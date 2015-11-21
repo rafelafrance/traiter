@@ -1,4 +1,4 @@
-A little project to extract specific traits from a slice of the VertNet database.
+A project to extract specific traits from a slice of the VertNet database.
 
 Extracting: sex, life stage, total body length, total body weight.
 
