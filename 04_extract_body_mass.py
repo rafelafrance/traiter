@@ -5,8 +5,8 @@ from collections import namedtuple
 from pprint import pprint
 
 base_name = 'vntraits110715'
-in_name = base_name + '_02_life_stage.csv'
-out_name = base_name + '_03_total_length.csv'
+in_name = base_name + '_03_total_length.csv'
+out_name = base_name + '_04_body_mass.csv'
 
 Row = namedtuple(
     'Row',
@@ -22,47 +22,56 @@ Row = namedtuple(
 Quantity = namedtuple('Quantity', 'value units')
 
 
-def get_total_length(field):
-    match = re.search(r'(?: \b t\.?l\.? \b | total \s* length )',
-                      field, re.IGNORECASE | re.VERBOSE)
-    if not match:
+def get_body_mass(field):
+    if not field:
         return None
 
-    match = re.search(r'\b totalLengthInMM \b \D+ (\d+(?:\.\d*)?)',
+    match = re.search(r'\b weightInGrams \b \D+ (\d+(?:\.\d*)?)',
                       field, re.IGNORECASE | re.VERBOSE)
     if match:
-        return Quantity(match.group(1), units='mm')
+        return Quantity(match.group(1), units='g')
 
-    match = re.search(r' \b t\.?l\.? \b \D* (\d+(?:\.\d*)?) \s* ([a-z]*)',
+    match = re.search(r'\b mass \s* in \s* grams \b \D+ (\d+(?:\.\d*)?)',
+                      field, re.IGNORECASE | re.VERBOSE)
+    if match:
+        return Quantity(match.group(1), units='g')
+
+    match = re.search(r'\b measurements \b \D+ \d+ (?: - \d+ )+'
+                      r'= (\d+(?:\.\d*)?) \s* ([a-z]*)',
                       field, re.IGNORECASE | re.VERBOSE)
     if match:
         return Quantity(match.group(1), units=match.group(2))
 
-    match = re.search(r' (\d+(?:\.\d*)?) \s* ([a-z]*) '
-                      r' (?:\s* [a-z]*)? \D* \b t\.?l\.? \b',
-                      field, re.IGNORECASE | re.VERBOSE)
-    if match:
-        return Quantity(match.group(1), units=match.group(2))
-
-    match = re.search(r' \b [t]? total \s* length \D* '
+    match = re.search(r' \b (?: body \s* mass | weight | wt ) \D* '
                       r'(\d+(?:\.\d*)?) \s* ([a-z]*)',
                       field, re.IGNORECASE | re.VERBOSE)
     if match:
         return Quantity(match.group(1), units=match.group(2))
 
-    match = re.search(r' \b total \s* length (?: \s* \D+ | $)',
+    match = re.search(r'(\d+(?:\.\d*)?) \s* \b '
+                      r'( lb | pound | oz | ounce | ton '
+                      r'| g  | gr | gram | kilogram | kg | kilo '
+                      r'| mg ) s? \b',
+                      field, re.IGNORECASE | re.VERBOSE)
+    if match:
+        return Quantity(match.group(1), units=match.group(2))
+
+    match = re.search(r'\b measurements \b \D+ (:?\d+(?:\.\d*)?) (?: - \d+ )+'
+                      r'(?: = [?])?',
                       field, re.IGNORECASE | re.VERBOSE)
     if match:
         return None
 
-    match = re.search(r' \b t \.? l [.;]? \s* \D+ ',
+    match = re.search(r'\b (?: lb | pound | oz | ounce | ton '
+                      r'| g  | gr | gram | kilogram | kg | kilo '
+                      r'| mg ) s? \b',
                       field, re.IGNORECASE | re.VERBOSE)
-    if match:
+    if not match:
         return None
 
-    match = re.search(r't \.? l [.;:=i)]* $',
-                      field, re.IGNORECASE | re.VERBOSE)
-    if match:
+    if re.search(r'\b (:? ounces | oz | gr? | mg | lbs? | grams? )'
+                 r'\b ( \D+ | $ )',
+                 field, re.IGNORECASE | re.VERBOSE):
         return None
 
     pprint(field)
@@ -82,18 +91,18 @@ def main():
             source = None
             if not quantity:
                 source = 'dynamicproperties'
-                quantity = get_total_length(row.dynamicproperties)
+                quantity = get_body_mass(row.dynamicproperties)
             if not quantity:
                 source = 'occurrenceremarks'
-                quantity = get_total_length(row.occurrenceremarks)
+                quantity = get_body_mass(row.occurrenceremarks)
             if not quantity:
                 source = 'fieldnotes'
-                quantity = get_total_length(row.fieldnotes)
+                quantity = get_body_mass(row.fieldnotes)
             if quantity:
-                row = row._replace(vto_bodyLength=quantity.value,
-                                   vto_bodyLength_units=quantity.units,
-                                   vto_bodyLength_source=source)
-            print row.row_num, row.vto_bodyLength, row.vto_bodyLength_units
+                row = row._replace(vto_bodyMass=quantity.value,
+                                   vto_bodyMass_units=quantity.units.lower(),
+                                   vto_bodyMass_source=source)
+            print row.row_num, row.vto_bodyMass, row.vto_bodyMass_units
             writer.writerow(row)
 
 
