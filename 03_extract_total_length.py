@@ -1,8 +1,8 @@
 import csv
 import re
 import sys
-from collections import namedtuple
 from pprint import pprint
+from collections import namedtuple
 
 # File names
 base_name = 'vntraits110715'
@@ -23,6 +23,12 @@ Row = namedtuple(
 
 # This named tuple is used to return multiple values from the regex search
 Quantity = namedtuple('Quantity', 'value units')
+
+length_skips = {
+        'hindfootlengthinmm': 1, 'earlengthinmm': 1, 'forearmlengthinmm': 1,
+        'taillengthinmm': 1, 'hindfootlengthinmm': 1,
+        'righttarsuslengthinmm': 1, 'culmenlengthinmm': 1,
+}
 
 
 def get_total_length(field):
@@ -45,27 +51,21 @@ def get_total_length(field):
 
     # Examples: 9.9 in t.l.  | 9.9 mm junk tl
     match = re.search(r' (\d+(?:\.\d*)?) \s* ([a-z]*) '
-                      r' (?:\s* [a-z]*)? \D* \b t\.?l\.? \b',
+                      r' (?:\s* [a-z]*)? \s* \b t\.?l\.? \b',
                       field, re.IGNORECASE | re.VERBOSE)
     if match:
         return Quantity(match.group(1), units=match.group(2))
 
-    # Examples: total length: 9.9 cm  | totallength=99mm
-    # Note: The extra [t]? handles some typos
-    match = re.search(r' \b [t]? total \s* length \D* '
+    # Examples: total length: 9.9 cm  | totalLength=99mm
+    match = re.search(r' \b (?: total | mean ) \s* length \D* '
                       r' (\d+(?:\.\d*)?) \s* ([a-z]*) ',
                       field, re.IGNORECASE | re.VERBOSE)
     if match:
         return Quantity(match.group(1), units=match.group(2))
 
-    # Skip: total length word
-    if re.search(r' \b total \s* length (?: \s* \D+ | $)',
-                 field, re.IGNORECASE | re.VERBOSE):
-        return None
-
-    # Skip: tl; word
-    if re.search(r' \b t \.? l [.;:=i)]* (:? \s* \D+ | $ )',
-                 field, re.IGNORECASE | re.VERBOSE):
+    # Skip: if missing TL or length or measurements
+    if not re.search(r' (?: measurements? | t\.?l | length | s\.?v\.?l)',
+                     field, re.IGNORECASE | re.VERBOSE):
         return None
 
     # Skip: measurements: 9.9g
@@ -73,12 +73,20 @@ def get_total_length(field):
                  field, re.IGNORECASE | re.VERBOSE):
         return None
 
-    # Skip: if missing TL or length or measurements
-    if not re.search(r' (?: measurements? | t\.?l\.? | length)',
-                     field, re.IGNORECASE | re.VERBOSE):
+    words = [w.lower() for w in re.split(r'[\s{}:=;,"\']+', field) if w]
+
+    for i, w in enumerate(words):
+        if not re.search(r'len|\bs\.?v\.?l\b|\bt\.?l\b', w, re.IGNORECASE):
+            continue
+        if w == 'length' and i and words[i - 1] == 'tail':
+            pass
+        elif w not in length_skips:
+            break
+    else:
         return None
 
     pprint(field)
+    pprint(words)
     sys.exit()
     return None
 
@@ -120,7 +128,7 @@ def main():
 
             # Output to new CSV file
             print row.row_num, source, row.vto_bodyLength, \
-                row.vto_bodyLength_source
+                row.vto_bodyLength_units
             writer.writerow(row)
 
 

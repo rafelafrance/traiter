@@ -1,8 +1,8 @@
 import csv
 import re
 # import sys
-from collections import namedtuple
 # from pprint import pprint
+from collections import namedtuple
 
 # File names
 base_name = 'vntraits110715'
