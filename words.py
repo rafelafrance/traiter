@@ -1,7 +1,8 @@
 # use this like so: python words.py | sort | uniq > words.txt
 
 import csv
-import re
+import sys
+import regex
 from collections import namedtuple
 
 base_name = 'vntraits110715'
@@ -14,7 +15,7 @@ Row = namedtuple(
      'scientificname class_ individualcount sex lifestage '
      'dynamicproperties occurrenceremarks fieldnotes'))
 
-punct = re.compile(r'[\s\d!@#$%^&*()+=|\\\]\[}{\'";/?:><,]-]+')
+punct = regex.compile(ur'[^\p{Letter}.]+')
 
 
 def main():
@@ -30,6 +31,7 @@ def main():
                 word = word.lower()
                 if word:
                     print word
+            # sys.exit()
 
 
 if __name__ == '__main__':
