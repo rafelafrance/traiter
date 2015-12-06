@@ -24,9 +24,12 @@ my $SEX_KEYED = qr{
 my $SEX_UNKEYED = qr{
     \b (?<value> (?:   males?
                      | females? 
-                     | m (?! \.)    # Take a lone M but not an abbreviation
-                     | f (?! \.)    # Take a lone F but not an abbreviation
+                     | m (?&no_trailing_period)
+                     | f (?&no_trailing_period)
        )) \b
+    (?(DEFINE)
+        (?<no_trailing_period> (?! \.) )
+    )
 };
 
 
@@ -43,29 +46,36 @@ my $LIFE_STAGE_UNKEYED = qr{
             (?: first | second | third | fourth | hatching ) \s+ \w+)
 };
 
-my $TOTAL_LENGTH_KEYS = qr{
-    length | t \.? \s* l \.? | measure
-};
-
 my $TOTAL_LENGTH = qr{
-    \b (?:
-        # Match with the label in the prefix
-        (?<key> (?&keys) )
-            \D*
-            (?<value> (?&quanity) )
-            \s*
-            (?<units> (?&lengths) )?
-        # Match with the label in the suffix
+    \b (?: (?<key> (?&len_key))           (?&key_sep) (?<value> (?&range))       \s* (?<units> (?&len_units))?
+         | (?<key> (?&len_key_units_req)) (?&key_sep) (?<value> (?&range))       \s* (?<units> (?&len_units))
+         | (?<key> (?&len_in_phrase))     \D+         (?<value> (?&range))       \s* (?<units> (?&len_units))?
+         | (?<value> (?&range))           \s*         (?<units> (?&len_units))?  \s* (?<key>   (?&len_key_as_suffix))
     ) \b
 
     (?(DEFINE)
-        (?<quanity> \d+ (?: \. \d* )? ) # Simple decimals should work OK
-        (?<keys> totalLengthInMM
-                | measurements  # Measurements is ambiguous and needs to be last
+        (?<quanity> \d+ (?: \. \d* )? )
+        (?<range>   (?&quanity) (?: \s* (?: - | to ) \s* (?&quanity) )? (?! \s* - ) )
+        (?<len_key> (?: totallengthinmm
+                      | snoutventlengthinmm
+                      | lengthinmillimeters
+                      | headbodylengthinmillimeters
+                      | total \s* length
+                      | maxlength
+                      | forklength
+                      | lengths?
+                      | svl
+                      | (?&len_units_abbrev)? (?&tl_abbrev) (?&len_units_abbrev)?
+                    )
         )
-        (?<lengths> (?: mm | m | cm | meter | millimeter | centimeter |
-                        in | foot | feet | inche? ) s?
-        )
+        (?<len_key_as_suffix> (?: (?: in )? (?&tl_abbrev) )
+        (?<len_key_units_req> (?: measurements? ))
+        (?<len_in_phrase>     (? total \s+ lengths? | snout vent lengts? ) )
+        (?<key_sep>           (?: [^\w.]* ))
+        (?<tl_abbrev>         (?: t\.?l\.? \s* [_-]? )
+        (?<len_units>         (?: (?: (?&len_units_word) | (?&len_units_abbrev) ) ) )
+        (?<len_units_word>    (?: meter | millimeter | centimeter | foot | feet | inche? ) s? )
+        (?<len_units_abbrev>  (?: (?: m\.?m | c\.?m | in | ft ) \.? s? ) )
     )
 };
 
@@ -73,7 +83,7 @@ my $BODY_MASS = qr{
     \b (?:
         # Match with the label in the prefix
         (?<key> (?&keys) )
-            \D*
+            [^\d\s]*
             (?<value> (?&quanity) )
             \s*
             (?<units> (?&masses) )?
@@ -85,6 +95,7 @@ my $BODY_MASS = qr{
         (?<keys>  weightInGrams
                 | measurements  # Measurements is ambiguous and needs to be last
         )
+        (?<wt_abbrev>  (?: (?: g | mg | kg | oz ) \.? s? ) )
         (?<masses> (?: g | gram | mg | milligram | kg | kilogram |
                        oz | ounce | pound | lb ) s? )
     )
@@ -147,9 +158,15 @@ sub dwc_life_stage {
 sub vto_total_length {
     my ($row, $col) = @_;
     if ( $row->{$col} =~ $TOTAL_LENGTH ) {
-        return { key => $+{key}, value => $+{value}, units => $+{units} };
+        my ($key, $value, $units) = ($+{key}, $+{value}, $+{units});
+        my ($suffix) = ($key =~ m/(mm|millimeters)$/i);
+        $units ||= $suffix;
+        say "$key, $value, $units";
+        die $row->{$col} . "\n" unless $key ne '' && $value ne '';
+        die $row->{$col} . "\n" if $units eq 'feet';
+        die $row->{$col} . "\n" if $value =~ /-/;
+        return { key => $key, value => $value, units => $units };
     }
-    die $row->{$col} . "\n" if $row->{$col} =~ $TOTAL_LENGTH_KEYS;
 }
 
 sub vto_body_mass {
