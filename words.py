@@ -1,4 +1,4 @@
-# use this like so: python words.py strings | sort | uniq > words.txt
+# use this like so: python words.py | strings | sort | uniq > words.txt
 
 import csv
 import sys

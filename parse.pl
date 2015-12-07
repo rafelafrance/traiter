@@ -46,60 +46,113 @@ my $LIFE_STAGE_UNKEYED = qr{
             (?: first | second | third | fourth | hatching ) \s+ \w+)
 };
 
-my $TOTAL_LENGTH = qr{
-    \b (?: (?<key> (?&len_key))           (?&key_sep) (?<value> (?&range))       \s* (?<units> (?&len_units))?
-         | (?<key> (?&len_key_units_req)) (?&key_sep) (?<value> (?&range))       \s* (?<units> (?&len_units))
-         | (?<key> (?&len_in_phrase))     \D+         (?<value> (?&range))       \s* (?<units> (?&len_units))?
-         | (?<value> (?&range))           \s*         (?<units> (?&len_units))?  \s* (?<key>   (?&len_key_as_suffix))
-    ) \b
+my $TOTAL_LENGTH = qr/
+    \b (?: (?<key> (?&shorthand_keys)) (?&key_sep) \s* (?<value> (?&quanity)) (?&shorthand)
+         | (?<key> (?&len_key))        (?&key_sep) (?<value> (?&range))      \s* (?<units> (?&len_units))?
+         | (?<key> (?&key_units_req))  (?&key_sep) (?<value> (?&range))      \s* (?<units> (?&len_units))
+         | (?<key> (?&len_in_phrase))  \D+         (?<value> (?&range))      \s* (?<units> (?&len_units))?
+         | (?<value> (?&range))        \s*         (?<units> (?&len_units))? \s* (?<key>   (?&len_key_as_suffix))
+         | (?<prev_word> [^\d\s]* )    \s*         (?<value>(?&quanity))     (?&shorthand)
+       )
+    \b
 
     (?(DEFINE)
         (?<quanity> \d+ (?: \. \d* )? )
-        (?<range>   (?&quanity) (?: \s* (?: - | to ) \s* (?&quanity) )? (?! \s* - ) )
-        (?<len_key> (?: totallengthinmm
-                      | snoutventlengthinmm
-                      | lengthinmillimeters
-                      | headbodylengthinmillimeters
-                      | total \s* length
-                      | maxlength
-                      | forklength
-                      | lengths?
-                      | svl
-                      | (?&len_units_abbrev)? (?&tl_abbrev) (?&len_units_abbrev)?
-                    )
+        (?<range>   (?&quanity) (?: \s* (?: - | to ) \s* (?&quanity) )? (?! \s* - ))
+        (?<len_key> totallengthinmm
+                  | snoutventlengthinmm
+                  | lengthinmillimeters
+                  | headbodylengthinmillimeters
+                  | total \s* lengths?
+                  | snout \s* vent \s* lengths?
+                  | max \s* length
+                  | fork \s* length
+                  | lengths?
+                  | tag
+                  | s \.? v \.? l \.?
+                  | (?&len_units_abbrev)? (?&tl_abbrev) (?&len_units_abbrev)?
         )
-        (?<len_key_as_suffix> (?: (?: in )? (?&tl_abbrev) )
-        (?<len_key_units_req> (?: measurements? ))
-        (?<len_in_phrase>     (? total \s+ lengths? | snout vent lengts? ) )
-        (?<key_sep>           (?: [^\w.]* ))
-        (?<tl_abbrev>         (?: t\.?l\.? \s* [_-]? )
-        (?<len_units>         (?: (?: (?&len_units_word) | (?&len_units_abbrev) ) ) )
-        (?<len_units_word>    (?: meter | millimeter | centimeter | foot | feet | inche? ) s? )
-        (?<len_units_abbrev>  (?: (?: m\.?m | c\.?m | in | ft ) \.? s? ) )
+        (?<shorthand_sep>   [:=,-]?)
+        (?<shorthand_words> on \s* tag
+                          | specimens?
+                          | catalog (?&shorthand_sep)
+                          | measurements (?: \s+ \w+)* \s* (?&shorthand_sep)
+                          | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+                          | et
+                          | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
+                          | [mf]
+                          | \b (?: male | female ) \s* (?&shorthand_sep)
+        )
+        (?<shorthand_typos>   mesurements | Measurementsnt )
+        (?<shorthand_keys>    (?&len_key) | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
+        (?<shorthand>         (?: [=\/-] (?&quanity)){3,} )
+        (?<len_key_as_suffix> (?: in )? (?&tl_abbrev) )
+        (?<key_units_req>     measurements? )
+        (?<len_in_phrase>     (?: total \s+ lengths? | snout \s+ vent \s+ lengths? ))
+        (?<key_sep>           [^ \w . ]* )
+        (?<tl_abbrev>         t \.? l \.? \s* [_-]? )
+        (?<len_units>         (?: (?&len_units_word) | (?&len_units_abbrev) ))
+        (?<len_units_word>    (?: meter | millimeter | centimeter | foot | feet | inch e? ) s? )
+        (?<len_units_abbrev>  (?: m \.? m | c \.? m | in | ft ) \.? s? )
     )
-};
+/;
 
-my $BODY_MASS = qr{
-    \b (?:
-        # Match with the label in the prefix
-        (?<key> (?&keys) )
-            [^\d\s]*
-            (?<value> (?&quanity) )
-            \s*
-            (?<units> (?&masses) )?
-        # Match with the label in the suffix
-    ) \b
+# This is for debugging/development only
+my $SKIP_PREV_WORD = qr/
+      date= | \?- | had | on | exhibit\( | cew | wing | nuttalli | nov
+    | uam | incisors, | primaries | americana | carolinensis | mark
+/;
+
+my $BODY_MASS = qr/
+    \b (?: (?<key> (?&shorthand_keys)) (?&key_sep) \s* (?<value> (?&quanity)) (?&shorthand)
+         | (?<key> (?&len_key))           (?&key_sep) (?<value> (?&range))       \s* (?<units> (?&len_units))?
+         | (?<key> (?&key_units_req)) (?&key_sep) (?<value> (?&range))       \s* (?<units> (?&len_units))
+         | (?<key> (?&len_in_phrase))     \D+         (?<value> (?&range))       \s* (?<units> (?&len_units))?
+         | (?<value> (?&range))           \s*         (?<units> (?&len_units))?  \s* (?<key>   (?&len_key_as_suffix))
+         | (?<prev_word> [^\d\s]* ) \s* (?<value>(?&quanity)) (?&shorthand)
+       )
+    \b
 
     (?(DEFINE)
-        (?<quanity> \d+ (?: \. \d* )? ) # Simple decimals should work OK
-        (?<keys>  weightInGrams
-                | measurements  # Measurements is ambiguous and needs to be last
+        (?<quanity> \d+ (?: \. \d* )? )
+        (?<range>   (?&quanity) (?: \s* (?: - | to ) \s* (?&quanity) )? (?! \s* - ))
+        (?<len_key> weightingrams
+                  | snoutventlengthinmm
+                  | lengthinmillimeters
+                  | headbodylengthinmillimeters
+                  | total \s* lengths?
+                  | snout \s* vent \s* lengths?
+                  | max \s* length
+                  | fork \s* length
+                  | lengths?
+                  | tag
+                  | s \.? v \.? l \.?
+                  | (?&len_units_abbrev)? (?&tl_abbrev) (?&len_units_abbrev)?
         )
-        (?<wt_abbrev>  (?: (?: g | mg | kg | oz ) \.? s? ) )
-        (?<masses> (?: g | gram | mg | milligram | kg | kilogram |
-                       oz | ounce | pound | lb ) s? )
+        (?<shorthand_sep>   [:=,-]?)
+        (?<shorthand_words> on \s* tag
+                          | specimens?
+                          | catalog (?&shorthand_sep)
+                          | measurements (?: \s+ \w+)* \s* (?&shorthand_sep)
+                          | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+                          | et
+                          | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
+                          | [mf]
+                          | \b (?: male | female ) \s* (?&shorthand_sep)
+        )
+        (?<shorthand_typos>   mesurements | Measurementsnt )
+        (?<shorthand_keys>    (?&len_key) | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
+        (?<shorthand>         (?: [=\/-] (?&quanity)){3,} )
+        (?<len_key_as_suffix> (?: in )? (?&tl_abbrev) )
+        (?<key_units_req>     measurements? )
+        (?<len_in_phrase>     (?: total \s+ lengths? | snout \s+ vent \s+ lengths? ))
+        (?<key_sep>           [^ \w . ]* )
+        (?<tl_abbrev>         t \.? l \.? \s* [_-]? )
+        (?<len_units>         (?: (?&len_units_word) | (?&len_units_abbrev) ))
+        (?<len_units_word>    (?: meter | millimeter | centimeter | foot | feet | inch e? ) s? )
+        (?<len_units_abbrev>  (?: m \.? m | c \.? m | in | ft ) \.? s? )
     )
-};
+/;
 
 # So we can loop thru the parsing functions
 my %new_columns = (
@@ -127,8 +180,10 @@ MAIN: {
         for my $new_col ( keys %new_columns ) {
             my $new_value = {};
             for my $scan_col ( @scan_columns ) {
-                my $parsed = &{$new_columns{$new_col}}( $row, $scan_col );
-                $new_value->{$scan_col} = $parsed if $parsed;
+                if ($row->{$scan_col} ) {
+                    my $parsed = &{$new_columns{$new_col}}( $row, $scan_col );
+                    $new_value->{$scan_col} = $parsed if $parsed;
+                }
             }
             $row->{$new_col} = to_json( $new_value ) if keys %$new_value;
         }
@@ -157,14 +212,15 @@ sub dwc_life_stage {
 
 sub vto_total_length {
     my ($row, $col) = @_;
+    #print "$col: $row->{$col}\n";
     if ( $row->{$col} =~ $TOTAL_LENGTH ) {
-        my ($key, $value, $units) = ($+{key}, $+{value}, $+{units});
+        my ($key, $value, $units, $prev_word) = ($+{key}, $+{value}, $+{units}, $+{prev_word});
+        #return if ($key eq '' || $value eq '') && ($prev_word eq '' || $prev_word =~ $SKIP_PREV_WORD);
         my ($suffix) = ($key =~ m/(mm|millimeters)$/i);
         $units ||= $suffix;
-        say "$key, $value, $units";
-        die $row->{$col} . "\n" unless $key ne '' && $value ne '';
-        die $row->{$col} . "\n" if $units eq 'feet';
-        die $row->{$col} . "\n" if $value =~ /-/;
+        #say "$key, $value, $units";
+        #say "$prev_word";
+        #die $prev_word . "\n" if (! $key || ! $value ) && $prev_word !~ /[;,.:]$/;
         return { key => $key, value => $value, units => $units };
     }
 }
