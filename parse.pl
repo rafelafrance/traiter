@@ -29,6 +29,7 @@ my $SEX_UNKEYED = qr{
 
 #############################################################################
 # Pull life stage out when there is a key=value pair
+
 my $LIFE_STAGE_KEYED = qr{
     \b (?<key> life \s* stage
              | age \s* class
@@ -41,6 +42,7 @@ my $LIFE_STAGE_KEYED = qr{
 
 #----------------------------------------------------------------------------
 # If the keyed version fails see if we can find unkeyed versions
+
 my $LIFE_STAGE_UNKEYED = qr{
   (?<value> (?: after \s+ )?
             (?: first | second | third | fourth | hatching )
@@ -150,7 +152,7 @@ MAIN: {
     open my $fh_out, '>', $output_file or die $!;
 
     my $column_names = $csv->getline($fh_in);
-    push @$column_names, keys %new_columns;
+    push @$column_names, sort keys %new_columns;
     $csv->say($fh_out, $column_names);
     $csv->column_names( @$column_names );
 
