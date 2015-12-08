@@ -1,4 +1,4 @@
-package VertNet::Parse;
+#package VertNet::Parse;
 
 use strict;
 use warnings FATAL => 'utf8';
@@ -11,40 +11,36 @@ use Text::CSV_XS;
 use Data::Dumper;
 
 my $input_file = $ARGV[0];
-my $output_file = $input_file . '.csv';
+my $output_file = $input_file . '.csv'; # TODO Get from argv[1]
 
+#############################################################################
 # Pull sex out when there is a key=value pair
+
 my $SEX_KEYED = qr{
-    \b (?<key> sex|gender ) \b
-    \W*
-    (?<value> \w+ )
+    \b (?<key> sex) \b \W* (?<value> \w+ )
 };
 
+#----------------------------------------------------------------------------
 # If the keyed version fails see if we can find unkeyed versions
+
 my $SEX_UNKEYED = qr{
-    \b (?<value> (?:   males?
-                     | females? 
-                     | m (?&no_trailing_period)
-                     | f (?&no_trailing_period)
-       )) \b
-    (?(DEFINE)
-        (?<no_trailing_period> (?! \.) )
-    )
+    \b (?<value> (?: males? | females? | m (?! \.) | f (?! \.) ) ) \b
 };
 
-
+#############################################################################
 # Pull life stage out when there is a key=value pair
 my $LIFE_STAGE_KEYED = qr{
-    \b (?<key> life \s* stage | age (?: class )? )
-    \W*
-    (?<value> \w+ )
+    \b (?<key> life \s* stage | age (?: class )? ) \W* (?<value> \w+ )
 };
 
+#----------------------------------------------------------------------------
 # If the keyed version fails see if we can find unkeyed versions
 my $LIFE_STAGE_UNKEYED = qr{
-  (?<value> (?: after \s+ )?
-            (?: first | second | third | fourth | hatching ) \s+ \w+)
+  (?<value> (?: after \s+ )? (?: first | second | third | fourth | hatching ) \s+ \w+)
 };
+
+#############################################################################
+# Common regular subexpressions for parsing both total length and body mass
 
 my $DEFINES = qr/
     (?(DEFINE)
@@ -97,8 +93,8 @@ my $DEFINES = qr/
     )
 /;
 
-#############################################################################################################
-# Go thru the regular expressions in array order
+#############################################################################
+# Go thru the total length regular expressions in array order
 
 my @TOTAL_LENGTH = (
     qr{ \b (?<key>   (?&len_key))        (?&key_sep) (?<value> (?&range))      \s* (?<units> (?&len_units))?        \b $DEFINES },
@@ -109,11 +105,8 @@ my @TOTAL_LENGTH = (
     qr{ \b (?<prev_word> [^\d\s]* )                      \s* (?<value> (?&quanity)) (?&len_shorthand) \b (?<next_word> [^\d\s]* ) $DEFINES },
 );
 
-# This is for debugging/development only
-my $SKIP_PREV_WORD = qr/
-      date= | \?- | had | on | exhibit\( | cew | wing | nuttalli | nov
-    | uam | incisors, | primaries | americana | carolinensis | mark
-/;
+#############################################################################
+# Go thru the body mass regular expressions in array order
 
 my @BODY_MASS = (
     qr{ \b (?<key> (?&wt_key))         (?&key_sep) (?<value> (?&range))      \s* (?<units> (?&wt_units))?        \b $DEFINES },
@@ -124,7 +117,17 @@ my @BODY_MASS = (
     qr{ \b (?<prev_word> [^\d\s]* )       \s*         (?&wt_shorthand) (?<value> (?&quanity)) \b $DEFINES },
 );
 
+#############################################################################
+# This is for debugging/development only
+
+my $SKIP_PREV_WORD = qr/
+      date= | \?- | had | on | exhibit\( | cew | wing | nuttalli | nov
+    | uam | incisors, | primaries | americana | carolinensis | mark
+/;
+
+#############################################################################
 # So we can loop thru the parsing functions
+
 my %new_columns = (
     dwc_sex          => \&dwc_sex,
     dwc_life_stage   => \&dwc_life_stage,
@@ -132,8 +135,12 @@ my %new_columns = (
     vto_body_mass    => \&vto_body_mass,
 );
 
+#############################################################################
 # Columns being searched
+
 my @scan_columns = qw( dynamicproperties occurrenceremarks fieldnotes );
+
+#############################################################################
 
 MAIN: {
     my $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1 });
@@ -182,13 +189,27 @@ sub dwc_life_stage {
 
 sub vto_total_length {
     my ($row, $col) = @_;
-    #print "$col: $row->{$col}\n";
     for my $regex ( @TOTAL_LENGTH ) {
         if ( $row->{$col} =~ $regex ) {
             my ($key, $value, $units, $prev_word) = ($+{key}, $+{value}, $+{units}, $+{prev_word});
+            my ($suffix) = ($key =~ m/( mm | millimeters ) $/);
+            $units ||= $suffix;
+            return { key => $key, value => $value, units => $units };
+        }
+    }
+}
+
+sub vto_body_mass {
+    my ($row, $col) = @_;
+    #print "$col: $row->{$col}\n";
+    #my $i = 0;
+    for my $regex ( @BODY_MASS ) {
+        if ( $row->{$col} =~ $regex ) {
+            #say "matched: $i";
+            my ($key, $value, $units, $prev_word) = ($+{key}, $+{value}, $+{units}, $+{prev_word});
             #say "$key, $value, $units";
             #return if ($key eq '' || $value eq '') && ($prev_word eq '' || $prev_word =~ $SKIP_PREV_WORD);
-            my ($suffix) = ($key =~ m/( mm | millimeters ) $/);
+            my ($suffix) = ($key =~ m/ ( grams ) $/);
             $units ||= $suffix;
             #say "$key, $value, $units";
             #say "$prev_word";
@@ -196,31 +217,9 @@ sub vto_total_length {
             #die $prev_word . "\n" if (! $key || ! $value ) && $prev_word !~ /[;,.:]$/;
             return { key => $key, value => $value, units => $units };
         }
+        #$i++;
     }
-    #die "$col: $row->{$col}\n" if $row->{$col} =~ m/\b(length|t\.?l\.?)\b/;
-}
-
-sub vto_body_mass {
-    my ($row, $col) = @_;
-    print "$col: $row->{$col}\n";
-    my $i = 0;
-    for my $regex ( @BODY_MASS ) {
-        if ( $row->{$col} =~ $regex ) {
-            say "matched: $i";
-            my ($key, $value, $units, $prev_word) = ($+{key}, $+{value}, $+{units}, $+{prev_word});
-            say "$key, $value, $units";
-            #return if ($key eq '' || $value eq '') && ($prev_word eq '' || $prev_word =~ $SKIP_PREV_WORD);
-            my ($suffix) = ($key =~ m/ ( grams ) $/);
-            $units ||= $suffix;
-            say "$key, $value, $units";
-            say "$prev_word";
-            die if $key =~ m/in \s+ mm/;
-            die $prev_word . "\n" if (! $key || ! $value ) && $prev_word !~ /[;,.:]$/;
-            return { key => $key, value => $value, units => $units };
-        }
-        $i++;
-    }
-    die "$col: $row->{$col}\n" if $row->{$col} =~ m/\b(weight|grams|w\.?t\.?)\b/ && $row->{$col} !~ /body/;
+    #die "$col: $row->{$col}\n" if $row->{$col} =~ m/\b(weight|grams|w\.?t\.?)\b/ && $row->{$col} !~ /body/;
 }
 
 1;
