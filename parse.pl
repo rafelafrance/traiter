@@ -30,13 +30,22 @@ my $SEX_UNKEYED = qr{
 #############################################################################
 # Pull life stage out when there is a key=value pair
 my $LIFE_STAGE_KEYED = qr{
-    \b (?<key> life \s* stage | age (?: class )? ) \W* (?<value> \w+ )
+    \b (?<key> life \s* stage
+             | age \s* class
+             | age \s* in \s* (?: hour | day ) s?
+             | age
+       )
+       \W+
+       (?<value> \w+ (?: \s+ (?: year | recorded ) )? )
 };
 
 #----------------------------------------------------------------------------
 # If the keyed version fails see if we can find unkeyed versions
 my $LIFE_STAGE_UNKEYED = qr{
-  (?<value> (?: after \s+ )? (?: first | second | third | fourth | hatching ) \s+ \w+)
+  (?<value> (?: after \s+ )?
+            (?: first | second | third | fourth | hatching )
+            \s+ year
+  )
 };
 
 #############################################################################
@@ -50,7 +59,7 @@ my $DEFINES = qr/
         (?<shorthand_typos> mesurements | Measurementsnt | et )
         (?<len_shorthand_keys> (?&len_key) | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
         (?<wt_shorthand_keys>  (?&wt_key)  | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
-        (?<shorthand_sep>   [: = , \/ \- ]+ )
+        (?<shorthand_sep>   [ : = , \/ \- ]+ )
         (?<len_shorthand>   (?: (?&shorthand_sep) (?&quanity) ){3,} )
         (?<wt_shorthand>    (?: (?&quanity) (?&shorthand_sep) ){3,} )
         (?<shorthand_words> on \s* tag
@@ -65,12 +74,13 @@ my $DEFINES = qr/
 
         (?<key_units_req> measurements? )
         (?<key_sep>       \s* [^ \w . ]* \s* )
+        (?<key_word_sep>  (?: \s | [ \- ])? )
 
-        (?<len_key> total \s* length \s* in \s* mm
-                  | snout \s* vent \s* lengths? (?: \s* in \s* mm )?
-                  | length \s* in \s* millimeters
-                  | head \s* body \s* length \s* in \s* millimeters
-                  | (?: total | max | fork | mean | standard )? \s* lengths?
+        (?<len_key> total (?&key_word_sep) length (?&key_word_sep) in (?&key_word_sep) mm
+                  | snout (?&key_word_sep) vent (?&key_word_sep) lengths? (?: \s* in \s* mm )?
+                  | length (?&key_word_sep) in (?&key_word_sep) millimeters
+                  | head (?&key_word_sep) body (?&key_word_sep) length (?&key_word_sep) in (?&key_word_sep) millimeters
+                  | (?: total | max | fork | mean | standard )? (?&key_word_sep) lengths?
                   | tag
                   | t \.? l \.?
                   | s \.? v \.? l \.?
@@ -187,30 +197,20 @@ sub vto_total_length {
         if ( $row->{$col} =~ $regex ) {
             my ($key, $value, $units) = ($+{key}, $+{value}, $+{units});
             my ($suffix) = ($key =~ m/( mm | millimeters ) $/);
-            $units ||= $suffix;
-            return { key => $key, value => $value, units => $units };
+            return { key => $key || '', value => $value // '', units => $units || $suffix || '' };
         }
     }
 }
 
 sub vto_body_mass {
     my ($row, $col) = @_;
-    #print "$col: $row->{$col}\n";
-    #my $i = 0;
     for my $regex ( @BODY_MASS ) {
         if ( $row->{$col} =~ $regex ) {
-            #say "matched: $i";
             my ($key, $value, $units) = ($+{key}, $+{value}, $+{units});
-            #say "$key, $value, $units";
             my ($suffix) = ($key =~ m/ ( grams ) $/);
-            $units ||= $suffix;
-            #say "$key, $value, $units";
-            #die if $key =~ m/in \s+ mm/;
-            return { key => $key, value => $value, units => $units };
+            return { key => $key || '', value => $value // '', units => $units || $suffix || '' };
         }
-        #$i++;
     }
-    #die "$col: $row->{$col}\n" if $row->{$col} =~ m/\b(weight|grams|w\.?t\.?)\b/ && $row->{$col} !~ /body/;
 }
 
 1;
