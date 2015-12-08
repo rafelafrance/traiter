@@ -101,8 +101,8 @@ my @TOTAL_LENGTH = (
     qr{ \b (?<key>   (?&key_units_req))  (?&key_sep) (?<value> (?&range))      \s* (?<units> (?&len_units))         \b $DEFINES },
     qr{ \b (?<key>   (?&len_in_phrase))  \D+         (?<value> (?&range))      \s* (?<units> (?&len_units))?        \b $DEFINES },
     qr{ \b (?<value> (?&range))          \s*         (?<units> (?&len_units))? \s* (?<key>   (?&len_key_as_suffix)) \b $DEFINES },
-    qr{ \b (?<key>   (?&len_shorthand_keys)) (?&key_sep) \s* (?<value> (?&quanity)) (?&len_shorthand) \b (?<next_word> [^\d\s]* ) $DEFINES },
-    qr{ \b (?<prev_word> [^\d\s]* )                      \s* (?<value> (?&quanity)) (?&len_shorthand) \b (?<next_word> [^\d\s]* ) $DEFINES },
+    qr{ \b (?<key>   (?&len_shorthand_keys)) (?&key_sep) (?<value> (?&quanity)) (?&len_shorthand) \b $DEFINES },
+    qr{ \b                                               (?<value> (?&quanity)) (?&len_shorthand) \b $DEFINES },
 );
 
 #############################################################################
@@ -114,16 +114,8 @@ my @BODY_MASS = (
     qr{ \b (?<key> (?&wt_in_phrase))   \D+         (?<value> (?&range))      \s* (?<units> (?&wt_units))?        \b $DEFINES },
     qr{ \b (?<value> (?&range))        \s*         (?<units> (?&wt_units))?  \s* (?<key>   (?&wt_key_as_suffix)) \b $DEFINES },
     qr{ \b (?<key> (?&wt_shorthand_keys)) (?&key_sep) (?&wt_shorthand) (?<value> (?&quanity)) \b $DEFINES },
-    qr{ \b (?<prev_word> [^\d\s]* )       \s*         (?&wt_shorthand) (?<value> (?&quanity)) \b $DEFINES },
+    qr{ \b                                            (?&wt_shorthand) (?<value> (?&quanity)) \b $DEFINES },
 );
-
-#############################################################################
-# This is for debugging/development only
-
-my $SKIP_PREV_WORD = qr/
-      date= | \?- | had | on | exhibit\( | cew | wing | nuttalli | nov
-    | uam | incisors, | primaries | americana | carolinensis | mark
-/;
 
 #############################################################################
 # So we can loop thru the parsing functions
@@ -135,7 +127,7 @@ my %new_columns = (
     vto_body_mass    => \&vto_body_mass,
 );
 
-#############################################################################
+#----------------------------------------------------------------------------
 # Columns being searched
 
 my @scan_columns = qw( dynamicproperties occurrenceremarks fieldnotes );
@@ -184,14 +176,16 @@ sub dwc_life_stage {
     if ( $row->{$col} =~ $LIFE_STAGE_KEYED ) {
         return { key => $+{key}, value => $+{value} };
     }
-    return { key => $+{key}, value => $+{value} };
+    if ( my @matches = ($row->{$col} =~ $LIFE_STAGE_UNKEYED) ) {
+        return { key => '', value => \@matches };
+    }
 }
 
 sub vto_total_length {
     my ($row, $col) = @_;
     for my $regex ( @TOTAL_LENGTH ) {
         if ( $row->{$col} =~ $regex ) {
-            my ($key, $value, $units, $prev_word) = ($+{key}, $+{value}, $+{units}, $+{prev_word});
+            my ($key, $value, $units) = ($+{key}, $+{value}, $+{units});
             my ($suffix) = ($key =~ m/( mm | millimeters ) $/);
             $units ||= $suffix;
             return { key => $key, value => $value, units => $units };
@@ -206,15 +200,12 @@ sub vto_body_mass {
     for my $regex ( @BODY_MASS ) {
         if ( $row->{$col} =~ $regex ) {
             #say "matched: $i";
-            my ($key, $value, $units, $prev_word) = ($+{key}, $+{value}, $+{units}, $+{prev_word});
+            my ($key, $value, $units) = ($+{key}, $+{value}, $+{units});
             #say "$key, $value, $units";
-            #return if ($key eq '' || $value eq '') && ($prev_word eq '' || $prev_word =~ $SKIP_PREV_WORD);
             my ($suffix) = ($key =~ m/ ( grams ) $/);
             $units ||= $suffix;
             #say "$key, $value, $units";
-            #say "$prev_word";
             #die if $key =~ m/in \s+ mm/;
-            #die $prev_word . "\n" if (! $key || ! $value ) && $prev_word !~ /[;,.:]$/;
             return { key => $key, value => $value, units => $units };
         }
         #$i++;
