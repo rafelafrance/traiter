@@ -70,7 +70,7 @@ my $DEFINES = qr/
                   | snout \s* vent \s* lengths? (?: \s* in \s* mm )?
                   | length \s* in \s* millimeters
                   | head \s* body \s* length \s* in \s* millimeters
-                  | (?: total | max | fork | mean )? \s* lengths?
+                  | (?: total | max | fork | mean | standard )? \s* lengths?
                   | tag
                   | t \.? l \.?
                   | s \.? v \.? l \.?
