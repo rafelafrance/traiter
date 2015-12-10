@@ -96,13 +96,13 @@ my $DEFINES = qr/
         (?<len_units_word>    (?: meter | millimeter | centimeter | foot | feet | inch e? ) s? )
         (?<len_units_abbrev>  (?: [cm] (?&dot) m | in | ft ) (?&dot) s? )
 
-        (?<wt_key_1st> weightingrams
+        (?<wt_key_1st> weightingrams | massingrams
                      | (?: body | dead | full | live | observed ) (?&dot) \s* weights?
                      | w (?&dot) t s? (?&dot)
         )
-        (?<wt_key_last>      weights? )
+        (?<wt_key_last>      weights? | mass )
         (?<wt_key_as_suffix> (?: oz ))
-        (?<wt_in_phrase>     (?: total \s+ wights? ))
+        (?<wt_in_phrase>     (?: total \s+ wights? | total mass ))
         (?<wt_units>         (?: (?&wt_units_word) | (?&wt_units_abbrev) ))
         (?<wt_units_word>    (?: gram | milligram | kilogram | pound | ounce ) s? )
         (?<wt_units_abbrev>  (?: m (?&dot) g | k (?&dot) g | g | lb | oz ) (?&dot) s? )
@@ -144,11 +144,11 @@ my @BODY_MASS = (
     { default_units => '',
       regex => qr{ \b (?<value> (?&quantity))     \s*         (?<units> (?&wt_units))?  \s* (?<key>   (?&wt_key_as_suffix)) \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key> (?&wt_shorthand_keys)) (?&key_end) (?&wt_shorthand)      (?<value> (?&number)) \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&wt_shorthand_keys)) (?&key_end) (?&wt_shorthand)      (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b                                            (?&wt_shorthand)      (?<value> (?&number)) \b $DEFINES } },
+      regex => qr{ \b                                            (?&wt_shorthand)      (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b                                            (?&wt_shorthand_euro) (?<value> (?&number)) \b $DEFINES } },
+      regex => qr{ \b                                            (?&wt_shorthand_euro) (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
       regex => qr{ \b (?<key> (?&wt_key_last))    (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))?        \b $DEFINES } },
 );
