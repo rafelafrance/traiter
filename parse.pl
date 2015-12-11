@@ -60,8 +60,10 @@ my $DEFINES = qr/
 
         (?<shorthand_sep>   [ : = , \/ \- ]+ )
         (?<shorthand_typos> mesurements | Measurementsnt | et )
-        (?<len_shorthand_keys> (?&len_key_1st) | (?&len_key_last) | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
-        (?<wt_shorthand_keys>  (?&wt_key_1st)  | (?&wt_key_last)  | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
+        (?<len_shorthand_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_last)
+                             | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
+        (?<wt_shorthand_keys> (?&total_wt_key) | (?&other_wt_key) | (?&wt_key_word) | (?&key_units_req)
+                            | (?&shorthand_words) | (?&shorthand_typos))
         (?<len_shorthand>   (?: (?&shorthand_sep) (?&number) ){3,} )
         (?<wt_shorthand>    (?: (?&number) (?&shorthand_sep) ){4,} )
         (?<shorthand_words> on \s* tag
@@ -80,32 +82,39 @@ my $DEFINES = qr/
         (?<key_end>       \s* [^ \w . ]* \s* )
         (?<dash>          (?: \s | [ \- ])? )
         (?<dot>           \.? )
+        (?<open>          [ \( \[ \{ ]? )
+        (?<close>         [ \) \] \} ]? )
 
-        (?<len_key_1st> total  (?&dash) length (?&dash) in (?&dash) mm
-                      | snout  (?&dash) vent   (?&dash) lengths? (?: (?&dash) in (?&dash) mm )?
-                      | length (?&dash) in     (?&dash) millimeters
-                      | head   (?&dash) body   (?&dash) length (?&dash) in (?&dash) millimeters
-                      | (?: total | max | fork | mean | standard ) (?&dash) lengths?
-                      | t [ o . ]? l (?&dot)
+        (?<total_len_key> total  (?&dash) length (?&dash) in (?&dash) mm
+                        | length (?&dash) in     (?&dash) millimeters
+                        | (?: total | max | standard ) (?&dash) lengths?
+                        | t [ o . ]? l (?&dot)
+        )
+        (?<svl_len_key> snout  (?&dash) vent   (?&dash) lengths? (?: (?&dash) in (?&dash) mm )?
                       | s (?&dot) v (?&dot) l (?&dot)
+                      | snout \s+ vent \s+ lengths?
         )
-        (?<len_key_last>      (?<![ \- . ] ) \b (?: lengths? | tag ) \b )
-        (?<len_key_as_suffix> (?: in \s* )? t (?&dot) l (?&dot) )
-        (?<len_in_phrase>     total \s+ lengths? | snout \s+ vent \s+ lengths? )
-        (?<len_units>         (?&len_units_word) | (?&len_units_abbrev) )
-        (?<len_units_word>    (?: meter | millimeter | centimeter | foot | feet | inch e? ) s? )
-        (?<len_units_abbrev>  (?: [cm] (?&dot) m | in | ft ) (?&dot) s? )
+        (?<other_len_key> head  (?&dash) body (?&dash) length (?&dash) in (?&dash) millimeters
+                        | (?: fork | mean | body ) (?&dash) lengths?
+        )
+        (?<len_key_last>   (?<![ \- . ] ) \b (?: lengths? | tag ) \b )
+        (?<len_key_abbrev> t (?&dot) o? l (?&dot) )
+        (?<len_key_suffix> (?: in \s* )? (?&len_key_abbrev) )
+        (?<len_in_phrase>  total \s+ lengths? | snout \s+ vent \s+ lengths? )
 
-        (?<wt_key_1st> weightingrams | massingrams
-                     | (?: body | dead | full | live | observed ) (?&dot) \s* weights?
-                     | w (?&dot) t s? (?&dot)
+        (?<len_units>        (?&len_units_word) | (?&len_units_abbrev) )
+        (?<len_units_word>   (?: meter | millimeter | centimeter | foot | feet | inch e? ) s? )
+        (?<len_units_abbrev> (?: [cm] (?&dot) m | in | ft ) (?&dot) s? )
+
+        (?<total_wt_key> weightingrams | massingrams |
+                       | (?: body | full | observed | total ) (?&dot) \s* (?&wt_key_word)
         )
-        (?<wt_key_last>      weights? | mass )
-        (?<wt_key_as_suffix> (?: oz ))
-        (?<wt_in_phrase>     (?: total \s+ wights? | total mass ))
-        (?<wt_units>         (?: (?&wt_units_word) | (?&wt_units_abbrev) ))
-        (?<wt_units_word>    (?: gram | milligram | kilogram | pound | ounce ) s? )
-        (?<wt_units_abbrev>  (?: m (?&dot) g | k (?&dot) g | g | lb | oz ) (?&dot) s? )
+        (?<other_wt_key>    (?: dead | live ) (?&dot) \s* (?&wt_key_word) )
+        (?<wt_key_word>    weights? | mass | w (?&dot) t s? (?&dot) )
+        (?<wt_in_phrase>    total \s+ (?&wt_key_word) )
+        (?<wt_units>        (?&wt_units_word) | (?&wt_units_abbrev) )
+        (?<wt_units_word>   (?: gram | milligram | kilogram | pound | ounce ) s? )
+        (?<wt_units_abbrev> (?: m (?&dot) g | k (?&dot) g | g | lb | oz ) (?&dot) s? )
     )
 /;
 
@@ -114,13 +123,19 @@ my $DEFINES = qr/
 
 my @TOTAL_LENGTH = (
     { default_units => '',
-      regex => qr{ \b (?<key>   (?&len_key_1st))    (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&len_units))?        \b $DEFINES } },
+      regex => qr{ \b (?<key>   (?&total_len_key))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&len_units))?     \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key>   (?&key_units_req))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&len_units))         \b $DEFINES } },
+      regex => qr{ \b (?<key>   (?&svl_len_key))    (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&len_units))?     \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key>   (?&len_in_phrase))  \D+         (?<value> (?&quantity))   \s* (?<units> (?&len_units))?        \b $DEFINES } },
+      regex => qr{ \b (?<key>   (?&other_len_key))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&len_units))?     \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<value> (?&quantity))       \s*         (?<units> (?&len_units))? \s* (?<key>   (?&len_key_as_suffix)) \b $DEFINES } },
+      regex => qr{ \b (?<key>   (?&key_units_req))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&len_units))      \b $DEFINES } },
+    { default_units => ''
+      regex => qr{ \b (?<key>   (?&len_in_phrase))  \D+         (?<value> (?&quantity))   \s* (?<units> (?&len_units))?     \b $DEFINES } },
+    { default_units => '',
+      regex => qr{ \b (?<key>   (?&len_key_abbrev)) \s* (?&open) \s* (?<units> (?&len_units)) \s* (?&close) \s* (?<value> (?&quantity)) \b $DEFINES } },
+    { default_units => '',
+      regex => qr{ \b (?<value> (?&quantity))       \s*         (?<units> (?&len_units))? \s* (?<key>   (?&len_key_suffix)) \b $DEFINES } },
     { default_units => 'mm',
       regex => qr{ \b (?<key>   (?&len_shorthand_keys)) (?&key_end) (?<value> (?&number)) (?&len_shorthand)      \b $DEFINES } },
     { default_units => 'mm',
@@ -136,21 +151,23 @@ my @TOTAL_LENGTH = (
 
 my @BODY_MASS = (
     { default_units => '',
-      regex => qr{ \b (?<key> (?&wt_key_1st))     (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))?        \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&total_wt_key))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key> (?&key_units_req))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))         \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&other_wt_key))  (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key> (?&wt_in_phrase))   \D+         (?<value> (?&quantity))   \s* (?<units> (?&wt_units))?        \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))  \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<value> (?&quantity))     \s*         (?<units> (?&wt_units))?  \s* (?<key>   (?&wt_key_as_suffix)) \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&wt_in_phrase))  \D+         (?<value> (?&quantity))   \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key> (?&wt_shorthand_keys)) (?&key_end) (?&wt_shorthand)      (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&wt_key_word)) \s* (?&open) \s* (?<units> (?&wt_units)) \s* (?&close) \s* (?<value> (?&quantity)) \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b                                            (?&wt_shorthand)      (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
+      regex => qr{ \b (?<key> (?&wt_shorthand_keys)) (?&key_end) (?&wt_shorthand)      \s* (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b                                            (?&wt_shorthand_euro) (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
+      regex => qr{ \b                                            (?&wt_shorthand)      \s* (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
     { default_units => '',
-      regex => qr{ \b (?<key> (?&wt_key_last))    (?&key_end) (?<value> (?&quantity))   \s* (?<units> (?&wt_units))?        \b $DEFINES } },
+      regex => qr{ \b                                            (?&wt_shorthand_euro) \s* (?<value> (?&number)) \s* (?<units> (?&wt_units))? \b $DEFINES } },
+    { default_units => '',
+      regex => qr{ \b (?<key> (?&wt_key_word))  (?&key_end) (?<value> (?&quantity))    \s* (?<units> (?&wt_units))? \b $DEFINES } },
 );
 
 #############################################################################
