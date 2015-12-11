@@ -76,7 +76,7 @@ our $DEFINES = qr/
         (?<wt_shorthand_keys> (?&total_wt_key) | (?&other_wt_key) | (?&wt_key_word)
                             | (?&key_units_req)
                             | (?&shorthand_words) | (?&shorthand_typos))
-        (?<len_shorthand>   (?: (?&shorthand_sep) (?&number) ){3,} )
+        (?<len_shorthand>   (?: (?&shorthand_sep) (?&number) ){4,} )
         (?<wt_shorthand>    (?: (?&number) (?&shorthand_sep) ){4,} )
         (?<shorthand_words> on \s* tag
                           | specimens?
@@ -85,8 +85,8 @@ our $DEFINES = qr/
                           | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
                           | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
         )
-        (?<len_shorthand_euro> hb (?: (?&shorthand_sep) (?&number) [a-z]* ){3,} )
-        (?<wt_shorthand_euro>  (?&number) hb (?: (?&shorthand_sep) (?&number) [a-z]* ){3,} = )
+        (?<len_shorthand_euro> hb (?: (?&shorthand_sep) (?&number) [a-z]* ){4,} )
+        (?<wt_shorthand_euro>  (?&number) hb (?: (?&shorthand_sep) (?&number) [a-z]* ){4,} = )
 
         (?<key_units_req> measurements? )
         (?<key_end>       \s* [^ \w . ]* \s* )
