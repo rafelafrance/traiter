@@ -29,8 +29,8 @@ my @scan_columns = qw( dynamicproperties occurrenceremarks fieldnotes );
 
 MAIN: {
     my $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1 });
-    open my $fh_in,  '<', $input_file  or die $!;
-    open my $fh_out, '>', $output_file or die $!;
+    open my $fh_in,  '<:encoding(UTF-8)', $input_file  or die $!;
+    open my $fh_out, '>:encoding(UTF-8)', $output_file or die $!;
 
     my $column_names = $csv->getline($fh_in);
     push @$column_names, sort keys %new_columns;
