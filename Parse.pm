@@ -1,12 +1,12 @@
 package Parse;
 
+# NOTE: Ugly code ahead. This is a brutal hack.
+
 use strict;
 use warnings FATAL => 'utf8';
 use feature qw( switch say );
 use open    qw( :std :utf8 );
 use re      '/xims';
-
-# NB: This is a brutal hack
 
 use JSON;
 use Text::CSV_XS;
