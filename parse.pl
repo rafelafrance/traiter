@@ -14,10 +14,10 @@ my $output_file = $input_file . '.csv'; # TODO Get from argv[1]
 # So we can loop thru the parsing functions
 
 my %new_columns = (
-    dwc_sex          => \&Parse::dwc_sex,
-    dwc_life_stage   => \&Parse::dwc_life_stage,
-    vto_total_length => \&Parse::vto_total_length,
-    vto_body_mass    => \&Parse::vto_body_mass,
+    autoextract_sex         => \&Parse::extract_sex,
+    autoextract_life_stage  => \&Parse::extract_life_stage,
+    autoextract_body_length => \&Parse::extract_total_length,
+    autoextract_body_mass   => \&Parse::extract_body_mass,
 );
 
 #----------------------------------------------------------------------------

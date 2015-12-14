@@ -4,7 +4,9 @@ use strict;
 use warnings FATAL => 'utf8';
 use feature qw( switch say );
 use open    qw( :std :utf8 );
-use re      '/xi';
+use re      '/xims';
+
+# NB: This is a brutal hack
 
 use JSON;
 use Text::CSV_XS;
@@ -12,12 +14,18 @@ use Data::Dumper;
 
 use parent 'Exporter';
 
-our @EXPORT = qw( dwc_sex dwc_life_stage vto_total_length vto_body_mass );
+our @EXPORT = qw(
+    extract_sex
+    extract_life_stage
+    extract_total_length
+    extract_body_mass
+);
+
 our @EXPORT_OK = qw(
-    $SEX_KEYED
-    $SEX_UNKEYED
-    $LIFE_STAGE_KEYED
-    $LIFE_STAGE_UNKEYED
+    @SEX
+    %SEX_BY_NAME
+    @LIFE_STAGE
+    %LIFE_STAGE_BY_NAME
     @TOTAL_LENGTH
     %TOTAL_LENGTH_BY_NAME
     @BODY_MASS
@@ -25,51 +33,62 @@ our @EXPORT_OK = qw(
 );
 
 #############################################################################
-# Pull sex out when there is a key=value pair
+# Parse sex
 
-our $SEX_KEYED = qr{
-    \b (?<key> sex) \b \W+ (?<value> \w+ )
-};
+our @SEX = (
+    { name => 'sex_with_delimiter', as_array => 0,
+      regex => qr/ \b (?<key> sex)
+                      \W+
+                      (?<value> [\w?.]+ (?: \s+ [\w?.]+ ){0,2} )
+                      \s* (?: [:;,"] | $ )
+                 /},
+    { name => 'sex_without_delimiter', as_array => 0,
+      regex => qr{ \b (?<key> sex) \W+ (?<value> \w+ ) }},
+    { name => 'sex_unkeyed', as_array => 1,
+      regex => qr{ \b (?<value> (?: males? | females? ) (?: \s* \? ) ) \b }},
+);
 
-#----------------------------------------------------------------------------
-# If the keyed version fails see if we can find unkeyed versions
-
-our $SEX_UNKEYED = qr{
-    \b (?<value> (?: males? | females? | m (?! \.) | f (?! \.) ) ) \b
-};
+our %SEX_BY_NAME = ();
+$SEX_BY_NAME{$_->{name}} = $_ for @SEX;
 
 #############################################################################
-# Pull life stage out when there is a key=value pair
+# Parse life stage
 
-our $LIFE_STAGE_KEYED = qr{
-    \b (?<key> life \s* stage
-             | age \s* class
-             | age \s* in \s* (?: hour | day ) s?
-             | age
-       )
-       \W+
-       (?<value> \w+ (?: \s+ (?: year | recorded ) )? )
-};
+our @LIFE_STAGE = (
+    { name => 'lifestage_with_delimiter',
+      regex => qr/ \b (?<key> (?: life \s* stage | age (?: \s* class )? ) )
+                      \W+
+                      (?<value> [\w?.]+ (?: \s+ [\w?.]+){0,4} )
+                      \s* (?: [:;,"] | $ )
+                 /},
+    { name => 'lifestage_without_delimiter',
+      regex => qr/ \b (?<key> life \s* stage
+                            | age \s* class
+                            | age \s* in \s* (?: hour | day ) s?
+                            | age
+                      )
+                      \W+
+                      (?<value> \w+ (?: \s+ (?: year | recorded ) )? )
+                 /},
+    { name => 'lifestage_unkeyed',
+      regex => qr{ (?<value> (?: after \s+ )?
+                             (?: first | second | third | fourth | hatching )
+                             \s+ year )
+                 }},
+);
 
-#----------------------------------------------------------------------------
-# If the keyed version fails see if we can find unkeyed versions
-
-our $LIFE_STAGE_UNKEYED = qr{
-  (?<value> (?: after \s+ )?
-            (?: first | second | third | fourth | hatching )
-            \s+ year
-  )
-};
+our %LIFE_STAGE_BY_NAME = ();
+$LIFE_STAGE_BY_NAME{$_->{name}} = $_ for @LIFE_STAGE;
 
 #############################################################################
 # Common regular subexpressions for parsing both total length and body mass
 
-our $DEFINES = qr/
+my $DEFINES = qr/
     (?(DEFINE)
-        (?<number>   [ \[ \( ]? \d+ (?: \. \d* )? [ \] \) ]? [ \* ]? )
+        (?<number>   [\[\(]? \d+ (?: \. \d* )? [\]\)]? [\*]? )
         (?<quantity> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
-        (?<shorthand_sep>   [ : = , \/ \- \s ]+ )
+        (?<shorthand_sep>   [:=,\/\-\s]+ )
         (?<shorthand_typos> mesurements | Measurementsnt | et )
         (?<len_shorthand_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_last)
                              | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
@@ -89,11 +108,11 @@ our $DEFINES = qr/
         (?<wt_shorthand_euro>  (?&number) hb (?: (?&shorthand_sep) (?&number) [a-z]* ){4,} = )
 
         (?<key_units_req> measurements? )
-        (?<key_end>       \s* [^ \w . ]* \s* )
-        (?<dash>          [ \s \- ]? )
+        (?<key_end>       \s* [^\w.]* \s* )
+        (?<dash>          [\s\-]? )
         (?<dot>           \.? )
-        (?<open>          [ \( \[ \{ ]? )
-        (?<close>         [ \) \] \} ]? )
+        (?<open>          [\(\[\{]? )
+        (?<close>         [\)\]\}]? )
 
         (?<total_len_key> total  (?&dash) length (?&dash) in (?&dash) mm
                         | length (?&dash) in     (?&dash) millimeters
@@ -105,9 +124,9 @@ our $DEFINES = qr/
         )
         (?<other_len_key> head  (?&dash) body (?&dash) length (?&dash) in (?&dash) millimeters
                         | (?: fork | mean | body ) (?&dash) lengths?
-                        | t [ o . ]? l (?&dot)
+                        | t [o.]? l (?&dot)
         )
-        (?<len_key_last>   (?<![ \- . ] ) \b (?: lengths? | tag ) \b )
+        (?<len_key_last>   (?<![\-.] ) \b (?: lengths? | tag ) \b )
         (?<len_key_abbrev> t (?&dot) o? l (?&dot) )
         (?<len_key_suffix> (?: in \s* )? (?&len_key_abbrev) )
         (?<len_in_phrase>  total \s+ lengths? | snout \s+ vent \s+ lengths? )
@@ -129,7 +148,7 @@ our $DEFINES = qr/
 /;
 
 #############################################################################
-# Go thru the total length regular expressions in array order
+# Parse total length
 
 our @TOTAL_LENGTH = (
     { default_units => '', name => 'total_len_key',
@@ -160,7 +179,7 @@ our %TOTAL_LENGTH_BY_NAME = ();
 $TOTAL_LENGTH_BY_NAME{$_->{name}} = $_ for @TOTAL_LENGTH;
 
 #############################################################################
-# Go thru the body mass regular expressions in array order
+# Parse body mass
 
 our @BODY_MASS = (
     { default_units => '', name => 'total_wt_key',
@@ -188,27 +207,32 @@ $BODY_MASS_BY_NAME{$_->{name}} = $_ for @BODY_MASS;
 
 #############################################################################
 
-sub dwc_sex {
+sub extract_sex {
     my ($row, $col) = @_;
-    if ( $row->{$col} =~ $SEX_KEYED ) {
-        return { key => $+{key}, value => $+{value} };
-    }
-    if ( my @matches = ($row->{$col} =~ /$SEX_UNKEYED/g) ) {
-        return { key => '', value => \@matches };
+    for my $pattern ( @SEX ) {
+        if ( $pattern->{as_array} ) {
+            if ( my @matches = ($row->{$col} =~ /$pattern->{regex}/g) ) {
+                #say $pattern->{name};
+                return { key => '', value => \@matches };
+            }
+        } elsif ( $row->{$col} =~ $pattern->{regex} ) {
+            #say $pattern->{name};
+            return { key => $+{key}, value => $+{value} };
+        }
     }
 }
 
-sub dwc_life_stage {
+sub extract_life_stage {
     my ($row, $col) = @_;
-    if ( $row->{$col} =~ $LIFE_STAGE_KEYED ) {
-        return { key => $+{key}, value => $+{value} };
-    }
-    if ( my @matches = ($row->{$col} =~ $LIFE_STAGE_UNKEYED) ) {
-        return { key => '', value => \@matches };
+    for my $pattern ( @LIFE_STAGE ) {
+        if ( $row->{$col} =~ $pattern->{regex} ) {
+            #say $pattern->{name};
+            return { key => $+{key}, value => $+{value} };
+        }
     }
 }
 
-sub vto_total_length {
+sub extract_total_length {
     my ($row, $col) = @_;
     for my $pattern ( @TOTAL_LENGTH ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
@@ -224,7 +248,7 @@ sub vto_total_length {
     }
 }
 
-sub vto_body_mass {
+sub extract_body_mass {
     my ($row, $col) = @_;
     for my $pattern ( @BODY_MASS ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
