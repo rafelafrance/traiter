@@ -81,5 +81,35 @@ $parsed = extract_life_stage( $test, 'test');
 is($parsed->{key},   'age');
 is($parsed->{value}, 'u ad.');
 
+$test = { test => 't.l.= 2 feet 3.1 - 4.5 inches ' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   't.l.');
+is($parsed->{value}->[0], '2');
+is($parsed->{value}->[1], '3.1 - 4.5');
+is($parsed->{units}->[0], 'feet');
+is($parsed->{units}->[1], 'inches');
+
+$test = { test => '2 ft. 3.1 - 4.5 in. ' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   '');
+is($parsed->{value}->[0], '2');
+is($parsed->{value}->[1], '3.1 - 4.5');
+is($parsed->{units}->[0], 'ft.');
+is($parsed->{units}->[1], 'in.');
+
+$test = { test => 'total length= 2 ft.' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   'total length');
+is($parsed->{value}->[0], '2');
+is($parsed->{units}->[0], 'ft.');
+
+$test = { test => '2 lbs. 3.1 - 4.5 oz ' };
+$parsed = extract_body_mass( $test, 'test');
+is($parsed->{key},   '');
+is($parsed->{value}->[0], '2');
+is($parsed->{value}->[1], '3.1 - 4.5');
+is($parsed->{units}->[0], 'lbs.');
+is($parsed->{units}->[1], 'oz');
+
 done_testing();
 
