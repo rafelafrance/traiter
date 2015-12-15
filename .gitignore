@@ -1,4 +1,3 @@
-vntraits*
 old/*
+data/*
 .ipynb_checkpoints/*
-*.txt
