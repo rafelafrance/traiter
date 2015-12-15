@@ -7,7 +7,39 @@ use Parse qw(
     extract_body_mass
 );
 
-my ($test, $parsed);
+my ($test, $parsed, $name);
+
+$test = { test => '"{"measurements":"308-190-45-20" }"' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   'measurements');
+is($parsed->{value}, '308');
+is($parsed->{units}, 'mm');
+
+$test = { test => '308-190-45-20' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   '');
+is($parsed->{value}, '308');
+is($parsed->{units}, 'mm');
+
+$test = { test => '{"measurements":"143-63-20-17=13 g" }' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   'measurements');
+is($parsed->{value}, '143');
+is($parsed->{units}, 'mm');
+$parsed = extract_body_mass( $test, 'test');
+is($parsed->{key},   'measurements');
+is($parsed->{value}, '13');
+is($parsed->{units}, 'g');
+
+$test = { test => '143-63-20-17=13 g' };
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   '');
+is($parsed->{value}, '143');
+is($parsed->{units}, 'mm');
+$parsed = extract_body_mass( $test, 'test');
+is($parsed->{key},   '');
+is($parsed->{value}, '13');
+is($parsed->{units}, 'g');
 
 $test = { test => 'reproductive data: Testes descended -10x7 mm; sex: male; unformatted measurements: 181-75-21-18=22 g' };
 $parsed = extract_body_mass( $test, 'test');

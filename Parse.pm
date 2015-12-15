@@ -88,14 +88,16 @@ my $DEFINES = qr/
         (?<number>   [\[\(]? \d+ (?: \. \d* )? [\]\)]? [\*]? )
         (?<quantity> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
-        (?<shorthand_sep>   [:=,\/\-\s]+ )
-        (?<shorthand_typos> mesurements | Measurementsnt | et )
+        (?<shorthand_sep>    [:,\/\-\s]+ )
+        (?<wt_shorthand_sep> [=\s]+ )
+        (?<shorthand_typos>  mesurements | Measurementsnt | et )
         (?<all_len_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_last)
                        | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
         (?<all_wt_keys>  (?&total_wt_key)  | (?&other_wt_key) | (?&wt_key_word)
                       |  (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
-        (?<len_shorthand>   (?: (?&shorthand_sep) (?&number) ){4,} )
-        (?<wt_shorthand>    (?: (?&number) (?&shorthand_sep) ){4,} )
+        (?<len_shorthand>    (?: (?&shorthand_sep) (?&number) ){3,} )
+        (?<wt_shorthand>     (?: (?&number) (?&shorthand_sep) ){3,} (?&number) (?&wt_shorthand_sep) )
+        (?<wt_shorthand_req> (?: (?&number) (?&shorthand_sep) ){4,} )
         (?<shorthand_words> on \s* tag
                           | specimens?
                           | catalog
@@ -197,12 +199,12 @@ our @TOTAL_LENGTH = (
                       (?<key> (?&len_key_suffix))
                       \b $DEFINES } },
     { name => 'len_shorthand', default_units => 'mm', compound => 0,
-      regex => qr{ \b (?<key> (?&all_len_keys))? (?&key_end)?
+      regex => qr{ \b (?: (?<key> (?&all_len_keys)) (?&key_end) )?
                       (?<value> (?&number))
                       (?&len_shorthand)
                       \b $DEFINES } },
     { name => 'len_shorthand_euro', default_units => 'mm', compound => 0,
-      regex => qr{ \b (?<key> (?&all_len_keys))? (?&key_end)?
+      regex => qr{ \b (?: (?<key> (?&all_len_keys)) (?&key_end) )?
                       (?<value> (?&number))
                       (?&len_shorthand_euro)
                       \b $DEFINES } },
@@ -253,13 +255,19 @@ our @BODY_MASS = (
                       (?<value> (?&quantity))
                       \b $DEFINES } },
     { name => 'wt_shorthand', default_units => '', compound => 0,
-      regex => qr{ \b (?<key> (?&all_wt_keys))? (?&key_end)?
+      regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))?
                       \b $DEFINES } },
-    { ame => 'wt_shorthand_euro', default_units => '', ncompound => 0,
-      regex => qr{ \b (?<key> (?&all_wt_keys))? (?&key_end)?
+    { name => 'wt_shorthand_req', default_units => '', compound => 0,
+      regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
+                      (?&wt_shorthand_req) \s*
+                      (?<value> (?&number)) \s*
+                      (?<units> (?&wt_units))
+                      \b $DEFINES } },
+    { name => 'wt_shorthand_euro', default_units => '', compound => 0,
+      regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand_euro) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))?
@@ -306,7 +314,7 @@ sub extract_total_length {
     my ($key, $value, $units, $suffix);
     for my $pattern ( @TOTAL_LENGTH ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
-            #say $pattern->{name};
+            # say '************************* ', $pattern->{name};
             if ($pattern->{compound} ) {
                 ($key, $value, $units) = ($+{key}, [$+{value1}, $+{value2}], [$+{units1}, $+{units2}]);
             } else {
@@ -315,7 +323,7 @@ sub extract_total_length {
                 $value //= '';
                 $value =~ s/\s*$//;
             }
-            return { key => $key || '',
+            return { key   => $key || '',
                      value => $value,
                      units => $units || $suffix || $pattern->{default_units} };
         }
@@ -327,7 +335,7 @@ sub extract_body_mass {
     my ($key, $value, $units, $suffix);
     for my $pattern ( @BODY_MASS ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
-            #say $pattern->{name};
+            # say '************************* ', $pattern->{name};
             if ($pattern->{compound} ) {
                 ($key, $value, $units) = ($+{key}, [$+{value1}, $+{value2}], [$+{units1}, $+{units2}]);
             } else {
@@ -336,7 +344,7 @@ sub extract_body_mass {
                 $value //= '';
                 $value =~ s/\s*$//;
             }
-            return { key => $key || '',
+            return { key   => $key || '',
                      value => $value,
                      units => $units || $suffix || $pattern->{default_units} };
         }
