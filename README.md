@@ -6,7 +6,7 @@ Extracting:
 - sex
 - life stage
 - total body length
-- total body weight
+- total body mass
 
 For sex and life stage we need to extract the value retrieved and the where we extracted the value from (CSV column and substring if gotten from an unformatted column cell). For the total body length and weight we need to also extract the units.
 
