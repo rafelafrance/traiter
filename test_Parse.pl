@@ -31,7 +31,7 @@ is($parsed->{key},   'measurements');
 is($parsed->{value}, '13');
 is($parsed->{units}, 'g');
 
-$test = { test => '143-63-20-17=13 g' };
+$test = { test => '143-63-20-17=13' };
 $parsed = extract_total_length( $test, 'test');
 is($parsed->{key},   '');
 is($parsed->{value}, '143');
@@ -39,7 +39,7 @@ is($parsed->{units}, 'mm');
 $parsed = extract_body_mass( $test, 'test');
 is($parsed->{key},   '');
 is($parsed->{value}, '13');
-is($parsed->{units}, 'g');
+is($parsed->{units}, '');
 
 $test = { test => 'reproductive data: Testes descended -10x7 mm; sex: male; unformatted measurements: 181-75-21-18=22 g' };
 $parsed = extract_body_mass( $test, 'test');
