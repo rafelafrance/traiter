@@ -1,7 +1,5 @@
 package Parse;
 
-# NOTE: Ugly code ahead. This is a brutal hack.
-
 use strict;
 use warnings FATAL => 'utf8';
 use feature qw( switch say );
@@ -58,7 +56,7 @@ our @LIFE_STAGE = (
     { name => 'lifestage_with_delimiter',
       regex => qr/ \b (?<key> (?: life \s* stage | age (?: \s* class )? ) )
                       \W+
-                      (?<value> [\w?.]+ (?: \s+ [\w?.]+){0,4} )
+                      (?<value> [\w?.\/]+ (?: \s+ [\w?.\/]+){0,4} )
                       \s* (?: [:;,"] | $ )
                  /},
     { name => 'lifestage_without_delimiter',
@@ -88,16 +86,17 @@ my $DEFINES = qr/
         (?<number>   [\[\(]? \d+ (?: \. \d* )? [\]\)]? [\*]? )
         (?<quantity> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
-        (?<shorthand_sep>    [:,\/\-\s]+ )
-        (?<wt_shorthand_sep> [=\s]+ )
-        (?<shorthand_typos>  mesurements | Measurementsnt | et )
-        (?<all_len_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_last)
+        (?<sep>      [:,\/\-\s] )
+        (?<wt_sep>   [=\s]+ )
+        (?<last_sep> [;,]+ )
+        (?<shorthand_typos>  mesurements | Measurementsnt )
+        (?<all_len_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_ambiguous)
                        | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
         (?<all_wt_keys>  (?&total_wt_key)  | (?&other_wt_key) | (?&wt_key_word)
                       |  (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
-        (?<len_shorthand>    (?: (?&shorthand_sep) (?&number) ){3,} )
-        (?<wt_shorthand>     (?: (?&number) (?&shorthand_sep) ){3,} (?&number) (?&wt_shorthand_sep) )
-        (?<wt_shorthand_req> (?: (?&number) (?&shorthand_sep) ){4,} )
+        (?<len_shorthand>    (?: (?&sep) (?&number) ){3,} )
+        (?<wt_shorthand>     (?: (?&number) (?&sep) ){3,} (?&number) (?&wt_sep) )
+        (?<wt_shorthand_req> (?: (?&number) (?&sep) ){4,} )
         (?<shorthand_words> on \s* tag
                           | specimens?
                           | catalog
@@ -105,11 +104,11 @@ my $DEFINES = qr/
                           | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
                           | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
         )
-        (?<len_shorthand_euro> hb (?: (?&shorthand_sep) (?&number) [a-z]* ){4,} )
-        (?<wt_shorthand_euro>  (?&number) hb (?: (?&shorthand_sep) (?&number) [a-z]* ){4,} = )
+        (?<len_shorthand_euro> hb (?: (?&sep) (?&number) [a-z]* ){4,} )
+        (?<wt_shorthand_euro>  (?&number) hb (?: (?&sep) (?&number) [a-z]* ){4,} = )
 
-        (?<key_units_req> measurements? )
-        (?<key_end>       \s* [^\w.]* \s* )
+        (?<key_units_req> measurements? | body | total )
+        (?<key_end>       \s* [^\w.\[\(]* \s* )
         (?<dash>          [\s\-]? )
         (?<dot>           \.? )
         (?<open>          [\(\[\{]? )
@@ -125,12 +124,12 @@ my $DEFINES = qr/
         )
         (?<other_len_key> head  (?&dash) body (?&dash) length (?&dash) in (?&dash) millimeters
                         | (?: fork | mean | body ) (?&dash) lengths?
-                        | t [o.]? l (?&dot)
+                        | t [o.]? l (?&dot) _?
         )
-        (?<len_key_last>   (?<![\-.] ) \b (?: lengths? | tag ) \b )
-        (?<len_key_abbrev> t (?&dot) o? l (?&dot) )
-        (?<len_key_suffix> (?: in \s* )? (?&len_key_abbrev) )
-        (?<len_in_phrase>  total \s+ lengths? | snout \s+ vent \s+ lengths? )
+        (?<len_key_ambiguous> lengths? | tag )
+        (?<len_key_abbrev>    t (?&dot) o? l (?&dot) )
+        (?<len_key_suffix>    (?: in \s* )? (?&len_key_abbrev) )
+        (?<len_in_phrase>     (?: total \s+ length | snout \s+ vent \s+ length ) s? )
 
         (?<len_units>        (?&len_units_word) | (?&len_units_abbrev) )
         (?<len_units_word>   (?: meter | millimeter | centimeter | foot | feet | inch e? ) s? )
@@ -146,7 +145,7 @@ my $DEFINES = qr/
         (?<wt_in_phrase>    total \s+ (?&wt_key_word) )
         (?<wt_units>        (?&wt_units_word) | (?&wt_units_abbrev) )
         (?<wt_units_word>   (?: gram | milligram | kilogram | pound | ounce ) s? )
-        (?<wt_units_abbrev> (?: m (?&dot) g | k (?&dot) g | gm? | lb | oz ) (?&dot) s? )
+        (?<wt_units_abbrev> (?: m (?&dot) g | k (?&dot) g | g[mr]? | lb | oz ) s? (?&dot) )
         (?<wt_pound>        (?: pound | lb ) s? (?&dot) )
         (?<wt_ounce>        (?: ounce | oz ) s? (?&dot))
     )
@@ -167,52 +166,53 @@ our @TOTAL_LENGTH = (
       regex => qr{ \b (?<key> (?&total_len_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
-                      \b $DEFINES } },
-    { name => 'svl_len_key', default_units => '', compound => 0,
-      regex => qr{ \b (?<key> (?&svl_len_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
-                      (?<units> (?&len_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'other_len_key', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&other_len_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'key_units_req', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'len_in_phrase', default_units => '', compound => 0,
-      regex => qr/ \b (?<key> (?&len_in_phrase))  \D{,20}
+      regex => qr/ \b (?<key> (?&len_in_phrase)) \D{1,32}
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
-                      \b $DEFINES / },
+                      $DEFINES / },
     { name => 'len_key_abbrev', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&len_key_abbrev)) \s*
                       (?&open) \s* (?<units> (?&len_units)) \s* (?&close) \s*
                       (?<value> (?&quantity))
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'len_key_suffix', default_units => '', compound => 0,
       regex => qr{ \b (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))? \s*
                       (?<key> (?&len_key_suffix))
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'len_shorthand', default_units => 'mm', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_len_keys)) (?&key_end) )?
                       (?<value> (?&number))
                       (?&len_shorthand)
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'len_shorthand_euro', default_units => 'mm', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_len_keys)) (?&key_end) )?
                       (?<value> (?&number))
                       (?&len_shorthand_euro)
-                      \b $DEFINES } },
-    { name => 'len_key_last', default_units => '', compound => 0,
-      regex => qr{ \b (?<key> (?&len_key_last)) (?&key_end)
+                      $DEFINES } },
+    { name => 'len_key_ambiguous', default_units => '', compound => 0,
+      regex => qr{ (?: ^ | (?&last_sep) ) \s*
+                   (?<key> (?&len_key_ambiguous)) (?&key_end)
+                   (?<value> (?&quantity)) \s*
+                   (?<units> (?&len_units))?
+                   $DEFINES } },
+    { name => 'svl_len_key', default_units => '', compound => 0,
+      regex => qr{ \b (?<key> (?&svl_len_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
 );
 
 our %TOTAL_LENGTH_BY_NAME = ();
@@ -233,50 +233,55 @@ our @BODY_MASS = (
       regex => qr{ \b (?<key> (?&total_wt_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'other_wt_key', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&other_wt_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'key_units_req', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'wt_in_phrase', default_units => '', compound => 0,
-      regex => qr{ \b (?<key> (?&wt_in_phrase)) \D{,20}
+      regex => qr{ \b (?<key> (?&wt_in_phrase)) \D{1,32}
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'wt_key_word', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&wt_key_word)) \s*
                       (?&open) \s* (?<units> (?&wt_units)) \s* (?&close) \s*
                       (?<value> (?&quantity))
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'wt_shorthand', default_units => '', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'wt_shorthand_req', default_units => '', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand_req) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))
-                      \b $DEFINES } },
+                      $DEFINES } },
     { name => 'wt_shorthand_euro', default_units => '', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand_euro) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))?
-                      \b $DEFINES } },
-    { name => 'wt_key_last', default_units => '', compound => 0,
-      regex => qr{ \b (?<key> (?&wt_key_word)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
-                      (?<units> (?&wt_units))?
-                      \b $DEFINES } },
+                      $DEFINES } },
+    { name => 'wt_fa', default_units => '', compound => 0,
+      regex => qr{ fa \d* - 
+                   (?<value> (?&number)) \s*
+                   (?<units> (?&wt_units))?
+                   $DEFINES } },
+    { name => 'wt_key_word', default_units => '', compound => 0,
+      regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
+                   (?<value> (?&quantity)) \s*
+                   (?<units> (?&wt_units))?
+                   $DEFINES } },
 );
 
 our %BODY_MASS_BY_NAME = ();
@@ -294,7 +299,9 @@ sub extract_sex {
             }
         } elsif ( $row->{$col} =~ $pattern->{regex} ) {
             #say $pattern->{name};
-            return { key => $+{key}, value => $+{value} };
+            my ($key, $value) = ($+{key}, $+{value});
+            $value = '' if $value =~ /^ (?: and | was | is ) $/;
+            return { key => $key, value => $value } if $value;
         }
     }
 }
@@ -304,7 +311,9 @@ sub extract_life_stage {
     for my $pattern ( @LIFE_STAGE ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
             #say $pattern->{name};
-            return { key => $+{key}, value => $+{value} };
+            my ($key, $value) = ($+{key}, $+{value});
+            $value = '' if $value =~ /^ (?: determination ) /;
+            return { key => $key, value => $value } if $value;
         }
     }
 }
