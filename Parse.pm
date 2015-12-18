@@ -182,6 +182,12 @@ our @TOTAL_LENGTH = (
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES / },
+    { name => 'len_key_ambiguous_units', default_units => '', compound => 0,
+      regex => qr{ (?: ^ | (?&last_sep) ) \s*
+                   (?<key> (?&len_key_ambiguous)) (?&key_end)
+                   (?<value> (?&quantity)) \s*
+                   (?<units> (?&len_units))
+                   $DEFINES } },
     { name => 'len_key_abbrev', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&len_key_abbrev)) \s*
                       (?&open) \s* (?<units> (?&len_units)) \s* (?&close) \s*
@@ -254,6 +260,11 @@ our @BODY_MASS = (
                       (?&open) \s* (?<units> (?&wt_units)) \s* (?&close) \s*
                       (?<value> (?&quantity))
                       $DEFINES } },
+    { name => 'wt_key_word_req', default_units => '', compound => 0,
+      regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
+                   (?<value> (?&quantity)) \s*
+                   (?<units> (?&wt_units))
+                   $DEFINES } },
     { name => 'wt_shorthand', default_units => '', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand) \s*
@@ -277,7 +288,7 @@ our @BODY_MASS = (
                    (?<value> (?&number)) \s*
                    (?<units> (?&wt_units))?
                    $DEFINES } },
-    { name => 'wt_key_word', default_units => '', compound => 0,
+    { name => 'wt_key_ambiguous', default_units => '', compound => 0,
       regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
                    (?<value> (?&quantity)) \s*
                    (?<units> (?&wt_units))?

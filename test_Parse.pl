@@ -285,6 +285,18 @@ $parsed = extract_life_stage( $test, 'test');
 is($parsed->{key},   'age class', $name);
 is($parsed->{value}, 'adult/juvenile', $name);
 
+($name, $test) = setup( 'weight=5.4 g; unformatted measurements=77-30-7-12=5.4' );
+$parsed = extract_body_mass( $test, 'test');
+is($parsed->{key},   'weight', $name);
+is($parsed->{value}, '5.4', $name);
+is($parsed->{units}, 'g', $name);
+
+($name, $test) = setup( 'unformatted measurements=77-30-7-12=5.4; weight=5.4;' );
+$parsed = extract_body_mass( $test, 'test');
+is($parsed->{key},   'measurements', $name);
+is($parsed->{value}, '5.4', $name);
+is($parsed->{units}, '', $name);
+
 
 done_testing();
 
