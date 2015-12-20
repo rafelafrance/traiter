@@ -138,8 +138,8 @@ is($parsed->{units}->[1], 'in.', $name);
 ($name, $test) = setup( 'total length= 2 ft.' );
 $parsed = extract_total_length( $test, 'test');
 is($parsed->{key},   'total length', $name);
-is($parsed->{value}->[0], '2', $name);
-is($parsed->{units}->[0], 'ft.', $name);
+is($parsed->{value}, '2', $name);
+is($parsed->{units}, 'ft.', $name);
 
 ($name, $test) = setup( '2 lbs. 3.1 - 4.5 oz ' );
 $parsed = extract_body_mass( $test, 'test');
@@ -295,6 +295,24 @@ is($parsed->{units}, 'g', $name);
 $parsed = extract_body_mass( $test, 'test');
 is($parsed->{key},   'measurements', $name);
 is($parsed->{value}, '5.4', $name);
+is($parsed->{units}, '', $name);
+
+($name, $test) = setup( '{"time collected":"0712-0900", "length":"12.0" }' );
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   'length', $name);
+is($parsed->{value}, '12.0', $name);
+is($parsed->{units}, '', $name);
+
+($name, $test) = setup( '{"length":"20-29" }' );
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   'length', $name);
+is($parsed->{value}, '20-29', $name);
+is($parsed->{units}, '', $name);
+
+($name, $test) = setup( '{"time collected":"1030", "water depth":"1-8", "bottom":"abrupt lava cliff dropping off to sand at 45 ft.", "length":"119-137" }' );
+$parsed = extract_total_length( $test, 'test');
+is($parsed->{key},   'length', $name);
+is($parsed->{value}, '119-137', $name);
 is($parsed->{units}, '', $name);
 
 

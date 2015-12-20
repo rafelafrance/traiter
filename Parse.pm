@@ -88,7 +88,7 @@ my $DEFINES = qr/
 
         (?<sep>      [:,\/\-\s] )
         (?<wt_sep>   [=\s]+ )
-        (?<last_sep> [;,]+ )
+        (?<no_word>  (?: ^ | [;,:\{\[\(]+ ) \s* ["']? )
         (?<shorthand_typos>  mesurements | Measurementsnt )
         (?<all_len_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_ambiguous)
                        | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
@@ -159,8 +159,8 @@ our @TOTAL_LENGTH = (
       regex => qr{ \b (?<key> (?&all_len_keys))? (?&key_end)?
                       (?<value1> (?&quantity))    \s*
                       (?<units1> (?&len_foot))    \s*
-                      (?<value2> (?&quantity))?   \s*
-                      (?<units2> (?&len_inch))?
+                      (?<value2> (?&quantity))    \s*
+                      (?<units2> (?&len_inch)) 
                       $DEFINES } },
     { name => 'total_len_key', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_len_key)) (?&key_end)
@@ -183,7 +183,7 @@ our @TOTAL_LENGTH = (
                       (?<units> (?&len_units))?
                       $DEFINES / },
     { name => 'len_key_ambiguous_units', default_units => '', compound => 0,
-      regex => qr{ (?: ^ | (?&last_sep) ) \s*
+      regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
                    (?<value> (?&quantity)) \s*
                    (?<units> (?&len_units))
@@ -209,10 +209,9 @@ our @TOTAL_LENGTH = (
                       (?&len_shorthand_euro)
                       $DEFINES } },
     { name => 'len_key_ambiguous', default_units => '', compound => 0,
-      regex => qr{ (?: ^ | (?&last_sep) ) \s*
+      regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
-                   (?<value> (?&quantity)) \s*
-                   (?<units> (?&len_units))?
+                   (?<value> (?&quantity))
                    $DEFINES } },
     { name => 'svl_len_key', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&svl_len_key)) (?&key_end)
@@ -232,8 +231,8 @@ our @BODY_MASS = (
       regex => qr{ \b (?<key> (?&all_wt_keys))? (?&key_end)?
                       (?<value1> (?&quantity))  \s*
                       (?<units1> (?&wt_pound))  \s*
-                      (?<value2> (?&quantity))? \s*
-                      (?<units2> (?&wt_ounce))?
+                      (?<value2> (?&quantity))  \s*
+                      (?<units2> (?&wt_ounce)) 
                       $DEFINES } },
     { name => 'total_wt_key', default_units => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_wt_key)) (?&key_end)
