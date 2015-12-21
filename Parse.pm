@@ -88,7 +88,7 @@ my $DEFINES = qr/
 
         (?<sep>      [:,\/\-\s] )
         (?<wt_sep>   [=\s]+ )
-        (?<no_word>  (?: ^ | [;,:\{\[\(]+ ) \s* ["']? )
+        (?<no_word>  (?: ^ | [;,:"'\{\[\(]+ ) \s* )
         (?<shorthand_typos>  mesurements | Measurementsnt )
         (?<all_len_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_ambiguous)
                        | (?&key_units_req) | (?&shorthand_words) | (?&shorthand_typos))
