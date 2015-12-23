@@ -155,65 +155,65 @@ my $DEFINES = qr/
 # Parse total length
 
 our @TOTAL_LENGTH = (
-    { name => 'en_len', default_units => '', compound => 2,
+    { name => 'en_len', default_units => '', default_key => '_english_', compound => 2,
       regex => qr{ \b (?<key> (?&all_len_keys))? (?&key_end)?
                       (?<value1> (?&quantity))    \s*
                       (?<units1> (?&len_foot))    \s*
                       (?<value2> (?&quantity))    \s*
                       (?<units2> (?&len_inch)) 
                       $DEFINES } },
-    { name => 'total_len_key', default_units => '', compound => 0,
+    { name => 'total_len_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_len_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES } },
-    { name => 'other_len_key', default_units => '', compound => 0,
+    { name => 'other_len_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&other_len_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES } },
-    { name => 'key_units_req', default_units => '', compound => 0,
+    { name => 'key_units_req', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))
                       $DEFINES } },
-    { name => 'len_in_phrase', default_units => '', compound => 0,
+    { name => 'len_in_phrase', default_units => '', default_key => '', compound => 0,
       regex => qr/ \b (?<key> (?&len_in_phrase)) \D{1,32}
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES / },
-    { name => 'len_key_ambiguous_units', default_units => '', compound => 0,
+    { name => 'len_key_ambiguous_units', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
                    (?<value> (?&quantity)) \s*
                    (?<units> (?&len_units))
                    $DEFINES } },
-    { name => 'len_key_abbrev', default_units => '', compound => 0,
+    { name => 'len_key_abbrev', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&len_key_abbrev)) \s*
                       (?&open) \s* (?<units> (?&len_units)) \s* (?&close) \s*
                       (?<value> (?&quantity))
                       $DEFINES } },
-    { name => 'len_key_suffix', default_units => '', compound => 0,
+    { name => 'len_key_suffix', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))? \s*
                       (?<key> (?&len_key_suffix))
                       $DEFINES } },
-    { name => 'len_shorthand', default_units => 'mm', compound => 0,
+    { name => 'len_shorthand', default_units => '_mm_', default_key => '_shorthand_', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_len_keys)) (?&key_end) )?
                       (?<value> (?&number))
                       (?&len_shorthand)
                       $DEFINES } },
-    { name => 'len_shorthand_euro', default_units => 'mm', compound => 0,
+    { name => 'len_shorthand_euro', default_units => '_mm_', default_key => '_shorthand_', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_len_keys)) (?&key_end) )?
                       (?<value> (?&number))
                       (?&len_shorthand_euro)
                       $DEFINES } },
-    { name => 'len_key_ambiguous', default_units => '', compound => 0,
+    { name => 'len_key_ambiguous', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
                    (?<value> (?&quantity))
                    $DEFINES } },
-    { name => 'svl_len_key', default_units => '', compound => 0,
+    { name => 'svl_len_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&svl_len_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&len_units))?
@@ -227,67 +227,67 @@ $TOTAL_LENGTH_BY_NAME{$_->{name}} = $_ for @TOTAL_LENGTH;
 # Parse body mass
 
 our @BODY_MASS = (
-    { name => 'en_wt', default_units => '', compound => 2,
+    { name => 'en_wt', default_units => '', default_key => '_english_', compound => 2,
       regex => qr{ \b (?<key> (?&all_wt_keys))? (?&key_end)?
                       (?<value1> (?&quantity))  \s*
                       (?<units1> (?&wt_pound))  \s*
                       (?<value2> (?&quantity))  \s*
                       (?<units2> (?&wt_ounce)) 
                       $DEFINES } },
-    { name => 'total_wt_key', default_units => '', compound => 0,
+    { name => 'total_wt_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_wt_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
-    { name => 'other_wt_key', default_units => '', compound => 0,
+    { name => 'other_wt_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&other_wt_key)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
-    { name => 'key_units_req', default_units => '', compound => 0,
+    { name => 'key_units_req', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end)
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))
                       $DEFINES } },
-    { name => 'wt_in_phrase', default_units => '', compound => 0,
+    { name => 'wt_in_phrase', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&wt_in_phrase)) \D{1,32}
                       (?<value> (?&quantity)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
-    { name => 'wt_key_word', default_units => '', compound => 0,
+    { name => 'wt_key_word', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&wt_key_word)) \s*
                       (?&open) \s* (?<units> (?&wt_units)) \s* (?&close) \s*
                       (?<value> (?&quantity))
                       $DEFINES } },
-    { name => 'wt_key_word_req', default_units => '', compound => 0,
+    { name => 'wt_key_word_req', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
                    (?<value> (?&quantity)) \s*
                    (?<units> (?&wt_units))
                    $DEFINES } },
-    { name => 'wt_shorthand', default_units => '', compound => 0,
+    { name => 'wt_shorthand', default_units => '', default_key => '_shorthand_', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
-    { name => 'wt_shorthand_req', default_units => '', compound => 0,
+    { name => 'wt_shorthand_req', default_units => '', default_key => '_shorthand_', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand_req) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))
                       $DEFINES } },
-    { name => 'wt_shorthand_euro', default_units => '', compound => 0,
+    { name => 'wt_shorthand_euro', default_units => '', default_key => '_shorthand_', compound => 0,
       regex => qr{ \b (?: (?<key> (?&all_wt_keys)) (?&key_end) )?
                       (?&wt_shorthand_euro) \s*
                       (?<value> (?&number)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
-    { name => 'wt_fa', default_units => '', compound => 0,
+    { name => 'wt_fa', default_units => '', default_key => '_shorthand_', compound => 0,
       regex => qr{ fa \d* - 
                    (?<value> (?&number)) \s*
                    (?<units> (?&wt_units))?
                    $DEFINES } },
-    { name => 'wt_key_ambiguous', default_units => '', compound => 0,
+    { name => 'wt_key_ambiguous', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
                    (?<value> (?&quantity)) \s*
                    (?<units> (?&wt_units))?
@@ -333,7 +333,7 @@ sub extract_total_length {
     my ($key, $value, $units, $suffix);
     for my $pattern ( @TOTAL_LENGTH ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
-            # say '************************* ', $pattern->{name};
+            say '************************* ', $pattern->{name};
             if ($pattern->{compound} ) {
                 ($key, $value, $units) = ($+{key}, [$+{value1}, $+{value2}], [$+{units1}, $+{units2}]);
             } else {
@@ -342,7 +342,7 @@ sub extract_total_length {
                 $value //= '';
                 $value =~ s/\s*$//;
             }
-            return { key   => $key || '',
+            return { key   => $key || $pattern->{default_key},
                      value => $value,
                      units => $units || $suffix || $pattern->{default_units} };
         }
@@ -363,7 +363,7 @@ sub extract_body_mass {
                 $value //= '';
                 $value =~ s/\s*$//;
             }
-            return { key   => $key || '',
+            return { key   => $key || $pattern->{default_key},
                      value => $value,
                      units => $units || $suffix || $pattern->{default_units} };
         }

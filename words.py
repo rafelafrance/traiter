@@ -22,8 +22,8 @@ def main():
     with open(in_name, 'rb') as in_file:
         reader = csv.reader(in_file)
         row = reader.next()   # Header row
-        for raw_row in reader:
-            row = Row._make(raw_row)
+        for lrow in reader:
+            row = Row._make(lrow)
             words = punct.split(row.dynamicproperties)
             words.extend(punct.split(row.occurrenceremarks))
             words.extend(punct.split(row.fieldnotes))
