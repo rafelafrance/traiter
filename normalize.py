@@ -265,6 +265,11 @@ MASS_UNITS = {
 }
 
 
+def to_number(value):
+    value = regex.sub(r'[^\d\.]', '', value)
+    return round(float(value), 3)
+
+
 def normalize(in_file_name, out_file_name):
     with open(in_file_name, 'rb') as in_file, open(out_file_name, 'w') as out_file:
         reader = csv.reader(in_file)
@@ -288,14 +293,19 @@ def normalize(in_file_name, out_file_name):
                         continue
                     label = LEN_KEY[obj['key']]
                     if isinstance(obj['units'], list):
-                        units  = ' '.join(obj[units])
-                        value  = obj['value'][0] * LEN_UNITS[units][0]
-                        value += obj['value'][1] * LEN_UNITS[units][1]
+                        units  = ' '.join(obj['units'])
+                        value  = to_number(obj['value'][0]) * LEN_UNITS[units][0]
+                        value += to_number(obj['value'][1]) * LEN_UNITS[units][1]
+                    elif regex.search(r'- | to',
+                                      obj['value'],
+                                      regex.IGNORECASE | regex.VERBOSE):
+                        values = regex.split(r'- | to',
+                                             obj['value'],
+                                             flags=regex.IGNORECASE | regex.VERBOSE)
+                        value = (to_number(values[0]) * LEN_UNITS[obj['units']],
+                                 to_number(values[1]) * LEN_UNITS[obj['units']])
                     else:
-                        print obj['value']
-                        print obj['units']
-                        print LEN_UNITS[obj['units']]
-                        value = obj['value'] * LEN_UNITS[obj['units']]
+                        value = to_number(obj['value']) * LEN_UNITS[obj['units']]
                     norm_len.append((label, value))
 
             if weights:
@@ -306,11 +316,17 @@ def normalize(in_file_name, out_file_name):
                         continue
                     label = MASS_KEY[obj['key']]
                     if isinstance(obj['units'], list):
-                        units  = ' '.join(obj[units])
-                        value  = obj['value'][0] * MASS_UNITS[units][0]
-                        value += obj['value'][1] * MASS_UNITS[units][1]
+                        units  = ' '.join(obj['units'])
+                        value  = to_number(obj['value'][0]) * MASS_UNITS[units][0]
+                        value += to_number(obj['value'][1]) * MASS_UNITS[units][1]
+                    elif regex.search(r'- | to', obj['value'], regex.IGNORECASE | regex.VERBOSE):
+                        values = regex.split(r'- | to',
+                                             obj['value'],
+                                             flags=regex.IGNORECASE | regex.VERBOSE)
+                        value = (to_number(values[0]) * MASS_UNITS[obj['units']],
+                                 to_number(values[1]) * MASS_UNITS[obj['units']])
                     else:
-                        value = obj['value'] * MASS_UNITS[obj['units']]
+                        value = to_number(obj['value']) * MASS_UNITS[obj['units']]
                     norm_wt.append((label, value))
 
             row.extend([json.dumps(norm_len), json.dumps(norm_wt)])

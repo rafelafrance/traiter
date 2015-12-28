@@ -87,7 +87,7 @@ my $DEFINES = qr/
         (?<quantity> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
         (?<sep>      [:,\/\-\s] )
-        (?<wt_sep>   [=\s]+ )
+        (?<wt_sep>   [=\s\-]+ )
         (?<no_word>  (?: ^ | [;,:\{\[\(]+ ) \s* ["']? )
         (?<shorthand_typos>  mesurements | Measurementsnt )
         (?<all_len_keys> (?&total_len_key) | (?&svl_len_key) | (?&other_len_key) | (?&len_key_ambiguous)
@@ -160,11 +160,11 @@ our @TOTAL_LENGTH = (
                       (?<value1> (?&quantity))    \s*
                       (?<units1> (?&len_foot))    \s*
                       (?<value2> (?&quantity))    \s*
-                      (?<units2> (?&len_inch)) 
+                      (?<units2> (?&len_inch))
                       $DEFINES } },
-    { name => 'total_len_key', default_units => '', default_key => '', compound => 0,
+    { name => 'total_len_key_num', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_len_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&number)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES } },
     { name => 'other_len_key', default_units => '', default_key => '', compound => 0,
@@ -208,6 +208,11 @@ our @TOTAL_LENGTH = (
                       (?<value> (?&number))
                       (?&len_shorthand_euro)
                       $DEFINES } },
+    { name => 'total_len_key', default_units => '', default_key => '', compound => 0,
+      regex => qr{ \b (?<key> (?&total_len_key)) (?&key_end)
+                      (?<value> (?&quantity)) \s*
+                      (?<units> (?&len_units))?
+                      $DEFINES } },
     { name => 'len_key_ambiguous', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
@@ -232,7 +237,7 @@ our @BODY_MASS = (
                       (?<value1> (?&quantity))  \s*
                       (?<units1> (?&wt_pound))  \s*
                       (?<value2> (?&quantity))  \s*
-                      (?<units2> (?&wt_ounce)) 
+                      (?<units2> (?&wt_ounce))
                       $DEFINES } },
     { name => 'total_wt_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_wt_key)) (?&key_end)
@@ -283,7 +288,7 @@ our @BODY_MASS = (
                       (?<units> (?&wt_units))?
                       $DEFINES } },
     { name => 'wt_fa', default_units => '', default_key => '_shorthand_', compound => 0,
-      regex => qr{ fa \d* - 
+      regex => qr{ fa \d* -
                    (?<value> (?&number)) \s*
                    (?<units> (?&wt_units))?
                    $DEFINES } },
@@ -333,7 +338,7 @@ sub extract_total_length {
     my ($key, $value, $units, $suffix);
     for my $pattern ( @TOTAL_LENGTH ) {
         if ( $row->{$col} =~ $pattern->{regex} ) {
-            say '************************* ', $pattern->{name};
+            # say '************************* ', $pattern->{name};
             if ($pattern->{compound} ) {
                 ($key, $value, $units) = ($+{key}, [$+{value1}, $+{value2}], [$+{units1}, $+{units2}]);
             } else {

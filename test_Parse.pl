@@ -321,7 +321,7 @@ is($parsed->{key},   'totalLengthInMM');
 is($parsed->{value}, '270');
 is($parsed->{units}, 'MM');
 $parsed = extract_body_mass( $test, 'test');
-is($parsed->{key},   'totalLengthInMM');
+is($parsed->{key},   '_shorthand_');
 is($parsed->{value}, '31');
 is($parsed->{units}, '');
 
