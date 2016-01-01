@@ -19,17 +19,6 @@ our @EXPORT = qw(
     extract_body_mass
 );
 
-our @EXPORT_OK = qw(
-    @SEX
-    %SEX_BY_NAME
-    @LIFE_STAGE
-    %LIFE_STAGE_BY_NAME
-    @TOTAL_LENGTH
-    %TOTAL_LENGTH_BY_NAME
-    @BODY_MASS
-    %BODY_MASS_BY_NAME
-);
-
 #############################################################################
 # Parse sex
 
@@ -43,11 +32,8 @@ our @SEX = (
     { name => 'sex_without_delimiter', as_array => 0,
       regex => qr{ \b (?<key> sex) \W+ (?<value> \w+ ) }},
     { name => 'sex_unkeyed', as_array => 1,
-      regex => qr{ \b (?<value> (?: males? | females? ) (?: \s* \? ) ) \b }},
+      regex => qr{ \b (?<value> (?: males? | females? ) (?: \s* \? )? ) \b }},
 );
-
-our %SEX_BY_NAME = ();
-$SEX_BY_NAME{$_->{name}} = $_ for @SEX;
 
 #############################################################################
 # Parse life stage
@@ -75,16 +61,13 @@ our @LIFE_STAGE = (
                  }},
 );
 
-our %LIFE_STAGE_BY_NAME = ();
-$LIFE_STAGE_BY_NAME{$_->{name}} = $_ for @LIFE_STAGE;
-
 #############################################################################
 # Common regular subexpressions for parsing both total length and body mass
 
 my $DEFINES = qr/
     (?(DEFINE)
         (?<number>   [\[\(]? \d+ (?: \. \d* )? [\]\)]? [\*]? )
-        (?<quantity> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
+        (?<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
         (?<sep>      [:,\/\-\s] )
         (?<wt_sep>   [=\s\-]+ )
@@ -157,9 +140,9 @@ my $DEFINES = qr/
 our @TOTAL_LENGTH = (
     { name => 'en_len', default_units => '', default_key => '_english_', compound => 2,
       regex => qr{ \b (?<key> (?&all_len_keys))? (?&key_end)?
-                      (?<value1> (?&quantity))    \s*
-                      (?<units1> (?&len_foot))    \s*
-                      (?<value2> (?&quantity))    \s*
+                      (?<value1> (?&range))    \s*
+                      (?<units1> (?&len_foot)) \s*
+                      (?<value2> (?&range))    \s*
                       (?<units2> (?&len_inch))
                       $DEFINES } },
     { name => 'total_len_key_num', default_units => '', default_key => '', compound => 0,
@@ -169,32 +152,32 @@ our @TOTAL_LENGTH = (
                       $DEFINES } },
     { name => 'other_len_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&other_len_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES } },
     { name => 'key_units_req', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&len_units))
                       $DEFINES } },
     { name => 'len_in_phrase', default_units => '', default_key => '', compound => 0,
       regex => qr/ \b (?<key> (?&len_in_phrase)) \D{1,32}
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES / },
     { name => 'len_key_ambiguous_units', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
-                   (?<value> (?&quantity)) \s*
+                   (?<value> (?&range)) \s*
                    (?<units> (?&len_units))
                    $DEFINES } },
     { name => 'len_key_abbrev', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&len_key_abbrev)) \s*
                       (?&open) \s* (?<units> (?&len_units)) \s* (?&close) \s*
-                      (?<value> (?&quantity))
+                      (?<value> (?&range))
                       $DEFINES } },
     { name => 'len_key_suffix', default_units => '', default_key => '', compound => 0,
-      regex => qr{ \b (?<value> (?&quantity)) \s*
+      regex => qr{ \b (?<value> (?&range)) \s*
                       (?<units> (?&len_units))? \s*
                       (?<key> (?&len_key_suffix))
                       $DEFINES } },
@@ -210,23 +193,20 @@ our @TOTAL_LENGTH = (
                       $DEFINES } },
     { name => 'total_len_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_len_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES } },
     { name => 'len_key_ambiguous', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?&no_word)
                    (?<key> (?&len_key_ambiguous)) (?&key_end)
-                   (?<value> (?&quantity))
+                   (?<value> (?&range))
                    $DEFINES } },
     { name => 'svl_len_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&svl_len_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&len_units))?
                       $DEFINES } },
 );
-
-our %TOTAL_LENGTH_BY_NAME = ();
-$TOTAL_LENGTH_BY_NAME{$_->{name}} = $_ for @TOTAL_LENGTH;
 
 #############################################################################
 # Parse body mass
@@ -234,39 +214,39 @@ $TOTAL_LENGTH_BY_NAME{$_->{name}} = $_ for @TOTAL_LENGTH;
 our @BODY_MASS = (
     { name => 'en_wt', default_units => '', default_key => '_english_', compound => 2,
       regex => qr{ \b (?<key> (?&all_wt_keys))? (?&key_end)?
-                      (?<value1> (?&quantity))  \s*
+                      (?<value1> (?&range))  \s*
                       (?<units1> (?&wt_pound))  \s*
-                      (?<value2> (?&quantity))  \s*
+                      (?<value2> (?&range))  \s*
                       (?<units2> (?&wt_ounce))
                       $DEFINES } },
     { name => 'total_wt_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&total_wt_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
     { name => 'other_wt_key', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&other_wt_key)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
     { name => 'key_units_req', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&key_units_req)) (?&key_end)
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&wt_units))
                       $DEFINES } },
     { name => 'wt_in_phrase', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&wt_in_phrase)) \D{1,32}
-                      (?<value> (?&quantity)) \s*
+                      (?<value> (?&range)) \s*
                       (?<units> (?&wt_units))?
                       $DEFINES } },
     { name => 'wt_key_word', default_units => '', default_key => '', compound => 0,
       regex => qr{ \b (?<key> (?&wt_key_word)) \s*
                       (?&open) \s* (?<units> (?&wt_units)) \s* (?&close) \s*
-                      (?<value> (?&quantity))
+                      (?<value> (?&range))
                       $DEFINES } },
     { name => 'wt_key_word_req', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
-                   (?<value> (?&quantity)) \s*
+                   (?<value> (?&range)) \s*
                    (?<units> (?&wt_units))
                    $DEFINES } },
     { name => 'wt_shorthand', default_units => '', default_key => '_shorthand_', compound => 0,
@@ -294,13 +274,10 @@ our @BODY_MASS = (
                    $DEFINES } },
     { name => 'wt_key_ambiguous', default_units => '', default_key => '', compound => 0,
       regex => qr{ (?<key> (?&wt_key_word)) (?&key_end)
-                   (?<value> (?&quantity)) \s*
+                   (?<value> (?&range)) \s*
                    (?<units> (?&wt_units))?
                    $DEFINES } },
 );
-
-our %BODY_MASS_BY_NAME = ();
-$BODY_MASS_BY_NAME{$_->{name}} = $_ for @BODY_MASS;
 
 #############################################################################
 
