@@ -3,3 +3,4 @@ data/*
 documents/*
 .ipynb_checkpoints/*
 parsers/.ipynb_checkpoints/*
+**/__pycache__/**
