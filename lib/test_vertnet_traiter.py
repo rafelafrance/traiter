@@ -1,0 +1,4 @@
+from tests.test_sex_parser import TestSexParser
+from tests.test_life_stage_parser import TestLifeStageParser
+from tests.test_total_length_parser import TestTotalLengthParser
+from tests.test_body_mass_parser import TestBodyMassParser
