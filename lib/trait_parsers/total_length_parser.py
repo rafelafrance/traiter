@@ -5,20 +5,22 @@ from trait_parsers.trait_parser import TraitParser
 class TotalLengthParser(TraitParser):
 
     def __init__(self):
-        self.normalize = True
-        self._battery(self._common_patterns())
+        self.default_units = 'mm'
+        self.battery = self._battery(self._common_patterns())
+        self.key_conversions = self._key_conversions()
+        self.unit_conversions = self._unit_conversions()
 
-    def success(self, value):
-        return value
+    def success(self, result):
+        return {'hasLength': 1, 'lengthInMM': result['value'], 'wereLengthUnitsInferred': result['is_inferred']}
 
     def fail(self):
         return {'hasLength': 0, 'lengthInMM': 0, 'wereLengthUnitsInferred': 0}
 
     def _battery(self, common_patterns):
-        self.battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> mm | millimeters ) $ ''')
+        battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> mm | millimeters ) $ ''')
 
         # Look for a pattern like: total length: 4 ft 8 in
-        self.battery.append(
+        battery.append(
             'en_len',
             common_patterns + r'''
                 \b (?P<key> (?&all_len_keys))? (?&key_end)?
@@ -33,7 +35,7 @@ class TotalLengthParser(TraitParser):
 
         # Look for total key, number (not a range) and optional units
         # Like: total length = 10.5 mm
-        self.battery.append(
+        battery.append(
             'total_len_key_num',
             common_patterns + r'''
                 \b (?P<key> (?&total_len_key)) (?&key_end)
@@ -44,7 +46,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # Look for these secondary length keys next but allow a range
-        self.battery.append(
+        battery.append(
             'other_len_key',
             common_patterns + r'''
                 \b (?P<key>   (?&other_len_key)) (?&key_end)
@@ -54,7 +56,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # Look for keys where the units are required
-        self.battery.append(
+        battery.append(
             'key_units_req',
             common_patterns + r'''
                 \b (?P<key>   (?&key_units_req)) (?&key_end)
@@ -64,7 +66,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # Look for a length in a phrase
-        self.battery.append(
+        battery.append(
             'len_in_phrase',
             common_patterns + r'''
                 \b (?P<key>   (?&len_in_phrase)) \D{1,32}
@@ -74,7 +76,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # These ambiguous keys have a suffix that disambiguate them
-        self.battery.append(
+        battery.append(
             'len_key_ambiguous_units',
             common_patterns + r'''
                 (?&no_word) (?&len_key_ambiguous) (?&key_end)
@@ -85,7 +87,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # These keys require units to disambiguate what is being measured
-        self.battery.append(
+        battery.append(
             'len_key_ambiguous_units',
             common_patterns + r'''
                 (?&no_word)
@@ -96,7 +98,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # An out of order parse: tol (mm) 20-25
-        self.battery.append(
+        battery.append(
             'len_key_abbrev',
             common_patterns + r'''
                 \b (?P<key>      (?&len_key_abbrev)) \s*
@@ -106,7 +108,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # This parse puts the key at the end: 20-25 mm TL
-        self.battery.append(
+        battery.append(
             'len_key_suffix',
             common_patterns + r'''
                 \b (?P<value> (?&range)) \s*
@@ -116,7 +118,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # Length is in shorthand notation
-        self.battery.append(
+        battery.append(
             'len_shorthand',
             common_patterns + r'''
                 \b (?: (?P<key> (?&all_len_keys)) (?&key_end) )?
@@ -128,7 +130,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # A shorthand notation with some abbreviations in it
-        self.battery.append(
+        battery.append(
             'len_shorthand_euro',
             common_patterns + r'''
                 \b (?: (?P<key> (?&all_len_keys)) (?&key_end) )?
@@ -142,7 +144,7 @@ class TotalLengthParser(TraitParser):
 
         # Now we can look for the total length, RANGE, optional units
         # See 'total_len_key_num' above
-        self.battery.append(
+        battery.append(
             'total_len_key',
             common_patterns + r'''
                 \b (?P<key>   (?&total_len_key)) (?&key_end)
@@ -153,7 +155,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # We will now allow an ambiguous key if it is not preceded by another word
-        self.battery.append(
+        battery.append(
             'len_key_ambiguous',
             common_patterns + r'''
                 (?&no_word)
@@ -163,7 +165,7 @@ class TotalLengthParser(TraitParser):
         )
 
         # Look for snout-vent length keys
-        self.battery.append(
+        battery.append(
             'svl_len_key',
             common_patterns + r'''
                 \b (?P<key>   (?&svl_len_key)) (?&key_end)
@@ -171,6 +173,8 @@ class TotalLengthParser(TraitParser):
                    (?P<units> (?&len_units))?
             '''
         )
+
+        return battery
 
     def _common_patterns(self):
         return self.CommonRegexMassLength() + r'''
@@ -245,3 +249,116 @@ class TotalLengthParser(TraitParser):
                 (?P<len_inch> (?: inch e? | in )     s? (?&dot) )
             )
         '''
+
+    def _key_conversions(self):
+        return {
+            '_english_'                   : 'total length',
+            '_shorthand_'                 : 'total length',
+            'body'                        : 'head-body length',
+            'body length'                 : 'head-body length',
+            'catalog'                     : 'total length',
+            'fork length'                 : 'fork length',
+            'forklength'                  : 'fork length',
+            'headbodylengthinmillimeters' : 'head-body length',
+            'label length'                : 'total length',
+            'label. length'               : 'total length',
+            'label.length'                : 'total length',
+            'length'                      : 'total length',
+            'lengthinmillimeters'         : 'total length',
+            'lengths'                     : 'total length',
+            'max length'                  : 'total length',
+            'maxlength'                   : 'total length',
+            'mean length'                 : 'total length',
+            'meas'                        : 'total length',
+            'meas,'                       : 'total length',
+            'meas.'                       : 'total length',
+            'meas. h.b.'                  : 'head-body length',
+            'meas: l'                     : 'total length',
+            'measurement'                 : 'total length',
+            'measurements'                : 'total length',
+            'measurements are'            : 'total length',
+            'measurements made'           : 'total length',
+            'measurements of'             : 'total length',
+            'measurements questionable'   : 'total length',
+            'measurements read'           : 'total length',
+            'measurements reads'          : 'total length',
+            'measurements: l'             : 'total length',
+            'measurementsnt'              : 'total length',
+            'mesurements'                 : 'total length',
+            'on tag'                      : 'total length',
+            's.l'                         : 'standard length',
+            's.l.'                        : 'standard length',
+            's.v.'                        : 'snout-vent length',
+            'sl'                          : 'standard length',
+            'sl.'                         : 'standard length',
+            'snout vent length'           : 'snout-vent length',
+            'snout vent lengths'          : 'snout-vent length',
+            'snout-vent length'           : 'snout-vent length',
+            'snout-vent lengths'          : 'snout-vent length',
+            'snoutventlengthinmm'         : 'snout-vent length',
+            'specimen'                    : 'total length',
+            'specimens'                   : 'total length',
+            'standard length'             : 'standard length',
+            'sv'                          : 'snout-vent length',
+            'svl'                         : 'snout-vent length',
+            'svl.'                        : 'snout-vent length',
+            't.l'                         : 'total length',
+            't.l.'                        : 'total length',
+            'tag'                         : 'total length',
+            'tl'                          : 'total length',
+            'tl.'                         : 'total length',
+            'tl_'                         : 'total length',
+            'tol'                         : 'total length',
+            'total'                       : 'total length',
+            'total length'                : 'total length',
+            'total length in mm'          : 'total length',
+            'total lengths'               : 'total length',
+            'totallength'                 : 'total length',
+            'totallengthinmm'             : 'total length',
+        }
+
+    def _unit_conversions(self):
+        return{
+            ''             : 1.0,
+            '_mm_'         : 1.0,
+            'c.m.'         : 10.0,
+            'centimeters'  : 10.0,
+            'cm'           : 10.0,
+            'cm.'          : 10.0,
+            'cm.s'         : 10.0,
+            'cms'          : 10.0,
+            'feet'         : 304.8,
+            'feet inch'    : [304.8, 25.4],
+            'feet inches'  : [304.8, 25.4],
+            'feet inches.' : [304.8, 25.4],
+            'foot'         : 304.8,
+            'foot inch'    : [304.8, 25.4],
+            'foot inches'  : [304.8, 25.4],
+            'foot inches.' : [304.8, 25.4],
+            'ft'           : 304.8,
+            'ft in'        : [304.8, 25.4],
+            'ft in.'       : [304.8, 25.4],
+            'ft inches'    : [304.8, 25.4],
+            'ft inches.'   : [304.8, 25.4],
+            'ft ins.'      : [304.8, 25.4],
+            'ft.'          : 304.8,
+            'ft. in'       : [304.8, 25.4],
+            'ft. in.'      : [304.8, 25.4],
+            'ft. inches'   : [304.8, 25.4],
+            'ft. ins'      : [304.8, 25.4],
+            'in'           : 25.4,
+            'in.'          : 25.4,
+            'inch'         : 25.4,
+            'inches'       : 25.4,
+            'ins'          : 25.4,
+            'm.m'          : 1.0,
+            'm.m.'         : 1.0,
+            'meter'        : 1000.0,
+            'meters'       : 1000.0,
+            'millimeter'   : 1.0,
+            'millimeters'  : 1.0,
+            'mm'           : 1.0,
+            'mm.'          : 1.0,
+            'mm.s'         : 1.0,
+            'mms'          : 1.0,
+        }

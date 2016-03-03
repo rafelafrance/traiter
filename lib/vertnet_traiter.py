@@ -16,20 +16,18 @@ class VertnetTraiter:
 
     def parse_row(self, row):
         strings = [row['dynamicproperties'], row['occurrenceremarks'], row['fieldnotes']]
-        traits  = self.sex_parser.prefer(row['sex'], strings)
-        traits.update(self.life_stage_parser.prefer(row['lifestage'], strings))
-        traits.update(self.total_length_parser.search(strings))
-        traits.update(self.body_mass_parser.search(strings))
+        traits  = self.sex_parser.preferred_or_search(row['sex'], strings)
+        traits.update(self.life_stage_parser.preferred_or_search(row['lifestage'], strings))
+        traits.update(self.total_length_parser.search_and_normalize(strings))
+        traits.update(self.body_mass_parser.search_and_normalize(strings))
         return traits
 
     def parse_csv_file(self, file_name):
         with open(file_name, 'r') as in_file:
             reader = csv.DictReader(in_file)
             for row in reader:
-                if reader.line_num > 10:
-                    break
                 traits = self.parse_row(row)
-                print(traits)
+                print(reader.line_num)
 
 
 if __name__ == "__main__":

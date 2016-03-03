@@ -8,7 +8,8 @@ class SexParser(TraitParser):
         self.normalize = False
         self._battery()
 
-    def success(self, value):
+    def success(self, result):
+        value = result['value']
         if isinstance(value, list):
             value = ','.join(value)
         return {'hasSex': 1, 'derivedSex': value}

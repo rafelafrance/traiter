@@ -5,20 +5,22 @@ from trait_parsers.trait_parser import TraitParser
 class BodyMassParser(TraitParser):
 
     def __init__(self):
-        self.normalize = True
-        self._battery(self._common_patterns())
+        self.default_units = 'g'
+        self.battery = self._battery(self._common_patterns())
+        self.key_conversions = self._key_conversions()
+        self.unit_conversions = self._unit_conversions()
 
-    def success(self, value):
-        return value
+    def success(self, result):
+        return {'hasMass': 1, 'massInG': result['value'], 'wereMassUnitsInferred': result['is_inferred']}
 
     def fail(self):
         return {'hasMass': 0, 'massInG': 0, 'wereMassUnitsInferred': 0}
 
     def _battery(self, common_patterns):
-        self.battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> grams ) $ ''')
+        battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> grams ) $ ''')
 
         # Look for a pattern like: body mass: 4 lbs 8 oz
-        self.battery.append(
+        battery.append(
             'en_wt',
             common_patterns + r'''
                 \b (?P<key>    (?&all_wt_keys))? (?&key_end)?
@@ -32,7 +34,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Look for body mass with a total weight key and optional units
-        self.battery.append(
+        battery.append(
             'total_wt_key',
             common_patterns + r'''
                 \b (?P<key>   (?&total_wt_key)) (?&key_end)
@@ -42,7 +44,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Look for these secondary body mass keys next
-        self.battery.append(
+        battery.append(
             'other_wt_key',
             common_patterns + r'''
                 \b (?P<key>   (?&other_wt_key)) (?&key_end)
@@ -52,7 +54,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Look for keys where the units are required
-        self.battery.append(
+        battery.append(
             'key_units_req',
             common_patterns + r'''
                 \b (?P<key>   (?&key_units_req)) (?&key_end)
@@ -62,7 +64,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Look for the body mass in a phrase
-        self.battery.append(
+        battery.append(
             'wt_in_phrase',
             common_patterns + r'''
                 \b (?P<key>   (?&wt_in_phrase)) \D{1,32}
@@ -72,7 +74,7 @@ class BodyMassParser(TraitParser):
         )
 
         # An out of order parse: body mass (g) 20-25
-        self.battery.append(
+        battery.append(
             'wt_key_word',
             common_patterns + r'''
                 \b (?P<key>   (?&wt_key_word)) \s*
@@ -82,7 +84,7 @@ class BodyMassParser(TraitParser):
         )
 
         # These keys require units to disambiguate what is being measured
-        self.battery.append(
+        battery.append(
             'wt_key_word_req',
             common_patterns + r'''
                 (?P<key>   (?&wt_key_word)) (?&key_end)
@@ -92,7 +94,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Body mass is in shorthand notation
-        self.battery.append(
+        battery.append(
             'wt_shorthand',
             common_patterns + r'''
                 \b (?: (?P<key> (?&all_wt_keys)) (?&key_end) )?
@@ -104,7 +106,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Body mass is in shorthand notation (units required)
-        self.battery.append(
+        battery.append(
             'wt_shorthand_req',
             common_patterns + r'''
                 \b (?: (?P<key> (?&all_wt_keys)) (?&key_end) )?
@@ -116,7 +118,7 @@ class BodyMassParser(TraitParser):
         )
 
         # A shorthand notation with some abbreviations in it
-        self.battery.append(
+        battery.append(
             'wt_shorthand_euro',
             common_patterns + r'''
                 \b (?: (?P<key> (?&all_wt_keys)) (?&key_end) )?
@@ -128,7 +130,7 @@ class BodyMassParser(TraitParser):
         )
 
         # A notation using 'fa'. It can be shorter than the other shorthand notations
-        self.battery.append(
+        battery.append(
             'wt_fa',
             common_patterns + r'''
                 fa \d* -
@@ -139,7 +141,7 @@ class BodyMassParser(TraitParser):
         )
 
         # Now we can look for the body mass, RANGE, optional units
-        self.battery.append(
+        battery.append(
             'wt_key_ambiguous',
             common_patterns + r'''
                 (?P<key>   (?&wt_key_word)) (?&key_end)
@@ -147,6 +149,8 @@ class BodyMassParser(TraitParser):
                 (?P<units> (?&wt_units))?
             '''
         )
+
+        return battery
 
     def _common_patterns(self):
         return self.CommonRegexMassLength() + r'''
@@ -203,3 +207,105 @@ class BodyMassParser(TraitParser):
                 (?P<wt_ounce> (?: ounce | oz ) s? (?&dot) )
             )
         '''
+
+    def _key_conversions(self):
+        return {
+            '_english_'                 : 'total weight',
+            '_shorthand_'               : 'total weight',
+            'body'                      : 'total weight',
+            'body mass'                 : 'total weight',
+            'body weight'               : 'total weight',
+            'body wt'                   : 'total weight',
+            'body wt.'                  : 'total weight',
+            'bodymass'                  : 'total weight',
+            'catalog'                   : 'total weight',
+            'dead. weight'              : 'total weight',
+            'dead. wt'                  : 'total weight',
+            'dead. wt.'                 : 'total weight',
+            'full.weight'               : 'total weight',
+            'live weight'               : 'total weight',
+            'live wt'                   : 'total weight',
+            'live wt.'                  : 'total weight',
+            'mass'                      : 'total weight',
+            'massingrams'               : 'total weight',
+            'meas'                      : 'total weight',
+            'meas.'                     : 'total weight',
+            'measurement'               : 'total weight',
+            'measurements'              : 'total weight',
+            'measurements are'          : 'total weight',
+            'measurements questionable' : 'total weight',
+            'measurements read'         : 'total weight',
+            'measurements reads'        : 'total weight',
+            'mesurements'               : 'total weight',
+            'observedweight'            : 'total weight',
+            'on tag'                    : 'total weight',
+            'specimen'                  : 'total weight',
+            'total'                     : 'total weight',
+            'total weight'              : 'total weight',
+            'total wt'                  : 'total weight',
+            'total wt.'                 : 'total weight',
+            'w.t.'                      : 'total weight',
+            'weighed'                   : 'total weight',
+            'weighing'                  : 'total weight',
+            'weighs'                    : 'total weight',
+            'weight'                    : 'total weight',
+            'weightingrams'             : 'total weight',
+            'weights'                   : 'total weight',
+            'wt'                        : 'total weight',
+            'wt.'                       : 'total weight',
+            'wts'                       : 'total weight',
+            'wts.'                      : 'total weight',
+        }
+
+    def _unit_conversions(self):
+        return {
+            ''               : 1.0,
+            'g'              : 1.0,
+            'g.'             : 1.0,
+            'gm'             : 1.0,
+            'gm.'            : 1.0,
+            'gms'            : 1.0,
+            'gms.'           : 1.0,
+            'gr'             : 1.0,
+            'gr.'            : 1.0,
+            'gram'           : 1.0,
+            'grams'          : 1.0,
+            'grs'            : 1.0,
+            'kg'             : 1000.0,
+            'kg.'            : 1000.0,
+            'kgs'            : 1000.0,
+            'kgs.'           : 1000.0,
+            'kilograms'      : 1000.0,
+            'lb'             : 453.593,
+            'lb oz'          : [453.593, 28.349],
+            'lb oz.'         : [453.593, 28.349],
+            'lb ozs'         : [453.593, 28.349],
+            'lb.'            : 453.593,
+            'lb. oz'         : [453.593, 28.349],
+            'lb. oz.'        : [453.593, 28.349],
+            'lb. ozs'        : [453.593, 28.349],
+            'lb. ozs.'       : [453.593, 28.349],
+            'lbs'            : 453.593,
+            'lbs oz'         : [453.593, 28.349],
+            'lbs oz.'        : [453.593, 28.349],
+            'lbs ozs'        : [453.593, 28.349],
+            'lbs.'           : 453.593,
+            'lbs. oz'        : [453.593, 28.349],
+            'lbs. oz.'       : [453.593, 28.349],
+            'lbs. ozs.'      : [453.593, 28.349],
+            'mg'             : 0.001,
+            'mg.'            : 0.001,
+            'mgs.'           : 0.001,
+            'ounce'          : 28.349,
+            'ounces'         : 28.349,
+            'oz'             : 28.349,
+            'oz.'            : 28.349,
+            'ozs'            : 28.349,
+            'ozs.'           : 28.349,
+            'pound'          : 453.593,
+            'pound ounces'   : [453.593, 28.349],
+            'pound oz'       : [453.593, 28.349],
+            'pounds'         : 453.593,
+            'pounds ounces'  : [453.593, 28.349],
+            'pounds ounces.' : [453.593, 28.349],
+        }

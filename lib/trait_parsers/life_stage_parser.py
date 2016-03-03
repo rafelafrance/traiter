@@ -8,8 +8,8 @@ class LifeStageParser(TraitParser):
         self.normalize = False
         self._battery(self._common_patterns())
 
-    def success(self, value):
-        return {'hasLifeStage': 1, 'derivedLifeStage': value}
+    def success(self, result):
+        return {'hasLifeStage': 1, 'derivedLifeStage': result['value']}
 
     def fail(self):
         return {'hasLifeStage': 0, 'derivedLifeStage': ''}
