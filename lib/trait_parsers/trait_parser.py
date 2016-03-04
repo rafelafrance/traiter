@@ -56,8 +56,9 @@ class TraitParser:
         values = TraitParser.IS_RANGE.split(parsed['value'])
         if len(values) > 1:
             # If value is a range like "3 - 5 mm"
-            value = [self.multiply(values[0], self.unit_conversions[units]),
-                     self.multiply(values[1], self.unit_conversions[units])]
+            # value = [self.multiply(values[0], self.unit_conversions[units]),
+            #         self.multiply(values[1], self.unit_conversions[units])]
+            value = 0
         else:
             # Value is just a number and optional units like "3.1 g"
             value = self.multiply(values[0], self.unit_conversions[units])
