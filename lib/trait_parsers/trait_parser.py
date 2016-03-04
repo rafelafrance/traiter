@@ -8,7 +8,6 @@ class TraitParser:
     def parse_first(self, strings):
         """Look for the first string that parses successfully."""
         for string in strings:
-            string = '  '.join(TraitParser.WS_SPLIT.split(string.strip()))
             if string:
                 trait = self.parse(string)
                 if trait:
@@ -17,6 +16,7 @@ class TraitParser:
 
     def parse(self, string):
         """Apply the battery of regular expressions to a string."""
+        string = '  '.join(TraitParser.WS_SPLIT.split(string.strip()))
         return self.battery.parse(string)
 
     def search(self, strings):
