@@ -6,7 +6,7 @@ class SexParser(TraitParser):
 
     def __init__(self):
         self.normalize = False
-        self._battery()
+        self.battery = self._battery()
 
     def success(self, result):
         value = result['value']
@@ -18,10 +18,10 @@ class SexParser(TraitParser):
         return {'hasSex': 0, 'derivedSex': ''}
 
     def _battery(self):
-        self.battery = ParserBattery(exclude_pattern=r''' ^ (?: and | was | is ) $ ''')
+        battery = ParserBattery(exclude_pattern=r''' ^ (?: and | was | is ) $ ''')
 
         # Look for a key and value that is terminated with a delimiter
-        self.battery.append(
+        battery.append(
             'sex_key_value_delimited',
             r'''
                 \b (?P<key> sex)
@@ -32,7 +32,7 @@ class SexParser(TraitParser):
         )
 
         # Look for a key and value without a clear delimiter
-        self.battery.append(
+        battery.append(
             'sex_key_value_undelimited',
             r'''
                 \b (?P<key> sex) \W+ (?P<value> \w+ )
@@ -40,10 +40,12 @@ class SexParser(TraitParser):
         )
 
         # Look for the words male & female
-        self.battery.append(
+        battery.append(
             'sex_unkeyed',
             r'''
                 \b (?P<value> (?: males? | females? ) (?: \s* \? )? ) \b
             ''',
             want_array=2
         )
+
+        return battery
