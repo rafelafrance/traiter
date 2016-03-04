@@ -3,11 +3,12 @@ import re
 
 class TraitParser:
     IS_RANGE = re.compile(r'- | to', flags=re.IGNORECASE | re.VERBOSE)
+    WS_SPLIT = re.compile(r'\s\s\s+')
 
     def parse_first(self, strings):
         """Look for the first string that parses successfully."""
         for string in strings:
-            string = string.strip()
+            string = '  '.join(TraitParser.WS_SPLIT.split(string.strip()))
             if string:
                 trait = self.parse(string)
                 if trait:
