@@ -71,9 +71,7 @@ class ParserRegex:
         if not match:
             return None
 
-        parsed = dict()
-        parsed['key']   = self._get_key_(match)
-        parsed['value'] = self._get_value_(match)
+        parsed = dict(key=self._get_key_(match), value=self._get_value_(match))
         if self.parse_units:
             parsed['units'] = self._get_units_(match, parsed['key'])
 
