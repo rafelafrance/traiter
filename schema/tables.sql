@@ -1,5 +1,25 @@
---  psql --dbname=traits --file=tables.sql
--- CREATE EXTENSION "uuid-ossp";
+/*
+psql --dbname=traits --file=tables.sql
+
+CREATE EXTENSION "uuid-ossp";
+
+DROP ROLE traits_user;
+CREATE ROLE traits_user NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+GRANT traits_user TO user_name;
+
+DROP DATABASE traits;
+DATABASE traits
+  WITH OWNER = postgres
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'en_US.UTF-8'
+       LC_CTYPE = 'en_US.UTF-8'
+       CONNECTION LIMIT = -1;
+
+DROP SCHEMA public;
+CREATE SCHEMA public AUTHORIZATION postgres;
+GRANT ALL ON SCHEMA public TO traits_user;
+*/
 
 DROP TABLE IF EXISTS measurements CASCADE;
 DROP TABLE IF EXISTS associated_records CASCADE;
@@ -7,10 +27,10 @@ DROP TABLE IF EXISTS process_evidence CASCADE;
 DROP TABLE IF EXISTS evidence CASCADE;
 DROP TABLE IF EXISTS datasets CASCADE;
 DROP TABLE IF EXISTS entities CASCADE;
-DROP TABLE IF EXISTS traits CASCADE;
-DROP TABLE IF EXISTS taxon_concepts CASCADE;
 DROP TABLE IF EXISTS planned_processes CASCADE;
 DROP TABLE IF EXISTS measurement_standards CASCADE;
+DROP TABLE IF EXISTS traits CASCADE;
+DROP TABLE IF EXISTS taxon_concepts CASCADE;
 DROP TABLE IF EXISTS "references" CASCADE;
 
 DROP TYPE IF EXISTS reference_types CASCADE;
@@ -137,6 +157,21 @@ CREATE TABLE process_evidence (
 CREATE INDEX ON process_evidence (evidence_id);
 CREATE INDEX ON process_evidence (planned_process_id);
 
+CREATE TABLE traits (
+    trait_id          UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
+    reference_id      UUID REFERENCES "references",
+    taxon_concept_id  UUID REFERENCES taxon_concepts,
+    trait             TEXT,
+    definition        TEXT,
+    role              TEXT,
+    sex               sexes,
+    life_stage        TEXT,
+    uri               TEXT,
+    remarks           TEXT
+);
+CREATE INDEX ON traits (reference_id);
+CREATE INDEX ON traits (taxon_concept_id);
+
 CREATE TABLE measurement_standards (
     measurement_standard_id  UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
     trait_id                 UUID REFERENCES traits,
@@ -157,21 +192,6 @@ CREATE INDEX ON measurement_standards (reference_id);
 CREATE INDEX ON measurement_standards (trait_id);
 CREATE INDEX ON measurement_standards (value_type);
 
-CREATE TABLE traits (
-    trait_id          UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
-    reference_id      UUID REFERENCES "references",
-    taxon_concept_id  UUID REFERENCES taxon_concepts,
-    trait             TEXT,
-    definition        TEXT,
-    role              TEXT,
-    sex               sexes,
-    life_stage        TEXT,
-    uri               TEXT,
-    remarks           TEXT
-);
-CREATE INDEX ON traits (reference_id);
-CREATE INDEX ON traits (taxon_concept_id);
-
 CREATE TABLE measurements (
     measurement_id           UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
     planned_process_id       UUID REFERENCES planned_processes,
@@ -191,6 +211,5 @@ CREATE INDEX ON measurements (planned_process_id);
 CREATE INDEX ON measurements (measurement_standard_id);
 CREATE INDEX ON measurements (value);
 CREATE INDEX ON measurements (value_max);
-CREATE INDEX ON measurements (value_enum);
 CREATE INDEX ON measurements (value_text);
 CREATE INDEX ON measurements (value_object);
