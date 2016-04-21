@@ -5,7 +5,7 @@ from trait_parsers.trait_parser import TraitParser
 class BodyMassParser(TraitParser):
 
     def __init__(self):
-        self.default_units = 'g'
+        self.default_units = '_g_'
         self.battery = self._battery(self._common_patterns())
         self.key_conversions = self._key_conversions()
         self.unit_conversions = self._unit_conversions()
@@ -260,6 +260,7 @@ class BodyMassParser(TraitParser):
     def _unit_conversions(self):
         return {
             ''               : 1.0,
+            '_g_'            : 1.0,
             'g'              : 1.0,
             'g.'             : 1.0,
             'gm'             : 1.0,

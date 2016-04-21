@@ -16,7 +16,7 @@ class TraitParser:
 
     def parse(self, string):
         """Apply the battery of regular expressions to a string."""
-        string = '  '.join(TraitParser.WS_SPLIT.split(string.strip()))
+        string = '  '.join(self.WS_SPLIT.split(string.strip()))
         return self.battery.parse(string)
 
     def search(self, strings):
@@ -45,15 +45,18 @@ class TraitParser:
         # If units & value is a compound list like "3 ft 6 in"
         if isinstance(parsed['units'], list):
             units  = ' '.join(parsed['units']).lower()
-            value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
-            value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
+            if self.IS_RANGE.split(parsed['value'][0]) or self.IS_RANGE.split(parsed['value'][1]):
+                value = 0
+            else:
+                value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
+                value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
             return {'value': value, 'is_inferred': 0}
 
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
         is_inferred = int(units[0] == '_' if units else True)
 
-        values = TraitParser.IS_RANGE.split(parsed['value'])
+        values = self.IS_RANGE.split(parsed['value'])
         if len(values) > 1:
             # If value is a range like "3 - 5 mm"
             # value = [self.multiply(values[0], self.unit_conversions[units]),
