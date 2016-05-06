@@ -272,6 +272,11 @@ class TestTotalLengthParser(unittest.TestCase):
             target.parse('Measurements: L: 21.0 cm'),
             {'key': 'Measurements: L', 'value': '21.0', 'units': 'cm'})
 
+    def test_54(self):
+        self.assertEqual(
+            target.parse('SVL=44'),
+            {'key': 'SVL', 'value': '44', 'units': None})
+
 
 target = TotalLengthParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestTotalLengthParser)

@@ -9,10 +9,10 @@ class LifeStageParser(TraitParser):
         self.battery = self._battery(self._common_patterns())
 
     def success(self, result):
-        return {'hasLifeStage': 1, 'derivedLifeStage': result['value']}
+        return {'haslifestage': 1, 'derivedlifestage': result['value']}
 
     def fail(self):
-        return {'hasLifeStage': 0, 'derivedLifeStage': ''}
+        return {'haslifestage': 0, 'derivedlifestage': ''}
 
     def _battery(self, common_patterns):
         battery = ParserBattery(exclude_pattern=r''' ^ determin ''')

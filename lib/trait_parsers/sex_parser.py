@@ -12,10 +12,10 @@ class SexParser(TraitParser):
         value = result['value']
         if isinstance(value, list):
             value = ','.join(value)
-        return {'hasSex': 1, 'derivedSex': value}
+        return {'hassex': 1, 'derivedsex': value}
 
     def fail(self):
-        return {'hasSex': 0, 'derivedSex': ''}
+        return {'hassex': 0, 'derivedsex': ''}
 
     def _battery(self):
         battery = ParserBattery(exclude_pattern=r''' ^ (?: and | was | is ) $ ''')

@@ -11,10 +11,10 @@ class BodyMassParser(TraitParser):
         self.unit_conversions = self._unit_conversions()
 
     def success(self, result):
-        return {'hasMass': 1, 'massInG': result['value'], 'wereMassUnitsInferred': result['is_inferred']}
+        return {'hasmass': 1, 'massing': result['value'], 'massunitsinferred': result['is_inferred']}
 
     def fail(self):
-        return {'hasMass': 0, 'massInG': 0, 'wereMassUnitsInferred': 0}
+        return {'hasmass': 0, 'massing': None, 'massunitsinferred': 0}
 
     def _battery(self, common_patterns):
         battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> grams ) $ ''')

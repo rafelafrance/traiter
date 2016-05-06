@@ -11,10 +11,10 @@ class TotalLengthParser(TraitParser):
         self.unit_conversions = self._unit_conversions()
 
     def success(self, result):
-        return {'hasLength': 1, 'lengthInMM': result['value'], 'wereLengthUnitsInferred': result['is_inferred']}
+        return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred']}
 
     def fail(self):
-        return {'hasLength': 0, 'lengthInMM': 0, 'wereLengthUnitsInferred': 0}
+        return {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': 0}
 
     def _battery(self, common_patterns):
         battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> mm | millimeters ) $ ''')
