@@ -5,7 +5,7 @@ from trait_parsers.trait_parser import TraitParser
 class TotalLengthParser(TraitParser):
 
     def __init__(self):
-        self.default_units = 'mm'
+        self.default_units = '_mm_'
         self.battery = self._battery(self._common_patterns())
         self.key_conversions = self._key_conversions()
         self.unit_conversions = self._unit_conversions()
