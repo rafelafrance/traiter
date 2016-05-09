@@ -6,7 +6,7 @@ from trait_parsers.sex_parser import SexParser
 from trait_parsers.total_length_parser import TotalLengthParser
 
 
-class VertnetTraiter:
+class Traiter:
 
     def __init__(self):
         self.body_mass_parser    = BodyMassParser()
@@ -31,5 +31,5 @@ class VertnetTraiter:
 
 
 if __name__ == "__main__":
-    vertnet_traiter = VertnetTraiter()
-    vertnet_traiter.parse_csv_file(sys.argv[1])
+    traiter = Traiter()
+    traiter.parse_csv_file(sys.argv[1])
