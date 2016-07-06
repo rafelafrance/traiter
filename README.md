@@ -4,4 +4,4 @@ The "parsers" directory contains Jupyter notebooks for parsing trait data from v
 
 The "lib" directory contains code extracted from the Jupyper notebooks that may be used in production.
 
-The "schema" directory contains the scripts and notes for build the traits database.
+The "schema" directory contains the scripts and notes to build the traits database.
