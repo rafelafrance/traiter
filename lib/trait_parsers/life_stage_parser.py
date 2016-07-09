@@ -1,6 +1,28 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# The line above is to signify that the script contains utf-8 encoded characters.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Adapted from https://github.com/rafelafrance/traiter
+
+__author__ = "John Wieczorek"
+__contributors__ = "Raphael LaFrance, John Wieczorek"
+__copyright__ = "Copyright 2016 vertnet.org"
+__version__ = "life_stage_parser.py 2016-07-08T10:47+02:00"
+
 from trait_parsers.parser_battery import ParserBattery
 from trait_parsers.trait_parser import TraitParser
-
 
 class LifeStageParser(TraitParser):
 
@@ -49,6 +71,31 @@ class LifeStageParser(TraitParser):
                 (?P<value> (?: after \s+ )?
                         (?: first | second | third | fourth | hatching ) \s+
                         year )
+            '''
+        )
+
+        battery.append(
+            'life_stage_yolk_sac',
+            common_patterns + r'''
+                (?P<value> (?: yolk ) \s+
+                        sac )
+            '''
+        )
+
+        # Look for the words lifestage words without keys
+        battery.append(
+            'life_stage_unkeyed',
+            r'''
+                \b (?P<value> (?: embryos? | embryons? | ovums? | eggs?
+                | larves? |larvae? | larvals? | imagos? | neonates? | fetuses? | fetus?
+                | hatchlings? | hatched? | fry? | metamorphs? | premetamorphs
+                | tadpoles? | têtard?
+                | young-of-the-year? | leptocephales? | leptocephalus? 
+                | immatures? | imms? | jeunes? | young? | ygs?
+                | fleglings? | fledgelings? | chicks? | nestlings? 
+                | juveniles? | juvéniles? | juvs?
+                | subadults? | subadultes? | subads? | sub-adults? | yearlings?
+                | matures? | adults? | adulte? | ads? ) (?: \s* \? )? ) \b
             '''
         )
 
