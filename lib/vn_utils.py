@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-08T15:06+2:00"
+__version__ = "vn_utils.py 2016-07-11T09:09+2:00"
 
 import csv
 import os
@@ -53,6 +53,8 @@ def id_resolution(rec):
     """
     keyname = None
     references = None
+    citation = None
+    bib = None
     
     #  rec must contain icode
     if rec.has_key('icode') == False or len(rec['icode']) == 0:
@@ -84,13 +86,17 @@ def id_resolution(rec):
     # Create a condensed version of the occurrence identifier
     # If the catalognumber has content, use it for the occurrence identifier
     # otherwise, use the id field
-    if rec.has_key('id') and len(rec['id']) > 0:
-        occ_id = slugify(rec['id'])
+    bestid = None
+    if rec.has_key('occurrenceid') and len(rec['occurrenceid'].strip()) > 0:
+        bestid = rec['occurrenceid'].strip()
+    elif rec.has_key('id') and len(rec['id'].strip()) > 0:
+        bestid = rec['id'].strip()
+    elif rec.has_key('catalognumber') and len(rec['catalognumber'].strip()) > 0:
+        bestid = rec['catalognumber'].strip()
     else:
-        if rec.has_key('catalognumber') and len(rec['catalognumber']) > 0:
-            occ_id = slugify(rec['catalognumber'])
-        else:
-            occ_id = 'noid'
+        bestid = 'noid'
+
+    occ_id = slugify(bestid)
 
     # Make a unique, potentially persistent record (datastore document) identifier
     keyname ='%s/%s/%s' % (icode_slug, coll_id, occ_id)
@@ -105,9 +111,60 @@ def id_resolution(rec):
           (icode_slug, coll_id, occ_id)
     else:
         references = rec['references']
+
+    ### CITATION ###
+    # Construct a standardized citation following the formula from the VertNet norms.
+    title = None
+    publisher = None
+    link = None
+    doi = None
+    pubdate = None
+
+    if rec.has_key('title') and len(rec['title'].strip()) > 0:
+        title = rec['title'].strip()
+    elif rec.has_key('collectioncode') and len(rec['collectioncode'].strip()) > 0:
+        title = rec['collectioncode'].strip()
+    else:
+        title = rec['gbifdatasetid']
+
+    if rec.has_key('orgname') and len(rec['orgname'].strip()) > 0:
+        publisher = rec['orgname'].strip()
+    else:
+        publisher = rec['icode']
+
+    if rec.has_key('source_url') and len(rec['source_url'].strip()) > 0:
+        link = rec['source_url'].strip()
+
+    if rec.has_key('doi') and len(rec['doi'].strip()) > 0:
+        doi = rec['doi'].strip()
+
+    if rec.has_key('pubdate') and len(rec['pubdate'].strip()) > 0:
+        pubdate = rec['pubdate'].strip()
+
+    s = ''
+    if title is not None:
+        s += '%s. ' % title 
+    if publisher is not None:
+        s += '%s. ' % publisher
+    if link is not None:
+        s += '%s. ' % link
+    if doi is not None:
+        s += 'Data set DOI: %s ' % doi
+    if pubdate is not None:
+        s += '(published on %s)' % pubdate
+    
+    citation = s.strip()
+
+    ### BIBLIOGRAPHICCITATION ###
+    # Construct a standardized bibliographic citation following the formula from the 
+    # VertNet norms.
+    bib = '%s. %s' % (bestid, citation)
+
     d = {}
     d['keyname'] = keyname
     d['references'] = references
+    d['citation'] = citation
+    d['bibliographiccitation'] = bib
     return d
 
 def license_resolution(rec):
@@ -150,17 +207,24 @@ def dynamicproperties_resolution(rec):
     return c
 
 def occurrence_resolution(rec):
-    """ Create a clean version of the occurrence fields in a dictionary.
+    """ Create a clean version of the occurrence fields in a dictionary. Depends on
+        rec['wascaptive'] having been populated.
     parameters:
         rec - dictionary to search for occurrence fields (required)
     returns:
         cleaned version of occurrence fields
     """
     occremarks = None
+    emeans = None
     if rec.has_key('occurrenceremarks') and len(rec['occurrenceremarks']) > 0:
         occremarks = strip_quote(rec['occurrenceremarks'])
+
+    if rec.has_key('wascaptive') and rec['wascaptive'] == 1:
+        emeans = 'managed'
+    
     d = {}
     d['occurrenceremarks'] = occremarks
+    d['establishmentmeans'] = emeans
     return d
 
 def location_resolution(rec):
