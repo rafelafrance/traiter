@@ -1003,9 +1003,11 @@ def was_captive(rec):
     if rec.has_key(f) and rec[f] is not None:
         if rec[f].lower() == 'native' or 'wild' in rec[f].lower():
             return 0
+        if 'managed' in rec[f].lower():
+          return 1
         if 'capt' in rec[f].lower():
           return 1
-        if 'managed' in rec[f].lower():
+        if 'domestic' in rec[f].lower():
           return 1
     checkwords = ['captiv', 'aviary', 'lab born', 'aquarium']
     checkfields = ['locality', 'highergeography', 'occurrenceremarks', 'locationremarks',
@@ -1021,6 +1023,20 @@ def was_captive(rec):
             if 'zoo' in rec[f].lower():
                 if 'azoo' not in rec[f].lower() and 'zool' not in rec[f].lower():
                     return 1
+    return 0
+
+def was_invasive(rec):
+    """ Check if a record has evidence that the organism was invasive.
+    parameters:
+        rec - dictionary to search (required)
+    returns:
+        True if the dictionary has evidence that the organism was invasive, 
+        otherwise False.
+    """
+    f = 'establishmentmeans'
+    if rec.has_key(f) and rec[f] is not None:
+        if rec[f].lower() == 'invasive':
+            return 1
     return 0
 
 tissuetokens = \

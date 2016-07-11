@@ -38,6 +38,7 @@ from vn_utils import identification_resolution
 from vn_utils import is_fossil
 from vn_utils import is_mappable
 from vn_utils import was_captive
+from vn_utils import was_invasive
 from vn_utils import has_media
 from vn_utils import has_tissue
 from vn_utils import has_typestatus
@@ -199,6 +200,7 @@ class VertHarvestFileProcessor:
         row['isfossil'] = is_fossil(row)
         row['mappable'] = is_mappable(row) # must come after georef_resolution
         row['hasmedia'] = has_media(row)
+        row['wasinvasive'] = was_invasive(row)
         row['hastissue'] = has_tissue(row)
         row['hastypestatus'] = has_typestatus(row)
         row['vntype'] = vn_type(row)
