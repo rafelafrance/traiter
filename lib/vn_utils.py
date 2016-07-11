@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-11T09:09+2:00"
+__version__ = "vn_utils.py 2016-07-11T14:47+2:00"
 
 import csv
 import os
@@ -43,19 +43,16 @@ from datetime import datetime
 # need to install arrow for this to be used (better support of date time)
 # pip install arrow
 
-def id_resolution(rec):
-    """ Create a dictionary of with a record identifier and a dcterms:references using.
+def record_level_resolution(rec):
+    """ Create a dictionary of completed, corrected record-level fields from data in 
+        a dictionary. Also make a keynam for the index.
     parameters:
-        rec - dictionary to search for georeference input (required)
+        rec - dictionary to search for record_level input (required)
     returns:
-        dictionary with keyname (record identifier) and references, or None if the 
-        key can not be created.
+        dictionary of completed, corrected record_level fields
     """
-    keyname = None
-    references = None
-    citation = None
-    bib = None
-    
+    ### KEYNAME ###
+    keyname = None    
     #  rec must contain icode
     if rec.has_key('icode') == False or len(rec['icode']) == 0:
         return None
@@ -105,6 +102,7 @@ def id_resolution(rec):
     ### REFERENCES ###
     # VertNet migrator must construct the references field using this same pattern for 
     # records that do not already have a references value.
+    references = None
     if rec.has_key('references') == False or len(rec['references']) == 0 or \
        'portal.vertnet.org' in rec['references'].lower():
         references = 'http://portal.vertnet.org/o/%s/%s?id=%s' % \
@@ -112,8 +110,51 @@ def id_resolution(rec):
     else:
         references = rec['references']
 
+    ### BASISOFRECORD ###
+    # Standardize basisOfRecord
+    basisofrecord = 'Occurrence'
+    if rec.has_key('basisofrecord'):
+        s = rec['basisofrecord'].strip().lower()
+        if len(s) > 0:
+            if 'preserv' in s:
+                basisofrecord = 'PreservedSpecimen'
+            elif 'material' in s:
+                basisofrecord = 'MaterialSample'
+            elif s == 'specimen':
+                basisofrecord = 'PreservedSpecimen'
+            elif 'machine' in s:
+                basisofrecord = 'MachineObservation'
+            elif 'human' in s:
+                basisofrecord = 'HumanObservation'
+    # Requires is_fossil() to have been used to set rec['isfossil']
+    if rec.has_key('isfossil') and rec['isfossil'] == 1:
+        basisofrecord = 'FossilSpecimen'
+
+    ### DCTYPE ###
+    # Standardize dc:type
+    dctype = 'Event'
+    if 'specimen' in basisofrecord.lower():
+        dctype = 'PhysicalObject'
+    elif 'material' in basisofrecord.lower():
+        dctype = 'PhysicalObject'
+    elif rec.has_key('dctype'):
+        s = rec['dctype'].strip().lower()
+        if 'moving' in s:
+            dctype = 'MovingImage'
+            basisofrecord = 'MachineObservation'
+        elif 'still' in s:
+            dctype = 'StillImage'
+            basisofrecord = 'MachineObservation'
+        elif s == 'sound':
+            dctype = 'Sound'
+            basisofrecord = 'MachineObservation'
+        elif 'obj' in s:
+            if 'obs' not in basisofrecord.lower():
+                dctype = 'PhysicalObject'
+
     ### CITATION ###
     # Construct a standardized citation following the formula from the VertNet norms.
+    citation = None
     title = None
     publisher = None
     link = None
@@ -165,6 +206,8 @@ def id_resolution(rec):
     d['references'] = references
     d['citation'] = citation
     d['bibliographiccitation'] = bib
+    d['basisofrecord'] = basisofrecord
+    d['dctype'] = dctype
     return d
 
 def license_resolution(rec):
@@ -1090,7 +1133,7 @@ def vn_type(rec):
     """
     if rec.has_key('basisofrecord') == False or len(rec['basisofrecord']) == 0:
         if rec.has_key('dctype') == False or len(rec['dctype']) == 0:
-            return 'both'
+            return 'indeterminate'
         elif 'object' in rec['dctype'].lower():
             return 'specimen'
         return 'observation'
@@ -1213,26 +1256,26 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         s = tsvreadheaderfile + ' does not exist'
         self.assertTrue(os.path.isfile(tsvreadheaderfile), s)
 
-    def test_id_resolution(self):
-        print 'testing id_resolution'
+    def test_record_level_resolution(self):
+        print 'testing record_level_resolution'
         rec={}
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'interpreted rec as having id when empty'
         self.assertIsNone(b, s)
 
         rec['icode'] = ''
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'interpreted rec as having id without an icode'
         self.assertIsNone(b, s)
 
         rec['icode'] = 'MVZ'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'interpreted rec as having id without either a collectioncode '
         s += 'or a gbifdatasetid: %s' % rec
         self.assertIsNone(b, s)
 
         rec['gbifdatasetid'] = 'anything'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'interpreted rec as having id without either a catalognumber '
         s += 'or an id: %s' % rec
         self.assertIsNone(b, s)
@@ -1240,13 +1283,13 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         rec={}
         rec['icode'] = 'MVZ'
         rec['collectioncode'] = 'Mamm'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'interpreted rec as having id without either a catalognumber '
         s += 'or an id: %s' % rec
         self.assertIsNone(b, s)
 
         rec['catalognumber'] = '123'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'incorrect interpretation of rec: %s interpretation: %s' % (rec, b)
         expected = 'mvz/mamm/123'
         self.assertEqual(b['keyname'], expected, s)
@@ -1257,7 +1300,7 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         rec['icode'] = 'MVZ'
         rec['collectioncode'] = 'Mamm'
         rec['id'] = 'ANYthing'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'incorrect interpretation of rec: %s interpretation: %s' % (rec, b)
         expected = 'mvz/mamm/anything'
         self.assertEqual(b['keyname'], expected, s)
@@ -1268,7 +1311,7 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         rec['icode'] = 'MVZ'
         rec['collectioncode'] = 'Mamm'
         rec['id'] = 'http://arctos.database.museum/guid/UAM:Herp:92?seid=497676'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'incorrect interpretation of rec: %s interpretation: %s' % (rec, b)
         expected = 'mvz/mamm/http-arctos-database-museum-guid-uam-herp-92-seid-497676'
         self.assertEqual(b['keyname'], expected, s)
@@ -1277,7 +1320,7 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         self.assertEqual(b['references'], expected, s)
 
         rec['id'] = '123E4567-E89b-12D3-A456-426655440000'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'incorrect interpretation of rec: %s interpretation: %s' % (rec, b)
         expected = 'mvz/mamm/123e4567-e89b-12d3-a456-426655440000'
         self.assertEqual(b['keyname'], expected, s)
@@ -1289,12 +1332,220 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         rec['icode'] = 'An iCode'
         rec['collectioncode'] = 'Collection Code'
         rec['catalognumber'] = 'ABC 123'
-        b = id_resolution(rec)
+        b = record_level_resolution(rec)
         s = 'incorrect interpretation of rec: %s interpretation: %s' % (rec, b)
         expected = 'an-icode/collection-code/abc-123'
         self.assertEqual(b['keyname'], expected, s)
         expected = 'http://portal.vertnet.org/o/an-icode/collection-code?id=abc-123'
         self.assertEqual(b['references'], expected, s)
+
+        rec={}
+        rec['icode'] = 'A'
+        rec['collectioncode'] = 'B'
+        rec['catalognumber'] = 'C'
+        rec['basisofrecord'] = 'specimen'
+        f = 'basisofrecord'
+        expected = 'PreservedSpecimen'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'PhysicalObject'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+#        rec['basisofrecord'] = 'PRESERVESPECIMEN'
+        rec['basisofrecord'] = 'Preserved record'
+        f = 'basisofrecord'
+        expected = 'PreservedSpecimen'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'PhysicalObject'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['basisofrecord'] = 'PreservedSpecimen'
+        f = 'basisofrecord'
+        expected = 'PreservedSpecimen'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'PhysicalObject'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['basisofrecord'] = 'Material sample'
+        f = 'basisofrecord'
+        expected = 'MaterialSample'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'PhysicalObject'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['basisofrecord'] = 'Machine Observation'
+        f = 'basisofrecord'
+        expected = 'MachineObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'Event'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['basisofrecord'] = 'MachineObservation'
+        rec['dctype'] = 'PhysicalObject'
+        f = 'basisofrecord'
+        expected = 'MachineObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'Event'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['basisofrecord'] = 'HumanObservation'
+        rec['dctype'] = 'PhysicalObject'
+        f = 'basisofrecord'
+        expected = 'HumanObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'Event'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec.pop('basisofrecord')
+        rec['dctype'] = 'still'
+        f = 'basisofrecord'
+        expected = 'MachineObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'StillImage'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['dctype'] = 'moving'
+        f = 'basisofrecord'
+        expected = 'MachineObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'MovingImage'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['dctype'] = 'SOUND'
+        f = 'basisofrecord'
+        expected = 'MachineObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'Sound'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec['dctype'] = 'object'
+        f = 'basisofrecord'
+        expected = 'Occurrence'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'PhysicalObject'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec.pop('dctype')
+        rec['basisofrecord'] = 'Human observation'
+#        rec['dctype'] = 'Event'
+        f = 'basisofrecord'
+        expected = 'HumanObservation'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'Event'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec.pop('basisofrecord')
+        f = 'basisofrecord'
+        expected = 'Occurrence'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'Event'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+###
+        rec['basisofrecord'] = 'FOSSIL'
+        rec['isfossil']=is_fossil(rec)
+        f = 'basisofrecord'
+        expected = 'FossilSpecimen'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'dctype'
+        expected = 'PhysicalObject'
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
 
     def test_license_resolution(self):
         print 'testing license_resolution'
@@ -2632,12 +2883,12 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         rec={}
         b = vn_type(rec)
         s = 'incorrect vn_type characterization - %s. rec: %s' % (b, rec)
-        self.assertEqual(b, 'both', s)
+        self.assertEqual(b, 'indeterminate', s)
 
         rec['basisofrecord'] = ''
         b = vn_type(rec)
         s = 'incorrect vn_type characterization - %s. rec: %s' % (b, rec)
-        self.assertEqual(b, 'both', s)
+        self.assertEqual(b, 'indeterminate', s)
 
         rec['basisofrecord'] = 'voucher'
         b = vn_type(rec)

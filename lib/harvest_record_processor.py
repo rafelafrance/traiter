@@ -20,14 +20,14 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-07-11T09:09+02:00"
+__version__ = "harvest_record_processor.py 2016-07-11T14:06+02:00"
 
 import csv
 import argparse
 from field_utils import INDEX_FIELDS
 from field_utils import HARVEST_FIELDS
 from vn_utils import tsv_dialect
-from vn_utils import id_resolution
+from vn_utils import record_level_resolution
 from vn_utils import license_resolution
 from vn_utils import dynamicproperties_resolution
 from vn_utils import occurrence_resolution
@@ -105,11 +105,15 @@ class VertHarvestFileProcessor:
            changes contents of some existing fields. All others remain as in the input.
         """
         
-        ### RECORD IDENTIFIER, REFERENCES, CITATION ###
+        ### ISFOSSIL ###
+        row['isfossil'] = is_fossil(row) # must come before record_level_resolution
+
+        ### RECORD_LEVEL ###
         # Create a record identifier (keyname) - docid in Google App Engine documents
         # Create a reference to the record details (references)
-        # fields determined: keyname, references, citation, bibliographiccitation
-        c = id_resolution(row)
+        # Other fields determined: keyname, references, citation, bibliographiccitation, 
+        #   basisofrecord, dctype
+        c = record_level_resolution(row)
 #        print 'ids:\n%s' % c
         # Set values of fields from dictionary
         for key, value in c.iteritems():
@@ -134,7 +138,7 @@ class VertHarvestFileProcessor:
         if dp is not None and len(dp) > 0:
             row['dynamicproperties'] = dp
 
-        # VertNet-specific flags - post-precessing
+        ### WASCAPTIVE ###
         row['wascaptive'] = was_captive(row) # must come before occurrence_resolution
 
         ### OCCURRENCE ###
@@ -197,7 +201,6 @@ class VertHarvestFileProcessor:
         row.pop('derivedlifestage')
 
         # VertNet-specific flags - post-precessing
-        row['isfossil'] = is_fossil(row)
         row['mappable'] = is_mappable(row) # must come after georef_resolution
         row['hasmedia'] = has_media(row)
         row['wasinvasive'] = was_invasive(row)
