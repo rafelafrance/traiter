@@ -20,11 +20,11 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-07-11T14:06+02:00"
+__version__ = "harvest_record_processor.py 2016-07-12T11:45+02:00"
 
 import csv
 import argparse
-from field_utils import INDEX_FIELDS
+from field_utils import index_fields
 from field_utils import HARVEST_FIELDS
 from vn_utils import tsv_dialect
 from vn_utils import record_level_resolution
@@ -53,6 +53,8 @@ from trait_parsers.total_length_parser import TotalLengthParser
 # need to install regex for the trait parsers to be used
 # pip install regex
 
+INDEX_FIELDS = index_fields()
+
 class VertHarvestFileProcessor:
 
     def __init__(self):
@@ -74,7 +76,7 @@ class VertHarvestFileProcessor:
         dialect = tsv_dialect()
 
         with open(outfilename, 'w') as outfile:
-            writer = csv.DictWriter(outfile, dialect=dialect, fieldnames=INDEX_FIELDS())
+            writer = csv.DictWriter(outfile, dialect=dialect, fieldnames=INDEX_FIELDS)
             # A header is not used in VertNet indexing chunks. The field order must be 
             # defined in the indexer. A header can be added to the output file by setting 
             # the optional header parameter.
@@ -88,7 +90,7 @@ class VertHarvestFileProcessor:
                     newrow = self.process_harvest_row(row)
 #                    print 'newrow: %s' % newrow
                     if newrow is not None:
-                        wrong_fields = [k for k in newrow if k not in INDEX_FIELDS()]
+                        wrong_fields = [k for k in newrow if k not in INDEX_FIELDS]
 #                        print 'wrong fields: %s' % wrong_fields
                         for f in wrong_fields:
                             newrow.pop(f)
@@ -125,7 +127,7 @@ class VertHarvestFileProcessor:
 
         ### LICENSE ###
         # Translate the field 'iptlicense' to field 'license' if the latter is missing
-        # fields determined: license, iptlicense, haslicense
+        # fields determined: license, haslicense
         c = license_resolution(row)
 #        print 'license:\n%s' % license
         # Set values of fields from dictionary
@@ -211,7 +213,7 @@ class VertHarvestFileProcessor:
         # The index has a default sort order. In VertNet we set it based on rank, which 
         # is a rough assessment of fitness for a variety of uses requiring a taxon at a 
         # georeferenced place and time. Must come after all other cleanup.
-        row['recrank'] = rec_rank(row)
+        row['rank'] = rec_rank(row)
 
         # hashid is a hash of the keyname as a means to evenly distribute records among bins
         # for parallel processing with bins having 10k or less records as recommended by 

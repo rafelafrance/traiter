@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-11T14:47+2:00"
+__version__ = "vn_utils.py 2016-07-12T11:44+2:00"
 
 import csv
 import os
@@ -219,12 +219,10 @@ def license_resolution(rec):
         dictionary of completed, corrected georeference fields
     """
     license = None
-    iptlicense = None
     haslicense = None
     if rec.has_key('license') == False or len(rec['license']) == 0:
         if rec.has_key('iptlicense') and len(rec['iptlicense']) > 0:
-            iptlicense = rec['iptlicense']
-            license = iptlicense
+            license = rec['iptlicense']
     else:
         license = rec['license']
     if license is not None:
@@ -233,7 +231,6 @@ def license_resolution(rec):
         haslicense = 0
     d = {}
     d['license'] = license
-    d['iptlicense'] = iptlicense
     d['haslicense'] = haslicense
     return d
 
@@ -1174,7 +1171,7 @@ def rec_rank(rec):
     parameters:
         rec - dictionary to search (required)
     returns:
-        1 if the dictionary contains valid coordinates, otherwise 0.
+        the ranking for the record, between 0 and 12 (most complete).
     """
     if has_binomial(rec) is False:
         return 0
@@ -1553,21 +1550,18 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         b = license_resolution(rec)
         s = 'interpreted rec as having licenses when empty: %s' % b
         self.assertIsNone(b['license'], s)
-        self.assertIsNone(b['iptlicense'], s)
         self.assertEquals(b['haslicense'], 0, s)
 
         rec['license'] = ''
         b = license_resolution(rec)
         s = 'interpreted rec as having licenses when empty: %s' % b
         self.assertIsNone(b['license'], s)
-        self.assertIsNone(b['iptlicense'], s)
         self.assertEquals(b['haslicense'], 0, s)
 
         rec['license'] = 'CC0'
         b = license_resolution(rec)
         s = 'interpreted rec as not having license: %s' % rec
         self.assertEqual(b['license'], 'CC0', s)
-        self.assertIsNone(b['iptlicense'], s)
         self.assertEquals(b['haslicense'], 1, s)
 
         rec={}
@@ -1575,7 +1569,6 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         b = license_resolution(rec)
         s = 'interpreted rec as not having license: %s' % rec
         self.assertEqual(b['license'], 'CC0', s)
-        self.assertEqual(b['iptlicense'], 'CC0', s)
         self.assertEquals(b['haslicense'], 1, s)
 
     def test_dynamicproperties_resolution(self):
