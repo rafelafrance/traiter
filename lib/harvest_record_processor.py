@@ -20,7 +20,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-07-13T13:12+02:00"
+__version__ = "harvest_record_processor.py 2016-07-13T15:07+02:00"
 
 import csv
 import argparse
@@ -31,6 +31,7 @@ from vn_utils import record_level_resolution
 from vn_utils import license_resolution
 from vn_utils import dynamicproperties_resolution
 from vn_utils import occurrence_resolution
+from vn_utils import sex_resolution
 from vn_utils import event_resolution
 from vn_utils import location_resolution
 from vn_utils import georef_resolution
@@ -217,6 +218,11 @@ class VertHarvestFileProcessor:
         row['lifestage'] = row['derivedlifestage']
         row.pop('derivedsex')
         row.pop('derivedlifestage')
+
+        ### SEX ###
+        # Standardize the field 'sex' after all trait extraction is done
+        # fields determined: sex
+        row['sex'] = sex_resolution(row['sex'])
 
         # VertNet-specific flags - post-precessing
         row['mappable'] = is_mappable(row) # must come after georef_resolution

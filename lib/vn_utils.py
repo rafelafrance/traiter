@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-13T13:10+2:00"
+__version__ = "vn_utils.py 2016-07-13T15:03+2:00"
 
 import csv
 import os
@@ -271,6 +271,26 @@ def occurrence_resolution(rec):
     d['recordedby'] = recordedby
     d['establishmentmeans'] = emeans
     return d
+
+def sex_resolution(sex):
+    """ Standardize the value of the sex field.
+    parameters:
+        sex - the string to standardize (required)
+    returns:
+        cleaned version of sex field
+    """
+    if sex is None or len(sex.strip())==0:
+        return None
+    s = strip_quote(sex).lower()
+    if s == 'm' or s == 'mâle' or s == 'macho':
+        s = 'male'
+    elif s == 'f' or s == 'femelle' or s == 'hembra':
+        s = 'female'
+    elif 'un' in s:
+        s = 'undetermined'
+    elif s == 'u' or s == 'not recorded' or s == 'indéterminé':
+        s = 'undetermined'
+    return s
 
 def location_resolution(rec):
     """ Create a clean version of the location fields in a dictionary.
@@ -1625,6 +1645,101 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
         s += '%s not as expected' % f
         self.assertEqual(b[f], expected, s)
+
+    def test_sex_resolution(self):
+        print 'testing sex_resolution'
+        sex = ' '
+        b = sex_resolution(sex)
+        s = 'interpreted sex as non-empty when empty: %s' % b
+        self.assertIsNone(b, s)
+
+        sex = 'M'
+        expected = 'male'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'MALE'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'Macho'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'Mâle'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'f'
+        expected = 'female'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'FEMALE'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'Hembra'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'Femelle'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'U'
+        expected = 'undetermined'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'unk'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'sex unknown'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'not recorded'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'Indéterminé'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
+
+        sex = 'UpStart'
+        expected = 'upstart'
+        b = sex_resolution(sex)
+        s = 'sex not as expected'
+        s += '\nwas: %s\ngot: %s\nexp: %s\n' % (sex, b, expected)
+        self.assertEqual(b, expected, s)
 
     def test_event_resolution(self):
         print 'testing event_resolution'
