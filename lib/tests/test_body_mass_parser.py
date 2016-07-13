@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "test_body_mass_parser.py 2016-07-08T09:10+02:00"
+__version__ = "test_body_mass_parser.py 2016-07-13T09:21+02:00"
 
 import unittest
 from trait_parsers.body_mass_parser import BodyMassParser
@@ -298,6 +298,10 @@ class TestBodyMassParser(unittest.TestCase):
             target.search_and_normalize(['c701563b-dbd9-4500-184f-1ad61eb8da11']),
             {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
 
+    def test_27(self):
+        self.assertDictEqual(
+            target.search_and_normalize(['body mass=0 g']),
+            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
 
 target = BodyMassParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestBodyMassParser)

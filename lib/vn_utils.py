@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-12T11:44+2:00"
+__version__ = "vn_utils.py 2016-07-13T13:10+2:00"
 
 import csv
 import os
@@ -256,6 +256,10 @@ def occurrence_resolution(rec):
     """
     occremarks = None
     emeans = None
+    recordedby = None
+    if rec.has_key('recordedby') and len(rec['recordedby']) > 0:
+        recordedby = strip_quote(rec['recordedby'])
+
     if rec.has_key('occurrenceremarks') and len(rec['occurrenceremarks']) > 0:
         occremarks = strip_quote(rec['occurrenceremarks'])
 
@@ -264,6 +268,7 @@ def occurrence_resolution(rec):
     
     d = {}
     d['occurrenceremarks'] = occremarks
+    d['recordedby'] = recordedby
     d['establishmentmeans'] = emeans
     return d
 
@@ -1608,6 +1613,14 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
 
         rec[f] = 'a remark with """excessive""" double quotes'
         expected = 'a remark with "excessive" double quotes'
+        b = occurrence_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'recordedby'
+        rec[f] = '"""W.S. Street, J.K. Street and D.M. Lay"""'
+        expected = '"W.S. Street, J.K. Street and D.M. Lay"'
         b = occurrence_resolution(rec)
         s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec[f], b, expected)
         s += '%s not as expected' % f

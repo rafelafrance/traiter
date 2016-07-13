@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "test_total_length_parser.py 2016-07-08T09:14+02:00"
+__version__ = "test_total_length_parser.py 2016-07-13T09:25+02:00"
 
 import unittest
 from trait_parsers.total_length_parser import TotalLengthParser
@@ -577,6 +577,11 @@ class TestTotalLengthParser(unittest.TestCase):
         self.assertEqual(
             target.search_and_normalize(['SVL=44']),
             {'haslength': 1, 'lengthinmm': 44, 'lengthunitsinferred': 1})
+
+    def test_search_and_normalize55(self):
+        self.assertDictEqual(
+            target.search_and_normalize(['SVL=0 g']),
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
 target = TotalLengthParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestTotalLengthParser)

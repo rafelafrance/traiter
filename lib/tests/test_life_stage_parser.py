@@ -336,7 +336,6 @@ class TestLifeStageParser(unittest.TestCase):
             target.preferred_or_search('', ['YOLK SAC']),
             {'derivedlifestage': 'YOLK SAC', 'haslifestage': 1})
 
-
 target = LifeStageParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestLifeStageParser)
 unittest.TextTestRunner().run(suite)

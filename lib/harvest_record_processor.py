@@ -20,7 +20,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-07-12T11:45+02:00"
+__version__ = "harvest_record_processor.py 2016-07-13T13:12+02:00"
 
 import csv
 import argparse
@@ -64,11 +64,23 @@ class VertHarvestFileProcessor:
         self.total_length_parser = TotalLengthParser()
 
     def parse_row_for_traits(self, row):
+        '''
+        Parse traits out of the given fields in the row.
+        '''
         strings = [row['dynamicproperties'], row['occurrenceremarks'], row['fieldnotes']]
         traits  = self.sex_parser.preferred_or_search(row['sex'], strings)
         traits.update(self.life_stage_parser.preferred_or_search(row['lifestage'], strings))
-        traits.update(self.total_length_parser.search_and_normalize(strings))
-        traits.update(self.body_mass_parser.search_and_normalize(strings))
+
+        # Only parse measurements if the record is not an observation. Expects 
+        # row['vntype'] to have been determined.
+        if row.has_key('vntype') and 'obs' in row['vntype'].lower():
+            traits.update({'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
+            traits.update({'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+        else:
+            traits.update(self.total_length_parser.search_and_normalize(strings))
+            traits.update(self.body_mass_parser.search_and_normalize(strings))
+ 
+#        print 'strings: %s\ntraits: %s' % (strings, traits)       
         return traits
 
     def parse_harvest_file(self, infilename, outfilename, header=None):
@@ -124,6 +136,9 @@ class VertHarvestFileProcessor:
         # The record cannot be propagated without an identifier
         if row.has_key('keyname') == False or len(row['keyname']) == 0:
             return None
+
+        ### VNTYPE ###
+        row['vntype'] = vn_type(row) # must come before traits
 
         ### LICENSE ###
         # Translate the field 'iptlicense' to field 'license' if the latter is missing
@@ -187,7 +202,8 @@ class VertHarvestFileProcessor:
             row[key] = value
 
         ### TRAITS ###
-        # Process the traits and add trait fields to the record 
+        # Process the traits and add trait fields to the record, but only if the record
+        # is not an observation. Requires vntype to have been determined.
         # Fields determined: haslength, haslifestage, hasmass, hassex, 
         #   lifestageverbatim, sexverbatim, lengthinmm, massing, 
         #   lengthunitsinferred, massunitsinferred
@@ -208,7 +224,6 @@ class VertHarvestFileProcessor:
         row['wasinvasive'] = was_invasive(row)
         row['hastissue'] = has_tissue(row)
         row['hastypestatus'] = has_typestatus(row)
-        row['vntype'] = vn_type(row)
 
         # The index has a default sort order. In VertNet we set it based on rank, which 
         # is a rough assessment of fitness for a variety of uses requiring a taxon at a 
