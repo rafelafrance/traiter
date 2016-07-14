@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-13T15:03+2:00"
+__version__ = "vn_utils.py 2016-07-14T16:05+2:00"
 
 import csv
 import os
@@ -182,24 +182,32 @@ def record_level_resolution(rec):
     if rec.has_key('pubdate') and len(rec['pubdate'].strip()) > 0:
         pubdate = rec['pubdate'].strip()
 
-    s = ''
-    if title is not None:
-        s += '%s. ' % title 
+    datasetpart = ''
     if publisher is not None:
-        s += '%s. ' % publisher
-    if link is not None:
-        s += '%s. ' % link
+        datasetpart += '%s. ' % publisher
+    if title is not None:
+        datasetpart += '%s. ' % title 
     if doi is not None:
-        s += 'Data set DOI: %s ' % doi
+        datasetpart += 'Dataset DOI: %s.' % doi
+    datasetpart = datasetpart.strip()
+
+    sourcepart = ''
+    if link is not None:
+        sourcepart += 'Source: %s ' % link
     if pubdate is not None:
-        s += '(published on %s)' % pubdate
-    
-    citation = s.strip()
+        sourcepart += '(source published on %s)' % pubdate
+
+    # Citation format
+    # [orgname]. [dataset title]. Dataset DOI: [data set doi]. Source: [source URL] (source published on [source published date]; accessed from VertNet on [today in YYYY-MM-DD format])
+    citation = '%s %s' % (datasetpart, sourcepart)
 
     ### BIBLIOGRAPHICCITATION ###
     # Construct a standardized bibliographic citation following the formula from the 
     # VertNet norms.
-    bib = '%s. %s' % (bestid, citation)
+    # Citation format
+    # [orgname]. [dataset title]. Dataset DOI: [data set doi]. Record ID: [occurrenceID]. Source: [source URL] (source published on [source published date]; accessed from VertNet on [today in YYYY-MM-DD format])
+    recordidpart = 'Record ID: %s.' % bestid
+    bib = '%s %s %s' % (datasetpart, recordidpart, sourcepart)
 
     d = {}
     d['keyname'] = keyname
@@ -1553,7 +1561,6 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         s += '%s not as expected' % f
         self.assertEqual(b[f], expected, s)
 
-###
         rec['basisofrecord'] = 'FOSSIL'
         rec['isfossil']=is_fossil(rec)
         f = 'basisofrecord'
@@ -1566,6 +1573,67 @@ class VNHarvestUtilsTestCase(unittest.TestCase):
         f = 'dctype'
         expected = 'PhysicalObject'
         s = '\nwas: %s\ngot: %s\nexp: %s\n' % (b[f], b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        # Test the citation and bibliographic citation. Format expected:
+        # [orgname]. [dataset title]. Dataset DOI: [data set doi]. 
+        # Record ID: [occurrenceID]. 
+        # Source: [source URL] (source published on [source published date]) 
+        rec={}
+        rec['icode'] = 'ICODE'
+        rec['collectioncode'] = 'CCODE'
+        rec['title'] = 'Title'
+        rec['doi'] = 'a.doi'
+        rec['source_url'] = 'http://the.org/sourceurl'
+        rec['catalognumber'] = 'catnum'
+        rec['pubdate'] = '2016-05-18'
+        f = 'citation'
+        expected = 'ICODE. Title. Dataset DOI: a.doi. '
+        expected += 'Source: http://the.org/sourceurl '
+        expected += '(source published on 2016-05-18)'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec, b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'bibliographiccitation'
+        expected = 'ICODE. Title. Dataset DOI: a.doi. '
+        expected += 'Record ID: catnum. '
+        expected += 'Source: http://the.org/sourceurl '
+        expected += '(source published on 2016-05-18)'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec, b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        rec={}
+        rec['icode'] = 'ICODE'
+        rec['orgname'] = 'Org Name'
+        rec['collectioncode'] = 'CCODE'
+        rec['title'] = 'Dataset Title'
+        # No doi
+        rec['source_url'] = 'http://the.org/sourceurl'
+        rec['catalognumber'] = 'catnum'
+        rec['occurrenceid'] = 'occurrenceID'
+        rec['pubdate'] = '2016-05-18'
+        today = datetime.today().isoformat().split('T')[0]
+        f = 'citation'
+        expected = 'Org Name. Dataset Title. '
+        expected += 'Source: http://the.org/sourceurl '
+        expected += '(source published on 2016-05-18)'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec, b, expected)
+        s += '%s not as expected' % f
+        self.assertEqual(b[f], expected, s)
+
+        f = 'bibliographiccitation'
+        expected = 'Org Name. Dataset Title. '
+        expected += 'Record ID: occurrenceID. '
+        expected += 'Source: http://the.org/sourceurl '
+        expected += '(source published on 2016-05-18)'
+        b = record_level_resolution(rec)
+        s = '\nwas: %s\ngot: %s\nexp: %s\n' % (rec, b, expected)
         s += '%s not as expected' % f
         self.assertEqual(b[f], expected, s)
 
