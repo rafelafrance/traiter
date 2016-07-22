@@ -27,10 +27,11 @@ __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
 __version__ = "field_utils.py 2016-07-12T11:28+2:00"
-
+     
 # Fields expected from the VertNet harvester output: https://github.com/VertNet/gulo
+
 HARVEST_FIELDS = [
-'icode', 'title', 'citation', 'contact', 'dwca', 'email', 'eml', 'emlrights', 
+'icode', 'count', 'title', 'citation', 'contact', 'dwca', 'email', 'eml', 'emlrights', 
 'gbifdatasetid', 'gbifpublisherid', 'doi', 'iptlicense', 'migrator', 'networks', 
 'orgcountry', 'orgname', 'orgstateprovince', 'pubdate', 'source_url', 'url', 'iptrecordid', 
 'associatedmedia', 'associatedoccurrences', 'associatedorganisms', 'associatedreferences', 
@@ -82,9 +83,9 @@ ADDED_FIELDS = [
 
 # Fields to remove from indexing
 REMOVE_FIELDS = [
-'dwca', 'eml', 'iptlicense', 'url', 'taxonid', 'acceptednameusageid', 'parentnameusageid', 
-'originalnameusageid', 'nameaccordingtoid', 'taxonconceptid', 'parentnameusage', 
-'nameaccordingto', 'nomenclaturalstatus', 'taxonremarks']
+'count', 'dwca', 'eml', 'iptlicense', 'url', 'taxonid', 'acceptednameusageid', 
+'parentnameusageid', 'originalnameusageid', 'nameaccordingtoid', 'taxonconceptid', 
+'parentnameusage', 'nameaccordingto', 'nomenclaturalstatus', 'taxonremarks']
 
 # Fields to go in the output
 def index_fields():

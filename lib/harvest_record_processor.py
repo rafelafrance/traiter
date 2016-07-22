@@ -20,7 +20,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-07-13T15:07+02:00"
+__version__ = "harvest_record_processor.py 2016-07-22T18:28+02:00"
 
 import csv
 import argparse
@@ -56,7 +56,7 @@ from trait_parsers.total_length_parser import TotalLengthParser
 
 INDEX_FIELDS = index_fields()
 
-class VertHarvestFileProcessor:
+class VertNetHarvestFileProcessor:
 
     def __init__(self):
         self.body_mass_parser    = BodyMassParser()
@@ -284,7 +284,7 @@ def main():
         print '%s' % s
         return
 
-    processor = VertHarvestFileProcessor()
+    processor = VertNetHarvestFileProcessor()
     inputfile = options.inputfile
     outputfile = options.outputfile
     includeheader = options.includeheader

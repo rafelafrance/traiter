@@ -55,17 +55,21 @@ def record_level_resolution(rec):
     keyname = None    
     #  rec must contain icode
     if rec.has_key('icode') == False or len(rec['icode']) == 0:
+        print 'missing icode in %s' % rec
         return None
 
     # rec must contain either collectioncode or gbifdatasetid
     if rec.has_key('collectioncode') == False or len(rec['collectioncode']) == 0:
         if rec.has_key('gbifdatasetid') == False or len(rec['gbifdatasetid']) == 0:
+            print 'missing collectioncode AND gbifdatasetid in %s' % rec
             return None
 
     # rec must contain either catalognumber or id
     if rec.has_key('catalognumber') == False or len(rec['catalognumber']) == 0:
         if rec.has_key('id') == False or len(rec['id']) == 0:
-            return None
+            if rec.has_key('occurrenceid') == False or len(rec['occurrenceid']) == 0:
+                print 'missing catalognumber AND id in %s' % rec
+                return None
 
     # Create a condensed version of the icode from the VertNet registry as an 
     # institution identifier
