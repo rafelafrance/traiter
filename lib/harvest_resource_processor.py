@@ -17,18 +17,29 @@
 # Adapted from https://github.com/VertNet/bigquery
 
 __author__ = "John Wieczorek"
-__contributors__ = "Javier Otegui, John Wieczorek"
+__contributors__ = "John Wieczorek, Javier Otegui"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_resource_processor.py 2016-07-22T19:31+02:00"
+__version__ = "harvest_resource_processor.py 2016-07-25T18:02+02:00"
 
 from googleapis import CloudStorage as CS
 from creds.google_creds import cs_cred
 from harvest_record_processor import VertNetHarvestFileProcessor
+from harvest_utils import get_harvest_folders_from_file
+from field_utils import index_fields
 from subprocess import call
 from datetime import datetime
 import csv
 import os
 import time
+
+def process_harvest_folders(cs, harvestfolders, processor):
+    for f in harvestfolders:
+        # Time how long it takes to process the folder
+        start = time.time()
+        # Process all of the files in the folder
+        process_harvest_folder(cs, processor, f)
+        end = time.time()
+        print '%s to process %s for %s.' % ((end - start), f['gbifdatasetid'], f['icode'])
 
 def process_harvest_folder(cs, processor, row):
     """Process a single harvest folder."""
@@ -56,14 +67,6 @@ def process_harvest_folder(cs, processor, row):
 
     if len(uri_list) == 0:
         return False
-
-    # List the files found in the harvest folder
-#    print 'Files for %s %s %s' % (row['icode'], row['github_reponame'], row['gbifdatasetid'])
-#    print 'Row information: %s' % row
-#    i = 0
-#    for uri in uri_list:
-#        i += 1
-#        print '%s) %s' % (i, uri)	
 
     localinputfolder = '%s/in' % resource
     localoutputfolder = '%s/out' % resource
@@ -132,7 +135,7 @@ def download_files(destination, uri_list):
             i += 1
             print '%s) downloaded %s to %s' % (i, uri, destination)
     else:
-        print '*** Skipping %s, folder is not empty' % (destination)
+        print '*** Skipping %s, local folder is not empty' % (destination)
         return False
 
 def upload_files(source, params):
@@ -168,47 +171,6 @@ def upload_files(source, params):
         return False
     return True
 
-def check_harvest_folders(cs, folders):
-    '''
-       Check that the harvest folders on the list coming out of CartoDB exists, and how
-       many files are in each.
-    '''
-    total = 0
-    i = 0
-    for f in folders:
-        j = 0
-        if f.has_key('harvestfolder') and len(f['harvestfolder'].strip()) > 0:
-            bucket = f['harvestfolder'].split('/', 1)[0]
-            resource = f['harvestfolder'].split('/', 1)[1]
-#            print 'harvest folder: %s resource: %s' % (f['harvestfolder'], resource)
-#            print ' bucket: %s %s' % (bucket, cs.list_bucket(prefix=resource))
-            # Make a list of files in the harvest folder
-            uri_list = []
-            if 'items' in cs.list_bucket(prefix=resource):
-                for item in cs.list_bucket(prefix=resource)['items']:
-                    uri = '/'.join(["gs:/", bucket, item['name']])
-                    uri_list.append(uri)
-                    j += 1
-            else:
-                # Fail unless all folders can be found. 
-                s = 'Resource %s not found in %s. ' % (resource, bucket)
-                s += 'Check harvestfoldernew value in CartoDB.'
-                print '%s' % s
-                return
-        i += 1
-        total += j
-        print '%s) %s files for %s %s %s' % (i, j, f['icode'], f['gbifdatasetid'], f['harvestfolder'])
-    print 'Total shards: %s' % total
-
-def process_harvest_folders(cs, harvestfolders):
-    for f in harvestfolders:
-        # Time how long it takes to process the folder
-        start = time.time()
-        # Process all of the files in the folder
-        process_harvest_folder(cs, processor, f)
-        end = time.time()
-        print '%s to process %s for %s.' % ((end - start), f['gbifdatasetid'], f['icode'])
-
 def main():
     ''' 
     Get the folders to process. Create the ./data/resource_staging.csv by exporting from
@@ -225,7 +187,7 @@ def main():
     Invoke without parameters as:
        python harvest_resource_processor.py
     '''
-    infilename = 'data/resource_staging.csv'
+    inputfile = './data/resource_staging.csv'
     # Create a CloudStorage Manager to be able to access Google Cloud Storage based on
     # the credentials stored in cs_cred.
     cs = CS.CloudStorage(cs_cred)
@@ -235,23 +197,14 @@ def main():
     processor = VertNetHarvestFileProcessor()
 
     # Create a list of folders on Google Cloud Storage to process
-    harvestfolders = []
+    harvestfolders = get_harvest_folders_from_file(inputfile)
 
-    # Populate the list of folder to harvest from the resource_staging.csv file    
-    with open(infilename, 'r') as infile:
-        print 'Getting GCS folders from %s' % infilename
-        fieldnames = ['icode', 'gbifdatasetid', 'harvestfolder']
-        reader = csv.DictReader(infile, dialect=csv.excel, fieldnames=fieldnames)
-        header = reader.next()
-        for row in reader:
-            harvestfolders.append(row)
+    if harvestfolders is None:
+        print 'No harvest folders found in %s.' % inputfile
+        return None
 
-    # Do a preliminary check of the folders in the harvest list
-    check_harvest_folders(cs, harvestfolders)
-
-    # Process all of the folders from GCS through the post-harvest processing and back
-    # on to GCS in a processed folder.    
-#    process_harvest_folders(cs, harvestfolders)
+    # Process harvest folders from GCS and put them back on GCS in the folder "processed".
+    process_harvest_folders(cs, harvestfolders, processor)
 
 if __name__ == "__main__":
     main()

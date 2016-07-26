@@ -1,5 +1,27 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# The line above is to signify that the script contains utf-8 encoded characters.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # Adapted from https://github.com/un33k/python-slugify/blob/master/slugify/slugify.py
-__version__ = "slugify.py 2016-05-26T11:46-03:00"
+
+# This file contains common utility functions to slugify strings
+
+__author__ = 'John Wieczorek'
+__contributors__ = "Val Neekman, John Wieczorek"
+__copyright__ = "Copyright 2016 vertnet.org"
+__version__ = "slugify.py 2016-07-26T14:03-03:00"
 
 import re
 import unicodedata
