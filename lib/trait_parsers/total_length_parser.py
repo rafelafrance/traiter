@@ -34,6 +34,7 @@ class TotalLengthParser(TraitParser):
 
     def success(self, result):
         return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred']}
+#        return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred'], 'lengthtype': result['normalized_key']}
 
     def fail(self):
         return {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None}

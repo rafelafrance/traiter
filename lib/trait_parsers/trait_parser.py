@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "trait_parser.py 2016-07-13T12:38+02:00"
+__version__ = "trait_parser.py 2016-08-06T12:38+02:00"
 
 import re
 
@@ -58,7 +58,13 @@ class TraitParser:
     def search_and_normalize(self, strings):
         """Search for a good parse and normalize the results."""
         parsed = self.parse_first(strings)
+#        joinedstring = ''
+#         for string in strings:
+#             if string:
+#                 joinedstring += '   '+string
+#        parsed = self.parse(joinedstring)
         if parsed:
+#            print 'strings: %s' % strings
 #            print 'parsed: %s' % parsed
 #            if parsed['value'] == '0':
 #                return self.fail()
@@ -95,6 +101,12 @@ class TraitParser:
             value = self.multiply(values[0], self.unit_conversions[units])
 
         return {'value': value, 'is_inferred': is_inferred}
+#         key = None
+#         if 'key' in parsed and parsed['key']:
+#             if parsed['key'].lower() in self.key_conversions:
+#                 key = self.key_conversions[parsed['key'].lower()]
+#         
+#         return {'value': value, 'is_inferred': is_inferred, 'normalized_key': key}
 
     def multiply(self, value, units):
         value = re.sub(r'[^\d\.]', '', value)

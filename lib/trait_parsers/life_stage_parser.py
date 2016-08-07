@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "life_stage_parser.py 2016-07-08T10:47+02:00"
+__version__ = "life_stage_parser.py 2016-08-05T22:24+02:00"
 
 from trait_parsers.parser_battery import ParserBattery
 from trait_parsers.trait_parser import TraitParser
@@ -86,8 +86,7 @@ class LifeStageParser(TraitParser):
         battery.append(
             'life_stage_unkeyed',
             r'''
-                \b (?P<value> (?: embryos? | embryons? | ovums? | eggs?
-                | larves? |larvae? | larvals? | imagos? | neonates? | fetuses? | fetus?
+                \b (?P<value> (?: larves? |larvae? | larvals? | imagos? | neonates? 
                 | hatchlings? | hatched? | fry? | metamorphs? | premetamorphs
                 | tadpoles? | têtard?
                 | young-of-the-year? | leptocephales? | leptocephalus? 

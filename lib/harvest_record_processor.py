@@ -211,6 +211,7 @@ class VertNetHarvestFileProcessor:
         traits = self.parse_row_for_traits(row)
 #        print 'traits:\n%s' % traits
         for trait in traits:
+#            print 'trait: %s %s' % (trait, traits[trait])
             row[trait]=traits[trait]
         row['underivedsex'] = row['sex']
         row['underivedlifestage'] = row['lifestage']
