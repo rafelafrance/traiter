@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "total_length_parser.py 2016-07-08T09:14+02:00"
+__version__ = "total_length_parser.py 2016-08-07T15:+02:00"
 
 from trait_parsers.parser_battery import ParserBattery
 from trait_parsers.trait_parser import TraitParser
@@ -33,8 +33,9 @@ class TotalLengthParser(TraitParser):
         self.unit_conversions = self._unit_conversions()
 
     def success(self, result):
-        return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred']}
-#        return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred'], 'lengthtype': result['normalized_key']}
+#        return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred']}
+        return {'haslength': 1, 'lengthinmm': result['value'], 
+            'lengthunitsinferred': result['is_inferred'], 'lengthtype': result['n_key']}
 
     def fail(self):
         return {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None}

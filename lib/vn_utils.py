@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-07-14T16:05+2:00"
+__version__ = "vn_utils.py 2016-08-07T23:05+2:00"
 
 import csv
 import os
@@ -269,10 +269,12 @@ def occurrence_resolution(rec):
     occremarks = None
     emeans = None
     recordedby = None
-    if rec.has_key('recordedby') and len(rec['recordedby']) > 0:
+    if rec.has_key('recordedby') and rec['recordedby'] is not None and \
+        len(rec['recordedby']) > 0:
         recordedby = strip_quote(rec['recordedby'])
 
-    if rec.has_key('occurrenceremarks') and len(rec['occurrenceremarks']) > 0:
+    if rec.has_key('occurrenceremarks') and rec['occurrenceremarks'] is not None and \
+        len(rec['occurrenceremarks']) > 0:
         occremarks = strip_quote(rec['occurrenceremarks'])
 
     if rec.has_key('wascaptive') and rec['wascaptive'] == 1:

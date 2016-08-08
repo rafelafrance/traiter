@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "test_total_length_parser.py 2016-07-13T09:25+02:00"
+__version__ = "test_total_length_parser.py 2016-08-07T15:56+02:00"
 
 import unittest
 from trait_parsers.total_length_parser import TotalLengthParser
@@ -308,12 +308,12 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_search_and_normalize_1(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"totalLengthInMM":"123" };']),
-            {'haslength': 1, 'lengthinmm': 123, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 123, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_2(self):
         self.assertDictEqual(
             target.search_and_normalize(['measurements: ToL=230;TaL=115;HF=22;E=18; total length=230 mm; tail length=115 mm;']),
-            {'haslength': 1, 'lengthinmm': 230, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 230, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_3(self):
         self.assertEqual(
@@ -328,123 +328,123 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_search_and_normalize_5(self):
         self.assertDictEqual(
             target.search_and_normalize(['"{"measurements":"308-190-45-20" }"']),
-            {'haslength': 1, 'lengthinmm': 308, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 308, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_6(self):
         self.assertDictEqual(
             target.search_and_normalize(['308-190-45-20']),
-            {'haslength': 1, 'lengthinmm': 308, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 308, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_7(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"measurements":"143-63-20-17=13 g" }']),
-            {'haslength': 1, 'lengthinmm': 143, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 143, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_8(self):
         self.assertDictEqual(
             target.search_and_normalize(['143-63-20-17=13']),
-            {'haslength': 1, 'lengthinmm': 143, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 143, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_9(self):
         self.assertDictEqual(
             target.search_and_normalize(['snout-vent length=54 mm; total length=111 mm; tail length=57 mm; weight=5 g']),
-            {'haslength': 1, 'lengthinmm': 111, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 111, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_10(self):
         self.assertDictEqual(
             target.search_and_normalize(['unformatted measurements=Verbatim weight=X;ToL=230;TaL=115;HF=22;E=18;'
                                          ' total length=230 mm; tail length=115 mm;']),
-            {'haslength': 1, 'lengthinmm': 230, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 230, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_11(self):
         self.assertDictEqual(
             target.search_and_normalize(['** Body length =345 cm; Blubber=1 cm ']),
-            {'haslength': 1, 'lengthinmm': 3450, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 3450, 'lengthunitsinferred': 0, 'lengthtype': 'head-body length'})
 
     def test_search_and_normalize_12(self):
         self.assertDictEqual(
             target.search_and_normalize(['t.l.= 2 feet 3.1 - 4.5 inches ']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_13(self):
         self.assertDictEqual(
             target.search_and_normalize(['2 ft. 3.1 - 4.5 in. ']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_14(self):
         self.assertDictEqual(
             target.search_and_normalize(['total length= 2 ft.']),
-            {'haslength': 1, 'lengthinmm': 610, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 610, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_15(self):
         self.assertDictEqual(
             target.search_and_normalize(['AJR-32   186-102-23-15  15.0g']),
-            {'haslength': 1, 'lengthinmm': 186, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 186, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_16(self):
         self.assertDictEqual(
             target.search_and_normalize(['length=8 mm']),
-            {'haslength': 1, 'lengthinmm': 8, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 8, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_17(self):
         self.assertDictEqual(
             target.search_and_normalize(['another; length=8 mm']),
-            {'haslength': 1, 'lengthinmm': 8, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 8, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_18(self):
         self.assertDictEqual(
             target.search_and_normalize(['another; TL_120, noise']),
-            {'haslength': 1, 'lengthinmm': 120, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 120, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_19(self):
         self.assertDictEqual(
             target.search_and_normalize(['another; TL - 101.3mm, noise']),
-            {'haslength': 1, 'lengthinmm': 101.3, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 101.3, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_20(self):
         self.assertDictEqual(
             target.search_and_normalize(['before; TL153, after']),
-            {'haslength': 1, 'lengthinmm': 153, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 153, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_21(self):
         self.assertDictEqual(
             target.search_and_normalize(['before; Total length in catalog and specimen tag as 117, after']),
-            {'haslength': 1, 'lengthinmm': 117, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 117, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_22(self):
         self.assertDictEqual(
             target.search_and_normalize(['before Snout vent lengths range from 16 to 23 mm. after']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_23(self):
         self.assertDictEqual(
             target.search_and_normalize(['Size=13 cm TL']),
-            {'haslength': 1, 'lengthinmm': 130, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 130, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_24(self):
         self.assertDictEqual(
             target.search_and_normalize(['det_comments:31.5-58.3inTL']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_25(self):
         self.assertDictEqual(
             target.search_and_normalize(['SVL52mm']),
-            {'haslength': 1, 'lengthinmm': 52, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 52, 'lengthunitsinferred': 0, 'lengthtype': 'snout-vent length'})
 
     def test_search_and_normalize_26(self):
         self.assertDictEqual(
             target.search_and_normalize(['snout-vent length=221 mm; total length=257 mm; tail length=36 mm']),
-            {'haslength': 1, 'lengthinmm': 257, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 257, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_27(self):
         self.assertDictEqual(
             target.search_and_normalize(['SVL 209 mm, total 272 mm, 4.4 g.']),
-            {'haslength': 1, 'lengthinmm': 272, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 272, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_28(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"time collected":"0712-0900", "length":"12.0" }']),
-            {'haslength': 1, 'lengthinmm': 12.0, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 12.0, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_29(self):
         self.assertDictEqual(
@@ -455,27 +455,27 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_search_and_normalize_30(self):
         self.assertDictEqual(
             target.search_and_normalize(['TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx']),
-            {'haslength': 1, 'lengthinmm': 44, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 44, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_31(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"totalLengthInMM":"270-165-18-22-31", ']),
-            {'haslength': 1, 'lengthinmm': 270, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 270, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_32(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"length":"20-29" }']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 1})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_33(self):
         self.assertDictEqual(
             target.search_and_normalize(['field measurements on fresh dead specimen were 157-60-20-19-21g']),
-            {'haslength': 1, 'lengthinmm': 157, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 157, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_34(self):
         self.assertDictEqual(
             target.search_and_normalize(['f age class: adult; standard length: 63-107mm']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_35(self):
         self.assertEqual(
@@ -485,22 +485,22 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_search_and_normalize_36(self):
         self.assertDictEqual(
             target.search_and_normalize(['age class: adult; standard length: 18.0-21.5mm']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_37(self):
         self.assertDictEqual(
             target.search_and_normalize(['age class: adult; standard length: 18-21.5mm']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_38(self):
         self.assertDictEqual(
             target.search_and_normalize(['age class: adult; standard length: 18.0-21mm']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_39(self):
         self.assertDictEqual(
             target.search_and_normalize(['age class: adult; standard length: 18-21mm']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_40(self):
         self.assertEqual(
@@ -511,17 +511,17 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_search_and_normalize_41(self):
         self.assertEqual(
             target.search_and_normalize(['20-28mm SL']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_42(self):
         self.assertEqual(
             target.search_and_normalize(['29mm SL']),
-            {'haslength': 1, 'lengthinmm': 29, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 29, 'lengthunitsinferred': 0, 'lengthtype': 'standard length'})
 
     def test_search_and_normalize_43(self):
         self.assertEqual(
             target.search_and_normalize(['{"measurements":"159-?-22-16=21.0" }']),
-            {'haslength': 1, 'lengthinmm': 159, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 159, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_44(self):
         self.assertEqual(
@@ -531,57 +531,72 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_search_and_normalize_45(self):
         self.assertEqual(
             target.search_and_normalize(['Meas: L: 21.0']),
-            {'haslength': 1, 'lengthinmm': 21.0, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 21.0, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_46(self):
         self.assertEqual(
             target.search_and_normalize(['Meas: L: 21.0 cm']),
-            {'haslength': 1, 'lengthinmm': 210.0, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 210.0, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_47(self):
         self.assertEqual(
             target.search_and_normalize(['LABEL. LENGTH 375 MM.']),
-            {'haslength': 1, 'lengthinmm': 375, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 375, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_48(self):
         self.assertEqual(
             target.search_and_normalize(['SL=12mm']),
-            {'haslength': 1, 'lengthinmm': 12, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 12, 'lengthunitsinferred': 0, 'lengthtype': 'standard length'})
 
     def test_search_and_normalize_49(self):
         self.assertEqual(
             target.search_and_normalize(['Size=SL 12-14 mm']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_50(self):
         self.assertEqual(
             target.search_and_normalize(['SV 1.2']),
-            {'haslength': 1, 'lengthinmm': 1.2, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 1.2, 'lengthunitsinferred': 1, 'lengthtype': 'snout-vent length'})
 
     def test_search_and_normalize_51(self):
         self.assertEqual(
             target.search_and_normalize([' Length: 123 mm SL']),
-            {'haslength': 1, 'lengthinmm': 123, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 123, 'lengthunitsinferred': 0, 'lengthtype': 'standard length'})
 
     def test_search_and_normalize_52(self):
         self.assertEqual(
             target.search_and_normalize([' Length: 12-34 mmSL']),
-            {'haslength': 1, 'lengthinmm': 0, 'lengthunitsinferred': 0})
+            {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
 
     def test_search_and_normalize_53(self):
         self.assertEqual(
             target.search_and_normalize(['Measurements: L: 21.0 cm']),
-            {'haslength': 1, 'lengthinmm': 210.0, 'lengthunitsinferred': 0})
+            {'haslength': 1, 'lengthinmm': 210.0, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
     def test_search_and_normalize_54(self):
         self.assertEqual(
             target.search_and_normalize(['SVL=44']),
-            {'haslength': 1, 'lengthinmm': 44, 'lengthunitsinferred': 1})
+            {'haslength': 1, 'lengthinmm': 44, 'lengthunitsinferred': 1, 'lengthtype': 'snout-vent length'})
 
     def test_search_and_normalize55(self):
         self.assertDictEqual(
             target.search_and_normalize(['SVL=0 g']),
             {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
+
+    def test_search_and_normalize56(self):
+        self.assertDictEqual(
+            target.search_and_normalize(['SVL=44', '', 'TL=50mm']),
+            {'haslength': 1, 'lengthinmm': 50, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
+
+    def test_search_and_normalize57	(self):
+        self.assertDictEqual(
+            target.search_and_normalize(['TL=50', '', 'SVL=44mm']),
+            {'haslength': 1, 'lengthinmm': 50, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
+
+    def test_search_and_normalize58	(self):
+        self.assertDictEqual(
+            target.search_and_normalize(['TgL=50', 'some other length', 'SVL=44mm']),
+            {'haslength': 1, 'lengthinmm': 44, 'lengthunitsinferred': 0, 'lengthtype': 'snout-vent length'})
 
 target = TotalLengthParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestTotalLengthParser)

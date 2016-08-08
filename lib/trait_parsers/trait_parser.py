@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "trait_parser.py 2016-08-06T12:38+02:00"
+__version__ = "trait_parser.py 2016-08-07T15:56+02:00"
 
 import re
 
@@ -39,6 +39,7 @@ class TraitParser:
     def parse(self, string):
         """Apply the battery of regular expressions to a string."""
         string = '  '.join(self.WS_SPLIT.split(string.strip()))
+#        print 'string: %s\nparse().parsed:\n%s' % (string, self.battery.parse(string))
         return self.battery.parse(string)
 
     def search(self, strings):
@@ -57,56 +58,64 @@ class TraitParser:
 
     def search_and_normalize(self, strings):
         """Search for a good parse and normalize the results."""
-        parsed = self.parse_first(strings)
-#        joinedstring = ''
-#         for string in strings:
-#             if string:
-#                 joinedstring += '   '+string
-#        parsed = self.parse(joinedstring)
+#        parsed = self.parse_first(strings)
+        joinedstring = ''
+        for string in strings:
+            if string:
+                joinedstring += '   '+string
+        parsed = self.parse(joinedstring)
         if parsed:
 #            print 'strings: %s' % strings
 #            print 'parsed: %s' % parsed
-#            if parsed['value'] == '0':
-#                return self.fail()
+            if parsed['value'] == '0' or parsed['value'] is None:
+                return self.fail()
             normalized = self.normalize(parsed)
-#            print 'normalized: %s' % normalized
-            if normalized['value'] == 0:
+#            print 'normalized:\n%s' % normalized
+            if normalized['value'] == 0 or normalized['value'] is None:
                 return self.fail()
             return self.success(normalized)
         return self.fail()
 
     def normalize(self, parsed):
-        # If units & value is a compound list like "3 ft 6 in"
+        if isinstance(parsed['value'], list):
+            # For now, if value is a list, do not process
+            return {'value': None, 'is_inferred': 0}
+
+        values = self.IS_RANGE.split(parsed['value'])
+        if len(values) > 1:
+            # For now, if value is a range, do not process
+            return {'value': None, 'is_inferred': 0}
+            # If value is a range like "3 - 5 mm"
+            # value = [self.multiply(values[0], self.unit_conversions[units]),
+            #         self.multiply(values[1], self.unit_conversions[units])]
+
         if isinstance(parsed['units'], list):
-            units  = ' '.join(parsed['units']).lower()
-            if self.IS_RANGE.split(parsed['value'][0]) or self.IS_RANGE.split(parsed['value'][1]):
-                value = 0
-            else:
-                value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
-                value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
-            return {'value': value, 'is_inferred': 0}
+            # For now, if units is a list, do not process
+            return {'value': None, 'is_inferred': 0}
+#             units  = ' '.join(parsed['units']).lower()
+#             if self.IS_RANGE.split(parsed['value'][0]) or self.IS_RANGE.split(parsed['value'][1]):
+#                 # TODO: Could do better here by converting the combined values to the 
+#                 # smaller unit (e.g., 3 ft 6 in to 42 in)
+#                 value = 0
+#             else:
+#                 value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
+#                 value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
+#             return {'value': value, 'is_inferred': 0}
 
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
         is_inferred = int(units[0] == '_' if units else True)
 
-        values = self.IS_RANGE.split(parsed['value'])
-        if len(values) > 1:
-            # If value is a range like "3 - 5 mm"
-            # value = [self.multiply(values[0], self.unit_conversions[units]),
-            #         self.multiply(values[1], self.unit_conversions[units])]
-            value = 0
-        else:
-            # Value is just a number and optional units like "3.1 g"
-            value = self.multiply(values[0], self.unit_conversions[units])
+        # Value is just a number and optional units like "3.1 g"
+        value = self.multiply(values[0], self.unit_conversions[units])
 
-        return {'value': value, 'is_inferred': is_inferred}
-#         key = None
-#         if 'key' in parsed and parsed['key']:
-#             if parsed['key'].lower() in self.key_conversions:
-#                 key = self.key_conversions[parsed['key'].lower()]
-#         
-#         return {'value': value, 'is_inferred': is_inferred, 'normalized_key': key}
+        key = None
+        if 'key' in parsed and parsed['key']:
+            if parsed['key'].lower() in self.key_conversions:
+                key = self.key_conversions[parsed['key'].lower()]
+        
+        return {'value': value, 'is_inferred': is_inferred, 'n_key': key}
+#        return {'value': value, 'is_inferred': is_inferred}
 
     def multiply(self, value, units):
         value = re.sub(r'[^\d\.]', '', value)

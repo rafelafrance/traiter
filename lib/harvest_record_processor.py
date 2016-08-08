@@ -20,7 +20,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-07-22T18:28+02:00"
+__version__ = "harvest_record_processor.py 2016-08-07T16:35+02:00"
 
 import csv
 import argparse
@@ -75,7 +75,8 @@ class VertNetHarvestFileProcessor:
         # Only parse measurements if the record is not an observation. Expects 
         # row['vntype'] to have been determined.
         if row.has_key('vntype') and 'obs' in row['vntype'].lower():
-            traits.update({'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None})
+            traits.update({'haslength': 0, 'lengthinmm': None, \
+                'lengthunitsinferred': None, 'lengthtype': None})
             traits.update({'hasmass': 0, 'massing': None, 'massunitsinferred': None})
         else:
             traits.update(self.total_length_parser.search_and_normalize(strings))
@@ -278,7 +279,7 @@ def main():
        options.outputfile is None or len(options.outputfile)==0:
         s =  'syntax:\n'
         s += 'python harvest_record_processor.py'
-        s += ' -i testdata-aa-1record'
+        s += ' -i data/test_traits.txt'
         s += ' -o outfile.txt'
         s += ' -e header'
         s += ' -l DEBUG'
