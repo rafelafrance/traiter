@@ -20,41 +20,19 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "trait_fields_processor.py 2016-08-07T16:35+02:00"
+__version__ = "trait_fields_processor.py 2016-08-09T16:00+02:00"
 
 import csv
 import argparse
-# from field_utils import index_fields
-# from field_utils import HARVEST_FIELDS
 from vn_utils import tsv_dialect
-# from vn_utils import record_level_resolution
-# from vn_utils import license_resolution
+from vn_utils import csv_file_dialect
 from vn_utils import dynamicproperties_resolution
 from vn_utils import occurrence_resolution
-# from vn_utils import sex_resolution
-# from vn_utils import event_resolution
-# from vn_utils import location_resolution
-# from vn_utils import georef_resolution
-# from vn_utils import identification_resolution
-# from vn_utils import is_fossil
-# from vn_utils import is_mappable
-# from vn_utils import was_captive
-# from vn_utils import was_invasive
-# from vn_utils import has_media
-# from vn_utils import has_tissue
-# from vn_utils import has_typestatus
-# from vn_utils import vn_type
-# from vn_utils import rec_rank
-# from datetime import datetime
-# from trait_parsers.body_mass_parser import BodyMassParser
-# from trait_parsers.life_stage_parser import LifeStageParser
-# from trait_parsers.sex_parser import SexParser
 from trait_parsers.total_length_parser import TotalLengthParser
 
 # need to install regex for the trait parsers to be used
 # pip install regex
 
-#INDEX_FIELDS = index_fields()
 HARVEST_FIELDS = [ 'dynamicproperties', 'occurrenceremarks', 'fieldnotes' ]
 INDEX_FIELDS = HARVEST_FIELDS + ['haslength', 'lengthinmm', 'lengthtype', 'lengthunitsinferred']
 
@@ -91,15 +69,15 @@ class VertNetTraitFieldProcessor:
 
     def parse_harvest_file(self, infilename, outfilename, header=None):
         # fields from the original harvest files
-        dialect = tsv_dialect()
+        indialect = csv_file_dialect(infilename)
         parts = outfilename.split('.')
         posfilename = parts[0]+'_pos.'+parts[1]
         negfilename = parts[0]+'_neg.'+parts[1]
-        print 'INDEX_FIELDS: %s' % INDEX_FIELDS
+#        print 'INDEX_FIELDS: %s' % INDEX_FIELDS
         with open(posfilename, 'w') as posfile:
-            poswriter = csv.DictWriter(posfile, dialect=dialect, fieldnames=INDEX_FIELDS)
+            poswriter = csv.DictWriter(posfile, dialect=tsv_dialect(), fieldnames=INDEX_FIELDS)
             with open(negfilename, 'w') as negfile:
-                negwriter = csv.DictWriter(negfile, dialect=dialect, fieldnames=INDEX_FIELDS)
+                negwriter = csv.DictWriter(negfile, dialect=tsv_dialect(), fieldnames=INDEX_FIELDS)
                 # A header is not used in VertNet indexing chunks. The field order must be 
                 # defined in the indexer. A header can be added to the output file by setting 
                 # the optional header parameter.
@@ -108,7 +86,7 @@ class VertNetTraitFieldProcessor:
                     negwriter.writeheader()
 
                 with open(infilename, 'r') as infile:
-                    reader = csv.DictReader(infile, dialect=dialect, fieldnames=HARVEST_FIELDS)
+                    reader = csv.DictReader(infile, dialect=indialect, fieldnames=HARVEST_FIELDS)
                     for row in reader:
 #                        print 'row: %s' % row
                         newrow = self.process_harvest_row(row)

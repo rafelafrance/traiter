@@ -176,7 +176,7 @@ def main():
     Get the folders to process. Create the ./data/resource_staging.csv by exporting from
     CartoDB the results of the following query (modified to filter on harvestfoldernew, 
     for example):
-      SELECT a.icode, a. gbifdatasetid, b.harvestfoldernew
+      SELECT a.icode, a.gbifdatasetid, b.harvestfoldernew
       FROM resource a, resource_staging b
       WHERE 
       a.url=b.url AND
