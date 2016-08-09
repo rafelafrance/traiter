@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "test_body_mass_parser.py 2016-08-07T14:10+02:00"
+__version__ = "test_body_mass_parser.py 2016-08-08T17:02+02:00"
 
 import unittest
 from trait_parsers.body_mass_parser import BodyMassParser
@@ -188,7 +188,7 @@ class TestBodyMassParser(unittest.TestCase):
     def test_5(self):
         self.assertDictEqual(
             target.search_and_normalize(['2 lbs. 3.1 - 4.5 oz ']),
-            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': None, 'massunitsinferred': 0})
 
     def test_6(self):
         self.assertDictEqual(
@@ -265,22 +265,22 @@ class TestBodyMassParser(unittest.TestCase):
     def test_20(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 20.5-31.8']),
-            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
     def test_21(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 20.5-32']),
-            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
     def test_22(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 21-31.8']),
-            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
     def test_23(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 21-32']),
-            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
     def test_24(self):
         self.assertEqual(
@@ -301,7 +301,7 @@ class TestBodyMassParser(unittest.TestCase):
     def test_27(self):
         self.assertDictEqual(
             target.search_and_normalize(['body mass=0 g']),
-            {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
 target = BodyMassParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestBodyMassParser)

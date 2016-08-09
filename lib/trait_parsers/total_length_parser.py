@@ -38,7 +38,7 @@ class TotalLengthParser(TraitParser):
             'lengthunitsinferred': result['is_inferred'], 'lengthtype': result['n_key']}
 
     def fail(self):
-        return {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None}
+        return {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None, 'lengthtype': None}
 
     def _battery(self, common_patterns):
         battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> mm | millimeters ) $ ''')
@@ -218,6 +218,7 @@ class TotalLengthParser(TraitParser):
 
                 # Keys that indicate we have a total length
                 (?P<total_len_key> total  (?&dash) length (?&dash) in (?&dash) mm
+                                 | total  (?&dash) length (?&dash) in
                                  | length (?&dash) in (?&dash) millimeters
                                  | (?: total | max | standard ) (?&dash) lengths?
                                  | meas (?: [a-z]* )? (?&dot) : \s* L
@@ -334,10 +335,12 @@ class TotalLengthParser(TraitParser):
             'tl_'                         : 'total length',
             'tol'                         : 'total length',
             'total'                       : 'total length',
+            'total  length'               : 'total length',
             'total length'                : 'total length',
             'total length in mm'          : 'total length',
             'total lengths'               : 'total length',
             'totallength'                 : 'total length',
+            'totallengthin'               : 'total length',
             'totallengthinmm'             : 'total length',
         }
 

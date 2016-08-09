@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-08-07T23:05+2:00"
+__version__ = "vn_utils.py 2016-08-09T18:51+2:00"
 
 import csv
 import os
@@ -913,8 +913,8 @@ def tsv_dialect():
     dialect.strict=False
     return dialect
 
-def csv_file_dialect(fullpath): 
-    """ Detect the dialect of a CSV or TXT data file.
+def csv_file_dialect(fullpath):
+    """Detect the dialect of a CSV or TXT data file.
     parameters:
         fullpath - full path to the file to process (required)
     returns:
@@ -936,13 +936,18 @@ def csv_file_dialect(fullpath):
     if filesize < readto:
         readto = filesize
 
+    found_doublequotes = False
     with open(fullpath, 'rb') as file:
         # Try to read the specified part of the file
         try:
             buf = file.read(readto)
-            s = 'csv_file_dialect()'
-            s += ' buf:\n%s' % buf
-            logging.debug(s)
+#            s = 'csv_file_dialect()'
+#            s += ' buf:\n%s' % buf
+#            logging.debug(s)
+            # See if the buffer has any doubled double quotes in it. If so, infer that the 
+            # dialect doublequote value should be true.
+            if buf.find('""')>0:
+                found_doublequotes = True
             # Make a determination based on existence of tabs in the buffer, as the
             # Sniffer is not particularly good at detecting TSV file formats. So, if the
             # buffer has a tab in it, let's treat it as a TSV file 
@@ -950,6 +955,7 @@ def csv_file_dialect(fullpath):
                 return tsv_dialect()
 #            dialect = csv.Sniffer().sniff(file.read(readto))
             # Otherwise let's see what we can find invoking the Sniffer.
+            logging.debug('Forced to use csv.Sniffer()')
             dialect = csv.Sniffer().sniff(buf)
         except csv.Error:
             # Something went wrong, so let's try to read a few lines from the beginning of 
@@ -960,6 +966,10 @@ def csv_file_dialect(fullpath):
                 s += ' Re-sniffing with tab to %s' % (readto)
                 logging.debug(s)
                 sample_text = ''.join(file.readline() for x in xrange(2,4,1))
+                # See if the buffer has any doubled double quotes in it. If so, infer that the 
+                # dialect doublequote value should be true.
+                if sample_text.find('""')>0:
+                    found_doublequotes = True
                 dialect = csv.Sniffer().sniff(sample_text)
             # Sorry, couldn't figure it out
             except csv.Error:
@@ -968,10 +978,11 @@ def csv_file_dialect(fullpath):
     
     # Fill in some standard values for the remaining dialect attributes        
     if dialect.escapechar is None:
-        dialect.escapechar='/'
+        dialect.escapechar='\\'
 
     dialect.skipinitialspace=True
     dialect.strict=False
+    dialect.doublequote = found_doublequotes
 
     return dialect
 

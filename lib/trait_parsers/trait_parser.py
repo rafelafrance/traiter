@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "trait_parser.py 2016-08-07T15:56+02:00"
+__version__ = "trait_parser.py 2016-08-09T19:39+02:00"
 
 import re
 
@@ -58,49 +58,40 @@ class TraitParser:
 
     def search_and_normalize(self, strings):
         """Search for a good parse and normalize the results."""
-#        parsed = self.parse_first(strings)
+#        print 'strings: %s' % strings
         joinedstring = ''
         for string in strings:
-            if string:
+            if string is not None:
                 joinedstring += '   '+string
+#        print 'joinedstring: %s' % joinedstring
         parsed = self.parse(joinedstring)
-        if parsed:
-#            print 'strings: %s' % strings
-#            print 'parsed: %s' % parsed
-            if parsed['value'] == '0' or parsed['value'] is None:
-                return self.fail()
+#        print 'parsed: %s' % parsed
+        if parsed is not None:
             normalized = self.normalize(parsed)
 #            print 'normalized:\n%s' % normalized
-            if normalized['value'] == 0 or normalized['value'] is None:
-                return self.fail()
             return self.success(normalized)
         return self.fail()
 
     def normalize(self, parsed):
-        if isinstance(parsed['value'], list):
-            # For now, if value is a list, do not process
-            return {'value': None, 'is_inferred': 0}
+        key = None
+        if 'key' in parsed and parsed['key']:
+            if parsed['key'].lower() in self.key_conversions:
+                key = self.key_conversions[parsed['key'].lower()]
+
+        if isinstance(parsed['units'], list):
+            units  = ' '.join(parsed['units']).lower()
+            if len(self.IS_RANGE.split(parsed['value'][0])) > 1 or \
+               len(self.IS_RANGE.split(parsed['value'][1])) > 1:
+                return {'value': None, 'is_inferred': 0, 'n_key': key + ' range'}
+            else:
+                value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
+                value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
+                return {'value': value, 'is_inferred': 0, 'n_key': key}
 
         values = self.IS_RANGE.split(parsed['value'])
         if len(values) > 1:
-            # For now, if value is a range, do not process
-            return {'value': None, 'is_inferred': 0}
-            # If value is a range like "3 - 5 mm"
-            # value = [self.multiply(values[0], self.unit_conversions[units]),
-            #         self.multiply(values[1], self.unit_conversions[units])]
-
-        if isinstance(parsed['units'], list):
-            # For now, if units is a list, do not process
-            return {'value': None, 'is_inferred': 0}
-#             units  = ' '.join(parsed['units']).lower()
-#             if self.IS_RANGE.split(parsed['value'][0]) or self.IS_RANGE.split(parsed['value'][1]):
-#                 # TODO: Could do better here by converting the combined values to the 
-#                 # smaller unit (e.g., 3 ft 6 in to 42 in)
-#                 value = 0
-#             else:
-#                 value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
-#                 value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
-#             return {'value': value, 'is_inferred': 0}
+            # If value is a range, do not process
+            return {'value': None, 'is_inferred': None, 'n_key': key + ' range'}
 
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
@@ -108,14 +99,12 @@ class TraitParser:
 
         # Value is just a number and optional units like "3.1 g"
         value = self.multiply(values[0], self.unit_conversions[units])
-
-        key = None
-        if 'key' in parsed and parsed['key']:
-            if parsed['key'].lower() in self.key_conversions:
-                key = self.key_conversions[parsed['key'].lower()]
         
+        if value == 0:
+            # If value is a zero, do not process
+            return {'value': None, 'is_inferred': None, 'n_key': None}
+
         return {'value': value, 'is_inferred': is_inferred, 'n_key': key}
-#        return {'value': value, 'is_inferred': is_inferred}
 
     def multiply(self, value, units):
         value = re.sub(r'[^\d\.]', '', value)
@@ -124,6 +113,7 @@ class TraitParser:
         if len(parts) > 1:
             precision = len(parts[1])
         result = round(float(value) * units, precision)
+#        print 'value: %s units: %s result: %s' % (value, units, result)
         return result if precision else int(result)
 
     def CommonRegexMassLength(self):
@@ -145,7 +135,7 @@ class TraitParser:
                 # so we do a positive search for a separator
                 (?P<no_word>  (?: ^ | [;,:"'\{\[\(]+ ) \s* )
 
-                # Keywords that may precedes a shorthand measurement
+                # Keywords that may precede a shorthand measurement
                 (?P<shorthand_words> on \s* tag
                                 | specimens?
                                 | catalog
