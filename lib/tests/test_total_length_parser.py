@@ -633,6 +633,42 @@ class TestTotalLengthParser(unittest.TestCase):
 #             target.search_and_normalize(['{"totalLength":"970", "wing":"390" }', 'L 970 mm', '']),
 #             {'haslength': 1, 'lengthinmm': 970, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
 
+#     def test_search_and_normalize65	(self):
+#         self.assertDictEqual(
+#             target.search_and_normalize(['', 'SOURCE: M.A.CARRIKER JR.', 'LENGTH: 117MM. SOFT PARTS COLOR ON LABEL.']),
+#             {'haslength': 1, 'lengthinmm': 117, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
+
+#     def test_search_and_normalize66	(self):
+#         self.assertDictEqual(
+#             target.search_and_normalize(['Meas:Length (L): 5', '', '']),
+#             {'haslength': 1, 'lengthinmm': 5, 'lengthunitsinferred': 1, 'lengthtype': 'total length'})
+
+#     def test_search_and_normalize67	(self):
+#         self.assertDictEqual(
+#             target.search_and_normalize(['Size=41-148mm SL', '', '']),
+#             {'haslength': 1, 'lengthinmm': None, 'lengthunitsinferred': 0, 'lengthtype': 'standard length'})
+
+#     def test_search_and_normalize68	(self):
+#         self.assertDictEqual(
+#             target.search_and_normalize(['Size=105 mm TL, 87.1 mm PCL', '', '']),
+#             {'haslength': 1, 'lengthinmm': 105, 'lengthunitsinferred': 0, 'lengthtype': 'total length'})
+
+    def test_search_and_normalize69	(self):
+        self.assertDictEqual(
+            target.search_and_normalize(['Total Length: 185-252 mm', '', '']),
+            {'haslength': 1, 'lengthinmm': None, 'lengthunitsinferred': None, 'lengthtype': 'total length range'})
+
+#     def test_search_and_normalize70	(self):
+#         self.assertDictEqual(
+#             target.search_and_normalize(['Total Length: 185 - 252 mm', '', '']),
+#             {'haslength': 1, 'lengthinmm': None, 'lengthunitsinferred': 0, 'lengthtype': 'total length range'})
+
+#     def test_search_and_normalize71	(self):
+#         # This one is a trawl measurement of some kind, not an organism measurement
+#         self.assertDictEqual(
+#             target.search_and_normalize(['{"time collected":"morning", "water depth":"9.1-18.3", "bottom":"rock?", "length":"278" }', '', '']),
+#             {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None, 'lengthtype': None})
+
 target = TotalLengthParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestTotalLengthParser)
 unittest.TextTestRunner().run(suite)

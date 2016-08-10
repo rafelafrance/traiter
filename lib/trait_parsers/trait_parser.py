@@ -62,7 +62,7 @@ class TraitParser:
         joinedstring = ''
         for string in strings:
             if string is not None:
-                joinedstring += '   '+string
+                joinedstring += ';   '+string
 #        print 'joinedstring: %s' % joinedstring
         parsed = self.parse(joinedstring)
 #        print 'parsed: %s' % parsed

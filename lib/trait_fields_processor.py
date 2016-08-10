@@ -25,6 +25,7 @@ __version__ = "trait_fields_processor.py 2016-08-09T16:00+02:00"
 import csv
 import argparse
 from vn_utils import tsv_dialect
+from vn_utils import dialect_attributes
 from vn_utils import csv_file_dialect
 from vn_utils import dynamicproperties_resolution
 from vn_utils import occurrence_resolution
@@ -70,6 +71,7 @@ class VertNetTraitFieldProcessor:
     def parse_harvest_file(self, infilename, outfilename, header=None):
         # fields from the original harvest files
         indialect = csv_file_dialect(infilename)
+#        print 'indialect: %s' % dialect_attributes(indialect)
         parts = outfilename.split('.')
         posfilename = parts[0]+'_pos.'+parts[1]
         negfilename = parts[0]+'_neg.'+parts[1]
@@ -85,21 +87,26 @@ class VertNetTraitFieldProcessor:
                     poswriter.writeheader()
                     negwriter.writeheader()
 
+#                i = 0
                 with open(infilename, 'r') as infile:
                     reader = csv.DictReader(infile, dialect=indialect, fieldnames=HARVEST_FIELDS)
+                    # read the header
+                    reader.next()
                     for row in reader:
 #                        print 'row: %s' % row
+#                        if i % 1 == 0:
                         newrow = self.process_harvest_row(row)
                         if newrow is not None:
                             wrong_fields = [k for k in newrow if k not in INDEX_FIELDS]
 #                           print 'wrong fields: %s' % wrong_fields
                             for f in wrong_fields:
                                 newrow.pop(f)
-#                            print 'newrow: %s' % newrow
+#                               print 'newrow: %s' % newrow
                             if newrow['haslength'] == 1:
                                 poswriter.writerow(newrow)
                             else:
                                 negwriter.writerow(newrow)
+#                        i += 1
 
     def process_harvest_row(self, row):
         """Produces an output record ready for indexing based on a post-harvest input 

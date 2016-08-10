@@ -956,7 +956,7 @@ def csv_file_dialect(fullpath):
 #            dialect = csv.Sniffer().sniff(file.read(readto))
             # Otherwise let's see what we can find invoking the Sniffer.
             logging.debug('Forced to use csv.Sniffer()')
-            dialect = csv.Sniffer().sniff(buf)
+            dialect = csv.Sniffer().sniff(buf,delimiters=',\t|')
         except csv.Error:
             # Something went wrong, so let's try to read a few lines from the beginning of 
             # the file
