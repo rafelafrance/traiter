@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "bigquery_loader.py 2016-07-26T10:24+02:00"
+__version__ = "bigquery_loader.py 2016-09-01T11:49+02:00"
 
 from googleapis import CloudStorage as CS
 from googleapis import BigQuery as BQ
@@ -28,9 +28,21 @@ from creds.google_creds import bq_cred
 from field_utils import index_fields
 from datetime import datetime
 
+def remove_GCS_files(cs, filelist):
+    '''
+       Remove a list of files from GCS, where the filenames in the list are the paths
+       within the bucket defined in cs
+       (e.g., processed/YPM/9643f840-f762-11e1-a439-00145eb45e9a/2016-07-16-aa)
+    '''
+    for file in filelist:
+        try:
+            cs.delete_object(file)
+        except Exception, e:
+            print 'Failed to remove file %s Exception: %s' % (file, e)
+
 def get_processed_files(cs, folder):
     '''
-       Get the list of files in a folder of processed files to copy into BigQuery.
+       Get the list of files in a folder of processed files.
     '''
     bucket = 'vertnet-harvesting'
     resource = 'processed'
@@ -87,42 +99,57 @@ def get_all_processed_folders(cs):
                 token = None
     return folderlist
 
-def check_processed_folders(folderdict):
-    datasetlist = []
-    dupeslist = []
-    instlist = []
-    for folder in folderdict:
-        datasetlist.append(folder)
-    datasetlist.sort()
-    i = 0
-    total = 0
-    for dataset in datasetlist:
-        i += 1
-        inst = dataset.split('/')[1]
-        if inst not in instlist:
-            instlist.append(inst)
-        print '%s) %s (%s)' % (i, dataset, len(folderdict[dataset]['listing']))
-        j = 0
-        dupes = 0
-        for file in folderdict[dataset]['listing']:
-            j +=1
-            if file in dupeslist:
-                print 'Remove duplicates before proceeding. Dupes found in %s.' % file
-                return False
-            else:
-                dupeslist.append(file)
-            print '  %s) %s' % (j, file)
-        total += j
-    print '%s Institutions:' % len(instlist)
-    k = 0
-    for inst in instlist:
-        k += 1
-        print '%s) %s' % (k, inst)
-    s = '%s files found in %s folders' % (total, i)
-    print '%s' % s
-    print 'No duplicates found. But check data set count against expected number.'
-    return True
+def sorted_list_from_dict(thedict):
+    '''
+       Return the keys for a dict in a sorted list.
+    '''
+    thelist = []
+    for key in thedict:
+        thelist.append(key)
+    thelist.sort()
+    return thelist
 
+def multiple_runs_list(folderdict):
+    '''
+       Get the list of folders that have more than one set of processed files (more than
+       one file for the data set ending in '-aa').
+    '''
+    datasetlist = sorted_list_from_dict(folderdict)
+    dupeslist = []
+    for dataset in datasetlist:
+        j = 0
+        for file in folderdict[dataset]['listing']:
+            if file.rfind('-aa') == len(file)-3:
+                j += 1
+        if j>1:
+            dupeslist.append(dataset)
+
+    cleanuplist = []
+    for dataset in dupeslist:
+        j = 0
+        patterns = set([])
+        for file in folderdict[dataset]['listing']:
+            if file.rfind('-aa') == len(file)-3:
+                j += 1
+                patterns.add(file[0:len(file)-3])
+        newpatterns = list(patterns)
+        newpatterns.sort()
+        cleanuplist.append(newpatterns[0])
+    return cleanuplist
+
+def matching_file_list(folderdict, pattern):
+    filelist = []
+    datasetlist = sorted_list_from_dict(folderdict)
+    for dataset in datasetlist:
+        for file in folderdict[dataset]['listing']:
+            if pattern in file:
+#                print 'Dataset: %s' % dataset
+#                print 'file:  %s' % file
+                shard = file[len('gs://vertnet-harvesting/'):len(file)]
+#                print '%s' % shard
+                filelist.append(shard)
+    return filelist
+    
 def load_folders_in_bigquery(cs, folderdict):
     '''
        Load data from all shards in folderdict into the dumps data set in 
@@ -267,30 +294,53 @@ def main():
     cs = CS.CloudStorage(cs_cred)
 
     # Create a dict of processed folders on Google Cloud Storage to copy into BigQuery
+    # Check for folders that have multiple harvest dates in them and clean out old 
+    # versions before loading BigQuery
     processedfolders = get_all_processed_folders(cs)
-
-    # Or create a subset to process based on a particular folder in GCS. 
-    # ***Caution***: The table creation logic only writes to a file called
-    # full_[YYYYMMDD]. Subsequent writes on the same day add data to the existing table.
-#    processedfolders = get_processed_files(cs, 'CCBER')
-#    processedfolders = get_processed_files(cs, 'test')
-#    processedfolders = get_processed_files(cs, 'MVZ/f3e4b261-00c5-4f3a-a5b7-d66075b7f3e1')
-#    processedfolders = get_processed_files(cs, 'UWYMV/b11cbb9e-8ee0-4d9a-8eac-da5d5ab53a31')
-#    processedfolders = get_processed_files(cs, 'MSB/09a17133-1487-440f-93aa-656d75877280')
-#    processedfolders = get_processed_files(cs, 'CM/6720aee6-2aad-446d-bb97-ba009d1b5666')
 
     if processedfolders is None or len(processedfolders) == 0:
         print 'No processed folders found'
         return False
     else:
-        print 'processed folders: %s' % processedfolders
-        print '%s files:' % len(processedfolders)
+        # print 'processed folders: %s' % processedfolders
+        print '%s processed folders:' % len(processedfolders)
         for file in processedfolders:
             print '%s' % file
 
-    if check_processed_folders(processedfolders) == False:
-        print 'Aborting load until processed folder check passes.'
-        return False
+    # Check for duplicate files that indicate that data sets had been 
+    # post-harvest-processed more than once without cleaning up previous processed files. 
+    # Files from previous runs must be removed before loading BigQuery.
+    previousrunslist = multiple_runs_list(processedfolders)
+
+    for f in previousrunslist:
+        print 'Removing GCS files for: %s' % f
+        filestoremove = matching_file_list(processedfolders, f)
+        for f in filestoremove:
+            print '  %s' % f
+        remove_GCS_files(cs,filestoremove)
+   
+    # Check again. First Duplicates should have been removed by now. There may be 
+    # additional duplicates. If there are, abort now with a message to run again.
+    processedfolders = get_all_processed_folders(cs)
+    previousrunslist = multiple_runs_list(processedfolders)
+    if len(previousrunslist) > 0:
+        print 'Processed files from previous runs still exist in GCS.'
+        print 'Previous runs to remove:'
+        for file in previousrunslist:
+            print '  %s' % file
+        print 'Run big_query_loader.py again to attempt to remove these files and upload '
+        print 'to BigQuery.'
+        
+    # Or create a subset to process based on a particular folder in GCS. 
+    # ***Caution***: The table creation logic only writes to a file called
+    # full_[YYYYMMDD]. Subsequent writes on the same day add data to the existing table.
+#    processedfolders = get_processed_files(cs, 'CCBER')
+#    processedfolders = get_processed_files(cs, 'test')
+#    processedfolders = {}
+#    processedfolders.update(get_processed_files(cs, 'MVZ/f3e4b261-00c5-4f3a-a5b7-d66075b7f3e1'))
+#    processedfolders.update(get_processed_files(cs, 'UWYMV/b11cbb9e-8ee0-4d9a-8eac-da5d5ab53a31'))
+#    processedfolders = get_processed_files(cs, 'MSB/09a17133-1487-440f-93aa-656d75877280')
+#    processedfolders = get_processed_files(cs, 'CM/6720aee6-2aad-446d-bb97-ba009d1b5666')
 
     load_folders_in_bigquery(cs, processedfolders)
 
