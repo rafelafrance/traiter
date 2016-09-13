@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-08-09T18:51+2:00"
+__version__ = "vn_utils.py 2016-09-13T12:03+2:00"
 
 import csv
 import os
@@ -1133,7 +1133,7 @@ tissuetokens = \
     ['+t', 'tiss', 'blood', 'dmso', 'dna', 'extract', 'froze', 'forzen',  'freez', 
      'heart', 'muscle', 'higado', 'kidney', 'liver', 'lung', 'nitrogen', 'pectoral', 
      'rinon', 'riñon', 'rnalater', 'sangre', 'toe', 'spleen', 'fin', 'ethanol', 
-     'alcohol', 'etoh']
+     'alcohol', 'etoh', 'fetge', 'cor', 'teixit' ]
 
 def has_tissue(rec):
     """ Check if a record has evidence of tissues viable for DNA extraction.
