@@ -1,6 +1,7 @@
 old/*
 data/*
 documents/*
+docs/*
 .ipynb_checkpoints
 __pycache__
 *.pyc
