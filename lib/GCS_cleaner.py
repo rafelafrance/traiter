@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "bigquery_loader.py 2016-09-01T11:49+02:00"
+__version__ = "bigquery_loader.py 2016-10-25T11:49+02:00"
 
 from googleapis import CloudStorage as CS
 import csv
@@ -43,6 +43,16 @@ def remove_GCS_files(cs, filelist):
     return n
 
 def get_file_list(inputfile):
+    ''' 
+    Make a list of file names from the GCS location list in the input file. From:
+
+    gs://vn-downloads2/MyResults-6908bcf86fa44ed485b3c3b6d77a2aaf.tsv
+    
+    produces:
+    
+    MyResults-6908bcf86fa44ed485b3c3b6d77a2aaf.tsv
+    
+    '''
     if inputfile is None or len(inputfile.strip())==0:
         print 'No file containing list of files given.'
         return None
@@ -58,7 +68,11 @@ def get_file_list(inputfile):
 
 def main():
     ''' 
-    Get the files to process from ./GCSFilesToDelete.txt
+    Get the files to process from ./GCSFilesToDelete.txt Entries in the input file are 
+    assumed to be of the form:
+
+    gs://vn-downloads2/MyResults-6908bcf86fa44ed485b3c3b6d77a2aaf.tsv
+
     Invoke without parameters as:
        python GCS_cleaner.py
     '''
@@ -70,10 +84,13 @@ def main():
 
     # A list of candidate files can be found by 
     #   gsutil ls -l gs://vn-downloads2 > GCSFilesToDelete.txt
-    # then filter for those before 60 days ago.
+    # then filter for those before 60 days ago and rewrite the list to the file.
     
+    # Make a list of file names (only, no buckets) from the input file
     filelist = get_file_list('GCSFilesToDelete.txt')
  
+    # Remove the files in the file list from the Google Cloud Storage bucket defined 
+    # in cs_cred
     filesremoved = remove_GCS_files(cs, filelist)
 
 #    print '%s file(s) removed' % filesremoved
