@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "body_mass_parser.py 2016-07-08T09:10+02:00"
+__version__ = "body_mass_parser.py 2017-01-23T23:18-03:00"
 
 from trait_parsers.parser_battery import ParserBattery
 from trait_parsers.trait_parser import TraitParser
@@ -320,6 +320,7 @@ class BodyMassParser(TraitParser):
             'mg'             : 0.001,
             'mg.'            : 0.001,
             'mgs.'           : 0.001,
+            'mgs'            : 0.001,
             'ounce'          : 28.349,
             'ounces'         : 28.349,
             'oz'             : 28.349,
