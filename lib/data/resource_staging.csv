@@ -1,10 +1,2 @@
 icode,gbifdatasetid,harvestfolder
-HSU,62f37aae-c69a-422f-ad23-32bd92454806,vertnet-harvesting/data/2017-01-23/HSU-hsu_vertebrate_mammals
-MBML,a9317b52-6c43-452c-87d5-ea43e4773058,vertnet-harvesting/data/2017-01-23/MBML-mbml-peixes
-YPM,854cf79e-f762-11e1-a439-00145eb45e9a,vertnet-harvesting/data/2017-01-23/YPM-ipt_vz_orn
-YPM,854f602e-f762-11e1-a439-00145eb45e9a,vertnet-harvesting/data/2017-01-23/YPM-ipt_vz_mam
-YPM,861d3d64-f762-11e1-a439-00145eb45e9a,vertnet-harvesting/data/2017-01-23/YPM-ipt_vz_her
-YPM,96419bea-f762-11e1-a439-00145eb45e9a,vertnet-harvesting/data/2017-01-23/YPM-ipt_vz_ich
-YPM,9643f840-f762-11e1-a439-00145eb45e9a,vertnet-harvesting/data/2017-01-23/YPM-ipt_vp
-ZUEC,186605f8-4f62-4e3a-be58-c6b3b0bc47be,vertnet-harvesting/data/2017-01-23/ZUEC-zuec-amp
-ZUEC,c0e8647d-dd4b-4300-8ad1-8c362fb21d75,vertnet-harvesting/data/2017-01-23/ZUEC-zuec-pis
+USNM,5df38344-b821-49c2-8174-cf0f29f4df0d-Mammals,vertnet-harvesting/data/2017-01-25/USNM-nmnh_mammals

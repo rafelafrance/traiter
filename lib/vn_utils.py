@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2016-10-28T11:29+2:00"
+__version__ = "vn_utils.py 2017-01-27T22:55-3:00"
 
 import csv
 import os
@@ -130,6 +130,8 @@ def record_level_resolution(rec):
                 basisofrecord = 'MachineObservation'
             elif 'human' in s:
                 basisofrecord = 'HumanObservation'
+            elif 'zoo' in s:
+                basisofrecord = 'ZooarchaeologicalSpecimen'
     # Requires is_fossil() to have been used to set rec['isfossil']
     if rec.has_key('isfossil') and rec['isfossil'] == 1:
         basisofrecord = 'FossilSpecimen'

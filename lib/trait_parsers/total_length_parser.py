@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
 __copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "total_length_parser.py 2016-08-07T15:+02:00"
+__version__ = "total_length_parser.py 2017-01-26T11:30-03:00"
 
 from trait_parsers.parser_battery import ParserBattery
 from trait_parsers.trait_parser import TraitParser
@@ -366,6 +366,7 @@ class TotalLengthParser(TraitParser):
             'ft in'        : [304.8, 25.4],
             'ft in.'       : [304.8, 25.4],
             'ft inches'    : [304.8, 25.4],
+            'ft inch'      : [304.8, 25.4],
             'ft inches.'   : [304.8, 25.4],
             'ft ins.'      : [304.8, 25.4],
             'ft.'          : 304.8,
