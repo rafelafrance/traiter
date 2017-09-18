@@ -2,6 +2,7 @@ old/*
 data/*
 documents/*
 docs/*
+venv/*
 .ipynb_checkpoints
 __pycache__
 *.pyc
