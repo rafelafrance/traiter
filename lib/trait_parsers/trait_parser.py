@@ -18,8 +18,10 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "trait_parser.py 2016-08-09T19:39+02:00"
+__copyright__ = "Copyright 2017 vertnet.org"
+__version__ = "trait_parser.py 2017-04-27T16:37-04:00"
+__kurator_content_type__ = "utility"
+__adapted_from__ = ""
 
 import re
 

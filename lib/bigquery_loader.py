@@ -18,8 +18,8 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "bigquery_loader.py 2016-09-01T11:49+02:00"
+__copyright__ = "Copyright 2017 vertnet.org"
+__version__ = "bigquery_loader.py 2017-11-10T15:08-03:00"
 
 from googleapis import CloudStorage as CS
 from googleapis import BigQuery as BQ
@@ -27,6 +27,7 @@ from creds.google_creds import cs_cred
 from creds.google_creds import bq_cred
 from field_utils import index_fields
 from datetime import datetime
+import time
 
 def remove_GCS_files(cs, filelist):
     '''
@@ -68,7 +69,6 @@ def get_all_processed_folders(cs):
     foldercount = 0
     filecount = 0
     token = None
-#    print 'bucket: %s\nfolders: %s' % (bucket, cs.list_bucket(prefix=resource))
     # Make a list of folders in the processed folder
     datasetlist = []
     folderlist = {}
@@ -81,7 +81,6 @@ def get_all_processed_folders(cs):
                 uri = '/'.join(["gs:/", bucket, item['name']])
                 parts = item['name'].split('/')
                 if len(parts) == 4:
-#                    print 'itemname: %s' % item['name']
                     dataset = '/'.join([parts[0],parts[1],parts[2]])
                     if dataset not in datasetlist:
                         datasetlist.append(dataset)
@@ -94,7 +93,6 @@ def get_all_processed_folders(cs):
                 filecount += 1
             if 'nextPageToken' in bucketlist:
                 token = bucketlist['nextPageToken']
-#                print 'nextPageToken: %s' % (token)
             else:
                 token = None
     return folderlist
@@ -143,10 +141,7 @@ def matching_file_list(folderdict, pattern):
     for dataset in datasetlist:
         for file in folderdict[dataset]['listing']:
             if pattern in file:
-#                print 'Dataset: %s' % dataset
-#                print 'file:  %s' % file
                 shard = file[len('gs://vertnet-harvesting/'):len(file)]
-#                print '%s' % shard
                 filelist.append(shard)
     return filelist
     
@@ -157,14 +152,13 @@ def load_folders_in_bigquery(cs, folderdict):
     '''
     # Load BigQuery table schema from file
     schema = get_schema()
-#    print 'constructedschema:\n%s' % schema
     if schema is None:
         return
 
     # BigQuery naming
     dataset_name = 'dumps'
     table_version = format(datetime.today(), '%Y%m%d')
-    table_name = 'full_{0}'.format(table_version)
+    table_name = 'full_load_{0}'.format(table_version)
     load_jobs = {}
 
     # Create the dumps dataset if it doesn't exist
@@ -173,10 +167,8 @@ def load_folders_in_bigquery(cs, folderdict):
     bq.create_dataset(dataset_name)
         
     # Launch a load job for each harvest folder
-#    print 'folderdict: %s' % folderdict
     for folder in folderdict:
         uri_list = folderdict[folder]['listing']
-#        print 'uri_list: %s' % uri_list
         # Launch a job for loading all the chunks in a single folder
         job_id = bq.create_load_job(ds_name=dataset_name,
                                     table_name=table_name,
@@ -185,8 +177,7 @@ def load_folders_in_bigquery(cs, folderdict):
         
         # Store the job_id in the dictionary of job_ids
         load_jobs[folder] = job_id
-
-#    print 'job list:\n%s' % bq.list_jobs()
+        time.sleep(1)
     
     # Wait until all jobs finish
     bq.wait_jobs(10)
@@ -194,29 +185,35 @@ def load_folders_in_bigquery(cs, folderdict):
     # Check failed jobs
     failed_resources = check_failed(bq, load_jobs)
     
+    # Commented out the following, as it was loading resources many times over. 
+    # Work-around for failed resources is to put in a folder filter in the for block
+    # above to try again to load failed resources on a subsequent run of the script. 
+    # Should try to implement that here instead, doing same loop on resources in 
+    # failed_resources list.
     # If any resource failed, run individual jobs for each chunk
-    if len(failed_resources) > 0:
-        # For each failed resource, launch an individual job for each chunk
-        for resource in failed_resources:
-            
-            # Build a list containing the URIs of the shards of a single resource
-            uri_list = build_uri_list(cs, resource)
-            
-            # For each uri (individual chunk)
-            for uri in uri_list:
-                # Launch a load job
-                job_id = bq.create_load_job(ds_name=dataset_name,
-                                    table_name=table_name,
-                                    uri_list=uri_list,
-                                    schema=schema)              
-                # Store the job_id in the dictionary of job_ids
-                load_jobs[uri] = job_id
-        
-        # Wait until all jobs finish
-        bq.wait_jobs(10)
-        
-        # Reset the job_ids dictionary
-        load_jobs = {}
+#     if len(failed_resources) > 0:
+#         # For each failed resource, launch an individual job for each chunk
+#         for resource in failed_resources:
+#             
+#             # Build a list containing the URIs of the shards of a single resource
+#             uri_list = build_uri_list(cs, resource)
+#             
+#             # For each uri (individual chunk)
+#             for uri in uri_list:
+#                 # Launch a load job
+#                 job_id = bq.create_load_job(ds_name=dataset_name,
+#                                     table_name=table_name,
+#                                     uri_list=uri_list,
+#                                     schema=schema)              
+#                 # Store the job_id in the dictionary of job_ids
+#                 load_jobs[uri] = job_id
+#                 time.sleep(1)
+#         
+#         # Wait until all jobs finish
+#         bq.wait_jobs(10)
+#         
+#         # Reset the job_ids dictionary
+#         load_jobs = {}
     
     if len(failed_resources) > 0:
         dump_file = './data/failed.txt'
@@ -274,21 +271,14 @@ def launch_load_job(uri_list):
     return job_id
 
 def main():
-    ''' 
-    Get the folders to process. Create the ./data/resource_staging.csv by exporting from
-    CartoDB the results of the following query (modified to filter on harvestfoldernew, 
-    for example):
-      SELECT a.icode, a. gbifdatasetid, b.harvestfoldernew
-      FROM resource a, resource_staging b
-      WHERE 
-      a.url=b.url AND
-      a.ipt=True AND 
-      a.networks like '%VertNet%' AND
-      harvestfoldernew LIKE 'vertnet-harvesting/data/2016-07-15/%'
-      order by icode, github_reponame asc
-    Invoke without parameters as:
-       python harvest_resource_processor.py
     '''
+    This script analyzes the folders in the Google Cloud vertnet-portal/processing and 
+    then removes up to one older duplicate. If no duplicates are found, the script uses 
+    contents of the vertnet-portal/processing folder to populate a BigQuery table 
+    dumps/full_yyyymmdd. If there are no duplicate folders, expect the script to run to
+    completion in 10 minutes or less.
+    '''
+    
     # Create a CloudStorage Manager to be able to access Google Cloud Storage based on
     # the credentials stored in cs_cred.
     cs = CS.CloudStorage(cs_cred)
@@ -302,7 +292,6 @@ def main():
         print 'No processed folders found'
         return False
     else:
-        # print 'processed folders: %s' % processedfolders
         print '%s processed folders:' % len(processedfolders)
         for file in processedfolders:
             print '%s' % file

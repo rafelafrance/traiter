@@ -1,2 +1,16 @@
 icode,gbifdatasetid,harvestfolder
-USNM,5df38344-b821-49c2-8174-cf0f29f4df0d-Mammals,vertnet-harvesting/data/2017-01-25/USNM-nmnh_mammals
+NMU,a909e61b-b5f6-4592-a699-428619b3dd55,vertnet-harvesting/data/2017-11-10/NMU-nmu_mamm
+NMU,f62c330c-e9ab-4a4b-8887-67b0e2888a28,vertnet-harvesting/data/2017-11-10/NMU-nmu_bird
+NCSM,ea9f5b0b-ad97-45ea-935a-ba2784c80cbb,vertnet-harvesting/data/2017-11-10/NCSM-ncsm_mammals
+NCSM,474cd7e1-7620-454f-828c-24907a15d6a7,vertnet-harvesting/data/2017-11-10/NCSM-ncsm_birds
+NCSM,5f1568db-5d5b-4597-9c66-dfbd0d7ddd7b,vertnet-harvesting/data/2017-11-10/NCSM-ncsm_vertpaleo
+NCSM,d5fafa95-7de2-48c0-bf10-3480bcca4a2b,vertnet-harvesting/data/2017-11-10/NCSM-ncsm_herps
+NCSM,2a79f202-3f3a-4d54-88fa-09aa8de1ac73,vertnet-harvesting/data/2017-11-10/NCSM-ncsm_fishes
+
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NMU/a909e61b-b5f6-4592-a699-428619b3dd55/*&shard_count=10
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NMU/f62c330c-e9ab-4a4b-8887-67b0e2888a28/*&shard_count=10
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NCSM/ea9f5b0b-ad97-45ea-935a-ba2784c80cbb/*&shard_count=10
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NCSM/474cd7e1-7620-454f-828c-24907a15d6a7/*&shard_count=10
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NCSM/5f1568db-5d5b-4597-9c66-dfbd0d7ddd7b/*&shard_count=10
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NCSM/d5fafa95-7de2-48c0-bf10-3480bcca4a2b/*&shard_count=10
+http://dwc-indexer.vertnet-portal.appspot.com/index-gcs-path?namespace=index-2013-08-08&index_name=dwc&bucket_name=vertnet-harvesting&files_list=processed/NCSM/2a79f202-3f3a-4d54-88fa-09aa8de1ac73/*&shard_count=10
