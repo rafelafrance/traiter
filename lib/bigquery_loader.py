@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2017 vertnet.org"
-__version__ = "bigquery_loader.py 2017-11-10T15:08-03:00"
+__version__ = "bigquery_loader.py 2017-11-13T04:31-03:00"
 
 from googleapis import CloudStorage as CS
 from googleapis import BigQuery as BQ
@@ -158,7 +158,8 @@ def load_folders_in_bigquery(cs, folderdict):
     # BigQuery naming
     dataset_name = 'dumps'
     table_version = format(datetime.today(), '%Y%m%d')
-    table_name = 'full_load_{0}'.format(table_version)
+    table_name = 'full_{0}'.format(table_version)
+#    table_name = 'full_20171112'
     load_jobs = {}
 
     # Create the dumps dataset if it doesn't exist
@@ -168,6 +169,10 @@ def load_folders_in_bigquery(cs, folderdict):
         
     # Launch a load job for each harvest folder
     for folder in folderdict:
+#       if folder in ['processed/ROM/e0dbf705-cec4-4dce-a152-fc4ebe14674d', \
+#         'processed/KU/8f79c802-a58c-447f-99aa-1d6a0790825a', \
+#         'processed/FMNH/36f15a36-6b45-442e-9c31-cd633423aee0']:
+        print 'Loading: %s' % folder
         uri_list = folderdict[folder]['listing']
         # Launch a job for loading all the chunks in a single folder
         job_id = bq.create_load_job(ds_name=dataset_name,
