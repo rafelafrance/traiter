@@ -28,8 +28,8 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "vn_utils.py 2017-01-27T22:55-3:00"
+__copyright__ = "Copyright 2018 vertnet.org"
+__version__ = "vn_utils.py 2018-02-02T21:20-3:00"
 
 import csv
 import os
@@ -1078,7 +1078,7 @@ def is_fossil(rec):
     if rec.has_key('basisofrecord'):
         if 'fossil' in rec['basisofrecord'].lower():
             return 1
-    if rec.has_key('networks'):
+    elif rec.has_key('networks'):
         if 'paleo' in rec['networks'].lower():
             return 1
     return 0
