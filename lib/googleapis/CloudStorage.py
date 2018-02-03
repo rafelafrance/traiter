@@ -20,8 +20,8 @@
 
 __author__ = 'Javier Otegui'
 __contributors__ = "Javier Otegui, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "CloudStorage.py 2016-07-26T12:38+2:00"
+__copyright__ = "Copyright 2017 vertnet.org"
+__version__ = "CloudStorage.py 2017-11-19T13:06-3:00"
 
 import json
 import time
@@ -159,3 +159,7 @@ class CloudStorage(GoogleAPI):
         )
         resp = req.execute()
         return resp
+
+    def bucket(self):
+        """Get bucket name."""
+        return self._BUCKET_NAME

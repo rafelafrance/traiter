@@ -19,8 +19,9 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "field_utils.py 2016-08-07T16:34+2:00"
+__copyright__ = "Copyright 2017 vertnet.org"
+__version__ = "field_utils.py 2017-11-19T11:45-3:00"
+from google.cloud import bigquery
      
 # Fields expected from the VertNet harvester output: https://github.com/VertNet/gulo
 
@@ -81,9 +82,37 @@ REMOVE_FIELDS = [
 'parentnameusageid', 'originalnameusageid', 'nameaccordingtoid', 'taxonconceptid', 
 'parentnameusage', 'nameaccordingto', 'nomenclaturalstatus', 'taxonremarks']
 
+# Fields for usage logs
+LOG_SCHEMA = [
+bigquery.SchemaField('cartodb_id', 'integer', 'NULLABLE', None, ()),
+bigquery.SchemaField('the_geom', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('query', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('client', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('created_at', 'timestamp', 'NULLABLE', None, ()), 
+bigquery.SchemaField('updated_at', 'timestamp', 'NULLABLE', None, ()), 
+#bigquery.SchemaField('the_geom_webmercator', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('error', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('type', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('count', 'integer', 'NULLABLE', None, ()), 
+bigquery.SchemaField('downloader', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('lat', 'float', 'NULLABLE', None, ()), 
+bigquery.SchemaField('lon', 'float', 'NULLABLE', None, ()), 
+bigquery.SchemaField('download', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('results_by_resource', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('matching_records', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('response_records', 'integer', 'NULLABLE', None, ()), 
+bigquery.SchemaField('api_version', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('request_source', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('query_version', 'string', 'NULLABLE', None, ()), 
+bigquery.SchemaField('source', 'string', 'NULLABLE', None, ())]
+
 # Fields to go in the output
 def index_fields():
     indexthese = HARVEST_FIELDS + ADDED_FIELDS
     for f in REMOVE_FIELDS:
         indexthese.remove(f)
     return indexthese
+
+# Fields to go in the logs
+def log_fields():
+    return LOG_FIELDS

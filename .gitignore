@@ -1,6 +1,9 @@
 old/*
-data/*
+lib/data/*
+lib/vertnet_latest*
 documents/*
+lib/tests/*
+lib/creds/*
 .ipynb_checkpoints
 __pycache__
 .classpath

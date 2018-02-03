@@ -19,7 +19,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
 __copyright__ = "Copyright 2017 vertnet.org"
-__version__ = "bigquery_loader.py 2017-11-13T04:31-03:00"
+__version__ = "bigquery_loader.py 2017-11-30T14:33-03:00"
 
 from googleapis import CloudStorage as CS
 from googleapis import BigQuery as BQ
@@ -159,7 +159,7 @@ def load_folders_in_bigquery(cs, folderdict):
     dataset_name = 'dumps'
     table_version = format(datetime.today(), '%Y%m%d')
     table_name = 'full_{0}'.format(table_version)
-#    table_name = 'full_20171112'
+    table_name = 'vertnet_latest'
     load_jobs = {}
 
     # Create the dumps dataset if it doesn't exist
@@ -328,13 +328,12 @@ def main():
     # Or create a subset to process based on a particular folder in GCS. 
     # ***Caution***: The table creation logic only writes to a file called
     # full_[YYYYMMDD]. Subsequent writes on the same day add data to the existing table.
-#    processedfolders = get_processed_files(cs, 'CCBER')
-#    processedfolders = get_processed_files(cs, 'test')
 #    processedfolders = {}
-#    processedfolders.update(get_processed_files(cs, 'MVZ/f3e4b261-00c5-4f3a-a5b7-d66075b7f3e1'))
-#    processedfolders.update(get_processed_files(cs, 'UWYMV/b11cbb9e-8ee0-4d9a-8eac-da5d5ab53a31'))
+#    processedfolders.update(get_processed_files(cs, 'CERMES/8f6d3a0d-10d2-44e3-8612-be219376c860'))
+#    processedfolders.update(get_processed_files(cs, 'CERMES/7904180c-36c9-40ca-aed2-463e36a04df7'))
+#    processedfolders.update(get_processed_files(cs, 'LSUMZ/847e2306-f762-11e1-a439-00145eb45e9a'))
+#    processedfolders = get_processed_files(cs, 'CCBER')
 #    processedfolders = get_processed_files(cs, 'MSB/09a17133-1487-440f-93aa-656d75877280')
-#    processedfolders = get_processed_files(cs, 'CM/6720aee6-2aad-446d-bb97-ba009d1b5666')
 
     load_folders_in_bigquery(cs, processedfolders)
 
