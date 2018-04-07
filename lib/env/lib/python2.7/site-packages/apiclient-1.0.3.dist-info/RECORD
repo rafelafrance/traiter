@@ -1,0 +1,13 @@
+apiclient/__init__.py,sha256=SOJ1tzoSN-KDr48vYSoX6sBxOhv-iSXL2i0_1GrGya0,89
+apiclient/base.py,sha256=bPC9ptugcPXqQGl3dSc9xQupufB4WUIa2n0ECs98Tp0,1513
+apiclient/ratelimiter.py,sha256=gTP48SnZ8aKmwxQAf3lc3fGNEvl1MB-2PUgB2QjKHqc,1242
+apiclient-1.0.3.dist-info/DESCRIPTION.rst,sha256=u6gvT_Pk6vl1dHkVhp3n_SBqx8aOxofe_uUgwo-yHQM,3512
+apiclient-1.0.3.dist-info/METADATA,sha256=pX7eS2Kn3LuRkfxBCjKqWffvzh6vdmVVuZcjt0MNfTA,4184
+apiclient-1.0.3.dist-info/RECORD,,
+apiclient-1.0.3.dist-info/WHEEL,sha256=JTb7YztR8fkPg6aSjc571Q4eiVHCwmUDlX8PhuuqIIE,92
+apiclient-1.0.3.dist-info/metadata.json,sha256=n7cnF4Qbwsu2pe_xFnwbO4DhEsLXEljysKi_O9GjOBY,927
+apiclient-1.0.3.dist-info/top_level.txt,sha256=CNL4yr8OrNw2YMoKsuFme2txKhQ3YQC61464soKjmNk,10
+apiclient-1.0.3.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+apiclient/base.pyc,,
+apiclient/__init__.pyc,,
+apiclient/ratelimiter.pyc,,

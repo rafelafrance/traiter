@@ -29,7 +29,7 @@
 __author__ = "John Wieczorek"
 __contributors__ = "Aaron Steele, John Wieczorek"
 __copyright__ = "Copyright 2018 vertnet.org"
-__version__ = "vn_utils.py 2018-02-02T21:20-3:00"
+__version__ = "vn_utils.py 2018-04-07T10:43-3:00"
 
 import csv
 import os
@@ -1080,6 +1080,18 @@ def is_fossil(rec):
             return 1
     elif rec.has_key('networks'):
         if 'paleo' in rec['networks'].lower():
+            return 1
+    return 0
+
+def is_archaeological(rec):
+    """ Check if a record represents an archaeological specimen.
+    parameters:
+        rec - dictionary to search (required)
+    returns:
+        True if the dictionary represents an archaeological specimen, otherwise False.
+    """
+    if rec.has_key('networks'):
+        if 'arch' in rec['networks'].lower():
             return 1
     return 0
 

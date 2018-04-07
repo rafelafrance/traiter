@@ -19,8 +19,8 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "Raphael LaFrance, Aaron Steele, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "harvest_record_processor.py 2016-08-07T16:35+02:00"
+__copyright__ = "Copyright 2018 vertnet.org"
+__version__ = "harvest_record_processor.py 2018-04-07T10:44-03:00"
 
 import csv
 import argparse
@@ -37,6 +37,7 @@ from vn_utils import location_resolution
 from vn_utils import georef_resolution
 from vn_utils import identification_resolution
 from vn_utils import is_fossil
+from vn_utils import is_archaeological
 from vn_utils import is_mappable
 from vn_utils import was_captive
 from vn_utils import was_invasive
@@ -123,6 +124,20 @@ class VertNetHarvestFileProcessor:
         
         ### ISFOSSIL ###
         row['isfossil'] = is_fossil(row) # must come before record_level_resolution
+
+        ### ISARCH ###
+        row['isarch'] = is_archaeological(row)
+
+        ### RECORD_LEVEL ###
+        # Create a record identifier (keyname) - docid in Google App Engine documents
+        # Create a reference to the record details (references)
+        # Other fields determined: keyname, references, citation, bibliographiccitation, 
+        #   basisofrecord, dctype
+        c = record_level_resolution(row)
+#        print 'ids:\n%s' % c
+        # Set values of fields from dictionary
+        for key, value in c.iteritems():
+            row[key] = value
 
         ### RECORD_LEVEL ###
         # Create a record identifier (keyname) - docid in Google App Engine documents
