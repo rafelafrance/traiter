@@ -1,10 +1,5 @@
 icode,gbifdatasetid,harvestfolder
-CMN,74f92761-3a24-4d85-9bfb-00b1fee0119d,vertnet-harvesting/data/2018-01-25/CMN-cmn_amphibian_reptile
-CMN,848586a4-a07b-4974-9f12-e1bbe0736a21,vertnet-harvesting/data/2018-01-25/CMN-cmn_bird
-CMN,dc3bfd08-0141-45ae-9603-91ac50cdc33b,vertnet-harvesting/data/2018-01-25/CMN-cmn_fish
-CMN,f86a681d-7db8-483b-819a-248def18b70a,vertnet-harvesting/data/2018-01-25/CMN-cmn_mammal
-HSU,37da8155-b024-4312-9456-9f69d0873c4b,vertnet-harvesting/data/2018-01-22/HSU-hsu_wildlife_eggs_nests
-HSU,41a910f3-db13-4520-a3b2-199edb4a32ea,vertnet-harvesting/data/2018-01-22/HSU-hsu_wildlife_mammals
-HSU,9c007868-b667-4c07-9a1a-96b796066f64,vertnet-harvesting/data/2018-01-22/HSU-hsu_wildlife_birds
-LACM,7a25f7aa-03fb-4322-aaeb-66719e1a9527,vertnet-harvesting/data/2018-01-22/LACM-lacm_verts
-RMCA,85e8c69c-f762-11e1-a439-00145eb45e9a,vertnet-harvesting/data/2018-01-22/RMCA-herpnet_rmca
+UF-Archaeology,3f42d91f-acc2-46e2-a807-f117eab8b762,vertnet-harvesting/data/2018-04-07/UF-Archaeology-uf_zooarch_parnell_feature1
+UF-Archaeology,80eaf2ed-c5ec-4c36-a9b7-a0b7023a8edf,vertnet-harvesting/data/2018-04-07/UF-Archaeology-tick_island_zooarchaeological_data
+UF-Archaeology,d8fd5432-0cb3-4354-8be8-874f2c047f8d,vertnet-harvesting/data/2018-04-07/UF-Archaeology-baptizing_springs
+UF-Archaeology,e727fcd0-e519-4fcc-9710-082762b4c262,vertnet-harvesting/data/2018-04-07/UF-Archaeology-north_midden
