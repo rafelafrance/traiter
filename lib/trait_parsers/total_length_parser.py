@@ -1,6 +1,30 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# The line above is to signify that the script contains utf-8 encoded characters.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Adapted from https://github.com/rafelafrance/traiter
+
+__author__ = "John Wieczorek"
+__contributors__ = "Raphael LaFrance, John Wieczorek"
+__copyright__ = "Copyright 2017 vertnet.org"
+__version__ = "total_length_parser.py 2017-04-27T16:37-04:00"
+__kurator_content_type__ = "utility"
+__adapted_from__ = ""
+
 from trait_parsers.parser_battery import ParserBattery
 from trait_parsers.trait_parser import TraitParser
-
 
 class TotalLengthParser(TraitParser):
 
@@ -11,10 +35,12 @@ class TotalLengthParser(TraitParser):
         self.unit_conversions = self._unit_conversions()
 
     def success(self, result):
-        return {'hasLength': 1, 'lengthInMM': result['value'], 'wereLengthUnitsInferred': result['is_inferred']}
+#        return {'haslength': 1, 'lengthinmm': result['value'], 'lengthunitsinferred': result['is_inferred']}
+        return {'haslength': 1, 'lengthinmm': result['value'], 
+            'lengthunitsinferred': result['is_inferred'], 'lengthtype': result['n_key']}
 
     def fail(self):
-        return {'hasLength': 0, 'lengthInMM': 0, 'wereLengthUnitsInferred': 0}
+        return {'haslength': 0, 'lengthinmm': None, 'lengthunitsinferred': None, 'lengthtype': None}
 
     def _battery(self, common_patterns):
         battery = ParserBattery(parse_units=True, units_from_key=r''' (?P<units> mm | millimeters ) $ ''')
@@ -194,6 +220,7 @@ class TotalLengthParser(TraitParser):
 
                 # Keys that indicate we have a total length
                 (?P<total_len_key> total  (?&dash) length (?&dash) in (?&dash) mm
+                                 | total  (?&dash) length (?&dash) in
                                  | length (?&dash) in (?&dash) millimeters
                                  | (?: total | max | standard ) (?&dash) lengths?
                                  | meas (?: [a-z]* )? (?&dot) : \s* L
@@ -310,10 +337,12 @@ class TotalLengthParser(TraitParser):
             'tl_'                         : 'total length',
             'tol'                         : 'total length',
             'total'                       : 'total length',
+            'total  length'               : 'total length',
             'total length'                : 'total length',
             'total length in mm'          : 'total length',
             'total lengths'               : 'total length',
             'totallength'                 : 'total length',
+            'totallengthin'               : 'total length',
             'totallengthinmm'             : 'total length',
         }
 
@@ -339,6 +368,7 @@ class TotalLengthParser(TraitParser):
             'ft in'        : [304.8, 25.4],
             'ft in.'       : [304.8, 25.4],
             'ft inches'    : [304.8, 25.4],
+            'ft inch'      : [304.8, 25.4],
             'ft inches.'   : [304.8, 25.4],
             'ft ins.'      : [304.8, 25.4],
             'ft.'          : 304.8,
