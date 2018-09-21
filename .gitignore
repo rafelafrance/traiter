@@ -3,6 +3,7 @@ lib/data/
 lib/vertnet_latest*
 documents/
 data/
+lib/venv/
 
 ddocs/
 venv/
