@@ -18,11 +18,11 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "John Wieczorek, Javier Otegui"
-__copyright__ = "Copyright 2017 vertnet.org"
-__version__ = "harvest_resource_processor.py 2017-11-10T12:29-03:00"
+__copyright__ = "Copyright 2018 vertnet.org"
+__version__ = "harvest_resource_processor.py 2018-09-21T12:58-03:00"
 
 from googleapis import CloudStorage as CS
-from creds.google_creds import cs_cred
+from google_creds import cs_cred
 from harvest_record_processor import VertNetHarvestFileProcessor
 from harvest_utils import get_harvest_folders_from_file
 from field_utils import index_fields
@@ -176,13 +176,11 @@ def main():
     Get the folders to process. Create the ./data/resource_staging.csv by exporting from
     Carto the results of the following query (modified to filter on harvestfolder, 
     for example):
-      SELECT icode, gbifdatasetid, harvestfolder
-      FROM resource_staging b
+      SELECT icode,gbifdatasetid,harvestfolder 
+      FROM resource_staging
       WHERE 
-      ipt=True AND 
-      networks like '%VertNet%' AND
-      harvestfolder LIKE 'vertnet-harvesting/data/2017-11-10/%'
-      order by icode, github_reponame asc
+      lastindexed='2017-01-23'
+      ORDER BY icode, gbifdatasetid ASC
 
     Invoke without parameters as:
        python harvest_resource_processor.py

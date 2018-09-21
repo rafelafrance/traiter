@@ -18,17 +18,17 @@
 
 __author__ = "John Wieczorek"
 __contributors__ = "Javier Otegui, John Wieczorek"
-__copyright__ = "Copyright 2016 vertnet.org"
-__version__ = "check_harvest_folder_GCS.py 2016-07-25T17:33+02:00"
+__copyright__ = "Copyright 2018 vertnet.org"
+__version__ = "check_harvest_folder_GCS.py 2018-09-21T12:50-03:00"
 
 from googleapis import CloudStorage as CS
-from creds.google_creds import cs_cred
+from google_creds import cs_cred
 from harvest_utils import get_harvest_folders_from_file
 import csv
 
 def check_harvest_folder_GCS(cs, folders):
     '''
-       Check that the harvest folders on the list coming out of CartoDB exists, and how
+       Check that the harvest folders on the list coming out of Carto exist, and how
        many files are in each.
     '''
     if cs is None:
@@ -54,7 +54,7 @@ def check_harvest_folder_GCS(cs, folders):
             else:
                 # Fail unless all folders can be found. 
                 s = 'Resource %s not found in %s. ' % (resource, bucket)
-                s += 'Check harvestfoldernew value in CartoDB.'
+                s += 'Check harvestfoldernew value in Carto.'
                 print '%s' % s
                 return False
         i += 1
@@ -66,18 +66,15 @@ def check_harvest_folder_GCS(cs, folders):
 def main():
     ''' 
     Get the folders to process. Create the ./data/resource_staging.csv by exporting from
-    CartoDB the results of the following query (modified to filter on harvestfoldernew, 
-    for example):
-      SELECT a.icode, a. gbifdatasetid, b.harvestfoldernew
-      FROM resource a, resource_staging b
+    Carto the results of the query (modified to filter on lastindexed, for example):
+      SELECT icode,gbifdatasetid,harvestfolder 
+      FROM resource_staging
       WHERE 
-      a.url=b.url AND
-      a.ipt=True AND 
-      a.networks like '%VertNet%' AND
-      harvestfoldernew LIKE 'vertnet-harvesting/data/2016-07-15/%'
-      order by icode, github_reponame asc
+      lastindexed='2017-01-23'
+      ORDER BY icode, gbifdatasetid ASC
+
     Invoke without parameters as:
-       python harvest_resource_processor.py
+       python check_harvest_folder_GCS.py
     '''
     inputfile = './data/resource_staging.csv'
     # Create a CloudStorage Manager to be able to access Google Cloud Storage based on

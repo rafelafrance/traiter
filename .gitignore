@@ -4,6 +4,7 @@ lib/vertnet_latest*
 documents/*
 lib/tests/*
 lib/creds/*
+google_creds*
 .ipynb_checkpoints
 __pycache__
 .classpath
