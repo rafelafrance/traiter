@@ -2,6 +2,7 @@
 
 .env
 venv/
+.venv/
 
 # Python
 
@@ -28,7 +29,7 @@ data/raw/*
 
 # Temp files
 temp/
-old/
+#old/
 junk*
 
 # Test
