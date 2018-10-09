@@ -1,0 +1,27 @@
+#### Extract trait data from Vernet and iDigBio records and associate them with ontology terms and convert to triples
+
+3.1.1 General approach
+
+For this grant, are primary goal is getting useful trait data to the community and the secondary goal is exploring new extraction techniques. We are going to use an iterative process that will go through the following steps repeatedly until we reach the stopping criteria. As much as possible, we will be using existing open source software and well established parsing techniques. We will start exploring machine learning (ML) techniques later. Upon first inspection, the size of the database may appear large but because of the wide variety of input forms (trait phrases) we are concerned that there are too few of each training example for ML techniques to be useful at first. We are also concerned that the idiosyncratic and spare nature of the input will hinder use use of transfer learning techniques.
+
+3.1.2 Preliminary analysis of the Vertnet and iDigBio data
+
+First we will map the traits we are extracting to the ontologies and what RDF triples we will use for the for entering the ontological data into the graph database. Using that, we will then examine how the raw data aligns with the ontological mapping. We will start by finding the vocabularies that are used in raw data. This is a list on n-grams in the raw data that we can map back to the ontologies. These n-grams include synonyms, abbreviations, jargon, terms, and values for the traits. This list will need to be manually checked for accuracy. The result of this will be the "anchor words" we will use for finding phrases to parse.
+
+Next we will use the anchor words to find the trait phrases that exist in the raw data. Although there are common data entry motifs there are no hard rules for how the data is structured and the data is rife with shorthand and idiosyncratic notation. For example, total length can be written in as "Total Length: 20cm", or as "20cm T.L.", etc. Controlled vocabularies can sometimes have a signifier like "Life Stage: Adult" and other times we will just see the word "Adult" without a signifier. In other cases we will see uncommented shorthand notations like "157-60-20-19-21g" and we will need to extract the proper values from that. We will use expert advice on which forms are appropriate for which phylogenetic groups.
+
+The trait phrases are used to build up the parsers which can be applied to a window of raw text around the anchor word. The parsers are also applied in the appropriate phylogenetic context, not all trait phrases are appropriate for all phylogenies.
+
+3.1.3 Extract trait data from Vernet and iDigBio records
+
+Rather than trying to parse all of the data at once, we start by scanning the raw data for any of the anchor words we found above. We extract a window around the anchor words and parse that. We can use standard lexical analysis and very simple parsers. The only caveats are that we want to apply the parsers in the appropriate context, plant traits for plants etc., and we are looking for the longest correct parse around the anchor.
+
+Once we have a correct parse we will create the ontological mappings and RFD triples that are suitable for entry into a graphing database. Aside from the traits themselves we will have to record where the parse started and ended so that we can annotate the trait in the raw text. This annotation is also helpful for manual quality control measures (described below). We will also record if what parts of the trait were inferred (typically units) and if the values we entered as a numeric range or a sequence of enumerated values.
+
+3.1.4 Testing of parsers and stopping criteria
+
+Aside from the heavy unit tests the previous steps will have we also need to tests the parses themselves. We will use a series of manual and automated tests for the parses for correctness. One of the simple automated test is when we already have a trait value, does the parsed value match the entered value? Another automated test is, are the data in a reasonable range for the other extracted traits in the phylogenetic group? Outliers are not necessarily errors but they do require further examination. If we have extracted the trait multiple times, do all of the extractions agree? Although these tests are automated, manual inspection of the discrepancies is required.
+
+After the automated test we do a manual verification by choosing n records at random and looking at the annotations. The questions answered here are did we find all possible parses (false negatives)? This is typically due to missing trait phrase forms or missing n-grams. Did we parse something we should not have (false positives)? This is often due to inappropriately picking up enumerated traits without a signifier. And did we use the correct form to parse the trait? Where we answer things like: Did we miss the units? Did we miss a signifier? etc.
+
+Once we have done this we can see if we have reached an acceptable stopping point. We will look at the Matthews correlation coefficients to determine the quality of the matches. If they are too low then we will correct the inaccuracies and start another iteration. Not all corrections actually improve the score and sometimes they actually lessen the overall quality by impacting other parsers. Which in turn may require more corrections and so on. So, we need to weight the effort required to improve the parsers with the significance on the overall quality of the extractions.

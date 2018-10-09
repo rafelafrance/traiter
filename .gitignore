@@ -1,27 +1,42 @@
-old/
-lib/data/
-lib/vertnet_latest*
-documents/
-data/
-lib/venv/
+# Environment
 
-ddocs/
+.env
 venv/
-.ipynb_checkpoints
-__pycache__
+
+# Python
+
 *.pyc
-traits/
-lib/creds/
-google_creds
-.ipynb_checkpoints
+*.swp
 __pycache__
-.classpath
-.project
-.settings
-target
-.DS_Store
-*.class
-*.pyc
-*.tar.gz
-*.egg-info
-*.whl
+.ipynb_checkpoints/
+
+# Data
+
+output/
+
+data/external/
+!data/external/.gitkeep
+
+data/interim/*
+!data/interim/.gitkeep
+
+data/processed/*
+!data/processed/.gitkeep
+
+data/raw/*
+!data/raw/.gitkeep
+
+# Temp files
+temp/
+old/
+junk*
+
+# Test
+.coverage
+.cache
+.hypothesis
+
+# R
+.Rhistory
+.RData
+
