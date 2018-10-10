@@ -29,7 +29,7 @@ data/raw/*
 
 # Temp files
 temp/
-#old/
+old/
 junk*
 
 # Test
@@ -40,4 +40,3 @@ junk*
 # R
 .Rhistory
 .RData
-
