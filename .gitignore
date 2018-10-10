@@ -1,18 +1,18 @@
-# Environment
+# Editors
+.ropenproject
 
+# Environment
 .env
 venv/
 .venv/
 
 # Python
-
 *.pyc
 *.swp
 __pycache__
 .ipynb_checkpoints/
 
 # Data
-
 output/
 
 data/external/
