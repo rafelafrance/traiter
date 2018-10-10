@@ -1,5 +1,6 @@
 import re
 
+
 class TraitParser:
     IS_RANGE = re.compile(r'- | to', flags=re.IGNORECASE | re.VERBOSE)
     WS_SPLIT = re.compile(r'\s\s\s+')
@@ -16,7 +17,6 @@ class TraitParser:
     def parse(self, string):
         """Apply the battery of regular expressions to a string."""
         string = '  '.join(self.WS_SPLIT.split(string.strip()))
-#        print 'string: %s\nparse().parsed:\n%s' % (string, self.battery.parse(string))
         return self.battery.parse(string)
 
     def search(self, strings):
@@ -35,17 +35,13 @@ class TraitParser:
 
     def search_and_normalize(self, strings):
         """Search for a good parse and normalize the results."""
-#        print 'strings: %s' % strings
         joinedstring = ''
         for string in strings:
             if string is not None:
                 joinedstring += ';   '+string
-#        print 'joinedstring: %s' % joinedstring
         parsed = self.parse(joinedstring)
-#        print 'parsed: %s' % parsed
         if parsed is not None:
             normalized = self.normalize(parsed)
-#            print 'normalized:\n%s' % normalized
             return self.success(normalized)
         return self.fail()
 

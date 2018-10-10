@@ -1,30 +1,40 @@
+"""Supporting logic for regular expressions."""
+
 import regex   # re expressions lack desired features
 
 
 class ParserRegex:
-    """
-    The regular expressions require common support logic so they are packaged into this object.
-    We will use an array of these objects for the actual parsing.
-    """
+    """Supporting logic for regular expressions."""
 
-    def __init__(self, name, regexp, want_array=0, parse_units=False, default_key=None,
-                 default_units=None, units_from_key=None, compound_value=False):
+    def __init__(
+            self,
+            name,
+            regexp,
+            want_list=0,
+            parse_units=False,
+            default_key=None,
+            default_units=None,
+            units_from_key=None,
+            compound_value=False):
         """
+        Build the regular expression object.
+
         name:           Is a label used for debugging
         regexp:         The payload
-        want_array:     Used to return an array of values but only up to the given length
-        parse_units:    Some traits have units, like length, and others, like sex, do not
+        want_list:      Return a list of values but only up to the given length
+        parse_units:    Some traits have units & others, like sex, do not
         default_key:
         default_units:
-        units_from_key: A regular expression that will extract the units from a key. Like "totallengthinmillimeters"
+        units_from_key: A regular expression that extracts the units from a key
+                        Like "totallengthinmillimeters"
         compound_value: Is the value in a form like "3 ft 7 in"
         """
         self.name = name
         self.regexp = regex.compile(regexp, regex.IGNORECASE | regex.VERBOSE)
-        self.want_array     = want_array
-        self.parse_units    = parse_units
-        self.default_key    = default_key
-        self.default_units  = default_units
+        self.want_list = want_list
+        self.parse_units = parse_units
+        self.default_key = default_key
+        self.default_units = default_units
         self.compound_value = compound_value
         self.units_from_key = units_from_key
 
@@ -57,14 +67,14 @@ class ParserRegex:
 
     def _get_value_array_(self, string):
         matches = self.regexp.findall(string)
-        if matches and len(matches) <= self.want_array:
+        if matches and len(matches) <= self.want_list:
             return dict(key=None, value=matches)
         else:
             return None
 
     def matches(self, string):
-        """Does this string match the regular expression? If so, then return a dictionary with the matched parts."""
-        if self.want_array:
+        """Get a dictionary with the matched parts if it matches."""
+        if self.want_list:
             return self._get_value_array_(string)
 
         match = self.regexp.search(string)
