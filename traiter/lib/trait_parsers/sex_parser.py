@@ -50,6 +50,6 @@ class SexParser(TraitParser):
             r"""
                 \b (?P<value> (?: males? | females? ) (?: \s* \? )? ) \b
                 """,
-            want_array=2)
+            want_list=2)
 
         return battery

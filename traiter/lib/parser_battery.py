@@ -1,7 +1,7 @@
 """An ordered list of regular expressions."""
 
 import regex   # re expressions lack desired features
-from trait_parsers.parser_regex import ParserRegex
+from lib.parser_regex import ParserRegex
 
 
 class ParserBattery:

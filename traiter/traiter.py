@@ -1,11 +1,13 @@
+#!/bin/env python
+
 """Given a CSV file of natural history notes, parse traits."""
 
 import sys
 import csv
-from trait_parsers.body_mass_parser import BodyMassParser
-from trait_parsers.life_stage_parser import LifeStageParser
-from trait_parsers.sex_parser import SexParser
-from trait_parsers.total_length_parser import TotalLengthParser
+from lib.trait_parsers.body_mass_parser import BodyMassParser
+from lib.trait_parsers.life_stage_parser import LifeStageParser
+from lib.trait_parsers.sex_parser import SexParser
+from lib.trait_parsers.total_length_parser import TotalLengthParser
 
 
 class Traiter:

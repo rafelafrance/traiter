@@ -1,5 +1,5 @@
 import unittest
-from trait_parsers.life_stage_parser import LifeStageParser
+from lib.trait_parsers.life_stage_parser import LifeStageParser
 
 class TestLifeStageParser(unittest.TestCase):
 
@@ -193,15 +193,15 @@ class TestLifeStageParser(unittest.TestCase):
             target.preferred_or_search('', ['ad is also a possibility']),
             {'derivedlifestage': 'ad', 'haslifestage': 1})
 
-#     def test_preferred_or_search_31(self):
-#         self.assertDictEqual(
-#             target.preferred_or_search('', ['some embryos']),
-#             {'derivedlifestage': 'embryos', 'haslifestage': 1})
+    def test_preferred_or_search_31(self):
+        self.assertDictEqual(
+            target.preferred_or_search('', ['some embryos']),
+            {'derivedlifestage': 'embryos', 'haslifestage': 1})
 
-#     def test_preferred_or_search_32(self):
-#         self.assertDictEqual(
-#             target.preferred_or_search('', ['an embryo']),
-#             {'derivedlifestage': 'embryo', 'haslifestage': 1})
+    def test_preferred_or_search_32(self):
+        self.assertDictEqual(
+            target.preferred_or_search('', ['an embryo']),
+            {'derivedlifestage': 'embryo', 'haslifestage': 1})
 
     def test_preferred_or_search_33(self):
         self.assertDictEqual(
@@ -273,15 +273,15 @@ class TestLifeStageParser(unittest.TestCase):
             target.preferred_or_search('', ['adult young']),
             {'derivedlifestage': 'adult', 'haslifestage': 1})
 
-#     def test_preferred_or_search_47(self):
-#         self.assertDictEqual(
-#             target.preferred_or_search('', ['fetus']),
-#             {'derivedlifestage': 'fetus', 'haslifestage': 1})
+    def test_preferred_or_search_47(self):
+        self.assertDictEqual(
+            target.preferred_or_search('', ['fetus']),
+            {'derivedlifestage': 'fetus', 'haslifestage': 1})
 
-#     def test_preferred_or_search_48(self):
-#         self.assertDictEqual(
-#             target.preferred_or_search('', ['fetuses']),
-#             {'derivedlifestage': 'fetuses', 'haslifestage': 1})
+    def test_preferred_or_search_48(self):
+        self.assertDictEqual(
+            target.preferred_or_search('', ['fetuses']),
+            {'derivedlifestage': 'fetuses', 'haslifestage': 1})
 
     def test_preferred_or_search_49(self):
         self.assertDictEqual(

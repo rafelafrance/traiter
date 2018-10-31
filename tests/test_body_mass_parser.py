@@ -1,5 +1,5 @@
 import unittest
-from trait_parsers.body_mass_parser import BodyMassParser
+from lib.trait_parsers.body_mass_parser import BodyMassParser
 
 
 class TestBodyMassParser(unittest.TestCase):
@@ -142,143 +142,143 @@ class TestBodyMassParser(unittest.TestCase):
     ######################################################################
     ######################################################################
 
-    def test_1(self):
+    def test_27(self):
         self.assertDictEqual(
             target.search_and_normalize(['762-292-121-76 2435.0g']),
             {'hasmass': 1, 'massing': 2435.0, 'massunitsinferred': 0})
 
-    def test_2(self):
+    def test_28(self):
         self.assertDictEqual(
             target.search_and_normalize(['TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx']),
             {'hasmass': 1, 'massing': 0.77, 'massunitsinferred': 0})
 
-    def test_3(self):
+    def test_29(self):
         self.assertDictEqual(
             target.search_and_normalize(['Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-62g']),
             {'hasmass': 1, 'massing': 62, 'massunitsinferred': 0})
 
-    def test_4(self):
+    def test_30(self):
         self.assertDictEqual(
             target.search_and_normalize(['body mass=20 g']),
             {'hasmass': 1, 'massing': 20, 'massunitsinferred': 0})
 
-    def test_5(self):
+    def test_31(self):
         self.assertDictEqual(
             target.search_and_normalize(['2 lbs. 3.1 - 4.5 oz ']),
             {'hasmass': 1, 'massing': None, 'massunitsinferred': 0})
 
-    def test_6(self):
+    def test_32(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"totalLengthInMM":"x", "earLengthInMM":"20", "weight":"[139.5] g" }']),
             {'hasmass': 1, 'massing': 139.5, 'massunitsinferred': 0})
 
-    def test_7(self):
+    def test_33(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"fat":"No fat", "gonads":"Testes 10 x 6 mm.", "molt":"No molt",'
                                          ' "stomach contents":"Not recorded", "weight":"94 gr."']),
             {'hasmass': 1, 'massing': 94, 'massunitsinferred': 0})
 
-    def test_8(self):
+    def test_34(self):
         self.assertDictEqual(
             target.search_and_normalize(['Note in catalog: 83-0-17-23-fa64-35g']),
             {'hasmass': 1, 'massing': 35, 'massunitsinferred': 0})
 
-    def test_9(self):
+    def test_35(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"measurements":"20.2g, SVL 89.13mm" }']),
             {'hasmass': 1, 'massing': 20.2, 'massunitsinferred': 0})
 
-    def test_10(self):
+    def test_36(self):
         self.assertDictEqual(
             target.search_and_normalize(['Body: 15 g']),
             {'hasmass': 1, 'massing': 15, 'massunitsinferred': 0})
 
-    def test_11(self):
+    def test_37(self):
         self.assertDictEqual(
             target.search_and_normalize(['82-00-15-21-tr7-fa63-41g']),
             {'hasmass': 1, 'massing': 41, 'massunitsinferred': 0})
 
-    def test_12(self):
+    def test_38(self):
         self.assertDictEqual(
             target.search_and_normalize(['weight=5.4 g; unformatted measurements=77-30-7-12=5.4']),
             {'hasmass': 1, 'massing': 5.4, 'massunitsinferred': 0})
 
-    def test_13(self):
+    def test_39(self):
         self.assertDictEqual(
             target.search_and_normalize(['unformatted measurements=77-30-7-12=5.4; weight=5.4;']),
             {'hasmass': 1, 'massing': 5.4, 'massunitsinferred': 1})
 
-    def test_14(self):
+    def test_40(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"totalLengthInMM":"270-165-18-22-31", ']),
             {'hasmass': 1, 'massing': 31, 'massunitsinferred': 1})
 
-    def test_15(self):
+    def test_41(self):
         self.assertDictEqual(
             target.search_and_normalize(['{"measurements":"143-63-20-17=13 g" }']),
             {'hasmass': 1, 'massing': 13, 'massunitsinferred': 0})
 
-    def test_16(self):
+    def test_42(self):
         self.assertDictEqual(
             target.search_and_normalize(['143-63-20-17=13']),
             {'hasmass': 1, 'massing': 13, 'massunitsinferred': 1})
 
-    def test_17(self):
+    def test_43(self):
         self.assertDictEqual(
             target.search_and_normalize(['reproductive data: Testes descended -10x7 mm; sex: male;'
                                          ' unformatted measurements: 181-75-21-18=22 g']),
             {'hasmass': 1, 'massing': 22, 'massunitsinferred': 0})
 
-    def test_18(self):
+    def test_44(self):
         self.assertDictEqual(
             target.search_and_normalize(['{ "massingrams"="20.1" }']),
             {'hasmass': 1, 'massing': 20.1, 'massunitsinferred': 0})
 
-    def test_19(self):
+    def test_45(self):
         self.assertDictEqual(
             target.search_and_normalize([' {"gonadLengthInMM_1":"10", "gonadLengthInMM_2":"6", "weight":"1,192.0" }']),
             {'hasmass': 1, 'massing': 1192.0, 'massunitsinferred': 1})
 
-    def test_20(self):
+    def test_46(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 20.5-31.8']),
             {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
-    def test_21(self):
+    def test_47(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 20.5-32']),
             {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
-    def test_22(self):
+    def test_48(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 21-31.8']),
             {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
-    def test_23(self):
+    def test_49(self):
         self.assertDictEqual(
             target.search_and_normalize(['"weight: 21-32']),
             {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
 
-    def test_24(self):
+    def test_50(self):
         self.assertEqual(
             target.search_and_normalize(["Specimen #'s - 5491,5492,5498,5499,5505,5526,5527,5528,5500,5507,5508,5590,"
                                          "5592,5595,5594,5593,5596,5589,5587,5586,5585"]),
             {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
 
-    def test_25(self):
+    def test_51(self):
         self.assertDictEqual(
             target.search_and_normalize(['weight=5.4 g; unformatted measurements=77-x-7-12=5.4']),
             {'hasmass': 1, 'massing': 5.4, 'massunitsinferred': 0})
 
-    def test_26(self):
+    def test_52(self):
         self.assertEqual(
             target.search_and_normalize(['c701563b-dbd9-4500-184f-1ad61eb8da11']),
             {'hasmass': 0, 'massing': None, 'massunitsinferred': None})
 
-    def test_27(self):
+    def test_53(self):
         self.assertDictEqual(
             target.search_and_normalize(['body mass=0 g']),
-            {'hasmass': 1, 'massing': None, 'massunitsinferred': None})
+            {'hasmass': 1, 'massing': 0, 'massunitsinferred': 0})
 
 target = BodyMassParser()
 suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestBodyMassParser)

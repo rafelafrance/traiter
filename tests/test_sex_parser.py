@@ -1,5 +1,5 @@
 import unittest
-from trait_parsers.sex_parser import SexParser
+from lib.trait_parsers.sex_parser import SexParser
 
 
 class TestSexParser(unittest.TestCase):
