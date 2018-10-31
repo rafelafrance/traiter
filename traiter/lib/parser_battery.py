@@ -10,7 +10,7 @@ class ParserBattery:
 
     We use a carefully ordered list of regular expressions to look for traits
     in the database. There is some logic for dealing with the entire list of
-    regular expressions.
+    regular expressions in this object.
     """
 
     def __init__(

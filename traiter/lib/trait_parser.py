@@ -1,9 +1,13 @@
-import re
+"""Common logic for all traits."""
+
+import regex
 
 
 class TraitParser:
-    IS_RANGE = re.compile(r'- | to', flags=re.IGNORECASE | re.VERBOSE)
-    WS_SPLIT = re.compile(r'\s\s\s+')
+    """Common logic for all traits."""
+
+    IS_RANGE = regex.compile(r'- | to', flags=regex.IGNORECASE | regex.VERBOSE)
+    WS_SPLIT = regex.compile(r'\s\s\s+')
 
     def parse_first(self, strings):
         """Look for the first string that parses successfully."""
@@ -27,7 +31,12 @@ class TraitParser:
         return self.fail()
 
     def preferred_or_search(self, preferred, strings):
-        """If there is a preferred value use it otherwise do a search."""
+        """
+        If there is a preferred value use it otherwise do a search.
+
+        The preferred value is a column in the CSV file. If the row contains a
+        value in the column's cell then return that value.
+        """
         preferred = preferred.strip()
         if preferred:
             return self.success({'value': preferred})
@@ -35,67 +44,60 @@ class TraitParser:
 
     def search_and_normalize(self, strings):
         """Search for a good parse and normalize the results."""
-        joinedstring = ''
-        for string in strings:
-            if string is not None:
-                joinedstring += ';   '+string
-        parsed = self.parse(joinedstring)
-        if parsed is not None:
+        parsed = self.parse_first(strings)
+        if parsed:
             normalized = self.normalize(parsed)
             return self.success(normalized)
         return self.fail()
 
     def normalize(self, parsed):
-        key = None
-        if 'key' in parsed and parsed['key']:
-            if parsed['key'].lower() in self.key_conversions:
-                key = self.key_conversions[parsed['key'].lower()]
-
+        """Convert units to a common measurement."""
         if isinstance(parsed['units'], list):
-            units  = ' '.join(parsed['units']).lower()
-            if len(self.IS_RANGE.split(parsed['value'][0])) > 1 or \
-               len(self.IS_RANGE.split(parsed['value'][1])) > 1:
-                return {'value': None, 'is_inferred': 0, 'n_key': key + ' range'}
+            units = ' '.join(parsed['units']).lower()
+            if self.IS_RANGE.split(parsed['value'][0]) or \
+               self.IS_RANGE.split(parsed['value'][1]):
+                value = 0
             else:
-                value  = self.multiply(parsed['value'][0], self.unit_conversions[units][0])
-                value += self.multiply(parsed['value'][1], self.unit_conversions[units][1])
-                return {'value': value, 'is_inferred': 0, 'n_key': key}
-
-        values = self.IS_RANGE.split(parsed['value'])
-        if len(values) > 1:
-            # If value is a range, do not process
-            return {'value': None, 'is_inferred': None, 'n_key': key + ' range'}
+                value = self.multiply(
+                    parsed['value'][0], self.unit_conversions[units][0])
+                value += self.multiply(
+                    parsed['value'][1], self.unit_conversions[units][1])
+            return {'value': value, 'is_inferred': 0}
 
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
         is_inferred = int(units[0] == '_' if units else True)
 
-        # Value is just a number and optional units like "3.1 g"
-        value = self.multiply(values[0], self.unit_conversions[units])
+        values = self.IS_RANGE.split(parsed['value'])
+        if len(values) > 1:
+            # If value is a range like "3 - 5 mm"
+            # value = [self.multiply(values[0], self.unit_conversions[units]),
+            #         self.multiply(values[1], self.unit_conversions[units])]
+            value = 0
+        else:
+            # Value is just a number and optional units like "3.1 g"
+            value = self.multiply(values[0], self.unit_conversions[units])
 
-        if value == 0:
-            # If value is a zero, do not process
-            return {'value': None, 'is_inferred': None, 'n_key': None}
-
-        return {'value': value, 'is_inferred': is_inferred, 'n_key': key}
+        return {'value': value, 'is_inferred': is_inferred}
 
     def multiply(self, value, units):
-        value = re.sub(r'[^\d\.]', '', value)
+        """Calculate the numeric value given the units."""
+        value = regex.sub(r'[^\d\.]', '', value)
         precision = 0
         parts = value.split('.')
         if len(parts) > 1:
             precision = len(parts[1])
         result = round(float(value) * units, precision)
-#        print 'value: %s units: %s result: %s' % (value, units, result)
         return result if precision else int(result)
 
     def CommonRegexMassLength(self):
-        """Regular expression subexpression used in both length and mass parsing."""
+        """Regex sub-expressions used in both length and mass parsing."""
         return r'''
             (?(DEFINE)
 
                 # For our purposes numbers are always positive and decimals.
-                (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? (?&close) [\*]? )
+                (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
+                    (?: \. \d+ )? (?&close) [\*]? )
 
                 # We also want to pull in number ranges when appropriate.
                 (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
@@ -117,7 +119,7 @@ class TraitParser:
                                 | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
                 )
 
-                # Common keyword misspellings that precede shorthand measurement
+                # Common keyword misspellings preceding shorthand measurements
                 (?P<shorthand_typos>  mesurements | Measurementsnt )
 
                 # Keys where we need units to know if it's for mass or length

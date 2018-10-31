@@ -57,11 +57,11 @@ class LifeStageParser(TraitParser):
                         year )
                 """)
 
+        # Look for brefore birth life stages
         battery.append(
             'life_stage_yolk_sac',
             common_patterns + r"""
-                (?P<value> (?: yolk ) \s+
-                        sac )
+                (?P<value> (?: yolk ) \s+ sac )
                 """)
 
         # Look for the words lifestage words without keys
@@ -73,10 +73,10 @@ class LifeStageParser(TraitParser):
             r"""
                 \b (?P<value>
                 (?: larves? |larvae? | larvals? | imagos? | neonates?
-                | hatchlings? | hatched? | fry? | metamorphs? | premetamorphs
-                | tadpoles? | têtard?
-                | young-of-the-year? | leptocephales? | leptocephalus?
-                | immatures? | imms? | jeunes? | young? | ygs?
+                | hatchlings? | hatched | fry | metamorphs? | premetamorphs?
+                | tadpoles? | têtard
+                | young-of-the-year | leptocephales? | leptocephalus
+                | immatures? | imms? | jeunes? | young | ygs?
                 | fleglings? | fledgelings? | chicks? | nestlings?
                 | juveniles? | juvéniles? | juvs?
                 | subadults? | subadultes? | subads? | sub-adults? | yearlings?

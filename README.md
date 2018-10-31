@@ -1,7 +1,14 @@
 # The Traits Database Project
 
-The "parsers" directory contains Jupyter notebooks for parsing trait data from various sources. Each notebook parses raw trait data from a particular source. These are raw scripts, look in the "lib" directory for code that is potentially usable.
+# Installation
 
-The "lib" directory contains code extracted from the Jupyper notebooks that may be used in production.
+You will need to have Python3 (3.6+) installed, as well as pip, a package manager for python. Beyond these, it is easiest to handle Traiter dependencies by setting up a virtual environment, which is a contained workspace with internally installed python libraries. Run the following code in what you intend to be your working directory:
 
-The "schema" directory contains notes and scripts for building a possible traiter database.
+```
+git clone https://github.com/rafelafrance/traiter.git
+cd path/to/cloned/traiter
+python3 -m venv venv
+source venv/bin/activate
+(optional) git checkout v0.2 (or any other version)
+pip install -r requirements.txt
+```
