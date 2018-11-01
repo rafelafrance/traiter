@@ -9,18 +9,28 @@ class LifeStageParser(TraitParser):
 
     def __init__(self):
         """Add defaults for the measurements."""
-        self.normalize = False
         self.battery = self._battery(self._common_patterns())
 
-    def success(self, result):
+    @staticmethod
+    def success(result):
         """Return this when the measurement is found."""
-        return {'haslifestage': 1, 'derivedlifestage': result['value']}
+        return {
+            'key': result['key'],
+            'has_life_stage': True,
+            'derived_life_stage': result['value'],
+            'regex': result['regex']}
 
-    def fail(self):
+    @staticmethod
+    def fail():
         """Return this when the measurement is not found."""
-        return {'haslifestage': 0, 'derivedlifestage': ''}
+        return {
+            'key': None,
+            'has_life_stage': False,
+            'derived_life_stage': '',
+            'regex': None}
 
-    def _battery(self, common_patterns):
+    @staticmethod
+    def _battery(common_patterns):
         battery = ParserBattery(exclude_pattern=r""" ^ determin """)
 
         # Look for a key and value that is terminated with a delimiter
@@ -57,7 +67,7 @@ class LifeStageParser(TraitParser):
                         year )
                 """)
 
-        # Look for brefore birth life stages
+        # Look for before birth life stages
         battery.append(
             'life_stage_yolk_sac',
             common_patterns + r"""
@@ -65,9 +75,8 @@ class LifeStageParser(TraitParser):
                 """)
 
         # Look for the words lifestage words without keys
-        # Combinations with embryo and fetus were removed,
-        # as more often than not these are reproductiveCondition
-        # indicators of and adult female.
+        # Combinations with embryo and fetus were removed, as more often than
+        # not these are reproductiveCondition indicators of the adult female.
         battery.append(
             'life_stage_unkeyed',
             r"""
@@ -75,6 +84,7 @@ class LifeStageParser(TraitParser):
                 (?: larves? |larvae? | larvals? | imagos? | neonates?
                 | hatchlings? | hatched | fry | metamorphs? | premetamorphs?
                 | tadpoles? | têtard
+                # | embryos? | embryonic | fetus(es)?
                 | young-of-the-year | leptocephales? | leptocephalus
                 | immatures? | imms? | jeunes? | young | ygs?
                 | fleglings? | fledgelings? | chicks? | nestlings?
@@ -85,7 +95,8 @@ class LifeStageParser(TraitParser):
 
         return battery
 
-    def _common_patterns(self):
+    @staticmethod
+    def _common_patterns():
         return r"""
             (?(DEFINE)
                 (?P<word_chars> [\w?.\/\-]+ )

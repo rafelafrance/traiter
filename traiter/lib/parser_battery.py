@@ -62,5 +62,6 @@ class ParserBattery:
         for regexp in self.battery:
             match = regexp.matches(string)
             if match and not self._excluded_(match):
+                match['regex'] = regexp.name
                 return match
         return None

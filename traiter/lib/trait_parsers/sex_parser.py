@@ -9,21 +9,31 @@ class SexParser(TraitParser):
 
     def __init__(self):
         """Add defaults for the measurements."""
-        self.normalize = False
         self.battery = self._battery()
 
-    def success(self, result):
+    @staticmethod
+    def success(result):
         """Return this when the measurement is found."""
         value = result['value']
         if isinstance(value, list):
             value = ','.join(value)
-        return {'hassex': 1, 'derivedsex': value}
+        return {
+            'key': result['key'],
+            'has_sex': True,
+            'derived_sex': value,
+            'regex': result['regex']}
 
-    def fail(self):
+    @staticmethod
+    def fail():
         """Return this when the measurement is not found."""
-        return {'hassex': 0, 'derivedsex': ''}
+        return {
+            'key': None,
+            'has_sex': False,
+            'derived_sex': '',
+            'regex': None}
 
-    def _battery(self):
+    @staticmethod
+    def _battery():
         battery = ParserBattery(
             exclude_pattern=r""" ^ (?: and | was | is ) $ """)
 

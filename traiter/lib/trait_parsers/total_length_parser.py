@@ -9,28 +9,31 @@ class TotalLengthParser(TraitParser):
 
     def __init__(self):
         """Add defaults for the measurements."""
-        self.default_units = '_mm_'
         self.battery = self._battery(self._common_patterns())
+        self.default_units = '_mm_'
         self.key_conversions = self._key_conversions()
         self.unit_conversions = self._unit_conversions()
 
-    def success(self, result):
+    @staticmethod
+    def success(result):
         """Return this when the measurement is found."""
         return {
-            'haslength': 1,
-            'lengthinmm': result['value'],
-            'lengthunitsinferred': result['is_inferred'],
-            'lengthtype': result['n_key']}
+            'has_length': True,
+            'length_in_mm': result['value'],
+            'length_units_inferred': result['is_inferred'],
+            'regex': result['regex']}
 
-    def fail(self):
+    @staticmethod
+    def fail():
         """Return this when the measurement is not found."""
         return {
-            'haslength': 0,
-            'lengthinmm': None,
-            'lengthunitsinferred': None,
-            'lengthtype': None}
+            'has_length': 0,
+            'length_in_mm': None,
+            'length_units_inferred': False,
+            'regex': None}
 
-    def _battery(self, common_patterns):
+    @staticmethod
+    def _battery(common_patterns):
         battery = ParserBattery(
             parse_units=True,
             units_from_key=r""" (?P<units> mm | millimeters ) $ """)
@@ -176,7 +179,7 @@ class TotalLengthParser(TraitParser):
         return battery
 
     def _common_patterns(self):
-        return self.CommonRegexMassLength() + r"""
+        return self.common_regex_mass_length() + r"""
             (?(DEFINE)
 
                 # Look for a shorthand total length. Make sure it isn't a date
@@ -265,7 +268,8 @@ class TotalLengthParser(TraitParser):
                 (?P<len_inch> (?: inch e? | in )     s? (?&dot) ))
                 """
 
-    def _key_conversions(self):
+    @staticmethod
+    def _key_conversions():
         return {
             '_english_': 'total length',
             '_shorthand_': 'total length',
@@ -333,7 +337,8 @@ class TotalLengthParser(TraitParser):
             'totallengthin': 'total length',
             'totallengthinmm': 'total length'}
 
-    def _unit_conversions(self):
+    @staticmethod
+    def _unit_conversions():
         return{
             '': 1.0,
             '_mm_': 1.0,

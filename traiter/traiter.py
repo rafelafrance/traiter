@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python3
 
 """Given a CSV file of natural history notes, parse traits."""
 
@@ -57,5 +57,5 @@ class Traiter:
 
 
 if __name__ == "__main__":
-    traiter = Traiter()
-    traiter.parse_csv_file(sys.argv[1])
+    TRAITER = Traiter()
+    TRAITER.parse_csv_file(sys.argv[1])

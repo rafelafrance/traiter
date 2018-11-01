@@ -1,5 +1,9 @@
 """Supporting logic for regular expressions."""
 
+#pylint: disable=too-many-instance-attributes
+#pylint: disable=too-few-public-methods
+#pylint: disable=too-many-arguments
+
 import regex   # re expressions lack desired features
 
 
@@ -38,51 +42,51 @@ class ParserRegex:
         self.compound_value = compound_value
         self.units_from_key = units_from_key
 
-    def _get_key_(self, match):
+    def _get_key(self, match):
         key = None
         if 'key' in match.groupdict().keys():
             key = match.group('key')
-        if not key:
-            key = self.default_key
-        return key
+        return key if key else self.default_key
 
-    def _get_value_(self, match):
+    @staticmethod
+    def _get_value(match):
         if 'value' in match.groupdict().keys():
             return match.group('value')
         return [match.group('value1'), match.group('value2')]
 
-    def _get_units_(self, match, key):
+    def _get_units(self, match, key):
         units = None
         if 'units' in match.groupdict().keys():
             units = match.group('units')
         if 'units1' in match.groupdict().keys():
             units = [match.group('units1'), match.group('units2')]
         if not units and key:
-            u = self.units_from_key.search(key)
-            if u:
-                units = u.group('units')
+            units_from_key = self.units_from_key.search(key)
+            if units_from_key:
+                units = units_from_key.group('units')
         if not units:
             units = self.default_units
         return units
 
-    def _get_value_array_(self, string):
+    def _get_value_array(self, string):
         matches = self.regexp.findall(string)
         if matches and len(matches) <= self.want_list:
             return dict(key=None, value=matches)
-        else:
-            return None
+        return None
 
     def matches(self, string):
         """Get a dictionary with the matched parts if it matches."""
         if self.want_list:
-            return self._get_value_array_(string)
+            return self._get_value_array(string)
 
         match = self.regexp.search(string)
         if not match:
             return None
 
-        parsed = dict(key=self._get_key_(match), value=self._get_value_(match))
+        parsed = {'key': self._get_key(match),
+                  'value': self._get_value(match),
+                  'regex': self.name}
         if self.parse_units:
-            parsed['units'] = self._get_units_(match, parsed['key'])
+            parsed['units'] = self._get_units(match, parsed['key'])
 
         return parsed

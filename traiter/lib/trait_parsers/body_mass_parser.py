@@ -9,23 +9,33 @@ class BodyMassParser(TraitParser):
 
     def __init__(self):
         """Add defaults for the measurements."""
-        self.default_units = '_g_'
         self.battery = self._battery(self._common_patterns())
+        self.default_units = '_g_'
         self.key_conversions = self._key_conversions()
         self.unit_conversions = self._unit_conversions()
 
-    def success(self, result):
+    @staticmethod
+    def success(result):
         """Return this when the measurement is found."""
         return {
-            'hasmass': 1,
-            'massing': result['value'],
-            'massunitsinferred': result['is_inferred']}
+            'key': result['key'],
+            'has_mass': True,
+            'mass_in_g': result['value'],
+            'mass_units_inferred': result['is_inferred'],
+            'regex': result['regex']}
 
-    def fail(self):
+    @staticmethod
+    def fail():
         """Return this when the measurement is not found."""
-        return {'hasmass': 0, 'massing': None, 'massunitsinferred': None}
+        return {
+            'has_mass': False,
+            'key': None,
+            'mass_in_g': None,
+            'mass_units_inferred': False,
+            'regex': None}
 
-    def _battery(self, common_patterns):
+    @staticmethod
+    def _battery(common_patterns):
         battery = ParserBattery(
             parse_units=True,
             units_from_key=r""" (?P<units> grams ) $ """)
@@ -153,7 +163,7 @@ class BodyMassParser(TraitParser):
         return battery
 
     def _common_patterns(self):
-        return self.CommonRegexMassLength() + r"""
+        return self.common_regex_mass_length() + r"""
             (?(DEFINE)
 
                 # Used to indicate that the next measurement in a shorthand
@@ -228,7 +238,8 @@ class BodyMassParser(TraitParser):
                 (?P<wt_ounce> (?: ounce | oz ) s? (?&dot) )
             )"""
 
-    def _key_conversions(self):
+    @staticmethod
+    def _key_conversions():
         return {
             '_english_': 'total weight',
             '_shorthand_': 'total weight',
@@ -276,7 +287,8 @@ class BodyMassParser(TraitParser):
             'wts': 'total weight',
             'wts.': 'total weight'}
 
-    def _unit_conversions(self):
+    @staticmethod
+    def _unit_conversions():
         return {
             '': 1.0,
             '_g_': 1.0,

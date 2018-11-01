@@ -6,32 +6,40 @@ from lib.trait_parsers.sex_parser import SexParser
 
 class TestSexParser(unittest.TestCase):
 
-    def test_sex_key_value_delimited_1(self):
+    def test_sex_key_value_delimited_01(self):
         self.assertDictEqual(
             TARGET.parse('weight=81.00 g; sex=female ? ; age=u ad.'),
-            {'key': 'sex', 'value': 'female ?'})
+            {'key': 'sex',
+             'value': 'female ?',
+             'regex': 'sex_key_value_delimited'})
 
-    def test_sex_key_value_delimited_2(self):
+    def test_sex_key_value_delimited_02(self):
         self.assertDictEqual(
             TARGET.parse('sex=unknown ; crown-rump length=8 mm'),
-            {'key': 'sex', 'value': 'unknown'})
+            {'key': 'sex',
+             'value': 'unknown',
+             'regex': 'sex_key_value_delimited'})
 
-    def test_sex_key_value_undelimited_1(self):
+    def test_sex_key_value_undelimited_01(self):
         self.assertDictEqual(
             TARGET.parse('sex=F crown rump length=8 mm'),
-            {'key': 'sex', 'value': 'F'})
+            {'key': 'sex',
+             'value': 'F',
+             'regex': 'sex_key_value_undelimited'})
 
-    def test_sex_unkeyed_1(self):
+    def test_sex_unkeyed_01(self):
         self.assertDictEqual(
             TARGET.parse('words male female unknown more words'),
-            {'key': None, 'value': ['male', 'female']})
+            {'key': None,
+             'value': ['male', 'female'],
+             'regex': 'sex_unkeyed'})
 
-    def test_sex_unkeyed_2(self):
+    def test_sex_unkeyed_02(self):
         self.assertEqual(
             TARGET.parse('words male female male more words'),
             None)
 
-    def test_excluded_1(self):
+    def test_excluded_01(self):
         self.assertEqual(
             TARGET.parse('Respective sex and msmt. in mm'),
             None)
@@ -41,56 +49,83 @@ class TestSexParser(unittest.TestCase):
     ######################################################################
     ######################################################################
 
-    def test_preferred_or_search_1(self):
+    def test_preferred_or_search_01(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
                 '', ['weight=81.00 g; sex=female ? ; age=u ad.']),
-            {'derivedsex': 'female ?', 'hassex': 1})
+            {'key': 'sex',
+             'regex': 'sex_key_value_delimited',
+             'derived_sex': 'female ?',
+             'has_sex': True})
 
-    def test_preferred_or_search_2(self):
+    def test_preferred_or_search_02(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
                 '', ['sex=unknown ; crown-rump length=8 mm']),
-            {'derivedsex': 'unknown', 'hassex': 1})
+            {'derived_sex': 'unknown',
+             'key': 'sex',
+             'regex': 'sex_key_value_delimited',
+             'has_sex': True})
 
-    def test_preferred_or_search_3(self):
+    def test_preferred_or_search_03(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
                 '', ['sex=F crown rump length=8 mm']),
-            {'derivedsex': 'F', 'hassex': 1})
+            {'derived_sex': 'F',
+             'key': 'sex',
+             'regex': 'sex_key_value_undelimited',
+             'has_sex': True})
 
-    def test_preferred_or_search_4(self):
+    def test_preferred_or_search_04(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
                 '', ['words male female unknown more words']),
-            {'derivedsex': 'male,female', 'hassex': 1})
+            {'derived_sex': 'male,female',
+             'key': None,
+             'regex': 'sex_unkeyed',
+             'has_sex': True})
 
-    def test_preferred_or_search_5(self):
+    def test_preferred_or_search_05(self):
         self.assertEqual(
             TARGET.preferred_or_search(
                 '', ['words male female male more words']),
-            {'derivedsex': '', 'hassex': 0})
+            {'derived_sex': '',
+             'key': None,
+             'regex': None,
+             'has_sex': False})
 
-    def test_preferred_or_search_6(self):
+    def test_preferred_or_search_06(self):
         self.assertEqual(
             TARGET.preferred_or_search(
                 '', ['Respective sex and msmt. in mm']),
-            {'derivedsex': '', 'hassex': 0})
+            {'derived_sex': '',
+             'key': None,
+             'regex': None,
+             'has_sex': False})
 
-    def test_preferred_or_search_7(self):
+    def test_preferred_or_search_07(self):
         self.assertEqual(
             TARGET.preferred_or_search('', ['mention male in a phrase']),
-            {'derivedsex': 'male', 'hassex': 1})
+            {'derived_sex': 'male',
+             'key': None,
+             'regex': 'sex_unkeyed',
+             'has_sex': True})
 
-    def test_preferred_or_search_8(self):
+    def test_preferred_or_search_08(self):
         self.assertEqual(
             TARGET.preferred_or_search('', ['male in a phrase']),
-            {'derivedsex': 'male', 'hassex': 1})
+            {'derived_sex': 'male',
+             'key': None,
+             'regex': 'sex_unkeyed',
+             'has_sex': True})
 
-    def test_preferred_or_search_9(self):
+    def test_preferred_or_search_09(self):
         self.assertEqual(
             TARGET.preferred_or_search('', ['male or female']),
-            {'derivedsex': 'male,female', 'hassex': 1})
+            {'derived_sex': 'male,female',
+             'key': None,
+             'regex': 'sex_unkeyed',
+             'has_sex': True})
 
 
 TARGET = SexParser()
