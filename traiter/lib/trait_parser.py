@@ -14,8 +14,6 @@ class TraitParser(ABC):
         """Add defaults for the measurements."""
         self.battery = None
         self.default_units = None
-        self.key_conversions = None
-        self.unit_conversions = None
 
     @staticmethod
     @abstractmethod
@@ -70,21 +68,13 @@ class TraitParser(ABC):
 
     def normalize(self, parsed):
         """Convert units to a common measurement."""
+        # Handle multiple units like lengths given as: 5 feet 3 inches
         if isinstance(parsed['units'], list):
             parsed['is_inferred'] = False
             units = ' '.join(parsed['units']).lower()
 
-            if len(self.IS_RANGE.split(parsed['value'][0])) > 1:
-                upper = self.IS_RANGE.split(parsed['value'][0])
-                lower = self.multiply(
-                    parsed['value'][1], self.unit_conversions[units][1])
-                parsed['value'] = []
-                parsed['value'].append(self.multiply(
-                    upper[0], self.unit_conversions[units][0]) + lower)
-                parsed['value'].append(self.multiply(
-                    upper[1], self.unit_conversions[units][0]) + lower)
-
-            elif len(self.IS_RANGE.split(parsed['value'][1])) > 1:
+            # Handle cases where the last value is a range: 4 lbs 2 - 4 ozs
+            if len(self.IS_RANGE.split(parsed['value'][1])) > 1:
                 upper = self.multiply(
                     parsed['value'][0], self.unit_conversions[units][0])
                 lower = self.IS_RANGE.split(parsed['value'][1])
@@ -94,21 +84,24 @@ class TraitParser(ABC):
                 parsed['value'].append(self.multiply(
                     lower[1], self.unit_conversions[units][1]) + upper)
 
+            # Handle cases like: 3 lbs 2 ozs
             else:
                 value = self.multiply(
                     parsed['value'][0], self.unit_conversions[units][0])
                 value += self.multiply(
                     parsed['value'][1], self.unit_conversions[units][1])
                 parsed['value'] = value
+
             return parsed
 
+        # Normal unit (optional) & value
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
         parsed['is_inferred'] = (units[0] == '_') if units else True
 
         values = self.IS_RANGE.split(parsed['value'])
         if len(values) > 1:
-            # If value is a range like "3 - 5 mm"
+            # Handle cases like: "3 - 5 mm"
             parsed['value'] = [
                 self.multiply(values[0], self.unit_conversions[units]),
                 self.multiply(values[1], self.unit_conversions[units])]
@@ -130,57 +123,54 @@ class TraitParser(ABC):
         result = round(float(value) * units, precision)
         return result if precision else int(result)
 
-    @staticmethod
-    def common_regex_mass_length():
-        """Regex sub-expressions used in both length and mass parsing."""
-        return r'''
-            (?(DEFINE)
+    common_regex_mass_length = r'''
+        (?(DEFINE)
 
-                # For our purposes numbers are always positive and decimals.
-                (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
-                    (?: \. \d+ )? (?&close) [\*]? )
+            # For our purposes numbers are always positive and decimals.
+            (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
+                (?: \. \d+ )? (?&close) [\*]? )
 
-                # We also want to pull in number ranges when appropriate.
-                (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
+            # We also want to pull in number ranges when appropriate.
+            (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
-                # Characters that follow a keyword
-                (?P<key_end>  \s* [^\w.\[\(]* \s* )
+            # Characters that follow a keyword
+            (?P<key_end>  \s* [^ \w . \[ ( ]* \s* )
 
-                # We sometimes want to guarantee no word precedes another word.
-                # This cannot be done with negative look behind,
-                # so we do a positive search for a separator
-                (?P<no_word>  (?: ^ | [;,:"'\{\[\(]+ ) \s* )
+            # We sometimes want to guarantee no word precedes another word.
+            # This cannot be done with negative look behind,
+            # so we do a positive search for a separator
+            (?P<no_word>  (?: ^ | [;,:"'\{\[\(]+ ) \s* )
 
-                # Keywords that may precede a shorthand measurement
-                (?P<shorthand_words> on \s* tag
-                                | specimens?
-                                | catalog
-                                | measurements (?: \s+ [\p{Letter}]+)
-                                | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-                                | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
-                )
+            # Keywords that may precede a shorthand measurement
+            (?P<shorthand_words> on \s* tag
+                            | specimens?
+                            | catalog
+                            | measurements (?: \s+ [\p{Letter}]+)
+                            | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+                            | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
+            )
 
-                # Common keyword misspellings preceding shorthand measurements
-                (?P<shorthand_typos>  mesurements | Measurementsnt )
+            # Common keyword misspellings preceding shorthand measurements
+            (?P<shorthand_typos>  mesurements | Measurementsnt )
 
-                # Keys where we need units to know if it's for mass or length
-                (?P<key_units_req> measurements? | body | total )
+            # Keys where we need units to know if it's for mass or length
+            (?P<key_units_req> measurements? | body | total )
 
-                # Characters that separate shorthand values
-                (?P<shorthand_sep> [:\/\-\s] )
+            # Characters that separate shorthand values
+            (?P<shorthand_sep> [:\/\-\s] )
 
-                # Used in shorthand notation for unknown values
-                (?P<shorthand_unknown> [\?x] )
+            # Used in shorthand notation for unknown values
+            (?P<shorthand_unknown> [\?x] )
 
-                # Look for an optional dash or space character
-                (?P<dash>     [\s\-]? )
-                (?P<dash_req> [\s\-]  )
+            # Look for an optional dash or space character
+            (?P<dash>     [\s\-]? )
+            (?P<dash_req> [\s\-]  )
 
-                # Look for an optional dot character
-                (?P<dot> \.? )
+            # Look for an optional dot character
+            (?P<dot> \.? )
 
-                # Numbers are sometimes surrounded by brackets or parentheses
-                # Don't worry about matching the opening and closing brackets
-                (?P<open>  [\(\[\{]? )
-                (?P<close> [\)\]\}]? )
-            )'''
+            # Numbers are sometimes surrounded by brackets or parentheses
+            # Don't worry about matching the opening and closing brackets
+            (?P<open>  [\(\[\{]? )
+            (?P<close> [\)\]\}]? )
+        )'''

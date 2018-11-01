@@ -9,6 +9,7 @@ class SexParser(TraitParser):
 
     def __init__(self):
         """Add defaults for the measurements."""
+        super().__init__()
         self.battery = self._battery()
 
     @staticmethod
