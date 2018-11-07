@@ -285,7 +285,7 @@ class TestTotalLengthParser(unittest.TestCase):
             TARGET.parse('f age class: adult; standard length: 63-107mm'),
             {'key': 'standard length',
              'value': '63-107',
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'units': 'mm'})
 
     def test_parser_35(self):
@@ -298,7 +298,7 @@ class TestTotalLengthParser(unittest.TestCase):
             TARGET.parse('age class: adult; standard length: 18.0-21.5mm'),
             {'key': 'standard length',
              'value': '18.0-21.5',
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'units': 'mm'})
 
     def test_parser_37(self):
@@ -306,7 +306,7 @@ class TestTotalLengthParser(unittest.TestCase):
             TARGET.parse('age class: adult; standard length: 18-21.5mm'),
             {'key': 'standard length',
              'value': '18-21.5',
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'units': 'mm'})
 
     def test_parser_38(self):
@@ -314,7 +314,7 @@ class TestTotalLengthParser(unittest.TestCase):
             TARGET.parse('age class: adult; standard length: 18.0-21mm'),
             {'key': 'standard length',
              'value': '18.0-21',
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'units': 'mm'})
 
     def test_parser_39(self):
@@ -322,7 +322,7 @@ class TestTotalLengthParser(unittest.TestCase):
             TARGET.parse('age class: adult; standard length: 18-21mm'),
             {'key': 'standard length',
              'value': '18-21',
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'units': 'mm'})
 
     def test_parser_40(self):
@@ -441,6 +441,14 @@ class TestTotalLengthParser(unittest.TestCase):
              'value': '44',
              'regex': 'svl_len_key',
              'units': None})
+
+    def test_parser_55(self):
+        self.assertDictEqual(
+            TARGET.parse('Total Length: 185 - 252 mm'),
+            {'key': 'Total Length',
+             'regex': 'total_len_key',
+             'value': '185 - 252',
+             'units': 'mm'})
 
     ######################################################################
     ######################################################################
@@ -775,7 +783,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [63, 107],
              'length_units_inferred': False,
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'key': 'standard length'})
 
     def test_search_and_normalize_35(self):
@@ -795,7 +803,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [18.0, 21.5],
              'length_units_inferred': False,
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'key': 'standard length'})
 
     def test_search_and_normalize_37(self):
@@ -805,7 +813,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [18, 21.5],
              'length_units_inferred': False,
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'key': 'standard length'})
 
     def test_search_and_normalize_38(self):
@@ -815,7 +823,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [18.0, 21],
              'length_units_inferred': False,
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'key': 'standard length'})
 
     def test_search_and_normalize_39(self):
@@ -825,7 +833,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [18, 21],
              'length_units_inferred': False,
-             'regex': 'len_in_phrase',
+             'regex': 'total_len_key',
              'key': 'standard length'})
 
     def test_search_and_normalize_40(self):
@@ -1104,16 +1112,17 @@ class TestTotalLengthParser(unittest.TestCase):
              'key': 'totalLength'})
 
     def test_search_and_normalize65(self):
+        # Just the word "Length" alone is ambiguous
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['',
                  'SOURCE: M.A.CARRIKER JR.',
                  'LENGTH: 117MM. SOFT PARTS COLOR ON LABEL.']),
-            {'has_length': True,
-             'length_in_mm': 117,
+            {'has_length': False,
+             'length_in_mm': None,
              'length_units_inferred': False,
-             'regex': 'total_len_key_num',
-             'key': 'LENGTH'})
+             'regex': None,
+             'key': None})
 
     def test_search_and_normalize66(self):
         self.assertDictEqual(
@@ -1121,8 +1130,8 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': 5,
              'length_units_inferred': True,
-             'regex': 'len_key_ambiguous',
-             'key': 'total length'})
+             'regex': 'other_len_key',
+             'key': 'Meas:Length (L)'})
 
     def test_search_and_normalize67(self):
         self.assertDictEqual(
@@ -1149,7 +1158,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [185, 252],
              'length_units_inferred': False,
-             'regex': 'total_len_key_num',
+             'regex': 'total_len_key',
              'key': 'Total Length'})
 
     def test_search_and_normalize70(self):
@@ -1159,7 +1168,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [185, 252],
              'length_units_inferred': False,
-             'regex': 'total_len_key_num',
+             'regex': 'total_len_key',
              'key': 'Total Length'})
 
     def test_search_and_normalize71(self):

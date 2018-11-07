@@ -142,7 +142,7 @@ class TraitParser(ABC):
 
             # For our purposes numbers are always positive and decimals.
             (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
-                (?: \. \d+ )? (?&close) [\*]? )
+                (?: \. \d+ )? (?&close) [*]? )
 
             # We also want to pull in number ranges when appropriate.
             (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
@@ -171,7 +171,7 @@ class TraitParser(ABC):
             (?P<key_units_req> measurements? | body | total )
 
             # Characters that separate shorthand values
-            (?P<shorthand_sep> [:\/\-\s] )
+            (?P<shorthand_sep> [:\/\-] )
 
             # Used in shorthand notation for unknown values
             (?P<shorthand_unknown> [\?x] )

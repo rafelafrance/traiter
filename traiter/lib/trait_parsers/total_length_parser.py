@@ -67,8 +67,7 @@ class TotalLengthParser(TraitParser):
 
         # This parse puts the key at the end: 20-25 mm TL
         battery.append(
-            'len_key_suffix',
-            common_patterns + r"""
+            'len_key_suffix', common_patterns + r"""
                 \b (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))? \s*
                    (?P<key>   (?&len_key_suffix))
@@ -80,15 +79,14 @@ class TotalLengthParser(TraitParser):
             'total_len_key_num',
             common_patterns + r"""
                 \b (?P<key> (?&total_len_key)) (?&key_end)
-                   (?P<value> (?&number)) (?! [\d\-\.] ) \s*
+                   (?P<value> (?&number)) (?! \s* [\d\-\.] ) \s*
                    (?P<units> (?&len_units))?
                    """,
             default_units='_mm_')
 
         # Look for these secondary length keys next but allow a range
         battery.append(
-            'other_len_key',
-            common_patterns + r"""
+            'other_len_key', common_patterns + r"""
                 \b (?P<key>   (?&other_len_key)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?
@@ -96,26 +94,15 @@ class TotalLengthParser(TraitParser):
 
         # Look for keys where the units are required
         battery.append(
-            'key_units_req',
-            common_patterns + r"""
+            'key_units_req', common_patterns + r"""
                 \b (?P<key>   (?&key_units_req)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))
                    """)
 
-        # Look for a length in a phrase
-        battery.append(
-            'len_in_phrase',
-            common_patterns + r"""
-                \b (?P<key>   (?&len_in_phrase)) [^\d;]{1,32}
-                   (?P<value> (?&range)) \s*
-                   (?P<units> (?&len_units))?
-                   """)
-
         # These ambiguous keys have a suffix that disambiguate them
         battery.append(
-            'len_key_ambiguous_suffix',
-            common_patterns + r"""
+            'len_key_ambiguous_suffix', common_patterns + r"""
                 (?&no_word) (?&len_key_ambiguous) (?&key_end)
                 (?P<value>  (?&range)) \s*
                 (?P<units>  (?&len_units))? \s*
@@ -124,8 +111,7 @@ class TotalLengthParser(TraitParser):
 
         # These keys require units to disambiguate what is being measured
         battery.append(
-            'len_key_ambiguous_units',
-            common_patterns + r"""
+            'len_key_ambiguous_units', common_patterns + r"""
                 (?&no_word)
                 (?P<key>   (?&len_key_ambiguous)) (?&key_end)
                 (?P<value> (?&range)) \s*
@@ -134,8 +120,7 @@ class TotalLengthParser(TraitParser):
 
         # An out of order parse: tol (mm) 20-25
         battery.append(
-            'len_key_abbrev',
-            common_patterns + r"""
+            'len_key_abbrev', common_patterns + r"""
                 \b (?P<key>      (?&len_key_abbrev)) \s*
                    (?&open)  \s* (?P<units> (?&len_units)) \s* (?&close) \s*
                    (?P<value>    (?&range))""")
@@ -167,16 +152,23 @@ class TotalLengthParser(TraitParser):
         battery.append(
             'total_len_key',
             common_patterns + r"""
-                \b (?P<key>   (?&total_len_key)) (?&key_end)
-                (?P<value> (?&range)) \s*
-                (?P<units> (?&len_units))?
+                \b (?P<key>   (?&total_len_key)) (?&key_end) \s*
+                   (?P<value> (?&range)) \s*
+                   (?P<units> (?&len_units))?
                 """,
             default_units='_mm_')
 
+        # Look for a length in a phrase
+        battery.append(
+            'len_in_phrase', common_patterns + r"""
+                \b (?P<key>   (?&len_in_phrase)) [^\d;]{1,32}
+                   (?P<value> (?&range)) \s*
+                   (?P<units> (?&len_units))?
+                   """)
+
         #  Now allow an ambiguous key if it is not preceded by another word
         battery.append(
-            'len_key_ambiguous',
-            common_patterns + r"""
+            'len_key_ambiguous', common_patterns + r"""
                 (?&no_word)
                 (?P<key>   (?&len_key_ambiguous)) (?&key_end)
                 (?P<value> (?&range))
@@ -184,8 +176,7 @@ class TotalLengthParser(TraitParser):
 
         # Look for snout-vent length keys
         battery.append(
-            'svl_len_key',
-            common_patterns + r"""
+            'svl_len_key', common_patterns + r"""
                 \b (?P<key>   (?&svl_len_key)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?""")
@@ -195,17 +186,20 @@ class TotalLengthParser(TraitParser):
     common_patterns = TraitParser.common_regex_mass_length + r"""
         (?(DEFINE)
 
+            # How numbers are represented in shorthand notation
+            (?P<shorthand_num>
+                (?: (?&number) | (?&shorthand_unknown) ) )
+
             # Look for a shorthand total length. Make sure it isn't a date
             (?P<len_shorthand>
-                (?&dash_req) (?: (?&number) | (?&shorthand_unknown) )
-                (?: (?&shorthand_sep)
-                    (?: (?&number) | (?&shorthand_unknown) ) ){2,})
+                (?&dash_req) (?&shorthand_num)
+                (?: (?&shorthand_sep) (?&shorthand_num) ){2,} )
 
             # The "European" version of the shorthand length
             (?P<len_shorthand_euro>
-                (?&dash_req) (?: (?&number) | (?&shorthand_unknown) )
+                (?&dash_req) (?&shorthand_num)
                 (?: (?&shorthand_sep)
-                (?: (?<! [\w\-] ) (?&number) | (?&shorthand_unknown) )
+                (?: (?<! [\w\-] ) (?&shorthand_num) )
                 [\p{Letter}]{0,3} ){2,})
 
             # Keys that indicate we have a total length
@@ -214,7 +208,7 @@ class TotalLengthParser(TraitParser):
                 | total  (?&dash) length (?&dash) in
                 | length (?&dash) in (?&dash) millimeters
                 | (?: total | max | standard ) (?&dash) lengths?
-                | meas (?: [a-z]* )? (?&dot) : \s* L
+                | (?: meas (?: [a-z]* )? (?&dot) : \s* L )
                 | s (?&dot) l (?&dot)
                 | label (?&dot) \s* lengths?)
 
@@ -231,6 +225,7 @@ class TotalLengthParser(TraitParser):
                 head  (?&dash) body (?&dash)
                     length (?&dash) in (?&dash) millimeters
                 | (?: fork | mean | body ) (?&dash) lengths?
+                | Meas \s* : \s* Length \s* \(L\)
                 | t [o.]? l (?&dot) _?
             )
 
