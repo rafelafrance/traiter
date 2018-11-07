@@ -16,7 +16,9 @@ class TotalLengthParser(TraitParser):
     def success(self, result):
         """Return this when the measurement is found."""
         if result['value'] == 0:
+            # Don't allow a 0 length
             return self.fail()
+
         return {
             'key': result['key'],
             'has_length': True,

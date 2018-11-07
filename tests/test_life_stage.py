@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.trait_parsers.life_stage_parser import LifeStageParser
+from lib.trait_parsers.life_stage import LifeStageParser
 
 
 class TestLifeStageParser(unittest.TestCase):

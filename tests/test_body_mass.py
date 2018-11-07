@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.trait_parsers.body_mass_parser import BodyMassParser
+from lib.trait_parsers.body_mass import BodyMassParser
 
 
 class TestBodyMassParser(unittest.TestCase):

@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.trait_parsers.sex_parser import SexParser
+from lib.trait_parsers.sex import SexParser
 
 
 class TestSexParser(unittest.TestCase):

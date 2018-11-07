@@ -4,10 +4,10 @@
 
 import sys
 import csv
-from lib.trait_parsers.body_mass_parser import BodyMassParser
-from lib.trait_parsers.life_stage_parser import LifeStageParser
-from lib.trait_parsers.sex_parser import SexParser
-from lib.trait_parsers.total_length_parser import TotalLengthParser
+from lib.trait_parsers.body_mass import BodyMassParser
+from lib.trait_parsers.life_stage import LifeStageParser
+from lib.trait_parsers.sex import SexParser
+from lib.trait_parsers.total_length import TotalLengthParser
 
 
 class Traiter:
@@ -15,10 +15,10 @@ class Traiter:
 
     def __init__(self):
         """Build all of the parsers."""
-        self.body_mass_parser = BodyMassParser()
-        self.life_stage_parser = LifeStageParser()
-        self.sex_parser = SexParser()
-        self.total_length_parser = TotalLengthParser()
+        self.body_mass = BodyMassParser()
+        self.life_stage = LifeStageParser()
+        self.sex = SexParser()
+        self.total_length = TotalLengthParser()
 
     def parse_row(self, row):
         """
@@ -36,11 +36,11 @@ class Traiter:
             row['dynamicproperties'],
             row['occurrenceremarks'],
             row['fieldnotes']]
-        traits = self.sex_parser.preferred_or_search(row['sex'], strings)
-        traits.update(self.life_stage_parser.preferred_or_search(
+        traits = self.sex.preferred_or_search(row['sex'], strings)
+        traits.update(self.life_stage.preferred_or_search(
             row['lifestage'], strings))
-        traits.update(self.total_length_parser.search_and_normalize(strings))
-        traits.update(self.body_mass_parser.search_and_normalize(strings))
+        traits.update(self.total_length.search_and_normalize(strings))
+        traits.update(self.body_mass.search_and_normalize(strings))
         return traits
 
     def parse_csv_file(self, file_name):
