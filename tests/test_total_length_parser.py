@@ -9,14 +9,20 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_parser_01(self):
         self.assertDictEqual(
             TARGET.parse('{"totalLengthInMM":"123" };'),
-            {'key': 'totalLengthInMM', 'value': '123', 'units': 'MM'})
+            {'key': 'totalLengthInMM',
+             'value': '123',
+             'regex': 'total_len_key_num',
+             'units': 'MM'})
 
     def test_parser_02(self):
         self.assertDictEqual(
             TARGET.parse(
                 'measurements: ToL=230;TaL=115;HF=22;E=18;'
                 ' total length=230 mm; tail length=115 mm;'),
-            {'key': 'total length', 'value': '230', 'units': 'mm'})
+            {'key': 'total length',
+             'value': '230',
+             'regex': 'total_len_key_num',
+             'units': 'mm'})
 
     def test_parser_03(self):
         self.assertEqual(
@@ -31,47 +37,69 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_parser_05(self):
         self.assertDictEqual(
             TARGET.parse('"{"measurements":"308-190-45-20" }"'),
-            {'key': 'measurements', 'value': '308', 'units': '_mm_'})
+            {'key': 'measurements',
+             'value': '308',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_06(self):
         self.assertDictEqual(
             TARGET.parse('308-190-45-20'),
-            {'key': '_shorthand_', 'value': '308', 'units': '_mm_'})
+            {'key': '_shorthand_',
+             'value': '308',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_07(self):
         self.assertDictEqual(
             TARGET.parse('{"measurements":"143-63-20-17=13 g" }'),
-            {'key': 'measurements', 'value': '143', 'units': '_mm_'})
+            {'key': 'measurements',
+             'value': '143',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_08(self):
         self.assertDictEqual(
             TARGET.parse('143-63-20-17=13'),
-            {'key': '_shorthand_', 'value': '143', 'units': '_mm_'})
+            {'key': '_shorthand_',
+             'value': '143',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_09(self):
         self.assertDictEqual(
             TARGET.parse(
                 'snout-vent length=54 mm; total length=111 mm;'
                 ' tail length=57 mm; weight=5 g'),
-            {'key': 'total length', 'value': '111', 'units': 'mm'})
+            {'key': 'total length',
+             'value': '111',
+             'regex': 'total_len_key_num',
+             'units': 'mm'})
 
     def test_parser_10(self):
         self.assertDictEqual(
             TARGET.parse('unformatted measurements=Verbatim weight=X;'
                          'ToL=230;TaL=115;HF=22;E=18;'
                          ' total length=230 mm; tail length=115 mm;'),
-            {'key': 'total length', 'value': '230', 'units': 'mm'})
+            {'key': 'total length',
+             'value': '230',
+             'regex': 'total_len_key_num',
+             'units': 'mm'})
 
     def test_parser_11(self):
         self.assertDictEqual(
             TARGET.parse('** Body length =345 cm; Blubber=1 cm '),
-            {'key': 'Body length', 'value': '345', 'units': 'cm'})
+            {'key': 'Body length',
+             'value': '345',
+             'regex': 'other_len_key',
+             'units': 'cm'})
 
     def test_parser_12(self):
         self.assertDictEqual(
             TARGET.parse('t.l.= 2 feet 3.1 - 4.5 inches '),
             {'key': 't.l.',
              'value': ['2', '3.1 - 4.5'],
+             'regex': 'en_len',
              'units': ['feet', 'inches']})
 
     def test_parser_13(self):
@@ -79,49 +107,74 @@ class TestTotalLengthParser(unittest.TestCase):
             TARGET.parse('2 ft. 3.1 - 4.5 in. '),
             {'key': '_english_',
              'value': ['2', '3.1 - 4.5'],
+             'regex': 'en_len',
              'units': ['ft.', 'in.']})
 
     def test_parser_14(self):
         self.assertDictEqual(
             TARGET.parse('total length= 2 ft.'),
-            {'key': 'total length', 'value': '2', 'units': 'ft.'})
+            {'key': 'total length',
+             'value': '2',
+             'regex': 'total_len_key_num',
+             'units': 'ft.'})
 
     def test_parser_15(self):
         self.assertDictEqual(
             TARGET.parse('AJR-32   186-102-23-15  15.0g'),
-            {'key': '_shorthand_', 'value': '186', 'units': '_mm_'})
+            {'key': '_shorthand_',
+             'value': '186',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_16(self):
         self.assertDictEqual(
             TARGET.parse('length=8 mm'),
-            {'key': 'length', 'value': '8', 'units': 'mm'})
+            {'key': 'length',
+             'value': '8',
+             'regex': 'len_key_ambiguous_units',
+             'units': 'mm'})
 
     def test_parser_17(self):
         self.assertDictEqual(
             TARGET.parse('another; length=8 mm'),
-            {'key': 'length', 'value': '8', 'units': 'mm'})
+            {'key': 'length',
+             'value': '8',
+             'regex': 'len_key_ambiguous_units',
+             'units': 'mm'})
 
     def test_parser_18(self):
         self.assertDictEqual(
             TARGET.parse('another; TL_120, noise'),
-            {'key': 'TL_', 'value': '120', 'units': None})
+            {'key': 'TL_',
+             'value': '120',
+             'regex': 'other_len_key',
+             'units': None})
 
     def test_parser_19(self):
         self.assertDictEqual(
             TARGET.parse('another; TL - 101.3mm, noise'),
-            {'key': 'TL', 'value': '101.3', 'units': 'mm'})
+            {'key': 'TL',
+             'value': '101.3',
+             'regex': 'other_len_key',
+             'units': 'mm'})
 
     def test_parser_20(self):
         self.assertDictEqual(
             TARGET.parse('before; TL153, after'),
-            {'key': 'TL', 'value': '153', 'units': None})
+            {'key': 'TL',
+             'value': '153',
+             'regex': 'other_len_key',
+             'units': None})
 
     def test_parser_21(self):
         self.assertDictEqual(
             TARGET.parse(
                 'before; Total length in catalog and '
                 'specimen tag as 117, after'),
-            {'key': 'Total length', 'value': '117', 'units': None})
+            {'key': 'Total length',
+             'value': '117',
+             'regex': 'len_in_phrase',
+             'units': None})
 
     def test_parser_22(self):
         self.assertDictEqual(
@@ -129,39 +182,58 @@ class TestTotalLengthParser(unittest.TestCase):
                 'before Snout vent lengths range from 16 to 23 mm. after'),
             {'key': 'Snout vent lengths',
              'value': '16 to 23',
+             'regex': 'len_in_phrase',
              'units': 'mm.'})
 
     def test_parser_23(self):
         self.assertDictEqual(
             TARGET.parse('Size=13 cm TL'),
-            {'key': 'TL', 'value': '13', 'units': 'cm'})
+            {'key': 'TL',
+             'value': '13',
+             'regex': 'len_key_suffix',
+             'units': 'cm'})
 
     def test_parser_24(self):
         self.assertDictEqual(
             TARGET.parse('det_comments:31.5-58.3inTL'),
-            {'key': 'TL', 'value': '31.5-58.3', 'units': 'in'})
+            {'key': 'TL',
+             'value': '31.5-58.3',
+             'regex': 'len_key_suffix',
+             'units': 'in'})
 
     def test_parser_25(self):
         self.assertDictEqual(
             TARGET.parse('SVL52mm'),
-            {'key': 'SVL', 'value': '52', 'units': 'mm'})
+            {'key': 'SVL',
+             'value': '52',
+             'regex': 'svl_len_key',
+             'units': 'mm'})
 
     def test_parser_26(self):
         self.assertDictEqual(
             TARGET.parse(
                 'snout-vent length=221 mm; total length=257 mm; '
                 'tail length=36 mm'),
-            {'key': 'total length', 'value': '257', 'units': 'mm'})
+            {'key': 'total length',
+             'value': '257',
+             'regex': 'total_len_key_num',
+             'units': 'mm'})
 
     def test_parser_27(self):
         self.assertDictEqual(
             TARGET.parse('SVL 209 mm, total 272 mm, 4.4 g.'),
-            {'key': 'total', 'value': '272', 'units': 'mm'})
+            {'key': 'total',
+             'value': '272',
+             'regex': 'key_units_req',
+             'units': 'mm'})
 
     def test_parser_28(self):
         self.assertDictEqual(
             TARGET.parse('{"time collected":"0712-0900", "length":"12.0" }'),
-            {'key': 'length', 'value': '12.0', 'units': None})
+            {'key': 'length',
+             'value': '12.0',
+             'regex': 'len_key_ambiguous',
+             'units': None})
 
     def test_parser_29(self):
         self.assertDictEqual(
@@ -169,34 +241,52 @@ class TestTotalLengthParser(unittest.TestCase):
                          '"bottom":"abrupt lava '
                          'cliff dropping off to sand at 45 ft.", '
                          '"length":"119-137" }'),
-            {'key': 'length', 'value': '119-137', 'units': None})
+            {'key': 'length',
+             'value': '119-137',
+             'regex': 'len_key_ambiguous',
+             'units': None})
 
     def test_parser_30(self):
         self.assertDictEqual(
             TARGET.parse('TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx'),
-            {'key': 'TL', 'value': '44', 'units': 'mm'})
+            {'key': 'TL',
+             'value': '44',
+             'regex': 'len_key_abbrev',
+             'units': 'mm'})
 
     def test_parser_31(self):
         self.assertDictEqual(
             TARGET.parse('{"totalLengthInMM":"270-165-18-22-31", '),
-            {'key': 'totalLengthInMM', 'value': '270', 'units': 'MM'})
+            {'key': 'totalLengthInMM',
+             'value': '270',
+             'regex': 'len_shorthand',
+             'units': 'MM'})
 
     def test_parser_32(self):
         self.assertDictEqual(
             TARGET.parse('{"length":"20-29" }'),
-            {'key': 'length', 'value': '20-29', 'units': None})
+            {'key': 'length',
+             'value': '20-29',
+             'regex': 'len_key_ambiguous',
+             'units': None})
 
     def test_parser_33(self):
         self.assertDictEqual(
             TARGET.parse(
                 'field measurements on fresh dead specimen '
                 'were 157-60-20-19-21g'),
-            {'key': '_shorthand_', 'value': '157', 'units': '_mm_'})
+            {'key': '_shorthand_',
+             'value': '157',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_34(self):
         self.assertDictEqual(
             TARGET.parse('f age class: adult; standard length: 63-107mm'),
-            {'key': 'standard length', 'value': '63-107', 'units': 'mm'})
+            {'key': 'standard length',
+             'value': '63-107',
+             'regex': 'len_in_phrase',
+             'units': 'mm'})
 
     def test_parser_35(self):
         self.assertEqual(
@@ -206,22 +296,34 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_parser_36(self):
         self.assertDictEqual(
             TARGET.parse('age class: adult; standard length: 18.0-21.5mm'),
-            {'key': 'standard length', 'value': '18.0-21.5', 'units': 'mm'})
+            {'key': 'standard length',
+             'value': '18.0-21.5',
+             'regex': 'len_in_phrase',
+             'units': 'mm'})
 
     def test_parser_37(self):
         self.assertDictEqual(
             TARGET.parse('age class: adult; standard length: 18-21.5mm'),
-            {'key': 'standard length', 'value': '18-21.5', 'units': 'mm'})
+            {'key': 'standard length',
+             'value': '18-21.5',
+             'regex': 'len_in_phrase',
+             'units': 'mm'})
 
     def test_parser_38(self):
         self.assertDictEqual(
             TARGET.parse('age class: adult; standard length: 18.0-21mm'),
-            {'key': 'standard length', 'value': '18.0-21', 'units': 'mm'})
+            {'key': 'standard length',
+             'value': '18.0-21',
+             'regex': 'len_in_phrase',
+             'units': 'mm'})
 
     def test_parser_39(self):
         self.assertDictEqual(
             TARGET.parse('age class: adult; standard length: 18-21mm'),
-            {'key': 'standard length', 'value': '18-21', 'units': 'mm'})
+            {'key': 'standard length',
+             'value': '18-21',
+             'regex': 'len_in_phrase',
+             'units': 'mm'})
 
     def test_parser_40(self):
         self.assertEqual(
@@ -234,17 +336,26 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_parser_41(self):
         self.assertEqual(
             TARGET.parse('20-28mm SL'),
-            {'key': 'SL', 'value': '20-28', 'units': 'mm'})
+            {'key': 'SL',
+             'value': '20-28',
+             'regex': 'len_key_suffix',
+             'units': 'mm'})
 
     def test_parser_42(self):
         self.assertEqual(
             TARGET.parse('29mm SL'),
-            {'key': 'SL', 'value': '29', 'units': 'mm'})
+            {'key': 'SL',
+             'value': '29',
+             'regex': 'len_key_suffix',
+             'units': 'mm'})
 
     def test_parser_43(self):
         self.assertEqual(
             TARGET.parse('{"measurements":"159-?-22-16=21.0" }'),
-            {'key': 'measurements', 'value': '159', 'units': '_mm_'})
+            {'key': 'measurements',
+             'value': '159',
+             'regex': 'len_shorthand',
+             'units': '_mm_'})
 
     def test_parser_44(self):
         self.assertEqual(
@@ -254,52 +365,82 @@ class TestTotalLengthParser(unittest.TestCase):
     def test_parser_45(self):
         self.assertEqual(
             TARGET.parse('Meas: L: 21.0'),
-            {'key': 'Meas: L', 'value': '21.0', 'units': '_mm_'})
+            {'key': 'Meas: L',
+             'value': '21.0',
+             'regex': 'total_len_key_num',
+             'units': '_mm_'})
 
     def test_parser_46(self):
         self.assertEqual(
             TARGET.parse('Meas: L: 21.0 cm'),
-            {'key': 'Meas: L', 'value': '21.0', 'units': 'cm'})
+            {'key': 'Meas: L',
+             'value': '21.0',
+             'regex': 'total_len_key_num',
+             'units': 'cm'})
 
     def test_parser_47(self):
         self.assertEqual(
             TARGET.parse('LABEL. LENGTH 375 MM.'),
-            {'key': 'LABEL. LENGTH', 'value': '375', 'units': 'MM.'})
+            {'key': 'LABEL. LENGTH',
+             'value': '375',
+             'regex': 'total_len_key_num',
+             'units': 'MM.'})
 
     def test_parser_48(self):
         self.assertEqual(
             TARGET.parse('SL=12mm'),
-            {'key': 'SL', 'value': '12', 'units': 'mm'})
+            {'key': 'SL',
+             'value': '12',
+             'regex': 'total_len_key_num',
+             'units': 'mm'})
 
     def test_parser_49(self):
         self.assertEqual(
             TARGET.parse('Size=SL 12-14 mm'),
-            {'key': 'SL', 'value': '12-14', 'units': 'mm'})
+            {'key': 'SL',
+             'value': '12-14',
+             'regex': 'total_len_key',
+             'units': 'mm'})
 
     def test_parser_50(self):
         self.assertEqual(
             TARGET.parse('SV 1.2'),
-            {'key': 'SV', 'value': '1.2', 'units': None})
+            {'key': 'SV',
+             'value': '1.2',
+             'regex': 'svl_len_key',
+             'units': None})
 
     def test_parser_51(self):
         self.assertEqual(
             TARGET.parse(' Length: 123 mm SL'),
-            {'key': 'SL', 'value': '123', 'units': 'mm'})
+            {'key': 'SL',
+             'value': '123',
+             'regex': 'len_key_suffix',
+             'units': 'mm'})
 
     def test_parser_52(self):
         self.assertEqual(
             TARGET.parse(' Length: 12-34 mmSL'),
-            {'key': 'SL', 'value': '12-34', 'units': 'mm'})
+            {'key': 'SL',
+             'value': '12-34',
+             'regex': 'len_key_suffix',
+             'units': 'mm'})
 
     def test_parser_53(self):
         self.assertEqual(
             TARGET.parse('Measurements: L: 21.0 cm'),
-            {'key': 'Measurements: L', 'value': '21.0', 'units': 'cm'})
+            {'key': 'Measurements: L',
+             'value': '21.0',
+             'regex': 'total_len_key_num',
+             'units': 'cm'})
 
     def test_parser_54(self):
         self.assertEqual(
             TARGET.parse('SVL=44'),
-            {'key': 'SVL', 'value': '44', 'units': None})
+            {'key': 'SVL',
+             'value': '44',
+             'regex': 'svl_len_key',
+             'units': None})
 
     ######################################################################
     ######################################################################
@@ -796,7 +937,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': 123,
              'length_units_inferred': False,
-             'regex': 'len_key_ambiguous_suffix',
+             'regex': 'len_key_suffix',
              'key': 'SL'})
 
     def test_search_and_normalize_52(self):
@@ -805,7 +946,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [12, 34],
              'length_units_inferred': False,
-             'regex': 'len_key_ambiguous_suffix',
+             'regex': 'len_key_suffix',
              'key': 'SL'})
 
     def test_search_and_normalize_53(self):
@@ -827,13 +968,14 @@ class TestTotalLengthParser(unittest.TestCase):
              'key': 'SVL'})
 
     def test_search_and_normalize55(self):
+        # Disallow 0 length
         self.assertDictEqual(
             TARGET.search_and_normalize(['SVL=0 g']),
-            {'has_length': True,
+            {'has_length': False,
              'length_in_mm': None,
-             'length_units_inferred': True,
-             'regex': 'svl_len_key',
-             'key': 'SVL'})
+             'length_units_inferred': False,
+             'regex': None,
+             'key': None})
 
     def test_search_and_normalize56(self):
         self.assertDictEqual(
@@ -841,8 +983,8 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': 50,
              'length_units_inferred': False,
-             'regex': 'len_key_ambiguous',
-             'key': 'total length'})
+             'regex': 'other_len_key',
+             'key': 'TL'})
 
     def test_search_and_normalize57(self):
         self.assertDictEqual(
@@ -876,29 +1018,48 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': [42, 51],
              'length_units_inferred': False,
-             'regex': 'key_units_req',
-             'key': 'measurements'})
+             'regex': 'len_key_suffix',
+             'key': 'SL'})
 
     def test_search_and_normalize59(self):
+        # TODO: Maybe we should infer the units from other measurements?
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['SV 1.4, TAIL 1.0 CM. HATCHLING', '', '']),
             {'has_length': True,
-             'length_in_mm': 14,
-             'length_units_inferred': False,
+             'length_in_mm': 1.4,
+             'length_units_inferred': True,
              'regex': 'svl_len_key',
              'key': 'SV'})
 
     def test_search_and_normalize60(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
-                ['LENGTH 10 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.',
-                 '',
-                 '']),
+                ['LENGTH 10 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.', '']),
             {'has_length': True,
              'length_in_mm': 263.5,
              'length_units_inferred': False,
-             'regex': 'len_key_ambiguous',
+             'regex': 'len_fract',
+             'key': 'LENGTH'})
+
+    def test_search_and_normalize60a(self):
+        self.assertDictEqual(
+            TARGET.search_and_normalize(
+                ['LENGTH 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.', '']),
+            {'has_length': True,
+             'length_in_mm': 9.5,
+             'length_units_inferred': False,
+             'regex': 'len_fract',
+             'key': 'LENGTH'})
+
+    def test_search_and_normalize60b(self):
+        self.assertDictEqual(
+            TARGET.search_and_normalize(
+                ['LENGTH 0 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.', '']),
+            {'has_length': True,
+             'length_in_mm': 9.5,
+             'length_units_inferred': False,
+             'regex': 'len_fract',
              'key': 'LENGTH'})
 
     def test_search_and_normalize61(self):
@@ -938,9 +1099,9 @@ class TestTotalLengthParser(unittest.TestCase):
                 ['{"totalLength":"970", "wing":"390" }', 'L 970 mm', '']),
             {'has_length': True,
              'length_in_mm': 970,
-             'length_units_inferred': False,
+             'length_units_inferred': True,
              'regex': 'total_len_key_num',
-             'key': 'total length'})
+             'key': 'totalLength'})
 
     def test_search_and_normalize65(self):
         self.assertDictEqual(
@@ -951,7 +1112,7 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': True,
              'length_in_mm': 117,
              'length_units_inferred': False,
-             'regex': 'len_key_ambiguous_units',
+             'regex': 'total_len_key_num',
              'key': 'LENGTH'})
 
     def test_search_and_normalize66(self):
@@ -1002,7 +1163,7 @@ class TestTotalLengthParser(unittest.TestCase):
              'key': 'Total Length'})
 
     def test_search_and_normalize71(self):
-        # This one is a trawl measurement of some kind, not an organism
+        # TODO This one is a trawl measurement of some kind, not an organism
         # measurement
         self.assertDictEqual(
             TARGET.search_and_normalize(

@@ -13,9 +13,10 @@ class TotalLengthParser(TraitParser):
         self.battery = self._battery(self.common_patterns)
         self.default_units = '_mm_'
 
-    @staticmethod
-    def success(result):
+    def success(self, result):
         """Return this when the measurement is found."""
+        if result['value'] == 0:
+            return self.fail()
         return {
             'key': result['key'],
             'has_length': True,
@@ -52,6 +53,27 @@ class TotalLengthParser(TraitParser):
             default_key='_english_',
             compound_value=True)
 
+        # Look for a pattern like: total length: 4 ft 8 in
+        battery.append(
+            'len_fract',
+            common_patterns + r"""
+                \b (?P<key> (?&all_len_keys))? (?&key_end)?
+                   (?P<value1> (\d*))        \s*
+                   (?P<value2> (\d+ \/ \d+)) \s*
+                   (?P<units> (?&len_units))
+                   """,
+            default_key='_english_',
+            compound_value=True)
+
+        # This parse puts the key at the end: 20-25 mm TL
+        battery.append(
+            'len_key_suffix',
+            common_patterns + r"""
+                \b (?P<value> (?&range)) \s*
+                   (?P<units> (?&len_units))? \s*
+                   (?P<key>   (?&len_key_suffix))
+                   """)
+
         # Look for total key, number (not a range) and optional units
         # Like: total length = 10.5 mm
         battery.append(
@@ -85,7 +107,7 @@ class TotalLengthParser(TraitParser):
         battery.append(
             'len_in_phrase',
             common_patterns + r"""
-                \b (?P<key>   (?&len_in_phrase)) \D{1,32}
+                \b (?P<key>   (?&len_in_phrase)) [^\d;]{1,32}
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?
                    """)
@@ -117,15 +139,6 @@ class TotalLengthParser(TraitParser):
                 \b (?P<key>      (?&len_key_abbrev)) \s*
                    (?&open)  \s* (?P<units> (?&len_units)) \s* (?&close) \s*
                    (?P<value>    (?&range))""")
-
-        # This parse puts the key at the end: 20-25 mm TL
-        battery.append(
-            'len_key_suffix',
-            common_patterns + r"""
-                \b (?P<value> (?&range)) \s*
-                   (?P<units> (?&len_units))? \s*
-                   (?P<key>   (?&len_key_suffix))
-                   """)
 
         # Length is in shorthand notation
         battery.append(

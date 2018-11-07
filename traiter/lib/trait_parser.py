@@ -8,6 +8,7 @@ class TraitParser(ABC):
     """Common logic for all traits."""
 
     IS_RANGE = regex.compile(r'- | to', flags=regex.IGNORECASE | regex.VERBOSE)
+    IS_FRACT = regex.compile(r'\/', flags=regex.IGNORECASE | regex.VERBOSE)
     WS_SPLIT = regex.compile(r'\s\s\s+')
 
     def __init__(self):
@@ -27,11 +28,11 @@ class TraitParser(ABC):
 
     def parse_first(self, strings):
         """Look for the first string that parses successfully."""
-        for string in strings:
-            if string:
-                trait = self.parse(string)
-                if trait:
-                    return trait
+        string = '   |||   '.join(strings)
+        if string:
+            trait = self.parse(string)
+            if trait:
+                return trait
         return None
 
     def parse(self, string):
@@ -98,6 +99,19 @@ class TraitParser(ABC):
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
         parsed['is_inferred'] = (units[0] == '_') if units else True
+
+        # Handle fractional values
+        if len(parsed['value']) > 1 and \
+                self.IS_FRACT.search(parsed['value'][1]):
+            if not parsed['value'][0]:
+                parsed['value'][0] = '0'
+            value = self.multiply(
+                parsed['value'][0], self.unit_conversions[units])
+            fract = self.IS_FRACT.split(parsed['value'][1])
+            value += float(fract[0]) / float(fract[1]) \
+                * self.unit_conversions[units]
+            parsed['value'] = round(value, 1)
+            return parsed
 
         values = self.IS_RANGE.split(parsed['value'])
         if len(values) > 1:
