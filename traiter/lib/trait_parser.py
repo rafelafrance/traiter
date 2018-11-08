@@ -3,6 +3,9 @@
 from abc import ABC, abstractmethod
 import regex
 
+# Used to join the fields into one string. TODO It's a hack.
+SEPARATOR = '   |||   '
+
 
 class TraitParser(ABC):
     """Common logic for all traits."""
@@ -16,19 +19,17 @@ class TraitParser(ABC):
         self.battery = None
         self.default_units = None
 
-    @staticmethod
     @abstractmethod
-    def success(result):
+    def success():
         """Return this when the measurement is found."""
 
-    @staticmethod
     @abstractmethod
     def fail():
         """Return this when the measurement is not found."""
 
     def parse_first(self, strings):
         """Look for the first string that parses successfully."""
-        string = '   |||   '.join(strings)
+        string = SEPARATOR.join(strings)
         if string:
             trait = self.parse(string)
             if trait:
@@ -47,7 +48,7 @@ class TraitParser(ABC):
             return self.success(parsed)
         return self.fail()
 
-    def preferred_or_search(self, preferred, strings):
+    def preferred_or_search(self, strings, preferred=''):
         """
         If there is a preferred value use it otherwise do a search.
 
@@ -56,10 +57,13 @@ class TraitParser(ABC):
         """
         preferred = preferred.strip()
         if preferred:
-            return self.success({'value': preferred})
+            return self.success({
+                'value': preferred,
+                'key': '_preferred_',
+                'regex': ''})
         return self.search(strings)
 
-    def search_and_normalize(self, strings):
+    def search_and_normalize(self, strings, preferred=''):
         """Search for a good parse and normalize the results."""
         parsed = self.parse_first(strings)
         if parsed:
@@ -69,61 +73,69 @@ class TraitParser(ABC):
 
     def normalize(self, parsed):
         """Convert units to a common measurement."""
-        # Handle multiple units like lengths given as: 5 feet 3 inches
         if isinstance(parsed['units'], list):
-            parsed['is_inferred'] = False
-            units = ' '.join(parsed['units']).lower()
-
-            # Handle cases where the last value is a range: 4 lbs 2 - 4 ozs
-            if len(self.IS_RANGE.split(parsed['value'][1])) > 1:
-                upper = self.multiply(
-                    parsed['value'][0], self.unit_conversions[units][0])
-                lower = self.IS_RANGE.split(parsed['value'][1])
-                parsed['value'] = []
-                parsed['value'].append(self.multiply(
-                    lower[0], self.unit_conversions[units][1]) + upper)
-                parsed['value'].append(self.multiply(
-                    lower[1], self.unit_conversions[units][1]) + upper)
-
-            # Handle cases like: 3 lbs 2 ozs
-            else:
-                value = self.multiply(
-                    parsed['value'][0], self.unit_conversions[units][0])
-                value += self.multiply(
-                    parsed['value'][1], self.unit_conversions[units][1])
-                parsed['value'] = value
-
-            return parsed
+            return self.handle_multiple_units(parsed)
 
         # Normal unit (optional) & value
         units = parsed.get('units', self.default_units)
         units = units.lower() if units else self.default_units
         parsed['is_inferred'] = (units[0] == '_') if units else True
 
-        # Handle fractional values
         if len(parsed['value']) > 1 and \
                 self.IS_FRACT.search(parsed['value'][1]):
-            if not parsed['value'][0]:
-                parsed['value'][0] = '0'
-            value = self.multiply(
-                parsed['value'][0], self.unit_conversions[units])
-            fract = self.IS_FRACT.split(parsed['value'][1])
-            value += float(fract[0]) / float(fract[1]) \
-                * self.unit_conversions[units]
-            parsed['value'] = round(value, 1)
-            return parsed
+            return self.handle_fractional_values(parsed, units)
 
         values = self.IS_RANGE.split(parsed['value'])
         if len(values) > 1:
-            # Handle cases like: "3 - 5 mm"
-            parsed['value'] = [
-                self.multiply(values[0], self.unit_conversions[units]),
-                self.multiply(values[1], self.unit_conversions[units])]
-            return parsed
+            return self.handle_range_value(parsed, values, units)
 
         # Value is just a number and optional units like "3.1 g"
         parsed['value'] = self.multiply(
             values[0], self.unit_conversions[units])
+        return parsed
+
+    def handle_multiple_units(self, parsed):
+        """Handle multiple units like lengths given as: 5 feet 3 inches."""
+        parsed['is_inferred'] = False
+        units = ' '.join(parsed['units']).lower()
+
+        # Handle cases where the last value is a range: 4 lbs 2 - 4 ozs
+        if len(self.IS_RANGE.split(parsed['value'][1])) > 1:
+            upper = self.multiply(
+                parsed['value'][0], self.unit_conversions[units][0])
+            lower = self.IS_RANGE.split(parsed['value'][1])
+            parsed['value'] = []
+            parsed['value'].append(self.multiply(
+                lower[0], self.unit_conversions[units][1]) + upper)
+            parsed['value'].append(self.multiply(
+                lower[1], self.unit_conversions[units][1]) + upper)
+
+        # Handle cases like: 3 lbs 2 ozs
+        else:
+            value = self.multiply(
+                parsed['value'][0], self.unit_conversions[units][0])
+            value += self.multiply(
+                parsed['value'][1], self.unit_conversions[units][1])
+            parsed['value'] = value
+
+        return parsed
+
+    def handle_fractional_values(self, parsed, units):
+        """Handle fractional values like 10 3/8 inches."""
+        if not parsed['value'][0]:
+            parsed['value'][0] = '0'
+        value = self.multiply(parsed['value'][0], self.unit_conversions[units])
+        fract = self.IS_FRACT.split(parsed['value'][1])
+        value += float(fract[0]) / float(fract[1]) \
+            * self.unit_conversions[units]
+        parsed['value'] = round(value, 1)
+        return parsed
+
+    def handle_range_value(self, parsed, values, units):
+        """Handle cases like: "3 - 5 mm."""
+        parsed['value'] = [
+            self.multiply(values[0], self.unit_conversions[units]),
+            self.multiply(values[1], self.unit_conversions[units])]
         return parsed
 
     @staticmethod

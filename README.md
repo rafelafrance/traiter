@@ -13,7 +13,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-If you prefer to not deal with setting up a virtual environment then you can install the requirements into your. WARNING: This can cause conflicts with other project requirements.
+If you prefer to not deal with setting up a virtual environment then you can install the requirements into your python environment. WARNING: This sometimes causes conflicts with other projects.
 
 ```
 git clone https://github.com/rafelafrance/traiter.git
@@ -22,7 +22,7 @@ python3 -m pip install --user -r traiter/requirements.txt
 
 # Run
 
-traiter/traiter.py vertnet-file.csv
+python3 traiter/traiter.py vertnet-file.csv
 
 # Running tests
 

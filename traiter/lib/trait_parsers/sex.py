@@ -4,13 +4,15 @@ from lib.parser_battery import ParserBattery
 from lib.trait_parser import TraitParser
 
 
-class SexParser(TraitParser):
+class ParseSex(TraitParser):
     """Find total sex annotations."""
 
-    def __init__(self):
+    def __init__(self, preferred='sex'):
         """Add defaults for the measurements."""
         super().__init__()
         self.battery = self._battery()
+        self.preferred = preferred
+        self.parser = self.preferred_or_search
 
     @staticmethod
     def success(result):

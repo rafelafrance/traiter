@@ -4,13 +4,15 @@ from lib.parser_battery import ParserBattery
 from lib.trait_parser import TraitParser
 
 
-class LifeStageParser(TraitParser):
+class ParseLifeStage(TraitParser):
     """Find life life stage annotations."""
 
-    def __init__(self):
+    def __init__(self, preferred='lifestage'):
         """Add defaults for the measurements."""
         super().__init__()
-        self.battery = self._battery(self._common_patterns())
+        self.battery = self._battery(self.common_patterns)
+        self.preferred = preferred
+        self.parser = self.preferred_or_search
 
     @staticmethod
     def success(result):
@@ -85,20 +87,19 @@ class LifeStageParser(TraitParser):
                 (?: larves? |larvae? | larvals? | imagos? | neonates?
                 | hatchlings? | hatched | fry | metamorphs? | premetamorphs?
                 | tadpoles? | têtard
-                # | embryos? | embryonic | fetus(es)?
+                # | embryos? | embryonic | fetus (:? es )?
                 | young-of-the-year | leptocephales? | leptocephalus
                 | immatures? | imms? | jeunes? | young | ygs?
                 | fleglings? | fledgelings? | chicks? | nestlings?
                 | juveniles? | juvéniles? | juvs?
                 | subadults? | subadultes? | subads? | sub-adults? | yearlings?
-                | matures? | adults? | adulte? | ads? ) (?: \s* \? )? ) \b
+                | matures? | adults? | adulte? | ads? )
+                (?: \s* \? )? ) \b
                 """)
 
         return battery
 
-    @staticmethod
-    def _common_patterns():
-        return r"""
+    common_patterns = r"""
             (?(DEFINE)
                 (?P<word_chars> [\w?.\/\-]+ )
             )

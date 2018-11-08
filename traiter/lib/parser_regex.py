@@ -1,8 +1,8 @@
 """Supporting logic for regular expressions."""
 
-#pylint: disable=too-many-instance-attributes
-#pylint: disable=too-few-public-methods
-#pylint: disable=too-many-arguments
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-arguments
 
 import regex   # re expressions lack desired features
 
@@ -64,9 +64,7 @@ class ParserRegex:
             units_from_key = self.units_from_key.search(key)
             if units_from_key:
                 units = units_from_key.group('units')
-        if not units:
-            units = self.default_units
-        return units
+        return units if units else self.default_units
 
     def _get_value_array(self, string):
         matches = self.regexp.findall(string)

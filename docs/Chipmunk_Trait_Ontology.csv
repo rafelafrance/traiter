@@ -1,6 +1,0 @@
-Entity-Quality,Synonyms,Examples,Meaning
-testis state,"testes abbreviation (testes, testis, gonad(s), tes, Tes, t, T, Ts);  testes state abbreviations (scr, S, descended, in scrotum, nonscrotal, non scrotal, not scrotal, nscr, NS, not descended, not fully descended, undescended, abdominal, cryptorchid)","testes descended, testes scrotal, testes not abdominal",testes are descended (=scrotal)
-testis length,"testes abbreviation (testes, testis, gonad(s), tes, Tes, t, T, Ts) followed by equals sign, colon or space and then a length and sometimes width measure","testes=3x2, T=3x2",testes are 3 by 2 mm
-ear length,"XX-XX-XX-ear length, E, Ear, EFN, ear from notch, earLengthInmm","ear from notch=25 mm, E : 25, ""earLengthInMillimeters""=""25""",ear length is 25 mm
-tail length,"XX-tail length-XX-XX, TV, Tail, TaL, tail length, tailLengthInMillimeters, tailLengthInmm","tail length=26 mm, TaL : 26, ""tailLengthInMillimeters""=""26""",tail length is 26 mm
-hindfoot length,"XX-XX-hindfoot length-XX, HF, Hind Foot, hind foot with claw, hindfootLengthInmm, footLengthInMillimeters","hind foot with claw=27 mm, HF : 27, ""footLengthInMillimeters""=""27""",hindfoot length is 27 mm

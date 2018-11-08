@@ -4,14 +4,16 @@ from lib.parser_battery import ParserBattery
 from lib.trait_parser import TraitParser
 
 
-class TotalLengthParser(TraitParser):
+class ParseTotalLength(TraitParser):
     """Find total length measurements."""
 
-    def __init__(self):
+    def __init__(self, preferred=''):
         """Add defaults for the measurements."""
         super().__init__()
         self.battery = self._battery(self.common_patterns)
         self.default_units = '_mm_'
+        self.preferred = preferred
+        self.parser = self.search_and_normalize
 
     def success(self, result):
         """Return this when the measurement is found."""

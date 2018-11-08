@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.trait_parsers.total_length import TotalLengthParser
+from lib.trait_parsers.total_length import ParseTotalLength
 
 
 class TestTotalLengthParser(unittest.TestCase):
@@ -1185,6 +1185,6 @@ class TestTotalLengthParser(unittest.TestCase):
              'key': 'length'})
 
 
-TARGET = TotalLengthParser()
+TARGET = ParseTotalLength()
 SUITE = unittest.defaultTestLoader.loadTestsFromTestCase(TestTotalLengthParser)
 unittest.TextTestRunner().run(SUITE)

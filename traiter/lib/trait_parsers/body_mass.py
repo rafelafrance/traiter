@@ -4,14 +4,16 @@ from lib.parser_battery import ParserBattery
 from lib.trait_parser import TraitParser
 
 
-class BodyMassParser(TraitParser):
+class ParseBodyMass(TraitParser):
     """Find body mass measurements."""
 
-    def __init__(self):
+    def __init__(self, preferred=''):
         """Add defaults for the measurements."""
         super().__init__()
         self.battery = self._battery(self.common_patterns)
         self.default_units = '_g_'
+        self.preferred = preferred
+        self.parser = self.search_and_normalize
 
     @staticmethod
     def success(result):
