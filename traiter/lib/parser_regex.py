@@ -43,33 +43,31 @@ class ParserRegex:
         self.units_from_key = units_from_key
 
     def _get_key(self, match):
-        key = None
-        if 'key' in match.groupdict().keys():
-            key = match.group('key')
+        key = match.groupdict().get('key')
         return key if key else self.default_key
 
     @staticmethod
     def _get_value(match):
-        if 'value' in match.groupdict().keys():
-            return match.group('value')
-        return [match.group('value1'), match.group('value2')]
+        val = match.groupdict().get('value')
+        return val if val else [match.group('value1'), match.group('value2')]
 
     def _get_units(self, match, key):
-        units = None
-        if 'units' in match.groupdict().keys():
-            units = match.group('units')
-        if 'units1' in match.groupdict().keys():
+        units = match.groupdict().get('units')
+
+        if not units and match.groupdict().get('units1'):
             units = [match.group('units1'), match.group('units2')]
+
         if not units and key:
             units_from_key = self.units_from_key.search(key)
             if units_from_key:
                 units = units_from_key.group('units')
+
         return units if units else self.default_units
 
     def _get_value_array(self, string):
         matches = self.regexp.findall(string)
         if matches and len(matches) <= self.want_list:
-            return dict(key=None, value=matches)
+            return {'key': None, 'value': matches}
         return None
 
     def matches(self, string):

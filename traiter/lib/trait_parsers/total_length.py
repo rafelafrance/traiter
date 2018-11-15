@@ -7,12 +7,13 @@ from lib.trait_parser import TraitParser
 class ParseTotalLength(TraitParser):
     """Find total length measurements."""
 
-    def __init__(self, preferred=''):
+    def __init__(self, args, preferred_value=None):
         """Add defaults for the measurements."""
         super().__init__()
+        self.args = args
         self.battery = self._battery(self.common_patterns)
         self.default_units = '_mm_'
-        self.preferred = preferred
+        self.preferred_value = preferred_value
         self.parser = self.search_and_normalize
 
     def success(self, result):

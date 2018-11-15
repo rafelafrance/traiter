@@ -54,15 +54,12 @@ class ParserBattery:
         regexp.units_from_key = self.units_from_key
 
     def parse(self, strings):
-        """
-        Use this battery to parse a set of strings.
-
-        The first regular expression that matches wins.
-        """
+        """Parse a set of strings and return the first match."""
         for regexp in self.battery:
             for string in strings:
                 match = regexp.matches(string)
                 if match and not self._excluded_(match):
                     match['regex'] = regexp.name
+                    # match['field'] = s
                     return match
         return None

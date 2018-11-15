@@ -13,23 +13,20 @@ class TraitParser(ABC):
 
     def __init__(self):
         """Add defaults for the measurements."""
+        self.args = None
         self.battery = None
         self.default_units = None
 
     @abstractmethod
-    def success():
+    def success(self, result):
         """Return this when the measurement is found."""
 
     @abstractmethod
-    def fail():
+    def fail(self):
         """Return this when the measurement is not found."""
 
     def parse(self, strings):
         """Look for the first string that parses successfully."""
-        print(strings)
-        if not isinstance(strings, list):
-            strings = [strings]
-        strings = ['  '.join(self.WS_SPLIT.split(s.strip())) for s in strings]
         trait = self.battery.parse(strings)
         return trait if trait else None
 
@@ -38,23 +35,27 @@ class TraitParser(ABC):
         parsed = self.parse(strings)
         return self.success(parsed) if parsed else self.fail()
 
-    def preferred_or_search(self, strings, preferred=''):
-        """
-        If there is a preferred value use it otherwise do a search.
-
-        The preferred value is a column in the CSV file. If the row contains a
-        value in the column's cell then return that value instead of parsing.
-        """
-        preferred = preferred.strip()
-        if preferred:
+    def preferred(self, preferred_value):
+        """If there is a preferred value then return it."""
+        preferred_value = preferred_value.strip()
+        if preferred_value:
             return self.success({
-                'value': preferred,
+                'value': preferred_value,
                 'key': '_preferred_',
                 'regex': ''})
-        return self.search(strings)
+        return None
 
-    def search_and_normalize(self, strings, preferred=''):
-        """Search for a good parse and normalize the results."""
+    def keyword_search(self, strings, preferred_value=''):
+        """Search for keyword traits."""
+        preferred_value = self.preferred(preferred_value)
+        return preferred_value if preferred_value else self.search(strings)
+
+    def search_and_normalize(self, strings, preferred_value=''):
+        """Search for a numeric value (or range) and normalize the results."""
+        preferred_value = self.preferred(preferred_value)
+        if preferred_value:
+            return preferred_value
+
         parsed = self.parse(strings)
         if parsed:
             normalized = self.normalize(parsed)
@@ -80,6 +81,8 @@ class TraitParser(ABC):
             return self.handle_range_value(parsed, values, units)
 
         # Value is just a number and optional units like "3.1 g"
+        print(parsed)
+        print(values)
         parsed['value'] = self.multiply(
             values[0], self.unit_conversions[units])
         return parsed
@@ -138,6 +141,8 @@ class TraitParser(ABC):
             precision = len(parts[1])
         result = round(float(value) * units, precision)
         return result if precision else int(result)
+
+    unit_conversions = {}
 
     common_regex_mass_length = r'''
         (?(DEFINE)

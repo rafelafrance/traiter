@@ -1,5 +1,6 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
+from argparse import Namespace
 import unittest
 from lib.trait_parsers.body_mass import ParseBodyMass
 
@@ -8,7 +9,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_01(self):
         self.assertDictEqual(
-            TARGET.parse('762-292-121-76 2435.0g'),
+            TARGET.parse(['762-292-121-76 2435.0g']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'value': '2435.0',
@@ -16,7 +17,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_02(self):
         self.assertDictEqual(
-            TARGET.parse('TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx'),
+            TARGET.parse(['TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx']),
             {'key': 'Weight',
              'regex': 'wt_key_word',
              'value': '0.77',
@@ -24,8 +25,8 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_03(self):
         self.assertDictEqual(
-            TARGET.parse(
-                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-62g'),
+            TARGET.parse([
+                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-62g']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'value': '62',
@@ -33,7 +34,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_04(self):
         self.assertDictEqual(
-            TARGET.parse('body mass=20 g'),
+            TARGET.parse(['body mass=20 g']),
             {'key': 'body mass',
              'regex': 'total_wt_key',
              'value': '20',
@@ -41,7 +42,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_05(self):
         self.assertDictEqual(
-            TARGET.parse('2 lbs. 3.1 - 4.5 oz '),
+            TARGET.parse(['2 lbs. 3.1 - 4.5 oz ']),
             {'key': '_english_',
              'regex': 'en_wt',
              'value': ['2', '3.1 - 4.5'],
@@ -49,9 +50,9 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_06(self):
         self.assertDictEqual(
-            TARGET.parse(
+            TARGET.parse([
                 '{"totalLengthInMM":"x", "earLengthInMM":"20", '
-                '"weight":"[139.5] g" }'),
+                '"weight":"[139.5] g" }']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
              'value': '[139.5]',
@@ -59,10 +60,10 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_07(self):
         self.assertDictEqual(
-            TARGET.parse(
+            TARGET.parse([
                 '{"fat":"No fat", "gonads":"Testes 10 x 6 mm.", '
                 '"molt":"No molt", '
-                '"stomach contents":"Not recorded", "weight":"94 gr."'),
+                '"stomach contents":"Not recorded", "weight":"94 gr."']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
              'value': '94',
@@ -70,7 +71,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_08(self):
         self.assertDictEqual(
-            TARGET.parse('Note in catalog: 83-0-17-23-fa64-35g'),
+            TARGET.parse(['Note in catalog: 83-0-17-23-fa64-35g']),
             {'key': '_shorthand_',
              'regex': 'wt_fa',
              'value': '35',
@@ -78,7 +79,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_09(self):
         self.assertDictEqual(
-            TARGET.parse('{"measurements":"20.2g, SVL 89.13mm" }'),
+            TARGET.parse(['{"measurements":"20.2g, SVL 89.13mm" }']),
             {'key': 'measurements',
              'regex': 'key_units_req',
              'value': '20.2',
@@ -86,7 +87,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_10(self):
         self.assertDictEqual(
-            TARGET.parse('Body: 15 g'),
+            TARGET.parse(['Body: 15 g']),
             {'key': 'Body',
              'regex': 'key_units_req',
              'value': '15',
@@ -94,7 +95,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_11(self):
         self.assertDictEqual(
-            TARGET.parse('82-00-15-21-tr7-fa63-41g'),
+            TARGET.parse(['82-00-15-21-tr7-fa63-41g']),
             {'key': '_shorthand_',
              'regex': 'wt_fa',
              'value': '41',
@@ -103,7 +104,7 @@ class TestBodyMassParser(unittest.TestCase):
     def test_12(self):
         self.assertDictEqual(
             TARGET.parse(
-                'weight=5.4 g; unformatted measurements=77-30-7-12=5.4'),
+                ['weight=5.4 g; unformatted measurements=77-30-7-12=5.4']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
              'value': '5.4',
@@ -112,7 +113,7 @@ class TestBodyMassParser(unittest.TestCase):
     def test_13(self):
         self.assertDictEqual(
             TARGET.parse(
-                'unformatted measurements=77-30-7-12=5.4; weight=5.4;'),
+                ['unformatted measurements=77-30-7-12=5.4; weight=5.4;']),
             {'key': 'measurements',
              'regex': 'wt_shorthand',
              'value': '5.4',
@@ -120,7 +121,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_14(self):
         self.assertDictEqual(
-            TARGET.parse('{"totalLengthInMM":"270-165-18-22-31", '),
+            TARGET.parse(['{"totalLengthInMM":"270-165-18-22-31", ']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'value': '31',
@@ -128,7 +129,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_15(self):
         self.assertDictEqual(
-            TARGET.parse('{"measurements":"143-63-20-17=13 g" }'),
+            TARGET.parse(['{"measurements":"143-63-20-17=13 g" }']),
             {'key': 'measurements',
              'regex': 'wt_shorthand',
              'value': '13',
@@ -136,7 +137,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_16(self):
         self.assertDictEqual(
-            TARGET.parse('143-63-20-17=13'),
+            TARGET.parse(['143-63-20-17=13']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'value': '13',
@@ -144,9 +145,9 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_17(self):
         self.assertDictEqual(
-            TARGET.parse(
+            TARGET.parse([
                 'reproductive data: Testes descended -10x7 mm; sex: male;'
-                ' unformatted measurements: 181-75-21-18=22 g'),
+                ' unformatted measurements: 181-75-21-18=22 g']),
             {'key': 'measurements',
              'regex': 'wt_shorthand',
              'value': '22',
@@ -154,7 +155,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_18(self):
         self.assertDictEqual(
-            TARGET.parse('{ "massingrams"="20.1" }'),
+            TARGET.parse(['{ "massingrams"="20.1" }']),
             {'key': 'massingrams',
              'regex': 'total_wt_key',
              'value': '20.1',
@@ -162,9 +163,9 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_19(self):
         self.assertDictEqual(
-            TARGET.parse(
+            TARGET.parse([
                 ' {"gonadLengthInMM_1":"10", "gonadLengthInMM_2":"6", '
-                '"weight":"1,192.0" }'),
+                '"weight":"1,192.0" }']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'value': '1,192.0',
@@ -172,7 +173,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_20(self):
         self.assertDictEqual(
-            TARGET.parse('"weight: 20.5-31.8'),
+            TARGET.parse(['"weight: 20.5-31.8']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'value': '20.5-31.8',
@@ -180,7 +181,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_21(self):
         self.assertDictEqual(
-            TARGET.parse('"weight: 20.5-32'),
+            TARGET.parse(['"weight: 20.5-32']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'value': '20.5-32',
@@ -188,7 +189,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_22(self):
         self.assertDictEqual(
-            TARGET.parse('"weight: 21-31.8'),
+            TARGET.parse(['"weight: 21-31.8']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'value': '21-31.8',
@@ -196,7 +197,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_23(self):
         self.assertDictEqual(
-            TARGET.parse('"weight: 21-32'),
+            TARGET.parse(['"weight: 21-32']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'value': '21-32',
@@ -204,16 +205,16 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_24(self):
         self.assertEqual(
-            TARGET.parse(
+            TARGET.parse([
                 "Specimen #'s - 5491,5492,5498,5499,5505,5526,5527,5528,5500,"
                 "5507,5508,5590,"
-                "5592,5595,5594,5593,5596,5589,5587,5586,5585"),
+                "5592,5595,5594,5593,5596,5589,5587,5586,5585"]),
             None)
 
     def test_25(self):
         self.assertDictEqual(
-            TARGET.parse(
-                'weight=5.4 g; unformatted measurements=77-x-7-12=5.4'),
+            TARGET.parse([
+                'weight=5.4 g; unformatted measurements=77-x-7-12=5.4']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
              'value': '5.4',
@@ -221,7 +222,7 @@ class TestBodyMassParser(unittest.TestCase):
 
     def test_26(self):
         self.assertEqual(
-            TARGET.parse('c701563b-dbd9-4500-184f-1ad61eb8da11'),
+            TARGET.parse(['c701563b-dbd9-4500-184f-1ad61eb8da11']),
             None)
 
     ######################################################################
@@ -504,6 +505,7 @@ class TestBodyMassParser(unittest.TestCase):
              'mass_units_inferred': False})
 
 
-TARGET = ParseBodyMass()
+ARGS = Namespace(columns=['col1', 'col2', 'col3'])
+TARGET = ParseBodyMass(ARGS)
 SUITE = unittest.defaultTestLoader.loadTestsFromTestCase(TestBodyMassParser)
 unittest.TextTestRunner().run(SUITE)

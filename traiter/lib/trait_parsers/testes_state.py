@@ -7,12 +7,13 @@ from lib.trait_parser import TraitParser
 class ParseTestesState(TraitParser):
     """Find testes state annotations."""
 
-    def __init__(self, preferred=''):
+    def __init__(self, args, preferred_value=None):
         """Add defaults for the measurements."""
         super().__init__()
+        self.args = args
         self.battery = self._battery(self.common_patterns)
-        self.preferred = preferred
-        self.parser = self.preferred_or_search
+        self.preferred_value = preferred_value
+        self.parser = self.keyword_search
 
     @staticmethod
     def success(result):

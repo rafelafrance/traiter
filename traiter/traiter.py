@@ -28,18 +28,21 @@ TRAIT_NAMES = ', '.join([i[0] for i in TRAITS])
 
 def parse_csv_file(args):
     """Build all of the parsers."""
-    columns = re.split(r'\s*,\s*', args.columns)
-    parsers = [parser() for (trait, parser) in TRAITS
-               if trait in args.traits]
-    parsers = [(parser.parser, parser.preferred) for parser in parsers]
+    parsers = build_parsers(args)
 
     with open(args.csv, 'r') as in_file:
         reader = csv.DictReader(in_file)
         for row in reader:
-            strings = [row[col] for col in columns]
-            print(reader.line_num)
-            for parser, preferred in parsers:
-                print(parser(strings, row.get(preferred, '')))
+            strings = [row[col] for col in args.columns]
+            for parser, preferred_value in parsers:
+                print(parser(strings, row.get(preferred_value, '')))
+
+
+def build_parsers(args):
+    """Build the parsers from the arguments."""
+    parsers = [parser(args) for (trait, parser) in TRAITS
+               if trait in args.traits]
+    return [(parser.parser, parser.preferred_value) for parser in parsers]
 
 
 def parse_args():
@@ -54,18 +57,22 @@ def parse_args():
                         version='%(prog)s {}'.format(__VERSION__))
 
     parser.add_argument('--columns', '-c', default=DEFAULT_COLS,
-                        help=f"""A comma separated list of columns that contain
-                            traits. The default is: '{DEFAULT_COLS}'.""")
+                        help=f"""A comma separated ordered list of columns that
+                            contain traits. The traits will be searched in the
+                            given order. You may need to quote the argument.
+                            The default is: '{DEFAULT_COLS}'.""")
 
     parser.add_argument('--traits', '-t', default=TRAIT_NAMES,
                         help=f"""A comma separated list of the traits to
-                            extract. The default is to select them all. The
-                            options are: '{TRAIT_NAMES}'.""")
+                            extract. The default is to select them all. You may
+                            want to quote the argument.The options are:
+                            '{TRAIT_NAMES}'.""")
 
-    parser.add_argument('csv',
-                        help='''The CSV file containing the traits.''')
+    parser.add_argument('--csv', '-i', required=True,
+                        help='''The CSV input file containing the traits.''')
 
     args = parser.parse_args()
+    args.columns = re.split(r'\s*,\s*', args.columns)
 
     return args
 

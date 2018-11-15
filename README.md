@@ -22,7 +22,7 @@ python3 -m pip install --user -r traiter/requirements.txt
 
 # Run
 
-python3 traiter/traiter.py vertnet-file.csv
+python3 traiter/traiter.py -i vertnet-file.csv
 
 # Running tests
 
