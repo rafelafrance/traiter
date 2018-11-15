@@ -3,9 +3,6 @@
 from abc import ABC, abstractmethod
 import regex
 
-# Used to join the fields into one string. TODO It's a hack.
-SEPARATOR = '   |||   '
-
 
 class TraitParser(ABC):
     """Common logic for all traits."""
@@ -27,33 +24,26 @@ class TraitParser(ABC):
     def fail():
         """Return this when the measurement is not found."""
 
-    def parse_first(self, strings):
+    def parse(self, strings):
         """Look for the first string that parses successfully."""
-        string = SEPARATOR.join(strings)
-        if string:
-            trait = self.parse(string)
-            if trait:
-                return trait
-        return None
-
-    def parse(self, string):
-        """Apply the battery of regular expressions to a string."""
-        string = '  '.join(self.WS_SPLIT.split(string.strip()))
-        return self.battery.parse(string)
+        print(strings)
+        if not isinstance(strings, list):
+            strings = [strings]
+        strings = ['  '.join(self.WS_SPLIT.split(s.strip())) for s in strings]
+        trait = self.battery.parse(strings)
+        return trait if trait else None
 
     def search(self, strings):
         """Search for a good parse in the strings."""
-        parsed = self.parse_first(strings)
-        if parsed:
-            return self.success(parsed)
-        return self.fail()
+        parsed = self.parse(strings)
+        return self.success(parsed) if parsed else self.fail()
 
     def preferred_or_search(self, strings, preferred=''):
         """
         If there is a preferred value use it otherwise do a search.
 
         The preferred value is a column in the CSV file. If the row contains a
-        value in the column's cell then return that value.
+        value in the column's cell then return that value instead of parsing.
         """
         preferred = preferred.strip()
         if preferred:
@@ -65,7 +55,7 @@ class TraitParser(ABC):
 
     def search_and_normalize(self, strings, preferred=''):
         """Search for a good parse and normalize the results."""
-        parsed = self.parse_first(strings)
+        parsed = self.parse(strings)
         if parsed:
             normalized = self.normalize(parsed)
             return self.success(normalized)

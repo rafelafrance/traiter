@@ -52,7 +52,7 @@ class TestSexParser(unittest.TestCase):
     def test_preferred_or_search_01(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
-                '', ['weight=81.00 g; sex=female ? ; age=u ad.']),
+                ['weight=81.00 g; sex=female ? ; age=u ad.']),
             {'key': 'sex',
              'regex': 'sex_key_value_delimited',
              'derived_sex': 'female ?',
@@ -61,7 +61,7 @@ class TestSexParser(unittest.TestCase):
     def test_preferred_or_search_02(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
-                '', ['sex=unknown ; crown-rump length=8 mm']),
+                ['sex=unknown ; crown-rump length=8 mm']),
             {'derived_sex': 'unknown',
              'key': 'sex',
              'regex': 'sex_key_value_delimited',
@@ -70,7 +70,7 @@ class TestSexParser(unittest.TestCase):
     def test_preferred_or_search_03(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
-                '', ['sex=F crown rump length=8 mm']),
+                ['sex=F crown rump length=8 mm']),
             {'derived_sex': 'F',
              'key': 'sex',
              'regex': 'sex_key_value_undelimited',
@@ -79,7 +79,7 @@ class TestSexParser(unittest.TestCase):
     def test_preferred_or_search_04(self):
         self.assertDictEqual(
             TARGET.preferred_or_search(
-                '', ['words male female unknown more words']),
+                ['words male female unknown more words']),
             {'derived_sex': 'male,female',
              'key': None,
              'regex': 'sex_unkeyed',
@@ -87,8 +87,7 @@ class TestSexParser(unittest.TestCase):
 
     def test_preferred_or_search_05(self):
         self.assertEqual(
-            TARGET.preferred_or_search(
-                '', ['words male female male more words']),
+            TARGET.preferred_or_search(['words male female male more words']),
             {'derived_sex': '',
              'key': None,
              'regex': None,
@@ -96,8 +95,7 @@ class TestSexParser(unittest.TestCase):
 
     def test_preferred_or_search_06(self):
         self.assertEqual(
-            TARGET.preferred_or_search(
-                '', ['Respective sex and msmt. in mm']),
+            TARGET.preferred_or_search(['Respective sex and msmt. in mm']),
             {'derived_sex': '',
              'key': None,
              'regex': None,
@@ -105,7 +103,7 @@ class TestSexParser(unittest.TestCase):
 
     def test_preferred_or_search_07(self):
         self.assertEqual(
-            TARGET.preferred_or_search('', ['mention male in a phrase']),
+            TARGET.preferred_or_search(['mention male in a phrase']),
             {'derived_sex': 'male',
              'key': None,
              'regex': 'sex_unkeyed',
@@ -113,7 +111,7 @@ class TestSexParser(unittest.TestCase):
 
     def test_preferred_or_search_08(self):
         self.assertEqual(
-            TARGET.preferred_or_search('', ['male in a phrase']),
+            TARGET.preferred_or_search(['male in a phrase']),
             {'derived_sex': 'male',
              'key': None,
              'regex': 'sex_unkeyed',
@@ -121,7 +119,7 @@ class TestSexParser(unittest.TestCase):
 
     def test_preferred_or_search_09(self):
         self.assertEqual(
-            TARGET.preferred_or_search('', ['male or female']),
+            TARGET.preferred_or_search(['male or female']),
             {'derived_sex': 'male,female',
              'key': None,
              'regex': 'sex_unkeyed',

@@ -1112,17 +1112,16 @@ class TestTotalLengthParser(unittest.TestCase):
              'key': 'totalLength'})
 
     def test_search_and_normalize65(self):
-        # Just the word "Length" alone is ambiguous
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['',
                  'SOURCE: M.A.CARRIKER JR.',
                  'LENGTH: 117MM. SOFT PARTS COLOR ON LABEL.']),
-            {'has_length': False,
-             'length_in_mm': None,
+            {'has_length': True,
+             'length_in_mm': 117,
              'length_units_inferred': False,
-             'regex': None,
-             'key': None})
+             'regex': 'len_key_ambiguous_units',
+             'key': 'LENGTH'})
 
     def test_search_and_normalize66(self):
         self.assertDictEqual(
