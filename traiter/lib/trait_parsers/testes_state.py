@@ -11,7 +11,7 @@ class ParseTestesState(TraitParser):
         """Add defaults for the measurements."""
         super().__init__()
         self.args = args
-        self.battery = self._battery(self.common_patterns)
+        self.regexp_list = self._battery(self.common_patterns)
         self.preferred_value = preferred_value
         self.parser = self.keyword_search
 
@@ -34,10 +34,10 @@ class ParseTestesState(TraitParser):
             'regex': None}
 
     def _battery(self, common_patterns):
-        battery = RegexpList(self.args)
+        regexp_list = RegexpList(self.args)
 
         # Look for testes state
-        battery.append(
+        regexp_list.append(
             'testes_state',
             common_patterns + r"""
                 \b (?P<key>  (?&testes) ) \s*
@@ -45,14 +45,14 @@ class ParseTestesState(TraitParser):
                 """)
 
         # Look for abbreviated testes key and a full state
-        battery.append(
+        regexp_list.append(
             'testes_abbrev_state',
             common_patterns + r"""
                 \b (?P<key>  (?&testes_abbrev) ) \s*
                    (?P<value> (?&state) )
                 """)
 
-        return battery
+        return regexp_list
 
     common_patterns = TraitParser.common_regex_mass_length + r"""
         (?(DEFINE)

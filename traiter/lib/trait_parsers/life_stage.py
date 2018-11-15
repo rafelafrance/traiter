@@ -11,7 +11,7 @@ class ParseLifeStage(TraitParser):
         """Add defaults for the measurements."""
         super().__init__()
         self.args = args
-        self.battery = self._battery(self.common_patterns)
+        self.regexp_list = self._battery(self.common_patterns)
         self.preferred_value = preferred_value
         self.parser = self.keyword_search
 
@@ -34,10 +34,11 @@ class ParseLifeStage(TraitParser):
             'regex': None}
 
     def _battery(self, common_patterns):
-        battery = RegexpList(self.args, exclude_pattern=r""" ^ determin """)
+        regexp_list = RegexpList(
+            self.args, exclude_pattern=r""" ^ determin """)
 
         # Look for a key and value that is terminated with a delimiter
-        battery.append(
+        regexp_list.append(
             'life_stage_key_value_delimited',
             common_patterns + r"""
                 \b (?P<key>
@@ -49,7 +50,7 @@ class ParseLifeStage(TraitParser):
                 """)
 
         # Look for a key and value without a clear delimiter
-        battery.append(
+        regexp_list.append(
             'life_stage_key_value_undelimited',
             common_patterns + r"""
                 \b (?P<key> life \s* stage
@@ -62,7 +63,7 @@ class ParseLifeStage(TraitParser):
                 """)
 
         # Look for common life stage phrases
-        battery.append(
+        regexp_list.append(
             'life_stage_no_keyword',
             common_patterns + r"""
                 (?P<value> (?: after \s+ )?
@@ -71,7 +72,7 @@ class ParseLifeStage(TraitParser):
                 """)
 
         # Look for before birth life stages
-        battery.append(
+        regexp_list.append(
             'life_stage_yolk_sac',
             common_patterns + r"""
                 (?P<value> (?: yolk ) \s+ sac )
@@ -80,7 +81,7 @@ class ParseLifeStage(TraitParser):
         # Look for the words lifestage words without keys
         # Combinations with embryo and fetus were removed, as more often than
         # not these are reproductiveCondition indicators of the adult female.
-        battery.append(
+        regexp_list.append(
             'life_stage_unkeyed',
             r"""
                 \b (?P<value>
@@ -97,7 +98,7 @@ class ParseLifeStage(TraitParser):
                 (?: \s* \? )? ) \b
                 """)
 
-        return battery
+        return regexp_list
 
     common_patterns = r"""
             (?(DEFINE)

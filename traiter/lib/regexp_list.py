@@ -34,7 +34,7 @@ class RegexpList:
                 units_from_key,
                 regex.IGNORECASE | regex.VERBOSE)
 
-        self.battery = []
+        self.regexp_list = []
         self.parse_units = parse_units
 
     def _excluded_(self, match):
@@ -43,15 +43,15 @@ class RegexpList:
         return False
 
     def append(self, *args, **kwargs):
-        """Append a new regular expression to the battery."""
+        """Append a new regular expression to the regexp_list."""
         regexp = Regexp(*args, **kwargs)
-        self.battery.append(regexp)
+        self.regexp_list.append(regexp)
         regexp.parse_units = self.parse_units
         regexp.units_from_key = self.units_from_key
 
     def parse(self, strings):
         """Parse a set of strings and return the first match."""
-        for regexp in self.battery:
+        for regexp in self.regexp_list:
             for string in strings:
                 match = regexp.matches(string)
                 if match and not self._excluded_(match):

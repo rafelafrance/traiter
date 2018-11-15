@@ -35,7 +35,8 @@ def parse_csv_file(args):
         for row in reader:
             strings = [row[col] for col in args.columns]
             for parser, preferred_value in parsers:
-                print(parser(strings, row.get(preferred_value, '')))
+                parsed = parser(strings, row.get(preferred_value, ''))
+                print(parsed)
 
 
 def build_parsers(args):

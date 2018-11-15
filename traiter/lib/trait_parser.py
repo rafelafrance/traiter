@@ -14,7 +14,7 @@ class TraitParser(ABC):
     def __init__(self):
         """Add defaults for the measurements."""
         self.args = None
-        self.battery = None
+        self.regexp_list = None
         self.default_units = None
 
     @abstractmethod
@@ -27,7 +27,7 @@ class TraitParser(ABC):
 
     def parse(self, strings):
         """Look for the first string that parses successfully."""
-        trait = self.battery.parse(strings)
+        trait = self.regexp_list.parse(strings)
         return trait if trait else None
 
     def search(self, strings):

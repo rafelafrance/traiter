@@ -11,7 +11,7 @@ class ParseTotalLength(TraitParser):
         """Add defaults for the measurements."""
         super().__init__()
         self.args = args
-        self.battery = self._battery(self.common_patterns)
+        self.regexp_list = self._battery(self.common_patterns)
         self.default_units = '_mm_'
         self.preferred_value = preferred_value
         self.parser = self.search_and_normalize
@@ -40,13 +40,13 @@ class ParseTotalLength(TraitParser):
             'regex': None}
 
     def _battery(self, common_patterns):
-        battery = RegexpList(
+        regexp_list = RegexpList(
             self.args,
             parse_units=True,
             units_from_key=r""" (?P<units> mm | millimeters ) $ """)
 
         # Look for a pattern like: total length: 4 ft 8 in
-        battery.append(
+        regexp_list.append(
             'en_len',
             common_patterns + r"""
                 \b (?P<key> (?&all_len_keys))? (?&key_end)?
@@ -59,7 +59,7 @@ class ParseTotalLength(TraitParser):
             compound_value=True)
 
         # Look for a pattern like: total length: 4 ft 8 in
-        battery.append(
+        regexp_list.append(
             'len_fract',
             common_patterns + r"""
                 \b (?P<key> (?&all_len_keys))? (?&key_end)?
@@ -71,7 +71,7 @@ class ParseTotalLength(TraitParser):
             compound_value=True)
 
         # This parse puts the key at the end: 20-25 mm TL
-        battery.append(
+        regexp_list.append(
             'len_key_suffix', common_patterns + r"""
                 \b (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))? \s*
@@ -80,7 +80,7 @@ class ParseTotalLength(TraitParser):
 
         # Look for total key, number (not a range) and optional units
         # Like: total length = 10.5 mm
-        battery.append(
+        regexp_list.append(
             'total_len_key_num',
             common_patterns + r"""
                 \b (?P<key> (?&total_len_key)) (?&key_end)
@@ -90,7 +90,7 @@ class ParseTotalLength(TraitParser):
             default_units='_mm_')
 
         # Look for these secondary length keys next but allow a range
-        battery.append(
+        regexp_list.append(
             'other_len_key', common_patterns + r"""
                 \b (?P<key>   (?&other_len_key)) (?&key_end)
                    (?P<value> (?&range)) \s*
@@ -98,7 +98,7 @@ class ParseTotalLength(TraitParser):
                    """)
 
         # Look for keys where the units are required
-        battery.append(
+        regexp_list.append(
             'key_units_req', common_patterns + r"""
                 \b (?P<key>   (?&key_units_req)) (?&key_end)
                    (?P<value> (?&range)) \s*
@@ -106,7 +106,7 @@ class ParseTotalLength(TraitParser):
                    """)
 
         # These ambiguous keys have a suffix that disambiguate them
-        battery.append(
+        regexp_list.append(
             'len_key_ambiguous_suffix', common_patterns + r"""
                 (?&no_word) (?&len_key_ambiguous) (?&key_end)
                 (?P<value>  (?&range)) \s*
@@ -115,7 +115,7 @@ class ParseTotalLength(TraitParser):
                 """)
 
         # These keys require units to disambiguate what is being measured
-        battery.append(
+        regexp_list.append(
             'len_key_ambiguous_units', common_patterns + r"""
                 (?&no_word)
                 (?P<key>   (?&len_key_ambiguous)) (?&key_end)
@@ -124,14 +124,14 @@ class ParseTotalLength(TraitParser):
                 """)
 
         # An out of order parse: tol (mm) 20-25
-        battery.append(
+        regexp_list.append(
             'len_key_abbrev', common_patterns + r"""
                 \b (?P<key>      (?&len_key_abbrev)) \s*
                    (?&open)  \s* (?P<units> (?&len_units)) \s* (?&close) \s*
                    (?P<value>    (?&range))""")
 
         # Length is in shorthand notation
-        battery.append(
+        regexp_list.append(
             'len_shorthand',
             common_patterns + r"""
                 \b (?: (?P<key> (?&all_len_keys)) (?&key_end) )?
@@ -142,7 +142,7 @@ class ParseTotalLength(TraitParser):
             default_key='_shorthand_')
 
         # A shorthand notation with some abbreviations in it
-        battery.append(
+        regexp_list.append(
             'len_shorthand_euro',
             common_patterns + r"""
                 \b (?: (?P<key> (?&all_len_keys)) (?&key_end) )?
@@ -154,7 +154,7 @@ class ParseTotalLength(TraitParser):
 
         # Now we can look for the total length, RANGE, optional units
         # See 'total_len_key_num' above
-        battery.append(
+        regexp_list.append(
             'total_len_key',
             common_patterns + r"""
                 \b (?P<key>   (?&total_len_key)) (?&key_end) \s*
@@ -164,7 +164,7 @@ class ParseTotalLength(TraitParser):
             default_units='_mm_')
 
         # Look for a length in a phrase
-        battery.append(
+        regexp_list.append(
             'len_in_phrase', common_patterns + r"""
                 \b (?P<key>   (?&len_in_phrase)) [^\d;]{1,32}
                    (?P<value> (?&range)) \s*
@@ -172,7 +172,7 @@ class ParseTotalLength(TraitParser):
                    """)
 
         #  Now allow an ambiguous key if it is not preceded by another word
-        battery.append(
+        regexp_list.append(
             'len_key_ambiguous', common_patterns + r"""
                 (?&no_word)
                 (?P<key>   (?&len_key_ambiguous)) (?&key_end)
@@ -180,13 +180,13 @@ class ParseTotalLength(TraitParser):
                 """)
 
         # Look for snout-vent length keys
-        battery.append(
+        regexp_list.append(
             'svl_len_key', common_patterns + r"""
                 \b (?P<key>   (?&svl_len_key)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?""")
 
-        return battery
+        return regexp_list
 
     common_patterns = TraitParser.common_regex_mass_length + r"""
         (?(DEFINE)

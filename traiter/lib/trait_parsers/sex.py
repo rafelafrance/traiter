@@ -11,7 +11,7 @@ class ParseSex(TraitParser):
         """Add defaults for the measurements."""
         super().__init__()
         self.args = args
-        self.battery = self._battery()
+        self.regexp_list = self._battery()
         self.preferred_value = preferred_value
         self.parser = self.keyword_search
 
@@ -37,12 +37,12 @@ class ParseSex(TraitParser):
             'regex': None}
 
     def _battery(self):
-        battery = RegexpList(
+        regexp_list = RegexpList(
             self.args,
             exclude_pattern=r""" ^ (?: and | was | is ) $ """)
 
         # Look for a key and value that is terminated with a delimiter
-        battery.append(
+        regexp_list.append(
             'sex_key_value_delimited',
             r"""
                 \b (?P<key> sex)
@@ -52,18 +52,18 @@ class ParseSex(TraitParser):
                 """)
 
         # Look for a key and value without a clear delimiter
-        battery.append(
+        regexp_list.append(
             'sex_key_value_undelimited',
             r"""
                 \b (?P<key> sex) \W+ (?P<value> \w+ )
                 """)
 
         # Look for the words 'male' or 'female'
-        battery.append(
+        regexp_list.append(
             'sex_unkeyed',
             r"""
                 \b (?P<value> (?: males? | females? ) (?: \s* \? )? ) \b
                 """,
             want_list=2)
 
-        return battery
+        return regexp_list

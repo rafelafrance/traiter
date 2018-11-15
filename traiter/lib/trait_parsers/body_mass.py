@@ -11,7 +11,7 @@ class ParseBodyMass(TraitParser):
         """Add defaults for the measurements."""
         super().__init__()
         self.args = args
-        self.battery = self._battery(self.common_patterns)
+        self.regexp_list = self._battery(self.common_patterns)
         self.default_units = '_g_'
         self.preferred_value = preferred_value
         self.parser = self.search_and_normalize
@@ -37,13 +37,13 @@ class ParseBodyMass(TraitParser):
             'regex': None}
 
     def _battery(self, common_patterns):
-        battery = RegexpList(
+        regexp_list = RegexpList(
             self.args,
             parse_units=True,
             units_from_key=r""" (?P<units> grams ) $ """)
 
         # Look for a pattern like: body mass: 4 lbs 8 oz
-        battery.append(
+        regexp_list.append(
             'en_wt',
             common_patterns + r"""
                 \b (?P<key>    (?&all_wt_keys))? (?&key_end)?
@@ -56,7 +56,7 @@ class ParseBodyMass(TraitParser):
             compound_value=2)
 
         # Look for body mass with a total weight key and optional units
-        battery.append(
+        regexp_list.append(
             'total_wt_key',
             common_patterns + r"""
                 \b (?P<key>   (?&total_wt_key)) (?&key_end)
@@ -65,7 +65,7 @@ class ParseBodyMass(TraitParser):
                 """)
 
         # Look for these secondary body mass keys next
-        battery.append(
+        regexp_list.append(
             'other_wt_key',
             common_patterns + r"""
                 \b (?P<key>   (?&other_wt_key)) (?&key_end)
@@ -74,7 +74,7 @@ class ParseBodyMass(TraitParser):
                 """)
 
         # Look for keys where the units are required
-        battery.append(
+        regexp_list.append(
             'key_units_req',
             common_patterns + r"""
                 \b (?P<key>   (?&key_units_req)) (?&key_end)
@@ -83,7 +83,7 @@ class ParseBodyMass(TraitParser):
                 """)
 
         # Look for the body mass in a phrase
-        battery.append(
+        regexp_list.append(
             'wt_in_phrase',
             common_patterns + r"""
                 \b (?P<key>   (?&wt_in_phrase)) \D{1,32}
@@ -92,7 +92,7 @@ class ParseBodyMass(TraitParser):
                 """)
 
         # An out of order parse: body mass (g) 20-25
-        battery.append(
+        regexp_list.append(
             'wt_key_word',
             common_patterns + r"""
                 \b (?P<key>   (?&wt_key_word)) \s*
@@ -101,7 +101,7 @@ class ParseBodyMass(TraitParser):
                 """)
 
         # These keys require units to disambiguate what is being measured
-        battery.append(
+        regexp_list.append(
             'wt_key_word_req',
             common_patterns + r"""
                 (?P<key>   (?&wt_key_word)) (?&key_end)
@@ -110,7 +110,7 @@ class ParseBodyMass(TraitParser):
                 """)
 
         # Body mass is in shorthand notation
-        battery.append(
+        regexp_list.append(
             'wt_shorthand',
             common_patterns + r"""
                 \b (?: (?P<key> (?&all_wt_keys)) (?&key_end) )?
@@ -121,7 +121,7 @@ class ParseBodyMass(TraitParser):
             default_key='_shorthand_')
 
         # Body mass is in shorthand notation (units required)
-        battery.append(
+        regexp_list.append(
             'wt_shorthand_req',
             common_patterns + r"""
                 \b (?: (?P<key> (?&all_wt_keys)) (?&key_end) )?
@@ -132,7 +132,7 @@ class ParseBodyMass(TraitParser):
             default_key='_shorthand_')
 
         # A shorthand notation with some abbreviations in it
-        battery.append(
+        regexp_list.append(
             'wt_shorthand_euro',
             common_patterns + r"""
                 \b (?: (?P<key> (?&all_wt_keys)) (?&key_end) )?
@@ -144,7 +144,7 @@ class ParseBodyMass(TraitParser):
 
         # A notation using 'fa'.
         # It can be shorter than the other shorthand notations
-        battery.append(
+        regexp_list.append(
             'wt_fa',
             common_patterns + r"""
                 fa \d* -
@@ -154,7 +154,7 @@ class ParseBodyMass(TraitParser):
             default_key='_shorthand_')
 
         # Now we can look for the body mass, RANGE, optional units
-        battery.append(
+        regexp_list.append(
             'wt_key_ambiguous',
             common_patterns + r"""
                 (?P<key>   (?&wt_key_word)) (?&key_end)
@@ -162,7 +162,7 @@ class ParseBodyMass(TraitParser):
                 (?P<units> (?&wt_units))?
                 """)
 
-        return battery
+        return regexp_list
 
     common_patterns = TraitParser.common_regex_mass_length + r"""
         (?(DEFINE)
