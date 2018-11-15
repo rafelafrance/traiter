@@ -1,6 +1,6 @@
 """Find life life stage annotations."""
 
-from lib.parser_battery import ParserBattery
+from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
 
 
@@ -33,9 +33,8 @@ class ParseLifeStage(TraitParser):
             'derived_life_stage': '',
             'regex': None}
 
-    @staticmethod
-    def _battery(common_patterns):
-        battery = ParserBattery(exclude_pattern=r""" ^ determin """)
+    def _battery(self, common_patterns):
+        battery = RegexpList(self.args, exclude_pattern=r""" ^ determin """)
 
         # Look for a key and value that is terminated with a delimiter
         battery.append(

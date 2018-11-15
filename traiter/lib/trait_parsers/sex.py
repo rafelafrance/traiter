@@ -1,6 +1,6 @@
 """Find sex annotations."""
 
-from lib.parser_battery import ParserBattery
+from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
 
 
@@ -36,9 +36,9 @@ class ParseSex(TraitParser):
             'derived_sex': '',
             'regex': None}
 
-    @staticmethod
-    def _battery():
-        battery = ParserBattery(
+    def _battery(self):
+        battery = RegexpList(
+            self.args,
             exclude_pattern=r""" ^ (?: and | was | is ) $ """)
 
         # Look for a key and value that is terminated with a delimiter

@@ -1,20 +1,15 @@
 """An ordered list of regular expressions."""
 
 import regex   # re expressions lack desired features
-from lib.parser_regex import ParserRegex
+from lib.regexp import Regexp
 
 
-class ParserBattery:
-    """
-    An ordered list of regular expressions.
-
-    We use a carefully ordered list of regular expressions to look for traits
-    in the database. There is some logic for dealing with the entire list of
-    regular expressions in this object.
-    """
+class RegexpList:
+    """An ordered list of regular expressions."""
 
     def __init__(
             self,
+            args,
             exclude_pattern=None,
             parse_units=False,
             units_from_key=None):
@@ -26,6 +21,7 @@ class ParserBattery:
         units_from_key:  A regular expression that extracts units from a key.
                          Like "totallengthinmillimeters"
         """
+        self.args = args
         self.exclude_pattern = exclude_pattern
         if exclude_pattern:
             self.exclude_pattern = regex.compile(
@@ -48,7 +44,7 @@ class ParserBattery:
 
     def append(self, *args, **kwargs):
         """Append a new regular expression to the battery."""
-        regexp = ParserRegex(*args, **kwargs)
+        regexp = Regexp(*args, **kwargs)
         self.battery.append(regexp)
         regexp.parse_units = self.parse_units
         regexp.units_from_key = self.units_from_key

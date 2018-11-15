@@ -1,6 +1,6 @@
 """Find testes state annotations."""
 
-from lib.parser_battery import ParserBattery
+from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
 
 
@@ -33,9 +33,8 @@ class ParseTestesState(TraitParser):
             'testes_state': None,
             'regex': None}
 
-    @staticmethod
-    def _battery(common_patterns):
-        battery = ParserBattery()
+    def _battery(self, common_patterns):
+        battery = RegexpList(self.args)
 
         # Look for testes state
         battery.append(

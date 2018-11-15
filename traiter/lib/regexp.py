@@ -7,7 +7,7 @@
 import regex   # re expressions lack desired features
 
 
-class ParserRegex:
+class Regexp:
     """Supporting logic for regular expressions."""
 
     def __init__(

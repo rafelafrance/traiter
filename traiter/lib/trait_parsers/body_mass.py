@@ -1,6 +1,6 @@
 """Find body mass measurements."""
 
-from lib.parser_battery import ParserBattery
+from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
 
 
@@ -36,9 +36,9 @@ class ParseBodyMass(TraitParser):
             'mass_units_inferred': False,
             'regex': None}
 
-    @staticmethod
-    def _battery(common_patterns):
-        battery = ParserBattery(
+    def _battery(self, common_patterns):
+        battery = RegexpList(
+            self.args,
             parse_units=True,
             units_from_key=r""" (?P<units> grams ) $ """)
 
