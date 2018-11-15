@@ -52,10 +52,10 @@ class RegexpList:
     def parse(self, strings):
         """Parse a set of strings and return the first match."""
         for regexp in self.regexp_list:
-            for string in strings:
+            for idx, string in enumerate(strings):
                 match = regexp.matches(string)
                 if match and not self._excluded_(match):
                     match['regex'] = regexp.name
-                    # match['field'] = s
+                    match['field'] = self.args.columns[idx]
                     return match
         return None

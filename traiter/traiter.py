@@ -4,6 +4,7 @@
 
 import re
 import csv
+import json
 import argparse
 import textwrap
 from lib.trait_parsers.body_mass import ParseBodyMass
@@ -36,7 +37,7 @@ def parse_csv_file(args):
             strings = [row[col] for col in args.columns]
             for parser, preferred_value in parsers:
                 parsed = parser(strings, row.get(preferred_value, ''))
-                print(parsed)
+                print(json.dumps(parsed))
 
 
 def build_parsers(args):

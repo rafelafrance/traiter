@@ -16,6 +16,7 @@ class TraitParser(ABC):
         self.args = None
         self.regexp_list = None
         self.default_units = None
+        self.preferred_value = None
 
     @abstractmethod
     def success(self, result):
@@ -40,9 +41,12 @@ class TraitParser(ABC):
         preferred_value = preferred_value.strip()
         if preferred_value:
             return self.success({
+                'regex': '',
+                'field': self.preferred_value,
+                'start': 0,
+                'end': len(preferred_value),
                 'value': preferred_value,
-                'key': '_preferred_',
-                'regex': ''})
+                'key': '_preferred_'})
         return None
 
     def keyword_search(self, strings, preferred_value=''):
@@ -81,8 +85,6 @@ class TraitParser(ABC):
             return self.handle_range_value(parsed, values, units)
 
         # Value is just a number and optional units like "3.1 g"
-        print(parsed)
-        print(values)
         parsed['value'] = self.multiply(
             values[0], self.unit_conversions[units])
         return parsed

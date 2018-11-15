@@ -11,6 +11,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['sex=unknown ; age class=adult/juvenile']),
             {'key': 'age class',
+             'field': 'col1',
+             'start': 14,
+             'end': 38,
              'regex': 'life_stage_key_value_delimited',
              'value': 'adult/juvenile'})
 
@@ -18,6 +21,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['weight=81.00 g; sex=female ? ; age=u ad.']),
             {'key': 'age',
+             'field': 'col1',
+             'start': 31,
+             'end': 40,
              'regex': 'life_stage_key_value_delimited',
              'value': 'u ad.'})
 
@@ -26,6 +32,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.parse([
                 'weight=5.2 g; age class=over-winter ; total length=99 mm;0']),
             {'key': 'age class',
+             'field': 'col1',
+             'start': 14,
+             'end': 37,
              'regex': 'life_stage_key_value_delimited',
              'value': 'over-winter'})
 
@@ -34,6 +43,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.parse([
                 'sex=female ? ; age=1st year more than four words here']),
             {'key': 'age',
+             'field': 'col1',
+             'start': 15,
+             'end': 27,
              'regex': 'life_stage_key_value_undelimited',
              'value': '1st year'})
 
@@ -41,6 +53,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['words after hatching year more words']),
             {'key': None,
+             'field': 'col1',
+             'start': 6,
+             'end': 25,
              'regex': 'life_stage_no_keyword',
              'value': 'after hatching year'})
 
@@ -53,6 +68,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['LifeStage Remarks: 5-6 wks']),
             {'key': 'LifeStage Remarks',
+             'field': 'col1',
+             'start': 0,
+             'end': 26,
              'regex': 'life_stage_key_value_delimited',
              'value': '5-6 wks'})
 
@@ -67,6 +85,9 @@ class TestLifeStageParser(unittest.TestCase):
                 ['sex=unknown ; age class=adult/juvenile']),
             {'derived_life_stage': 'adult/juvenile',
              'key': 'age class',
+             'field': 'col1',
+             'start': 14,
+             'end': 38,
              'regex': 'life_stage_key_value_delimited',
              'has_life_stage': True})
 
@@ -77,6 +98,9 @@ class TestLifeStageParser(unittest.TestCase):
             {'derived_life_stage': 'u ad.',
              'key': 'age',
              'regex': 'life_stage_key_value_delimited',
+             'field': 'col1',
+             'start': 31,
+             'end': 40,
              'has_life_stage': True})
 
     def test_preferred_or_search_03(self):
@@ -85,6 +109,9 @@ class TestLifeStageParser(unittest.TestCase):
                 ['weight=5.2 g; age class=over-winter ; total length=99 mm;']),
             {'derived_life_stage': 'over-winter',
              'key': 'age class',
+             'field': 'col1',
+             'start': 14,
+             'end': 37,
              'regex': 'life_stage_key_value_delimited',
              'has_life_stage': True})
 
@@ -94,15 +121,21 @@ class TestLifeStageParser(unittest.TestCase):
                 ['sex=female ? ; age=1st year more than four words here']),
             {'derived_life_stage': '1st year',
              'key': 'age',
+             'field': 'col1',
+             'start': 15,
+             'end': 27,
              'regex': 'life_stage_key_value_undelimited',
              'has_life_stage': True})
 
     def test_preferred_or_search_05(self):
         self.assertDictEqual(
             TARGET.keyword_search(
-                ['words after hatching year more words']),
+                ['', 'words after hatching year more words']),
             {'derived_life_stage': 'after hatching year',
              'key': None,
+             'field': 'col2',
+             'start': 6,
+             'end': 25,
              'regex': 'life_stage_no_keyword',
              'has_life_stage': True})
 
@@ -111,6 +144,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['age determined by 20-sided die']),
             {'derived_life_stage': '',
              'key': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'regex': None,
              'has_life_stage': False})
 
@@ -119,6 +155,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['LifeStage Remarks: 5-6 wks']),
             {'derived_life_stage': '5-6 wks',
              'key': 'LifeStage Remarks',
+             'field': 'col1',
+             'start': 0,
+             'end': 26,
              'regex': 'life_stage_key_value_delimited',
              'has_life_stage': True})
 
@@ -126,6 +165,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['mentions juvenile']),
             {'derived_life_stage': 'juvenile',
+             'field': 'col1',
+             'start': 9,
+             'end': 17,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -136,6 +178,9 @@ class TestLifeStageParser(unittest.TestCase):
                 ['mentions juveniles in the field']),
             {'derived_life_stage': 'juveniles',
              'key': None,
+             'field': 'col1',
+             'start': 9,
+             'end': 18,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -143,6 +188,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['one or more adults']),
             {'derived_life_stage': 'adults',
+             'field': 'col1',
+             'start': 12,
+             'end': 18,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -152,6 +200,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['adults']),
             {'derived_life_stage': 'adults',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -160,6 +211,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['adult']),
             {'derived_life_stage': 'adult',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -168,6 +222,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['Adulte']),
             {'derived_life_stage': 'Adulte',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -176,6 +233,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['AGE IMM']),
             {'derived_life_stage': 'IMM',
              'key': 'AGE',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'regex': 'life_stage_key_value_delimited',
              'has_life_stage': True})
 
@@ -184,6 +244,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['subadult']),
             {'derived_life_stage': 'subadult',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 8,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -192,6 +255,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['subadults']),
             {'derived_life_stage': 'subadults',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 9,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -200,6 +266,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['subadultery']),
             {'derived_life_stage': '',
              'key': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'regex': None,
              'has_life_stage': False})
 
@@ -208,6 +277,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['in which larvae are found']),
             {'derived_life_stage': 'larvae',
              'key': None,
+             'field': 'col1',
+             'start': 9,
+             'end': 15,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -216,6 +288,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['larval']),
             {'derived_life_stage': 'larval',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -224,6 +299,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['solitary larva, lonely']),
             {'derived_life_stage': 'larva',
              'key': None,
+             'field': 'col1',
+             'start': 9,
+             'end': 14,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -232,6 +310,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['juvénile']),
             {'derived_life_stage': 'juvénile',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 8,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -240,6 +321,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['Têtard']),
             {'derived_life_stage': 'Têtard',
              'key': None,
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -248,6 +332,9 @@ class TestLifeStageParser(unittest.TestCase):
             TARGET.keyword_search(['what if it is a subad.?']),
             {'derived_life_stage': 'subad',
              'key': None,
+             'field': 'col1',
+             'start': 16,
+             'end': 21,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
 
@@ -255,6 +342,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['subad is a possibility']),
             {'derived_life_stage': 'subad',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -263,6 +353,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['one tadpole']),
             {'derived_life_stage': 'tadpole',
+             'field': 'col1',
+             'start': 4,
+             'end': 11,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -271,6 +364,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['two tadpoles']),
             {'derived_life_stage': 'tadpoles',
+             'field': 'col1',
+             'start': 4,
+             'end': 12,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -279,6 +375,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['an ad.']),
             {'derived_life_stage': 'ad',
+             'field': 'col1',
+             'start': 3,
+             'end': 5,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -287,6 +386,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['what about ad']),
             {'derived_life_stage': 'ad',
+             'field': 'col1',
+             'start': 11,
+             'end': 13,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -295,6 +397,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['ad. is a possibility']),
             {'derived_life_stage': 'ad',
+             'field': 'col1',
+             'start': 0,
+             'end': 2,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -303,6 +408,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['ad is also a possibility']),
             {'derived_life_stage': 'ad',
+             'field': 'col1',
+             'start': 0,
+             'end': 2,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -312,6 +420,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['some embryos']),
             {'derived_life_stage': '',
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None,
              'regex': None,
              'has_life_stage': False})
@@ -321,6 +432,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['an embryo']),
             {'derived_life_stage': '',
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None,
              'regex': None,
              'has_life_stage': False})
@@ -329,6 +443,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['embryonic']),
             {'derived_life_stage': '',
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None,
              'regex': None,
              'has_life_stage': False})
@@ -337,6 +454,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['IMM']),
             {'derived_life_stage': 'IMM',
+             'field': 'col1',
+             'start': 0,
+             'end': 3,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -345,6 +465,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['immature']),
             {'derived_life_stage': 'immature',
+             'field': 'col1',
+             'start': 0,
+             'end': 8,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -353,6 +476,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['immatures']),
             {'derived_life_stage': 'immatures',
+             'field': 'col1',
+             'start': 0,
+             'end': 9,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -361,6 +487,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['imm.']),
             {'derived_life_stage': 'imm',
+             'field': 'col1',
+             'start': 0,
+             'end': 3,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -369,6 +498,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['juv.']),
             {'derived_life_stage': 'juv',
+             'field': 'col1',
+             'start': 0,
+             'end': 3,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -377,6 +509,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['one juv to rule them all']),
             {'derived_life_stage': 'juv',
+             'field': 'col1',
+             'start': 4,
+             'end': 7,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -385,6 +520,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['how many juvs does it take?']),
             {'derived_life_stage': 'juvs',
+             'field': 'col1',
+             'start': 9,
+             'end': 13,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -393,6 +531,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['juvs.?']),
             {'derived_life_stage': 'juvs',
+             'field': 'col1',
+             'start': 0,
+             'end': 4,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -401,6 +542,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['juvenile(s)']),
             {'derived_life_stage': 'juvenile',
+             'field': 'col1',
+             'start': 0,
+             'end': 8,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -409,6 +553,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['larva(e)']),
             {'derived_life_stage': 'larva',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -417,6 +564,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['young']),
             {'derived_life_stage': 'young',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -424,7 +574,10 @@ class TestLifeStageParser(unittest.TestCase):
     def test_preferred_or_search_45(self):
         self.assertDictEqual(
             TARGET.keyword_search(['young adult']),
-            {'derived_life_stage': 'young',
+            {'derived_life_stage': 'young adult',
+             'field': 'col1',
+             'start': 0,
+             'end': 11,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -433,6 +586,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['adult young']),
             {'derived_life_stage': 'adult',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -442,6 +598,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['fetus']),
             {'derived_life_stage': '',
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None,
              'regex': None,
              'has_life_stage': False})
@@ -451,6 +610,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['fetuses']),
             {'derived_life_stage': '',
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None,
              'regex': None,
              'has_life_stage': False})
@@ -459,6 +621,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['sub-adult']),
             {'derived_life_stage': 'sub-adult',
+             'field': 'col1',
+             'start': 0,
+             'end': 9,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -467,6 +632,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['hatched']),
             {'derived_life_stage': 'hatched',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'regex': 'life_stage_unkeyed',
              'key': None,
              'has_life_stage': True})
@@ -475,6 +643,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['adult(s) and juvenile(s)']),
             {'derived_life_stage': 'adult',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -483,6 +654,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['juvenile(s) and adult(s)']),
             {'derived_life_stage': 'juvenile',
+             'field': 'col1',
+             'start': 0,
+             'end': 8,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -491,6 +665,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['young-of-the-year']),
             {'derived_life_stage': 'young-of-the-year',
+             'field': 'col1',
+             'start': 0,
+             'end': 17,
              'key': None,
              'regex': 'life_stage_unkeyed',
              'has_life_stage': True})
@@ -499,6 +676,9 @@ class TestLifeStageParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.keyword_search(['YOLK SAC']),
             {'derived_life_stage': 'YOLK SAC',
+             'field': 'col1',
+             'start': 0,
+             'end': 8,
              'key': None,
              'regex': 'life_stage_yolk_sac',
              'has_life_stage': True})

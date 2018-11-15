@@ -16,25 +16,34 @@ class ParseBodyMass(TraitParser):
         self.preferred_value = preferred_value
         self.parser = self.search_and_normalize
 
-    @staticmethod
-    def success(result):
+    def success(self, result):
         """Return this when the measurement is found."""
+        if result['value'] == 0:
+            # Don't allow a 0 mass
+            return self.fail()
+
         return {
-            'key': result['key'],
             'has_mass': True,
+            'regex': result['regex'],
+            'field': result['field'],
+            'start': result['start'],
+            'end': result['end'],
+            'key': result['key'],
             'mass_in_g': result['value'],
-            'mass_units_inferred': result['is_inferred'],
-            'regex': result['regex']}
+            'mass_units_inferred': result['is_inferred']}
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
             'has_mass': False,
+            'regex': None,
+            'field': None,
+            'start': None,
+            'end': None,
             'key': None,
             'mass_in_g': None,
-            'mass_units_inferred': False,
-            'regex': None}
+            'mass_units_inferred': False}
 
     def _battery(self, common_patterns):
         regexp_list = RegexpList(

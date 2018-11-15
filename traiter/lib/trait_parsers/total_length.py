@@ -23,21 +23,27 @@ class ParseTotalLength(TraitParser):
             return self.fail()
 
         return {
-            'key': result['key'],
             'has_length': True,
+            'regex': result['regex'],
+            'key': result['key'],
+            'field': result['field'],
+            'start': result['start'],
+            'end': result['end'],
             'length_in_mm': result['value'],
-            'length_units_inferred': result['is_inferred'],
-            'regex': result['regex']}
+            'length_units_inferred': result['is_inferred']}
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
-            'key': None,
             'has_length': False,
+            'regex': None,
+            'field': None,
+            'start': None,
+            'end': None,
+            'key': None,
             'length_in_mm': None,
-            'length_units_inferred': False,
-            'regex': None}
+            'length_units_inferred': False}
 
     def _battery(self, common_patterns):
         regexp_list = RegexpList(

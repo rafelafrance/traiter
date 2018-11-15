@@ -12,6 +12,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['762-292-121-76 2435.0g']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 22,
              'value': '2435.0',
              'units': 'g'})
 
@@ -20,6 +23,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx']),
             {'key': 'Weight',
              'regex': 'wt_key_word',
+             'field': 'col1',
+             'start': 22,
+             'end': 37,
              'value': '0.77',
              'units': 'g'})
 
@@ -29,6 +35,9 @@ class TestBodyMassParser(unittest.TestCase):
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-62g']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 41,
+             'end': 55,
              'value': '62',
              'units': 'g'})
 
@@ -37,6 +46,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['body mass=20 g']),
             {'key': 'body mass',
              'regex': 'total_wt_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 14,
              'value': '20',
              'units': 'g'})
 
@@ -45,6 +57,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['2 lbs. 3.1 - 4.5 oz ']),
             {'key': '_english_',
              'regex': 'en_wt',
+             'field': 'col1',
+             'start': 0,
+             'end': 19,
              'value': ['2', '3.1 - 4.5'],
              'units': ['lbs.', 'oz']})
 
@@ -55,6 +70,9 @@ class TestBodyMassParser(unittest.TestCase):
                 '"weight":"[139.5] g" }']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 47,
+             'end': 65,
              'value': '[139.5]',
              'units': 'g'})
 
@@ -66,6 +84,9 @@ class TestBodyMassParser(unittest.TestCase):
                 '"stomach contents":"Not recorded", "weight":"94 gr."']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 101,
+             'end': 116,
              'value': '94',
              'units': 'gr.'})
 
@@ -74,6 +95,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['Note in catalog: 83-0-17-23-fa64-35g']),
             {'key': '_shorthand_',
              'regex': 'wt_fa',
+             'field': 'col1',
+             'start': 28,
+             'end': 36,
              'value': '35',
              'units': 'g'})
 
@@ -82,6 +106,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['{"measurements":"20.2g, SVL 89.13mm" }']),
             {'key': 'measurements',
              'regex': 'key_units_req',
+             'field': 'col1',
+             'start': 2,
+             'end': 22,
              'value': '20.2',
              'units': 'g'})
 
@@ -90,6 +117,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['Body: 15 g']),
             {'key': 'Body',
              'regex': 'key_units_req',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'value': '15',
              'units': 'g'})
 
@@ -98,6 +128,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['82-00-15-21-tr7-fa63-41g']),
             {'key': '_shorthand_',
              'regex': 'wt_fa',
+             'field': 'col1',
+             'start': 16,
+             'end': 24,
              'value': '41',
              'units': 'g'})
 
@@ -107,6 +140,9 @@ class TestBodyMassParser(unittest.TestCase):
                 ['weight=5.4 g; unformatted measurements=77-30-7-12=5.4']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 0,
+             'end': 12,
              'value': '5.4',
              'units': 'g'})
 
@@ -116,6 +152,9 @@ class TestBodyMassParser(unittest.TestCase):
                 ['unformatted measurements=77-30-7-12=5.4; weight=5.4;']),
             {'key': 'measurements',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 12,
+             'end': 39,
              'value': '5.4',
              'units': None})
 
@@ -124,6 +163,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['{"totalLengthInMM":"270-165-18-22-31", ']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 20,
+             'end': 36,
              'value': '31',
              'units': None})
 
@@ -132,6 +174,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['{"measurements":"143-63-20-17=13 g" }']),
             {'key': 'measurements',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 34,
              'value': '13',
              'units': 'g'})
 
@@ -140,6 +185,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['143-63-20-17=13']),
             {'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 15,
              'value': '13',
              'units': None})
 
@@ -150,6 +198,9 @@ class TestBodyMassParser(unittest.TestCase):
                 ' unformatted measurements: 181-75-21-18=22 g']),
             {'key': 'measurements',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 69,
+             'end': 100,
              'value': '22',
              'units': 'g'})
 
@@ -158,6 +209,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['{ "massingrams"="20.1" }']),
             {'key': 'massingrams',
              'regex': 'total_wt_key',
+             'field': 'col1',
+             'start': 3,
+             'end': 21,
              'value': '20.1',
              'units': 'grams'})
 
@@ -168,6 +222,9 @@ class TestBodyMassParser(unittest.TestCase):
                 '"weight":"1,192.0" }']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 54,
+             'end': 70,
              'value': '1,192.0',
              'units': None})
 
@@ -176,6 +233,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['"weight: 20.5-31.8']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 18,
              'value': '20.5-31.8',
              'units': None})
 
@@ -184,6 +244,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['"weight: 20.5-32']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 16,
              'value': '20.5-32',
              'units': None})
 
@@ -192,6 +255,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['"weight: 21-31.8']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 16,
              'value': '21-31.8',
              'units': None})
 
@@ -200,6 +266,9 @@ class TestBodyMassParser(unittest.TestCase):
             TARGET.parse(['"weight: 21-32']),
             {'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 14,
              'value': '21-32',
              'units': None})
 
@@ -217,6 +286,9 @@ class TestBodyMassParser(unittest.TestCase):
                 'weight=5.4 g; unformatted measurements=77-x-7-12=5.4']),
             {'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 0,
+             'end': 12,
              'value': '5.4',
              'units': 'g'})
 
@@ -236,6 +308,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 22,
              'mass_in_g': 2435.0,
              'mass_units_inferred': False})
 
@@ -246,6 +321,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'Weight',
              'regex': 'wt_key_word',
+             'field': 'col1',
+             'start': 22,
+             'end': 37,
              'mass_in_g': 0.77,
              'mass_units_inferred': False})
 
@@ -256,6 +334,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 41,
+             'end': 55,
              'mass_in_g': 62,
              'mass_units_inferred': False})
 
@@ -265,6 +346,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'body mass',
              'regex': 'total_wt_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 14,
              'mass_in_g': 20,
              'mass_units_inferred': False})
 
@@ -274,6 +358,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_english_',
              'regex': 'en_wt',
+             'field': 'col1',
+             'start': 0,
+             'end': 19,
              'mass_in_g': [994.9, 1034.6],
              'mass_units_inferred': False})
 
@@ -285,6 +372,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 47,
+             'end': 65,
              'mass_in_g': 139.5,
              'mass_units_inferred': False})
 
@@ -297,6 +387,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 101,
+             'end': 116,
              'mass_in_g': 94,
              'mass_units_inferred': False})
 
@@ -307,6 +400,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_shorthand_',
              'regex': 'wt_fa',
+             'field': 'col1',
+             'start': 28,
+             'end': 36,
              'mass_in_g': 35,
              'mass_units_inferred': False})
 
@@ -317,6 +413,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'measurements',
              'regex': 'key_units_req',
+             'field': 'col1',
+             'start': 2,
+             'end': 22,
              'mass_in_g': 20.2,
              'mass_units_inferred': False})
 
@@ -326,6 +425,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'Body',
              'regex': 'key_units_req',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'mass_in_g': 15,
              'mass_units_inferred': False})
 
@@ -335,6 +437,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_shorthand_',
              'regex': 'wt_fa',
+             'field': 'col1',
+             'start': 16,
+             'end': 24,
              'mass_in_g': 41,
              'mass_units_inferred': False})
 
@@ -345,6 +450,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 0,
+             'end': 12,
              'mass_in_g': 5.4,
              'mass_units_inferred': False})
 
@@ -355,6 +463,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'measurements',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 12,
+             'end': 39,
              'mass_in_g': 5.4,
              'mass_units_inferred': True})
 
@@ -365,6 +476,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 20,
+             'end': 36,
              'mass_in_g': 31,
              'mass_units_inferred': True})
 
@@ -375,6 +489,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'measurements',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 34,
              'mass_in_g': 13,
              'mass_units_inferred': False})
 
@@ -384,6 +501,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 15,
              'mass_in_g': 13,
              'mass_units_inferred': True})
 
@@ -395,6 +515,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'measurements',
              'regex': 'wt_shorthand',
+             'field': 'col1',
+             'start': 69,
+             'end': 100,
              'mass_in_g': 22,
              'mass_units_inferred': False})
 
@@ -404,6 +527,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'massingrams',
              'regex': 'total_wt_key',
+             'field': 'col1',
+             'start': 3,
+             'end': 21,
              'mass_in_g': 20.1,
              'mass_units_inferred': False})
 
@@ -415,6 +541,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 54,
+             'end': 70,
              'mass_in_g': 1192.0,
              'mass_units_inferred': True})
 
@@ -424,6 +553,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 18,
              'mass_in_g': [20.5, 31.8],
              'mass_units_inferred': True})
 
@@ -433,6 +565,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 16,
              'mass_in_g': [20.5, 32],
              'mass_units_inferred': True})
 
@@ -442,6 +577,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 16,
              'mass_in_g': [21, 31.8],
              'mass_units_inferred': True})
 
@@ -451,6 +589,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
+             'field': 'col1',
+             'start': 1,
+             'end': 14,
              'mass_in_g': [21, 32],
              'mass_units_inferred': True})
 
@@ -463,6 +604,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': False,
              'key': None,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'mass_in_g': None,
              'mass_units_inferred': False})
 
@@ -474,6 +618,9 @@ class TestBodyMassParser(unittest.TestCase):
              'mass_in_g': 5.4,
              'key': 'weight',
              'regex': 'wt_key_word_req',
+             'field': 'col1',
+             'start': 0,
+             'end': 12,
              'mass_units_inferred': False})
 
     def test_52(self):
@@ -484,15 +631,21 @@ class TestBodyMassParser(unittest.TestCase):
              'mass_in_g': None,
              'key': None,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'mass_units_inferred': False})
 
     def test_53(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['body mass=0 g']),
-            {'has_mass': True,
-             'key': 'body mass',
-             'regex': 'total_wt_key',
-             'mass_in_g': 0,
+            {'has_mass': False,
+             'key': None,
+             'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
+             'mass_in_g': None,
              'mass_units_inferred': False})
 
     def test_54(self):
@@ -501,6 +654,9 @@ class TestBodyMassParser(unittest.TestCase):
             {'has_mass': True,
              'key': '_english_',
              'regex': 'en_wt',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'mass_in_g': 994.9,
              'mass_units_inferred': False})
 

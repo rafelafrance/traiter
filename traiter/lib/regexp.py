@@ -65,9 +65,27 @@ class Regexp:
         return units if units else self.default_units
 
     def _get_value_array(self, string):
-        matches = self.regexp.findall(string)
-        if matches and len(matches) <= self.want_list:
-            return {'key': None, 'value': matches}
+        matches = self.regexp.finditer(string)
+
+        values = []
+        starts = []
+        ends = []
+        for idx, match in enumerate(matches):
+            if idx >= self.want_list:
+                return None
+            values.append(match.group(0))
+            starts.append(match.start())
+            ends.append(match.end())
+        if not values:
+            return None
+        starts = starts if len(starts) > 1 else starts[0]
+        ends = ends if len(ends) > 1 else ends[0]
+
+        if matches:
+            return {'key': None,
+                    'start': starts,
+                    'end': ends,
+                    'value': values}
         return None
 
     def matches(self, string):
@@ -81,7 +99,10 @@ class Regexp:
 
         parsed = {'key': self._get_key(match),
                   'value': self._get_value(match),
+                  'start': match.start(),
+                  'end': match.end(),
                   'regex': self.name}
+
         if self.parse_units:
             parsed['units'] = self._get_units(match, parsed['key'])
 

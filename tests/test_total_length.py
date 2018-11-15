@@ -13,6 +13,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'totalLengthInMM',
              'value': '123',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 2,
+             'end': 23,
              'units': 'MM'})
 
     def test_parser_02(self):
@@ -23,6 +26,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'total length',
              'value': '230',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 42,
+             'end': 61,
              'units': 'mm'})
 
     def test_parser_03(self):
@@ -42,6 +48,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'measurements',
              'value': '308',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 3,
+             'end': 31,
              'units': '_mm_'})
 
     def test_parser_06(self):
@@ -50,6 +59,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': '_shorthand_',
              'value': '308',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'units': '_mm_'})
 
     def test_parser_07(self):
@@ -58,6 +70,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'measurements',
              'value': '143',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 29,
              'units': '_mm_'})
 
     def test_parser_08(self):
@@ -66,6 +81,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': '_shorthand_',
              'value': '143',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 12,
              'units': '_mm_'})
 
     def test_parser_09(self):
@@ -76,6 +94,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'total length',
              'value': '111',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 25,
+             'end': 44,
              'units': 'mm'})
 
     def test_parser_10(self):
@@ -87,6 +108,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'total length',
              'value': '230',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 71,
+             'end': 90,
              'units': 'mm'})
 
     def test_parser_11(self):
@@ -95,6 +119,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Body length',
              'value': '345',
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 3,
+             'end': 22,
              'units': 'cm'})
 
     def test_parser_12(self):
@@ -103,6 +130,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 't.l.',
              'value': ['2', '3.1 - 4.5'],
              'regex': 'en_len',
+             'field': 'col1',
+             'start': 0,
+             'end': 29,
              'units': ['feet', 'inches']})
 
     def test_parser_13(self):
@@ -111,6 +141,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': '_english_',
              'value': ['2', '3.1 - 4.5'],
              'regex': 'en_len',
+             'field': 'col1',
+             'start': 0,
+             'end': 19,
              'units': ['ft.', 'in.']})
 
     def test_parser_14(self):
@@ -119,6 +152,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'total length',
              'value': '2',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 19,
              'units': 'ft.'})
 
     def test_parser_15(self):
@@ -127,6 +163,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': '_shorthand_',
              'value': '186',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 9,
+             'end': 22,
              'units': '_mm_'})
 
     def test_parser_16(self):
@@ -135,6 +174,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'length',
              'value': '8',
              'regex': 'len_key_ambiguous_units',
+             'field': 'col1',
+             'start': 0,
+             'end': 11,
              'units': 'mm'})
 
     def test_parser_17(self):
@@ -143,6 +185,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'length',
              'value': '8',
              'regex': 'len_key_ambiguous_units',
+             'field': 'col1',
+             'start': 7,
+             'end': 20,
              'units': 'mm'})
 
     def test_parser_18(self):
@@ -151,6 +196,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'TL_',
              'value': '120',
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 9,
+             'end': 15,
              'units': None})
 
     def test_parser_19(self):
@@ -159,6 +207,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'TL',
              'value': '101.3',
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 9,
+             'end': 21,
              'units': 'mm'})
 
     def test_parser_20(self):
@@ -167,6 +218,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'TL',
              'value': '153',
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 8,
+             'end': 13,
              'units': None})
 
     def test_parser_21(self):
@@ -177,6 +231,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Total length',
              'value': '117',
              'regex': 'len_in_phrase',
+             'field': 'col1',
+             'start': 8,
+             'end': 55,
              'units': None})
 
     def test_parser_22(self):
@@ -186,6 +243,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Snout vent lengths',
              'value': '16 to 23',
              'regex': 'len_in_phrase',
+             'field': 'col1',
+             'start': 7,
+             'end': 49,
              'units': 'mm.'})
 
     def test_parser_23(self):
@@ -194,6 +254,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'TL',
              'value': '13',
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 5,
+             'end': 13,
              'units': 'cm'})
 
     def test_parser_24(self):
@@ -202,6 +265,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'TL',
              'value': '31.5-58.3',
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 13,
+             'end': 26,
              'units': 'in'})
 
     def test_parser_25(self):
@@ -210,6 +276,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SVL',
              'value': '52',
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'units': 'mm'})
 
     def test_parser_26(self):
@@ -220,6 +289,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'total length',
              'value': '257',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 26,
+             'end': 45,
              'units': 'mm'})
 
     def test_parser_27(self):
@@ -228,6 +300,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'total',
              'value': '272',
              'regex': 'key_units_req',
+             'field': 'col1',
+             'start': 12,
+             'end': 24,
              'units': 'mm'})
 
     def test_parser_28(self):
@@ -236,6 +311,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'length',
              'value': '12.0',
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 31,
+             'end': 45,
              'units': None})
 
     def test_parser_29(self):
@@ -248,6 +326,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'length',
              'value': '119-137',
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 108,
+             'end': 125,
              'units': None})
 
     def test_parser_30(self):
@@ -256,6 +337,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'TL',
              'value': '44',
              'regex': 'len_key_abbrev',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'units': 'mm'})
 
     def test_parser_31(self):
@@ -264,6 +348,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'totalLengthInMM',
              'value': '270',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 36,
              'units': 'MM'})
 
     def test_parser_32(self):
@@ -272,6 +359,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'length',
              'value': '20-29',
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 0,
+             'end': 16,
              'units': None})
 
     def test_parser_33(self):
@@ -282,6 +372,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': '_shorthand_',
              'value': '157',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 47,
+             'end': 62,
              'units': '_mm_'})
 
     def test_parser_34(self):
@@ -290,6 +383,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'standard length',
              'value': '63-107',
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 20,
+             'end': 45,
              'units': 'mm'})
 
     def test_parser_35(self):
@@ -303,6 +399,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'standard length',
              'value': '18.0-21.5',
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 46,
              'units': 'mm'})
 
     def test_parser_37(self):
@@ -311,6 +410,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'standard length',
              'value': '18-21.5',
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 44,
              'units': 'mm'})
 
     def test_parser_38(self):
@@ -319,6 +421,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'standard length',
              'value': '18.0-21',
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 44,
              'units': 'mm'})
 
     def test_parser_39(self):
@@ -327,6 +432,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'standard length',
              'value': '18-21',
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 42,
              'units': 'mm'})
 
     def test_parser_40(self):
@@ -342,6 +450,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SL',
              'value': '20-28',
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'units': 'mm'})
 
     def test_parser_42(self):
@@ -350,6 +461,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SL',
              'value': '29',
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'units': 'mm'})
 
     def test_parser_43(self):
@@ -358,6 +472,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'measurements',
              'value': '159',
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 28,
              'units': '_mm_'})
 
     def test_parser_44(self):
@@ -371,6 +488,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Meas: L',
              'value': '21.0',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'units': '_mm_'})
 
     def test_parser_46(self):
@@ -379,6 +499,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Meas: L',
              'value': '21.0',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 16,
              'units': 'cm'})
 
     def test_parser_47(self):
@@ -387,6 +510,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'LABEL. LENGTH',
              'value': '375',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 21,
              'units': 'MM.'})
 
     def test_parser_48(self):
@@ -395,6 +521,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SL',
              'value': '12',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'units': 'mm'})
 
     def test_parser_49(self):
@@ -403,6 +532,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SL',
              'value': '12-14',
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 5,
+             'end': 16,
              'units': 'mm'})
 
     def test_parser_50(self):
@@ -411,6 +543,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SV',
              'value': '1.2',
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'units': None})
 
     def test_parser_51(self):
@@ -419,6 +554,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SL',
              'value': '123',
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 9,
+             'end': 18,
              'units': 'mm'})
 
     def test_parser_52(self):
@@ -427,6 +565,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SL',
              'value': '12-34',
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 9,
+             'end': 19,
              'units': 'mm'})
 
     def test_parser_53(self):
@@ -435,6 +576,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Measurements: L',
              'value': '21.0',
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 24,
              'units': 'cm'})
 
     def test_parser_54(self):
@@ -443,6 +587,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'SVL',
              'value': '44',
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'units': None})
 
     def test_parser_55(self):
@@ -451,6 +598,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'key': 'Total Length',
              'regex': 'total_len_key',
              'value': '185 - 252',
+             'field': 'col1',
+             'start': 0,
+             'end': 26,
              'units': 'mm'})
 
     ######################################################################
@@ -465,6 +615,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 123,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 2,
+             'end': 23,
              'key': 'totalLengthInMM'})
 
     def test_search_and_normalize_02(self):
@@ -476,6 +629,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 230,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 42,
+             'end': 61,
              'key': 'total length'})
 
     def test_search_and_normalize_03(self):
@@ -486,6 +642,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize_04(self):
@@ -496,6 +655,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize_05(self):
@@ -506,6 +668,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 308,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 3,
+             'end': 31,
              'key': 'measurements'})
 
     def test_search_and_normalize_06(self):
@@ -515,6 +680,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 308,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'key': '_shorthand_'})
 
     def test_search_and_normalize_07(self):
@@ -525,6 +693,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 143,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 29,
              'key': 'measurements'})
 
     def test_search_and_normalize_08(self):
@@ -534,6 +705,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 143,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 0,
+             'end': 12,
              'key': '_shorthand_'})
 
     def test_search_and_normalize_09(self):
@@ -545,6 +719,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 111,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 25,
+             'end': 44,
              'key': 'total length'})
 
     def test_search_and_normalize_10(self):
@@ -556,6 +733,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 230,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 71,
+             'end': 90,
              'key': 'total length'})
 
     def test_search_and_normalize_11(self):
@@ -566,6 +746,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 3450,
              'length_units_inferred': False,
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 3,
+             'end': 22,
              'key': 'Body length'})
 
     def test_search_and_normalize_12(self):
@@ -575,6 +758,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [688.7, 724.3],
              'length_units_inferred': False,
              'regex': 'en_len',
+             'field': 'col1',
+             'start': 0,
+             'end': 29,
              'key': 't.l.'})
 
     def test_search_and_normalize_13(self):
@@ -584,6 +770,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [688.7, 724.3],
              'length_units_inferred': False,
              'regex': 'en_len',
+             'field': 'col1',
+             'start': 0,
+             'end': 19,
              'key': '_english_'})
 
     def test_search_and_normalize_14(self):
@@ -593,6 +782,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 610,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 19,
              'key': 'total length'})
 
     def test_search_and_normalize_15(self):
@@ -602,6 +794,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 186,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 9,
+             'end': 22,
              'key': '_shorthand_'})
 
     def test_search_and_normalize_16(self):
@@ -611,6 +806,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 8,
              'length_units_inferred': False,
              'regex': 'len_key_ambiguous_units',
+             'field': 'col1',
+             'start': 0,
+             'end': 11,
              'key': 'length'})
 
     def test_search_and_normalize_17(self):
@@ -620,6 +818,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 8,
              'length_units_inferred': False,
              'regex': 'len_key_ambiguous_units',
+             'field': 'col1',
+             'start': 7,
+             'end': 20,
              'key': 'length'})
 
     def test_search_and_normalize_18(self):
@@ -629,6 +830,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 120,
              'length_units_inferred': True,
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 9,
+             'end': 15,
              'key': 'TL_'})
 
     def test_search_and_normalize_19(self):
@@ -638,6 +842,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 101.3,
              'length_units_inferred': False,
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 9,
+             'end': 21,
              'key': 'TL'})
 
     def test_search_and_normalize_20(self):
@@ -647,6 +854,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 153,
              'length_units_inferred': True,
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 8,
+             'end': 13,
              'key': 'TL'})
 
     def test_search_and_normalize_21(self):
@@ -658,6 +868,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 117,
              'length_units_inferred': True,
              'regex': 'len_in_phrase',
+             'field': 'col1',
+             'start': 8,
+             'end': 55,
              'key': 'Total length'})
 
     def test_search_and_normalize_22(self):
@@ -668,6 +881,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [16, 23],
              'length_units_inferred': False,
              'regex': 'len_in_phrase',
+             'field': 'col1',
+             'start': 7,
+             'end': 49,
              'key': 'Snout vent lengths'})
 
     def test_search_and_normalize_23(self):
@@ -677,6 +893,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 130,
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 5,
+             'end': 13,
              'key': 'TL'})
 
     def test_search_and_normalize_24(self):
@@ -686,6 +905,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [800.1, 1480.8],
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 13,
+             'end': 26,
              'key': 'TL'})
 
     def test_search_and_normalize_25(self):
@@ -695,6 +917,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 52,
              'length_units_inferred': False,
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'key': 'SVL'})
 
     def test_search_and_normalize_26(self):
@@ -706,6 +931,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 257,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 26,
+             'end': 45,
              'key': 'total length'})
 
     def test_search_and_normalize_27(self):
@@ -715,6 +943,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 272,
              'length_units_inferred': False,
              'regex': 'key_units_req',
+             'field': 'col1',
+             'start': 12,
+             'end': 24,
              'key': 'total'})
 
     def test_search_and_normalize_28(self):
@@ -725,6 +956,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 12.0,
              'length_units_inferred': True,
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 31,
+             'end': 45,
              'key': 'length'})
 
     def test_search_and_normalize_29(self):
@@ -737,6 +971,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [119, 137],
              'length_units_inferred': True,
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 108,
+             'end': 125,
              'key': 'length'})
 
     def test_search_and_normalize_30(self):
@@ -747,6 +984,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 44,
              'length_units_inferred': False,
              'regex': 'len_key_abbrev',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'key': 'TL'})
 
     def test_search_and_normalize_31(self):
@@ -757,6 +997,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 270,
              'length_units_inferred': False,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 36,
              'key': 'totalLengthInMM'})
 
     def test_search_and_normalize_32(self):
@@ -766,6 +1009,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [20, 29],
              'length_units_inferred': True,
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 0,
+             'end': 16,
              'key': 'length'})
 
     def test_search_and_normalize_33(self):
@@ -777,6 +1023,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 157,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 47,
+             'end': 62,
              'key': '_shorthand_'})
 
     def test_search_and_normalize_34(self):
@@ -787,6 +1036,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [63, 107],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 20,
+             'end': 45,
              'key': 'standard length'})
 
     def test_search_and_normalize_35(self):
@@ -796,6 +1048,9 @@ class TestTotalLengthParser(unittest.TestCase):
             {'has_length': False,
              'length_in_mm': None,
              'length_units_inferred': False,
+             'field': None,
+             'start': None,
+             'end': None,
              'regex': None,
              'key': None})
 
@@ -807,6 +1062,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [18.0, 21.5],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 46,
              'key': 'standard length'})
 
     def test_search_and_normalize_37(self):
@@ -817,6 +1075,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [18, 21.5],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 44,
              'key': 'standard length'})
 
     def test_search_and_normalize_38(self):
@@ -827,6 +1088,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [18.0, 21],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 44,
              'key': 'standard length'})
 
     def test_search_and_normalize_39(self):
@@ -837,6 +1101,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [18, 21],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 18,
+             'end': 42,
              'key': 'standard length'})
 
     def test_search_and_normalize_40(self):
@@ -848,6 +1115,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize_41(self):
@@ -857,6 +1127,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [20, 28],
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'key': 'SL'})
 
     def test_search_and_normalize_42(self):
@@ -866,6 +1139,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 29,
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'key': 'SL'})
 
     def test_search_and_normalize_43(self):
@@ -876,6 +1152,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 159,
              'length_units_inferred': True,
              'regex': 'len_shorthand',
+             'field': 'col1',
+             'start': 2,
+             'end': 28,
              'key': 'measurements'})
 
     def test_search_and_normalize_44(self):
@@ -886,6 +1165,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize_45(self):
@@ -895,6 +1177,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 21.0,
              'length_units_inferred': True,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'key': 'Meas: L'})
 
     def test_search_and_normalize_46(self):
@@ -904,6 +1189,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 210.0,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 16,
              'key': 'Meas: L'})
 
     def test_search_and_normalize_47(self):
@@ -913,6 +1201,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 375,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 21,
              'key': 'LABEL. LENGTH'})
 
     def test_search_and_normalize_48(self):
@@ -922,6 +1213,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 12,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 7,
              'key': 'SL'})
 
     def test_search_and_normalize_49(self):
@@ -931,6 +1225,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [12, 14],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 5,
+             'end': 16,
              'key': 'SL'})
 
     def test_search_and_normalize_50(self):
@@ -940,6 +1237,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 1.2,
              'length_units_inferred': True,
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'key': 'SV'})
 
     def test_search_and_normalize_51(self):
@@ -949,6 +1249,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 123,
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 9,
+             'end': 18,
              'key': 'SL'})
 
     def test_search_and_normalize_52(self):
@@ -958,6 +1261,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [12, 34],
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 9,
+             'end': 19,
              'key': 'SL'})
 
     def test_search_and_normalize_53(self):
@@ -967,6 +1273,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 210.0,
              'length_units_inferred': False,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 0,
+             'end': 24,
              'key': 'Measurements: L'})
 
     def test_search_and_normalize_54(self):
@@ -976,6 +1285,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 44,
              'length_units_inferred': True,
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'key': 'SVL'})
 
     def test_search_and_normalize55(self):
@@ -986,6 +1298,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize56(self):
@@ -995,6 +1310,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 50,
              'length_units_inferred': False,
              'regex': 'other_len_key',
+             'field': 'col3',
+             'start': 0,
+             'end': 7,
              'key': 'TL'})
 
     def test_search_and_normalize57(self):
@@ -1004,6 +1322,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 50,
              'length_units_inferred': True,
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'key': 'TL'})
 
     def test_search_and_normalize58(self):
@@ -1014,6 +1335,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 44,
              'length_units_inferred': False,
              'regex': 'svl_len_key',
+             'field': 'col3',
+             'start': 0,
+             'end': 8,
              'key': 'SVL'})
 
     ##########################################################################
@@ -1030,6 +1354,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [42, 51],
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 25,
+             'end': 36,
              'key': 'SL'})
 
     def test_search_and_normalize59(self):
@@ -1041,6 +1368,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 1.4,
              'length_units_inferred': True,
              'regex': 'svl_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 6,
              'key': 'SV'})
 
     def test_search_and_normalize60(self):
@@ -1051,6 +1381,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 263.5,
              'length_units_inferred': False,
              'regex': 'len_fract',
+             'field': 'col1',
+             'start': 0,
+             'end': 17,
              'key': 'LENGTH'})
 
     def test_search_and_normalize60a(self):
@@ -1061,6 +1394,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 9.5,
              'length_units_inferred': False,
              'regex': 'len_fract',
+             'field': 'col1',
+             'start': 0,
+             'end': 14,
              'key': 'LENGTH'})
 
     def test_search_and_normalize60b(self):
@@ -1071,6 +1407,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 9.5,
              'length_units_inferred': False,
              'regex': 'len_fract',
+             'field': 'col1',
+             'start': 0,
+             'end': 16,
              'key': 'LENGTH'})
 
     def test_search_and_normalize61(self):
@@ -1084,6 +1423,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize62(self):
@@ -1093,6 +1435,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 760,
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 0,
+             'end': 10,
              'key': 'S.L.'})
 
     def test_search_and_normalize63(self):
@@ -1102,6 +1447,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': None,
              'length_units_inferred': False,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'key': None})
 
     def test_search_and_normalize64(self):
@@ -1112,6 +1460,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 970,
              'length_units_inferred': True,
              'regex': 'total_len_key_num',
+             'field': 'col1',
+             'start': 2,
+             'end': 19,
              'key': 'totalLength'})
 
     def test_search_and_normalize65(self):
@@ -1124,6 +1475,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 117,
              'length_units_inferred': False,
              'regex': 'len_key_ambiguous_units',
+             'field': 'col3',
+             'start': 0,
+             'end': 14,
              'key': 'LENGTH'})
 
     def test_search_and_normalize66(self):
@@ -1133,6 +1487,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 5,
              'length_units_inferred': True,
              'regex': 'other_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 18,
              'key': 'Meas:Length (L)'})
 
     def test_search_and_normalize67(self):
@@ -1142,6 +1499,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [41, 148],
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 5,
+             'end': 16,
              'key': 'SL'})
 
     def test_search_and_normalize68(self):
@@ -1152,6 +1512,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 105,
              'length_units_inferred': False,
              'regex': 'len_key_suffix',
+             'field': 'col1',
+             'start': 5,
+             'end': 14,
              'key': 'TL'})
 
     def test_search_and_normalize69(self):
@@ -1161,6 +1524,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [185, 252],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 24,
              'key': 'Total Length'})
 
     def test_search_and_normalize70(self):
@@ -1171,6 +1537,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': [185, 252],
              'length_units_inferred': False,
              'regex': 'total_len_key',
+             'field': 'col1',
+             'start': 0,
+             'end': 26,
              'key': 'Total Length'})
 
     def test_search_and_normalize71(self):
@@ -1184,6 +1553,9 @@ class TestTotalLengthParser(unittest.TestCase):
              'length_in_mm': 278,
              'length_units_inferred': True,
              'regex': 'len_key_ambiguous',
+             'field': 'col1',
+             'start': 73,
+             'end': 86,
              'key': 'length'})
 
 

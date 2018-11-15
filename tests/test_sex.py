@@ -11,6 +11,9 @@ class TestSexParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['weight=81.00 g; sex=female ? ; age=u ad.']),
             {'key': 'sex',
+             'field': 'col1',
+             'start': 16,
+             'end': 30,
              'value': 'female ?',
              'regex': 'sex_key_value_delimited'})
 
@@ -18,6 +21,9 @@ class TestSexParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['sex=unknown ; crown-rump length=8 mm']),
             {'key': 'sex',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'value': 'unknown',
              'regex': 'sex_key_value_delimited'})
 
@@ -25,6 +31,9 @@ class TestSexParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['sex=F crown rump length=8 mm']),
             {'key': 'sex',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'value': 'F',
              'regex': 'sex_key_value_undelimited'})
 
@@ -32,6 +41,9 @@ class TestSexParser(unittest.TestCase):
         self.assertDictEqual(
             TARGET.parse(['words male female unknown more words']),
             {'key': None,
+             'field': 'col1',
+             'start': [6, 11],
+             'end': [10, 17],
              'value': ['male', 'female'],
              'regex': 'sex_unkeyed'})
 
@@ -56,6 +68,9 @@ class TestSexParser(unittest.TestCase):
                 ['weight=81.00 g; sex=female ? ; age=u ad.']),
             {'key': 'sex',
              'regex': 'sex_key_value_delimited',
+             'field': 'col1',
+             'start': 16,
+             'end': 30,
              'derived_sex': 'female ?',
              'has_sex': True})
 
@@ -66,6 +81,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': 'unknown',
              'key': 'sex',
              'regex': 'sex_key_value_delimited',
+             'field': 'col1',
+             'start': 0,
+             'end': 13,
              'has_sex': True})
 
     def test_preferred_or_search_03(self):
@@ -75,6 +93,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': 'F',
              'key': 'sex',
              'regex': 'sex_key_value_undelimited',
+             'field': 'col1',
+             'start': 0,
+             'end': 5,
              'has_sex': True})
 
     def test_preferred_or_search_04(self):
@@ -84,6 +105,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': 'male,female',
              'key': None,
              'regex': 'sex_unkeyed',
+             'field': 'col1',
+             'start': [6, 11],
+             'end': [10, 17],
              'has_sex': True})
 
     def test_preferred_or_search_05(self):
@@ -92,6 +116,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': '',
              'key': None,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'has_sex': False})
 
     def test_preferred_or_search_06(self):
@@ -100,6 +127,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': '',
              'key': None,
              'regex': None,
+             'field': None,
+             'start': None,
+             'end': None,
              'has_sex': False})
 
     def test_preferred_or_search_07(self):
@@ -108,6 +138,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': 'male',
              'key': None,
              'regex': 'sex_unkeyed',
+             'field': 'col1',
+             'start': 8,
+             'end': 12,
              'has_sex': True})
 
     def test_preferred_or_search_08(self):
@@ -116,6 +149,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': 'male',
              'key': None,
              'regex': 'sex_unkeyed',
+             'field': 'col1',
+             'start': 0,
+             'end': 4,
              'has_sex': True})
 
     def test_preferred_or_search_09(self):
@@ -124,6 +160,9 @@ class TestSexParser(unittest.TestCase):
             {'derived_sex': 'male,female',
              'key': None,
              'regex': 'sex_unkeyed',
+             'field': 'col1',
+             'start': [0, 8],
+             'end': [4, 14],
              'has_sex': True})
 
 

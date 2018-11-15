@@ -19,19 +19,27 @@ class ParseLifeStage(TraitParser):
     def success(result):
         """Return this when the measurement is found."""
         return {
-            'key': result['key'],
             'has_life_stage': True,
+            'regex': result['regex'],
+            'field': result['field'],
+            'start': result['start'],
+            'end': result['end'],
+            'key': result['key'],
             'derived_life_stage': result['value'],
-            'regex': result['regex']}
+            }
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
-            'key': None,
             'has_life_stage': False,
+            'regex': None,
+            'field': None,
+            'start': None,
+            'end': None,
+            'key': None,
             'derived_life_stage': '',
-            'regex': None}
+            }
 
     def _battery(self, common_patterns):
         regexp_list = RegexpList(
@@ -90,7 +98,7 @@ class ParseLifeStage(TraitParser):
                 | tadpoles? | têtard
                 # | embryos? | embryonic | fetus (:? es )?
                 | young-of-the-year | leptocephales? | leptocephalus
-                | immatures? | imms? | jeunes? | young | ygs?
+                | immatures? | imms? | jeunes? | young (?: \s* adult)? | ygs?
                 | fleglings? | fledgelings? | chicks? | nestlings?
                 | juveniles? | juvéniles? | juvs?
                 | subadults? | subadultes? | subads? | sub-adults? | yearlings?
