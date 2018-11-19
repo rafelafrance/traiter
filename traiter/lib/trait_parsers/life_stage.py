@@ -19,27 +19,25 @@ class ParseLifeStage(TraitParser):
     def success(result):
         """Return this when the measurement is found."""
         return {
-            'has_life_stage': True,
+            'found': True,
             'regex': result['regex'],
             'field': result['field'],
             'start': result['start'],
             'end': result['end'],
             'key': result['key'],
-            'derived_life_stage': result['value'],
-            }
+            'value': result['value']}
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
-            'has_life_stage': False,
+            'found': False,
             'regex': None,
             'field': None,
             'start': None,
             'end': None,
             'key': None,
-            'derived_life_stage': '',
-            }
+            'value': ''}
 
     def _battery(self, common_patterns):
         regexp_list = RegexpList(

@@ -19,25 +19,25 @@ class ParseTestesState(TraitParser):
     def success(result):
         """Return this when the measurement is found."""
         return {
-            'has_testes_state': True,
+            'found': True,
             'regex': result['regex'],
             'field': result['field'],
             'start': result['start'],
             'end': result['end'],
             'key': result['key'],
-            'testes_state': result['value']}
+            'value': result['value']}
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
-            'has_testes_state': False,
+            'found': False,
             'regex': None,
             'field': None,
             'start': None,
             'end': None,
             'key': None,
-            'testes_state': None}
+            'value': None}
 
     def _battery(self, common_patterns):
         regexp_list = RegexpList(self.args)

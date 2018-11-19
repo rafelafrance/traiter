@@ -23,27 +23,27 @@ class ParseBodyMass(TraitParser):
             return self.fail()
 
         return {
-            'has_mass': True,
+            'found': True,
             'regex': result['regex'],
             'field': result['field'],
             'start': result['start'],
             'end': result['end'],
             'key': result['key'],
-            'mass_in_g': result['value'],
-            'mass_units_inferred': result['is_inferred']}
+            'grams': result['value'],
+            'units_inferred': result['is_inferred']}
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
-            'has_mass': False,
+            'found': False,
             'regex': None,
             'field': None,
             'start': None,
             'end': None,
             'key': None,
-            'mass_in_g': None,
-            'mass_units_inferred': False}
+            'grams': None,
+            'units_inferred': False}
 
     def _battery(self, common_patterns):
         regexp_list = RegexpList(

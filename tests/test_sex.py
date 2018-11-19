@@ -71,99 +71,99 @@ class TestSexParser(unittest.TestCase):
              'field': 'col1',
              'start': 16,
              'end': 30,
-             'derived_sex': 'female ?',
-             'has_sex': True})
+             'value': 'female ?',
+             'found': True})
 
     def test_preferred_or_search_02(self):
         self.assertDictEqual(
             TARGET.keyword_search(
                 ['sex=unknown ; crown-rump length=8 mm']),
-            {'derived_sex': 'unknown',
+            {'value': 'unknown',
              'key': 'sex',
              'regex': 'sex_key_value_delimited',
              'field': 'col1',
              'start': 0,
              'end': 13,
-             'has_sex': True})
+             'found': True})
 
     def test_preferred_or_search_03(self):
         self.assertDictEqual(
             TARGET.keyword_search(
                 ['sex=F crown rump length=8 mm']),
-            {'derived_sex': 'F',
+            {'value': 'F',
              'key': 'sex',
              'regex': 'sex_key_value_undelimited',
              'field': 'col1',
              'start': 0,
              'end': 5,
-             'has_sex': True})
+             'found': True})
 
     def test_preferred_or_search_04(self):
         self.assertDictEqual(
             TARGET.keyword_search(
                 ['words male female unknown more words']),
-            {'derived_sex': 'male,female',
+            {'value': 'male,female',
              'key': None,
              'regex': 'sex_unkeyed',
              'field': 'col1',
              'start': [6, 11],
              'end': [10, 17],
-             'has_sex': True})
+             'found': True})
 
     def test_preferred_or_search_05(self):
         self.assertEqual(
             TARGET.keyword_search(['words male female male more words']),
-            {'derived_sex': '',
+            {'value': '',
              'key': None,
              'regex': None,
              'field': None,
              'start': None,
              'end': None,
-             'has_sex': False})
+             'found': False})
 
     def test_preferred_or_search_06(self):
         self.assertEqual(
             TARGET.keyword_search(['Respective sex and msmt. in mm']),
-            {'derived_sex': '',
+            {'value': '',
              'key': None,
              'regex': None,
              'field': None,
              'start': None,
              'end': None,
-             'has_sex': False})
+             'found': False})
 
     def test_preferred_or_search_07(self):
         self.assertEqual(
             TARGET.keyword_search(['mention male in a phrase']),
-            {'derived_sex': 'male',
+            {'value': 'male',
              'key': None,
              'regex': 'sex_unkeyed',
              'field': 'col1',
              'start': 8,
              'end': 12,
-             'has_sex': True})
+             'found': True})
 
     def test_preferred_or_search_08(self):
         self.assertEqual(
             TARGET.keyword_search(['male in a phrase']),
-            {'derived_sex': 'male',
+            {'value': 'male',
              'key': None,
              'regex': 'sex_unkeyed',
              'field': 'col1',
              'start': 0,
              'end': 4,
-             'has_sex': True})
+             'found': True})
 
     def test_preferred_or_search_09(self):
         self.assertEqual(
             TARGET.keyword_search(['male or female']),
-            {'derived_sex': 'male,female',
+            {'value': 'male,female',
              'key': None,
              'regex': 'sex_unkeyed',
              'field': 'col1',
              'start': [0, 8],
              'end': [4, 14],
-             'has_sex': True})
+             'found': True})
 
 
 ARGS = Namespace(columns=['col1', 'col2', 'col3'])

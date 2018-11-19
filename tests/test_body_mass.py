@@ -305,78 +305,78 @@ class TestBodyMassParser(unittest.TestCase):
     def test_27(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['762-292-121-76 2435.0g']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 0,
              'end': 22,
-             'mass_in_g': 2435.0,
-             'mass_units_inferred': False})
+             'grams': 2435.0,
+             'units_inferred': False})
 
     def test_28(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'Weight',
              'regex': 'wt_key_word',
              'field': 'col1',
              'start': 22,
              'end': 37,
-             'mass_in_g': 0.77,
-             'mass_units_inferred': False})
+             'grams': 0.77,
+             'units_inferred': False})
 
     def test_29(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-62g']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 41,
              'end': 55,
-             'mass_in_g': 62,
-             'mass_units_inferred': False})
+             'grams': 62,
+             'units_inferred': False})
 
     def test_30(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['body mass=20 g']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'body mass',
              'regex': 'total_wt_key',
              'field': 'col1',
              'start': 0,
              'end': 14,
-             'mass_in_g': 20,
-             'mass_units_inferred': False})
+             'grams': 20,
+             'units_inferred': False})
 
     def test_31(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['2 lbs. 3.1 - 4.5 oz ']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_english_',
              'regex': 'en_wt',
              'field': 'col1',
              'start': 0,
              'end': 19,
-             'mass_in_g': [994.9, 1034.6],
-             'mass_units_inferred': False})
+             'grams': [994.9, 1034.6],
+             'units_inferred': False})
 
     def test_32(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['{"totalLengthInMM":"x", "earLengthInMM":"20", '
                  '"weight":"[139.5] g" }']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_word_req',
              'field': 'col1',
              'start': 47,
              'end': 65,
-             'mass_in_g': 139.5,
-             'mass_units_inferred': False})
+             'grams': 139.5,
+             'units_inferred': False})
 
     def test_33(self):
         self.assertDictEqual(
@@ -384,216 +384,216 @@ class TestBodyMassParser(unittest.TestCase):
                 ['{"fat":"No fat", "gonads":"Testes 10 x 6 mm.", '
                  '"molt":"No molt",'
                  ' "stomach contents":"Not recorded", "weight":"94 gr."']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_word_req',
              'field': 'col1',
              'start': 101,
              'end': 116,
-             'mass_in_g': 94,
-             'mass_units_inferred': False})
+             'grams': 94,
+             'units_inferred': False})
 
     def test_34(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['Note in catalog: 83-0-17-23-fa64-35g']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_shorthand_',
              'regex': 'wt_fa',
              'field': 'col1',
              'start': 28,
              'end': 36,
-             'mass_in_g': 35,
-             'mass_units_inferred': False})
+             'grams': 35,
+             'units_inferred': False})
 
     def test_35(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['{"measurements":"20.2g, SVL 89.13mm" }']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'measurements',
              'regex': 'key_units_req',
              'field': 'col1',
              'start': 2,
              'end': 22,
-             'mass_in_g': 20.2,
-             'mass_units_inferred': False})
+             'grams': 20.2,
+             'units_inferred': False})
 
     def test_36(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['Body: 15 g']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'Body',
              'regex': 'key_units_req',
              'field': 'col1',
              'start': 0,
              'end': 10,
-             'mass_in_g': 15,
-             'mass_units_inferred': False})
+             'grams': 15,
+             'units_inferred': False})
 
     def test_37(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['82-00-15-21-tr7-fa63-41g']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_shorthand_',
              'regex': 'wt_fa',
              'field': 'col1',
              'start': 16,
              'end': 24,
-             'mass_in_g': 41,
-             'mass_units_inferred': False})
+             'grams': 41,
+             'units_inferred': False})
 
     def test_38(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['weight=5.4 g; unformatted measurements=77-30-7-12=5.4']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_word_req',
              'field': 'col1',
              'start': 0,
              'end': 12,
-             'mass_in_g': 5.4,
-             'mass_units_inferred': False})
+             'grams': 5.4,
+             'units_inferred': False})
 
     def test_39(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['unformatted measurements=77-30-7-12=5.4; weight=5.4;']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'measurements',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 12,
              'end': 39,
-             'mass_in_g': 5.4,
-             'mass_units_inferred': True})
+             'grams': 5.4,
+             'units_inferred': True})
 
     def test_40(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['{"totalLengthInMM":"270-165-18-22-31", ']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 20,
              'end': 36,
-             'mass_in_g': 31,
-             'mass_units_inferred': True})
+             'grams': 31,
+             'units_inferred': True})
 
     def test_41(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['{"measurements":"143-63-20-17=13 g" }']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'measurements',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 2,
              'end': 34,
-             'mass_in_g': 13,
-             'mass_units_inferred': False})
+             'grams': 13,
+             'units_inferred': False})
 
     def test_42(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['143-63-20-17=13']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_shorthand_',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 0,
              'end': 15,
-             'mass_in_g': 13,
-             'mass_units_inferred': True})
+             'grams': 13,
+             'units_inferred': True})
 
     def test_43(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['reproductive data: Testes descended -10x7 mm; sex: male;'
                  ' unformatted measurements: 181-75-21-18=22 g']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'measurements',
              'regex': 'wt_shorthand',
              'field': 'col1',
              'start': 69,
              'end': 100,
-             'mass_in_g': 22,
-             'mass_units_inferred': False})
+             'grams': 22,
+             'units_inferred': False})
 
     def test_44(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['{ "massingrams"="20.1" }']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'massingrams',
              'regex': 'total_wt_key',
              'field': 'col1',
              'start': 3,
              'end': 21,
-             'mass_in_g': 20.1,
-             'mass_units_inferred': False})
+             'grams': 20.1,
+             'units_inferred': False})
 
     def test_45(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 [' {"gonadLengthInMM_1":"10", "gonadLengthInMM_2":"6", '
                  '"weight":"1,192.0" }']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'field': 'col1',
              'start': 54,
              'end': 70,
-             'mass_in_g': 1192.0,
-             'mass_units_inferred': True})
+             'grams': 1192.0,
+             'units_inferred': True})
 
     def test_46(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['"weight: 20.5-31.8']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'field': 'col1',
              'start': 1,
              'end': 18,
-             'mass_in_g': [20.5, 31.8],
-             'mass_units_inferred': True})
+             'grams': [20.5, 31.8],
+             'units_inferred': True})
 
     def test_47(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['"weight: 20.5-32']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'field': 'col1',
              'start': 1,
              'end': 16,
-             'mass_in_g': [20.5, 32],
-             'mass_units_inferred': True})
+             'grams': [20.5, 32],
+             'units_inferred': True})
 
     def test_48(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['"weight: 21-31.8']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'field': 'col1',
              'start': 1,
              'end': 16,
-             'mass_in_g': [21, 31.8],
-             'mass_units_inferred': True})
+             'grams': [21, 31.8],
+             'units_inferred': True})
 
     def test_49(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['"weight: 21-32']),
-            {'has_mass': True,
+            {'found': True,
              'key': 'weight',
              'regex': 'wt_key_ambiguous',
              'field': 'col1',
              'start': 1,
              'end': 14,
-             'mass_in_g': [21, 32],
-             'mass_units_inferred': True})
+             'grams': [21, 32],
+             'units_inferred': True})
 
     def test_50(self):
         self.assertEqual(
@@ -601,64 +601,64 @@ class TestBodyMassParser(unittest.TestCase):
                 ["Specimen #'s - 5491,5492,5498,5499,5505,5526,5527,5528,5500,"
                  "5507,5508,5590,"
                  "5592,5595,5594,5593,5596,5589,5587,5586,5585"]),
-            {'has_mass': False,
+            {'found': False,
              'key': None,
              'regex': None,
              'field': None,
              'start': None,
              'end': None,
-             'mass_in_g': None,
-             'mass_units_inferred': False})
+             'grams': None,
+             'units_inferred': False})
 
     def test_51(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(
                 ['weight=5.4 g; unformatted measurements=77-x-7-12=5.4']),
-            {'has_mass': True,
-             'mass_in_g': 5.4,
+            {'found': True,
+             'grams': 5.4,
              'key': 'weight',
              'regex': 'wt_key_word_req',
              'field': 'col1',
              'start': 0,
              'end': 12,
-             'mass_units_inferred': False})
+             'units_inferred': False})
 
     def test_52(self):
         self.assertEqual(
             TARGET.search_and_normalize(
                 ['c701563b-dbd9-4500-184f-1ad61eb8da11']),
-            {'has_mass': False,
-             'mass_in_g': None,
+            {'found': False,
+             'grams': None,
              'key': None,
              'regex': None,
              'field': None,
              'start': None,
              'end': None,
-             'mass_units_inferred': False})
+             'units_inferred': False})
 
     def test_53(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['body mass=0 g']),
-            {'has_mass': False,
+            {'found': False,
              'key': None,
              'regex': None,
              'field': None,
              'start': None,
              'end': None,
-             'mass_in_g': None,
-             'mass_units_inferred': False})
+             'grams': None,
+             'units_inferred': False})
 
     def test_54(self):
         self.assertDictEqual(
             TARGET.search_and_normalize(['2 lbs. 3.1 oz ']),
-            {'has_mass': True,
+            {'found': True,
              'key': '_english_',
              'regex': 'en_wt',
              'field': 'col1',
              'start': 0,
              'end': 13,
-             'mass_in_g': 994.9,
-             'mass_units_inferred': False})
+             'grams': 994.9,
+             'units_inferred': False})
 
 
 ARGS = Namespace(columns=['col1', 'col2', 'col3'])

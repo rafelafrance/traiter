@@ -22,25 +22,25 @@ class ParseSex(TraitParser):
         if isinstance(value, list):
             value = ','.join(value)
         return {
-            'has_sex': True,
+            'found': True,
             'regex': result['regex'],
             'field': result['field'],
             'start': result['start'],
             'end': result['end'],
             'key': result['key'],
-            'derived_sex': value}
+            'value': value}
 
     @staticmethod
     def fail():
         """Return this when the measurement is not found."""
         return {
-            'has_sex': False,
+            'found': False,
             'regex': None,
             'field': None,
             'start': None,
             'end': None,
             'key': None,
-            'derived_sex': ''}
+            'value': ''}
 
     def _battery(self):
         regexp_list = RegexpList(
