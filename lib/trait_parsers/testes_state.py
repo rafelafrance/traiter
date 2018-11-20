@@ -58,9 +58,17 @@ class ParseTestesState(TraitParser):
                    (?P<value> (?&state) )
                 """)
 
+        regexp_list.append(
+            'reproductive_data',
+            common_patterns + r"""
+                \b (?P<key>  reproductive [\s_-]? data ) \W+
+                   (?P<value> (?: (?&testes) | (?&testes_abbrev) )? \s*
+                              (?: (?&state) | (?&state_abbrev) ) )
+                """)
+
         return regexp_list
 
-    common_patterns = TraitParser.common_regex_mass_length + r"""
+    common_patterns = TraitParser.short_patterns + r"""
         (?(DEFINE)
             # Negative state indicators
             (?P<not> not | non | no )
@@ -77,14 +85,17 @@ class ParseTestesState(TraitParser):
             # Abbreviations for testes. Other indicators required
             (?P<testes_abbrev> tes | ts | t )
 
+            # Forms of the word descend
+            (?P<descended> descend (?: ed)? (?&dot) | desc (?&dot) )
+
             # State words
             (?P<state>
                 (?&not)? (?&dash) (?: scrot (?&dot) | scrotum | scrotal ) \b
-              | (?&not)? (?&dash) (?: fully? )? (?&dash)
-                descend (?&dot) (?: ed)?  \b
-              | undescended | undescend (?&dot) | undesc (?&dot)
+              | (?&not)? (?&dash) (?: fully? )? (?&dash) (?&descended) \b
+              | (?: un)? (?&descended)
               | abdominal | abdomin (?&dot) | abdom (?&dot)
               | cryptorchism | cryptorchid | monorchism | monorchid
+              | (?: partially | partially) \s* (?&descended)
               | nscr
             )
 

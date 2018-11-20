@@ -130,6 +130,26 @@ class TestTestesStateParser(unittest.TestCase):
     def test_parse_13(self):
         self.assertEqual(TARGET.parse('t ns'), None)
 
+    ######################################################################
+    ######################################################################
+    ######################################################################
+    ######################################################################
+
+    def test_preferred_or_search_01(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('sex=male ; total length=245 mm; tail length=90 mm; '
+                  'hind foot with claw=35 mm; '
+                  'reproductive data=Testes partially descended. '
+                  'Sperm present.')]),
+            {'value': 'partially descended.',
+             'key': 'Testes',
+             'field': 'col1',
+             'start': 96,
+             'end': 123,
+             'regex': 'testes_state',
+             'found': True})
+
 
 ARGS = Namespace(columns=['col1', 'col2', 'col3'])
 TARGET = ParseTestesState(ARGS)

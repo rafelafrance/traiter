@@ -146,15 +146,8 @@ class TraitParser(ABC):
 
     unit_conversions = {}
 
-    common_regex_mass_length = r'''
+    short_patterns = r'''
         (?(DEFINE)
-
-            # For our purposes numbers are always positive and decimals.
-            (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
-                (?: \. \d+ )? (?&close) [*]? )
-
-            # We also want to pull in number ranges when appropriate.
-            (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
             # Characters that follow a keyword
             (?P<key_end>  \s* [^ \w . \[ ( ]* \s* )
@@ -163,6 +156,29 @@ class TraitParser(ABC):
             # This cannot be done with negative look behind,
             # so we do a positive search for a separator
             (?P<no_word>  (?: ^ | [;,:"'\{\[\(]+ ) \s* )
+
+            # Look for an optional dash or space character
+            (?P<dash>     [\s\-]? )
+            (?P<dash_req> [\s\-]  )
+
+            # Look for an optional dot character
+            (?P<dot> \.? )
+
+            # Numbers are sometimes surrounded by brackets or parentheses
+            # Don't worry about matching the opening and closing brackets
+            (?P<open>  [\(\[\{]? )
+            (?P<close> [\)\]\}]? )
+        )'''
+
+    common_regex_mass_length = short_patterns + r'''
+        (?(DEFINE)
+
+            # For our purposes numbers are always positive and decimals.
+            (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
+                (?: \. \d+ )? (?&close) [*]? )
+
+            # We also want to pull in number ranges when appropriate.
+            (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
 
             # Keywords that may precede a shorthand measurement
             (?P<shorthand_words> on \s* tag
@@ -184,16 +200,4 @@ class TraitParser(ABC):
 
             # Used in shorthand notation for unknown values
             (?P<shorthand_unknown> [\?x] )
-
-            # Look for an optional dash or space character
-            (?P<dash>     [\s\-]? )
-            (?P<dash_req> [\s\-]  )
-
-            # Look for an optional dot character
-            (?P<dot> \.? )
-
-            # Numbers are sometimes surrounded by brackets or parentheses
-            # Don't worry about matching the opening and closing brackets
-            (?P<open>  [\(\[\{]? )
-            (?P<close> [\)\]\}]? )
         )'''
