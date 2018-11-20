@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<title>Traiter</title>
+
+<style>
+  body, table {
+    margin: 40px;
+  }
+
+  h1 > span {
+    font-size: 20px;
+    float: right;
+    margin-right: 12px;
+  }
+
+  h2 {
+    margin-left: 40px;
+  }
+
+  .args {
+    display: inline-table;
+    margin: 40px;
+  }
+
+  .args h3 {
+    margin-inline-start: -16px;
+  }
+
+  .found {
+    background: lightgreen;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  td, th {
+    border: 1px solid #999;
+    padding: 0.5rem;
+    text-align: left;
+  }
+</style>
+
+</head>
+
+<body>
+  <h1>Traiter <span>{{ now }}</span></h1>
+
+  <h2>Totals</h2>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td></td>
+        <td>Total rows</td>
+        <td></td>
+        <td>{{ totals['rows'] }}</td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td>Empty rows</td>
+        <td></td>
+        <td>{{ totals['empty'] }}</td>
+      </tr>
+
+      {% for trait in args.traits %}
+        <tr>
+          {% set total = totals['parsed_{}'.format(trait)] %}
+          <td>Trait</td>
+          <td>{{ trait }}</td>
+          <td>found</td>
+          <td>{{ total }}</td>
+        </tr>
+      {% endfor %}
+
+      {% for column in args.columns %}
+        <tr>
+          <td>Column</td>
+          <td>{{ column }}</td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+
+      {% for column in preferred_columns %}
+        <tr>
+          <td>Preferred Column</td>
+          <td>{{ column }}</td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+
+      {% for column in args.extra_columns %}
+        <tr>
+          <td>Extra Column</td>
+          <td>{{ column }}</td>
+          <td></td>
+          <td></td>
+        </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+  <h2>Parser Results</h2>
+  <table>
+    <thead>
+      <tr>
+
+        {% for trait in args.traits %}
+          <th>{{ trait }}</th>
+        {% endfor %}
+
+        {% for column in args.columns %}
+          <th>{{ column }}</th>
+        {% endfor %}
+
+        {% for column in preferred_columns %}
+          <th>{{ column }}</th>
+        {% endfor %}
+
+        {% for column in args.extra_columns %}
+          <th>{{ column }}</th>
+        {% endfor %}
+
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for row in rows %}
+        <tr>
+
+          {% for trait in args.traits %}
+            {% set column = row['parsed_{}'.format(trait)] %}
+            <td class="{{'found' if column.found else ''}}">
+              {% if column.found %}
+                {% for key, value in column.items() %}
+                  {{ key }}={{ value }}<br/>
+                {% endfor %}
+              {% endif %}
+            </td>
+          {% endfor %}
+
+          {% for column in args.columns %}
+            <td>{{ row[column] }}</td>
+          {% endfor %}
+
+          {% for column in preferred_columns %}
+            <td>{{ row[column] }}</td>
+          {% endfor %}
+
+          {% for column in args.extra_columns %}
+            <td>{{ row[column] }}</td>
+          {% endfor %}
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>
