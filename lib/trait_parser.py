@@ -164,13 +164,17 @@ class TraitParser(ABC):
             # Look for an optional dot character
             (?P<dot> \.? )
 
+            # Look for an optional comma character
+            (?P<comma> ,? )
+
             # Numbers are sometimes surrounded by brackets or parentheses
             # Don't worry about matching the opening and closing brackets
             (?P<open>  [\(\[\{]? )
             (?P<close> [\)\]\}]? )
-        )'''
 
-    common_regex_mass_length = short_patterns + r'''
+            )'''
+
+    numeric_patterns = short_patterns + r'''
         (?(DEFINE)
 
             # For our purposes numbers are always positive and decimals.
@@ -179,6 +183,9 @@ class TraitParser(ABC):
 
             # We also want to pull in number ranges when appropriate.
             (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
+
+            # We also want to pull in number length x width.
+            (?P<cross> (?&number) (?: \s* (?: x | by ) \s* (?&number) )? )
 
             # Keywords that may precede a shorthand measurement
             (?P<shorthand_words> on \s* tag
@@ -191,6 +198,10 @@ class TraitParser(ABC):
 
             # Common keyword misspellings preceding shorthand measurements
             (?P<shorthand_typos>  mesurements | Measurementsnt )
+
+            # Length unit abbreviations
+            (?P<len_units_abbrev>
+                (?: [cm] (?&dot) m | in | ft ) (?&dot) s? )
 
             # Keys where we need units to know if it's for mass or length
             (?P<key_units_req> measurements? | body | total )

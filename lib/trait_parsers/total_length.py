@@ -194,7 +194,7 @@ class ParseTotalLength(TraitParser):
 
         return regexp_list
 
-    common_patterns = TraitParser.common_regex_mass_length + r"""
+    common_patterns = TraitParser.numeric_patterns + r"""
         (?(DEFINE)
 
             # How numbers are represented in shorthand notation
@@ -274,10 +274,6 @@ class ParseTotalLength(TraitParser):
                 | foot
                 | feet
                 | inch e? ) s? )
-
-            # Length unit abbreviations
-            (?P<len_units_abbrev>
-                (?: [cm] (?&dot) m | in | ft ) (?&dot) s? )
 
             # All length units
             (?P<len_units> (?&len_units_word) | (?&len_units_abbrev) )

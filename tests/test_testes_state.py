@@ -34,8 +34,8 @@ class TestTestesStateParser(unittest.TestCase):
              'key': 'testes',
              'field': 'col1',
              'start': 0,
-             'end': 14,
-             'value': 'undesc.'})
+             'end': 13,
+             'value': 'undesc'})
 
     def test_parse_04(self):
         self.assertDictEqual(
@@ -104,8 +104,8 @@ class TestTestesStateParser(unittest.TestCase):
              'key': 'tes',
              'field': 'col1',
              'start': 0,
-             'end': 14,
-             'value': 'undescend.'})
+             'end': 13,
+             'value': 'undescend'})
 
     def test_parse_11(self):
         self.assertDictEqual(
@@ -142,12 +142,49 @@ class TestTestesStateParser(unittest.TestCase):
                   'hind foot with claw=35 mm; '
                   'reproductive data=Testes partially descended. '
                   'Sperm present.')]),
-            {'value': 'partially descended.',
+            {'value': 'partially descended',
              'key': 'Testes',
              'field': 'col1',
              'start': 96,
-             'end': 123,
+             'end': 122,
              'regex': 'testes_state',
+             'found': True})
+
+    def test_preferred_or_search_02(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('sex=male ; reproductive data=testis 5mm, abdominal '
+                  '; ear from notch=20 mm; ')]),
+            {'value': 'abdominal',
+             'key': None,
+             'field': 'col1',
+             'start': 41,
+             'end': 50,
+             'regex': 'testes_state_only',
+             'found': True})
+
+    def test_preferred_or_search_03(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('tag# 1089; bag# 156; no gonads')]),
+            {'value': 'no gonads',
+             'key': None,
+             'field': 'col1',
+             'start': 21,
+             'end': 30,
+             'regex': 'testes_state_only',
+             'found': True})
+
+    def test_preferred_or_search_04(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                ['weight=36 g; reproductive data=testes: 11x7 mm (scrotal)']),
+            {'value': 'scrotal',
+             'key': None,
+             'field': 'col1',
+             'start': 48,
+             'end': 55,
+             'regex': 'testes_state_only',
              'found': True})
 
 

@@ -173,7 +173,7 @@ class ParseBodyMass(TraitParser):
 
         return regexp_list
 
-    common_patterns = TraitParser.common_regex_mass_length + r"""
+    common_patterns = TraitParser.numeric_patterns + r"""
         (?(DEFINE)
 
             # Used to indicate that the next measurement in a shorthand

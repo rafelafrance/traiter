@@ -47,7 +47,7 @@ class ParseTestesState(TraitParser):
             'testes_state',
             common_patterns + r"""
                 \b (?P<key>  (?&testes) ) \s*
-                   (?P<value> (?&state) | (?&state_abbrev) )
+                   (?P<value> (?&state) | (?&state_abbrev) | (?&key_req) )
                 """)
 
         # Look for abbreviated testes key and a full state
@@ -66,40 +66,55 @@ class ParseTestesState(TraitParser):
                               (?: (?&state) | (?&state_abbrev) ) )
                 """)
 
+        # Look for testes state
+        regexp_list.append(
+            'testes_state_only',
+            common_patterns + r"""
+                \b (?P<value> (?&state) )
+                """)
+
         return regexp_list
 
-    common_patterns = TraitParser.short_patterns + r"""
+    common_patterns = TraitParser.numeric_patterns + r"""
         (?(DEFINE)
             # Negative state indicators
-            (?P<not> not | non | no )
+            (?P<not> not | non | no | semi | sub )
 
             # Completely
             (?P<complete>
                 (?&not) (?&dash) (:? in )?
-                (?: completely | complete )
+                (?: completely | complete ) \b
             )
 
             # Testes
-            (?P<testes> testes |  testis |  gonads? )
+            (?P<testes>
+                (?: testes |  testis | testicles |  gonads?)
+                (?: \s* normal)? \b )
 
             # Abbreviations for testes. Other indicators required
-            (?P<testes_abbrev> tes | ts | t )
+            (?P<testes_abbrev> (?: tes | ts | t) \b )
 
             # Forms of the word descend
-            (?P<descended> descend (?: ed)? (?&dot) | desc (?&dot) )
+            (?P<descended>
+                descend (?: ed)? (?&dot) | desc (?&dot) )
 
             # State words
-            (?P<state>
-                (?&not)? (?&dash) (?: scrot (?&dot) | scrotum | scrotal ) \b
-              | (?&not)? (?&dash) (?: fully? )? (?&dash) (?&descended) \b
+            (?P<state> (?:
+                (?&not) (?&dash)
+                    (?: scrot (?&dot) | scrotum | scrotal | gonads?)
+              | (?: scrot (?&dot) | scrotum | scrotal )
+              | (?&not)? (?&dash) (?: fully? )? (?&dash) (?&descended)
               | (?: un)? (?&descended)
               | abdominal | abdomin (?&dot) | abdom (?&dot)
               | cryptorchism | cryptorchid | monorchism | monorchid
               | (?: partially | partially) \s* (?&descended)
-              | nscr
-            )
+              | nscr | inguinal
+            ) \b )
+
+            # Key is required
+            (?P<key_req> (?&not) (?&dash) (?: visible | enlarged ) )
 
             # State Abbreviations. Other indicators required
-            (?P<state_abbrev> scr | ns | s )
+            (?P<state_abbrev> (?: scr | ns | sc) \b )
         )
         """
