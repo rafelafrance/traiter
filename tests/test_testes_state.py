@@ -187,6 +187,71 @@ class TestTestesStateParser(unittest.TestCase):
              'regex': 'testes_state_only',
              'found': True})
 
+    def test_preferred_or_search_05(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('"ear length":"15.0", "gonad length 1":"7.0", '
+                  '"gonad length 2":"3.0", "hind foot length":"31.0", '
+                  '"tail length":"102.0", "total length":"204.0", '
+                  '"weight":"48.9" }	non-scrotal, sem. ves. 14 mm, '
+                  'little fat')]),
+            {'value': 'non-scrotal',
+             'key': None,
+             'field': 'col1',
+             'start': 161,
+             'end': 172,
+             'regex': 'testes_state_only',
+             'found': True})
+
+    def test_preferred_or_search_06(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('verbatim preservation date=8 October 1986 ; '
+                  'reproductive data=No testicles')]),
+            {'value': 'No testicles',
+             'key': 'reproductive data',
+             'field': 'col1',
+             'start': 44,
+             'end': 74,
+             'regex': 'reproductive_data',
+             'found': True})
+
+    def test_preferred_or_search_07(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('weight=53 g; reproductive data=testes decended, T=8x3 ;')]),
+            {'value': 'decended',
+             'key': 'testes',
+             'field': 'col1',
+             'start': 31,
+             'end': 46,
+             'regex': 'testes_state',
+             'found': True})
+
+    def test_preferred_or_search_08(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('weight=75.6 g; reproductive data=Testes small')]),
+            {'value': 'small',
+             'key': 'Testes',
+             'field': 'col1',
+             'start': 33,
+             'end': 45,
+             'regex': 'testes_state',
+             'found': True})
+
+    def test_preferred_or_search_09(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('weight=75.6 g; reproductive data=small')]),
+            {'value': None,
+             'key': None,
+             'field': None,
+             'start': None,
+             'end': None,
+             'regex': None,
+             'found': False})
+
 
 ARGS = Namespace(columns=['col1', 'col2', 'col3'])
 TARGET = ParseTestesState(ARGS)
