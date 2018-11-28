@@ -143,11 +143,11 @@ class TestTestesStateParser(unittest.TestCase):
                   'reproductive data=Testes partially descended. '
                   'Sperm present.')]),
             {'value': 'partially descended',
-             'key': 'Testes',
+             'key': 'reproductive data',
              'field': 'col1',
-             'start': 96,
+             'start': 78,
              'end': 122,
-             'regex': 'testes_state',
+             'regex': 'reproductive_data',
              'found': True})
 
     def test_preferred_or_search_02(self):
@@ -156,11 +156,11 @@ class TestTestesStateParser(unittest.TestCase):
                 [('sex=male ; reproductive data=testis 5mm, abdominal '
                   '; ear from notch=20 mm; ')]),
             {'value': 'abdominal',
-             'key': None,
+             'key': 'reproductive data',
              'field': 'col1',
-             'start': 41,
+             'start': 11,
              'end': 50,
-             'regex': 'testes_state_only',
+             'regex': 'reproductive_data_keyed',
              'found': True})
 
     def test_preferred_or_search_03(self):
@@ -180,11 +180,11 @@ class TestTestesStateParser(unittest.TestCase):
             TARGET.keyword_search(
                 ['weight=36 g; reproductive data=testes: 11x7 mm (scrotal)']),
             {'value': 'scrotal',
-             'key': None,
+             'key': 'reproductive data',
              'field': 'col1',
-             'start': 48,
+             'start': 13,
              'end': 55,
-             'regex': 'testes_state_only',
+             'regex': 'reproductive_data',
              'found': True})
 
     def test_preferred_or_search_05(self):
@@ -221,11 +221,11 @@ class TestTestesStateParser(unittest.TestCase):
             TARGET.keyword_search(
                 [('weight=53 g; reproductive data=testes decended, T=8x3 ;')]),
             {'value': 'decended',
-             'key': 'testes',
+             'key': 'reproductive data',
              'field': 'col1',
-             'start': 31,
+             'start': 13,
              'end': 46,
-             'regex': 'testes_state',
+             'regex': 'reproductive_data',
              'found': True})
 
     def test_preferred_or_search_08(self):
@@ -233,17 +233,77 @@ class TestTestesStateParser(unittest.TestCase):
             TARGET.keyword_search(
                 [('weight=75.6 g; reproductive data=Testes small')]),
             {'value': 'small',
-             'key': 'Testes',
+             'key': 'reproductive data',
              'field': 'col1',
-             'start': 33,
+             'start': 15,
              'end': 45,
-             'regex': 'testes_state',
+             'regex': 'reproductive_data_keyed',
              'found': True})
 
     def test_preferred_or_search_09(self):
         self.assertDictEqual(
             TARGET.keyword_search(
                 [('weight=75.6 g; reproductive data=small')]),
+            {'value': 'small',
+             'key': 'reproductive data',
+             'field': 'col1',
+             'start': 15,
+             'end': 38,
+             'regex': 'reproductive_data_immediate',
+             'found': True})
+
+    def test_preferred_or_search_10(self):
+        # Make sure we don't pick up a stray 'abdonminal'
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                [('reproductive data=unknown '
+                  'No ecto/endoparasites found. Part of the tail was missing, '
+                  'puncture wound in left abdominal region.')]),
+            {'value': None,
+             'key': None,
+             'field': None,
+             'start': None,
+             'end': None,
+             'regex': None,
+             'found': False})
+
+    def test_preferred_or_search_11(self):
+        self.assertDictEqual(
+            TARGET.keyword_search([(' reproductive data=plsc')]),
+            {'value': None,
+             'key': None,
+             'field': None,
+             'start': None,
+             'end': None,
+             'regex': None,
+             'found': False})
+
+    def test_preferred_or_search_12(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(
+                ['junk before reproductive data=Testes small, not descended']),
+            {'value': 'small, not descended',
+             'key': 'reproductive data',
+             'field': 'col1',
+             'start': 12,
+             'end': 57,
+             'regex': 'reproductive_data',
+             'found': True})
+
+    def test_preferred_or_search_13(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(['Mixed woods // TESTES NOT DESCENDED']),
+            {'value': 'NOT DESCENDED',
+             'key': 'TESTES',
+             'field': 'col1',
+             'start': 15,
+             'end': 35,
+             'regex': 'testes_state',
+             'found': True})
+
+    def test_preferred_or_search_14(self):
+        self.assertDictEqual(
+            TARGET.keyword_search(['reproductive data=Uteri small, clear']),
             {'value': None,
              'key': None,
              'field': None,

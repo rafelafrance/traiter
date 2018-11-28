@@ -42,37 +42,48 @@ class ParseTestesState(TraitParser):
     def _battery(self, common_patterns):
         regexp_list = RegexpList(self.args)
 
+        regexp_list.append(
+            'reproductive_data',
+            common_patterns + r"""
+                (?P<key> (?&reproductive_data) ) .{1,40}?
+                (?P<value> (?: (?&state) | (?&state_abbrev) ) )
+                """)
+
+        regexp_list.append(
+            'reproductive_data_keyed',
+            common_patterns + r"""
+                (?P<key> (?&reproductive_data) )     .{1,40}?
+                (?: (?&testes) | (?&testes_abbrev) ) .{0,40}?
+                (?P<value> (?&key_req) )
+                """)
+
+        regexp_list.append(
+            'reproductive_data_immediate',
+            common_patterns + r"""
+                (?P<key> (?&reproductive_data) ) .{1,2}?
+                (?P<value> (?&key_req) )
+                """)
+
         # Look for testes state
         regexp_list.append(
             'testes_state',
             common_patterns + r"""
-                \b (?P<key>  (?&testes) ) \s+
-                   (?P<value> (?&state) | (?&state_abbrev) | (?&key_req) )
+                (?P<key>   (?&testes) ) \s+
+                (?P<value> (?&state) | (?&state_abbrev) | (?&key_req) )
                 """)
 
         # Look for abbreviated testes key and a full state
         regexp_list.append(
             'testes_abbrev_state',
             common_patterns + r"""
-                \b (?P<key>  (?&testes_abbrev) ) \s*
-                   (?P<value> (?&state) )
-                """)
-
-        regexp_list.append(
-            'reproductive_data',
-            common_patterns + r"""
-                \b (?P<key>  reproductive [\s_-]?
-                             (?: data | state | condition ) ) \W+
-                   (?P<value> (?: (?&testes) | (?&testes_abbrev) )? \s*
-                              (?: (?&state) | (?&state_abbrev) ) )
+                (?P<key>   (?&testes_abbrev) ) \s*
+                (?P<value> (?&state) | (?&key_req) )
                 """)
 
         # Look for testes state
         regexp_list.append(
             'testes_state_only',
-            common_patterns + r"""
-                \b (?P<value> (?&state) )
-                """)
+            common_patterns + r""" (?P<value> (?&state) ) """)
 
         return regexp_list
 
@@ -88,37 +99,47 @@ class ParseTestesState(TraitParser):
             )
 
             # Testes
-            (?P<testes>
+            (?P<testes> \b
                 (?: testes |  testis | testicles |  gonads?)
                 (?: \s* normal)? \b )
 
             # Abbreviations for testes. Other indicators required
-            (?P<testes_abbrev> (?: tes | ts | t) \b )
+            (?P<testes_abbrev> \b (?: tes | ts | t) \b )
 
             # Forms of the word descend & some common misspellings
             (?P<descended>
-                descend (?: ed)? (?&dot) | desc (?&dot) | decend (?: ed)? )
+                descend (?: ed)? | desc (?&dot) | decend (?: ed)? )
 
             # State words
-            (?P<state> (?:
+            (?P<state> \b (?:
                 (?&not) (?&dash) (?&testes)
                 | (?&not) (?&dash)
                     (?: scrot (?&dot) | scrotum | scrotal | gonads?)
                 | (?: scrot (?&dot) | scrotum | scrotal )
-                | (?&not)? (?&dash) (?: fully? )? (?&dash) (?&descended)
-                | (?: un)? (?&descended)
-                | abdominal | abdomin (?&dot) | abdom (?&dot)
+                | small ,? \s* (?&not)? (?&dash) (?&descended)
+                | partially (?&dash_req) (?&descended)
+                | part (?&dot) (?&dash_req) (?&descended)
+                | part (?&dot) \s* (?&descended)
+                | (?&not) (?&dash_req) (?: fully? ) (?&dash_req) (?&descended)
+                | (?: fully? ) (?&dash_req) (?&descended)
+                | (?&not) (?&dash_req) (?&descended)
+                | (?: un) (?&descended)
+                | (?&descended)
                 | cryptorchism | cryptorchid | monorchism | monorchid
-                | (?: partially | part (?&dot) ) \s* (?&descended)
                 | nscr | inguinal
             ) \b )
 
             # Key is required
-            (?P<key_req>
-                (?&not)? (?&dash) (?: visible | enlarged | small ) \b
-            )
+            (?P<key_req> \b (?:
+                (?&not)? -? (?: visible | enlarged )
+                | small | abdominal | abdomin (?&dot) | abdom (?&dot)
+            ) \b )
 
             # State Abbreviations. Other indicators required
-            (?P<state_abbrev> (?: scr | ns | sc ) \b )
+            (?P<state_abbrev> \b (?: scr | ns | sc ) \b )
+
+            # reproductive_data key
+            (?P<reproductive_data> \b reproductive [\s_-]?
+                         (?: data | state | condition ) \b )
         )
         """
