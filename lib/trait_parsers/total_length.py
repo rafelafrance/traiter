@@ -2,10 +2,14 @@
 
 from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
+import lib.units as units
+import lib.trait_parsers.common_regexp as common_regexp
 
 
 class ParseTotalLength(TraitParser):
     """Find total length measurements."""
+
+    unit_conversions = units.LENGTH_CONVERSIONS
 
     def __init__(self, args, preferred_value=None):
         """Add defaults for the measurements."""
@@ -78,7 +82,8 @@ class ParseTotalLength(TraitParser):
 
         # This parse puts the key at the end: 20-25 mm TL
         regexp_list.append(
-            'len_key_suffix', common_patterns + r"""
+            'len_key_suffix',
+            common_patterns + r"""
                 \b (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))? \s*
                    (?P<key>   (?&len_key_suffix))
@@ -97,7 +102,8 @@ class ParseTotalLength(TraitParser):
 
         # Look for these secondary length keys next but allow a range
         regexp_list.append(
-            'other_len_key', common_patterns + r"""
+            'other_len_key',
+            common_patterns + r"""
                 \b (?P<key>   (?&other_len_key)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?
@@ -105,7 +111,8 @@ class ParseTotalLength(TraitParser):
 
         # Look for keys where the units are required
         regexp_list.append(
-            'key_units_req', common_patterns + r"""
+            'key_units_req',
+            common_patterns + r"""
                 \b (?P<key>   (?&key_units_req)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))
@@ -113,7 +120,8 @@ class ParseTotalLength(TraitParser):
 
         # These ambiguous keys have a suffix that disambiguate them
         regexp_list.append(
-            'len_key_ambiguous_suffix', common_patterns + r"""
+            'len_key_ambiguous_suffix',
+            common_patterns + r"""
                 (?&no_word) (?&len_key_ambiguous) (?&key_end)
                 (?P<value>  (?&range)) \s*
                 (?P<units>  (?&len_units))? \s*
@@ -131,7 +139,8 @@ class ParseTotalLength(TraitParser):
 
         # An out of order parse: tol (mm) 20-25
         regexp_list.append(
-            'len_key_abbrev', common_patterns + r"""
+            'len_key_abbrev',
+            common_patterns + r"""
                 \b (?P<key>      (?&len_key_abbrev)) \s*
                    (?&open)  \s* (?P<units> (?&len_units)) \s* (?&close) \s*
                    (?P<value>    (?&range))""")
@@ -171,7 +180,8 @@ class ParseTotalLength(TraitParser):
 
         # Look for a length in a phrase
         regexp_list.append(
-            'len_in_phrase', common_patterns + r"""
+            'len_in_phrase',
+            common_patterns + r"""
                 \b (?P<key>   (?&len_in_phrase)) [^\d;]{1,32}
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?
@@ -187,14 +197,18 @@ class ParseTotalLength(TraitParser):
 
         # Look for snout-vent length keys
         regexp_list.append(
-            'svl_len_key', common_patterns + r"""
+            'svl_len_key',
+            common_patterns + r"""
                 \b (?P<key>   (?&svl_len_key)) (?&key_end)
                    (?P<value> (?&range)) \s*
                    (?P<units> (?&len_units))?""")
 
         return regexp_list
 
-    common_patterns = TraitParser.numeric_patterns + r"""
+    common_patterns = common_regexp.SHORT_PATTERNS \
+        + common_regexp.LENGTH_PATTERNS \
+        + common_regexp.NUMERIC_PATTERNS \
+        + r"""
         (?(DEFINE)
 
             # How numbers are represented in shorthand notation
@@ -266,131 +280,4 @@ class ParseTotalLength(TraitParser):
               | snout \s+ vent \s+ length
               | standard \s+ length ) s? )
 
-            # Length unit words
-            (?P<len_units_word>
-                (?: meter
-                | millimeter
-                | centimeter
-                | foot
-                | feet
-                | inch e? ) s? )
-
-            # All length units
-            (?P<len_units> (?&len_units_word) | (?&len_units_abbrev) )
-
-            # Used for parsing forms like: 2 ft 4 inches
-            (?P<len_foot> (?: foot | feet | ft ) s? (?&dot) )
-            (?P<len_inch> (?: inch e? | in )     s? (?&dot) ))
-            """
-
-    key_conversions = {
-        '_english_': 'total length',
-        '_shorthand_': 'total length',
-        'body': 'head-body length',
-        'body length': 'head-body length',
-        'catalog': 'total length',
-        'fork length': 'fork length',
-        'forklength': 'fork length',
-        'headbodylengthinmillimeters': 'head-body length',
-        'label length': 'total length',
-        'label. length': 'total length',
-        'label.length': 'total length',
-        'length': 'total length',
-        'lengthinmillimeters': 'total length',
-        'lengths': 'total length',
-        'max length': 'total length',
-        'maxlength': 'total length',
-        'mean length': 'total length',
-        'meas': 'total length',
-        'meas,': 'total length',
-        'meas.': 'total length',
-        'meas. h.b.': 'head-body length',
-        'meas: l': 'total length',
-        'measurement': 'total length',
-        'measurements': 'total length',
-        'measurements are': 'total length',
-        'measurements made': 'total length',
-        'measurements of': 'total length',
-        'measurements questionable': 'total length',
-        'measurements read': 'total length',
-        'measurements reads': 'total length',
-        'measurements: l': 'total length',
-        'measurementsnt': 'total length',
-        'mesurements': 'total length',
-        'on tag': 'total length',
-        's.l': 'standard length',
-        's.l.': 'standard length',
-        's.v.': 'snout-vent length',
-        'sl': 'standard length',
-        'sl.': 'standard length',
-        'snout vent length': 'snout-vent length',
-        'snout vent lengths': 'snout-vent length',
-        'snout-vent length': 'snout-vent length',
-        'snout-vent lengths': 'snout-vent length',
-        'snoutventlengthinmm': 'snout-vent length',
-        'specimen': 'total length',
-        'specimens': 'total length',
-        'standard length': 'standard length',
-        'sv': 'snout-vent length',
-        'svl': 'snout-vent length',
-        'svl.': 'snout-vent length',
-        't.l': 'total length',
-        't.l.': 'total length',
-        'tag': 'total length',
-        'tl': 'total length',
-        'tl.': 'total length',
-        'tl_': 'total length',
-        'tol': 'total length',
-        'total': 'total length',
-        'total  length': 'total length',
-        'total length': 'total length',
-        'total length in mm': 'total length',
-        'total lengths': 'total length',
-        'totallength': 'total length',
-        'totallengthin': 'total length',
-        'totallengthinmm': 'total length'}
-
-    unit_conversions = {
-        '': 1.0,
-        '_mm_': 1.0,
-        'c.m.': 10.0,
-        'centimeters': 10.0,
-        'cm': 10.0,
-        'cm.': 10.0,
-        'cm.s': 10.0,
-        'cms': 10.0,
-        'feet': 304.8,
-        'feet inch': [304.8, 25.4],
-        'feet inches': [304.8, 25.4],
-        'feet inches.': [304.8, 25.4],
-        'foot': 304.8,
-        'foot inch': [304.8, 25.4],
-        'foot inches': [304.8, 25.4],
-        'foot inches.': [304.8, 25.4],
-        'ft': 304.8,
-        'ft in': [304.8, 25.4],
-        'ft in.': [304.8, 25.4],
-        'ft inches': [304.8, 25.4],
-        'ft inch': [304.8, 25.4],
-        'ft inches.': [304.8, 25.4],
-        'ft ins.': [304.8, 25.4],
-        'ft.': 304.8,
-        'ft. in': [304.8, 25.4],
-        'ft. in.': [304.8, 25.4],
-        'ft. inches': [304.8, 25.4],
-        'ft. ins': [304.8, 25.4],
-        'in': 25.4,
-        'in.': 25.4,
-        'inch': 25.4,
-        'inches': 25.4,
-        'ins': 25.4,
-        'm.m': 1.0,
-        'm.m.': 1.0,
-        'meter': 1000.0,
-        'meters': 1000.0,
-        'millimeter': 1.0,
-        'millimeters': 1.0,
-        'mm': 1.0,
-        'mm.': 1.0,
-        'mm.s': 1.0,
-        'mms': 1.0}
+        )"""

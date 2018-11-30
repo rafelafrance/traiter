@@ -2,6 +2,7 @@
 
 from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
+import lib.trait_parsers.common_regexp as common_regexp
 
 
 class ParseTestesState(TraitParser):
@@ -87,7 +88,9 @@ class ParseTestesState(TraitParser):
 
         return regexp_list
 
-    common_patterns = TraitParser.numeric_patterns + r"""
+    common_patterns = common_regexp.SHORT_PATTERNS \
+        + common_regexp.REPRODUCTIVE_PATTERNS \
+        + r"""
         (?(DEFINE)
             # Negative state indicators
             (?P<not> not | non | no | semi | sub )
@@ -97,14 +100,6 @@ class ParseTestesState(TraitParser):
                 (?&not) (?&dash) (:? in )?
                 (?: completely | complete ) \b
             )
-
-            # Testes
-            (?P<testes> \b
-                (?: testes |  testis | testicles |  gonads?)
-                (?: \s* normal)? \b )
-
-            # Abbreviations for testes. Other indicators required
-            (?P<testes_abbrev> \b (?: tes | ts | t) \b )
 
             # Forms of the word descend & some common misspellings
             (?P<descended>
@@ -137,9 +132,5 @@ class ParseTestesState(TraitParser):
 
             # State Abbreviations. Other indicators required
             (?P<state_abbrev> \b (?: scr | ns | sc ) \b )
-
-            # reproductive_data key
-            (?P<reproductive_data> \b reproductive [\s_-]?
-                         (?: data | state | condition ) \b )
         )
         """

@@ -2,10 +2,14 @@
 
 from lib.regexp_list import RegexpList
 from lib.trait_parser import TraitParser
+import lib.units as units
+import lib.trait_parsers.common_regexp as common_regexp
 
 
 class ParseBodyMass(TraitParser):
     """Find body mass measurements."""
+
+    unit_conversions = units.MASS_CONVERSIONS
 
     def __init__(self, args, preferred_value=None):
         """Add defaults for the measurements."""
@@ -173,7 +177,10 @@ class ParseBodyMass(TraitParser):
 
         return regexp_list
 
-    common_patterns = TraitParser.numeric_patterns + r"""
+    common_patterns = common_regexp.SHORT_PATTERNS \
+        + common_regexp.MASS_PATTERNS \
+        + common_regexp.NUMERIC_PATTERNS \
+        + r"""
         (?(DEFINE)
 
             # Used to indicate that the next measurement in a shorthand
@@ -198,22 +205,9 @@ class ParseBodyMass(TraitParser):
                 (?: (?&shorthand_sep) (?: (?<! [\w\-] ) (?&number)
                 | (?&shorthand_unknown) )[a-z]* ){4,} = )
 
-            # Keywords for total mass
-            (?P<total_wt_key>
-                weightingrams | massingrams
-                | (?: body | full | observed | total )
-                    (?&dot) \s* (?&wt_key_word)
-            )
-
             # Keywords often used for total mass
             (?P<other_wt_key>
                 (?: dead | live ) (?&dot) \s* (?&wt_key_word) )
-
-            #  Weight keyword
-            (?P<wt_key_word> weights?
-                           | weigh (?: s | ed | ing )
-                           | mass
-                           | w (?&dot) t s? (?&dot) )
 
             # Gather all weight keys
             (?P<all_wt_keys>
@@ -226,124 +220,4 @@ class ParseBodyMass(TraitParser):
 
             # Look for phrases with the total weight
             (?P<wt_in_phrase> total \s+ (?&wt_key_word) )
-
-            # Mass unit words
-            (?P<wt_units_word>
-                (?: gram | milligram | kilogram | pound | ounce ) s? )
-
-            # Mass unit abbreviations
-            (?P<wt_units_abbrev>
-                (?: m (?&dot) g
-                | k (?&dot) g
-                | g[mr]?
-                | lb
-                | oz )
-                s? (?&dot) )
-
-            # All mass units
-            (?P<wt_units> (?&wt_units_word) | (?&wt_units_abbrev) )
-
-            # Use to parse forms like: 2 lbs 4 oz.
-            (?P<wt_pound> (?: pound | lb ) s? (?&dot) )
-            (?P<wt_ounce> (?: ounce | oz ) s? (?&dot) )
         )"""
-
-    key_conversions = {
-        '_english_': 'total weight',
-        '_shorthand_': 'total weight',
-        'body': 'total weight',
-        'body mass': 'total weight',
-        'body weight': 'total weight',
-        'body wt': 'total weight',
-        'body wt.': 'total weight',
-        'bodymass': 'total weight',
-        'catalog': 'total weight',
-        'dead. weight': 'total weight',
-        'dead. wt': 'total weight',
-        'dead. wt.': 'total weight',
-        'full.weight': 'total weight',
-        'live weight': 'total weight',
-        'live wt': 'total weight',
-        'live wt.': 'total weight',
-        'mass': 'total weight',
-        'massingrams': 'total weight',
-        'meas': 'total weight',
-        'meas.': 'total weight',
-        'measurement': 'total weight',
-        'measurements': 'total weight',
-        'measurements are': 'total weight',
-        'measurements questionable': 'total weight',
-        'measurements read': 'total weight',
-        'measurements reads': 'total weight',
-        'mesurements': 'total weight',
-        'observedweight': 'total weight',
-        'on tag': 'total weight',
-        'specimen': 'total weight',
-        'total': 'total weight',
-        'total weight': 'total weight',
-        'total wt': 'total weight',
-        'total wt.': 'total weight',
-        'w.t.': 'total weight',
-        'weighed': 'total weight',
-        'weighing': 'total weight',
-        'weighs': 'total weight',
-        'weight': 'total weight',
-        'weightingrams': 'total weight',
-        'weights': 'total weight',
-        'wt': 'total weight',
-        'wt.': 'total weight',
-        'wts': 'total weight',
-        'wts.': 'total weight'}
-
-    unit_conversions = {
-        '': 1.0,
-        '_g_': 1.0,
-        'g': 1.0,
-        'g.': 1.0,
-        'gm': 1.0,
-        'gm.': 1.0,
-        'gms': 1.0,
-        'gms.': 1.0,
-        'gr': 1.0,
-        'gr.': 1.0,
-        'gram': 1.0,
-        'grams': 1.0,
-        'grs': 1.0,
-        'kg': 1000.0,
-        'kg.': 1000.0,
-        'kgs': 1000.0,
-        'kgs.': 1000.0,
-        'kilograms': 1000.0,
-        'lb': 453.593,
-        'lb oz': [453.593, 28.349],
-        'lb oz.': [453.593, 28.349],
-        'lb ozs': [453.593, 28.349],
-        'lb.': 453.593,
-        'lb. oz': [453.593, 28.349],
-        'lb. oz.': [453.593, 28.349],
-        'lb. ozs': [453.593, 28.349],
-        'lb. ozs.': [453.593, 28.349],
-        'lbs': 453.593,
-        'lbs oz': [453.593, 28.349],
-        'lbs oz.': [453.593, 28.349],
-        'lbs ozs': [453.593, 28.349],
-        'lbs.': 453.593,
-        'lbs. oz': [453.593, 28.349],
-        'lbs. oz.': [453.593, 28.349],
-        'lbs. ozs.': [453.593, 28.349],
-        'mg': 0.001,
-        'mg.': 0.001,
-        'mgs.': 0.001,
-        'mgs': 0.001,
-        'ounce': 28.349,
-        'ounces': 28.349,
-        'oz': 28.349,
-        'oz.': 28.349,
-        'ozs': 28.349,
-        'ozs.': 28.349,
-        'pound': 453.593,
-        'pound ounces': [453.593, 28.349],
-        'pound oz': [453.593, 28.349],
-        'pounds': 453.593,
-        'pounds ounces': [453.593, 28.349],
-        'pounds ounces.': [453.593, 28.349]}

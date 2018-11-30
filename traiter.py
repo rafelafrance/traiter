@@ -9,12 +9,14 @@ import json
 import argparse
 import textwrap
 from datetime import datetime
+from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, Template
 from lib.trait_parsers.sex import ParseSex
 from lib.trait_parsers.body_mass import ParseBodyMass
 from lib.trait_parsers.life_stage import ParseLifeStage
 from lib.trait_parsers.total_length import ParseTotalLength
 from lib.trait_parsers.testes_state import ParseTestesState
+from lib.trait_parsers.testes_size import ParseTestesSize
 
 __VERSION__ = '0.3.0'
 
@@ -26,7 +28,8 @@ TRAITS = [
     ('life_stage', ParseLifeStage),
     ('sex', ParseSex),
     ('total_length', ParseTotalLength),
-    ('testes_state', ParseTestesState)]
+    ('testes_state', ParseTestesState),
+    ('testes_size', ParseTestesSize)]
 TRAIT_NAMES = ', '.join([i[0] for i in TRAITS])
 
 TEMPLATE = Template(
@@ -42,11 +45,12 @@ def parse_csv_file(args):
     totals = {'rows': 0, 'empty': 0}
 
     reader = csv.DictReader(args.infile)
-    for (i, in_row) in enumerate(reader, 1):
-        totals['rows'] += 1
+    for (i, in_row) in tqdm(enumerate(reader, 1)):
 
-        if not i % 1000:
-            print(i)
+        if args.skip and i < args.skip:
+            continue
+
+        totals['rows'] += 1
 
         if writer is None:
             # Setup the output file
@@ -84,6 +88,9 @@ def parse_csv_file(args):
             totals[column] += int(parsed['found'])
 
         output_row(args, writer, out_row)
+
+        if args.stop and totals['rows'] >= args.stop:
+            break
 
     output_end(args, writer, preferred_columns, totals)
 
@@ -179,6 +186,13 @@ def parse_args():
 
     parser.add_argument('--html', action='store_true',
                         help="""Output the result as an HTML table.""")
+
+    parser.add_argument('--skip', type=int,
+                        help="""Skip this many records at the beginning of the
+                            input file.""")
+
+    parser.add_argument('--stop', type=int,
+                        help="""Stop after this many records are processed.""")
 
     parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
                         default=sys.stdin,

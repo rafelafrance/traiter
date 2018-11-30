@@ -1,15 +1,14 @@
 """Common logic for all traits."""
 
-from abc import ABC, abstractmethod
 import regex
+from abc import ABC, abstractmethod
+import lib.trait_parsers.common_regexp as common_regexp
 
 
 class TraitParser(ABC):
     """Common logic for all traits."""
 
-    IS_RANGE = regex.compile(r'- | to', flags=regex.IGNORECASE | regex.VERBOSE)
-    IS_FRACT = regex.compile(r'\/', flags=regex.IGNORECASE | regex.VERBOSE)
-    WS_SPLIT = regex.compile(r'\s\s\s+')
+    unit_conversions = {}
 
     def __init__(self):
         """Add defaults for the measurements."""
@@ -77,12 +76,16 @@ class TraitParser(ABC):
         parsed['is_inferred'] = (units[0] == '_') if units else True
 
         if len(parsed['value']) > 1 and \
-                self.IS_FRACT.search(parsed['value'][1]):
+                common_regexp.IS_FRACT.search(parsed['value'][1]):
             return self.handle_fractional_values(parsed, units)
 
-        values = self.IS_RANGE.split(parsed['value'])
+        values = common_regexp.IS_CROSS.split(parsed['value'])
         if len(values) > 1:
-            return self.handle_range_value(parsed, values, units)
+            return self.handle_multiple_value(parsed, values, units)
+
+        values = common_regexp.IS_RANGE.split(parsed['value'])
+        if len(values) > 1:
+            return self.handle_multiple_value(parsed, values, units)
 
         # Value is just a number and optional units like "3.1 g"
         parsed['value'] = self.multiply(
@@ -95,10 +98,10 @@ class TraitParser(ABC):
         units = ' '.join(parsed['units']).lower()
 
         # Handle cases where the last value is a range: 4 lbs 2 - 4 ozs
-        if len(self.IS_RANGE.split(parsed['value'][1])) > 1:
+        if len(common_regexp.IS_RANGE.split(parsed['value'][1])) > 1:
             upper = self.multiply(
                 parsed['value'][0], self.unit_conversions[units][0])
-            lower = self.IS_RANGE.split(parsed['value'][1])
+            lower = common_regexp.IS_RANGE.split(parsed['value'][1])
             parsed['value'] = []
             parsed['value'].append(self.multiply(
                 lower[0], self.unit_conversions[units][1]) + upper)
@@ -120,14 +123,14 @@ class TraitParser(ABC):
         if not parsed['value'][0]:
             parsed['value'][0] = '0'
         value = self.multiply(parsed['value'][0], self.unit_conversions[units])
-        fract = self.IS_FRACT.split(parsed['value'][1])
+        fract = common_regexp.IS_FRACT.split(parsed['value'][1])
         value += float(fract[0]) / float(fract[1]) \
             * self.unit_conversions[units]
         parsed['value'] = round(value, 1)
         return parsed
 
-    def handle_range_value(self, parsed, values, units):
-        """Handle cases like: "3 - 5 mm."""
+    def handle_multiple_value(self, parsed, values, units):
+        """Handle cases like: '3 - 5 mm' or 3 x 5 mm."""
         parsed['value'] = [
             self.multiply(values[0], self.unit_conversions[units]),
             self.multiply(values[1], self.unit_conversions[units])]
@@ -143,72 +146,3 @@ class TraitParser(ABC):
             precision = len(parts[1])
         result = round(float(value) * units, precision)
         return result if precision else int(result)
-
-    unit_conversions = {}
-
-    short_patterns = r'''
-        (?(DEFINE)
-
-            # Characters that follow a keyword
-            (?P<key_end>  \s* [^ \w . \[ ( ]* \s* )
-
-            # We sometimes want to guarantee no word precedes another word.
-            # This cannot be done with negative look behind,
-            # so we do a positive search for a separator
-            (?P<no_word>  (?: ^ | [;,:"'\{\[\(]+ ) \s* )
-
-            # Look for an optional dash or space character
-            (?P<dash>     [\s\-]? )
-            (?P<dash_req> [\s\-]  )
-
-            # Look for an optional dot character
-            (?P<dot> \.? )
-
-            # Look for an optional comma character
-            (?P<comma> ,? )
-
-            # Numbers are sometimes surrounded by brackets or parentheses
-            # Don't worry about matching the opening and closing brackets
-            (?P<open>  [\(\[\{]? )
-            (?P<close> [\)\]\}]? )
-
-            )'''
-
-    numeric_patterns = short_patterns + r'''
-        (?(DEFINE)
-
-            # For our purposes numbers are always positive and decimals.
-            (?P<number> (?&open) (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ )
-                (?: \. \d+ )? (?&close) [*]? )
-
-            # We also want to pull in number ranges when appropriate.
-            (?P<range> (?&number) (?: \s* (?: - | to ) \s* (?&number) )? )
-
-            # We also want to pull in number length x width.
-            (?P<cross> (?&number) (?: \s* (?: x | by ) \s* (?&number) )? )
-
-            # Keywords that may precede a shorthand measurement
-            (?P<shorthand_words> on \s* tag
-                            | specimens?
-                            | catalog
-                            | measurements (?: \s+ [\p{Letter}]+)
-                            | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-                            | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
-            )
-
-            # Common keyword misspellings preceding shorthand measurements
-            (?P<shorthand_typos>  mesurements | Measurementsnt )
-
-            # Length unit abbreviations
-            (?P<len_units_abbrev>
-                (?: [cm] (?&dot) m | in | ft ) (?&dot) s? )
-
-            # Keys where we need units to know if it's for mass or length
-            (?P<key_units_req> measurements? | body | total )
-
-            # Characters that separate shorthand values
-            (?P<shorthand_sep> [:\/\-] )
-
-            # Used in shorthand notation for unknown values
-            (?P<shorthand_unknown> [\?x] )
-        )'''
