@@ -119,6 +119,7 @@
   <table>
     <thead>
       <tr>
+        <th>Row</th>
 
         {% for trait in args.traits %}
           <th>{{ trait }}</th>
@@ -142,6 +143,8 @@
     <tbody>
       {% for row in rows %}
         <tr>
+
+          <td>{{loop.index}}</td>
 
           {% for trait in args.traits %}
             {% set column = row['parsed_{}'.format(trait)] %}

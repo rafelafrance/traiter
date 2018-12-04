@@ -11,6 +11,7 @@ import textwrap
 from datetime import datetime
 from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, Template
+# import pandas as pd
 from lib.trait_parsers.sex import ParseSex
 from lib.trait_parsers.body_mass import ParseBodyMass
 from lib.trait_parsers.life_stage import ParseLifeStage
@@ -37,7 +38,7 @@ TEMPLATE = Template(
 
 
 def parse_csv_file(args):
-    """Build all of the parsers."""
+    """Parse the input."""
     parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
                if trait in args.traits]
 
@@ -72,7 +73,6 @@ def parse_csv_file(args):
 
         if not sum(len(s) for s in strings):
             totals['empty'] += 1
-            continue
 
         out_row = {c: in_row[c] for c in input_columns}
 
