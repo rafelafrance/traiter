@@ -8,64 +8,57 @@ class ParserTestesState(BaseParser):
     """Shared parser logic."""
 
     def __init__(self):
+        """Initialize the parser."""
         super().__init__(LexerTestesState)
 
     def get_rules(self):
+        """Return the parser rules."""
         return {
-            'label testes state': self.value_in_2,
-            'label testes state_abbrev': self.value_in_2,
-            'label testes not testes': self.value_in_2_and_3,
-            'label testes descended': self.value_in_2,
-            'label testes not descended': self.value_in_2_and_3,
-            'label testes abdominal': self.value_in_2,
-            'label testes abdominal not descended': self.value_in_2_thru_4,
-            'label testes fully descended': self.value_in_2_and_3,
-            'label testes partially descended': self.value_in_2_and_3,
-            'label testes not fully descended': self.value_in_2_thru_4,
-            'label testes scrotal': self.value_in_2,
-            'label testes not scrotal': self.value_in_2_and_3,
-            'label testes other_words': self.value_in_2_and_3,
-            'label testes size': self.value_in_2,
-            'label testes size not descended': self.value_in_2_thru_4,
+            'label not testes': self.value_in_1_and_2,
+            'label scrotal': self.value_in_1,
 
-            'label abbrev state': self.value_in_2,
-            'label abbrev state_abbrev': self.value_in_2,
-            'label abbrev not testes': self.value_in_2_and_3,
-            'label abbrev descended': self.value_in_2,
-            'label abbrev not descended': self.value_in_2_and_3,
-            'label abbrev abdominal': self.value_in_2,
-            'label abbrev abdominal not descended': self.value_in_2_thru_4,
-            'label abbrev fully descended': self.value_in_2_and_3,
-            'label abbrev partially descended': self.value_in_2_and_3,
-            'label abbrev not fully descended': self.value_in_2_thru_4,
-            'label abbrev scrotal': self.value_in_2,
-            'label abbrev not scrotal': self.value_in_2_and_3,
-            'label abbrev other_words': self.value_in_2_and_3,
-            'label abbrev size': self.value_in_2,
-            'label abbrev size not descended': self.value_in_2_thru_4,
+            'label testes': 'record',
+            'label abbrev': 'record',
+
+            'record state_abbrev': self.value_in_1,
+            'record not testes': self.value_in_1_and_2,
+            'record descended': self.value_in_1,
+            'record not descended': self.value_in_1_and_2,
+            'record abdominal': self.value_in_1,
+            'record abdominal not descended': self.value_in_1_thru_3,
+            'record fully descended': self.value_in_1_and_2,
+            'record partially descended': self.value_in_1_and_2,
+            'record not fully descended': self.value_in_1_thru_3,
+            'record scrotal': self.value_in_1,
+            'record not scrotal': self.value_in_1_and_2,
+            'record other_words': self.value_in_1_and_2,
+            'record size': self.value_in_1,
+            'record size not descended': self.value_in_1_thru_3,
 
             'testes descended': self.value_in_1,
             'testes abdominal': self.value_in_1,
             'testes scrotal': self.value_in_1,
             'testes abdominal not descended': self.value_in_1_thru_3,
             'testes not descended': self.value_in_1_and_2,
+            'testes not fully descended': self.value_in_1_thru_3,
             'testes not scrotal': self.value_in_1_and_2,
             'testes other_words': self.value_in_1,
             'testes size not descended': self.value_in_1_thru_3,
+            'testes state_abbrev': self.value_in_1,
 
             'abbrev descended': self.value_in_1,
             'abbrev abdominal': self.value_in_1,
             'abbrev scrotal': self.value_in_1,
             'abbrev abdominal not descended': self.value_in_1_thru_3,
             'abbrev not descended': self.value_in_1,
+            'abbrev not fully descended': self.value_in_1_thru_3,
             'abbrev not scrotal': self.value_in_1_and_2,
             'abbrev other_words': self.value_in_1,
             'abbrev size not descended': self.value_in_1_thru_3,
 
             'not testes': self.value_in_0_and_1,
             'not scrotal': self.value_in_0_and_1,
-            'not gonads': self.value_in_0_and_1,
-        }
+            'not gonads': self.value_in_0_and_1}
 
     def value_in_1(self, stack, input):
         result = {'value': stack[1]['value'],

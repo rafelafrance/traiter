@@ -115,7 +115,7 @@ class TestParseTestesState(unittest.TestCase):
             TK.parse(
                 ('sex=male ; reproductive data=testis 5mm, abdominal '
                  '; ear from notch=20 mm; ')),
-            [{'value': 'testis 5mm, abdominal',
+            [{'value': 'abdominal',
               'start': 11,
               'end': 50}])
 
@@ -130,7 +130,7 @@ class TestParseTestesState(unittest.TestCase):
         self.assertEqual(
             TK.parse(
                 'weight=36 g; reproductive data=testes: 11x7 mm (scrotal)'),
-            [{'value': 'testes: 11x7 mm (scrotal',
+            [{'value': 'scrotal',
               'start': 13,
               'end': 55}])
 

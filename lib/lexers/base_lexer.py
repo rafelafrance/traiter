@@ -21,6 +21,8 @@ class BaseLexer:
     # Order matters!
     tokens = [number, to, cross, word, stop]
 
+    sentinel_token = {'token': '__END__', 'value': None, 'start': 0, 'end': 0}
+
     def __init__(self):
         """Compile the regex."""
         joined = ' | '.join([f' (?P<{k}> {v} ) ' for k, v in self.tokens])
@@ -44,5 +46,21 @@ class BaseLexer:
         return tokens
 
 
-def isolate(regex):
-    return r'\b ( {} ) \b'.format(regex)
+def build(regex, boundary=True):
+    r"""
+    Build a lexer regular expression.
+
+    boundary: True or False
+        If boundary is True then the regex will be wrapped in \b so that only
+        the entire word will be matched. See the re documentation.
+        - This is helpful for keyword searches like 't'
+          which would match every 't' in the input but wrapping the regex in
+          \b will only match a t standing on its own.
+        - It is not helpful for searching for things like '19mm' where there is
+          no word break between the two tokens.
+        - It is also not helpful if your pattern ends or starts with a non-word
+          character.
+    """
+    if boundary:
+        return r'\b ( {} ) \b'.format(regex)
+    return regex
