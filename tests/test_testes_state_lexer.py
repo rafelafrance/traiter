@@ -6,87 +6,108 @@ from lib.lexers.testes_state_lexer import LexerTestesState
 
 class TestTestesStateLexer(unittest.TestCase):
 
-    def test_01(self):
+    def test_tokenize_01(self):
         self.assertEqual(
             TK.tokenize('testes descended'),
-            [('testes', 'testes', 0, 6),
-             ('descended', 'descended', 7, 16)])
+            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
+             {'token':
+              'descended',
+              'value': 'descended',
+              'start': 7,
+              'end': 16}])
 
-    def test_02(self):
+    def test_tokenize_02(self):
         self.assertEqual(
             TK.tokenize('testes undescended'),
-            [('testes', 'testes', 0, 6),
-             ('descended', 'undescended', 7, 18)])
+            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
+             {'token': 'descended',
+              'value': 'undescended',
+              'start': 7,
+              'end': 18}])
 
-    def test_03(self):
+    def test_tokenize_03(self):
         self.assertEqual(
             TK.tokenize('testis undesc.'),
-            [('testes', 'testis', 0, 6),
-             ('descended', 'undesc', 7, 13)])
+            [{'token': 'testes', 'value': 'testis', 'start': 0, 'end': 6},
+             {'token': 'descended', 'value': 'undesc', 'start': 7, 'end': 13},
+             {'token': 'stop', 'value': '.', 'start': 13, 'end': 14}])
 
-    def test_04(self):
+    def test_tokenize_04(self):
         self.assertEqual(
             TK.tokenize('testicles undesc'),
-            [('testes', 'testicles', 0, 9),
-             ('descended', 'undesc', 10, 16)])
+            [{'token': 'testes', 'value': 'testicles', 'start': 0, 'end': 9},
+             {'token': 'descended',
+              'value': 'undesc',
+              'start': 10,
+              'end': 16}])
 
-    def test_05(self):
+    def test_tokenize_05(self):
         self.assertEqual(
             TK.tokenize('testes not fully descended'),
-            [('testes', 'testes', 0, 6),
-             ('not', 'not', 7, 10),
-             ('fully', 'fully', 11, 16),
-             ('descended', 'descended', 17, 26)])
+            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
+             {'token': 'not', 'value': 'not', 'start': 7, 'end': 10},
+             {'token': 'fully', 'value': 'fully', 'start': 11, 'end': 16},
+             {'token': 'descended',
+              'value': 'descended',
+              'start': 17,
+              'end': 26}])
 
-    def test_06(self):
+    def test_tokenize_06(self):
         self.assertEqual(
-            TK.tokenize('testes not-scrotal'),
-            [('testes', 'testes', 0, 6),
-             ('not', 'not', 7, 10),
-             ('scrotal', 'scrot', 11, 16)])
+            TK.tokenize('testes non-scrotal'),
+            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
+             {'token': 'not', 'value': 'non', 'start': 7, 'end': 10},
+             {'token': 'scrotal', 'value': 'scrotal', 'start': 11, 'end': 18}])
 
-    def test_07(self):
+    def test_tokenize_07(self):
         self.assertEqual(
             TK.tokenize('testes no scrotum'),
-            [('testes', 'testes', 0, 6),
-             ('not', 'no', 7, 9),
-             ('scrotal', 'scrot', 10, 15)])
+            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
+             {'token': 'not', 'value': 'no', 'start': 7, 'end': 9},
+             {'token': 'scrotal', 'value': 'scrotum', 'start': 10, 'end': 17}])
 
-    def test_08(self):
+    def test_tokenize_08(self):
         self.assertEqual(
             TK.tokenize('testes nscr'),
-            [('testes', 'testes', 0, 6),
-             ('other_words', 'nscr', 7, 11)])
+            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
+             {'token': 'other_words', 'value': 'nscr', 'start': 7, 'end': 11}])
 
-    def test_09(self):
+    def test_tokenize_09(self):
         self.assertEqual(
             TK.tokenize('tes ns'),
-            [('testes_abbrev', 'tes', 0, 3),
-             ('state_abbrev', 'ns', 4, 6)])
+            [{'token': 'abbrev', 'value': 'tes', 'start': 0, 'end': 3},
+             {'token': 'state_abbrev', 'value': 'ns', 'start': 4, 'end': 6}])
 
-    def test_10(self):
+    def test_tokenize_10(self):
         self.assertEqual(
             TK.tokenize('tes undescend.'),
-            [('testes_abbrev', 'tes', 0, 3),
-             ('descended', 'undescend', 4, 13)])
+            [{'token': 'abbrev', 'value': 'tes', 'start': 0, 'end': 3},
+             {'token': 'descended',
+              'value': 'undescend',
+              'start': 4,
+              'end': 13},
+             {'token': 'stop', 'value': '.', 'start': 13, 'end': 14}])
 
-    def test_11(self):
+    def test_tokenize_11(self):
         self.assertEqual(
             TK.tokenize('t abdominal'),
-            [('testes_abbrev', 't', 0, 1),
-             ('key_req', 'abdominal', 2, 11)])
+            [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
+             {'token': 'abdominal',
+              'value': 'abdominal',
+              'start': 2,
+              'end': 11}])
 
-    def test_12(self):
+    def test_tokenize_12(self):
         self.assertEqual(
             TK.tokenize('t nscr'),
-            [('testes_abbrev', 't', 0, 1),
-             ('other_words', 'nscr', 2, 6)])
+            [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
+             {'token': 'other_words', 'value': 'nscr', 'start': 2, 'end': 6}])
 
-    def test_13(self):
+    def test_tokenize_13(self):
         self.assertEqual(
             TK.tokenize('t ns'),
-            [('testes_abbrev', 't', 0, 1),
-             ('state_abbrev', 'ns', 2, 4)])
+            [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
+             {'token': 'state_abbrev', 'value': 'ns', 'start': 2, 'end': 4}])
 
 
 TK = LexerTestesState()

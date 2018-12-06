@@ -1,45 +1,56 @@
 """Lex testes state annotations."""
 
-from lib.lexers.base_lexer import BaseLexer
+from lib.lexers.base_lexer import BaseLexer, isolate
 
 
 class LexerTestesState(BaseLexer):
     """Lex testes state annotations."""
 
-    forms = [
-        ('reproductive_data',
-         r'reproductive .? (?: data |state | condition )'),
+    tokens = [
+        BaseLexer.stop,  # We don't want to confuse prefix and suffix notation
+
+        ('label',
+         isolate(r' reproductive .? (?: data |state | condition ) ')),
 
         ('testes',
-         r' testes |  testis | testicles '),
+         isolate(r' testes |  testis | testicles ')),
 
         ('fully',
-         r' fully | (:? in ) complete (?: ly) '),
+         isolate(r' fully | (:? in ) complete (?: ly) ')),
 
         ('not',
-         r' (?: not | non | no | semi | sub) '),
+         isolate(r' not | non | no | semi | sub ')),
 
         ('descended',
-         r' (?: un)? (?: des?c?end (?: ed)? | desc ) '),
+         isolate(r' (?: un)? (?: des?c?end (?: ed)? | desc ) ')),
 
-        ('testes_abbrev',
-         r' tes | ts | t '),
+        ('abbrev',
+         isolate(r' tes | ts | t ')),
 
         ('scrotal',
-         r' scrot | scrotum | scrotal '),
+         isolate(r' scrotum | scrotal | scrot ')),
 
         ('partially',
-         r' partially | part '),
+         isolate(r' partially | part ')),
 
         ('other_words',
-         (r'cryptorchism | cryptorchid | monorchism | monorchid '
-          r'| nscr | inguinal')),
+         isolate((r' cryptorchism | cryptorchid | monorchism | monorchid '
+                  r' | nscr | inguinal'))),
 
         ('state_abbrev',
-         r'scr | ns | sc'),
+         isolate(r' scr | ns | sc')),
 
-        ('key_req',
-         r'visible | enlarged | small | abdominal | abdomin | abdom'),
+        ('abdominal',
+         isolate(
+             r' abdominal | abdomin | abdom ')),
+
+        ('size',
+         isolate(
+             r' visible | enlarged | small ')),
+
+        ('gonads',
+         isolate(
+             r' gonads? ')),
 
         # ('', r''),
     ]
