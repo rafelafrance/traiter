@@ -14,11 +14,14 @@ class BaseParser:
         self._build_rules()
         self._validate_rules()
         self._build_lookahead()
-        self.max = max(len(k.split()) for k, v in self.rules.items())
+        self.max = 0
+        if self.rules:
+            self.max = max(len(k.split()) for k, v in self.rules.items())
 
     @abstractmethod
     def get_rules(self):
         """List the parser rules here."""
+        return {}
 
     def parse(self, input):
         """Parse the tokens."""
@@ -29,42 +32,64 @@ class BaseParser:
         results = []
 
         while tokens:
-            if not stack:
-                stack.append(tokens.pop(0))
-                continue
-
             count = min(len(stack), self.max)
 
-            for j in range(count, 0, -1):
-                key = ' '.join([t['token'] for t in stack[-j:]])
-                production = self.rules.get(key)
+            for idx in range(count, 0, -1):
+                key = ' '.join([t['token'] for t in stack[-idx:]])
+                match = self.rules.get(key)
 
-                if self.find_lookahead(tokens, stack, key):
+                if self._find_lookahead(tokens, stack, key):
                     break
 
-                if callable(production):
-                    results.append(production(stack[-j:], input))
-                    del stack[-j:]
+                if self._reduce(input, stack, results, match, idx):
                     break
-                elif production:
-                    token = {
-                        'token': production,
-                        'value': input[stack[-j]['start']:stack[-1]['end']],
-                        'start': stack[-j]['start'],
-                        'end': stack[-1]['end']}
-                    del stack[-j:]
-                    stack.append(token)
-                    break
+
             else:
-                stack.append(tokens.pop(0))
+                self._shift(tokens, stack)
 
         return results
 
-    def find_lookahead(self, tokens, stack, key):
-        """
-        Lookahead into the token list.
+    def value_span(self, stack, input, args):
+        """Handle the case where the value spans one or more tokens."""
+        span = args['span']
+        print(args['span'])
 
-        We are looking longest lookahead to shortest lookahead. If we find one
+        if len(span) == 1:
+            value = stack[span[0]]['value']
+        else:
+            value = input[stack[span[0]]['start']:stack[span[1]]['end']]
+
+        return {'value': value,
+                'start': stack[0]['start'],
+                'end': stack[-1]['end']}
+
+    def _shift(self, tokens, stack, token=None):
+        """Shift the next token onto the stack."""
+        stack.append(tokens.pop(0))
+
+    def _reduce(self, input, stack, results, match, idx):
+        """Reduce the stack given the rule."""
+        action = match['action'] if match else None
+
+        if callable(action):
+            results.append(action(stack[-idx:], input, match['args']))
+            del stack[-idx:]
+            return True
+        elif action:
+            token = {
+                'token': action,
+                'value': input[stack[-idx]['start']:stack[-1]['end']],
+                'start': stack[-idx]['start'],
+                'end': stack[-1]['end']}
+            del stack[-idx:]
+            stack.append(token)
+            return True
+        return False
+
+    def _find_lookahead(self, tokens, stack, key):
+        """Lookahead into the token list.
+
+        We are looking for the longest lookahead that matches. If we find one
         we advance the stack to the lookahead.
         """
         for lookahead in self.lookahead.get(key, []):
@@ -73,13 +98,9 @@ class BaseParser:
                     break
             else:
                 for _ in range(len(lookahead)):
-                    stack.append(tokens.pop(0))
+                    self._shift(tokens, stack)
                 return True
         return False
-
-    def range(self, stack, input):
-        """Parse a number raange like 10 to 20 mm."""
-        return
 
     def _build_rules(self):
         """Build the parser rules and check for simple errors."""
@@ -88,16 +109,14 @@ class BaseParser:
 
     def _validate_rules(self):
         """Make sure rule tokens are found in the lexer."""
-        valid_tokens = [t[0] for t in self.lexer.tokens]
-        valid_tokens += [v for k, v in self.rules.items()
-                         if isinstance(v, str)]
+        valid_tokens = {t[0] for t in self.lexer.tokens}
+        valid_tokens |= {v['action'] for k, v in self.rules.items()}
 
-        errors = []
+        errors = {}
         for rule, _ in self.rules.items():
-            tokens = rule.split()
-            for token in tokens:
+            for token in rule.split():
                 if token not in valid_tokens:
-                    errors.append(token)
+                    errors.add(token)
 
         if errors:
             raise ValueError(f'Unknown tokens: {", ".join(errors)}.')
