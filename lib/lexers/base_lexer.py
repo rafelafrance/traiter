@@ -50,9 +50,13 @@ def build(regex, boundary=True):
     r"""
     Build a lexer regular expression.
 
+    This will be used to build up the '|' (regex pipe) sections of the full
+    parser regex. That is, this is one clause between the pipes. Like so:
+        ... | clause | ...
+
     boundary: True or False
         If boundary is True then the regex will be wrapped in \b so that only
-        the entire word will be matched. See the re documentation.
+        the entire word will be matched. See re documentation.
         - This is helpful for keyword searches like 't'
           which would match every 't' in the input but wrapping the regex in
           \b will only match a t standing on its own.

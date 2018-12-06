@@ -29,7 +29,7 @@ pytest tests/
 
 # Parsing strategy
 
-We are clearly not parsing a formal grammar so using a normal LR(k) parser is not the best solution. Statistical parsers might work well but we still need to bootstrap the training data. In the future, the results from these parsers may be used as training data for a statistical/machine learning model. However, for the time being, I am basing the trait parsers on modified but simple shift-reduce parsers.
+I am basing the trait parsers on modified but simple shift-reduce parsers with a K lookahead.
 
 Basic program flow:
 
@@ -41,9 +41,10 @@ Basic program flow:
 
 * The parser then:
   - Scans the tokens from left to right looking for rule matches.
+  - We are doing a right-most reduction.
   - If there is not match then we shift to the next token.
   - If we have a match we perform the reduction.
-  - For our purposes we want to look for the **longest leftmost match**. So whenever we get a set of tokens to match we lookahead into the tokens to see if there is a longer match. If there is one we directly advance the stack to this longer match. If there are multiple lookahead options that match the tokens we take the longest one.
+  - For our purposes we want to look for the **longest match**. So whenever we get a set of tokens to match we lookahead into the tokens to see if there is a longer match. If there is one we directly advance the stack to this longer match. If there are multiple lookahead options that match the tokens we take the longest one.
   - All matches are put into an array of dictionaries that contain the match value(s) as well as where in the string the match occurred.
 
 
