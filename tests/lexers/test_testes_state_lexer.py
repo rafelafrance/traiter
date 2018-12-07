@@ -10,8 +10,7 @@ class TestTestesStateLexer(unittest.TestCase):
         self.assertEqual(
             TK.tokenize('testes descended'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token':
-              'descended',
+             {'token': 'descended',
               'value': 'descended',
               'start': 7,
               'end': 16}])

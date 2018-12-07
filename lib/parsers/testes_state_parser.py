@@ -5,7 +5,7 @@ from lib.lexers.testes_state_lexer import LexerTestesState
 
 
 class ParserTestesState(BaseParser):
-    """Shared parser logic."""
+    """Parser logic."""
 
     def __init__(self):
         """Initialize the parser."""

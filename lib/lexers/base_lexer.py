@@ -10,11 +10,11 @@ class BaseLexer:
     number = ('number',
               r' (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ')
 
-    to = ('to', r' - | to ')    # Used to parse numeric ranges
+    to = ('to', r' - | to ')              # Used to parse numeric ranges
 
     cross = ('cross', r'  x | by | \* ')  # Used to parse length x width values
 
-    word = ('word', r' \w+ ')   # Generic word
+    word = ('word', r' \w+ ')             # Generic word
 
     stop = ('stop', r' [.;] ')  # Used to separate key1=value1; key2=val2 pairs
 

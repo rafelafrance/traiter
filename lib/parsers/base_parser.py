@@ -6,9 +6,23 @@ from abc import abstractmethod
 class BaseParser:
     """Shared parser logic."""
 
+    def value_span(self, stack, input, args):
+        """Handle the case where the value spans one or more tokens."""
+        span = args['span']
+
+        if len(span) == 1:
+            value = stack[span[0]]['value']
+        else:
+            value = input[stack[span[0]]['start']:stack[span[1]]['end']]
+
+        return {'value': value,
+                'start': stack[0]['start'],
+                'end': stack[-1]['end']}
+
     def __init__(self, lexer):
         """Initialize the parser."""
         self.lexer = lexer()
+        self.too_many = 999999
         self.rules = {}
         self.lookahead = {}
         self._build_rules()
@@ -47,21 +61,7 @@ class BaseParser:
             else:
                 self._shift(tokens, stack)
 
-        return results
-
-    def value_span(self, stack, input, args):
-        """Handle the case where the value spans one or more tokens."""
-        span = args['span']
-        print(args['span'])
-
-        if len(span) == 1:
-            value = stack[span[0]]['value']
-        else:
-            value = input[stack[span[0]]['start']:stack[span[1]]['end']]
-
-        return {'value': value,
-                'start': stack[0]['start'],
-                'end': stack[-1]['end']}
+        return results if len(results) < self.too_many else []
 
     def _shift(self, tokens, stack, token=None):
         """Shift the next token onto the stack."""
