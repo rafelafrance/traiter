@@ -1,5 +1,7 @@
 """Tokenize the notations."""
 
+# pylint: disable=too-few-public-methods
+
 import re
 
 
@@ -28,11 +30,11 @@ class BaseLexer:
         joined = ' | '.join([f' (?P<{k}> {v} ) ' for k, v in self.tokens])
         self.regex = re.compile(joined, re.VERBOSE | re.IGNORECASE)
 
-    def tokenize(self, input):
+    def tokenize(self, raw):
         """Split the text into tokens."""
         tokens = []
 
-        for match in self.regex.finditer(input):
+        for match in self.regex.finditer(raw):
 
             for key, _ in self.tokens:
                 if match[key] is not None:

@@ -6,14 +6,15 @@ from abc import abstractmethod
 class BaseParser:
     """Shared parser logic."""
 
-    def value_span(self, stack, input, args):
+    @staticmethod
+    def value_span(stack, raw, args):
         """Handle the case where the value spans one or more tokens."""
         span = args['span']
 
         if len(span) == 1:
             value = stack[span[0]]['value']
         else:
-            value = input[stack[span[0]]['start']:stack[span[1]]['end']]
+            value = raw[stack[span[0]]['start']:stack[span[1]]['end']]
 
         return {'value': value,
                 'start': stack[0]['start'],
@@ -37,9 +38,9 @@ class BaseParser:
         """List the parser rules here."""
         return {}
 
-    def parse(self, input):
+    def parse(self, raw):
         """Parse the tokens."""
-        tokens = self.lexer.tokenize(input)
+        tokens = self.lexer.tokenize(raw)
         tokens.append(self.lexer.sentinel_token)
 
         stack = []
@@ -55,7 +56,7 @@ class BaseParser:
                 if self._find_lookahead(tokens, stack, key):
                     break
 
-                if self._reduce(input, stack, results, match, idx):
+                if self._reduce(raw, stack, results, match, idx):
                     break
 
             else:
@@ -63,22 +64,24 @@ class BaseParser:
 
         return results if len(results) < self.too_many else []
 
-    def _shift(self, tokens, stack, token=None):
+    @staticmethod
+    def _shift(tokens, stack):
         """Shift the next token onto the stack."""
         stack.append(tokens.pop(0))
 
-    def _reduce(self, input, stack, results, match, idx):
+    @staticmethod
+    def _reduce(raw, stack, results, match, idx):
         """Reduce the stack given the rule."""
         action = match['action'] if match else None
 
         if callable(action):
-            results.append(action(stack[-idx:], input, match['args']))
+            results.append(action(stack[-idx:], raw, match['args']))
             del stack[-idx:]
             return True
-        elif action:
+        if action:
             token = {
                 'token': action,
-                'value': input[stack[-idx]['start']:stack[-1]['end']],
+                'value': raw[stack[-idx]['start']:stack[-1]['end']],
                 'start': stack[-idx]['start'],
                 'end': stack[-1]['end']}
             del stack[-idx:]
@@ -112,7 +115,7 @@ class BaseParser:
         valid_tokens = {t[0] for t in self.lexer.tokens}
         valid_tokens |= {v['action'] for k, v in self.rules.items()}
 
-        errors = {}
+        errors = set()
         for rule, _ in self.rules.items():
             for token in rule.split():
                 if token not in valid_tokens:

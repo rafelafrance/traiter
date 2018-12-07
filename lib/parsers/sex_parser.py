@@ -1,5 +1,8 @@
 """Parse the notations."""
 
+# pylint: disable=too-few-public-methods
+
+
 from lib.parsers.base_parser import BaseParser
 from lib.lexers.sex_lexer import SexLexer
 

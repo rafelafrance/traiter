@@ -1,5 +1,7 @@
 """Lex testes state annotations."""
 
+# pylint: disable=too-few-public-methods
+
 from lib.lexers.base_lexer import BaseLexer, build
 
 
