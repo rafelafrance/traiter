@@ -13,7 +13,7 @@ class ParserTestesState(BaseParser):
         """Initialize the parser."""
         super().__init__(LexerTestesState)
 
-    def get_rules(self):
+    def rule_dict(self):
         """Return the parser rules."""
         return {
             'label testes': {'action': 'record'},

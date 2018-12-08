@@ -17,6 +17,7 @@ class SexLexer(BaseLexer):
 
         ('quest', r' \? '),
 
+        # These are words that indicate "sex" is not a key
         ('skip', build(r' and | was | is ')),
 
         BaseLexer.word]

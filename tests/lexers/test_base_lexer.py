@@ -4,6 +4,9 @@ import unittest
 from lib.lexers.base_lexer import BaseLexer
 
 
+TK = BaseLexer()
+
+
 class TestBaseLexer(unittest.TestCase):
 
     def test_tokenize_01(self):
@@ -53,8 +56,3 @@ class TestBaseLexer(unittest.TestCase):
             [{'token': 'number', 'value': '99.5', 'start': 1, 'end': 5},
              {'token': 'word', 'value': 'mm', 'start': 5, 'end': 7},
              {'token': 'stop', 'value': ';', 'start': 7, 'end': 8}])
-
-
-TK = BaseLexer()
-SUITE = unittest.defaultTestLoader.loadTestsFromTestCase(TestBaseLexer)
-unittest.TextTestRunner().run(SUITE)

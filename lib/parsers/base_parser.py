@@ -24,94 +24,121 @@ class BaseParser:
         """Initialize the parser."""
         self.lexer = lexer()
         self.too_many = 999999
-        self.rules = {}
-        self.lookahead = {}
-        self._build_rules()
-        self._validate_rules()
-        self._build_lookahead()
-        self.max = 0
-        if self.rules:
-            self.max = max(len(k.split()) for k, v in self.rules.items())
+        self.stack = []
+        self.tokens = []
+        self.rules = self.build_rules()
+        self.validate_rules()
+        # The maximum number of tokens in the rule set
+        self.max_tokens = max(k.count(' ') for k, v in self.rules.items()) + 1
 
     @abstractmethod
-    def get_rules(self):
-        """List the parser rules here."""
+    def rule_dict(self):
+        """Return the parser rules for the trait.
+
+        The key is the rule and the value is a dictonary containing:
+            - An 'action' which can be either:
+                - A string that will replace the entire rule.
+                - A function reference that performs an action for the
+                  reduction. This function will get the folling arguments:
+                  - The portion of the stack that maches the the rule. So if
+                    the stack is 10 tokens deep and the rule has 3 tokens in it
+                    you will get the last (top) 3 items of the stack.
+                  - The raw input string so we can get data from that.
+                  - An arguments dictionary (see below).
+            - And an optional 'args' dictionary. This dictionary will be passed
+              to the 'action' function above.
+
+            ** NOTE: The key is normalized and data may be added to the value.
+        """
         return {}
 
     def parse(self, raw):
         """Parse the tokens."""
-        tokens = self.lexer.tokenize(raw)
-        tokens.append(self.lexer.sentinel_token)
+        self.tokens = self.lexer.tokenize(raw)
+        self.tokens.append(self.lexer.sentinel_token)
 
-        stack = []
+        self.stack = []
         results = []
 
-        while tokens:
-            count = min(len(stack), self.max)
+        while self.tokens:
+            rule, prod = self.find_stack_match()
 
-            for idx in range(count, 0, -1):
-                key = ' '.join([t['token'] for t in stack[-idx:]])
-                match = self.rules.get(key)
+            if rule:
+                rule, prod = self.find_longer_match(rule, prod)
 
-                if self._find_lookahead(tokens, stack, key):
-                    break
-
-                if self._reduce(raw, stack, results, match, idx):
-                    break
-
+                self.reduce(raw, results, prod)
             else:
-                self._shift(tokens, stack)
+                self.shift()
 
         return results if len(results) < self.too_many else []
 
-    @staticmethod
-    def _shift(tokens, stack):
+    def find_stack_match(self):
+        """Look for the longest possible rule at the top of the stack."""
+        count = min(len(self.stack), self.max_tokens)
+        for idx in range(count, 0, -1):
+            rule = ' '.join([t['token'] for t in self.stack[-idx:]])
+            prod = self.rules.get(rule)
+            if prod:
+                return rule, prod
+        return None, None
+
+    def find_longer_match(self, rule, prod):
+        """Look ahead into the token list to find the longest possible match.
+
+        I.e. we are looking for the longest rule that has the current rule as a
+        prefix made up of the current rule and the next K tokens. If found, we
+        advance the stack and return it.
+        """
+        count = min(len(self.tokens), self.max_tokens - prod['len'])
+        for idx in range(count, 0, -1):
+            longer_rule = \
+                f"{rule} {' '.join([t['token'] for t in self.tokens[:idx]])}"
+            longer_prod = self.rules.get(longer_rule)
+
+            if longer_prod:
+                for _ in range(idx):
+                    self.shift()
+                return longer_rule, longer_prod
+
+        return rule, prod
+
+    def shift(self):
         """Shift the next token onto the stack."""
-        stack.append(tokens.pop(0))
+        self.stack.append(self.tokens.pop(0))
 
-    @staticmethod
-    def _reduce(raw, stack, results, match, idx):
+    def reduce(self, raw, results, prod):
         """Reduce the stack given the rule."""
-        action = match['action'] if match else None
-
+        action = prod['action']
+        rule_len = prod['len']
         if callable(action):
-            results.append(action(stack[-idx:], raw, match['args']))
-            del stack[-idx:]
-            return True
-        if action:
+            result = action(self.stack[-rule_len:], raw, prod['args'])
+            del self.stack[-rule_len:]
+            results.append(result)
+        elif action:
             token = {
                 'token': action,
-                'value': raw[stack[-idx]['start']:stack[-1]['end']],
-                'start': stack[-idx]['start'],
-                'end': stack[-1]['end']}
-            del stack[-idx:]
-            stack.append(token)
-            return True
-        return False
+                'value': raw[
+                    self.stack[-rule_len]['start']:self.stack[-1]['end']],
+                'start': self.stack[-rule_len]['start'],
+                'end': self.stack[-1]['end']}
+            del self.stack[-rule_len:]
+            self.stack.append(token)
 
-    def _find_lookahead(self, tokens, stack, key):
-        """Lookahead into the token list.
-
-        We are looking for the longest lookahead that matches. If we find one
-        we advance the stack to the lookahead.
-        """
-        for lookahead in self.lookahead.get(key, []):
-            for i, token in enumerate(lookahead):
-                if len(tokens) < i + 1 or tokens[i]['token'] != token:
-                    break
-            else:
-                for _ in range(len(lookahead)):
-                    self._shift(tokens, stack)
-                return True
-        return False
-
-    def _build_rules(self):
+    def build_rules(self):
         """Build the parser rules and check for simple errors."""
-        self.rules = {' '.join(k.split()): v
-                      for k, v in self.get_rules().items()}
+        rules = {' '.join(k.split()): v
+                 for k, v in self.rule_dict().items()}
 
-    def _validate_rules(self):
+        for rule, prod in rules.items():
+            prod['len'] = rule.count(' ') + 1
+
+        return rules
+
+    def validate_rules(self):
         """Make sure rule tokens are found in the lexer."""
+        if not self.rules:
+            raise ValueError('No rules for the parser.')
+
         valid_tokens = {t[0] for t in self.lexer.tokens}
         valid_tokens |= {v['action'] for k, v in self.rules.items()}
 
@@ -119,20 +146,7 @@ class BaseParser:
         for rule, _ in self.rules.items():
             for token in rule.split():
                 if token not in valid_tokens:
-                    errors.add(token)
+                    errors.add(f'"{token}"')
 
         if errors:
             raise ValueError(f'Unknown tokens: {", ".join(errors)}.')
-
-    def _build_lookahead(self):
-        """Build the lookahead information for each token."""
-        other_rules = [k for k, _ in self.rules.items()]
-        for rule, _ in self.rules.items():
-            self.lookahead[rule] = []
-            for other_rule in other_rules:
-                if other_rule.startswith(rule) and rule != other_rule:
-                    lookahead = other_rule.replace(rule, '', 1).split()
-                    self.lookahead[rule].append(lookahead)
-
-        for rule, lookahead in self.lookahead.items():
-            self.lookahead[rule] = sorted(lookahead, key=len, reverse=True)

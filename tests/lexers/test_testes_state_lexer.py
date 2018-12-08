@@ -4,6 +4,9 @@ import unittest
 from lib.lexers.testes_state_lexer import LexerTestesState
 
 
+TK = LexerTestesState()
+
+
 class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_01(self):
@@ -107,8 +110,3 @@ class TestTestesStateLexer(unittest.TestCase):
             TK.tokenize('t ns'),
             [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
              {'token': 'state_abbrev', 'value': 'ns', 'start': 2, 'end': 4}])
-
-
-TK = LexerTestesState()
-SUITE = unittest.defaultTestLoader.loadTestsFromTestCase(TestTestesStateLexer)
-unittest.TextTestRunner().run(SUITE)

@@ -15,7 +15,7 @@ class SexParser(BaseParser):
         super().__init__(SexLexer)
         self.too_many = 3
 
-    def get_rules(self):
+    def rule_dict(self):
         """Return the parser rules."""
         return {
 
@@ -25,11 +25,11 @@ class SexParser(BaseParser):
 
             'key sex': {'action': self.value_span, 'args': {'span': (1, )}},
 
+            'key sex quest':
+                {'action': self.value_span, 'args': {'span': (1, 2)}},
+
             'key word': {'action': self.value_span, 'args': {'span': (1, )}},
 
             'key word quest':
-                {'action': self.value_span, 'args': {'span': (1, 2)}},
-
-            'key sex quest':
                 {'action': self.value_span, 'args': {'span': (1, 2)}},
         }
