@@ -4,7 +4,7 @@ import unittest
 from lib.lexers.sex_lexer import SexLexer
 
 
-TK = SexLexer()
+TKN = SexLexer()
 
 
 class TestSexLexer(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestSexLexer(unittest.TestCase):
     def test_tokenize_01(self):
         self.assertEqual(
             #            0123456789.123456789.123456789.123456789.123456789.123
-            TK.tokenize('weight; sex=female ? ; age'),
+            TKN.tokenize('weight; sex=female ? ; age'),
             [{'token': 'word', 'value': 'weight', 'start': 0, 'end': 6},
              {'token': 'stop', 'value': ';', 'start': 6, 'end': 7},
              {'token': 'key', 'value': 'sex', 'start': 8, 'end': 11},
@@ -24,7 +24,7 @@ class TestSexLexer(unittest.TestCase):
     def test_tokenize_02(self):
         self.assertEqual(
             #            0123456789.123456789.123456789.123456789.123456789.123
-            TK.tokenize('sex and age'),
+            TKN.tokenize('sex and age'),
             [{'token': 'key', 'value': 'sex', 'start': 0, 'end': 3},
              {'token': 'skip', 'value': 'and', 'start': 4, 'end': 7},
              {'token': 'word', 'value': 'age', 'start': 8, 'end': 11}])

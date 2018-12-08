@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
+# pylint: disable=global-statement,unused-argument
 
 import unittest
 from lib.parsers.base_parser import BaseParser
