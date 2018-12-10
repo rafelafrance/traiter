@@ -33,7 +33,9 @@ class TestSexParser(unittest.TestCase):
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('words male female male more words'),
-            [])
+            [{'value': 'male', 'start': 6, 'end': 10},
+             {'value': 'female', 'start': 11, 'end': 17},
+             {'value': 'male', 'start': 18, 'end': 22}])
 
     def test_parse_06(self):
         self.assertEqual(
@@ -50,3 +52,14 @@ class TestSexParser(unittest.TestCase):
         self.assertEqual(
             PAR.parse('sex=unknown length=8 mm'),
             [{'value': 'unknown', 'start': 0, 'end': 11}])
+
+    def test_post_process_01(self):
+        results = [{'value': 'male', 'start': 6, 'end': 10},
+                   {'value': 'female', 'start': 11, 'end': 17}]
+        self.assertEqual(PAR.post_process(results), results)
+
+    def test_post_process_02(self):
+        results = [{'value': 'male', 'start': 6, 'end': 10},
+                   {'value': 'female', 'start': 11, 'end': 17},
+                   {'value': 'male', 'start': 18, 'end': 22}]
+        self.assertEqual(PAR.post_process(results), [])

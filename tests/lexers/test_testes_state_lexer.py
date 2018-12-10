@@ -4,14 +4,14 @@ import unittest
 from lib.lexers.testes_state_lexer import LexerTestesState
 
 
-TKN = LexerTestesState()
+LEX = LexerTestesState()
 
 
 class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_01(self):
         self.assertEqual(
-            TKN.tokenize('testes descended'),
+            LEX.tokenize('testes descended'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
              {'token': 'descended',
               'value': 'descended',
@@ -20,7 +20,7 @@ class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_02(self):
         self.assertEqual(
-            TKN.tokenize('testes undescended'),
+            LEX.tokenize('testes undescended'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
              {'token': 'descended',
               'value': 'undescended',
@@ -29,14 +29,14 @@ class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_03(self):
         self.assertEqual(
-            TKN.tokenize('testis undesc.'),
+            LEX.tokenize('testis undesc.'),
             [{'token': 'testes', 'value': 'testis', 'start': 0, 'end': 6},
              {'token': 'descended', 'value': 'undesc', 'start': 7, 'end': 13},
              {'token': 'stop', 'value': '.', 'start': 13, 'end': 14}])
 
     def test_tokenize_04(self):
         self.assertEqual(
-            TKN.tokenize('testicles undesc'),
+            LEX.tokenize('testicles undesc'),
             [{'token': 'testes', 'value': 'testicles', 'start': 0, 'end': 9},
              {'token': 'descended',
               'value': 'undesc',
@@ -45,7 +45,7 @@ class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_05(self):
         self.assertEqual(
-            TKN.tokenize('testes not fully descended'),
+            LEX.tokenize('testes not fully descended'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
              {'token': 'not', 'value': 'not', 'start': 7, 'end': 10},
              {'token': 'fully', 'value': 'fully', 'start': 11, 'end': 16},
@@ -56,33 +56,33 @@ class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_06(self):
         self.assertEqual(
-            TKN.tokenize('testes non-scrotal'),
+            LEX.tokenize('testes non-scrotal'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
              {'token': 'not', 'value': 'non', 'start': 7, 'end': 10},
              {'token': 'scrotal', 'value': 'scrotal', 'start': 11, 'end': 18}])
 
     def test_tokenize_07(self):
         self.assertEqual(
-            TKN.tokenize('testes no scrotum'),
+            LEX.tokenize('testes no scrotum'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
              {'token': 'not', 'value': 'no', 'start': 7, 'end': 9},
              {'token': 'scrotal', 'value': 'scrotum', 'start': 10, 'end': 17}])
 
     def test_tokenize_08(self):
         self.assertEqual(
-            TKN.tokenize('testes nscr'),
+            LEX.tokenize('testes nscr'),
             [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
              {'token': 'other_words', 'value': 'nscr', 'start': 7, 'end': 11}])
 
     def test_tokenize_09(self):
         self.assertEqual(
-            TKN.tokenize('tes ns'),
+            LEX.tokenize('tes ns'),
             [{'token': 'abbrev', 'value': 'tes', 'start': 0, 'end': 3},
              {'token': 'state_abbrev', 'value': 'ns', 'start': 4, 'end': 6}])
 
     def test_tokenize_10(self):
         self.assertEqual(
-            TKN.tokenize('tes undescend.'),
+            LEX.tokenize('tes undescend.'),
             [{'token': 'abbrev', 'value': 'tes', 'start': 0, 'end': 3},
              {'token': 'descended',
               'value': 'undescend',
@@ -92,7 +92,7 @@ class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_11(self):
         self.assertEqual(
-            TKN.tokenize('t abdominal'),
+            LEX.tokenize('t abdominal'),
             [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
              {'token': 'abdominal',
               'value': 'abdominal',
@@ -101,12 +101,12 @@ class TestTestesStateLexer(unittest.TestCase):
 
     def test_tokenize_12(self):
         self.assertEqual(
-            TKN.tokenize('t nscr'),
+            LEX.tokenize('t nscr'),
             [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
              {'token': 'other_words', 'value': 'nscr', 'start': 2, 'end': 6}])
 
     def test_tokenize_13(self):
         self.assertEqual(
-            TKN.tokenize('t ns'),
+            LEX.tokenize('t ns'),
             [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
              {'token': 'state_abbrev', 'value': 'ns', 'start': 2, 'end': 4}])

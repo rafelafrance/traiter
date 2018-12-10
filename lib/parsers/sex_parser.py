@@ -13,7 +13,6 @@ class SexParser(BaseParser):
     def __init__(self):
         """Initialize the parser."""
         super().__init__(SexLexer)
-        self.too_many = 3
 
     def rule_dict(self):
         """Return the parser rules."""
@@ -33,3 +32,7 @@ class SexParser(BaseParser):
             'key word quest':
                 {'action': self.value_span, 'args': {'span': (1, 2)}},
         }
+
+    def post_process(self, results, args=None):
+        """Post-process the results."""
+        return results if len(results) < 3 else []

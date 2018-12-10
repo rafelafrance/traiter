@@ -23,7 +23,7 @@ class BaseLexer:
     # Order matters!
     tokens = [number, to, cross, word, stop]
 
-    sentinel_token = {'token': '__END__', 'value': None, 'start': 0, 'end': 0}
+    sentinel_token = {'token': 'END', 'value': None, 'start': 0, 'end': 0}
 
     def __init__(self):
         """Compile the regex."""
@@ -48,25 +48,18 @@ class BaseLexer:
         return tokens
 
 
-def build(regex, boundary=True):
-    r"""
-    Build a lexer regular expression.
+def isolate(regex):
+    r"""Wrap a regular expression in \b character class.
 
-    This will be used to build up the '|' (regex pipe) sections of the full
-    parser regex. That is, this is one clause between the pipes. Like so:
-        ... | clause | ...
+    This is used to "isolate" a word on a word boundary so the regex does not
+    match the interior of a word.
 
-    boundary: True or False
-        If boundary is True then the regex will be wrapped in \b so that only
-        the entire word will be matched. See re documentation.
-        - This is helpful for keyword searches like 't'
-          which would match every 't' in the input but wrapping the regex in
-          \b will only match a t standing on its own.
-        - It is not helpful for searching for things like '19mm' where there is
-          no word break between the two tokens.
-        - It is also not helpful if your pattern ends or starts with a non-word
-          character.
+    - This is helpful for keyword searches like 't'. Without this 't' would
+      match both 't's in 'that' but the regex in \b neither 't' is matched.
+      Only 't's like ' t ', or '$t.', etc. will match.
+    - It is not helpful for searching for things like '19mm' where there is
+      no word break between the two tokens.
+    - It is also not helpful if your pattern ends or starts with a non-word
+      character.
     """
-    if boundary:
-        return r'\b ( {} ) \b'.format(regex)
-    return regex
+    return r'\b (?: {} ) \b'.format(regex)

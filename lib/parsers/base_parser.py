@@ -1,46 +1,31 @@
 """Parse the notations."""
 
+import re
 from abc import abstractmethod
 
 
 class BaseParser:
     """Shared parser logic."""
 
-    @staticmethod
-    def value_span(stack, raw, args):
-        """Handle the case where the value spans one or more tokens."""
-        span = args['span']
-
-        if len(span) == 1:
-            value = stack[span[0]]['value']
-        else:
-            value = raw[stack[span[0]]['start']:stack[span[1]]['end']]
-
-        return {'value': value,
-                'start': stack[0]['start'],
-                'end': stack[-1]['end']}
-
     def __init__(self, lexer):
         """Initialize the parser."""
         self.lexer = lexer()
-        self.too_many = 999999
         self.stack = []
         self.tokens = []
         self.rules = self.build_rules()
         self.validate_rules()
-        # The maximum number of tokens in the rule set
-        self.max_tokens = max(k.count(' ') for k, v in self.rules.items()) + 1
+        self.windows = self.build_windows()
 
     @abstractmethod
     def rule_dict(self):
         """Return the parser rules for the trait.
 
-        The key is the rule and the value is a dictonary containing:
+        The key is the rule and the value is a dictionary containing:
             - An 'action' which can be either:
                 - A string that will replace the entire rule.
                 - A function reference that performs an action for the
-                  reduction. This function will get the folling arguments:
-                  - The portion of the stack that maches the the rule. So if
+                  reduction. This function will get the following arguments:
+                  - The portion of the stack that matches the the rule. So if
                     the stack is 10 tokens deep and the rule has 3 tokens in it
                     you will get the last (top) 3 items of the stack.
                   - The raw input string so we can get data from that.
@@ -61,46 +46,40 @@ class BaseParser:
         results = []
 
         while self.tokens:
-            rule, prod = self.find_stack_match()
+
+            rule, prod = self.find_longest_match()
 
             if rule:
-                rule, prod = self.find_longer_match(rule, prod)
-
                 self.reduce(raw, results, prod)
             else:
                 self.shift()
 
-        return results if len(results) < self.too_many else []
+        return results
 
-    def find_stack_match(self):
-        """Look for the longest possible rule at the top of the stack."""
-        count = min(len(self.stack), self.max_tokens)
-        for idx in range(count, 0, -1):
-            rule = ' '.join([t['token'] for t in self.stack[-idx:]])
-            prod = self.rules.get(rule)
-            if prod:
-                return rule, prod
-        return None, None
+    def find_longest_match(self):
+        """Look for the longest possible match using the top of the stack."""
+        if not self.stack:
+            return None, None
 
-    def find_longer_match(self, rule, prod):
-        """Look ahead into the token list to find the longest possible match.
+        tos = self.stack[-1]['token']
+        window = self.windows.get(tos, [])
 
-        I.e. we are looking for the longest rule that has the current rule as a
-        prefix made up of the current rule and the next K tokens. If found, we
-        advance the stack and return it.
-        """
-        count = min(len(self.tokens), self.max_tokens - prod['len'])
-        for idx in range(count, 0, -1):
-            longer_rule = \
-                f"{rule} {' '.join([t['token'] for t in self.tokens[:idx]])}"
-            longer_prod = self.rules.get(longer_rule)
+        longest_rule = None
+        longest_prod = {'len': 0}
+        longest_ahead = 0
 
-            if longer_prod:
-                for _ in range(idx):
-                    self.shift()
-                return longer_rule, longer_prod
+        for back, ahead in window:
+            tokens = self.stack[-back:] + self.tokens[:ahead]
+            rule = ' '.join(t['token'] for t in tokens)
+            prod = self.rules.get(rule, {'len': 0})
 
-        return rule, prod
+            if prod['len'] > longest_prod['len']:
+                longest_rule, longest_prod, longest_ahead = rule, prod, ahead
+
+        for _ in range(longest_ahead):
+            self.shift()
+
+        return longest_rule, longest_prod
 
     def shift(self):
         """Shift the next token onto the stack."""
@@ -150,3 +129,50 @@ class BaseParser:
 
         if errors:
             raise ValueError(f'Unknown tokens: {", ".join(errors)}.')
+
+    def build_windows(self):
+        """How far to look into the stack and tokens for each token."""
+        token_set = {t for k, v in self.rules.items() for t in k.split()}
+        windows = {t: [] for t in token_set}
+
+        for rule, prod in self.rules.items():
+            tokens = rule.split()
+            for i in range(len(tokens)):
+                token = tokens[i]
+                behind = i + 1
+                ahead = prod['len'] - i - 1
+                window = (behind, ahead)
+                windows[token].append(window)
+
+        return windows
+
+    def post_process(self, results, args=None):
+        """Post-process the results."""
+        return results
+
+    @staticmethod
+    def value_span(stack, raw, args):
+        """Handle the case where the value spans one or more tokens."""
+        span = args['span']
+
+        if len(span) == 1:
+            value = stack[span[0]]['value']
+        else:
+            value = raw[stack[span[0]]['start']:stack[span[1]]['end']]
+
+        return {'value': value,
+                'start': stack[0]['start'],
+                'end': stack[-1]['end']}
+
+    @staticmethod
+    def strip_span(stack, raw, args):
+        """Trim characters from a value_span."""
+        result = BaseParser.value_span(stack, raw, args)
+
+        match = re.match(
+            f"^{args['strip']}(.*?){args['strip']}$",
+            result['value'])
+
+        return {'value': match[1],
+                'start': result['start'],
+                'end': result['end']}
