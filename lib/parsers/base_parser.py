@@ -64,22 +64,17 @@ class BaseParser:
         tos = self.stack[-1]['token']
         window = self.windows.get(tos, [])
 
-        longest_rule = None
-        longest_prod = {'len': 0}
-        longest_ahead = 0
-
         for back, ahead in window:
             tokens = self.stack[-back:] + self.tokens[:ahead]
             rule = ' '.join(t['token'] for t in tokens)
-            prod = self.rules.get(rule, {'len': 0})
+            prod = self.rules.get(rule)
 
-            if prod['len'] > longest_prod['len']:
-                longest_rule, longest_prod, longest_ahead = rule, prod, ahead
+            if prod:
+                for _ in range(ahead):
+                    self.shift()
+                return rule, prod
 
-        for _ in range(longest_ahead):
-            self.shift()
-
-        return longest_rule, longest_prod
+        return None, None
 
     def shift(self):
         """Shift the next token onto the stack."""
@@ -133,7 +128,7 @@ class BaseParser:
     def build_windows(self):
         """How far to look into the stack and tokens for each token."""
         token_set = {t for k, v in self.rules.items() for t in k.split()}
-        windows = {t: [] for t in token_set}
+        windows = {t: set() for t in token_set}
 
         for rule, prod in self.rules.items():
             tokens = rule.split()
@@ -142,7 +137,14 @@ class BaseParser:
                 behind = i + 1
                 ahead = prod['len'] - i - 1
                 window = (behind, ahead)
-                windows[token].append(window)
+                windows[token].add(window)
+
+        # Sort so that longest window is first. Use look-behind as tiebreaker
+        for token, window in windows.items():
+            windows[token] = sorted(
+                windows[token],
+                key=lambda x: (x[0] + x[1], x[0]),
+                reverse=True)
 
         return windows
 
