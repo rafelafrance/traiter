@@ -3,8 +3,9 @@
 # pylint: disable=too-few-public-methods
 
 
-from lib.parsers.base_parser import BaseParser
 from lib.lexers.sex_lexer import SexLexer
+from lib.parsers.base_parser import BaseParser
+import lib.parsers.reducers as reduce
 
 
 class SexParser(BaseParser):
@@ -18,19 +19,20 @@ class SexParser(BaseParser):
         """Return the parser rules."""
         return {
 
-            'sex': {'action': self.value_span, 'args': {'span': (0, )}},
+            'sex': {'action': reduce.value_span, 'args': {'span': (0, )}},
 
-            'sex quest': {'action': self.value_span, 'args': {'span': (0, 1)}},
+            'sex quest':
+                {'action': reduce.value_span, 'args': {'span': (0, 1)}},
 
-            'key sex': {'action': self.value_span, 'args': {'span': (1, )}},
+            'key sex': {'action': reduce.value_span, 'args': {'span': (1, )}},
 
             'key sex quest':
-                {'action': self.value_span, 'args': {'span': (1, 2)}},
+                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
 
-            'key word': {'action': self.value_span, 'args': {'span': (1, )}},
+            'key word': {'action': reduce.value_span, 'args': {'span': (1, )}},
 
             'key word quest':
-                {'action': self.value_span, 'args': {'span': (1, 2)}},
+                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
         }
 
     def post_process(self, results, args=None):

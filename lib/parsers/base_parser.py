@@ -1,6 +1,5 @@
 """Parse the notations."""
 
-import re
 from abc import abstractmethod
 
 
@@ -62,15 +61,15 @@ class BaseParser:
             return None, None
 
         tos = self.stack[-1]['token']
-        window = self.windows.get(tos, [])
+        windows = self.windows.get(tos, [])
 
-        for back, ahead in window:
-            tokens = self.stack[-back:] + self.tokens[:ahead]
+        for look_back, look_ahead in windows:
+            tokens = self.stack[-look_back:] + self.tokens[:look_ahead]
             rule = ' '.join(t['token'] for t in tokens)
             prod = self.rules.get(rule)
 
             if prod:
-                for _ in range(ahead):
+                for _ in range(look_ahead):
                     self.shift()
                 return rule, prod
 
@@ -151,30 +150,3 @@ class BaseParser:
     def post_process(self, results, args=None):
         """Post-process the results."""
         return results
-
-    @staticmethod
-    def value_span(stack, raw, args):
-        """Handle the case where the value spans one or more tokens."""
-        span = args['span']
-
-        if len(span) == 1:
-            value = stack[span[0]]['value']
-        else:
-            value = raw[stack[span[0]]['start']:stack[span[1]]['end']]
-
-        return {'value': value,
-                'start': stack[0]['start'],
-                'end': stack[-1]['end']}
-
-    @staticmethod
-    def strip_span(stack, raw, args):
-        """Trim characters from a value_span."""
-        result = BaseParser.value_span(stack, raw, args)
-
-        match = re.match(
-            f"^{args['strip']}(.*?){args['strip']}$",
-            result['value'])
-
-        return {'value': match[1],
-                'start': result['start'],
-                'end': result['end']}

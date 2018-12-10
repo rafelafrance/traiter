@@ -2,8 +2,9 @@
 # pylint: disable=global-statement,unused-argument
 
 import unittest
-from lib.parsers.base_parser import BaseParser
 from lib.lexers.base_lexer import BaseLexer
+from lib.parsers.base_parser import BaseParser
+import lib.parsers.reducers as reduce
 
 PAR = None
 
@@ -42,72 +43,25 @@ class TestBaseParser(unittest.TestCase):
                 'cross number': {'action': 'by_num', 'len': 2},
                 'cross cross cross': {'action': '3_crosses', 'len': 3},
             })
-        self.assertEqual(PAR.max_tokens, 3)
 
-    def test_find_stack_match_01(self):
+    def test_find_longest_match_01(self):
         PAR.stack = [
             {'token': 'number'}, {'token': 'to'}, {'token': 'number'}]
         self.assertEqual(
-            PAR.find_stack_match(),
+            PAR.find_longest_match(),
             ('number to number', {'action': 'range', 'len': 3}))
 
-    def test_find_stack_match_02(self):
+    def test_find_longest_match02(self):
         PAR.stack = [{'token': 'number'}, {'token': 'to'}]
-        self.assertEqual(PAR.find_stack_match(), (None, None))
+        self.assertEqual(PAR.find_longest_match(), (None, None))
 
-    def test_find_stack_match_03(self):
+    def test_find_longest_match_03(self):
         PAR.stack = [{'token': 'number'}, {'token': 'to'},
                      {'token': 'number'}, {'token': 'to'},
                      {'token': 'number'}]
         self.assertEqual(
-            PAR.find_stack_match(),
+            PAR.find_longest_match(),
             ('number to number', {'action': 'range', 'len': 3}))
-
-    def test_find_longer_match_01(self):
-        # shift one
-        #             stack       |  tokens
-        # from:       cross cross | cross cross
-        # to:   cross cross cross | cross
-        PAR.stack = [{'token': 'cross'}] * 2
-        PAR.tokens = [{'token': 'cross'}] * 2
-        rule = 'cross cross'
-        prod = {'action': '2_crosses', 'len': 2}
-        self.assertEqual(
-            PAR.find_longer_match(rule, prod),
-            ('cross cross cross', {'action': '3_crosses', 'len': 3}))
-        self.assertEqual(PAR.stack, [{'token': 'cross'}] * 3)
-        self.assertEqual(PAR.tokens, [{'token': 'cross'}])
-
-    def test_find_longer_match_02(self):
-        # no change
-        #             stack        |  tokens
-        # from:       cross number | cross cross
-        # to:         cross number | cross cross
-        PAR.stack = [{'token': 'cross'}, {'token': 'number'}]
-        PAR.tokens = [{'token': 'cross'}] * 2
-        rule = 'cross number'
-        prod = {'action': 'by_num', 'len': 2}
-        self.assertEqual(
-            PAR.find_longer_match(rule, prod),
-            ('cross number', {'action': 'by_num', 'len': 2}))
-        self.assertEqual(
-            PAR.stack, [{'token': 'cross'}, {'token': 'number'}])
-        self.assertEqual(PAR.tokens, [{'token': 'cross'}] * 2)
-
-    def test_find_longer_match_03(self):
-        # shift two
-        #             stack       |  tokens
-        # from:             cross | cross cross cross
-        # to:   cross cross cross | cross
-        PAR.stack = [{'token': 'cross'}]
-        PAR.tokens = [{'token': 'cross'}] * 3
-        rule = 'cross'
-        prod = {'action': '1_cross', 'len': 1}
-        self.assertEqual(
-            PAR.find_longer_match(rule, prod),
-            ('cross cross cross', {'action': '3_crosses', 'len': 3}))
-        self.assertEqual(PAR.stack, [{'token': 'cross'}] * 3)
-        self.assertEqual(PAR.tokens, [{'token': 'cross'}])
 
     def test_shift_01(self):
         PAR.stack = [1, 2, 3]
@@ -145,7 +99,7 @@ class TestBaseParser(unittest.TestCase):
         ]
         results = []
         prod = {
-            'action': PAR.value_span,
+            'action': reduce.value_span,
             'args': {'span': (0, 1)},
             'len': 2}
 
@@ -161,7 +115,7 @@ class TestBaseParser(unittest.TestCase):
     def test_build_windows_01(self):
         self.assertEqual(
             PAR.build_windows(),
-            {'cross': [(0, 0), (0, 1), (1, 0), (0, 1), (0, 2), (1, 1), (2, 0)],
-             'number': [(0, 2), (2, 0), (1, 0)],
-             'to': [(1, 1), (1, 1)],
-             'word': [(0, 2), (2, 0)]})
+            {'cross': [(3, 0), (2, 1), (1, 2), (2, 0), (1, 1), (1, 0)],
+             'number': [(3, 0), (1, 2), (2, 0)],
+             'to': [(2, 1)],
+             'word': [(3, 0), (1, 2)]})
