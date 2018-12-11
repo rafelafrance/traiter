@@ -1,24 +1,25 @@
 # The Traits Database Project
 
-# Install
+## What's this all about then
+**Challenge**: Extract trait information from unstructured or semi-structured natural history notations. That is, if I'm given text like, "This rather large female specimen is 12 lbs 7 oz and 3 feet and 7 inches in total length." I should be able to extract that the "sex = female", the "body mass = 5,641 g" and the "total length = 1,092 mm". Of course this is a rather straight-forward example. Natural history/museum notations are highly idiosyncratic and may come in several well known shorthand notations.
 
+## Install
 You will need to have Python3 (3.6+) installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
 ```
 git clone https://github.com/rafelafrance/traiter.git
 python3 -m pip install --user -r traiter/requirements.txt
 ```
 
-# Run
+## Run
 ```
 python3 traiter.py -i input.csv (change me!)
 ```
-# Running tests
+## Running tests
 ```
 pytest tests/
 ```
 
-# Parsing strategy
-
+## Parsing strategy
 I am basing the trait parsers on modified but simple shift-reduce parsers.
 
 Basic program flow:
