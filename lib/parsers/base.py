@@ -131,8 +131,7 @@ class Base:
 
         for rule, prod in self.rules.items():
             tokens = rule.split()
-            for i in range(len(tokens)):
-                token = tokens[i]
+            for i, token in enumerate(tokens):
                 behind = i + 1
                 ahead = prod['len'] - i - 1
                 window = (behind, ahead)
@@ -147,6 +146,7 @@ class Base:
 
         return windows
 
+    # pylint: disable=unused-argument, no-self-use
     def post_process(self, results, args=None):
         """Post-process the results."""
         return results

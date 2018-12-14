@@ -10,7 +10,6 @@ LEX = LexSex()
 class TestSexLexer(unittest.TestCase):
 
     def test_tokenize_01(self):
-        self.maxDiff = None
         self.assertEqual(
             #             0123456789.123456789.123456789.123456789.123456789.12
             LEX.tokenize('sex male males female females ? and is was ; other'),
