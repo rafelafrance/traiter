@@ -1,10 +1,10 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.lexers.life_stage_lexer import LifeStageLexer
+from lib.lexers.life_stage import LexLifeStage
 
 
-LEX = LifeStageLexer()
+LEX = LexLifeStage()
 
 
 class TestLifeStageLexer(unittest.TestCase):
@@ -51,9 +51,9 @@ class TestLifeStageLexer(unittest.TestCase):
     def test_tokenize_05(self):
         self.assertEqual(
             LEX.tokenize('yolksac yolk sac embryo'),
-            [{'token': 'before_birth', 'value': 'yolksac',
+            [{'token': 'keyless', 'value': 'yolksac',
               'start': 0, 'end': 7},
-             {'token': 'before_birth', 'value': 'yolk sac',
+             {'token': 'keyless', 'value': 'yolk sac',
               'start': 8, 'end': 16},
              {'token': 'word_plus', 'value': 'embryo',
               'start': 17, 'end': 23},

@@ -2,17 +2,17 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.testes_state_lexer import LexerTestesState
-from lib.parsers.base_parser import BaseParser
+from lib.lexers.testes_state import LexTestesState
+from lib.parsers.base import Base
 import lib.parsers.reducers as reduce
 
 
-class ParserTestesState(BaseParser):
+class ParseTestesState(Base):
     """Parser logic."""
 
     def __init__(self):
         """Initialize the parser."""
-        super().__init__(LexerTestesState)
+        super().__init__(LexTestesState)
 
     def rule_dict(self):
         """Return the parser rules."""

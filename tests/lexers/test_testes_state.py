@@ -1,10 +1,10 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.lexers.testes_state_lexer import LexerTestesState
+from lib.lexers.testes_state import LexTestesState
 
 
-LEX = LexerTestesState()
+LEX = LexTestesState()
 
 
 class TestTestesStateLexer(unittest.TestCase):

@@ -3,17 +3,17 @@
 # pylint: disable=too-few-public-methods
 
 
-from lib.lexers.sex_lexer import SexLexer
-from lib.parsers.base_parser import BaseParser
+from lib.lexers.sex import LexSex
+from lib.parsers.base import Base
 import lib.parsers.reducers as reduce
 
 
-class SexParser(BaseParser):
+class ParseSex(Base):
     """Parser logic."""
 
     def __init__(self):
         """Initialize the parser."""
-        super().__init__(SexLexer)
+        super().__init__(LexSex)
 
     def rule_dict(self):
         """Return the parser rules."""

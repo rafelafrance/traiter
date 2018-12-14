@@ -1,10 +1,10 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.parsers.testes_state_parser import ParserTestesState
+from lib.parsers.testes_state import ParseTestesState
 
 
-PAR = ParserTestesState()
+PAR = ParseTestesState()
 
 
 class TestParseTestesState(unittest.TestCase):

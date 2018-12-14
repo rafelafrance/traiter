@@ -1,10 +1,10 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.lexers.sex_lexer import SexLexer
+from lib.lexers.sex import LexSex
 
 
-LEX = SexLexer()
+LEX = LexSex()
 
 
 class TestSexLexer(unittest.TestCase):

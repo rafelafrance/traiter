@@ -2,22 +2,23 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.base_lexer import BaseLexer, isolate
+from lib.lexers.base import Base
+from lib.lexers.util import boundary
 
 
-class LifeStageLexer(BaseLexer):
+class LexLifeStage(Base):
     """Lex testes state annotations."""
 
     tokens = [
         ('skip', r' determin \w*'),
 
-        ('key', isolate(
+        ('key', boundary(
             r""" life \s* stage (?: \s* remarks )?
                  | age \s* class
                  | age \s* in \s* (?: hour | day ) s?
                  | age """)),
 
-        ('keyless', isolate(
+        ('keyless', boundary(
             r""" (?: after \s+ )?
                     (?: first | second | third | fourth | hatching
                         | 1st | 2nd | 3rd | \dth) \s+ year
@@ -29,12 +30,11 @@ class LifeStageLexer(BaseLexer):
                  | fleglings? | fledgelings? | chicks? | nestlings?
                  | juveniles? | juvéniles? | juvs?
                  | subadults? | subadultes? | subads? | sub-adults?
-                 | yearlings? | matures? | adults? | adulte? | ads? """)),
-
-        ('before_birth', isolate(r' yolk \s* sac ')),
+                 | yearlings? | matures? | adults? | adulte? | ads?
+                 | yolk \s* sac """)),
         # | embryos? | embryonic | fetus (:? es )?
 
-        ('word_plus', isolate(r' \w [\w?./\-]* ')),
+        ('word_plus', boundary(r' \w [\w?./\-]* ')),
 
         ('stop', r' [;,"?] | $ '),
 

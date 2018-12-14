@@ -2,8 +2,8 @@
 # pylint: disable=global-statement,unused-argument
 
 import unittest
-from lib.lexers.base_lexer import BaseLexer
-from lib.parsers.base_parser import BaseParser
+from lib.lexers.base import Base as BaseLexer
+from lib.parsers.base import Base as BaseParser
 import lib.parsers.reducers as reduce
 
 PAR = None

@@ -1,10 +1,10 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.lexers.base_lexer import BaseLexer
+from lib.lexers.base import Base
 
 
-LEX = BaseLexer()
+LEX = Base()
 
 
 class TestBaseLexer(unittest.TestCase):
@@ -47,12 +47,10 @@ class TestBaseLexer(unittest.TestCase):
     def test_tokenize_06(self):
         self.assertEqual(
             LEX.tokenize('99mm'),
-            [{'token': 'number', 'value': '99', 'start': 0, 'end': 2},
-             {'token': 'word', 'value': 'mm', 'start': 2, 'end': 4}])
+            [{'token': 'number', 'value': '99', 'start': 0, 'end': 2}])
 
     def test_tokenize_07(self):
         self.assertEqual(
             LEX.tokenize(':99.5mm;'),
             [{'token': 'number', 'value': '99.5', 'start': 1, 'end': 5},
-             {'token': 'word', 'value': 'mm', 'start': 5, 'end': 7},
              {'token': 'stop', 'value': ';', 'start': 7, 'end': 8}])

@@ -3,17 +3,17 @@
 # pylint: disable=too-few-public-methods
 
 from itertools import product
-from lib.lexers.life_stage_lexer import LifeStageLexer
-from lib.parsers.base_parser import BaseParser
+from lib.lexers.life_stage import LexLifeStage
+from lib.parsers.base import Base
 import lib.parsers.reducers as reduce
 
 
-class LifeStageParser(BaseParser):
+class ParseLifeStage(Base):
     """Parser logic."""
 
     def __init__(self):
         """Initialize the parser."""
-        super().__init__(LifeStageLexer)
+        super().__init__(LexLifeStage)
 
     def rule_dict(self):
         """Return the parser rules."""
