@@ -1,7 +1,8 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.lexers.life_stage import LexLifeStage
+from lib.lexers.lex_base import Token
+from lib.lexers.lex_life_stage import LexLifeStage
 
 
 LEX = LexLifeStage()
@@ -12,59 +13,60 @@ class TestLifeStageLexer(unittest.TestCase):
     def test_tokenize_01(self):
         self.assertEqual(
             LEX.tokenize('lifestage life stage lifestage remarks'),
-            [{'token': 'key', 'value': 'lifestage', 'start': 0, 'end': 9},
-             {'token': 'key', 'value': 'life stage', 'start': 10, 'end': 20},
-             {'token': 'key', 'value': 'lifestage remarks',
-              'start': 21, 'end': 38},
-             {'end': 38, 'start': 38, 'token': 'stop', 'value': ''}])
+            [Token(token='key', start=0, end=9),
+             Token(token='key', start=10, end=20),
+             Token(token='key', start=21, end=38)])
 
     def test_tokenize_02(self):
         self.assertEqual(
             LEX.tokenize('ageclass age class ageinhours age in days age'),
-            [{'token': 'key', 'value': 'ageclass', 'start': 0, 'end': 8},
-             {'token': 'key', 'value': 'age class', 'start': 9, 'end': 18},
-             {'token': 'key', 'value': 'ageinhours', 'start': 19, 'end': 29},
-             {'token': 'key', 'value': 'age in days', 'start': 30, 'end': 41},
-             {'token': 'key', 'value': 'age', 'start': 42, 'end': 45},
-             {'end': 45, 'start': 45, 'token': 'stop', 'value': ''}])
+            [Token(token='key', start=0, end=8),
+             Token(token='key', start=9, end=18),
+             Token(token='key', start=19, end=29),
+             Token(token='key', start=30, end=41),
+             Token(token='key', start=42, end=45)])
 
     def test_tokenize_03(self):
         self.assertEqual(
             LEX.tokenize(';,"'),
-            [{'token': 'stop', 'value': ';', 'start': 0, 'end': 1},
-             {'token': 'stop', 'value': ',', 'start': 1, 'end': 2},
-             {'token': 'stop', 'value': '"', 'start': 2, 'end': 3},
-             {'end': 3, 'start': 3, 'token': 'stop', 'value': ''}])
+            [Token(token='stop', start=0, end=1),
+             Token(token='stop', start=1, end=2),
+             Token(token='stop', start=2, end=3)])
 
     def test_tokenize_04(self):
         self.assertEqual(
             LEX.tokenize('year first year second year after hatching    year'),
-            [{'end': 4, 'start': 0, 'token': 'word_plus', 'value': 'year'},
-             {'token': 'keyless', 'value': 'first year',
-              'start': 5, 'end': 15},
-             {'token': 'keyless', 'value': 'second year',
-              'start': 16, 'end': 27},
-             {'token': 'keyless', 'value': 'after hatching    year',
-              'start': 28, 'end': 50},
-             {'end': 50, 'start': 50, 'token': 'stop', 'value': ''}])
+            [Token(token='word_plus', start=0, end=4),
+             Token(token='keyless', start=5, end=15),
+             Token(token='keyless', start=16, end=27),
+             Token(token='keyless', start=28, end=50)])
 
     def test_tokenize_05(self):
         self.assertEqual(
             LEX.tokenize('yolksac yolk sac embryo'),
-            [{'token': 'keyless', 'value': 'yolksac',
-              'start': 0, 'end': 7},
-             {'token': 'keyless', 'value': 'yolk sac',
-              'start': 8, 'end': 16},
-             {'token': 'word_plus', 'value': 'embryo',
-              'start': 17, 'end': 23},
-             {'end': 23, 'start': 23, 'token': 'stop', 'value': ''}])
+            [Token(token='keyless',  start=0, end=7),
+             Token(token='keyless',  start=8, end=16),
+             Token(token='word_plus', start=17, end=23)])
 
     def test_tokenize_06(self):
         self.assertEqual(
-            #             0123456789.123456789.123
             LEX.tokenize('age class=over-winter ;'),
-            [{'token': 'key', 'value': 'age class', 'start': 0, 'end': 9},
-             {'token': 'word_plus', 'value': 'over-winter',
-              'start': 10, 'end': 21},
-             {'end': 23, 'start': 22, 'token': 'stop', 'value': ';'},
-             {'end': 23, 'start': 23, 'token': 'stop', 'value': ''}])
+            [Token(token='key', start=0, end=9),
+             Token(token='word_plus', start=10, end=21),
+             Token(token='stop', start=22, end=23)])
+
+    def test_tokenize_07(self):
+        self.assertEqual(
+            #             0123456789.123456789.1234567
+            LEX.tokenize('LifeStage Remarks: 5-6 wks'),
+            [Token(token='key', start=0, end=17),
+             Token(token='word_plus', start=19, end=22),
+             Token(token='word_plus', start=23, end=26)])
+
+    def test_tokenize_08(self):
+        self.assertEqual(
+            #             0123456789.123456789.1234567
+            LEX.tokenize('age=u ad.'),
+            [Token(token='key', start=0, end=3),
+             Token(token='word_plus', start=4, end=5),
+             Token(token='keyless', start=6, end=8)])

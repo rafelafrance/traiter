@@ -6,7 +6,7 @@
 There are many possible strategies for parsing traits from these notations. For now, I'm using a modified shift-reduce parser and I am writing one parser per trait or trait set. (See below.)
 
 ## Install
-You will need to have Python3 (3.6+) installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
+You will need to have Python3 (3.7+) installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
 ```
 git clone https://github.com/rafelafrance/traiter.git
 python3 -m pip install --user -r traiter/requirements.txt

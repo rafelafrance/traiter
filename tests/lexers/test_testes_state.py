@@ -1,7 +1,8 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.lexers.testes_state import LexTestesState
+from lib.lexers.lex_base import Token
+from lib.lexers.lex_testes_state import LexTestesState
 
 
 LEX = LexTestesState()
@@ -12,101 +13,83 @@ class TestTestesStateLexer(unittest.TestCase):
     def test_tokenize_01(self):
         self.assertEqual(
             LEX.tokenize('testes descended'),
-            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token': 'descended',
-              'value': 'descended',
-              'start': 7,
-              'end': 16}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='descended', start=7, end=16)])
 
     def test_tokenize_02(self):
         self.assertEqual(
             LEX.tokenize('testes undescended'),
-            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token': 'descended',
-              'value': 'undescended',
-              'start': 7,
-              'end': 18}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='descended', start=7, end=18)])
 
     def test_tokenize_03(self):
         self.assertEqual(
             LEX.tokenize('testis undesc.'),
-            [{'token': 'testes', 'value': 'testis', 'start': 0, 'end': 6},
-             {'token': 'descended', 'value': 'undesc', 'start': 7, 'end': 13},
-             {'token': 'stop', 'value': '.', 'start': 13, 'end': 14}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='descended', start=7, end=13),
+             Token(token='stop', start=13, end=14)])
 
     def test_tokenize_04(self):
         self.assertEqual(
             LEX.tokenize('testicles undesc'),
-            [{'token': 'testes', 'value': 'testicles', 'start': 0, 'end': 9},
-             {'token': 'descended',
-              'value': 'undesc',
-              'start': 10,
-              'end': 16}])
+            [Token(token='testes', start=0, end=9),
+             Token(token='descended', start=10, end=16)])
 
     def test_tokenize_05(self):
         self.assertEqual(
             LEX.tokenize('testes not fully descended'),
-            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token': 'not', 'value': 'not', 'start': 7, 'end': 10},
-             {'token': 'fully', 'value': 'fully', 'start': 11, 'end': 16},
-             {'token': 'descended',
-              'value': 'descended',
-              'start': 17,
-              'end': 26}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='not', start=7, end=10),
+             Token(token='fully', start=11, end=16),
+             Token(token='descended', start=17, end=26)])
 
     def test_tokenize_06(self):
         self.assertEqual(
             LEX.tokenize('testes non-scrotal'),
-            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token': 'not', 'value': 'non', 'start': 7, 'end': 10},
-             {'token': 'scrotal', 'value': 'scrotal', 'start': 11, 'end': 18}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='not', start=7, end=10),
+             Token(token='scrotal', start=11, end=18)])
 
     def test_tokenize_07(self):
         self.assertEqual(
             LEX.tokenize('testes no scrotum'),
-            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token': 'not', 'value': 'no', 'start': 7, 'end': 9},
-             {'token': 'scrotal', 'value': 'scrotum', 'start': 10, 'end': 17}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='not', start=7, end=9),
+             Token(token='scrotal', start=10, end=17)])
 
     def test_tokenize_08(self):
         self.assertEqual(
             LEX.tokenize('testes nscr'),
-            [{'token': 'testes', 'value': 'testes', 'start': 0, 'end': 6},
-             {'token': 'other_words', 'value': 'nscr', 'start': 7, 'end': 11}])
+            [Token(token='testes', start=0, end=6),
+             Token(token='other_words', start=7, end=11)])
 
     def test_tokenize_09(self):
         self.assertEqual(
             LEX.tokenize('tes ns'),
-            [{'token': 'abbrev', 'value': 'tes', 'start': 0, 'end': 3},
-             {'token': 'state_abbrev', 'value': 'ns', 'start': 4, 'end': 6}])
+            [Token(token='abbrev', start=0, end=3),
+             Token(token='state_abbrev', start=4, end=6)])
 
     def test_tokenize_10(self):
         self.assertEqual(
             LEX.tokenize('tes undescend.'),
-            [{'token': 'abbrev', 'value': 'tes', 'start': 0, 'end': 3},
-             {'token': 'descended',
-              'value': 'undescend',
-              'start': 4,
-              'end': 13},
-             {'token': 'stop', 'value': '.', 'start': 13, 'end': 14}])
+            [Token(token='abbrev', start=0, end=3),
+             Token(token='descended', start=4, end=13),
+             Token(token='stop', start=13, end=14)])
 
     def test_tokenize_11(self):
         self.assertEqual(
             LEX.tokenize('t abdominal'),
-            [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
-             {'token': 'abdominal',
-              'value': 'abdominal',
-              'start': 2,
-              'end': 11}])
+            [Token(token='abbrev', start=0, end=1),
+             Token(token='abdominal', start=2, end=11)])
 
     def test_tokenize_12(self):
         self.assertEqual(
             LEX.tokenize('t nscr'),
-            [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
-             {'token': 'other_words', 'value': 'nscr', 'start': 2, 'end': 6}])
+            [Token(token='abbrev', start=0, end=1),
+             Token(token='other_words', start=2, end=6)])
 
     def test_tokenize_13(self):
         self.assertEqual(
             LEX.tokenize('t ns'),
-            [{'token': 'abbrev', 'value': 't', 'start': 0, 'end': 1},
-             {'token': 'state_abbrev', 'value': 'ns', 'start': 2, 'end': 4}])
+            [Token(token='abbrev', start=0, end=1),
+             Token(token='state_abbrev', start=2, end=4)])

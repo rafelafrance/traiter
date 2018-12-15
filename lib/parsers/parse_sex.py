@@ -3,12 +3,12 @@
 # pylint: disable=too-few-public-methods
 
 
-from lib.lexers.sex import LexSex
-from lib.parsers.base import Base
+from lib.lexers.lex_sex import LexSex
+from lib.parsers.parse_base import ParseBase
 import lib.parsers.reducers as reduce
 
 
-class ParseSex(Base):
+class ParseSex(ParseBase):
     """Parser logic."""
 
     def __init__(self):

@@ -1,9 +1,10 @@
 """Parse the notations."""
 
 from abc import abstractmethod
+from lib.lexers.lex_base import Token
 
 
-class Base:
+class ParseBase:
     """Shared parser logic."""
 
     def __init__(self, lexer):
@@ -22,17 +23,9 @@ class Base:
         The key is the rule and the value is a dictionary containing:
             - An 'action' which can be either:
                 - A string that will replace the entire rule.
-                - A function reference that performs an action for the
-                  reduction. This function will get the following arguments:
-                  - The portion of the stack that matches the the rule. So if
-                    the stack is 10 tokens deep and the rule has 3 tokens in it
-                    you will get the last (top) 3 items of the stack.
-                  - The raw input string so we can get data from that.
-                  - An arguments dictionary (see below).
+                - A function for building the results. The rule is removed.
             - And an optional 'args' dictionary. This dictionary will be passed
               to the 'action' function above.
-
-            ** NOTE: The key is normalized and data may be added to the value.
         """
         return {}
 
@@ -60,12 +53,12 @@ class Base:
         if not self.stack:
             return None, None
 
-        tos = self.stack[-1]['token']
+        tos = self.stack[-1].token
         windows = self.windows.get(tos, [])
 
         for look_back, look_ahead in windows:
             tokens = self.stack[-look_back:] + self.tokens[:look_ahead]
-            rule = ' '.join(t['token'] for t in tokens)
+            rule = ' '.join(t.token for t in tokens)
             prod = self.rules.get(rule)
 
             if prod:
@@ -88,12 +81,8 @@ class Base:
             del self.stack[-rule_len:]
             results.append(result)
         elif action:
-            token = {
-                'token': action,
-                'value': raw[
-                    self.stack[-rule_len]['start']:self.stack[-1]['end']],
-                'start': self.stack[-rule_len]['start'],
-                'end': self.stack[-1]['end']}
+            token = Token(
+                action, self.stack[-rule_len].start, self.stack[-1].end)
             del self.stack[-rule_len:]
             self.stack.append(token)
 
@@ -112,7 +101,7 @@ class Base:
         if not self.rules:
             raise ValueError('No rules for the parser.')
 
-        valid_tokens = {t[0] for t in self.lexer.tokens}
+        valid_tokens = {t.token for t in self.lexer.tokens}
         valid_tokens |= {v['action'] for k, v in self.rules.items()}
 
         errors = set()

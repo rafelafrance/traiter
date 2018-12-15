@@ -2,17 +2,17 @@
 # pylint: disable=global-statement,unused-argument
 
 import unittest
-from lib.lexers.base import Base as BaseLexer
-from lib.parsers.base import Base as BaseParser
-import lib.parsers.reducers as reduce
+from lib.lexers.lex_base import LexBase, Token
+from lib.parsers.parse_base import ParseBase
+from lib.parsers.reducers import Result, value_span
 
 PAR = None
 
 
-class MockParser(BaseParser):
+class MockParser(ParseBase):
 
     def __init__(self):
-        super().__init__(BaseLexer)
+        super().__init__(LexBase)
 
     def rule_dict(self):
         return {
@@ -30,7 +30,7 @@ def setup_module(module):
     PAR = MockParser()
 
 
-class TestBaseParser(unittest.TestCase):
+class TestParseBase(unittest.TestCase):
 
     def test_build_rules_01(self):
         self.assertEqual(
@@ -46,19 +46,24 @@ class TestBaseParser(unittest.TestCase):
 
     def test_find_longest_match_01(self):
         PAR.stack = [
-            {'token': 'number'}, {'token': 'to'}, {'token': 'number'}]
+            Token(token='number', start=0, end=0),
+            Token(token='to', start=0, end=0),
+            Token(token='number', start=0, end=0)]
         self.assertEqual(
             PAR.find_longest_match(),
             ('number to number', {'action': 'range', 'len': 3}))
 
     def test_find_longest_match02(self):
-        PAR.stack = [{'token': 'number'}, {'token': 'to'}]
+        PAR.stack = [Token(token='number', start=0, end=0),
+                     Token(token='to', start=0, end=0)]
         self.assertEqual(PAR.find_longest_match(), (None, None))
 
     def test_find_longest_match_03(self):
-        PAR.stack = [{'token': 'number'}, {'token': 'to'},
-                     {'token': 'number'}, {'token': 'to'},
-                     {'token': 'number'}]
+        PAR.stack = [Token(token='number', start=0, end=0),
+                     Token(token='to', start=0, end=0),
+                     Token(token='number', start=0, end=0),
+                     Token(token='to', start=0, end=0),
+                     Token(token='number', start=0, end=0)]
         self.assertEqual(
             PAR.find_longest_match(),
             ('number to number', {'action': 'range', 'len': 3}))
@@ -75,17 +80,17 @@ class TestBaseParser(unittest.TestCase):
         #      0123456789.123456789.123456789.12
         raw = 'before one x x after'
         PAR.stack = [
-            {'token': 'one', 'start': 7, 'end': 10},
-            {'token': 'cross', 'start': 11, 'end': 12},
-            {'token': 'cross', 'start': 14, 'end': 14},
+            Token(token='one', start=7, end=10),
+            Token(token='cross', start=11, end=12),
+            Token(token='cross', start=14, end=14),
         ]
         results = []
         prod = {'action': '2_crosses', 'len': 2}
         PAR.reduce(raw, results, prod)
         self.assertEqual(
             PAR.stack,
-            [{'token': 'one', 'start': 7, 'end': 10},
-             {'token': '2_crosses', 'start': 11, 'end': 14, 'value': 'x x'}])
+            [Token(token='one', start=7, end=10),
+             Token(token='2_crosses', start=11, end=14)])
         self.assertEqual(results, [])
 
     def test_reduce_02(self):
@@ -93,20 +98,17 @@ class TestBaseParser(unittest.TestCase):
         #      0123456789.123456789.123456789.12
         raw = 'before one x x after'
         PAR.stack = [
-            {'token': 'one', 'start': 7, 'end': 10},
-            {'token': 'cross', 'start': 11, 'end': 12},
-            {'token': 'cross', 'start': 14, 'end': 14},
+            Token(token='one', start=7, end=10),
+            Token(token='cross', start=11, end=12),
+            Token(token='cross', start=14, end=14),
         ]
         results = []
-        prod = {
-            'action': reduce.value_span,
-            'args': {'span': (0, 1)},
-            'len': 2}
+        prod = {'action': value_span, 'args': {'span': (0, 1)}, 'len': 2}
 
         PAR.reduce(raw, results, prod)
         self.assertEqual(
-            PAR.stack, [{'token': 'one', 'start': 7, 'end': 10}])
-        self.assertEqual(results, [{'value': 'x x', 'start': 11, 'end': 14}])
+            PAR.stack, [Token(token='one', start=7, end=10)])
+        self.assertEqual(results, [Result(value='x x', start=11, end=14)])
 
     def test_post_process_01(self):
         results = ['test']

@@ -2,23 +2,23 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.base import Base
+from lib.lexers.lex_base import LexBase, LexRule
 from lib.lexers.util import boundary
 
 
-class LexLifeStage(Base):
+class LexLifeStage(LexBase):
     """Lex testes state annotations."""
 
     tokens = [
-        ('skip', r' determin \w*'),
+        LexRule('skip', r' determin \w*'),
 
-        ('key', boundary(
+        LexRule('key', boundary(
             r""" life \s* stage (?: \s* remarks )?
                  | age \s* class
                  | age \s* in \s* (?: hour | day ) s?
                  | age """)),
 
-        ('keyless', boundary(
+        LexRule('keyless', boundary(
             r""" (?: after \s+ )?
                     (?: first | second | third | fourth | hatching
                         | 1st | 2nd | 3rd | \dth) \s+ year
@@ -34,8 +34,8 @@ class LexLifeStage(Base):
                  | yolk \s* sac """)),
         # | embryos? | embryonic | fetus (:? es )?
 
-        ('word_plus', boundary(r' \w [\w?./\-]* ')),
+        LexRule('word_plus', boundary(r' \w [\w?./\-]* ')),
 
-        ('stop', r' [;,"?] | $ '),
+        LexRule('stop', r' [;,"?] | $ '),
 
-        ('joiner', r' [/-] ')]
+        LexRule('joiner', r' [/-] ')]

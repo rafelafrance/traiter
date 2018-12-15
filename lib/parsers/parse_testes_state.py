@@ -2,12 +2,12 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.testes_state import LexTestesState
-from lib.parsers.base import Base
+from lib.lexers.lex_testes_state import LexTestesState
+from lib.parsers.parse_base import ParseBase
 import lib.parsers.reducers as reduce
 
 
-class ParseTestesState(Base):
+class ParseTestesState(ParseBase):
     """Parser logic."""
 
     def __init__(self):
