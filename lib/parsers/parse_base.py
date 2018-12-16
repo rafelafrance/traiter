@@ -1,8 +1,10 @@
 """Parse the notations."""
 
-from dataclasses import dataclass
-from typing import Any, Dict, List, Callable
+# pylint: disable=missing-docstring
+
 from abc import abstractmethod
+from typing import Any, Dict, List, Callable
+from dataclasses import dataclass
 from lib.lexers.lex_base import Token, Tokens
 
 
@@ -39,15 +41,7 @@ class ParseBase:
 
     @abstractmethod
     def rule_dict(self) -> Rules:
-        """Return the parser rules for the trait.
-
-        The key is the rule and the value is a dictionary containing:
-            - An 'action' which can be either:
-                - A string that will replace the entire rule.
-                - A function for building the results. The rule is removed.
-            - And an optional 'args' dictionary. This dictionary will be passed
-              to the 'action' function above.
-        """
+        """Return the parser rules for the trait."""
         return {}
 
     def parse(self, raw: str) -> Results:
@@ -88,9 +82,9 @@ class ParseBase:
 
         return None, None
 
-    def shift(self, n=1):
+    def shift(self, count=1):
         """Shift the next token onto the stack."""
-        for i in range(n):
+        for _ in range(count):
             self.stack.append(self.tokens.pop(0))
 
     def action(self, raw: str, results: Results, prod: Action):

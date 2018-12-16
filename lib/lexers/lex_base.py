@@ -1,9 +1,9 @@
 """Tokenize the notations."""
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,missing-docstring
 
-from dataclasses import dataclass
 from typing import List
+from dataclasses import dataclass
 import regex
 from lib.lexers.util import boundary
 
