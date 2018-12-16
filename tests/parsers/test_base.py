@@ -3,7 +3,7 @@
 
 import unittest
 from lib.lexers.lex_base import LexBase, Token
-from lib.parsers.parse_base import ParseBase
+from lib.parsers.parse_base import ParseBase, Action
 from lib.parsers.reducers import Result, value_span
 
 PAR = None
@@ -16,12 +16,12 @@ class MockParser(ParseBase):
 
     def rule_dict(self):
         return {
-            'word   to   word': {'action': 'len_width'},
-            'number   to   number': {'action': 'range'},
-            'cross': {'action': '1_cross'},
-            'cross   cross': {'action': '2_crosses'},
-            'cross   number': {'action': 'by_num'},
-            'cross   cross cross': {'action': '3_crosses'},
+            'word   to   word': Action(replace='len_width'),
+            'number   to   number': Action(replace='range'),
+            'cross': Action(replace='1_cross'),
+            'cross   cross': Action(replace='2_crosses'),
+            'cross   number': Action(replace='by_num'),
+            'cross   cross cross': Action(replace='3_crosses'),
         }
 
 
@@ -36,12 +36,12 @@ class TestParseBase(unittest.TestCase):
         self.assertEqual(
             PAR.rules,
             {
-                'word to word': {'action': 'len_width', 'len': 3},
-                'number to number': {'action': 'range', 'len': 3},
-                'cross': {'action': '1_cross', 'len': 1},
-                'cross cross': {'action': '2_crosses', 'len': 2},
-                'cross number': {'action': 'by_num', 'len': 2},
-                'cross cross cross': {'action': '3_crosses', 'len': 3},
+                'word to word': Action(replace='len_width', len=3),
+                'number to number': Action(replace='range', len=3),
+                'cross': Action(replace='1_cross', len=1),
+                'cross cross': Action(replace='2_crosses', len=2),
+                'cross number': Action(replace='by_num', len=2),
+                'cross cross cross': Action(replace='3_crosses', len=3),
             })
 
     def test_find_longest_match_01(self):
@@ -51,7 +51,7 @@ class TestParseBase(unittest.TestCase):
             Token(token='number', start=0, end=0)]
         self.assertEqual(
             PAR.find_longest_match(),
-            ('number to number', {'action': 'range', 'len': 3}))
+            ('number to number', Action(replace='range', len=3)))
 
     def test_find_longest_match02(self):
         PAR.stack = [Token(token='number', start=0, end=0),
@@ -66,7 +66,7 @@ class TestParseBase(unittest.TestCase):
                      Token(token='number', start=0, end=0)]
         self.assertEqual(
             PAR.find_longest_match(),
-            ('number to number', {'action': 'range', 'len': 3}))
+            ('number to number', Action(replace='range', len=3)))
 
     def test_shift_01(self):
         PAR.stack = [1, 2, 3]
@@ -75,18 +75,17 @@ class TestParseBase(unittest.TestCase):
         self.assertEqual(PAR.stack, [1, 2, 3, 4])
         self.assertEqual(PAR.tokens, [5, 6])
 
-    def test_reduce_01(self):
+    def test_replace_01(self):
         # reduce to token
         #      0123456789.123456789.123456789.12
-        raw = 'before one x x after'
         PAR.stack = [
             Token(token='one', start=7, end=10),
             Token(token='cross', start=11, end=12),
             Token(token='cross', start=14, end=14),
         ]
         results = []
-        prod = {'action': '2_crosses', 'len': 2}
-        PAR.reduce(raw, results, prod)
+        prod = Action(replace='2_crosses', len=2)
+        PAR.replace(prod)
         self.assertEqual(
             PAR.stack,
             [Token(token='one', start=7, end=10),
@@ -103,7 +102,7 @@ class TestParseBase(unittest.TestCase):
             Token(token='cross', start=14, end=14),
         ]
         results = []
-        prod = {'action': value_span, 'args': {'span': (0, 1)}, 'len': 2}
+        prod = Action(reduce=value_span, args={'span': (0, 1)}, len=2)
 
         PAR.reduce(raw, results, prod)
         self.assertEqual(

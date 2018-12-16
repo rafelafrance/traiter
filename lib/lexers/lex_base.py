@@ -3,8 +3,15 @@
 # pylint: disable=too-few-public-methods
 
 from dataclasses import dataclass
+from typing import List
 import regex
 from lib.lexers.util import boundary
+
+
+@dataclass
+class LexRule:
+    token: str
+    regex: str
 
 
 @dataclass
@@ -14,10 +21,7 @@ class Token:
     end: int = 0
 
 
-@dataclass
-class LexRule:
-    token: str
-    regex: str
+Tokens = List[Token]
 
 
 class LexBase:
@@ -29,7 +33,7 @@ class LexBase:
             [f' (?P<{r.token}> {r.regex} ) ' for r in self.tokens])
         self.regex = regex.compile(joined, regex.VERBOSE | regex.IGNORECASE)
 
-    def tokenize(self, raw: str):
+    def tokenize(self, raw: str) -> Tokens:
         """Split the text into tokens."""
         tokens = []
 

@@ -3,7 +3,7 @@
 # pylint: disable=too-few-public-methods
 
 from lib.lexers.lex_testes_state import LexTestesState
-from lib.parsers.parse_base import ParseBase
+from lib.parsers.parse_base import ParseBase, Action
 import lib.parsers.reducers as reduce
 
 
@@ -17,68 +17,68 @@ class ParseTestesState(ParseBase):
     def rule_dict(self):
         """Return the parser rules."""
         return {
-            'label testes': {'action': 'record'},
-            'label abbrev': {'action': 'record'},
+            'label testes': Action(replace='record'),
+            'label abbrev': Action(replace='record'),
 
-            'descended': {'action': 'desc'},
-            'not descended': {'action': 'desc'},
-            'abdominal descended': {'action': 'desc'},
-            'abdominal not descended': {'action': 'desc'},
-            'fully descended': {'action': 'desc'},
-            'not fully descended': {'action': 'desc'},
-            'partially descended': {'action': 'desc'},
+            'descended': Action(replace='desc'),
+            'not descended': Action(replace='desc'),
+            'abdominal descended': Action(replace='desc'),
+            'abdominal not descended': Action(replace='desc'),
+            'fully descended': Action(replace='desc'),
+            'not fully descended': Action(replace='desc'),
+            'partially descended': Action(replace='desc'),
 
-            'size': {'action': 'desc'},
-            'size descended': {'action': 'desc'},
-            'size not descended': {'action': 'desc'},
+            'size': Action(replace='desc'),
+            'size descended': Action(replace='desc'),
+            'size not descended': Action(replace='desc'),
 
             'label not testes':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
             'label scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
 
             'record desc':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'record state_abbrev':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'record abdominal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'record scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'record not scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
             'record other_words':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
             'record not testes':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
 
             'abbrev desc':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'abbrev abdominal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'abbrev not scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
             'abbrev scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'abbrev other_words':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
 
             'testes desc':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'testes state_abbrev':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'testes abdominal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'testes scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'testes not scrotal':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
             'testes other_words':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
 
             'not testes':
-                {'action': reduce.value_span, 'args': {'span': (0, 1)}},
+                Action(reduce=reduce.value_span, args={'span': (0, 1)}),
             'not scrotal':
-                {'action': reduce.value_span, 'args': {'span': (0, 1)}},
+                Action(reduce=reduce.value_span, args={'span': (0, 1)}),
             'not gonads':
-                {'action': reduce.value_span, 'args': {'span': (0, 1)}}}
+                Action(reduce=reduce.value_span, args={'span': (0, 1)})}

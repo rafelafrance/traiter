@@ -1,18 +1,11 @@
 """Functions for reducing parser results."""
 
-from dataclasses import dataclass
-from typing import Any
 import regex
+from lib.parsers.parse_base import Result
+from lib.lexers.lex_base import Tokens
 
 
-@dataclass
-class Result:
-    value: Any
-    start: int = 0
-    end: int = 0
-
-
-def value_span(stack, raw, args):
+def value_span(stack: Tokens, raw: str, args: dict) -> Result:
     """Handle the case where the value spans one or more tokens."""
     span = args['span']
 
@@ -27,7 +20,7 @@ def value_span(stack, raw, args):
     return Result(value=value, start=stack[0].start, end=stack[-1].end)
 
 
-def strip_span(stack, raw, args):
+def strip_span(stack: Tokens, raw: str, args: dict) -> Result:
     """Trim characters from a value_span."""
     result = value_span(stack, raw, args)
 

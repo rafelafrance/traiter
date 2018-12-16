@@ -4,7 +4,7 @@
 
 from itertools import product
 from lib.lexers.lex_life_stage import LexLifeStage
-from lib.parsers.parse_base import ParseBase
+from lib.parsers.parse_base import ParseBase, Action
 import lib.parsers.reducers as reduce
 
 
@@ -19,16 +19,16 @@ class ParseLifeStage(ParseBase):
         """Return the parser rules."""
         rule_dict = {
             'keyless':
-                {'action': reduce.value_span, 'args': {'span': (0, )}},
+                Action(reduce=reduce.value_span, args={'span': (0, )}),
 
             'key keyless':
-                {'action': reduce.value_span, 'args': {'span': (1, )}},
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
             'key word_plus keyless':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
             'key word_plus joiner keyless':
-                {'action': reduce.value_span, 'args': {'span': (1, 3)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 3)}),
             'key keyless joiner keyless':
-                {'action': reduce.value_span, 'args': {'span': (1, 3)}}}
+                Action(reduce=reduce.value_span, args={'span': (1, 3)})}
 
         for j in range(1, 6):
             for prod in product(['keyless', 'word_plus'], repeat=j):
@@ -37,7 +37,7 @@ class ParseLifeStage(ParseBase):
                 span = (1, )
                 if j > 1:
                     span = (1, j)
-                rule_dict[rule] = {
-                    'action': reduce.value_span, 'args': {'span': span}}
+                rule_dict[rule] = Action(
+                    reduce=reduce.value_span, args={'span': span})
 
         return rule_dict

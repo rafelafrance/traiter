@@ -4,7 +4,7 @@
 
 
 from lib.lexers.lex_sex import LexSex
-from lib.parsers.parse_base import ParseBase
+from lib.parsers.parse_base import ParseBase, Action
 import lib.parsers.reducers as reduce
 
 
@@ -19,20 +19,23 @@ class ParseSex(ParseBase):
         """Return the parser rules."""
         return {
 
-            'sex': {'action': reduce.value_span, 'args': {'span': (0, )}},
+            'sex':
+                Action(reduce=reduce.value_span, args={'span': (0, )}),
 
             'sex quest':
-                {'action': reduce.value_span, 'args': {'span': (0, 1)}},
+                Action(reduce=reduce.value_span, args={'span': (0, 1)}),
 
-            'key sex': {'action': reduce.value_span, 'args': {'span': (1, )}},
+            'key sex':
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
 
             'key sex quest':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
 
-            'key word': {'action': reduce.value_span, 'args': {'span': (1, )}},
+            'key word':
+                Action(reduce=reduce.value_span, args={'span': (1, )}),
 
             'key word quest':
-                {'action': reduce.value_span, 'args': {'span': (1, 2)}},
+                Action(reduce=reduce.value_span, args={'span': (1, 2)}),
         }
 
     def post_process(self, results, args=None):

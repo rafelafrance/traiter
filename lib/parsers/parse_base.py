@@ -1,7 +1,28 @@
 """Parse the notations."""
 
+from dataclasses import dataclass
+from typing import Any, Dict, List, Callable
 from abc import abstractmethod
-from lib.lexers.lex_base import Token
+from lib.lexers.lex_base import Token, Tokens
+
+
+@dataclass
+class Action:
+    replace: str = None
+    reduce: Callable = None
+    args: Dict = None
+    len: int = 0
+
+
+@dataclass
+class Result:
+    value: Any
+    start: int = 0
+    end: int = 0
+
+
+Rules = Dict[str, Action]
+Results = List[Result]
 
 
 class ParseBase:
@@ -10,14 +31,14 @@ class ParseBase:
     def __init__(self, lexer):
         """Initialize the parser."""
         self.lexer = lexer()
-        self.stack = []
-        self.tokens = []
-        self.rules = self.build_rules()
+        self.stack: Tokens = []
+        self.tokens: Tokens = []
+        self.rules: Rules = self.build_rules()
         self.validate_rules()
         self.windows = self.build_windows()
 
     @abstractmethod
-    def rule_dict(self):
+    def rule_dict(self) -> Rules:
         """Return the parser rules for the trait.
 
         The key is the rule and the value is a dictionary containing:
@@ -29,7 +50,7 @@ class ParseBase:
         """
         return {}
 
-    def parse(self, raw):
+    def parse(self, raw: str) -> Results:
         """Parse the tokens."""
         self.tokens = self.lexer.tokenize(raw)
         self.tokens.append(self.lexer.sentinel_token)
@@ -42,7 +63,7 @@ class ParseBase:
             rule, prod = self.find_longest_match()
 
             if rule:
-                self.reduce(raw, results, prod)
+                self.action(raw, results, prod)
             else:
                 self.shift()
 
@@ -62,37 +83,42 @@ class ParseBase:
             prod = self.rules.get(rule)
 
             if prod:
-                for _ in range(look_ahead):
-                    self.shift()
+                self.shift(look_ahead)
                 return rule, prod
 
         return None, None
 
-    def shift(self):
+    def shift(self, n=1):
         """Shift the next token onto the stack."""
-        self.stack.append(self.tokens.pop(0))
+        for i in range(n):
+            self.stack.append(self.tokens.pop(0))
+
+    def action(self, raw: str, results: Results, prod: Action):
+        """Reduce the stack given the rule's action."""
+        if prod.reduce:
+            self.reduce(raw, results, prod)
+        elif prod.replace:
+            self.replace(prod)
 
     def reduce(self, raw, results, prod):
-        """Reduce the stack given the rule."""
-        action = prod['action']
-        rule_len = prod['len']
-        if callable(action):
-            result = action(self.stack[-rule_len:], raw, prod['args'])
-            del self.stack[-rule_len:]
-            results.append(result)
-        elif action:
-            token = Token(
-                action, self.stack[-rule_len].start, self.stack[-1].end)
-            del self.stack[-rule_len:]
-            self.stack.append(token)
+        """Reduce the stack tokens with the action."""
+        result = prod.reduce(self.stack[-prod.len:], raw, prod.args)
+        del self.stack[-prod.len:]
+        results.append(result)
 
-    def build_rules(self):
+    def replace(self, prod):
+        """Replace the stack tokens with the replacement token."""
+        token = Token(
+            prod.replace, self.stack[-prod.len].start, self.stack[-1].end)
+        del self.stack[-prod.len:]
+        self.stack.append(token)
+
+    def build_rules(self) -> Rules:
         """Build the parser rules and check for simple errors."""
-        rules = {' '.join(k.split()): v
-                 for k, v in self.rule_dict().items()}
+        rules = {' '.join(k.split()): v for k, v in self.rule_dict().items()}
 
         for rule, prod in rules.items():
-            prod['len'] = rule.count(' ') + 1
+            prod.len = rule.count(' ') + 1
 
         return rules
 
@@ -102,7 +128,7 @@ class ParseBase:
             raise ValueError('No rules for the parser.')
 
         valid_tokens = {t.token for t in self.lexer.tokens}
-        valid_tokens |= {v['action'] for k, v in self.rules.items()}
+        valid_tokens |= {v.replace for k, v in self.rules.items() if v.replace}
 
         errors = set()
         for rule, _ in self.rules.items():
@@ -122,7 +148,7 @@ class ParseBase:
             tokens = rule.split()
             for i, token in enumerate(tokens):
                 behind = i + 1
-                ahead = prod['len'] - i - 1
+                ahead = prod.len - i - 1
                 window = (behind, ahead)
                 windows[token].add(window)
 
@@ -136,6 +162,6 @@ class ParseBase:
         return windows
 
     # pylint: disable=unused-argument, no-self-use
-    def post_process(self, results, args=None):
+    def post_process(self, results: Results, args=None) -> Results:
         """Post-process the results."""
         return results
