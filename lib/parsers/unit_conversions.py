@@ -1,7 +1,7 @@
 """Common unit utilities."""
 
 
-LENGTH_CONVERSIONS = {
+LENGTH = {
     '': 1.0,
     '_mm_': 1.0,
     'c.m.': 10.0,
@@ -46,7 +46,7 @@ LENGTH_CONVERSIONS = {
     'mm.s': 1.0,
     'mms': 1.0}
 
-MASS_CONVERSIONS = {
+MASS = {
     '': 1.0,
     '_g_': 1.0,
     'g': 1.0,

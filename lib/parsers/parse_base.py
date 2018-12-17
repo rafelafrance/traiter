@@ -19,6 +19,7 @@ class Action:
 @dataclass
 class Result:
     value: Any
+    inferred: bool = False
     start: int = 0
     end: int = 0
 

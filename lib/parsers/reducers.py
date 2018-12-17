@@ -1,8 +1,12 @@
 """Functions for reducing parser results."""
 
 import regex
-from lib.parsers.parse_base import Result
 from lib.lexers.lex_base import Tokens
+from lib.parsers.parse_base import Result
+import lib.parsers.unit_conversions as conversions
+
+
+MM = regex.compile('mm | millimeters', regex.IGNORECASE | regex.VERBOSE)
 
 
 def value_span(stack: Tokens, raw: str, args: dict) -> Result:
@@ -27,3 +31,27 @@ def strip_span(stack: Tokens, raw: str, args: dict) -> Result:
     match = regex.match(f"^{args['strip']}(.*?){args['strip']}$", result.value)
 
     return Result(value=match[1], start=result.start, end=result.end)
+
+
+def len_in_key(stack: Tokens, raw: str, args: dict) -> Result:
+    """Pull the length units from the key."""
+    start = stack[args['value']].start
+    end = stack[args['value']].end
+    value = float(raw[start:end])
+
+    return Result(
+        value=value, inferred=False, start=stack[0].start, end=stack[-1].end)
+
+
+def key_len_units(stack: Tokens, raw: str, args: dict) -> Result:
+    """Key, length, & units are in separate tokens."""
+    start = stack[args['units']].start
+    end = stack[args['units']].end
+    units = raw[start:end]
+
+    start = stack[args['value']].start
+    end = stack[args['value']].end
+    value = float(raw[start:end]) * conversions.LENGTH[units]
+
+    return Result(
+        value=value, inferred=False, start=stack[0].start, end=stack[-1].end)

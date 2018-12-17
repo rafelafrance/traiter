@@ -81,4 +81,5 @@ class ParseTestesState(ParseBase):
             'not scrotal':
                 Action(reduce=reduce.value_span, args={'span': (0, 1)}),
             'not gonads':
-                Action(reduce=reduce.value_span, args={'span': (0, 1)})}
+                Action(reduce=reduce.value_span, args={'span': (0, 1)})
+        }

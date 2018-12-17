@@ -2,46 +2,54 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.lex_base import LexBase, LexRule
-from lib.lexers.util import boundary
+from lib.lexers.lex_base import LexBase, LexRule, LexRules
 
 
 class LexTestesState(LexBase):
     """Lex testes state annotations."""
 
-    tokens = [
-        LexBase.stop,  # We don't want to confuse prefix and suffix notation
+    def rule_list(self) -> LexRules:
+        return [
+            self.stop,  # Don't confuse prefix and suffix notation
 
-        LexRule(
-            'label',
-            boundary(r' reproductive .? (?: data |state | condition ) ')),
+            LexRule(
+                'label',
+                self.boundary(
+                    r""" reproductive .? (?: data |state | condition ) """)),
 
-        LexRule('testes', boundary(r' testes |  testis | testicles ')),
+            LexRule(
+                'testes', self.boundary(r' testes |  testis | testicles ')),
 
-        LexRule('fully', boundary(r' fully | (:? in ) complete (?: ly) ')),
+            LexRule(
+                'fully',
+                self.boundary(r' fully | (:? in ) complete (?: ly) ')),
 
-        LexRule('not', boundary(r' not | non | no | semi | sub ')),
+            LexRule('not', self.boundary(r' not | non | no | semi | sub ')),
 
-        LexRule(
-            'descended',
-            boundary(r' (?: un)? (?: des?c?end (?: ed)? | desc ) ')),
+            LexRule(
+                'descended',
+                self.boundary(r' (?: un)? (?: des?c?end (?: ed)? | desc ) ')),
 
-        LexRule('abbrev', boundary(r' tes | ts | t ')),
+            LexRule('abbrev', self.boundary(r' tes | ts | t ')),
 
-        LexRule('scrotal', boundary(r' scrotum | scrotal | scrot ')),
+            LexRule(
+                'scrotal',
+                self.boundary(r' scrotum | scrotal | scrot ')),
 
-        LexRule('partially', boundary(r' partially | part ')),
+            LexRule('partially', self.boundary(r' partially | part ')),
 
-        LexRule(
-            'other_words',
-            boundary(
-                (r' cryptorchism | cryptorchid | monorchism | monorchid '
-                 r' | nscr | inguinal'))),
+            LexRule(
+                'other_words',
+                self.boundary(
+                    r""" cryptorchism | cryptorchid | monorchism | monorchid
+                        | nscr | inguinal""")),
 
-        LexRule('state_abbrev', boundary(r' scr | ns | sc')),
+            LexRule('state_abbrev', self.boundary(r' scr | ns | sc')),
 
-        LexRule('abdominal', boundary(r' abdominal | abdomin | abdom ')),
+            LexRule('abdominal',
+                    self.boundary(r' abdominal | abdomin | abdom ')),
 
-        LexRule('size', boundary(r' visible | enlarged | small ')),
+            LexRule('size', self.boundary(r' visible | enlarged | small ')),
 
-        LexRule('gonads', boundary(r' gonads? '))]
+            LexRule('gonads', self.boundary(r' gonads? ')),
+        ]

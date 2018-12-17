@@ -2,23 +2,24 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.lex_base import LexBase, LexRule
-from lib.lexers.util import boundary
+from lib.lexers.lex_base import LexBase, LexRule, LexRules
 
 
 class LexSex(LexBase):
     """Lex testes state annotations."""
 
-    tokens = [
-        LexBase.stop,  # We don't want to confuse prefix and suffix notation
+    def rule_list(self) -> LexRules:
+        return [
+            self.stop,  # Don't confuse prefix and suffix notation
 
-        LexRule('key', boundary(r' sex ')),
+            LexRule('key', self.boundary(r' sex ')),
 
-        LexRule('sex', boundary(r' males? | females? ')),
+            LexRule('sex', self.boundary(r' males? | females? ')),
 
-        LexRule('quest', r' \? '),
+            LexRule('quest', r' \? '),
 
-        # These are words that indicate "sex" is not a key
-        LexRule('skip', boundary(r' and | is | was ')),
+            # These are words that indicate "sex" is not a key
+            LexRule('skip', self.boundary(r' and | is | was ')),
 
-        LexBase.word]
+            self.word,
+        ]
