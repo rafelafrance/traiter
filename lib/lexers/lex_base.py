@@ -112,11 +112,14 @@ class LexBase:
         return LexRule('number', ' (?&decimal) ')
 
     @property
+    def fraction(self):
+        return LexRule('fraction', r' (?: \d+ \s+ )? \d+ / \d+ ')
+
+    @property
     def range(self):
         return LexRule(
             'range', r' (?&decimal) (?: \s* (?: - | to ) \s* (?&decimal) )? ')
 
-    # Used to parse numeric ranges
     @property
     def to(self):
         return LexRule('to', r' - | to ')
@@ -130,20 +133,20 @@ class LexBase:
     def shorthand_key(self):
         return LexRule('shorthand_key', self.boundary(r"""
             on \s* tag | specimens? | catalog
-            | measurements (?: \s+ [\p{Letter}]+ )?
+            | meas(?: urements )? [:.,]? (?: \s* length \s* )?
+                (?: \s+ \(? [\p{Letter}]+ \)? \.? ){0,2}
             | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-            | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
             | mesurements | Measurementsnt
         """))
 
     @property
     def shorthand(self):
         return LexRule('shorthand', r"""
-            (?<! [:/-] )            # Handle list notation
+            (?<! [:-] )            # Handle list notation
             (?: (?&decimal) | [?x] )
-            (?: [:/-] (?&decimal) ){3}
-            (?: \s* [:/-=]? \s* (?&decimal) | [?x] )?
-            (?! [:/-] )             # Handle list notation
+            (?: [:-] (?: (?&decimal) | [?x]{1,2}) ){2,3}
+            (?: (?: [=:-] | \s+ ) (?: (?&decimal) | [?x]{1,2})? )
+            (?! [\s:/-] )          # Handle list notation
         """)
 
     @property
@@ -166,6 +169,5 @@ class LexBase:
     @property
     def metric_len(self):
         return LexRule('metric_len', r"""
-            (?: [cm] [\s.]? m ) [\s.]? s?
-            | meters? | millimeters? | centimeters?
+            (?: [cm] [\s.]? m ) | meters? | millimeters? | centimeters?
         """)

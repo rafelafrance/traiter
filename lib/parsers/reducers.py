@@ -9,6 +9,18 @@ import lib.parsers.unit_conversions as conv
 MM = regex.compile('mm | millimeters', regex.IGNORECASE | regex.VERBOSE)
 SHORTHAND = regex.compile(r'[:/-]', regex.VERBOSE)
 RANGE = regex.compile(r' - | to ', regex.VERBOSE)
+FRACTION = regex.compile(r' \/ ', regex.VERBOSE)
+
+
+def convert_units(value: float, units: str) -> float:
+    """Normalize the units to millimeters or grams."""
+    factor = conv.UNITS[units.lower()]
+    if isinstance(value, list):
+        value = [round(v * factor, 2) for v in value]
+    else:
+        value *= factor
+        value = round(value, 2)
+    return value
 
 
 def token_to_str(stack: Tokens, raw: str, idx: int) -> str:
@@ -102,10 +114,7 @@ def length(stack: Tokens, raw: str, args: dict) -> Result:
     units = token_to_str(stack, raw, args['units']) if has_units else ''
 
     value = token_to_floats(stack, raw, args['value'])
-    if isinstance(value, list):
-        value = [v * conv.LENGTH[units] for v in value]
-    else:
-        value *= conv.LENGTH[units]
+    value = convert_units(value, units)
 
     return Result(
         value=value,
@@ -140,9 +149,27 @@ def english_len(stack: Tokens, raw: str, args: dict) -> Result:
     """
     feet = token_to_floats(stack, raw, args['feet'], as_array=True)
     inches = token_to_floats(stack, raw, args['inches'], as_array=True)
-    values = [f * conv.LENGTH['feet'] + i * conv.LENGTH['inches']
+    values = [convert_units(f, 'feet') + convert_units(i, 'inches')
               for f in feet for i in inches]
     value = values if len(values) > 1 else values[0]
 
     return Result(
         value=value, has_units=True, start=stack[0].start, end=stack[-1].end)
+
+
+def fraction(stack: Tokens, raw: str, args: dict) -> Result:
+    """Handle fractional values like 10 3/8 inches."""
+    units = token_to_str(stack, raw, args['units'])
+    ambiguous = args.get('ambiguous', False)
+
+    value = token_to_str(stack, raw, args['value'])
+    parts = value.split()
+    whole = to_float(parts[0] if len(parts) > 1 else '0')
+    numerator, denominator = [to_float(f) for f in FRACTION.split(parts[-1])]
+    value = convert_units(whole + numerator / denominator, units)
+
+    return Result(
+        value=value,
+        ambiguous=ambiguous,
+        has_units=True,
+        start=stack[0].start, end=stack[-1].end)

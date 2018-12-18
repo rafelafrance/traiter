@@ -1,8 +1,10 @@
-"""Common unit utilities."""
+"""Unit conversions."""
 
 
-LENGTH = {
-    '': 1.0,
+UNITS = {
+    '': 1.0,    # No units given
+
+    # Length
     'c.m.': 10.0,
     'centimeters': 10.0,
     'cm': 10.0,
@@ -28,11 +30,8 @@ LENGTH = {
     'mm.': 1.0,
     'mm.s': 1.0,
     'mms': 1.0,
-}
 
-MASS = {
-    '': 1.0,
-    '_g_': 1.0,
+    # Mass
     'g': 1.0,
     'g.': 1.0,
     'gm': 1.0,

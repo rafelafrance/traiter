@@ -54,6 +54,10 @@ class ParseBase:
         self.stack = []
         results = []
 
+        for t in self.tokens:
+            print(t)
+            print(raw[t.start:t.end])
+
         while self.tokens:
 
             rule, prod = self.find_longest_match()
