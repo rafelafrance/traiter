@@ -15,7 +15,7 @@ class TestLexTotalLength(unittest.TestCase):
             LEX.tokenize('{"totalLengthInMM":"123" };'),
             [Token(token='key_with_units', start=2, end=17),
              Token(token='range', start=20, end=23),
-             Token(token='stop', start=26, end=27)])
+             Token(token='stop_plus', start=26, end=27)])
 
     def test_tokenize_02(self):
         self.assertEqual(

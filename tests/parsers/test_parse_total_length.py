@@ -134,8 +134,16 @@ class TestParseTotalLength(unittest.TestCase):
 
     def test_parse_22(self):
         self.assertEqual(
-            #    0123456789.123456789.123456789.123456789.123456789.12345
             PAR.parse('before Snout vent lengths range from 16 to 23 mm. qq'),
+            [Result(
+                value=[16.0, 23.0],
+                has_units=True,
+                start=7, end=49)])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            #    0123456789.123456789.123456789.123456789.123456789.12345
+            PAR.parse('Size=13 cm TL'),
             [Result(
                 value=[16.0, 23.0],
                 has_units=True,
