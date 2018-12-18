@@ -14,6 +14,9 @@ class LexRule:
     regex: str
 
 
+LexRules = List[LexRule]
+
+
 @dataclass
 class Token:
     token: str
@@ -22,7 +25,6 @@ class Token:
 
 
 Tokens = List[Token]
-LexRules = List[LexRule]
 
 
 class LexBase:
@@ -38,9 +40,15 @@ class LexBase:
     def __init__(self):
         """Build the regex."""
         self.tokens = self.rule_list()
+
         joined = ' | '.join(
             [f' (?P<{r.token}> {r.regex} ) ' for r in self.tokens])
-        self.regex = regex.compile(joined, regex.VERBOSE | regex.IGNORECASE)
+
+        defines = ' '.join(self.defines())
+
+        self.regex = regex.compile(
+            f"""(?(DEFINE) {defines} ) {joined}""",
+            regex.VERBOSE | regex.IGNORECASE)
 
     @abstractmethod
     def rule_list(self) -> LexRules:
@@ -48,42 +56,12 @@ class LexBase:
 
         Note: Order matters.
         """
+        # Returning this list only for testing. Overridden elsewhere
         return [self.number, self.to, self.cross, self.word, self.stop]
 
-    # #########################################################################
-    # Common regex fragments used in more than one lexer
-
-    # Numbers are positive & decimals
-    @property
-    def re_number(self):
-        return r' (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? '
-
-    # #########################################################################
-    # Tokens used by more than one lexer
-
-    @property
-    def number(self):
-        return LexRule(
-            'number', self.re_number)
-
-    # Used to parse numeric ranges
-    @property
-    def to(self):
-        return LexRule('to', r' - | to ')
-
-    # Used to parse length x width values
-    @property
-    def cross(self):
-        return LexRule('cross', r'  x | by | \* ')
-
-    @property
-    def word(self):
-        return LexRule('word', self.boundary(r' \w+ '))   # Generic word
-
-    # Used to separate key1=value1; key2=val2 pairs
-    @property
-    def stop(self):
-        return LexRule('stop', r' [.;] ')
+    def defines(self):
+        """ These DEFINEs will appear in the lexer's regexs."""
+        return [self.define_decimal]
 
     # #########################################################################
 
@@ -99,7 +77,7 @@ class LexBase:
         return tokens
 
     @staticmethod
-    def boundary(regex):
+    def boundary(regex, left=True, right=True):
         r"""Wrap a regular expression in \b character class.
 
         This is used to "delimit" a word on a word boundary so the regex does
@@ -113,4 +91,81 @@ class LexBase:
         - It is also not helpful if your pattern ends or starts with a non-word
           character.
         """
-        return r'\b (?: {} ) \b'.format(regex)
+        left = r'\b' if left else ''
+        right = r'\b' if right else ''
+        return r'{} (?: {} ) {}'.format(left, regex, right)
+
+    # #########################################################################
+    # Common regex fragments used in more than one lexer
+
+    # Numbers are positive decimals
+    @property
+    def define_decimal(self):
+        return r"""(?P<decimal>
+            (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? )"""
+
+    # #########################################################################
+    # Tokens used by more than one lexer
+
+    @property
+    def number(self):
+        return LexRule('number', ' (?&decimal) ')
+
+    @property
+    def range(self):
+        return LexRule(
+            'range', r' (?&decimal) (?: \s* (?: - | to ) \s* (?&decimal) )? ')
+
+    # Used to parse numeric ranges
+    @property
+    def to(self):
+        return LexRule('to', r' - | to ')
+
+    # Used to parse length x width values
+    @property
+    def cross(self):
+        return LexRule('cross', r'  x | by | \* ')
+
+    @property
+    def shorthand_key(self):
+        return LexRule('shorthand_key', self.boundary(r"""
+            on \s* tag | specimens? | catalog
+            | measurements (?: \s+ [\p{Letter}]+ )?
+            | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+            | meas [.,]? (?: \s+ \w+ \. \w+ \. )?
+            | mesurements | Measurementsnt
+        """))
+
+    @property
+    def shorthand(self):
+        return LexRule('shorthand', r"""
+            (?<! [:/-] )            # Handle list notation
+            (?: (?&decimal) | [?x] )
+            (?: [:/-] (?&decimal) ){3}
+            (?: \s* [:/-=]? \s* (?&decimal) | [?x] )?
+            (?! [:/-] )             # Handle list notation
+        """)
+
+    @property
+    def word(self):
+        return LexRule('word', self.boundary(r' \w+ '))   # Generic word
+
+    # Used to separate key1=value1; key2=val2 pairs
+    @property
+    def stop(self):
+        return LexRule('stop', r' [.;] ')
+
+    @property
+    def feet(self):
+        return LexRule('feet', r' (?: foot | feet | ft ) s? \.? ')
+
+    @property
+    def inches(self):
+        return LexRule('inches', r' (?: inch e? | in ) s? \.? ')
+
+    @property
+    def metric_len(self):
+        return LexRule('metric_len', r"""
+            (?: [cm] [\s.]? m ) [\s.]? s?
+            | meters? | millimeters? | centimeters?
+        """)

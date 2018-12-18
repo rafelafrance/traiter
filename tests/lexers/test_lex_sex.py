@@ -8,7 +8,7 @@ from lib.lexers.lex_sex import LexSex
 LEX = LexSex()
 
 
-class TestSexLexer(unittest.TestCase):
+class TestLexSex(unittest.TestCase):
 
     def test_tokenize_01(self):
         self.assertEqual(

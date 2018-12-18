@@ -10,7 +10,7 @@ class LexTestesState(LexBase):
 
     def rule_list(self) -> LexRules:
         return [
-            self.stop,  # Don't confuse prefix and suffix notation
+            self.stop,
 
             LexRule(
                 'label',
