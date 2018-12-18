@@ -38,12 +38,15 @@ class LexTotalLength(LexBase):
                 | snout \s+ vent \s+ lengths?
                 """, right=False)),
 
-            LexRule('len_key_ambiguous', self.boundary(
-                r""" lengths? | tag """)),
+            LexRule('ambiguous', self.boundary(r"""
+                (?<! [\p{Letter}] \s* ) lengths? """)),
 
             LexRule('key_units_req', self.boundary(
                 r""" measurements? | body | total""")),
 
+
+            LexRule('stop_plus', r' [.;,] '),
+
             self.metric_len,
-            self.stop,
+            self.word,
         ]

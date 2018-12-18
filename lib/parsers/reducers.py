@@ -87,31 +87,32 @@ def len_units_in_key(stack: Tokens, raw: str, args: dict) -> Result:
     """
     value = token_to_floats(stack, raw, args['value'])
     return Result(
-        value=value, inferred=False, start=stack[0].start, end=stack[-1].end)
+        value=value, has_units=True, start=stack[0].start, end=stack[-1].end)
 
 
-def key_len_units(stack: Tokens, raw: str, args: dict) -> Result:
+def length(stack: Tokens, raw: str, args: dict) -> Result:
     """Key, length, & units are in separate tokens.
 
     args:
         value:  index of token with the value
         units:  index of token with the length units
     """
-    units = token_to_str(stack, raw, args['units'])
-    value = token_to_floats(stack, raw, args['value']) * conv.LENGTH[units]
-    return Result(
-        value=value, inferred=False, start=stack[0].start, end=stack[-1].end)
+    ambiguous = args.get('ambiguous', False)
+    has_units = True if args.get('units') else False
+    units = token_to_str(stack, raw, args['units']) if has_units else ''
 
-
-def key_len_no_units(stack: Tokens, raw: str, args: dict) -> Result:
-    """Key & length are in separate tokens.
-
-    args:
-        value:  index of token with the value
-    """
     value = token_to_floats(stack, raw, args['value'])
+    if isinstance(value, list):
+        value = [v * conv.LENGTH[units] for v in value]
+    else:
+        value *= conv.LENGTH[units]
+
     return Result(
-        value=value, inferred=True, start=stack[0].start, end=stack[-1].end)
+        value=value,
+        has_units=has_units,
+        ambiguous=ambiguous,
+        start=stack[0].start,
+        end=stack[-1].end)
 
 
 def shorthand(stack: Tokens, raw: str, args: dict) -> Result:
@@ -126,7 +127,7 @@ def shorthand(stack: Tokens, raw: str, args: dict) -> Result:
     values = token_to_floats(stack, raw, args['value'], SHORTHAND)
     value = values[args['part']] if len(values) > args['part'] else None
     return Result(
-        value=value, inferred=True, start=stack[0].start, end=stack[-1].end)
+        value=value, has_units=True, start=stack[0].start, end=stack[-1].end)
 
 
 def english_len(stack: Tokens, raw: str, args: dict) -> Result:
@@ -144,4 +145,4 @@ def english_len(stack: Tokens, raw: str, args: dict) -> Result:
     value = values if len(values) > 1 else values[0]
 
     return Result(
-        value=value, inferred=False, start=stack[0].start, end=stack[-1].end)
+        value=value, has_units=True, start=stack[0].start, end=stack[-1].end)

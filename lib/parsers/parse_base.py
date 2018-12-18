@@ -19,7 +19,8 @@ class Action:
 @dataclass
 class Result:
     value: Any
-    inferred: bool = False
+    has_units: bool = False
+    ambiguous: bool = False
     start: int = 0
     end: int = 0
 
