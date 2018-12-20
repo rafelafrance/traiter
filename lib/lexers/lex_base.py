@@ -51,6 +51,11 @@ class LexBase:
         self._lex_rules += lex_rules
         self.regex = self.build_regex()
 
+    @lex_rules.deleter
+    def lex_rules(self):
+        self._lex_rules = []
+        self.regex = self.build_regex()
+
     @property
     def regex_defines(self):
         return self._regex_defines
@@ -58,6 +63,11 @@ class LexBase:
     @regex_defines.setter
     def regex_defines(self, regex_defines: define.Defines):
         self._regex_defines += regex_defines
+        self.regex = self.build_regex()
+
+    @regex_defines.deleter
+    def regex_defines(self):
+        self._regex_defines = []
         self.regex = self.build_regex()
 
     def build_regex(self):
@@ -74,10 +84,9 @@ class LexBase:
     def rule_list(self) -> rule.LexRules:
         """Return the lexer rules for the trait.
 
-        Note: Order matters.
+        Each trait will have its own list of lexer rules. Note: Order matters.
         """
-        # Other lexers will override this. This list is for testing only.
-        return [rule.number, rule.word, rule.stop]
+        return []
 
     # #########################################################################
 

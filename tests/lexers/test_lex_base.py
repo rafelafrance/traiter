@@ -3,12 +3,18 @@
 
 import unittest
 from lib.lexers.lex_base import LexBase, Token
+import lib.lexers.shared_lex_rules as rule
 
 
 LEX = LexBase()
 
 
 class TestBaseLexer(unittest.TestCase):
+
+    def setup_method(self, method):
+        global LEX
+        del LEX.lex_rules
+        LEX.lex_rules = [rule.number, rule.word, rule.stop]
 
     # #########################################################################
 
@@ -147,6 +153,10 @@ class TestBaseLexer(unittest.TestCase):
     # #########################################################################
 
     def test_range_01(self):
+        global LEX
+        del LEX.lex_rules
+        LEX.lex_rules = [rule.range, rule.word, rule.stop]
+
         self.assertEqual(
             LEX.tokenize('12345.6'),
             [Token(token='range', start=0, end=7)])
