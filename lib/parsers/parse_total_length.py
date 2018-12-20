@@ -4,7 +4,7 @@
 
 from lib.lexers.lex_total_length import LexTotalLength
 from lib.parsers.parse_base import ParseBase, Action
-import lib.parsers.reducers as reduce
+import lib.parsers.shared_reducers as reduce
 
 
 class ParseTotalLength(ParseBase):

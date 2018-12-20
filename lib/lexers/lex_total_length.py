@@ -1,29 +1,25 @@
 """Lex total length annotations."""
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,missing-docstring,duplicate-code
 
-from lib.lexers.lex_base import LexBase, LexRule, LexRules
+from lib.lexers.lex_base import LexBase
+import lib.lexers.shared_lex_rules as rule
+import lib.lexers.shared_utils as util
 
 
 class LexTotalLength(LexBase):
     """Lex total length annotations."""
 
-    def defines(self):
-        """ These DEFINEs will appear in the lexer's regexs."""
+    def rule_list(self) -> rule.LexRules:
         return [
-            self.define_decimal,
-        ]
+            rule.shorthand,
+            rule.fraction,
+            rule.range,
+            rule.feet,
+            rule.inches,
+            rule.shorthand_key,
 
-    def rule_list(self) -> LexRules:
-        return [
-            self.shorthand,
-            self.fraction,
-            self.range,
-            self.feet,
-            self.inches,
-            self.shorthand_key,
-
-            LexRule('key_with_units', r"""
+            rule.LexRule('key_with_units', r"""
                 total  [\s-]* length [\s-]* in [\s-]* (?: mm | millimeters)
                 | length [\s-]* in [\s-]* (?: mm | millimeters)
                 | snout [\s-]* vent [\s-]* lengths? [\s-]* in [\s-]*
@@ -32,7 +28,7 @@ class LexTotalLength(LexBase):
                     (?: mm | millimeters)
                 """),
 
-            LexRule('total_len_key', r"""
+            rule.LexRule('total_len_key', r"""
                 total  [\s-]* length [\s-]* in
                 | (?: total | max | standard ) [\s-]* lengths?
                 | meas (?: [a-z]* )? \.? : \s* L
@@ -45,14 +41,14 @@ class LexTotalLength(LexBase):
                 | snout \s+ vent \s+ lengths?
                 """),
 
-            LexRule('ambiguous', self.boundary(r"""
+            rule.LexRule('ambiguous', util.boundary(r"""
                 (?<! [\p{Letter}] \s* ) lengths? """)),
 
-            LexRule('key_units_req', self.boundary(
+            rule.LexRule('key_units_req', util.boundary(
                 r""" measurements? | body | total""")),
 
-            LexRule('stop_plus', r' [.;,] '),
+            rule.LexRule('stop_plus', r' [.;,] '),
 
-            self.metric_len,
-            self.word,
+            rule.metric_len,
+            rule.word,
         ]

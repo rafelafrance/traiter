@@ -2,23 +2,25 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.lex_base import LexBase, LexRule, LexRules
+from lib.lexers.lex_base import LexBase
+import lib.lexers.shared_lex_rules as rule
+import lib.lexers.shared_utils as util
 
 
 class LexLifeStage(LexBase):
     """Lex testes state annotations."""
 
-    def rule_list(self) -> LexRules:
+    def rule_list(self) -> rule.LexRules:
         return [
-            LexRule('skip', r' determin \w*'),
+            rule.LexRule('skip', r' determin \w*'),
 
-            LexRule('key', self.boundary(
+            rule.LexRule('key', util.boundary(
                 r""" life \s* stage (?: \s* remarks )?
                      | age \s* class
                      | age \s* in \s* (?: hour | day ) s?
                      | age """)),
 
-            LexRule('keyless', self.boundary(
+            rule.LexRule('keyless', util.boundary(
                 r""" (?: after \s+ )?
                         (?: first | second | third | fourth | hatching
                             | 1st | 2nd | 3rd | \dth) \s+ year
@@ -36,9 +38,9 @@ class LexLifeStage(LexBase):
                      | yolk \s* sac """)),
             # | embryos? | embryonic | fetus (:? es )?
 
-            LexRule('word_plus', self.boundary(r' \w [\w?./\-]* ')),
+            rule.LexRule('word_plus', util.boundary(r' \w [\w?./\-]* ')),
 
-            LexRule('stop', r' [;,"?] | $ '),
+            rule.LexRule('stop', r' [;,"?] | $ '),
 
-            LexRule('joiner', r' [/-] '),
+            rule.LexRule('joiner', r' [/-] '),
         ]

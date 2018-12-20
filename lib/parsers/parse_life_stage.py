@@ -5,7 +5,7 @@
 from itertools import product
 from lib.lexers.lex_life_stage import LexLifeStage
 from lib.parsers.parse_base import ParseBase, Action
-import lib.parsers.reducers as reduce
+import lib.parsers.shared_reducers as reduce
 
 
 class ParseLifeStage(ParseBase):

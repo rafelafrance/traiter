@@ -2,24 +2,26 @@
 
 # pylint: disable=too-few-public-methods
 
-from lib.lexers.lex_base import LexBase, LexRule, LexRules
+from lib.lexers.lex_base import LexBase
+import lib.lexers.shared_lex_rules as rule
+import lib.lexers.shared_utils as util
 
 
 class LexSex(LexBase):
     """Lex testes state annotations."""
 
-    def rule_list(self) -> LexRules:
+    def rule_list(self) -> rule.LexRules:
         return [
-            self.stop,
+            rule.stop,
 
-            LexRule('key', self.boundary(r' sex ')),
+            rule.LexRule('key', util.boundary(r' sex ')),
 
-            LexRule('sex', self.boundary(r' males? | females? ')),
+            rule.LexRule('sex', util.boundary(r' males? | females? ')),
 
-            LexRule('quest', r' \? '),
+            rule.LexRule('quest', r' \? '),
 
             # These are words that indicate "sex" is not a key
-            LexRule('skip', self.boundary(r' and | is | was ')),
+            rule.LexRule('skip', util.boundary(r' and | is | was ')),
 
-            self.word,
+            rule.word,
         ]

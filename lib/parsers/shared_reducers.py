@@ -3,11 +3,10 @@
 import regex
 from lib.lexers.lex_base import Tokens
 from lib.parsers.parse_base import Result
-import lib.parsers.unit_conversions as conv
+import lib.parsers.shared_unit_conversions as conv
 
 
-MM = regex.compile('mm | millimeters', regex.IGNORECASE | regex.VERBOSE)
-SHORTHAND = regex.compile(r'[:/-]', regex.VERBOSE)
+SHORTHAND = regex.compile(r' [=:-] | \s+ ', regex.VERBOSE)
 RANGE = regex.compile(r' - | to ', regex.VERBOSE)
 FRACTION = regex.compile(r' \/ ', regex.VERBOSE)
 
@@ -110,7 +109,7 @@ def length(stack: Tokens, raw: str, args: dict) -> Result:
         units:  index of token with the length units
     """
     ambiguous = args.get('ambiguous', False)
-    has_units = True if args.get('units') else False
+    has_units = bool(args.get('units'))
     units = token_to_str(stack, raw, args['units']) if has_units else ''
 
     value = token_to_floats(stack, raw, args['value'])
@@ -125,18 +124,31 @@ def length(stack: Tokens, raw: str, args: dict) -> Result:
 
 
 def shorthand(stack: Tokens, raw: str, args: dict) -> Result:
-    """Handle shorthand notation like 11-22-33-44:55.
+    """Handle shorthand notation like 11-22-33-44:55g.
 
     Which is total-tail-hindFoot-ear-mass.
     First 4 are lengths & mass is optional.
     args:
         value:  index of token with the values
-        part:   wihich part of 11-22-33-44:55 notation holds the value
+        part:   which part of 11-22-33-44:55 notation holds the value
     """
     values = token_to_floats(stack, raw, args['value'], SHORTHAND)
     value = values[args['part']] if len(values) > args['part'] else None
     return Result(
         value=value, has_units=True, start=stack[0].start, end=stack[-1].end)
+
+
+def shorthand_mass(stack: Tokens, raw: str, args: dict) -> Result:
+    """Handle shorthand notation like 11-22-33-44:55g.
+
+    Which is total-tail-hindFoot-ear-mass. The token has the mass in this case.
+    args:
+        value:  index of token with the values
+    """
+    # values = token_to_floats(stack, raw, args['value'], SHORTHAND)
+    # parts =
+    # return Result(
+    #     value=value, has_units=True, start=stack[0].start, end=stack[-1].end)
 
 
 def english_len(stack: Tokens, raw: str, args: dict) -> Result:

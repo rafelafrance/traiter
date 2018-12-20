@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,import-error,too-many-public-methods
 
 import unittest
-from lib.parsers.reducers import Result
+from lib.parsers.shared_reducers import Result
 from lib.parsers.parse_total_length import ParseTotalLength
 
 
@@ -94,7 +94,7 @@ class TestParseTotalLength(unittest.TestCase):
         self.assertEqual(
             #          0123456789.123456789.123456789.123456789.123456789.12345
             PAR.parse('AJR-32   186-102-23-15  15.0g'),
-            [Result(value=186.0, has_units=True, start=9, end=28)])
+            [Result(value=186.0, has_units=True, start=9, end=29)])
 
     def test_parse_16(self):
         self.assertEqual(
@@ -209,7 +209,7 @@ class TestParseTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('field measurements on fresh dead specimen were '
                       '157-60-20-19-21g'),
-            [Result(value=157, has_units=True, start=47, end=62)])
+            [Result(value=157, has_units=True, start=47, end=63)])
 
     def test_parse_34(self):
         self.assertEqual(

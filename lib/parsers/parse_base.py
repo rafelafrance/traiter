@@ -54,9 +54,9 @@ class ParseBase:
         self.stack = []
         results = []
 
-        for t in self.tokens:
-            print(t)
-            print(raw[t.start:t.end])
+        # for t in self.tokens:
+        #     print(t)
+        #     print(raw[t.start:t.end])
 
         while self.tokens:
 
@@ -127,7 +127,7 @@ class ParseBase:
         if not self.rules:
             raise ValueError('No rules for the parser.')
 
-        valid_tokens = {t.token for t in self.lexer.tokens}
+        valid_tokens = {t.token for t in self.lexer.lex_rules}
         valid_tokens |= {v.replace for k, v in self.rules.items() if v.replace}
 
         errors = set()
