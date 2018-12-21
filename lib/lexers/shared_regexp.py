@@ -86,6 +86,10 @@ ALL = [
         [\s=:/-]
         """),
 
+    Regexp('shorthand_ext', r"""
+        (?: (?&shorthand_sep) [\p{Letter}]{1,4} (?&shorthand_val) )
+        """),
+
     Regexp('shorthand_wt', r"""
         (?&shorthand_wt_sep) \s* (?&shorthand_val) \s* (?&metric_wt)?
         """),
@@ -129,16 +133,21 @@ shorthand_key = Regexp('shorthand_key', r"""
     | mesurements | Measurementsnt
     """)
 
-# This is a common notation form. "11-22-33-44:55g". There are other separators
+# This is a common notation form: "11-22-33-44:99g". There are other separators
+# There is also an extended form that looks like:
+#   ""11-22-33-44-fa55-hb66:99g"" There may be several extended numbers.
+#
 #   11 = total length (ToL or TL)
 #   22 = tail length (TaL)
 #   33 = hind foot length (HFL)
 #   44 = ear length (EL)
-#   55 = body mass is optional, as is the mass units
+#   99 = body mass is optional, as is the mass units
 # Unknown values are filled with ? or x. Like 11-xx-xx-44 or 11-??-33-44
 shorthand = Regexp('shorthand', r"""
     (?<! (?&shorthand_overrun) )
-    (?&shorthand_vals) (?&shorthand_wt)?
+    (?&shorthand_vals)
+    (?&shorthand_ext)*
+    (?&shorthand_wt)?
     (?! (?&shorthand_overrun) )
     """)
 
@@ -146,7 +155,9 @@ shorthand = Regexp('shorthand', r"""
 # the mass to be present. This is, unsurprisingly, used when parsing body mass.
 shorthand_mass = Regexp('shorthand_mass', r"""
     (?<! (?&shorthand_overrun) )
-    (?&shorthand_vals) (?&shorthand_wt)
+    (?&shorthand_vals)
+    (?&shorthand_ext)*
+    (?&shorthand_wt)
     (?! (?&shorthand_overrun) )
     """)
 

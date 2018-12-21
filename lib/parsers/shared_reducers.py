@@ -16,10 +16,13 @@ FRACTION = regex.compile(r' \/ ', regex.VERBOSE)
 DEFINES = regexp.build_regex_defines(regexp.ALL)
 
 SHORTHAND_WT = regex.compile(
-    (f'{DEFINES} '
-     r'(?&shorthand_vals) (?&shorthand_wt_sep) \s* '
-     r'(?P<value> (?&shorthand_val) ) \s* '
-     r'(?P<units> (?&metric_wt) )?'),
+    (f'{DEFINES} ' + r"""
+        (?&shorthand_vals)
+        (?&shorthand_ext)*
+        (?&shorthand_wt_sep) \s*
+        (?P<value> (?&shorthand_val) ) \s*
+        (?P<units> (?&metric_wt) )?
+     """),
     regex.VERBOSE | regex.IGNORECASE)
 
 

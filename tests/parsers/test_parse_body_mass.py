@@ -55,7 +55,7 @@ class TestParseBodyMass(unittest.TestCase):
     def test_parse_08(self):
         self.assertEqual(
             PAR.parse('Note in catalog: 83-0-17-23-fa64-35g'),
-            [Result(value=35, has_units=True, start=28, end=36)])
+            [Result(value=35, has_units=True, start=8, end=36)])
 
     def test_parse_09(self):
         self.assertEqual(
@@ -70,7 +70,7 @@ class TestParseBodyMass(unittest.TestCase):
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('82-00-15-21-tr7-fa63-41g'),
-            [Result(value=41, has_units=True, start=16, end=24)])
+            [Result(value=41, has_units=True, start=0, end=24)])
 
     def test_parse_12(self):
         self.assertEqual(
