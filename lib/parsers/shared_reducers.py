@@ -11,7 +11,7 @@ SHORTHAND_SEP = regexp.compile_regex('shorthand_sep')
 RANGE_SEP = regexp.compile_regex('range_sep')
 FRACTION = regex.compile(r' \/ ', regex.VERBOSE)
 
-DEFINES = regexp.build_regex_defines(regexp.ALL)
+DEFINES = regexp.build_regex_defines(regexp.DEFINES)
 
 SHORTHAND_WT = regex.compile(
     (f'{DEFINES} ' + r"""
@@ -94,8 +94,8 @@ def strip_span(stack: Tokens, text: str, args: dict) -> Result:
     """Trim characters from a value_span.
 
     args:
-        span:   tuple with (index of first value token, last token)
-        strip:  regex for what to strip off the start and end of the value
+        span:   tuple  with (index of first value token, last token)
+        strip:  regexp for what to strip off the start and end of the value
     """
     result = value_span(stack, text, args)
 

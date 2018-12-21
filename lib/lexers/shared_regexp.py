@@ -7,10 +7,10 @@ import regex
 
 @dataclass
 class Regexp:
-    """Label a regex so it can be reused."""
+    """Label a regexp so it can be reused."""
 
     label: str
-    regex: str
+    regexp: str
 
 
 Regexps = List[Regexp]
@@ -18,14 +18,14 @@ Regexps = List[Regexp]
 
 # #############################################################################
 
-def boundary(regex, left=True, right=True):
+def boundary(regexp, left=True, right=True):
     r"""Wrap a regular expression in \b character class.
 
-    This is used to "delimit" a word on a word boundary so the regex does
+    This is used to "delimit" a word on a word boundary so the regexp does
     not match the interior of a word.
 
     - This is helpful for keyword searches like 't'. Without this 't' would
-      match both 't's in 'that' but the regex in \b neither 't' is matched.
+      match both 't's in 'that' but the regexp in \b neither 't' is matched.
       Only 't's like ' t ', or '$t.', etc. will match.
     - It is not helpful for searching for things like '19mm' where there is
       no word break between the two tokens.
@@ -34,30 +34,38 @@ def boundary(regex, left=True, right=True):
     """
     left = r'\b' if left else ''
     right = r'\b' if right else ''
-    return r'{} (?: {} ) {}'.format(left, regex, right)
+    return r'{} (?: {} ) {}'.format(left, regexp, right)
 
 
 def build_lex_rules(lex_rules: Regexps):
     """Combine the ordered list of rules into one rule."""
-    return '\n| '.join([f' (?P<{r.label}> {r.regex} ) ' for r in lex_rules])
+    return '\n| '.join([f' (?P<{r.label}> {r.regexp} ) ' for r in lex_rules])
 
 
 def build_regex_defines(regexes: Regexps):
     """Combine the ordered list of rules into one rule."""
-    defines = '\n'.join(f'(?P<{d.label}> {d.regex} )' for d in regexes)
+    defines = '\n'.join(f'(?P<{d.label}> {d.regexp} )' for d in regexes)
     return f'(?(DEFINE) {defines} )'
+
+
+def get(label):
+    """Get the regular expression associated with the given label."""
+    regexp = [r for r in ALL if r.label == label]
+    if not regexp:
+        raise ValueError(f'Could not find the regexp {label}')
+    return regexp[0]
 
 
 def compile_regex(label):
     """Compile one define as a plain regex."""
-    regexp = [regex.compile(d.regex, regex.VERBOSE | regex.IGNORECASE)
-              for d in ALL if d.label == label]
-    return regexp[0]
+    regexp = get(label)
+    return regex.compile(regexp.regexp, regex.VERBOSE | regex.IGNORECASE)
 
 
 # #############################################################################
+# These regexp are typically used as (?(DEFINE) <label> ... ) clauses
 
-ALL = [
+DEFINES = [
     Regexp('decimal', r"""
         (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )?
         """),
@@ -96,87 +104,100 @@ ALL = [
 ]
 
 # #############################################################################
+# These regexp are typically used as lexer rules.
 
-# Numbers are positive decimals
-number = Regexp('number', ' (?&decimal) ')
+LEX_RULES = [
+    # Numbers are positive decimals
+    Regexp('number', ' (?&decimal) '),
 
-# For fractions like "1 2/3" or "1/2".
-# We don't allow date like "1/2/34". No part of this is a fraction
-fraction = Regexp('fraction', r"""
-    (?<! [\d/,.] )
-    (?: \d+ \s+ )? \d+ / \d+
-    (?! [\d/,.] )
-    """)
 
-# A number or a range of numbers like "12 to 34" or "12.3-45.6"
-# Note we want to exclude dates and to not pick up partial dates
-# So: no part of "2014-12-11" would be in a range
-range = Regexp('range', r"""
-    (?<! \d+ | \d [/,.-] | to \s+ )
-    (?&decimal) (?: \s* (?&range_sep) \s* (?&decimal) )?
-    (?! [/,.-] \d | \d+ | \s+ to )
-    """)
+    # For fractions like "1 2/3" or "1/2".
+    # We don't allow date like "1/2/34". No part of this is a fraction
+    Regexp('fraction', r"""
+        (?<! [\d/,.] )
+        (?: \d+ \s+ )? \d+ / \d+
+        (?! [\d/,.] )
+        """),
 
-# A number times another number like "12 x 34" this is typically length x width
-# We Allow a triple like "12 x 34 x 56" but we ony take the first two numbers
-cross = Regexp('cross', r"""
-    (?<! [\d/,.-]\d | \s+ by )
-    (?&decimal) (?: \s* (?: x | by | \* ) \s* (?&decimal) )?
-    # (?! [\d/,.-]\d | \s+ by )
-    """)
+    # A number or a range of numbers like "12 to 34" or "12.3-45.6"
+    # Note we want to exclude dates and to not pick up partial dates
+    # So: no part of "2014-12-11" would be in a range
+    Regexp('range', r"""
+        (?<! \d+ | \d [/,.-] | to \s+ )
+        (?&decimal) (?: \s* (?&range_sep) \s* (?&decimal) )?
+        (?! [/,.-] \d | \d+ | \s+ to )
+        """),
 
-shorthand_key = Regexp('shorthand_key', r"""
-    on \s* tag | specimens? | catalog
-    | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
-        (?: \s* [({\[})]? [\p{Letter}]{1,2} [)}\]]? \.? )?
-    | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-    | mesurements | Measurementsnt
-    """)
+    # A number times another number like "12 x 34" this is typically
+    # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
+    # first two numbers
+    Regexp('cross', r"""
+        (?<! [\d/,.-]\d | \s+ by )
+        (?&decimal) (?: \s* (?: x | by | \* ) \s* (?&decimal) )?
+        # (?! [\d/,.-]\d | \s+ by )
+        """),
 
-# This is a common notation form: "11-22-33-44:99g". There are other separators
-# There is also an extended form that looks like:
-#   ""11-22-33-44-fa55-hb66:99g"" There may be several extended numbers.
-#
-#   11 = total length (ToL or TL)
-#   22 = tail length (TaL)
-#   33 = hind foot length (HFL)
-#   44 = ear length (EL)
-#   99 = body mass is optional, as is the mass units
-# Unknown values are filled with ? or x. Like 11-xx-xx-44 or 11-??-33-44
-shorthand = Regexp('shorthand', r"""
-    (?<! (?&shorthand_overrun) )
-    (?&shorthand_vals)
-    (?&shorthand_ext)*
-    (?&shorthand_wt)?
-    (?! (?&shorthand_overrun) )
-    """)
+    Regexp('shorthand_key', r"""
+        on \s* tag | specimens? | catalog
+        | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
+            (?: \s* [({\[})]? [\p{Letter}]{1,2} [)}\]]? \.? )?
+        | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+        | mesurements | Measurementsnt
+        """),
 
-# This is like "shorthand" above with the difference being that we are forcing
-# the mass to be present. This is, unsurprisingly, used when parsing body mass.
-shorthand_mass = Regexp('shorthand_mass', r"""
-    (?<! (?&shorthand_overrun) )
-    (?&shorthand_vals)
-    (?&shorthand_ext)*
-    (?&shorthand_wt)
-    (?! (?&shorthand_overrun) )
-    """)
+    # This is a common notation form: "11-22-33-44:99g".
+    # There are other separators.
+    # There is also an extended form that looks like:
+    #   ""11-22-33-44-fa55-hb66:99g"" There may be several extended numbers.
+    #
+    #   11 = total length (ToL or TL)
+    #   22 = tail length (TaL)
+    #   33 = hind foot length (HFL)
+    #   44 = ear length (EL)
+    #   99 = body mass is optional, as is the mass units
+    # Unknown values are filled with ? or x. Like 11-xx-xx-44 or 11-??-33-44
+    Regexp('shorthand', r"""
+        (?<! (?&shorthand_overrun) )
+        (?&shorthand_vals)
+        (?&shorthand_ext)*
+        (?&shorthand_wt)?
+        (?! (?&shorthand_overrun) )
+        """),
 
-# Generic word
-word = Regexp('word', boundary(r' \w+ '))
+    # This is like "shorthand" above with the difference being that we are
+    # forcing the mass to be present. This is, unsurprisingly, used when
+    # parsing body mass.
+    Regexp('shorthand_mass', r"""
+        (?<! (?&shorthand_overrun) )
+        (?&shorthand_vals)
+        (?&shorthand_ext)*
+        (?&shorthand_wt)
+        (?! (?&shorthand_overrun) )
+        """),
 
-# Used to separate key1=value1; key2=val2 pairs
-sep = Regexp('sep', r' [.;] ')
+    # Generic word
+    Regexp('word', boundary(r' \w+ ')),
 
-feet = Regexp('feet', r' (?: foot | feet | ft ) s? \.? ')
+    # Used to separate key1=value1; key2=val2 pairs
+    Regexp('sep', r' [.;] '),
 
-inches = Regexp('inches', r' (?: inch e? | in ) s? \.? ')
+    Regexp('feet', r' (?: foot | feet | ft ) s? \.? '),
 
-metric_len = Regexp('metric_len', r"""
-        millimeters? | centimeters? | meters? | (?: [cm] [\s.]? m )
-    """)
+    Regexp('inches', r' (?: inch e? | in ) s? \.? '),
 
-pounds = Regexp('pounds', r' (?: pound | lb ) s? \.? ')
+    Regexp('metric_len', r"""
+            millimeters? | centimeters? | meters? | (?: [cm] [\s.]? m )
+        """),
 
-ounces = Regexp('ounces', r' (?: ounce | oz ) s? \.? ')
+    Regexp('pounds', r' (?: pound | lb ) s? \.? '),
 
-metric_mass = Regexp('metric_mass', r""" (?&metric_wt) """)
+    Regexp('ounces', r' (?: ounce | oz ) s? \.? '),
+
+    Regexp('metric_mass', r""" (?&metric_wt) """),
+
+]
+
+
+# #############################################################################
+
+ALL = DEFINES + LEX_RULES

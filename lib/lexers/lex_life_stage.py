@@ -1,24 +1,24 @@
 """Lex life stage annotations."""
 
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_regexp as regexp
+from lib.lexers.shared_regexp import Regexp, Regexps, boundary
 
 
 class LexLifeStage(LexBase):
     """Lex testes state annotations."""
 
-    def rule_list(self) -> regexp.Regexps:
+    def rule_list(self) -> Regexps:
         """Define the lexer."""
         return [
-            regexp.Regexp('skip', r' determin \w*'),
+            Regexp('skip', r' determin \w*'),
 
-            regexp.Regexp('key', regexp.boundary(
+            Regexp('key', boundary(
                 r""" life \s* stage (?: \s* remarks )?
                      | age \s* class
                      | age \s* in \s* (?: hour | day ) s?
                      | age """)),
 
-            regexp.Regexp('keyless', regexp.boundary(
+            Regexp('keyless', boundary(
                 r""" (?: after \s+ )?
                         (?: first | second | third | fourth | hatching
                             | 1st | 2nd | 3rd | \dth) \s+ year
@@ -36,9 +36,9 @@ class LexLifeStage(LexBase):
                      | yolk \s* sac """)),
             # | embryos? | embryonic | fetus (:? es )?
 
-            regexp.Regexp('word_plus', regexp.boundary(r' \w [\w?./\-]* ')),
+            Regexp('word_plus', boundary(r' \w [\w?./\-]* ')),
 
-            regexp.Regexp('sep', r' [;,"?] | $ '),
+            Regexp('sep', r' [;,"?] | $ '),
 
-            regexp.Regexp('joiner', r' [/-] '),
+            Regexp('joiner', r' [/-] '),
         ]

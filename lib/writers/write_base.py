@@ -1,22 +1,26 @@
-"""Write the traiter output to an HTML file."""
+"""Write the traiter output to a file."""
 
-from lib.writers.write_base import WriteBase
+from abc import abstractmethod
 
 
-class WriteHtml(WriteBase):
+class WriteBase:
     """Write the traiter output to a file."""
 
     def __init__(self, args):
         """Build the writer."""
 
+    @abstractmethod
     def header(self):
         """Output the report header."""
 
+    @abstractmethod
     def row(self):
         """Output a report row."""
 
+    @abstractmethod
     def cell(self):
         """Output a report cell."""
 
+    @abstractmethod
     def footer(self):
         """Output the report footer."""

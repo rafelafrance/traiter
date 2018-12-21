@@ -1,23 +1,23 @@
 """Lex total length annotations."""
 
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_regexp as regexp
+from lib.lexers.shared_regexp import Regexp, Regexps, get, boundary
 
 
 class LexTotalLength(LexBase):
     """Lex total length annotations."""
 
-    def rule_list(self) -> regexp.Regexps:
+    def rule_list(self) -> Regexps:
         """Define the lexer."""
         return [
-            regexp.shorthand,
-            regexp.fraction,
-            regexp.range,
-            regexp.feet,
-            regexp.inches,
-            regexp.shorthand_key,
+            get('shorthand'),
+            get('fraction'),
+            get('range'),
+            get('feet'),
+            get('inches'),
+            get('shorthand_key'),
 
-            regexp.Regexp('key_with_units', r"""
+            Regexp('key_with_units', r"""
                 total  [\s-]* length [\s-]* in [\s-]* (?: mm | millimeters)
                 | length [\s-]* in [\s-]* (?: mm | millimeters)
                 | snout [\s-]* vent [\s-]* lengths? [\s-]* in [\s-]*
@@ -26,7 +26,7 @@ class LexTotalLength(LexBase):
                     (?: mm | millimeters)
                 """),
 
-            regexp.Regexp('len_key', r"""
+            Regexp('len_key', r"""
                 total  [\s-]* length [\s-]* in
                 | (?: total | max | standard ) [\s-]* lengths?
                 | meas (?: [a-z]* )? \.? : \s* L
@@ -39,14 +39,14 @@ class LexTotalLength(LexBase):
                 | snout \s+ vent \s+ lengths?
                 """),
 
-            regexp.Regexp('ambiguous', regexp.boundary(r"""
+            Regexp('ambiguous', boundary(r"""
                 (?<! [\p{Letter}] \s* ) lengths? """)),
 
-            regexp.Regexp('key_units_req', regexp.boundary(
+            Regexp('key_units_req', boundary(
                 r""" measurements? | body | total""")),
 
-            regexp.Regexp('stop_plus', r' [.;,] '),
+            Regexp('stop_plus', r' [.;,] '),
 
-            regexp.metric_len,
-            regexp.word,
+            get('metric_len'),
+            get('word'),
         ]

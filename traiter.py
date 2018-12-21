@@ -11,7 +11,9 @@ from datetime import datetime
 import regex
 from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, Template
-# import pandas as pd
+from lib.readers.read_csv import ReadCsv
+from lib.writers.write_csv import WriteCsv
+from lib.writers.write_html import WriteHtml
 from lib.parsers.parse_sex import ParseSex
 from lib.parsers.parse_body_mass import ParseBodyMass
 from lib.parsers.parse_life_stage import ParseLifeStage
@@ -25,12 +27,12 @@ __VERSION__ = '0.3.0'
 DEFAULT_COLS = 'dynamicproperties, occurrenceremarks, fieldnotes'
 
 INPUT_FORMAT = [
-    ('csv',),
+    ('csv', ReadCsv),
 ]
 
 OUTPUT_FORMAT = [
-    ('csv',),
-    ('html',),
+    ('csv', WriteCsv),
+    ('html', WriteHtml),
 ]
 
 TRAITS = [
@@ -176,19 +178,19 @@ def parse_args():
     parser.add_argument('--version', action='version',
                         version='%(prog)s {}'.format(__VERSION__))
 
-    parser.add_argument('--columns', '-c', default=DEFAULT_COLS,
-                        help=f"""A comma separated ordered list of columns that
-                            contain traits. The traits will be searched in the
-                            given order. You may need to quote this argument.
-                            The default is: '{DEFAULT_COLS}'.""")
-
     parser.add_argument('--traits', '-t', default=TRAIT_NAMES,
                         help=f"""A comma separated list of the traits to
                             extract. The default is to select them all. You may
                             want to quote this argument. The options are:
                             '{TRAIT_NAMES}'.""")
 
-    parser.add_argument('--extra-columns', '-e', default='',
+    parser.add_argument('--csv-columns', '-c', default=DEFAULT_COLS,
+                        help=f"""A comma separated ordered list of columns that
+                            contain traits. The traits will be searched in the
+                            given order. You may need to quote this argument.
+                            The default is: '{DEFAULT_COLS}'.""")
+
+    parser.add_argument('--csv-extra-columns', '-e', default='',
                         help="""A comma separated list of any extra columns to
                             append to an output row. You may need to quote this
                             argument.""")
@@ -199,13 +201,6 @@ def parse_args():
     parser.add_argument('--output-format', default='csv',
                         help="""Output the result as an HTML table.""")
 
-    parser.add_argument('--skip', type=int,
-                        help="""Skip this many records at the beginning of the
-                            input file.""")
-
-    parser.add_argument('--stop', type=int,
-                        help="""Stop after this many records are processed.""")
-
     parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
                         default=sys.stdin,
                         help='''The input file containing the traits.''')
@@ -213,6 +208,13 @@ def parse_args():
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'),
                         default=sys.stdout,
                         help='''Output the results to this file.''')
+
+    parser.add_argument('--skip', type=int,
+                        help="""Skip this many records at the beginning of the
+                            input file.""")
+
+    parser.add_argument('--stop', type=int,
+                        help="""Stop after this many records are processed.""")
 
     args = parser.parse_args()
 

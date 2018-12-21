@@ -4,7 +4,12 @@ import lib.lexers.shared_regexp as regexp
 
 
 LEX = LexBase()
-LEX.lex_rules = [regexp.shorthand, regexp.number, regexp.word, regexp.sep]
+LEX.lex_rules = [
+    regexp.get('shorthand'),
+    regexp.get('number'),
+    regexp.get('word'),
+    regexp.get('sep'),
+]
 LEX.build_regex()
 
 

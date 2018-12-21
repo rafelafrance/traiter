@@ -10,7 +10,7 @@ PAR = None
 
 class MockLexer(LexBase):
     def rule_list(self):
-        return [rule.number, rule.word, rule.sep]
+        return [rule.get('number'), rule.get('word'), rule.get('sep')]
 
 
 class MockParser(ParseBase):
