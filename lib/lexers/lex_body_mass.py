@@ -1,8 +1,5 @@
 """Lex total length annotations."""
 
-# pylint: disable=missing-docstring,invalid-name
-
-
 from lib.lexers.lex_base import LexBase
 import lib.lexers.shared_regexp as regexp
 
@@ -11,6 +8,7 @@ class LexBodyMass(LexBase):
     """Lex total length annotations."""
 
     def rule_list(self) -> regexp.Regexps:
+        """Define the lexer."""
         return [
             regexp.shorthand_mass,
             regexp.fraction,

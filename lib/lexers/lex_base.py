@@ -1,16 +1,16 @@
 """Tokenize the notations."""
 
-# pylint: disable=too-few-public-methods,missing-docstring
-
 from abc import abstractmethod
 from typing import List
 from dataclasses import dataclass
 import regex
-import lib.lexers.shared_regexp as regexp
+from lib.lexers import shared_regexp as regexp
 
 
 @dataclass
 class Token:
+    """What the token is and where we found it in the text."""
+
     token: str
     start: int = 0
     end: int = 0
@@ -31,49 +31,17 @@ class LexBase:
 
     def __init__(self, lex_rules=None, regex_defines=None):
         """Build the lexer's regex."""
-        self._lex_rules = lex_rules
-        if lex_rules is None:
-            self._lex_rules = self.rule_list()
-
-        self._regex_defines = regex_defines
-        if regex_defines is None:
-            self._regex_defines = regexp.ALL
-
-        self.regex = self.build_regex()
-
-    @property
-    def lex_rules(self):
-        return self._lex_rules
-
-    @lex_rules.setter
-    def lex_rules(self, lex_rules: regexp.Regexps):
-        self._lex_rules += lex_rules
-        self.regex = self.build_regex()
-
-    @lex_rules.deleter
-    def lex_rules(self):
-        self._lex_rules = []
-        self.regex = self.build_regex()
-
-    @property
-    def regex_defines(self):
-        return self._regex_defines
-
-    @regex_defines.setter
-    def regex_defines(self, regex_defines: regexp.Regexps):
-        self._regex_defines += regex_defines
-        self.regex = self.build_regex()
-
-    @regex_defines.deleter
-    def regex_defines(self):
-        self._regex_defines = []
-        self.regex = self.build_regex()
+        self.regex = ''
+        self.lex_rules = self.rule_list()
+        self.regex_defines = regexp.ALL
+        self.build_regex()
 
     def build_regex(self):
+        """Build the lexer's regular expression."""
         regex_defines = regexp.build_regex_defines(self.regex_defines)
         lex_rules = regexp.build_lex_rules(self.lex_rules)
 
-        return regex.compile(
+        self.regex = regex.compile(
             f"""{regex_defines} {lex_rules}""",
             regex.VERBOSE | regex.IGNORECASE)
 

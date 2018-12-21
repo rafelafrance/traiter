@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring,import-error,too-many-public-methods
-
 import unittest
 from lib.lexers.lex_base import Token
 from lib.lexers.lex_sex import LexSex
@@ -12,7 +10,6 @@ class TestLexSex(unittest.TestCase):
 
     def test_tokenize_01(self):
         self.assertEqual(
-            #             0123456789.123456789.123456789.123456789.123456789.12
             LEX.tokenize('sex male males female females ? and is was ; other'),
             [Token(token='key', start=0, end=3),
              Token(token='sex', start=4, end=8),

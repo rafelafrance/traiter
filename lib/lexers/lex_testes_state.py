@@ -1,7 +1,5 @@
 """Lex testes state annotations."""
 
-# pylint: disable=too-few-public-methods
-
 from lib.lexers.lex_base import LexBase
 import lib.lexers.shared_regexp as regexp
 
@@ -10,6 +8,7 @@ class LexTestesState(LexBase):
     """Lex testes state annotations."""
 
     def rule_list(self) -> regexp.Regexps:
+        """Define the lexer."""
         return [
             regexp.sep,
 

@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring,import-error,too-many-public-methods
-
 import unittest
 from lib.lexers.lex_base import Token
 from lib.lexers.lex_total_length import LexTotalLength

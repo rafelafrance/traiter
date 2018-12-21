@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring,import-error,too-many-public-methods
-
 import unittest
 from lib.parsers.shared_reducers import Result
 from lib.parsers.parse_total_length import ParseTotalLength

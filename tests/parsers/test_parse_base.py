@@ -1,6 +1,3 @@
-# pylint: disable=missing-docstring,import-error,too-many-public-methods
-# pylint: disable=global-statement,unused-argument
-
 import unittest
 from lib.lexers.lex_base import LexBase, Token
 from lib.parsers.parse_base import ParseBase, Action

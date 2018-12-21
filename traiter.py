@@ -2,35 +2,44 @@
 
 """Given a CSV file of natural history notes, parse traits."""
 
-import re
 import sys
 import csv
 import json
 import argparse
 import textwrap
 from datetime import datetime
+import regex
 from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, Template
 # import pandas as pd
-from lib.trait_parsers.sex import ParseSex
-from lib.trait_parsers.body_mass import ParseBodyMass
-from lib.trait_parsers.life_stage import ParseLifeStage
-from lib.trait_parsers.total_length import ParseTotalLength
-from lib.trait_parsers.testes_state import ParseTestesState
-from lib.trait_parsers.testes_size import ParseTestesSize
+from lib.parsers.parse_sex import ParseSex
+from lib.parsers.parse_body_mass import ParseBodyMass
+from lib.parsers.parse_life_stage import ParseLifeStage
+from lib.parsers.parse_total_length import ParseTotalLength
+from lib.parsers.parse_testes_state import ParseTestesState
+# from lib.parsers.parse_testes_size import ParseTestesSize
 
 __VERSION__ = '0.3.0'
 
 
 DEFAULT_COLS = 'dynamicproperties, occurrenceremarks, fieldnotes'
 
+INPUT_FORMAT = [
+    ('csv',),
+]
+
+OUTPUT_FORMAT = [
+    ('csv',),
+    ('html',),
+]
+
 TRAITS = [
     ('body_mass', ParseBodyMass),
     ('life_stage', ParseLifeStage),
     ('sex', ParseSex),
     ('total_length', ParseTotalLength),
-    ('testes_state', ParseTestesState),
-    ('testes_size', ParseTestesSize)]
+    ('testes_state', ParseTestesState)]
+#   ('testes_size', ParseTestesSize)]
 TRAIT_NAMES = ', '.join([i[0] for i in TRAITS])
 
 TEMPLATE = Template(
@@ -145,7 +154,7 @@ def output_end(args, writer, preferred_columns, totals):
         return
 
     # Handle HTML output
-    env = Environment(loader=FileSystemLoader('./templates'))
+    env = Environment(loader=FileSystemLoader('./lib/templates'))
     template = env.get_template('traiter.html')
     report = template.render(
         args=vars(args),
@@ -184,7 +193,10 @@ def parse_args():
                             append to an output row. You may need to quote this
                             argument.""")
 
-    parser.add_argument('--html', action='store_true',
+    parser.add_argument('--input-format', default='csv',
+                        help="""Output the result as an HTML table.""")
+
+    parser.add_argument('--output-format', default='csv',
                         help="""Output the result as an HTML table.""")
 
     parser.add_argument('--skip', type=int,
@@ -204,10 +216,10 @@ def parse_args():
 
     args = parser.parse_args()
 
-    args.traits = re.split(r'\s*,\s*', args.traits)
-    args.columns = re.split(r'\s*,\s*', args.columns)
+    args.traits = regex.split(r'\s*,\s*', args.traits)
+    args.columns = regex.split(r'\s*,\s*', args.columns)
     args.extra_columns = [
-        c for c in re.split(r'\s*,\s*', args.extra_columns) if c]
+        c for c in regex.split(r'\s*,\s*', args.extra_columns) if c]
 
     return args
 

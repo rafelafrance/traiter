@@ -1,7 +1,5 @@
 """Lex total length annotations."""
 
-# pylint: disable=too-few-public-methods,missing-docstring,duplicate-code
-
 from lib.lexers.lex_base import LexBase
 import lib.lexers.shared_regexp as regexp
 
@@ -10,6 +8,7 @@ class LexTotalLength(LexBase):
     """Lex total length annotations."""
 
     def rule_list(self) -> regexp.Regexps:
+        """Define the lexer."""
         return [
             regexp.shorthand,
             regexp.fraction,

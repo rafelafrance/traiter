@@ -1,7 +1,5 @@
 """Parse the notations."""
 
-# pylint: disable=missing-docstring
-
 from abc import abstractmethod
 from typing import Any, Dict, List, Callable
 from dataclasses import dataclass
@@ -10,6 +8,8 @@ from lib.lexers.lex_base import Token, Tokens
 
 @dataclass
 class Action:
+    """What to do when we have a rule match."""
+
     replace: str = None
     reduce: Callable = None
     args: Dict = None
@@ -18,6 +18,8 @@ class Action:
 
 @dataclass
 class Result:
+    """Output this when a parser rule is a production."""
+
     value: Any
     has_units: bool = False
     ambiguous: bool = False
@@ -161,7 +163,6 @@ class ParseBase:
 
         return windows
 
-    # pylint: disable=unused-argument, no-self-use
     def post_process(self, results: Results, args=None) -> Results:
         """Post-process the results."""
         return results

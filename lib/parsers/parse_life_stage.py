@@ -1,7 +1,5 @@
 """Parse the notations."""
 
-# pylint: disable=too-few-public-methods
-
 from itertools import product
 from lib.lexers.lex_life_stage import LexLifeStage
 from lib.parsers.parse_base import ParseBase, Action

@@ -1,7 +1,5 @@
 """Parse the notations."""
 
-# pylint: disable=too-few-public-methods
-
 from lib.lexers.lex_testes_state import LexTestesState
 from lib.parsers.parse_base import ParseBase, Action
 import lib.parsers.shared_reducers as reduce

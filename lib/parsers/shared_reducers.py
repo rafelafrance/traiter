@@ -1,7 +1,5 @@
 """Functions for reducing parser results."""
 
-# pylint: disable=unused-argument
-
 import regex
 from lib.lexers.lex_base import Tokens
 from lib.parsers.parse_base import Result

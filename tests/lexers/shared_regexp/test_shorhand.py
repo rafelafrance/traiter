@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring,import-error,too-many-public-methods
-
 import unittest
 from lib.lexers.lex_base import LexBase
 import lib.lexers.shared_regexp as regexp
@@ -7,6 +5,7 @@ import lib.lexers.shared_regexp as regexp
 
 LEX = LexBase()
 LEX.lex_rules = [regexp.shorthand, regexp.number, regexp.word, regexp.sep]
+LEX.build_regex()
 
 
 class TestRange(unittest.TestCase):
