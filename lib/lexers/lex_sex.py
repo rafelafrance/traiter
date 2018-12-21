@@ -12,7 +12,7 @@ class LexSex(LexBase):
 
     def rule_list(self) -> rule.LexRules:
         return [
-            rule.stop,
+            rule.sep,
 
             rule.LexRule('key', util.boundary(r' sex ')),
 

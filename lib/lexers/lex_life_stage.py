@@ -40,7 +40,7 @@ class LexLifeStage(LexBase):
 
             rule.LexRule('word_plus', util.boundary(r' \w [\w?./\-]* ')),
 
-            rule.LexRule('stop', r' [;,"?] | $ '),
+            rule.LexRule('sep', r' [;,"?] | $ '),
 
             rule.LexRule('joiner', r' [/-] '),
         ]

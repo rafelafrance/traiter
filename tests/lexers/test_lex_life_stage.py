@@ -29,9 +29,9 @@ class TestLifeStageLexer(unittest.TestCase):
     def test_tokenize_03(self):
         self.assertEqual(
             LEX.tokenize(';,"'),
-            [Token(token='stop', start=0, end=1),
-             Token(token='stop', start=1, end=2),
-             Token(token='stop', start=2, end=3)])
+            [Token(token='sep', start=0, end=1),
+             Token(token='sep', start=1, end=2),
+             Token(token='sep', start=2, end=3)])
 
     def test_tokenize_04(self):
         self.assertEqual(
@@ -44,8 +44,8 @@ class TestLifeStageLexer(unittest.TestCase):
     def test_tokenize_05(self):
         self.assertEqual(
             LEX.tokenize('yolksac yolk sac embryo'),
-            [Token(token='keyless',  start=0, end=7),
-             Token(token='keyless',  start=8, end=16),
+            [Token(token='keyless', start=0, end=7),
+             Token(token='keyless', start=8, end=16),
              Token(token='word_plus', start=17, end=23)])
 
     def test_tokenize_06(self):
@@ -53,7 +53,7 @@ class TestLifeStageLexer(unittest.TestCase):
             LEX.tokenize('age class=over-winter ;'),
             [Token(token='key', start=0, end=9),
              Token(token='word_plus', start=10, end=21),
-             Token(token='stop', start=22, end=23)])
+             Token(token='sep', start=22, end=23)])
 
     def test_tokenize_07(self):
         self.assertEqual(

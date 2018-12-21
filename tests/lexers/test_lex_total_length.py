@@ -25,14 +25,11 @@ class TestLexTotalLength(unittest.TestCase):
 
     def test_tokenize_03(self):
         self.assertEqual(
-            #             0123456789.123456789.123456789.123456789.123456789.12
             LEX.tokenize('308-190-45-20'),
             [Token(token='shorthand', start=0, end=13)])
 
     def test_tokenize_04(self):
-        self.maxDiff = None
         self.assertEqual(
-            #             0123456789.123456789.123456789.123456789.123456789.12
             LEX.tokenize('t.l.= 2 feet 3.1 - 4.5 inches '),
             [Token(token='total_len_key', start=0, end=4),
              Token(token='range', start=6, end=7),

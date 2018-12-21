@@ -16,11 +16,20 @@ class LexBodyMass(LexBase):
             rule.shorthand_mass,
             rule.fraction,
             rule.range,
-            rule.feet,
-            rule.inches,
+            rule.pounds,
+            rule.ounces,
             rule.shorthand_key,
 
             rule.LexRule('key_with_units', util.boundary(
                 r""" weightingrams | massingrams """)),
 
+            rule.LexRule('wt_key', util.boundary(r"""
+                (?: (?: body | full | observed | total ) \.? \s* )?
+                (?: weights?
+                | weigh (?: s | ed | ing )
+                | mass
+                | w \.? t s? \.? )
+                """)),
+
+            rule.metric_mass,
         ]

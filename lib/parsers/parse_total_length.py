@@ -23,106 +23,107 @@ class ParseTotalLength(ParseBase):
                 reduce=reduce.shorthand, args={'value': 1, 'part': 0}),
 
             'shorthand_key range': Action(
-                reduce=reduce.length, args={'value': 1}),
+                reduce=reduce.numeric_units, args={'value': 1}),
             'shorthand_key range metric_len': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
             'shorthand_key range feet': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
             'shorthand_key range inches': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
 
             'key_with_units range': Action(
                 reduce=reduce.len_units_in_key, args={'key': 0, 'value': 1}),
 
-            'total_len_key range': Action(
-                reduce=reduce.length, args={'value': 1}),
-            'total_len_key range metric_len': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
-            'total_len_key range feet': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
-            'total_len_key range inches': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
-            'total_len_key range feet range inches': Action(
-                reduce=reduce.english_len, args={'feet': 1, 'inches': 3}),
+            'len_key range': Action(
+                reduce=reduce.numeric_units, args={'value': 1}),
+            'len_key range metric_len': Action(
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
+            'len_key range feet': Action(
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
+            'len_key range inches': Action(
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
+            'len_key range feet range inches': Action(
+                reduce=reduce.english_units, args={'start': 1}),
             'range feet range inches': Action(
-                reduce=reduce.english_len, args={'feet': 0, 'inches': 2}),
+                reduce=reduce.english_units,
+                args={'start': 0, 'ambiguous': True}),
 
-            'total_len_key word range': Action(
-                reduce=reduce.length, args={'value': 2}),
-            'total_len_key word word range': Action(
-                reduce=reduce.length, args={'value': 3}),
-            'total_len_key word word word range': Action(
-                reduce=reduce.length, args={'value': 4}),
-            'total_len_key word range metric_len': Action(
-                reduce=reduce.length, args={'value': 2, 'units': 3}),
-            'total_len_key word word range metric_len': Action(
-                reduce=reduce.length, args={'value': 3, 'units': 4}),
-            'total_len_key word word word range metric_len': Action(
-                reduce=reduce.length, args={'value': 4, 'units': 5}),
-            'total_len_key word range feet': Action(
-                reduce=reduce.length, args={'value': 2, 'units': 3}),
-            'total_len_key word word range feet': Action(
-                reduce=reduce.length, args={'value': 3, 'units': 4}),
-            'total_len_key word word word range feet': Action(
-                reduce=reduce.length, args={'value': 4, 'units': 5}),
-            'total_len_key word range inches': Action(
-                reduce=reduce.length, args={'value': 2, 'units': 3}),
-            'total_len_key word word range inches': Action(
-                reduce=reduce.length, args={'value': 3, 'units': 4}),
-            'total_len_key word word word range inches': Action(
-                reduce=reduce.length, args={'value': 4, 'units': 5}),
+            'len_key word range': Action(
+                reduce=reduce.numeric_units, args={'value': 2}),
+            'len_key word word range': Action(
+                reduce=reduce.numeric_units, args={'value': 3}),
+            'len_key word word word range': Action(
+                reduce=reduce.numeric_units, args={'value': 4}),
+            'len_key word range metric_len': Action(
+                reduce=reduce.numeric_units, args={'value': 2, 'units': 3}),
+            'len_key word word range metric_len': Action(
+                reduce=reduce.numeric_units, args={'value': 3, 'units': 4}),
+            'len_key word word word range metric_len': Action(
+                reduce=reduce.numeric_units, args={'value': 4, 'units': 5}),
+            'len_key word range feet': Action(
+                reduce=reduce.numeric_units, args={'value': 2, 'units': 3}),
+            'len_key word word range feet': Action(
+                reduce=reduce.numeric_units, args={'value': 3, 'units': 4}),
+            'len_key word word word range feet': Action(
+                reduce=reduce.numeric_units, args={'value': 4, 'units': 5}),
+            'len_key word range inches': Action(
+                reduce=reduce.numeric_units, args={'value': 2, 'units': 3}),
+            'len_key word word range inches': Action(
+                reduce=reduce.numeric_units, args={'value': 3, 'units': 4}),
+            'len_key word word word range inches': Action(
+                reduce=reduce.numeric_units, args={'value': 4, 'units': 5}),
 
             'ambiguous range': Action(
-                reduce=reduce.length,
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'ambiguous': True}),
             'ambiguous range metric_len': Action(
-                reduce=reduce.length,
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'units': 2, 'ambiguous': True}),
             'ambiguous range feet': Action(
-                reduce=reduce.length,
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'units': 2, 'ambiguous': True}),
             'ambiguous range inches': Action(
-                reduce=reduce.length,
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'units': 2, 'ambiguous': True}),
 
             'key_units_req range metric_len': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
             'key_units_req range feet': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
             'key_units_req range inches': Action(
-                reduce=reduce.length, args={'value': 1, 'units': 2}),
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
 
-            # Due to the trailing total_len_key it is not longer ambiguous
-            'ambiguous range total_len_key': Action(
-                reduce=reduce.length,
+            # Due to the trailing len_key it is not longer ambiguous
+            'ambiguous range len_key': Action(
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'ambiguous': False}),
-            'ambiguous range metric_len total_len_key': Action(
-                reduce=reduce.length,
+            'ambiguous range metric_len len_key': Action(
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'units': 2, 'ambiguous': False}),
-            'ambiguous range feet total_len_key': Action(
-                reduce=reduce.length,
+            'ambiguous range feet len_key': Action(
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'units': 2, 'ambiguous': False}),
-            'ambiguous range inches total_len_key': Action(
-                reduce=reduce.length,
+            'ambiguous range inches len_key': Action(
+                reduce=reduce.numeric_units,
                 args={'value': 1, 'units': 2, 'ambiguous': False}),
 
-            'range total_len_key': Action(
-                reduce=reduce.length, args={'value': 0}),
-            'range metric_len total_len_key': Action(
+            'range len_key': Action(
+                reduce=reduce.numeric_units, args={'value': 0}),
+            'range metric_len len_key': Action(
+                reduce=reduce.numeric_units, args={'value': 0, 'units': 1}),
+            'range feet len_key': Action(
                 reduce=reduce.length, args={'value': 0, 'units': 1}),
-            'range feet total_len_key': Action(
-                reduce=reduce.length, args={'value': 0, 'units': 1}),
-            'range inches total_len_key': Action(
-                reduce=reduce.length, args={'value': 0, 'units': 1}),
+            'range inches len_key': Action(
+                reduce=reduce.numeric_units, args={'value': 0, 'units': 1}),
 
-            'total_len_key metric_len range': Action(
-                reduce=reduce.length, args={'value': 2, 'units': 1}),
-            'total_len_key feet range': Action(
-                reduce=reduce.length, args={'value': 2, 'units': 1}),
-            'total_len_key inches range': Action(
-                reduce=reduce.length, args={'value': 2, 'units': 1}),
+            'len_key metric_len range': Action(
+                reduce=reduce.numeric_units, args={'value': 2, 'units': 1}),
+            'len_key feet range': Action(
+                reduce=reduce.numeric_units, args={'value': 2, 'units': 1}),
+            'len_key inches range': Action(
+                reduce=reduce.numeric_units, args={'value': 2, 'units': 1}),
 
-            'total_len_key fraction inches': Action(
+            'len_key fraction inches': Action(
                 reduce=reduce.fraction, args={'value': 1, 'units': 2}),
             'key_units_req fraction inches': Action(
                 reduce=reduce.fraction, args={'value': 1, 'units': 2}),

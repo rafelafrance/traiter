@@ -28,54 +28,65 @@ def build_lex_rules(lex_rules: LexRules):
 # Numbers are positive decimals
 number = LexRule('number', ' (?&decimal) ')
 
+# For fractions like "1 2/3" or "1/2".
+# We don't allow date like "1/2/34". No part of this is a fraction
 fraction = LexRule('fraction', r"""
-        (?<! [\d/,.] )
-        (?: \d+ \s+ )? \d+ / \d+
-        (?! [\d/,.] )
+    (?<! [\d/,.] )
+    (?: \d+ \s+ )? \d+ / \d+
+    (?! [\d/,.] )
     """)
 
+# A number or a range of numbers like "12 to 34" or "12.3-45.6"
+# Note we want to exclude dates and to not pick up partial dates
+# So: no part of "2014-12-11" would be in a range
 range = LexRule('range', r"""
-        (?<! [\d/,.-]\d | \s+ to )
-        (?&decimal) (?: \s* (?: - | to ) \s* (?&decimal) )?
-        (?! [\d/,.-]\d | \s+ to )
-        """)
+    (?<! \d+ | \d [/,.-] | to \s+ )
+    (?&decimal) (?: \s* (?&range_sep) \s* (?&decimal) )?
+    (?! [/,.-] \d | \d+ | \s+ to )
+    """)
 
+# A number times another number like "12 x 34" this is typically length x width
+# We Allow a triple like "12 x 34 x 56" but we ony take the first two numbers
 cross = LexRule('cross', r"""
-        (?<! [\d/,.-]\d | \s+ by )
-        (?&decimal) (?: \s* (?: x | by | \* ) \s* (?&decimal) )?
-        (?! [\d/,.-]\d | \s+ by )
+    (?<! [\d/,.-]\d | \s+ by )
+    (?&decimal) (?: \s* (?: x | by | \* ) \s* (?&decimal) )?
+    # (?! [\d/,.-]\d | \s+ by )
     """)
 
 shorthand_key = LexRule('shorthand_key', r"""
-        on \s* tag | specimens? | catalog
-        | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
-            (?: \s* [({\[})]? [\p{Letter}]{1,2} [)}\]]? \.? )?
-        | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-        | mesurements | Measurementsnt
+    on \s* tag | specimens? | catalog
+    | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
+        (?: \s* [({\[})]? [\p{Letter}]{1,2} [)}\]]? \.? )?
+    | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+    | mesurements | Measurementsnt
     """)
 
+# This is a common notation form. "11-22-33-44:55g". There are other separators
+#   11 = total length (ToL or TL)
+#   22 = tail length (TaL)
+#   33 = hind foot length (HFL)
+#   44 = ear length (EL)
+#   55 = body mass is optional, as is the mass units
+# Unknown values are filled with ? or x. Like 11-xx-xx-44 or 11-??-33-44
 shorthand = LexRule('shorthand', r"""
-        (?<! [=:/-] )            # Handle list notation
-        (?: (?&decimal) | [?x] )
-        (?: [:-] (?: (?&decimal) | [?x]{1,2} ) ){3}
-        (?: (?: [=:/-] | \s+ )
-            (?: (?&decimal) | [?x] ) \s* (?&metric_wt)? )?
-        (?! [=:/-] )          # Handle list notation
+    (?<! (?&shorthand_overrun) )
+    (?&shorthand_vals) (?&shorthand_wt)?
+    (?! (?&shorthand_overrun) )
     """)
 
+# This is like "shorthand" above with the difference being that we are forcing
+# the mass to be present. This is, unsurprisingly, used when parsing body mass.
 shorthand_mass = LexRule('shorthand_mass', r"""
-        (?<! [:-] )            # Handle list notation
-        (?: (?&decimal) | [?x] )
-        (?: [:-] (?: (?&decimal) | [?x]{1,2} ) ){3}
-        (?: (?: [=:-] | \s+ )
-            (?: (?&decimal) | [?x] ) \s* (?&metric_wt)? )
-        (?! [\s:/-] )          # Handle list notation
+    (?<! (?&shorthand_overrun) )
+    (?&shorthand_vals) (?&shorthand_wt)
+    (?! (?&shorthand_overrun) )
     """)
 
-word = LexRule('word', util.boundary(r' \w+ '))   # Generic word
+# Generic word
+word = LexRule('word', util.boundary(r' \w+ '))
 
 # Used to separate key1=value1; key2=val2 pairs
-stop = LexRule('stop', r' [.;] ')
+sep = LexRule('sep', r' [.;] ')
 
 feet = LexRule('feet', r' (?: foot | feet | ft ) s? \.? ')
 

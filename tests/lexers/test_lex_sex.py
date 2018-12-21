@@ -23,5 +23,5 @@ class TestLexSex(unittest.TestCase):
              Token(token='skip', start=32, end=35),
              Token(token='skip', start=36, end=38),
              Token(token='skip', start=39, end=42),
-             Token(token='stop', start=43, end=44),
+             Token(token='sep', start=43, end=44),
              Token(token='word', start=45, end=50)])

@@ -46,9 +46,9 @@ class ParseBase:
         """Return the parser rules for the trait."""
         return {}
 
-    def parse(self, raw: str) -> Results:
+    def parse(self, text: str) -> Results:
         """Parse the tokens."""
-        self.tokens = self.lexer.tokenize(raw)
+        self.tokens = self.lexer.tokenize(text)
         self.tokens.append(self.lexer.sentinel_token)
 
         self.stack = []
@@ -56,14 +56,14 @@ class ParseBase:
 
         # for t in self.tokens:
         #     print(t)
-        #     print(raw[t.start:t.end])
+        #     print(text[t.start:t.end])
 
         while self.tokens:
 
             rule, prod = self.find_longest_match()
 
             if rule:
-                self.action(raw, results, prod)
+                self.action(text, results, prod)
             else:
                 self.shift()
 
@@ -93,16 +93,16 @@ class ParseBase:
         for _ in range(count):
             self.stack.append(self.tokens.pop(0))
 
-    def action(self, raw: str, results: Results, prod: Action):
+    def action(self, text: str, results: Results, prod: Action):
         """Reduce the stack given the rule's action."""
         if prod.reduce:
-            self.reduce(raw, results, prod)
+            self.reduce(text, results, prod)
         elif prod.replace:
             self.replace(prod)
 
-    def reduce(self, raw, results, prod):
+    def reduce(self, text, results, prod):
         """Reduce the stack tokens with the action."""
-        result = prod.reduce(self.stack[-prod.len:], raw, prod.args)
+        result = prod.reduce(self.stack[-prod.len:], text, prod.args)
         del self.stack[-prod.len:]
         results.append(result)
 

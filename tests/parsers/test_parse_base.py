@@ -5,14 +5,18 @@ import unittest
 from lib.lexers.lex_base import LexBase, Token
 from lib.parsers.parse_base import ParseBase, Action
 from lib.parsers.shared_reducers import Result, value_span
+import lib.lexers.shared_lex_rules as rule
+
 
 PAR = None
 
 
-class MockParser(ParseBase):
+class MockLexer(LexBase):
+    def rule_list(self):
+        return [rule.number, rule.word, rule.sep]
 
-    def __init__(self):
-        super().__init__(LexBase)
+
+class MockParser(ParseBase):
 
     def rule_dict(self):
         return {
@@ -26,7 +30,7 @@ class MockParser(ParseBase):
 
 def setup_module(module):
     global PAR
-    PAR = MockParser()
+    PAR = MockParser(MockLexer)
 
 
 class TestParseBase(unittest.TestCase):
@@ -44,7 +48,7 @@ class TestParseBase(unittest.TestCase):
 
     def test_find_longest_match_01(self):
         PAR.stack = [
-            Token(token='stop', start=0, end=0),
+            Token(token='sep', start=0, end=0),
             Token(token='number', start=0, end=0),
             Token(token='number', start=0, end=0),
             Token(token='number', start=0, end=0)]
@@ -59,7 +63,7 @@ class TestParseBase(unittest.TestCase):
 
     def test_find_longest_match_03(self):
         PAR.stack = [Token(token='number', start=0, end=0),
-                     Token(token='stop', start=0, end=0),
+                     Token(token='sep', start=0, end=0),
                      Token(token='number', start=0, end=0),
                      Token(token='number', start=0, end=0)]
         self.assertEqual(

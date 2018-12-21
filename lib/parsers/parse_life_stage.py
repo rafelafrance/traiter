@@ -33,7 +33,7 @@ class ParseLifeStage(ParseBase):
         for j in range(1, 6):
             for prod in product(['keyless', 'word_plus'], repeat=j):
                 tokens = ' '.join(prod)
-                rule = f'key {tokens} stop'
+                rule = f'key {tokens} sep'
                 span = (1, )
                 if j > 1:
                     span = (1, j)

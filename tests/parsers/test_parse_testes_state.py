@@ -58,7 +58,7 @@ class TestParseTestesState(unittest.TestCase):
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('testes ns'),
-            [Result(value='ns',  start=0, end=9)])
+            [Result(value='ns', start=0, end=9)])
 
     def test_parse_11(self):
         self.assertEqual(

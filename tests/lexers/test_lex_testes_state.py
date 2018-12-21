@@ -27,7 +27,7 @@ class TestTestesStateLexer(unittest.TestCase):
             LEX.tokenize('testis undesc.'),
             [Token(token='testes', start=0, end=6),
              Token(token='descended', start=7, end=13),
-             Token(token='stop', start=13, end=14)])
+             Token(token='sep', start=13, end=14)])
 
     def test_tokenize_04(self):
         self.assertEqual(
@@ -74,7 +74,7 @@ class TestTestesStateLexer(unittest.TestCase):
             LEX.tokenize('tes undescend.'),
             [Token(token='abbrev', start=0, end=3),
              Token(token='descended', start=4, end=13),
-             Token(token='stop', start=13, end=14)])
+             Token(token='sep', start=13, end=14)])
 
     def test_tokenize_11(self):
         self.assertEqual(

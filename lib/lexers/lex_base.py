@@ -7,7 +7,7 @@ from typing import List
 from dataclasses import dataclass
 import regex
 import lib.lexers.shared_lex_rules as rule
-import lib.lexers.shared_regex_defines as define
+import lib.lexers.shared_regex as regexp
 
 
 @dataclass
@@ -38,7 +38,7 @@ class LexBase:
 
         self._regex_defines = regex_defines
         if regex_defines is None:
-            self._regex_defines = [define.decimal, define.metric_wt]
+            self._regex_defines = regexp.ALL
 
         self.regex = self.build_regex()
 
@@ -61,7 +61,7 @@ class LexBase:
         return self._regex_defines
 
     @regex_defines.setter
-    def regex_defines(self, regex_defines: define.Defines):
+    def regex_defines(self, regex_defines: regexp.Regexes):
         self._regex_defines += regex_defines
         self.regex = self.build_regex()
 
@@ -71,11 +71,11 @@ class LexBase:
         self.regex = self.build_regex()
 
     def build_regex(self):
-        regex_defines = define.build_regex_defines(self.regex_defines)
+        regex_defines = regexp.build_regex_defines(self.regex_defines)
         lex_rules = rule.build_lex_rules(self.lex_rules)
 
         return regex.compile(
-            f"""(?(DEFINE) {regex_defines} ) {lex_rules}""",
+            f"""{regex_defines} {lex_rules}""",
             regex.VERBOSE | regex.IGNORECASE)
 
     # #########################################################################
@@ -90,11 +90,11 @@ class LexBase:
 
     # #########################################################################
 
-    def tokenize(self, raw: str) -> Tokens:
+    def tokenize(self, text: str) -> Tokens:
         """Split the text into tokens."""
         tokens = []
 
-        for match in self.regex.finditer(raw):
+        for match in self.regex.finditer(text):
             keys = [k for k, v in match.groupdict().items() if v]
             if keys:
                 tokens.append(Token(keys[0], match.start(), match.end()))

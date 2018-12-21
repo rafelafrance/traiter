@@ -12,7 +12,7 @@ class LexTestesState(LexBase):
 
     def rule_list(self) -> rule.LexRules:
         return [
-            rule.stop,
+            rule.sep,
 
             rule.LexRule(
                 'label',

@@ -345,7 +345,7 @@ class TestParseTotalLength(unittest.TestCase):
             [Result(value=[42, 51], has_units=True, start=12, end=33)])
 
     def test_parse_59(self):
-        # TODO: Maybe we should infer the units from other measurements?
+        # Infer the units from other measurements in post processing
         self.assertEqual(
             PAR.parse('SV 1.4, TAIL 1.0 CM. HATCHLING'),
             [Result(value=1.4, has_units=False, start=0, end=6)])
@@ -433,8 +433,6 @@ class TestParseTotalLength(unittest.TestCase):
             [Result(value=[185, 252], has_units=True, start=0, end=26)])
 
     def test_parse_71(self):
-        # TODO This one is a trawl measurement of some kind, not an organism
-        # measurement
         self.assertEqual(
             PAR.parse('"bottom":"rock?", "length":"278" }'),
             [Result(

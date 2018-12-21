@@ -28,7 +28,7 @@ class LexTotalLength(LexBase):
                     (?: mm | millimeters)
                 """),
 
-            rule.LexRule('total_len_key', r"""
+            rule.LexRule('len_key', r"""
                 total  [\s-]* length [\s-]* in
                 | (?: total | max | standard ) [\s-]* lengths?
                 | meas (?: [a-z]* )? \.? : \s* L
