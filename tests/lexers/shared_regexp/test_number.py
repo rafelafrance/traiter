@@ -2,11 +2,11 @@
 
 import unittest
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_lex_rules as rule
+import lib.lexers.shared_regexp as regexp
 
 
 LEX = LexBase()
-LEX.lex_rules = [rule.number, rule.word, rule.sep]
+LEX.lex_rules = [regexp.number, regexp.word, regexp.sep]
 
 
 class TestNumber(unittest.TestCase):

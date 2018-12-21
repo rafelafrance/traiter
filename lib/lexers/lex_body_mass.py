@@ -4,32 +4,32 @@
 
 
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_lex_rules as rule
-import lib.lexers.shared_utils as util
+import lib.lexers.shared_regexp as regexp
 
 
 class LexBodyMass(LexBase):
     """Lex total length annotations."""
 
-    def rule_list(self) -> rule.LexRules:
+    def rule_list(self) -> regexp.Regexps:
         return [
-            rule.shorthand_mass,
-            rule.fraction,
-            rule.range,
-            rule.pounds,
-            rule.ounces,
-            rule.shorthand_key,
+            regexp.shorthand_mass,
+            regexp.fraction,
+            regexp.range,
+            regexp.pounds,
+            regexp.ounces,
+            regexp.shorthand_key,
 
-            rule.LexRule('key_with_units', util.boundary(
+            regexp.Regexp('key_with_units', regexp.boundary(
                 r""" weightingrams | massingrams """)),
 
-            rule.LexRule('wt_key', util.boundary(r"""
+            regexp.Regexp('wt_key', regexp.boundary(r"""
                 (?: (?: body | full | observed | total ) \.? \s* )?
-                (?: weights?
-                | weigh (?: s | ed | ing )
-                | mass
-                | w \.? t s? \.? )
+                    (?: weights?
+                    | weigh (?: s | ed | ing )
+                    | mass
+                    | w \.? t s? \.? )
+                | body
                 """)),
 
-            rule.metric_mass,
+            regexp.metric_mass,
         ]

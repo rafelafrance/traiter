@@ -3,25 +3,24 @@
 # pylint: disable=too-few-public-methods
 
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_lex_rules as rule
-import lib.lexers.shared_utils as util
+import lib.lexers.shared_regexp as regexp
 
 
 class LexSex(LexBase):
     """Lex testes state annotations."""
 
-    def rule_list(self) -> rule.LexRules:
+    def rule_list(self) -> regexp.Regexps:
         return [
-            rule.sep,
+            regexp.sep,
 
-            rule.LexRule('key', util.boundary(r' sex ')),
+            regexp.Regexp('key', regexp.boundary(r' sex ')),
 
-            rule.LexRule('sex', util.boundary(r' males? | females? ')),
+            regexp.Regexp('sex', regexp.boundary(r' males? | females? ')),
 
-            rule.LexRule('quest', r' \? '),
+            regexp.Regexp('quest', r' \? '),
 
             # These are words that indicate "sex" is not a key
-            rule.LexRule('skip', util.boundary(r' and | is | was ')),
+            regexp.Regexp('skip', regexp.boundary(r' and | is | was ')),
 
-            rule.word,
+            regexp.word,
         ]

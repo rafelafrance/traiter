@@ -83,7 +83,10 @@ class TestParseTotalLength(unittest.TestCase):
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('2 ft. 3.1 - 4.5 in. '),
-            [Result(value=[688.34, 723.9], has_units=True, start=0, end=19)])
+            [Result(value=[688.34, 723.9],
+                    ambiguous=True,
+                    has_units=True,
+                    start=0, end=19)])
 
     def test_parse_14(self):
         self.assertEqual(

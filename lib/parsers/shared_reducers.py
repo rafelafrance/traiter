@@ -5,7 +5,7 @@
 import regex
 from lib.lexers.lex_base import Tokens
 from lib.parsers.parse_base import Result
-import lib.lexers.shared_regex as regexp
+import lib.lexers.shared_regexp as regexp
 import lib.parsers.shared_unit_conversions as conv
 
 
@@ -25,6 +25,7 @@ SHORTHAND_WT = regex.compile(
 
 def convert_units(value: float, units: str) -> float:
     """Normalize the units to millimeters or grams."""
+    units = units if units else ''
     factor = conv.UNITS[units.lower()]
     if isinstance(value, list):
         value = [round(v * factor, 2) for v in value]
@@ -102,8 +103,8 @@ def strip_span(stack: Tokens, text: str, args: dict) -> Result:
     return Result(value=match[1], start=result.start, end=result.end)
 
 
-def len_units_in_key(stack: Tokens, text: str, args: dict) -> Result:
-    """Pull the length units from the key.
+def units_in_key(stack: Tokens, text: str, args: dict) -> Result:
+    """Pull the units from the key.
 
     args:
         key:    index of token with the key

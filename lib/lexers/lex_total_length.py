@@ -3,23 +3,22 @@
 # pylint: disable=too-few-public-methods,missing-docstring,duplicate-code
 
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_lex_rules as rule
-import lib.lexers.shared_utils as util
+import lib.lexers.shared_regexp as regexp
 
 
 class LexTotalLength(LexBase):
     """Lex total length annotations."""
 
-    def rule_list(self) -> rule.LexRules:
+    def rule_list(self) -> regexp.Regexps:
         return [
-            rule.shorthand,
-            rule.fraction,
-            rule.range,
-            rule.feet,
-            rule.inches,
-            rule.shorthand_key,
+            regexp.shorthand,
+            regexp.fraction,
+            regexp.range,
+            regexp.feet,
+            regexp.inches,
+            regexp.shorthand_key,
 
-            rule.LexRule('key_with_units', r"""
+            regexp.Regexp('key_with_units', r"""
                 total  [\s-]* length [\s-]* in [\s-]* (?: mm | millimeters)
                 | length [\s-]* in [\s-]* (?: mm | millimeters)
                 | snout [\s-]* vent [\s-]* lengths? [\s-]* in [\s-]*
@@ -28,7 +27,7 @@ class LexTotalLength(LexBase):
                     (?: mm | millimeters)
                 """),
 
-            rule.LexRule('len_key', r"""
+            regexp.Regexp('len_key', r"""
                 total  [\s-]* length [\s-]* in
                 | (?: total | max | standard ) [\s-]* lengths?
                 | meas (?: [a-z]* )? \.? : \s* L
@@ -41,14 +40,14 @@ class LexTotalLength(LexBase):
                 | snout \s+ vent \s+ lengths?
                 """),
 
-            rule.LexRule('ambiguous', util.boundary(r"""
+            regexp.Regexp('ambiguous', regexp.boundary(r"""
                 (?<! [\p{Letter}] \s* ) lengths? """)),
 
-            rule.LexRule('key_units_req', util.boundary(
+            regexp.Regexp('key_units_req', regexp.boundary(
                 r""" measurements? | body | total""")),
 
-            rule.LexRule('stop_plus', r' [.;,] '),
+            regexp.Regexp('stop_plus', r' [.;,] '),
 
-            rule.metric_len,
-            rule.word,
+            regexp.metric_len,
+            regexp.word,
         ]

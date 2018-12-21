@@ -3,24 +3,23 @@
 # pylint: disable=too-few-public-methods
 
 from lib.lexers.lex_base import LexBase
-import lib.lexers.shared_lex_rules as rule
-import lib.lexers.shared_utils as util
+import lib.lexers.shared_regexp as regexp
 
 
 class LexLifeStage(LexBase):
     """Lex testes state annotations."""
 
-    def rule_list(self) -> rule.LexRules:
+    def rule_list(self) -> regexp.Regexps:
         return [
-            rule.LexRule('skip', r' determin \w*'),
+            regexp.Regexp('skip', r' determin \w*'),
 
-            rule.LexRule('key', util.boundary(
+            regexp.Regexp('key', regexp.boundary(
                 r""" life \s* stage (?: \s* remarks )?
                      | age \s* class
                      | age \s* in \s* (?: hour | day ) s?
                      | age """)),
 
-            rule.LexRule('keyless', util.boundary(
+            regexp.Regexp('keyless', regexp.boundary(
                 r""" (?: after \s+ )?
                         (?: first | second | third | fourth | hatching
                             | 1st | 2nd | 3rd | \dth) \s+ year
@@ -38,9 +37,9 @@ class LexLifeStage(LexBase):
                      | yolk \s* sac """)),
             # | embryos? | embryonic | fetus (:? es )?
 
-            rule.LexRule('word_plus', util.boundary(r' \w [\w?./\-]* ')),
+            regexp.Regexp('word_plus', regexp.boundary(r' \w [\w?./\-]* ')),
 
-            rule.LexRule('sep', r' [;,"?] | $ '),
+            regexp.Regexp('sep', r' [;,"?] | $ '),
 
-            rule.LexRule('joiner', r' [/-] '),
+            regexp.Regexp('joiner', r' [/-] '),
         ]

@@ -32,7 +32,7 @@ class ParseTotalLength(ParseBase):
                 reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
 
             'key_with_units range': Action(
-                reduce=reduce.len_units_in_key, args={'key': 0, 'value': 1}),
+                reduce=reduce.units_in_key, args={'key': 0, 'value': 1}),
 
             'len_key range': Action(
                 reduce=reduce.numeric_units, args={'value': 1}),
@@ -112,7 +112,7 @@ class ParseTotalLength(ParseBase):
             'range metric_len len_key': Action(
                 reduce=reduce.numeric_units, args={'value': 0, 'units': 1}),
             'range feet len_key': Action(
-                reduce=reduce.length, args={'value': 0, 'units': 1}),
+                reduce=reduce.numeric_units, args={'value': 0, 'units': 1}),
             'range inches len_key': Action(
                 reduce=reduce.numeric_units, args={'value': 0, 'units': 1}),
 

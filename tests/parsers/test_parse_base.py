@@ -5,7 +5,7 @@ import unittest
 from lib.lexers.lex_base import LexBase, Token
 from lib.parsers.parse_base import ParseBase, Action
 from lib.parsers.shared_reducers import Result, value_span
-import lib.lexers.shared_lex_rules as rule
+import lib.lexers.shared_regexp as rule
 
 
 PAR = None

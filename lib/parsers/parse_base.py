@@ -127,7 +127,7 @@ class ParseBase:
         if not self.rules:
             raise ValueError('No rules for the parser.')
 
-        valid_tokens = {t.token for t in self.lexer.lex_rules}
+        valid_tokens = {t.label for t in self.lexer.lex_rules}
         valid_tokens |= {v.replace for k, v in self.rules.items() if v.replace}
 
         errors = set()

@@ -75,12 +75,14 @@ class TestParseBodyMass(unittest.TestCase):
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('weight=5.4 g; unformatted measurements=77-30-7-12=5.4'),
-            [Result(value=5.4, has_units=True, start=0, end=12)])
+            [Result(value=5.4, has_units=True, start=0, end=12),
+             Result(value=5.4, has_units=False, start=26, end=53)])
 
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('unformatted measurements=77-30-7-12=5.4; weight=5.4;'),
-            [Result(value=5.4, has_units=False, start=12, end=39)])
+            [Result(value=5.4, has_units=False, start=12, end=39),
+             Result(value=5.4, has_units=False, start=41, end=51)])
 
     def test_parse_14(self):
         self.assertEqual(
@@ -144,7 +146,8 @@ class TestParseBodyMass(unittest.TestCase):
     def test_parse_26(self):
         self.assertEqual(
             PAR.parse('weight=5.4 g; unformatted measurements=77-x-7-12=5.4'),
-            [Result(value=5.4, has_units=True, start=0, end=12)])
+            [Result(value=5.4, has_units=True, start=0, end=12),
+             Result(value=5.4, has_units=False, start=26, end=52)])
 
     def test_parse_27(self):
         self.assertEqual(
@@ -154,9 +157,12 @@ class TestParseBodyMass(unittest.TestCase):
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse('body mass=0 g'),
-            [])
+            [Result(value=0.0, has_units=True, start=0, end=13)])
 
     def test_parse_29(self):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 oz '),
-            [Result(value=994.9, has_units=True, start=0, end=13)])
+            [Result(value=995.07,
+                    ambiguous=True,
+                    has_units=True,
+                    start=0, end=13)])

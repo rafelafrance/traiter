@@ -6,8 +6,7 @@ from abc import abstractmethod
 from typing import List
 from dataclasses import dataclass
 import regex
-import lib.lexers.shared_lex_rules as rule
-import lib.lexers.shared_regex as regexp
+import lib.lexers.shared_regexp as regexp
 
 
 @dataclass
@@ -47,7 +46,7 @@ class LexBase:
         return self._lex_rules
 
     @lex_rules.setter
-    def lex_rules(self, lex_rules: rule.LexRules):
+    def lex_rules(self, lex_rules: regexp.Regexps):
         self._lex_rules += lex_rules
         self.regex = self.build_regex()
 
@@ -61,7 +60,7 @@ class LexBase:
         return self._regex_defines
 
     @regex_defines.setter
-    def regex_defines(self, regex_defines: regexp.Regexes):
+    def regex_defines(self, regex_defines: regexp.Regexps):
         self._regex_defines += regex_defines
         self.regex = self.build_regex()
 
@@ -72,7 +71,7 @@ class LexBase:
 
     def build_regex(self):
         regex_defines = regexp.build_regex_defines(self.regex_defines)
-        lex_rules = rule.build_lex_rules(self.lex_rules)
+        lex_rules = regexp.build_lex_rules(self.lex_rules)
 
         return regex.compile(
             f"""{regex_defines} {lex_rules}""",
@@ -81,7 +80,7 @@ class LexBase:
     # #########################################################################
 
     @abstractmethod
-    def rule_list(self) -> rule.LexRules:
+    def rule_list(self) -> regexp.Regexps:
         """Return the lexer rules for the trait.
 
         Each trait will have its own list of lexer rules. Note: Order matters.

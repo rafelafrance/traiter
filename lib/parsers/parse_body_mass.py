@@ -34,6 +34,13 @@ class ParseBodyMass(ParseBase):
             'wt_key range ounces': Action(
                 reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
 
+            'shorthand_key range metric_mass': Action(
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
+            'shorthand_key range pounds': Action(
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
+            'shorthand_key range ounces': Action(
+                reduce=reduce.numeric_units, args={'value': 1, 'units': 2}),
+
             'wt_key range': Action(
                 reduce=reduce.numeric_units, args={'value': 1}),
 
@@ -43,4 +50,6 @@ class ParseBodyMass(ParseBase):
                 reduce=reduce.english_units,
                 args={'start': 0, 'ambiguous': True}),
 
+            'key_with_units range': Action(
+                reduce=reduce.units_in_key, args={'key': 0, 'value': 1}),
         }
