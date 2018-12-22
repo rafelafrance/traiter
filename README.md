@@ -1,7 +1,30 @@
 # The Traits Database Project
 
 ## All right, what's this all about then?
-**Challenge**: Extract trait information from unstructured or semi-structured natural history notations. That is, if I'm given text like, "This rather large female specimen is 12 lbs 7 oz and 3 feet and 7 inches in total length." I should be able to extract that the "sex = female", the "body mass = 5,641 g" and the "total length = 1,092 mm". Of course this is a rather straight-forward example. Natural history/museum notations are highly idiosyncratic and may use various shorthand notations. For example, total length can be written in as "Total Length: 20cm", or as "20cm T.L.", etc. Controlled vocabularies can sometimes have a signifier like "Life Stage: Adult" and other times we will just see the word "Adult" without a signifier. In other cases we will see uncommented shorthand notations like "157-60-20-19-21g" and we will need to extract the proper values from that.
+**Challenge**: Extract trait information from unstructured or semi-structured natural history notations. That is, if I'm given text like:
+
+ ```This rather large female specimen is 12 lbs 7 oz and 3 feet and 7 inches in total length.```
+
+ I should be able to extract:
+
+ - sex = female
+ - body mass = 5,641 g
+ - total length = 1,092 mm
+
+
+ Of course this is a rather straight-forward example.
+
+ Natural history/museum notations are highly idiosyncratic and may use various shorthand notations. Here are just a few examples of how total length measurements appear:
+
+ - Total Length: 15.7cm
+ - 15.7cm T.L.
+ - 157-60-20-19-21g
+ - SVL 157 mm
+ - standard length: 157-215mm
+ - t.l.= 2 feet 3.1 - 4.5 inches
+ - etc.
+
+Controlled vocabularies can sometimes have a signifier like "Life Stage: Adult" and other times we will just see the word "Adult" without a signifier. In other cases we will see uncommented shorthand notations like "157-60-20-19-21g" and we will need to extract the proper values from that.
 
 There are many possible strategies for parsing traits from these notations. For now, I'm using a modified shift-reduce parser and I am writing one parser per trait or trait set. (See below.)
 
@@ -14,7 +37,7 @@ python3 -m pip install --user -r traiter/requirements.txt
 
 ## Run
 ```
-python3 traiter.py ... more to follow ...
+python3 traiter.py ... TODO ...
 ```
 ## Running tests
 ```
@@ -26,7 +49,7 @@ I am basing the trait parsers on modified but simple shift-reduce parsers.
 
 Basic program flow:
 
-* Extract the data to be parsed from, for now, CSV columns.
+* Extract the data to be parsed from a text file.
 
 * Feed each column cell to one or more parsers.
 
