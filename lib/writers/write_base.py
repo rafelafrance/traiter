@@ -8,6 +8,7 @@ class WriteBase:
 
     def __init__(self, args):
         """Build the writer."""
+        self.args = args
 
     @abstractmethod
     def header(self):

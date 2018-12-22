@@ -9,7 +9,7 @@ import argparse
 import textwrap
 from datetime import datetime
 import regex
-from tqdm import tqdm
+# from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, Template
 from lib.readers.read_csv import ReadCsv
 from lib.writers.write_csv import WriteCsv
@@ -26,84 +26,97 @@ __VERSION__ = '0.3.0'
 
 DEFAULT_COLS = 'dynamicproperties, occurrenceremarks, fieldnotes'
 
-INPUT_FORMAT = [
-    ('csv', ReadCsv),
-]
+INPUT_FORMATS = {
+    'csv': ReadCsv,
+}
+INPUT_OPTIONS = [k for k, v in INPUT_FORMATS.items()]
 
-OUTPUT_FORMAT = [
-    ('csv', WriteCsv),
-    ('html', WriteHtml),
-]
+OUTPUT_FORMATS = {
+    'csv': WriteCsv,
+    'html': WriteHtml,
+}
+OUTPUT_OPTIONS = [k for k, v in OUTPUT_FORMATS.items()]
 
+# These are ordered
 TRAITS = [
     ('body_mass', ParseBodyMass),
-    ('life_stage', ParseLifeStage),
     ('sex', ParseSex),
+    ('life_stage', ParseLifeStage),
     ('total_length', ParseTotalLength),
-    ('testes_state', ParseTestesState)]
-#   ('testes_size', ParseTestesSize)]
-TRAIT_NAMES = ', '.join([i[0] for i in TRAITS])
+    ('testes_state', ParseTestesState),
+    #   ('testes_size', ParseTestesSize)],
+]
+TRAIT_OPTIONS = ', '.join([i[0] for i in TRAITS])
 
 TEMPLATE = Template(
     '{{ left }}<span class="found">{{ middle }}</span>{{ right }}')
 
 
-def parse_csv_file(args):
+def parse_traits(args):
     """Parse the input."""
-    parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
-               if trait in args.traits]
+    reader = INPUT_FORMATS[args.input_format](args)
+    writer = OUTPUT_FORMATS[args.output_format](args)
 
-    writer = None
-    totals = {'rows': 0, 'empty': 0}
-
-    reader = csv.DictReader(args.infile)
-    for (i, in_row) in tqdm(enumerate(reader, 1)):
-
-        if args.skip and i < args.skip:
-            continue
-
-        totals['rows'] += 1
-
-        if writer is None:
-            # Setup the output file
-            columns = reader.fieldnames
-            preferred_columns = [p.preferred_value for (t, p) in parsers
-                                 if p.preferred_value
-                                 and p.preferred_value in columns]
-            input_columns = (args.columns + preferred_columns
-                             + args.extra_columns)
-            parsed_columns = [f'parsed_{t}' for (t, p) in parsers]
-
-            for col in parsed_columns:
-                totals[col] = 0
-
-            all_columns = parsed_columns + input_columns
-            writer = output_start(args, all_columns)
-
-        strings = [in_row[col] for col in args.columns]
-
-        if not sum(len(s) for s in strings):
-            totals['empty'] += 1
-
-        out_row = {c: in_row[c] for c in input_columns}
-
-        for trait, parser in parsers:
-            preferred_value = ''
-            if parser.preferred_value:
-                preferred_value = in_row.get(parser.preferred_value, '')
-
-            parsed = parser.parser(strings, preferred_value)
-
-            column = f'parsed_{trait}'
-            out_row[column] = output_cell(args, parsed, out_row)
-            totals[column] += int(parsed['found'])
-
-        output_row(args, writer, out_row)
-
-        if args.stop and totals['rows'] >= args.stop:
-            break
-
-    output_end(args, writer, preferred_columns, totals)
+    with reader as input:
+        for line in input:
+            print(line)
+            print()
+    print(args)
+    import sys
+    sys.exit()
+    # parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
+    #            if trait in args.traits]
+    #
+    # totals = {'rows': 0, 'empty': 0}
+    #
+    # reader = csv.DictReader(args.infile)
+    # for (i, in_row) in tqdm(enumerate(reader, 1)):
+    #
+    #     if args.skip and i < args.skip:
+    #         continue
+    #
+    #     totals['rows'] += 1
+    #
+    #     if writer is None:
+    #         # Setup the output file
+    #         columns = reader.fieldnames
+    #         preferred_columns = [p.preferred_value for (t, p) in parsers
+    #                              if p.preferred_value
+    #                              and p.preferred_value in columns]
+    #         input_columns = (args.columns + preferred_columns
+    #                          + args.extra_columns)
+    #         parsed_columns = [f'parsed_{t}' for (t, p) in parsers]
+    #
+    #         for col in parsed_columns:
+    #             totals[col] = 0
+    #
+    #         all_columns = parsed_columns + input_columns
+    #         writer = output_start(args, all_columns)
+    #
+    #     strings = [in_row[col] for col in args.columns]
+    #
+    #     if not sum(len(s) for s in strings):
+    #         totals['empty'] += 1
+    #
+    #     out_row = {c: in_row[c] for c in input_columns}
+    #
+    #     for trait, parser in parsers:
+    #         preferred_value = ''
+    #         if parser.preferred_value:
+    #             preferred_value = in_row.get(parser.preferred_value, '')
+    #
+    #         parsed = parser.parser(strings, preferred_value)
+    #
+    #         column = f'parsed_{trait}'
+    #         out_row[column] = output_cell(args, parsed, out_row)
+    #         totals[column] += int(parsed['found'])
+    #
+    #     output_row(args, writer, out_row)
+    #
+    #     if args.stop and totals['rows'] >= args.stop:
+    #         break
+    #
+    # output_end(args, writer, preferred_columns, totals)
 
 
 def output_start(args, all_columns):
@@ -178,11 +191,11 @@ def parse_args():
     parser.add_argument('--version', action='version',
                         version='%(prog)s {}'.format(__VERSION__))
 
-    parser.add_argument('--traits', '-t', default=TRAIT_NAMES,
+    parser.add_argument('--traits', '-t', default=TRAIT_OPTIONS,
                         help=f"""A comma separated list of the traits to
                             extract. The default is to select them all. You may
                             want to quote this argument. The options are:
-                            '{TRAIT_NAMES}'.""")
+                            '{TRAIT_OPTIONS}'.""")
 
     parser.add_argument('--csv-columns', '-c', default=DEFAULT_COLS,
                         help=f"""A comma separated ordered list of columns that
@@ -195,11 +208,15 @@ def parse_args():
                             append to an output row. You may need to quote this
                             argument.""")
 
-    parser.add_argument('--input-format', default='csv',
-                        help="""Output the result as an HTML table.""")
+    parser.add_argument('--input-format', '-i', default='csv',
+                        choices=INPUT_OPTIONS,
+                        help="""The data input format.
+                            The default is "csv".""")
 
-    parser.add_argument('--output-format', default='csv',
-                        help="""Output the result as an HTML table.""")
+    parser.add_argument('--output-format', '-o', default='csv',
+                        choices=OUTPUT_OPTIONS,
+                        help="""Output the result as this.
+                            The default is "csv".""")
 
     parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
                         default=sys.stdin,
@@ -219,13 +236,13 @@ def parse_args():
     args = parser.parse_args()
 
     args.traits = regex.split(r'\s*,\s*', args.traits)
-    args.columns = regex.split(r'\s*,\s*', args.columns)
-    args.extra_columns = [
-        c for c in regex.split(r'\s*,\s*', args.extra_columns) if c]
+    args.csv_columns = regex.split(r'\s*,\s*', args.csv_columns)
+    args.csv_extra_columns = [
+        c for c in regex.split(r'\s*,\s*', args.csv_extra_columns) if c]
 
     return args
 
 
 if __name__ == "__main__":
     ARGS = parse_args()
-    parse_csv_file(ARGS)
+    parse_traits(ARGS)
