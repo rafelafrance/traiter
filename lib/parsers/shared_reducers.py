@@ -7,27 +7,15 @@ import lib.lexers.shared_regexp as regexp
 import lib.parsers.shared_unit_conversions as conv
 
 
-SHORTHAND_SEP = regexp.compile_regex('shorthand_sep')
-RANGE_SEP = regexp.compile_regex('range_sep')
+RANGE_SEP = regexp.compile_regexp('range_sep')
 FRACTION = regex.compile(r' \/ ', regex.VERBOSE)
-
-DEFINES = regexp.build_regex_defines(regexp.DEFINES)
-
-SHORTHAND_WT = regex.compile(
-    (f'{DEFINES} ' + r"""
-        (?&shorthand_vals)
-        (?&shorthand_ext)*
-        (?&shorthand_wt_sep) \s*
-        (?P<value> (?&shorthand_val) ) \s*
-        (?P<units> (?&metric_wt) )?
-     """),
-    regex.VERBOSE | regex.IGNORECASE)
+SHORTHAND = regexp.compile_regexp('shorthand', regexp.DEFINES)
 
 
 def convert_units(value: float, units: str) -> float:
     """Normalize the units to millimeters or grams."""
     units = units if units else ''
-    factor = conv.UNITS[units.lower()]
+    factor = conv.UNITS.get(units.lower(), '')
     if isinstance(value, list):
         value = [round(v * factor, 2) for v in value]
     else:
@@ -147,33 +135,25 @@ def shorthand(stack: Tokens, text: str, args: dict) -> Result:
         value:  index of token with the values
         part:   which part of 11-22-33-44:55 notation holds the value
     """
-    values = token_to_floats(stack, text, args['value'], SHORTHAND_SEP)
-    value = values[args['part']] if len(values) > args['part'] else None
-    return Result(
-        value=value, has_units=True, start=stack[0].start, end=stack[-1].end)
+    shorthand = token_to_str(stack, text, args['value'])
+    match = SHORTHAND.match(shorthand)
 
-
-def shorthand_mass(stack: Tokens, text: str, args: dict) -> Result:
-    """Handle shorthand notation like 11-22-33-44:55g.
-
-    Which is total-tail-hindFoot-ear-mass. The token has the mass in this case.
-    args:
-        value:  index of token with the values
-    """
-    all = token_to_str(stack, text, args['value'])
-    match = SHORTHAND_WT.match(all)
-    value = to_float(match.group('value'))
-    units = match.group('units')
-    if value is None:
-        has_units = None
-    else:
-        value = convert_units(value, units)
+    has_units = True
+    units = ''
+    if args.get('units'):
+        units = match[args['units']]
         has_units = bool(units)
+
+    value = to_float(match[args['part']])
+    if value is None:
+        return None
+    value = convert_units(value, units)
 
     return Result(
         value=value,
         has_units=has_units,
-        start=stack[0].start, end=stack[-1].end)
+        start=stack[0].start,
+        end=stack[-1].end)
 
 
 def english_units(stack: Tokens, text: str, args: dict) -> Result:
@@ -190,9 +170,10 @@ def english_units(stack: Tokens, text: str, args: dict) -> Result:
     minor = token_to_floats(stack, text, idx + 2, as_array=True)
     major_units = token_to_str(stack, text, idx + 1)
     minor_units = token_to_str(stack, text, idx + 3)
-    values = [convert_units(f, major_units) + convert_units(i, minor_units)
-              for f in major for i in minor]
-    value = values if len(values) > 1 else values[0]
+    value = [convert_units(f, major_units) + convert_units(i, minor_units)
+             for f in major for i in minor]
+    if len(value) == 1:
+        value = value[0]
 
     return Result(
         value=value,

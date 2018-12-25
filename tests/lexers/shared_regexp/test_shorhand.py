@@ -106,3 +106,8 @@ class TestRange(unittest.TestCase):
         text = '762-292-121-76 2435.0g'
         expect = [('shorthand', '762-292-121-76 2435.0g')]
         self.compare_tokens(text, expect)
+
+    def test_shorthand_17(self):
+        text = '762-292-121-76-fa99 2435.0g'
+        expect = [('shorthand', '762-292-121-76-fa99 2435.0g')]
+        self.compare_tokens(text, expect)

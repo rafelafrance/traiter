@@ -16,9 +16,11 @@ class ParseTotalLength(ParseBase):
         """Return the parser rules."""
         return {
             'shorthand': Action(
-                reduce=reduce.shorthand, args={'value': 0, 'part': 0}),
+                reduce=reduce.shorthand,
+                args={'value': 0, 'part': 'shorthand_tl'}),
             'shorthand_key shorthand': Action(
-                reduce=reduce.shorthand, args={'value': 1, 'part': 0}),
+                reduce=reduce.shorthand,
+                args={'value': 1, 'part': 'shorthand_tl'}),
 
             'shorthand_key range': Action(
                 reduce=reduce.numeric_units, args={'value': 1}),

@@ -56,10 +56,22 @@ def get(label):
     return regexp[0]
 
 
-def compile_regex(label):
+def compile_regexps(lex_rules, defines):
+    """Compile one define as a plain regex."""
+    defines = build_regex_defines(defines)
+    lex_rules = build_lex_rules(lex_rules)
+    return regex.compile(
+        f"""{defines} {lex_rules}""", regex.VERBOSE | regex.IGNORECASE)
+
+
+def compile_regexp(label, defines=None):
     """Compile one define as a plain regex."""
     regexp = get(label)
-    return regex.compile(regexp.regexp, regex.VERBOSE | regex.IGNORECASE)
+    reg = regexp.regexp
+    if defines:
+        defines = build_regex_defines(defines)
+        reg = f"""{defines} {reg}"""
+    return regex.compile(reg, regex.VERBOSE | regex.IGNORECASE)
 
 
 # #############################################################################
@@ -79,28 +91,7 @@ DEFINES = [
 
     Regexp('shorthand_overrun', r""" [\d/-] """),
 
-    Regexp('shorthand_val', r"""
-        (?: (?&decimal) | [?x]{1,2} )
-        """),
-
-    Regexp('shorthand_sep', r""" [:-] """),
-
-    Regexp('shorthand_vals', r"""
-        (?&shorthand_val)
-        (?: (?&shorthand_sep) (?&shorthand_val) ){3}
-        """),
-
-    Regexp('shorthand_wt_sep', r"""
-        [\s=:/-]
-        """),
-
-    Regexp('shorthand_ext', r"""
-        (?: (?&shorthand_sep) [\p{Letter}]{1,4} (?&shorthand_val) )
-        """),
-
-    Regexp('shorthand_wt', r"""
-        (?&shorthand_wt_sep) \s* (?&shorthand_val) \s* (?&metric_wt)?
-        """),
+    Regexp('shorthand_val', r""" (?&decimal) | [?x]{1,2} """),
 ]
 
 # #############################################################################
@@ -145,33 +136,34 @@ LEX_RULES = [
         | mesurements | Measurementsnt
         """),
 
-    # This is a common notation form: "11-22-33-44:99g".
-    # There are other separators.
+    # This is a common notation: "11-22-33-44:99g".
+    # There are other separators "/", ":", etc.
     # There is also an extended form that looks like:
-    #   ""11-22-33-44-fa55-hb66:99g"" There may be several extended numbers.
+    #   "11-22-33-44-fa55-hb66:99g" There may be several extended numbers.
     #
-    #   11 = total length (ToL or TL)
+    #   11 = total length (ToL or TL) or sometimes head body length
     #   22 = tail length (TaL)
     #   33 = hind foot length (HFL)
     #   44 = ear length (EL)
     #   99 = body mass is optional, as is the mass units
-    # Unknown values are filled with ? or x. Like 11-xx-xx-44 or 11-??-33-44
+    # Unknown values are filled with "?" or "x".
+    #   Like "11-x-x-44" or "11-?-33-44"
+
+
     Regexp('shorthand', r"""
         (?<! (?&shorthand_overrun) )
-        (?&shorthand_vals)
-        (?&shorthand_ext)*
-        (?&shorthand_wt)?
-        (?! (?&shorthand_overrun) )
-        """),
-
-    # This is like "shorthand" above with the difference being that we are
-    # forcing the mass to be present. This is, unsurprisingly, used when
-    # parsing body mass.
-    Regexp('shorthand_mass', r"""
-        (?<! (?&shorthand_overrun) )
-        (?&shorthand_vals)
-        (?&shorthand_ext)*
-        (?&shorthand_wt)
+        (?<shorthand_tl> (?&shorthand_val) )
+        (?<shorthand_sep> [:/-] )
+        (?<shorthand_tal> (?&shorthand_val) )
+        (?P=shorthand_sep)
+        (?<shorthand_hfl> (?&shorthand_val) )
+        (?P=shorthand_sep)
+        (?<shorthand_eal> (?&shorthand_val) )
+        (?<shorthand_ext>
+            (?: (?P=shorthand_sep) [\p{Letter}]{1,4} (?&shorthand_val) )* )
+        (?: [\s=:/-] \s*
+            (?<shorthand_wt> (?&shorthand_val) ) \s*
+            (?<shorthand_wt_units> (?&metric_wt) )? )?
         (?! (?&shorthand_overrun) )
         """),
 

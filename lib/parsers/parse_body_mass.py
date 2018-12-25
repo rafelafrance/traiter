@@ -15,10 +15,16 @@ class ParseBodyMass(ParseBase):
     def rule_dict(self):
         """Return the parser rules."""
         return {
-            'shorthand_mass': Action(
-                reduce=reduce.shorthand_mass, args={'value': 0}),
-            'shorthand_key shorthand_mass': Action(
-                reduce=reduce.shorthand_mass, args={'value': 1}),
+            'shorthand': Action(
+                reduce=reduce.shorthand,
+                args={'value': 0,
+                      'part': 'shorthand_wt',
+                      'units': 'shorthand_wt_units'}),
+            'shorthand_key shorthand': Action(
+                reduce=reduce.shorthand,
+                args={'value': 1,
+                      'part': 'shorthand_wt',
+                      'units': 'shorthand_wt_units'}),
             'wt_key metric_mass range': Action(
                 reduce=reduce.numeric_units, args={'value': 2, 'units': 1}),
             'wt_key pounds range': Action(

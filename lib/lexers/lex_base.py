@@ -3,7 +3,6 @@
 from abc import abstractmethod
 from typing import List
 from dataclasses import dataclass
-import regex
 import lib.lexers.shared_regexp as regexp
 
 
@@ -34,12 +33,8 @@ class LexBase:
 
     def build_regex(self):
         """Build the lexer's regular expression."""
-        regex_defines = regexp.build_regex_defines(self.regex_defines)
-        lex_rules = regexp.build_lex_rules(self.lex_rules)
-
-        self.regexp = regex.compile(
-            f"""{regex_defines} {lex_rules}""",
-            regex.VERBOSE | regex.IGNORECASE)
+        self.regexp = regexp.compile_regexps(
+            self.lex_rules, self.regex_defines)
 
     @abstractmethod
     def rule_list(self) -> regexp.Regexps:

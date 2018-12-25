@@ -10,7 +10,7 @@ class LexBodyMass(LexBase):
     def rule_list(self) -> Regexps:
         """Define the lexer."""
         return [
-            get('shorthand_mass'),
+            get('shorthand'),
             get('fraction'),
             get('range'),
             get('pounds'),

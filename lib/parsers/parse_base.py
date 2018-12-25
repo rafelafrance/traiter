@@ -106,7 +106,8 @@ class ParseBase:
         """Reduce the stack tokens with the action."""
         result = prod.reduce(self.stack[-prod.len:], text, prod.args)
         del self.stack[-prod.len:]
-        results.append(result)
+        if result:
+            results.append(result)
 
     def replace(self, prod):
         """Replace the stack tokens with the replacement token."""
