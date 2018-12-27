@@ -7,7 +7,7 @@ import regex
 
 @dataclass
 class Regexp:
-    """Label a regexp so it can be reused."""
+    """Label a regexp so it can be used in different ways."""
 
     label: str
     regexp: str

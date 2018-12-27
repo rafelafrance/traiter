@@ -134,6 +134,7 @@ def shorthand(stack: Tokens, text: str, args: dict) -> Result:
     args:
         value:  index of token with the values
         part:   which part of 11-22-33-44:55 notation holds the value
+        units:  for the optional weight part
     """
     shorthand = token_to_str(stack, text, args['value'])
     match = SHORTHAND.match(shorthand)
