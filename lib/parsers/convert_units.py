@@ -1,6 +1,18 @@
 """Unit conversions."""
 
 
+def convert(value, units):
+    """Normalize the units to millimeters or grams."""
+    units = units if units else ''
+    factor = UNITS.get(units.lower(), '')
+    if isinstance(value, list):
+        value = [round(v * factor, 2) for v in value]
+    else:
+        value *= factor
+        value = round(value, 2)
+    return value
+
+
 UNITS = {
     '': 1.0,    # No units given
 
@@ -64,4 +76,6 @@ UNITS = {
     'ozs.': 28.349,
     'pound': 453.593,
     'pounds': 453.593,
+    'weightingrams': 1.0,
+    'massingrams': 1.0,
 }

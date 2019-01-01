@@ -1,12 +1,14 @@
+# flake8=noqa
+
 import unittest
-from lib.parsers.shared_reducers import Result
-from lib.parsers.parse_total_length import ParseTotalLength
+from lib.parsers.base import Result
+from lib.parsers.total_length import TotalLength
 
 
-PAR = ParseTotalLength()
+PAR = TotalLength()
 
 
-class TestParseTotalLength(unittest.TestCase):
+class TestTotalLength(unittest.TestCase):
 
     def test_parse_01(self):
         self.assertEqual(
@@ -17,14 +19,14 @@ class TestParseTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('measurements: ToL=230;TaL=115;HF=22;E=18;'
                       ' total length=231 mm; tail length=115 mm;'),
-            [Result(value=230.0, has_units=False, start=0, end=21),
+            [Result(value=230.0, has_units=False, start=14, end=21),
              Result(value=231.0, has_units=True, start=42, end=61)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('measurements: ToL=230;TaL=115;HF=22;E=18;'
                       ' total length=24 cm; tail length=115 mm;'),
-            [Result(value=230.0, has_units=False, start=0, end=21),
+            [Result(value=230.0, has_units=False, start=14, end=21),
              Result(value=240.0, has_units=True, start=42, end=60)])
 
     def test_parse_04(self):
@@ -52,7 +54,8 @@ class TestParseTotalLength(unittest.TestCase):
             PAR.parse((
                 'snout-vent length=54 mm; total length=111 mm;'
                 ' tail length=57 mm; weight=5 g')),
-            [Result(value=111.0, has_units=True, start=25, end=44)])
+            [Result(value=54.0, has_units=True, start=0, end=23),
+             Result(value=111.0, has_units=True, start=25, end=44)])
 
     def test_parse_09(self):
         self.assertEqual(
@@ -84,12 +87,12 @@ class TestParseTotalLength(unittest.TestCase):
             [Result(value=[688.34, 723.9],
                     ambiguous=True,
                     has_units=True,
-                    start=0, end=19)])
+                    start=0, end=18)])
 
     def test_parse_14(self):
         self.assertEqual(
             PAR.parse('total length= 2 ft.'),
-            [Result(value=609.6, has_units=True, start=0, end=19)])
+            [Result(value=609.6, has_units=True, start=0, end=18)])
 
     def test_parse_15(self):
         self.assertEqual(
@@ -158,7 +161,8 @@ class TestParseTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('snout-vent length=221 mm; total length=257 mm; '
                       'tail length=36 mm'),
-            [Result(value=257, has_units=True, start=26, end=45)])
+            [Result(value=221, has_units=True, start=0, end=24),
+             Result(value=257, has_units=True, start=26, end=45)])
 
     def test_parse_27(self):
         self.assertEqual(
@@ -358,7 +362,7 @@ class TestParseTotalLength(unittest.TestCase):
                 value=263.52,
                 ambiguous=True,
                 has_units=True,
-                start=0, end=17)])
+                start=0, end=16)])
 
     def test_parse_60a(self):
         self.assertEqual(
@@ -367,7 +371,7 @@ class TestParseTotalLength(unittest.TestCase):
                 value=9.52,
                 ambiguous=True,
                 has_units=True,
-                start=0, end=14)])
+                start=0, end=13)])
 
     def test_parse_60b(self):
         self.assertEqual(
@@ -375,7 +379,7 @@ class TestParseTotalLength(unittest.TestCase):
             [Result(value=9.52,
                     ambiguous=True,
                     has_units=True,
-                    start=0, end=16)])
+                    start=0, end=15)])
 
     def test_parse_61(self):
         self.assertEqual(

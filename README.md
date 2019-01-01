@@ -42,28 +42,6 @@ Ambiguous values like `length` are flagged as well as numeric values that do not
 - Hind foot Length (In progress)
 - Ear Length (In progress)
 
-## Parsing strategy
-
-There are many possible strategies for parsing traits from these notations. I am using simple but modified shift-reduce parsers. For now, there is one parser per trait or trait set.
-
-Basic program flow:
-
-* Extract the data to be parsed from a text file.
-
-* Feed each column cell to one or more parsers.
-
-* The parser will first use a lexer to tokenize the input string. The lexers will skip as many irrelevant characters as possible leaving only what is relevant for parsing that particular trait.
-
-* The parser then:
-  - Scans the tokens from left to right looking for the **longest** rule that matches the top of the stack. I look both back into the stack of productions and forward into the token list to find the longest match that uses the token at the top of the stack.
-  - If there is no match then I shift to the next token.
-  - If there is a match I perform the reduction.
-  - All terminal reductions are put into an array that contain the matched value(s), where in the string the match occurred, and any flags that indicate possible problems with the extraction.
-
-
-* There is a possible post-processing step to handle things like having too many results returned, which is almost always unhelpful. Or, to make sure that we have agreement between sets of traits. For instance, making sure that the "sex" trait agrees with the "testes" or "ovaries" trait.
-
-* Results are place into an output file (CSV, or HTML).
 
 ## Install
 You will need to have Python3 (3.7+) installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:

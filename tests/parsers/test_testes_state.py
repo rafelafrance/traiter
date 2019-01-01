@@ -1,17 +1,19 @@
+# flake8=noqa
+
 import unittest
-from lib.parsers.shared_reducers import Result
-from lib.parsers.parse_testes_state import ParseTestesState
+from lib.parsers.base import Result
+from lib.parsers.testes_state import TestesState
 
 
-PAR = ParseTestesState()
+PAR = TestesState()
 
 
-class TestParseTestesState(unittest.TestCase):
+class TestTestesState(unittest.TestCase):
 
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('some words reproductive data=No testicles; more words'),
-            [Result(value='No testicles', start=11, end=41)])
+            [Result(value='no testicles', start=11, end=41)])
 
     def test_parse_02(self):
         self.assertEqual(
@@ -41,7 +43,7 @@ class TestParseTestesState(unittest.TestCase):
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('testes not-scrotal'),
-            [Result(value='not-scrotal', start=0, end=18)])
+            [Result(value='not scrotal', start=0, end=18)])
 
     def test_parse_08(self):
         self.assertEqual(
@@ -112,14 +114,14 @@ class TestParseTestesState(unittest.TestCase):
                  '"tail length":"102.0", "total length":"204.0", '
                  '"weight":"48.9" )	non-scrotal, sem. ves. 14 mm, '
                  'little fat')),
-            [Result(value='non-scrotal', start=161, end=172)])
+            [Result(value='non scrotal', start=161, end=172)])
 
     def test_parse_20(self):
         self.assertEqual(
             PAR.parse(
                 ('verbatim preservation date=8 October 1986 ; '
                  'reproductive data=No testicles')),
-            [Result(value='No testicles', start=44, end=74)])
+            [Result(value='no testicles', start=44, end=74)])
 
     def test_parse_21(self):
         self.assertEqual(
@@ -156,12 +158,12 @@ class TestParseTestesState(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 ('junk before reproductive data=Testes small, not descended')),
-            [Result(value='small, not descended', start=12, end=57)])
+            [Result(value='small not descended', start=12, end=57)])
 
     def test_parse_27(self):
         self.assertEqual(
             PAR.parse('Mixed woods // TESTES NOT DESCENDED'),
-            [Result(value='NOT DESCENDED', start=15, end=35)])
+            [Result(value='not descended', start=15, end=35)])
 
     def test_parse_28(self):
         self.assertEqual(

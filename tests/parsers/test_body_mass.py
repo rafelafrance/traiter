@@ -1,12 +1,14 @@
+# flake8=noqa
+
 import unittest
-from lib.parsers.shared_reducers import Result
-from lib.parsers.parse_body_mass import ParseBodyMass
+from lib.parsers.base import Result
+from lib.parsers.body_mass import BodyMass
 
 
-PAR = ParseBodyMass()
+PAR = BodyMass()
 
 
-class TestParseBodyMass(unittest.TestCase):
+class TestBodyMass(unittest.TestCase):
 
     def test_parse_01(self):
         self.assertEqual(
@@ -48,7 +50,7 @@ class TestParseBodyMass(unittest.TestCase):
             PAR.parse('{"fat":"No fat", "gonads":"Testes 10 x 6 mm.", '
                       '"molt":"No molt",'
                       ' "stomach contents":"Not recorded", "weight":"94 gr."'),
-            [Result(value=94, has_units=True, start=101, end=116)])
+            [Result(value=94, has_units=True, start=101, end=115)])
 
     def test_parse_08(self):
         self.assertEqual(

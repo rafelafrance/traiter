@@ -1,0 +1,76 @@
+"""Parse the notations."""
+
+# pylint: disable=no-self-use,unused-argument
+
+import re
+from abc import abstractmethod
+from typing import Any, List
+from dataclasses import dataclass
+
+
+@dataclass
+class Result:
+    """This is a rule production."""
+
+    value: Any
+    has_units: bool = False
+    ambiguous: bool = False
+    start: int = 0
+    end: int = 0
+
+
+Results = List[Result]
+
+
+class Base:
+    """Shared parser logic."""
+
+    def __init__(self):
+        """Initialize the parser."""
+        self.parser = self.build_parser()
+
+    # #########################################################################
+    # These methods are meant to be overridden
+
+    @abstractmethod
+    def build_parser(self):
+        """Return the trait parser."""
+
+    def result(self, match):
+        """Convert parsed tokens into a result."""
+        if isinstance(match[0].value, str):
+            value = match[0].value
+        else:
+            value = ' '.join(match[0].value)
+        return Result(value=value.lower(), start=match[1], end=match[2])
+
+    def post_process(self, results: Results, args=None) -> Results:
+        """Post-process the results."""
+        return results
+
+    # #########################################################################
+
+    def parse(self, text: str) -> Results:
+        """Parse the text."""
+        results = []
+        for match in self.parser.parseWithTabs().scanString(text):
+            result = self.result(match)
+            if result:
+                results.append(result)
+        return results
+
+    # #########################################################################
+
+    @staticmethod
+    def to_float(value):
+        """Convert string to float."""
+        value = value.replace(',', '') if value else ''
+        try:
+            return float(value)
+        except ValueError:
+            return None
+
+    def to_floats(self, text, splitter):
+        """Split a string and return a list of floats."""
+        text = text if text else ''
+        return [self.to_float(x) for x in re.split(splitter, text)]

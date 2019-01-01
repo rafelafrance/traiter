@@ -1,17 +1,19 @@
+# flake8=noqa
+
 import unittest
-from lib.parsers.shared_reducers import Result
-from lib.parsers.parse_life_stage import ParseLifeStage
+from lib.parsers.base import Result
+from lib.parsers.life_stage import LifeStage
 
 
-PAR = ParseLifeStage()
+PAR = LifeStage()
 
 
-class TestParseLifeStage(unittest.TestCase):
+class TestLifeStage(unittest.TestCase):
 
     def test_parse_01(self):
         self.assertEqual(
-            PAR.parse('sex=unknown ; age class=adult/juvenile'),
-            [Result(value='adult/juvenile', start=14, end=38)])
+            PAR.parse('sex=unknown ; age class=adult/juvenile after'),
+            [Result(value='adult / juvenile', start=14, end=38)])
 
     def test_parse_02(self):
         self.assertEqual(
@@ -68,12 +70,12 @@ class TestParseLifeStage(unittest.TestCase):
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('Adulte'),
-            [Result(value='Adulte', start=0, end=6)])
+            [Result(value='adulte', start=0, end=6)])
 
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('AGE IMM'),
-            [Result(value='IMM', start=0, end=7)])
+            [Result(value='imm', start=0, end=7)])
 
     def test_parse_14(self):
         self.assertEqual(
@@ -131,4 +133,4 @@ class TestParseLifeStage(unittest.TestCase):
     def test_parse_24(self):
         self.assertEqual(
             PAR.parse('YOLK SAC'),
-            [Result(value='YOLK SAC', start=0, end=8)])
+            [Result(value='yolk sac', start=0, end=8)])
