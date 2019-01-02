@@ -62,9 +62,7 @@ class BodyMass(Base):
         has_units = bool(units)
         value = convert(value, units)
 
-        return Result(value=value,
-                      has_units=has_units,
-                      ambiguous=ambiguous,
+        return Result(value=value, ambiguous=ambiguous, has_units=has_units,
                       start=match[1], end=match[2])
 
     def shorthand(self, match, parts):
@@ -75,22 +73,12 @@ class BodyMass(Base):
         units = parts.get('shorthand_wt_units')
         has_units = bool(units)
         value = convert(value, units)
-        return Result(value=value,
-                      has_units=has_units,
+        return Result(value=value, has_units=has_units,
                       start=match[1], end=match[2])
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
         ambiguous = 'ambiguous' in match[0].asList()
-        lbs = self.to_floats(parts['lbs'], rx.range_joiner)
-        ozs = self.to_floats(parts['ozs'], rx.range_joiner)
-        value = [convert(x, 'lbs') + convert(y, 'ozs')
-                 for x in lbs for y in ozs]
-
-        if len(value) == 1:
-            value = value[0]
-
-        return Result(value=value,
-                      ambiguous=ambiguous,
-                      has_units=True,
+        value = self.english_value(parts, 'lbs', 'ozs')
+        return Result(value=value, ambiguous=ambiguous, has_units=True,
                       start=match[1], end=match[2])

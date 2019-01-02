@@ -41,7 +41,8 @@ class Sex(Base):
             value += values[1] if len(values) > 1 else ''
         return Result(value=value, start=match[1], end=match[2])
 
-    def normalize(self, value):
+    @staticmethod
+    def normalize(value):
         """Normalize the value."""
         value = value.lower()
         value = 'female' if value[0] == 'f' else value

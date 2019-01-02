@@ -6,6 +6,8 @@ import re
 from abc import abstractmethod
 from typing import Any, List
 from dataclasses import dataclass
+import lib.parsers.regexp as rx
+from lib.parsers.convert_units import convert
 
 
 @dataclass
@@ -74,3 +76,13 @@ class Base:
         """Split a string and return a list of floats."""
         text = text if text else ''
         return [self.to_float(x) for x in re.split(splitter, text)]
+
+    def english_value(self, parts, major, minor):
+        """Calculate value for english units."""
+        big = self.to_floats(parts[major], rx.range_joiner)
+        small = self.to_floats(parts[minor], rx.range_joiner)
+        value = [convert(x, major) + convert(y, minor)
+                 for x in big for y in small]
+        if len(value) == 1:
+            value = value[0]
+        return value

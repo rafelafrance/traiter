@@ -8,7 +8,7 @@ import lib.parsers.regexp as rx
 class TestesState(Base):
     """Parser logic."""
 
-    def build_parser(self):
+    def build_parser(self):  # pylint: disable=too-many-locals
         """Return the trait parser."""
         label = Regex(
             rx.boundary(r' reproductive .? (?: data | state | condition ) '),

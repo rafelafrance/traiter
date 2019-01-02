@@ -55,7 +55,7 @@ TEMPLATE = Template(
 def parse_traits(args):
     """Parse the input."""
     reader = INPUT_FORMATS[args.input_format](args)
-    writer = OUTPUT_FORMATS[args.output_format](args)
+    # writer = OUTPUT_FORMATS[args.output_format](args)
 
     with reader as input:
         for row in input:

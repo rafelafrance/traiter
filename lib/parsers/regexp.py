@@ -28,6 +28,7 @@ number = Regex(number_re, flags)
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
 range_joiner = r'- | to'
+# pylint: disable=redefined-builtin
 range = Regex(r"""
     (?<! \d ) (?<! \d [/,.-] ) (?<! \b to )
     (?P<value1> {val} ) (?: \s* (?: {joiner} ) \s* (?P<value2> {val} ) )?

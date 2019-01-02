@@ -114,9 +114,7 @@ class TotalLength(Base):
             value = [value, value2]
         value = convert(value, units)
 
-        return Result(value=value,
-                      has_units=has_units,
-                      ambiguous=ambiguous,
+        return Result(value=value, ambiguous=ambiguous, has_units=has_units,
                       start=match[1], end=match[2])
 
     def shorthand(self, match, parts):
@@ -124,24 +122,14 @@ class TotalLength(Base):
         value = self.to_float(parts.get('shorthand_tl'))
         if not value:
             return None
-        return Result(value=value,
-                      has_units=True,
+        return Result(value=value, has_units=True,
                       start=match[1], end=match[2])
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
         ambiguous = 'ambiguous' in match[0].asList()
-        lbs = self.to_floats(parts['ft'], rx.range_joiner)
-        ozs = self.to_floats(parts['in'], rx.range_joiner)
-        value = [convert(x, 'ft') + convert(y, 'in')
-                 for x in lbs for y in ozs]
-
-        if len(value) == 1:
-            value = value[0]
-
-        return Result(value=value,
-                      ambiguous=ambiguous,
-                      has_units=True,
+        value = self.english_value(parts, 'ft', 'in')
+        return Result(value=value, ambiguous=ambiguous, has_units=True,
                       start=match[1], end=match[2])
 
     def fraction(self, match, parts):
@@ -157,8 +145,5 @@ class TotalLength(Base):
         denominator = self.to_float(parts['denominator'])
         value = convert(whole + numerator / denominator, units)
 
-        return Result(
-            value=value,
-            ambiguous=ambiguous,
-            has_units=has_units,
-            start=match[1], end=match[2])
+        return Result(value=value, ambiguous=ambiguous, has_units=has_units,
+                      start=match[1], end=match[2])
