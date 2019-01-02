@@ -11,17 +11,17 @@ class BaseWriter:
         self.args = args
 
     @abstractmethod
-    def header(self):
-        """Output the report header."""
+    def start(self):
+        """Start the report."""
 
     @abstractmethod
     def row(self):
-        """Output a report row."""
+        """Build a report row."""
 
     @abstractmethod
     def cell(self):
-        """Output a report cell."""
+        """Build a report cell."""
 
     @abstractmethod
-    def footer(self):
-        """Output the report footer."""
+    def end(self):
+        """End the report."""

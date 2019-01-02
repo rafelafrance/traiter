@@ -4,13 +4,8 @@
 
 import re
 import sys
-import csv
-import json
 import argparse
 import textwrap
-from datetime import datetime
-# from tqdm import tqdm
-from jinja2 import Environment, FileSystemLoader, Template
 from lib.readers.csv_reader import CsvReader
 from lib.writers.csv_writer import CsvWriter
 from lib.writers.html_writer import HtmlWriter
@@ -21,7 +16,7 @@ from lib.parsers.total_length import TotalLength
 from lib.parsers.testes_state import TestesState
 # from lib.parsers.testes_size import TestesSize
 
-__VERSION__ = '0.3.0'
+__VERSION__ = '0.4.0'
 
 
 DEFAULT_COLS = 'dynamicproperties, occurrenceremarks, fieldnotes'
@@ -48,135 +43,33 @@ TRAITS = [
 ]
 TRAIT_OPTIONS = ', '.join([i[0] for i in TRAITS])
 
-TEMPLATE = Template(
-    '{{ left }}<span class="found">{{ middle }}</span>{{ right }}')
-
 
 def parse_traits(args):
     """Parse the input."""
     reader = INPUT_FORMATS[args.input_format](args)
-    # writer = OUTPUT_FORMATS[args.output_format](args)
+    writer = OUTPUT_FORMATS[args.output_format](args)
 
-    with reader as input:
-        for row in input:
-            print(row)
-            break
-    import sys
-    sys.exit()
-    # parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
-    #            if trait in args.traits]
-    #
-    # totals = {'rows': 0, 'empty': 0}
-    #
-    # reader = csv.DictReader(args.infile)
-    # for (i, in_row) in tqdm(enumerate(reader, 1)):
-    #
-    #     if args.skip and i < args.skip:
-    #         continue
-    #
-    #     totals['rows'] += 1
-    #
-    #     if writer is None:
-    #         # Setup the output file
-    #         columns = reader.fieldnames
-    #         preferred_columns = [p.preferred_value for (t, p) in parsers
-    #                              if p.preferred_value
-    #                              and p.preferred_value in columns]
-    #         input_columns = (args.columns + preferred_columns
-    #                          + args.extra_columns)
-    #         parsed_columns = [f'parsed_{t}' for (t, p) in parsers]
-    #
-    #         for col in parsed_columns:
-    #             totals[col] = 0
-    #
-    #         all_columns = parsed_columns + input_columns
-    #         writer = output_start(args, all_columns)
-    #
-    #     strings = [in_row[col] for col in args.columns]
-    #
-    #     if not sum(len(s) for s in strings):
-    #         totals['empty'] += 1
-    #
-    #     out_row = {c: in_row[c] for c in input_columns}
-    #
-    #     for trait, parser in parsers:
-    #         preferred_value = ''
-    #         if parser.preferred_value:
-    #             preferred_value = in_row.get(parser.preferred_value, '')
-    #
-    #         parsed = parser.parser(strings, preferred_value)
-    #
-    #         column = f'parsed_{trait}'
-    #         out_row[column] = output_cell(args, parsed, out_row)
-    #         totals[column] += int(parsed['found'])
-    #
-    #     output_row(args, writer, out_row)
-    #
-    #     if args.stop and totals['rows'] >= args.stop:
-    #         break
-    #
-    # output_end(args, writer, preferred_columns, totals)
+    parsers = [(trait, parser()) for (trait, parser) in TRAITS
+               if trait in args.traits]
 
+    writer.start()
 
-def output_start(args, all_columns):
-    """Output the report header."""
-    # Handle HTML output
-    if args.html:
-        return []
+    with reader as infile:
+        for i, row in enumerate(infile, 1):
 
-    # Handle CSV output
-    writer = csv.DictWriter(args.outfile, fieldnames=all_columns)
-    writer.writeheader()
-    return writer
+            if args.skip and i <= args.skip:
+                continue
 
+            for trait, parser in parsers:
+                results = parser.parse(row)
+                writer.cell(trait, results)
 
-def output_row(args, writer, out_row):
-    """Output a report row."""
-    # Handle HTML output
-    if args.html:
-        writer.append(out_row)
-        return
+            writer.row()
 
-    # Handle CSV output
-    writer.writerow(out_row)
+            if args.stop and i >= args.stop:
+                break
 
-
-def output_cell(args, parsed, row):
-    """Output a report cell."""
-    # Handle CSV output
-    if not args.html:
-        return json.dumps(parsed)
-
-    # Handle HTML output
-    if parsed['found']:
-        field_name = parsed['field']
-        field = row[field_name]
-        start = parsed['start']
-        end = parsed['end']
-        left = field[:start] if start else ''
-        middle = field[start:end]
-        right = field[end:] if end <= len(field) else ''
-        row[field_name] = TEMPLATE.render(
-            left=left, middle=middle, right=right)
-    return parsed
-
-
-def output_end(args, writer, preferred_columns, totals):
-    """Output the report footer."""
-    # Handle CSV output
-    if not args.html:
-        return
-
-    # Handle HTML output
-    env = Environment(loader=FileSystemLoader('./lib/templates'))
-    template = env.get_template('traiter.html')
-    report = template.render(
-        args=vars(args),
-        now=datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M'),
-        rows=writer,
-        preferred_columns=preferred_columns,
-        totals=totals)
-    args.outfile.write(report)
+    writer.end()
 
 
 def parse_args():

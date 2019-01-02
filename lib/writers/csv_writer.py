@@ -1,5 +1,7 @@
 """Write the traiter output to a CSV file."""
 
+# import csv
+# import json
 from lib.writers.base_writer import BaseWriter
 
 
@@ -8,15 +10,22 @@ class CsvWriter(BaseWriter):
 
     def __init__(self, args):
         """Build the writer."""
+        self.args = args
 
-    def header(self):
-        """Output the report header."""
+    def start(self):
+        """Start the report."""
+        # writer = csv.DictWriter(args.outfile, fieldnames=all_columns)
+        # writer.writeheader()
+        # return writer
 
     def row(self):
-        """Output a report row."""
+        """Build a report row."""
+        # writer.writerow(out_row)
 
     def cell(self):
-        """Output a report cell."""
+        """Build a report cell."""
+        # return json.dumps(parsed)
 
-    def footer(self):
-        """Output the report footer."""
+    def end(self):
+        """End the report."""
+        # Close output stream

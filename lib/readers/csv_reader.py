@@ -11,19 +11,20 @@ class CsvReader(BaseReader):
         """Build the reader."""
         self.args = args
         self.reader = None
+        self.infile = args.infile
+        self.columns = args.csv_columns + args.csv_extra_columns
 
     def __enter__(self):
         """Use the reader in with statements."""
-        print('__enter__')
-        self.reader = csv.DictReader(self.args.infile)
+        self.reader = csv.DictReader(self.infile)
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         """Close the file handle."""
-        self.args.infile.close()  # paranoia
-        print('__exit__')
+        self.infile.close()  # paranoia
 
     def __iter__(self):
         """Loop thru the file."""
-        yield from self.reader
-        yield '__done__'
+        for row in self.reader:
+            cols = {k: v for k, v in row.items() if k in self.columns}
+            yield cols

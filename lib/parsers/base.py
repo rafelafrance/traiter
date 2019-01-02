@@ -1,7 +1,5 @@
 """Parse the notations."""
 
-# pylint: disable=no-self-use,unused-argument
-
 import re
 from abc import abstractmethod
 from typing import Any, List
@@ -24,7 +22,7 @@ class Result:
 Results = List[Result]
 
 
-class Base:
+class Base:  # pylint: disable=no-self-use,unused-argument
     """Shared parser logic."""
 
     def __init__(self):
