@@ -1,9 +1,9 @@
 """Write the traiter output to an HTML file."""
 
-from lib.writers.write_base import WriteBase
+from lib.writers.base_writer import BaseWriter
 
 
-class WriteHtml(WriteBase):
+class HtmlWriter(BaseWriter):
     """Write the traiter output to a file."""
 
     def __init__(self, args):

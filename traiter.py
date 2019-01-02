@@ -2,24 +2,24 @@
 
 """Given a CSV file of natural history notes, parse traits."""
 
+import re
 import sys
 import csv
 import json
 import argparse
 import textwrap
 from datetime import datetime
-import regex
 # from tqdm import tqdm
 from jinja2 import Environment, FileSystemLoader, Template
-from lib.readers.read_csv import ReadCsv
-from lib.writers.write_csv import WriteCsv
-from lib.writers.write_html import WriteHtml
-from lib.parsers.parse_sex import ParseSex
-from lib.parsers.parse_body_mass import ParseBodyMass
-from lib.parsers.parse_life_stage import ParseLifeStage
-from lib.parsers.parse_total_length import ParseTotalLength
-from lib.parsers.parse_testes_state import ParseTestesState
-# from lib.parsers.parse_testes_size import ParseTestesSize
+from lib.readers.csv_reader import CsvReader
+from lib.writers.csv_writer import CsvWriter
+from lib.writers.html_writer import HtmlWriter
+from lib.parsers.sex import Sex
+from lib.parsers.body_mass import BodyMass
+from lib.parsers.life_stage import LifeStage
+from lib.parsers.total_length import TotalLength
+from lib.parsers.testes_state import TestesState
+# from lib.parsers.testes_size import TestesSize
 
 __VERSION__ = '0.3.0'
 
@@ -27,23 +27,23 @@ __VERSION__ = '0.3.0'
 DEFAULT_COLS = 'dynamicproperties, occurrenceremarks, fieldnotes'
 
 INPUT_FORMATS = {
-    'csv': ReadCsv,
+    'csv': CsvReader,
 }
 INPUT_OPTIONS = [k for k, v in INPUT_FORMATS.items()]
 
 OUTPUT_FORMATS = {
-    'csv': WriteCsv,
-    'html': WriteHtml,
+    'csv': CsvWriter,
+    'html': HtmlWriter,
 }
 OUTPUT_OPTIONS = [k for k, v in OUTPUT_FORMATS.items()]
 
 # These are ordered
 TRAITS = [
-    ('body_mass', ParseBodyMass),
-    ('sex', ParseSex),
-    ('life_stage', ParseLifeStage),
-    ('total_length', ParseTotalLength),
-    ('testes_state', ParseTestesState),
+    ('sex', Sex),
+    ('body_mass', BodyMass),
+    ('life_stage', LifeStage),
+    ('total_length', TotalLength),
+    ('testes_state', TestesState),
     #   ('testes_size', ParseTestesSize)],
 ]
 TRAIT_OPTIONS = ', '.join([i[0] for i in TRAITS])
@@ -58,10 +58,9 @@ def parse_traits(args):
     writer = OUTPUT_FORMATS[args.output_format](args)
 
     with reader as input:
-        for line in input:
-            print(line)
-            print()
-    print(args)
+        for row in input:
+            print(row)
+            break
     import sys
     sys.exit()
     # parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
@@ -215,16 +214,18 @@ def parse_args():
 
     parser.add_argument('--output-format', '-o', default='csv',
                         choices=OUTPUT_OPTIONS,
-                        help="""Output the result as this.
+                        help="""Output the result in this format.
                             The default is "csv".""")
 
     parser.add_argument('infile', nargs='?', type=argparse.FileType('r'),
                         default=sys.stdin,
-                        help='''The input file containing the traits.''')
+                        help='''The input file containing the traits.
+                            Defaults to stdin.''')
 
     parser.add_argument('outfile', nargs='?', type=argparse.FileType('w'),
                         default=sys.stdout,
-                        help='''Output the results to this file.''')
+                        help='''Output the results to this file.
+                            Defaults to stdout.''')
 
     parser.add_argument('--skip', type=int,
                         help="""Skip this many records at the beginning of the
@@ -235,10 +236,10 @@ def parse_args():
 
     args = parser.parse_args()
 
-    args.traits = regex.split(r'\s*,\s*', args.traits)
-    args.csv_columns = regex.split(r'\s*,\s*', args.csv_columns)
+    args.traits = re.split(r'\s*,\s*', args.traits)
+    args.csv_columns = re.split(r'\s*,\s*', args.csv_columns)
     args.csv_extra_columns = [
-        c for c in regex.split(r'\s*,\s*', args.csv_extra_columns) if c]
+        c for c in re.split(r'\s*,\s*', args.csv_extra_columns) if c]
 
     return args
 

@@ -3,7 +3,7 @@
 from abc import abstractmethod
 
 
-class ReadBase:
+class BaseReader:
     """Read the traiter input from a file."""
 
     def __init__(self, args):

@@ -1,9 +1,10 @@
 """Read the traiter input from a CSV file."""
 
 import csv
+from lib.readers.base_reader import BaseReader
 
 
-class ReadCsv:
+class CsvReader(BaseReader):
     """Read the traiter input from a file."""
 
     def __init__(self, args):
@@ -13,16 +14,16 @@ class ReadCsv:
 
     def __enter__(self):
         """Use the reader in with statements."""
+        print('__enter__')
         self.reader = csv.DictReader(self.args.infile)
-        return self.reader
+        return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         """Close the file handle."""
-        pass
+        self.args.infile.close()  # paranoia
+        print('__exit__')
 
     def __iter__(self):
         """Loop thru the file."""
-        return self
-
-    def next(self):
-        """Get the next row."""
+        yield from self.reader
+        yield '__done__'
