@@ -12,7 +12,8 @@ class CsvReader(BaseReader):
         self.args = args
         self.reader = None
         self.infile = args.infile
-        self.columns = args.csv_columns + args.csv_extra_columns
+        self.columns = (args.search_fields + args.extra_fields
+                        + [v for k, v in args.preferred_fields.items()])
 
     def __enter__(self):
         """Use the reader in with statements."""

@@ -24,18 +24,18 @@ class BodyMass(Base):
             """, rx.flags)
 
         parser = (
-            key_with_units('units') + rx.range
-            | wt_key + rx.mass_units + rx.range
-            | wt_key + rx.range + rx.mass_units
-            | rx.shorthand_key + rx.range + rx.mass_units
-            | rx.shorthand_key + rx.mass_units + rx.range
+            key_with_units('units') + rx.pair
+            | wt_key + rx.mass_units + rx.pair
+            | wt_key + rx.pair + rx.mass_units
+            | rx.shorthand_key + rx.pair + rx.mass_units
+            | rx.shorthand_key + rx.mass_units + rx.pair
             | (wt_key
-               + rx.range('lbs') + rx.pounds
-               + rx.range('ozs') + rx.ounces)
-            | (rx.range('lbs') + rx.pounds
-               + rx.range('ozs') + rx.ounces
+               + rx.pair('lbs') + rx.pounds
+               + rx.pair('ozs') + rx.ounces)
+            | (rx.pair('lbs') + rx.pounds
+               + rx.pair('ozs') + rx.ounces
                ).setParseAction(lambda tokens: tokens.append('ambiguous'))
-            | wt_key + rx.range
+            | wt_key + rx.pair
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
         )

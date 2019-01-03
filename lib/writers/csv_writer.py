@@ -8,24 +8,21 @@ from lib.writers.base_writer import BaseWriter
 class CsvWriter(BaseWriter):
     """Write the traiter output to a file."""
 
-    def __init__(self, args):
-        """Build the writer."""
-        self.args = args
-
     def start(self):
         """Start the report."""
+        # self.reader = csv.DictReader(self.infile)
         # writer = csv.DictWriter(args.outfile, fieldnames=all_columns)
         # writer.writeheader()
-        # return writer
+
+    def cell(self, results):
+        """Build a report cell."""
+        print(results)
+        # return json.dumps(parsed)
 
     def row(self):
         """Build a report row."""
         # writer.writerow(out_row)
 
-    def cell(self):
-        """Build a report cell."""
-        # return json.dumps(parsed)
-
     def end(self):
         """End the report."""
-        # Close output stream
+        self.outfile.close()  # paranoia

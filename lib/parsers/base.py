@@ -15,6 +15,8 @@ class Result:
     value: Any
     has_units: bool = False
     ambiguous: bool = False
+    trait: str = None
+    field: str = None
     start: int = 0
     end: int = 0
 
@@ -25,8 +27,9 @@ Results = List[Result]
 class Base:  # pylint: disable=no-self-use,unused-argument
     """Shared parser logic."""
 
-    def __init__(self):
+    def __init__(self, args=None):
         """Initialize the parser."""
+        self.args = args
         self.parser = self.build_parser()
 
     # #########################################################################
@@ -44,7 +47,7 @@ class Base:  # pylint: disable=no-self-use,unused-argument
             value = ' '.join(match[0].value)
         return Result(value=value.lower(), start=match[1], end=match[2])
 
-    def post_process(self, results: Results, args=None) -> Results:
+    def post_parse(self, results: Results, args=None) -> Results:
         """Post-process the results."""
         return results
 
@@ -57,6 +60,14 @@ class Base:  # pylint: disable=no-self-use,unused-argument
             result = self.result(match)
             if result:
                 results.append(result)
+        return results
+
+    def extended_parse(self, text: str, trait: str, field: str) -> Results:
+        """Extend the results of the parse function with trait & field data."""
+        results = self.parse(text)
+        for result in results:
+            result.trait = trait
+            result.field = field
         return results
 
     # #########################################################################
@@ -77,8 +88,8 @@ class Base:  # pylint: disable=no-self-use,unused-argument
 
     def english_value(self, parts, major, minor):
         """Calculate value for english units."""
-        big = self.to_floats(parts[major], rx.range_joiner)
-        small = self.to_floats(parts[minor], rx.range_joiner)
+        big = self.to_floats(parts[major], rx.pair_joiner)
+        small = self.to_floats(parts[minor], rx.pair_joiner)
         value = [convert(x, major) + convert(y, minor)
                  for x in big for y in small]
         if len(value) == 1:

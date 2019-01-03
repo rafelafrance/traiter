@@ -39,46 +39,46 @@ class TotalLength(Base):
         key_units_req = Regex(r'measurements? | body | total', rx.flags)
 
         parser = (
-            key_with_units('millimeters') + rx.range
+            key_with_units('millimeters') + rx.pair
 
-            | rx.shorthand_key + rx.range + rx.len_units
-            | rx.shorthand_key + rx.len_units + rx.range
+            | rx.shorthand_key + rx.pair + rx.len_units
+            | rx.shorthand_key + rx.len_units + rx.pair
 
             | key_units_req + rx.fraction + rx.len_units
-            | key_units_req + rx.range + rx.len_units
+            | key_units_req + rx.pair + rx.len_units
 
             | len_key + rx.fraction + rx.len_units
             | (ambiguous + rx.fraction + rx.len_units).setParseAction(
                 self.ambiguous)
 
 
-            | rx.range + rx.len_units + len_key
-            | rx.range + len_key
+            | rx.pair + rx.len_units + len_key
+            | rx.pair + len_key
 
             | (len_key
-               + rx.range('ft') + rx.feet
-               + rx.range('in') + rx.inches)
-            | (rx.range('ft') + rx.feet
-               + rx.range('in') + rx.inches).setParseAction(self.ambiguous)
+               + rx.pair('ft') + rx.feet
+               + rx.pair('in') + rx.inches)
+            | (rx.pair('ft') + rx.feet
+               + rx.pair('in') + rx.inches).setParseAction(self.ambiguous)
 
             # Due to trailing len_key the leading key it is no longer ambiguous
-            | ambiguous + rx.range + rx.len_units + len_key
-            | ambiguous + rx.range + len_key
+            | ambiguous + rx.pair + rx.len_units + len_key
+            | ambiguous + rx.pair + len_key
 
-            | (ambiguous + rx.range + rx.len_units).setParseAction(
+            | (ambiguous + rx.pair + rx.len_units).setParseAction(
                 self.ambiguous)
-            | (ambiguous + rx.len_units + rx.range).setParseAction(
+            | (ambiguous + rx.len_units + rx.pair).setParseAction(
                 self.ambiguous)
-            | (ambiguous + rx.range).setParseAction(self.ambiguous)
+            | (ambiguous + rx.pair).setParseAction(self.ambiguous)
 
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
 
-            | len_key + rx.range + rx.len_units
-            | len_key + rx.len_units + rx.range
-            | len_key + rx.range
-            | len_key + words + rx.range + rx.len_units
-            | len_key + words + rx.range
+            | len_key + rx.pair + rx.len_units
+            | len_key + rx.len_units + rx.pair
+            | len_key + rx.pair
+            | len_key + words + rx.pair + rx.len_units
+            | len_key + words + rx.pair
         )
 
         ignore = Word(rx.punct, excludeChars=';')

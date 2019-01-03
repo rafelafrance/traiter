@@ -48,6 +48,6 @@ class Sex(Base):
         value = 'female' if value[0] == 'f' else value
         return value
 
-    def post_process(self, results, args=None):
+    def post_parse(self, results, args=None):
         """Post-process the results."""
         return results if len({r.value for r in results}) == 1 else []

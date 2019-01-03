@@ -24,16 +24,15 @@ def boundary(regexp, left=True, right=True):
 # Numbers are positive decimals
 number = Regex(number_re, flags)
 
-# A number or a range of numbers like "12 to 34" or "12.3-45.6"
+# A number or a pair of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
-# So: no part of "2014-12-11" would be in a range
-range_joiner = r'- | to'
-# pylint: disable=redefined-builtin
-range = Regex(r"""
+# So: no part of "2014-12-11" would be in a pair
+pair_joiner = r'- | to'
+pair = Regex(r"""
     (?<! \d ) (?<! \d [/,.-] ) (?<! \b to )
     (?P<value1> {val} ) (?: \s* (?: {joiner} ) \s* (?P<value2> {val} ) )?
     (?! [/,.-] \d ) (?! \d+ ) (?! \s+ to )
-    """.format(val=number_re, joiner=range_joiner), flags)
+    """.format(val=number_re, joiner=pair_joiner), flags)
 
 # A number times another number like "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
