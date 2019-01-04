@@ -20,16 +20,14 @@
  - `SVL 157 mm`
  - `standard length: 157-215mm`
  - `t.l.= 2 feet 3.1 - 4.5 inches`
- - As well as measurements embedded in prose like: `Snout vent lengths range anywhere from 16 to 23 mm.` I am experimenting with various distances between the anchor token `Snout vent lengths` and the measurements `16 to 23 mm`.
- - We but flag ambiguous measurements like: `length: 12.0`. This may be a total length measurement or another length measurement.
+ - As well as measurements embedded in prose like: `Snout vent lengths range anywhere from 16 to 23 cm.` I am experimenting with various distances between the anchor token `Snout vent lengths` and the measurements `16 to 23 cm`.
+ - We flag ambiguous measurements like: `length: 12.0`. This may be a total length measurement or another length measurement.
+ - We also flag numeric measurements without units like: `total length = 120`. The units may be the default millimeters.
  - etc.
 
 We also extract values from controlled vocabularies.
  - These values sometimes have a signifier like `Life Stage: Adult`
- - and other times we will just see the value like `Adult` without a signifier.
-
-Ambiguous values like `length` are flagged as well as numeric values that do not have associated units like `total length: 12.0`. In both cases we can cleanup or cull the values in post-processing.
-
+ - and other times we see a value like `Adult` without a signifier.
 
 ## List of traits extracted
 - Body body mass
@@ -55,6 +53,7 @@ python3 -m pip install --user -r traiter/requirements.txt
 python3 traiter.py ... TODO ...
 ```
 ## Running tests
+Then you can run the tests like so:
 ```
-pytest tests/
+python -m pytest tests/
 ```
