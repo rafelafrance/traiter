@@ -2,14 +2,13 @@
 
 """Given a CSV file of natural history notes, parse traits."""
 
-import re
 import sys
 import argparse
 import textwrap
 from lib.readers.csv_reader import CsvReader
 from lib.writers.csv_writer import CsvWriter
 from lib.writers.html_writer import HtmlWriter
-from lib.parsers.any_value import AnyValue
+from lib.parsers.as_is import AsIs
 from lib.parsers.sex import Sex
 from lib.parsers.body_mass import BodyMass
 from lib.parsers.life_stage import LifeStage
@@ -23,8 +22,6 @@ from lib.parsers.total_length import TotalLength
 __VERSION__ = '0.3.0'
 
 
-DEFAULT_COLS = 'dynamicproperties,occurrenceremarks,fieldnotes'
-
 INPUT_FORMATS = {
     'csv': CsvReader,
 }
@@ -36,7 +33,6 @@ OUTPUT_FORMATS = {
 }
 OUTPUT_OPTIONS = [k for k, v in OUTPUT_FORMATS.items()]
 
-# These are ordered
 TRAITS = [
     ('sex', Sex),
     ('body_mass', BodyMass),
@@ -48,15 +44,15 @@ TRAITS = [
     #   ('tail_length', TailLength)],
     #   ('hind_foot_length', HindFootLength)],
 ]
-TRAIT_OPTIONS = ', '.join([i[0] for i in TRAITS])
+TRAIT_OPTIONS = [t[0] for t in TRAITS]
+
+AS_IS = None
 
 
 def parse_traits(args):
     """Parse the input."""
-    any_value = AnyValue(args)
-
     parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
-               if trait in args.traits]
+               if trait in args.trait]
 
     reader = INPUT_FORMATS[args.input_format](args)
     writer = OUTPUT_FORMATS[args.output_format](args)
@@ -67,26 +63,29 @@ def parse_traits(args):
             if args.skip and i <= args.skip:
                 continue
 
+            outfile.start_row(row)
+
             for trait, parser in parsers:
+                results = parse_trait(args, trait, parser, row)
+                outfile.cell(results, trait)
 
-                # Check for a value in the preferred field
-                field = args.preferred_fields.get(trait)
-                value = row.get(field, '')
-                results = any_value.extended_parse(
-                    value, f'preferred_{trait}', field)
-
-                # No value in the preferred field so parse the data
-                if not results:
-                    for field in args.search_fields:
-                        results.extend(
-                            parser.extended_parse(row[field], trait, field))
-
-                outfile.cell(results)
-
-            outfile.row()
+            outfile.end_row()
 
             if args.stop and i >= args.stop:
                 break
+
+
+def parse_trait(args, trait, parser, row):
+    """Get the results from parsing the traits."""
+    results = []
+
+    for field in args.as_is.get(trait, []):
+        results += AS_IS.parse(row[field], trait, field, 'as_is')
+
+    for field in args.search_field:
+        results += parser.parse(row[field], trait, field)
+
+    return results
 
 
 def parse_args():
@@ -101,31 +100,26 @@ def parse_args():
                         version='%(prog)s v{}'.format(__VERSION__))
 
     parser.add_argument(
-        '--traits', '-t', default=TRAIT_OPTIONS,
-        help=f"""A comma separated list of the traits to extract. The default
-            is to select them all. You may want to quote this argument. The
-            traits will be searched in the given order. The options are:
-            '{TRAIT_OPTIONS}'.""")
+        '--trait', '-t', required=True, action='append', choices=TRAIT_OPTIONS,
+        help="""A trait to extract.""")
 
     parser.add_argument(
-        '--search_fields', '-f', default=DEFAULT_COLS, metavar='COLUMNS',
+        '--search-field', '-s', action='append', metavar='INPUT-FIELD',
         help=f"""A comma separated ordered list of fields that contain traits.
-            You may need to quote this argument. The default is:
-            '{DEFAULT_COLS}'.""")
+            You may need to quote this argument.""")
 
     parser.add_argument(
-        '--extra-fields', '-e', default='', metavar='COLUMNS',
+        '--extra-fields', '-e', action='append', metavar='INPUT-FIELD',
         help="""A comma separated list of any extra fields to append to an
             output row. You may need to quote this argument.""")
 
     parser.add_argument(
-        '--preferred-fields', '-p', default='', metavar='COLUMNS',
-        help="""A comma separated list of trait=field to use, if filled,
-            instead of parsing the --search-fields. For example:
-            --preferred-fields='body_mass=mass, life_stage=age' will use the
-            value in the row's "mass" field, if there is one, instead of
-            parsing the body_mass for any of the --search_fields.  Likewise for
-            life_stage and "age". You may need to quote this argument.""")
+        '--as-is', '-a', action='append', metavar='INPUT-FIELD=TRAIT',
+        default=[],
+        help="""A field=trait to pull in as is. For example:
+            --as-is='life_stage=age' will use the value in the row's "age"
+            field, if there is one, for as a parsed value of "life_stage".
+            You may need to quote this argument.""")
 
     parser.add_argument(
         '--input-format', '-i', default='csv', choices=INPUT_OPTIONS,
@@ -135,6 +129,13 @@ def parse_args():
         '--output-format', '-o', default='csv', choices=OUTPUT_OPTIONS,
         help="""Output the result in this format. The default is "csv".""")
 
+    parser.add_argument('--skip', type=int,
+                        help="""Skip this many records at the beginning of the
+                            input file.""")
+
+    parser.add_argument('--stop', type=int,
+                        help="""Stop after this many records are processed.""")
+
     parser.add_argument(
         'infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
         help='''The input file containing the traits. Defaults to stdin.''')
@@ -143,27 +144,18 @@ def parse_args():
         'outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
         help='''Output the results to this file. Defaults to stdout.''')
 
-    parser.add_argument('--skip', type=int,
-                        help="""Skip this many records at the beginning of the
-                            input file.""")
-
-    parser.add_argument('--stop', type=int,
-                        help="""Stop after this many records are processed.""")
-
     args = parser.parse_args()
 
-    args.traits = re.split(r'\s*,\s*', args.traits)
-    args.search_fields = re.split(r'\s*,\s*', args.search_fields)
-    args.extra_fields = [
-        col for col in re.split(r'\s*,\s*', args.extra_fields) if col]
-
-    prefs = [item for pair in re.split(r'\s*,\s*', args.preferred_fields)
-             for item in re.split(r'\s*=\s*', pair)]
-    args.preferred_fields = dict(zip(prefs[::2], prefs[1::2]))
+    as_is = {x.split('=')[1].strip(): [] for x in args.as_is}
+    for arg in args.as_is:
+        key, val = arg.split('=')
+        as_is[val.strip()].append(key.strip())
+    args.as_is = as_is
 
     return args
 
 
 if __name__ == "__main__":
     ARGS = parse_args()
+    AS_IS = AsIs(ARGS)
     parse_traits(ARGS)

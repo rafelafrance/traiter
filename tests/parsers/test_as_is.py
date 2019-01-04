@@ -2,13 +2,13 @@
 
 import unittest
 from lib.parsers.base import Result
-from lib.parsers.any_value import AnyValue
+from lib.parsers.as_is import AsIs
 
 
-PAR = AnyValue()
+PAR = AsIs()
 
 
-class TestSex(unittest.TestCase):
+class TestAsIs(unittest.TestCase):
 
     def test_parse_01(self):
         self.assertEqual(

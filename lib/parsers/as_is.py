@@ -5,7 +5,7 @@ from lib.parsers.base import Base
 import lib.parsers.regexp as rx
 
 
-class AnyValue(Base):
+class AsIs(Base):
     """Parser logic."""
 
     def build_parser(self):

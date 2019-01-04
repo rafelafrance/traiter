@@ -11,9 +11,17 @@ from lib.writers.base_writer import BaseWriter
 class HtmlWriter(BaseWriter):
     """Write the traiter output to a file."""
 
+    def __init__(self, args):
+        """Build the writer."""
+        super().__init__(args)
+
     def start(self):
         """Start the report."""
         # return []
+
+    def start_row(self):
+        """Start a report row."""
+        # writer.writerow(out_row)
 
     def cell(self):
         """Build a report cell."""
@@ -29,8 +37,8 @@ class HtmlWriter(BaseWriter):
         #         left=left, middle=middle, right=right)
         # return parsed
 
-    def row(self):
-        """Build a report row."""
+    def end_row(self):
+        """End a report row."""
         # writer.append(out_row)
 
     def end(self):

@@ -25,12 +25,16 @@ class BaseWriter:
         """Start the report."""
 
     @abstractmethod
-    def cell(self, results):
+    def start_row(self, row):
+        """Start a report row."""
+
+    @abstractmethod
+    def cell(self, results, trait):
         """Build a report cell."""
 
     @abstractmethod
-    def row(self):
-        """Build a report row."""
+    def end_row(self):
+        """End a report row."""
 
     @abstractmethod
     def end(self):

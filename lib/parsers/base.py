@@ -19,6 +19,7 @@ class Result:
     field: str = None
     start: int = 0
     end: int = 0
+    flag: str = None
 
 
 Results = List[Result]
@@ -47,27 +48,18 @@ class Base:  # pylint: disable=no-self-use,unused-argument
             value = ' '.join(match[0].value)
         return Result(value=value.lower(), start=match[1], end=match[2])
 
-    def post_parse(self, results: Results, args=None) -> Results:
-        """Post-process the results."""
-        return results
-
     # #########################################################################
 
-    def parse(self, text: str) -> Results:
+    def parse(self, text: str, trait=None, field=None, flag=None) -> Results:
         """Parse the text."""
         results = []
         for match in self.parser.parseWithTabs().scanString(text):
             result = self.result(match)
             if result:
+                result.trait = trait
+                result.field = field
+                result.flag = flag
                 results.append(result)
-        return results
-
-    def extended_parse(self, text: str, trait: str, field: str) -> Results:
-        """Extend the results of the parse function with trait & field data."""
-        results = self.parse(text)
-        for result in results:
-            result.trait = trait
-            result.field = field
         return results
 
     # #########################################################################
