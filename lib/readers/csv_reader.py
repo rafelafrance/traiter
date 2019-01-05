@@ -12,7 +12,7 @@ class CsvReader(BaseReader):
         self.args = args
         self.reader = None
         self.infile = args.infile
-        self.columns = args.search_field + args.extra_fields
+        self.columns = args.search_field + args.extra_field
         for trait, fields in args.as_is.items():
             self.columns += fields
 

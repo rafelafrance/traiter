@@ -95,8 +95,11 @@ shorthand_key = Regex(r"""
 #   99 = body mass is optional, as is the mass units
 # Unknown values are filled with "?" or "x".
 #   Like "11-x-x-44" or "11-?-33-44"
+# Ambiguous measurements are enclosed in brackets.
+#   Like 11-[22]-33-[44]:99g
 
-sh_val = r' {} | [?x]{}'.format(number_re, '{1,2}')
+sh_val = r' {number} | [?x]{repeat} | \[{number}\] | \[[?x]{repeat}\]'.format(
+    number=number_re, repeat='{1,2}')
 shorthand = Regex(r"""
     (?<! [\d/-] )
     (?P<shorthand_tl> {sh_val} )
@@ -106,10 +109,9 @@ shorthand = Regex(r"""
     (?P<shorthand_hfl> {sh_val} )
     (?P=shorthand_sep)
     (?P<shorthand_eal> {sh_val} )
-    (?P<shorthand_ext>
-        (?: (?P=shorthand_sep) [a-z]{repeat} {sh_val} )* )
+    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat14} {sh_val} )* )
     (?: [\s=:/-] \s*
         (?P<shorthand_wt> {sh_val} ) \s*
         (?P<shorthand_wt_units> {units} )? )?
     (?! [\d/:=-] )
-    """.format(sh_val=sh_val, repeat='{1,4}', units=metric_mass_re), flags)
+    """.format(sh_val=sh_val, repeat14='{1,4}', units=metric_mass_re), flags)

@@ -12,7 +12,7 @@ class CsvWriter(BaseWriter):
     def __init__(self, args):
         """Build the writer."""
         super().__init__(args)
-        self.columns = args.extra_fields
+        self.columns = args.extra_field
         self.columns += [self.name(trait) for trait in args.trait]
         self.columns += args.search_field
         self.columns += sorted({f for fds in args.as_is.values() for f in fds})

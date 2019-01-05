@@ -96,30 +96,30 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent(description))
 
-    parser.add_argument('--version', '-V', action='version',
-                        version='%(prog)s v{}'.format(__VERSION__))
+    parser.add_argument(
+        '--version', '-V', action='version',
+        version='%(prog)s v{}'.format(__VERSION__))
 
     parser.add_argument(
         '--trait', '-t', required=True, action='append', choices=TRAIT_OPTIONS,
         help="""A trait to extract.""")
 
     parser.add_argument(
-        '--search-field', '-s', action='append', metavar='INPUT-FIELD',
-        help=f"""A comma separated ordered list of fields that contain traits.
-            You may need to quote this argument.""")
+        '--search-field', '-s', action='append', metavar='FIELD',
+        help=f"""A field that contains traits. You may use this argument more
+            than once.""")
 
     parser.add_argument(
-        '--extra-fields', '-e', action='append', metavar='INPUT-FIELD',
-        help="""A comma separated list of any extra fields to append to an
-            output row. You may need to quote this argument.""")
+        '--extra-field', '-e', action='append', metavar='FIELD',
+        help="""An extra field to to append to an output row. You may use this
+            argument more than once.""")
 
     parser.add_argument(
-        '--as-is', '-a', action='append', metavar='INPUT-FIELD=TRAIT',
-        default=[],
+        '--as-is', '-a', action='append', metavar='FIELD=TRAIT', default=[],
         help="""A field=trait to pull in as is. For example:
-            --as-is='life_stage=age' will use the value in the row's "age"
-            field, if there is one, for as a parsed value of "life_stage".
-            You may need to quote this argument.""")
+            --as-is='life_stage:age' will use the value in the row's "age"
+            field, if there is one, as a parsed value of "life_stage". You may
+            use this argument more than once and you may need to quote it.""")
 
     parser.add_argument(
         '--input-format', '-i', default='csv', choices=INPUT_OPTIONS,
@@ -129,12 +129,13 @@ def parse_args():
         '--output-format', '-o', default='csv', choices=OUTPUT_OPTIONS,
         help="""Output the result in this format. The default is "csv".""")
 
-    parser.add_argument('--skip', type=int,
-                        help="""Skip this many records at the beginning of the
-                            input file.""")
+    parser.add_argument(
+        '--skip', type=int,
+        help="""Skip this many records at the beginning of the input file.""")
 
-    parser.add_argument('--stop', type=int,
-                        help="""Stop after this many records are processed.""")
+    parser.add_argument(
+        '--stop', type=int,
+        help="""Stop after this many records are processed.""")
 
     parser.add_argument(
         'infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
@@ -146,9 +147,9 @@ def parse_args():
 
     args = parser.parse_args()
 
-    as_is = {x.split('=')[1].strip(): [] for x in args.as_is}
+    as_is = {x.split(':')[1].strip(): [] for x in args.as_is}
     for arg in args.as_is:
-        key, val = arg.split('=')
+        key, val = arg.split(':')
         as_is[val.strip()].append(key.strip())
     args.as_is = as_is
 

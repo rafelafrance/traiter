@@ -30,10 +30,10 @@ class BodyMass(Base):
             | rx.shorthand_key + rx.pair + rx.mass_units
             | rx.shorthand_key + rx.mass_units + rx.pair
             | (wt_key
-               + rx.pair('lbs') + rx.pounds
-               + rx.pair('ozs') + rx.ounces)
-            | (rx.pair('lbs') + rx.pounds
-               + rx.pair('ozs') + rx.ounces
+               + rx.pair('lbs') + rx.pounds('lbs_units')
+               + rx.pair('ozs') + rx.ounces('ozs_units'))
+            | (rx.pair('lbs') + rx.pounds('lbs_units')
+               + rx.pair('ozs') + rx.ounces('ozs_units')
                ).setParseAction(lambda tokens: tokens.append('ambiguous'))
             | wt_key + rx.pair
             | rx.shorthand_key + rx.shorthand
@@ -59,10 +59,9 @@ class BodyMass(Base):
         if value2:
             value = [value, value2]
         units = parts.get('units')
-        has_units = bool(units)
         value = convert(value, units)
 
-        return Result(value=value, ambiguous=ambiguous, has_units=has_units,
+        return Result(value=value, ambiguous=ambiguous, units=units,
                       start=match[1], end=match[2])
 
     def shorthand(self, match, parts):
@@ -71,14 +70,13 @@ class BodyMass(Base):
         if not value:
             return None
         units = parts.get('shorthand_wt_units')
-        has_units = bool(units)
         value = convert(value, units)
-        return Result(value=value, has_units=has_units,
-                      start=match[1], end=match[2])
+        return Result(value=value, units=units, start=match[1], end=match[2])
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
         ambiguous = 'ambiguous' in match[0].asList()
+        units = [parts['lbs_units'], parts['ozs_units']]
         value = self.english_value(parts, 'lbs', 'ozs')
-        return Result(value=value, ambiguous=ambiguous, has_units=True,
+        return Result(value=value, ambiguous=ambiguous, units=units,
                       start=match[1], end=match[2])

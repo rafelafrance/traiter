@@ -56,10 +56,11 @@ class TotalLength(Base):
             | rx.pair + len_key
 
             | (len_key
-               + rx.pair('ft') + rx.feet
-               + rx.pair('in') + rx.inches)
-            | (rx.pair('ft') + rx.feet
-               + rx.pair('in') + rx.inches).setParseAction(self.ambiguous)
+               + rx.pair('ft') + rx.feet('ft_units')
+               + rx.pair('in') + rx.inches('in_units'))
+            | (rx.pair('ft') + rx.feet('ft_units')
+               + rx.pair('in') + rx.inches('in_units')).setParseAction(
+                   self.ambiguous)
 
             # Due to trailing len_key the leading key it is no longer ambiguous
             | ambiguous + rx.pair + rx.len_units + len_key
@@ -106,7 +107,6 @@ class TotalLength(Base):
         units = parts.get('units')
         if parts.get('millimeters'):
             units = 'mm'
-        has_units = bool(units)
 
         value = self.to_float(parts['value1'])
         value2 = self.to_float(parts['value2'])
@@ -114,7 +114,7 @@ class TotalLength(Base):
             value = [value, value2]
         value = convert(value, units)
 
-        return Result(value=value, ambiguous=ambiguous, has_units=has_units,
+        return Result(value=value, ambiguous=ambiguous, units=units,
                       start=match[1], end=match[2])
 
     def shorthand(self, match, parts):
@@ -122,28 +122,26 @@ class TotalLength(Base):
         value = self.to_float(parts.get('shorthand_tl'))
         if not value:
             return None
-        return Result(value=value, has_units=True,
+        return Result(value=value, units='mm_shorthand',
                       start=match[1], end=match[2])
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
         ambiguous = 'ambiguous' in match[0].asList()
+        units = [parts['ft_units'], parts['in_units']]
         value = self.english_value(parts, 'ft', 'in')
-        return Result(value=value, ambiguous=ambiguous, has_units=True,
+        return Result(value=value, ambiguous=ambiguous, units=units,
                       start=match[1], end=match[2])
 
     def fraction(self, match, parts):
         """Handle fractional values like 10 3/8 inches."""
         ambiguous = 'ambiguous' in match[0].asList()
-
         units = parts.get('units')
-        has_units = bool(units)
-
         whole = self.to_float(parts['whole'])
         whole = whole if whole else 0
         numerator = self.to_float(parts['numerator'])
         denominator = self.to_float(parts['denominator'])
         value = convert(whole + numerator / denominator, units)
 
-        return Result(value=value, ambiguous=ambiguous, has_units=has_units,
+        return Result(value=value, ambiguous=ambiguous, units=units,
                       start=match[1], end=match[2])

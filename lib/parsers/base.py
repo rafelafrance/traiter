@@ -13,7 +13,7 @@ class Result:
     """This is a rule production."""
 
     value: Any
-    has_units: bool = False
+    units: str = None
     ambiguous: bool = False
     trait: str = None
     field: str = None
