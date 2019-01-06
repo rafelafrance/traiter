@@ -128,8 +128,8 @@ class TotalLength(Base):
         if not value:
             return None
         flags = {}
-        if parts['shorthand_tl'][0] == '[':
-            flags['ambiguous_value'] = True
+        if parts['shorthand_tl'][-1] == ']':
+            flags['estimated_value'] = True
         return Result(value=value, units='mm_shorthand', flags=flags,
                       start=match[1], end=match[2])
 

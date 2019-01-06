@@ -180,20 +180,21 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62]g'),
-            [Result(value=62, units='g', flags={'ambiguous_value': True},
+            [Result(value=62, units='g', flags={'estimated_value': True},
                     start=41, end=57)])
 
     def test_parse_30(self):
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62g]'),
-            [Result(value=62, units='g', flags={'ambiguous_value': True},
+            [Result(value=62, units='g', flags={'estimated_value': True},
                     start=41, end=57)])
 
     def test_parse_31(self):
         self.assertEqual(
             PAR.parse(
-                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62]'),
+            #    0123456789 123456789 123456789 123456789 123456789 1234567
+                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62] x'),
             [Result(value=62,
-                    flags={'ambiguous_value': True, 'units_inferred': True},
+                    flags={'estimated_value': True, 'units_inferred': True},
                     start=41, end=56)])

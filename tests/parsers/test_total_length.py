@@ -434,3 +434,17 @@ class TestTotalLength(unittest.TestCase):
             [Result(value=278,
                     flags={'ambiguous_key': True, 'units_inferred': True},
                     start=19, end=31)])
+
+    def test_parse_72(self):
+        self.assertEqual(
+            PAR.parse('[308]-190-45-20'),
+            [Result(value=308.0, units='mm_shorthand',
+                    flags={'estimated_value': True},
+                    start=1, end=15)])
+
+    def test_parse_73(self):
+        self.assertEqual(
+            PAR.parse('"{"measurements":"[308]-190-45-20" }"'),
+            [Result(value=308.0, units='mm_shorthand',
+                    flags={'estimated_value': True},
+                    start=3, end=33)])
