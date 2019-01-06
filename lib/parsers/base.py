@@ -3,7 +3,7 @@
 import re
 from abc import abstractmethod
 from typing import Any, List
-from dataclasses import dataclass
+from dataclasses import dataclass, field as datafield
 import lib.parsers.regexp as rx
 from lib.parsers.convert_units import convert
 
@@ -14,12 +14,11 @@ class Result:
 
     value: Any
     units: str = None
-    ambiguous: bool = False
     trait: str = None
     field: str = None
     start: int = 0
     end: int = 0
-    flag: str = None
+    flags: dict = datafield(default_factory=dict)
 
 
 Results = List[Result]
@@ -50,7 +49,7 @@ class Base:  # pylint: disable=no-self-use,unused-argument
 
     # #########################################################################
 
-    def parse(self, text: str, trait=None, field=None, flag=None) -> Results:
+    def parse(self, text: str, trait=None, field=None) -> Results:
         """Parse the text."""
         results = []
         for match in self.parser.parseWithTabs().scanString(text):
@@ -58,7 +57,6 @@ class Base:  # pylint: disable=no-self-use,unused-argument
             if result:
                 result.trait = trait
                 result.field = field
-                result.flag = flag
                 results.append(result)
         return results
 
@@ -87,3 +85,11 @@ class Base:  # pylint: disable=no-self-use,unused-argument
         if len(value) == 1:
             value = value[0]
         return value
+
+    @staticmethod
+    def ambiguous_key(match):
+        """Set the ambiguous key flag."""
+        print(match)
+        if 'ambiguous_key' in match[0].asList():
+            return {'ambiguous_key': True}
+        return {}

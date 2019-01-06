@@ -67,7 +67,7 @@ def parse_traits(args):
 
             for trait, parser in parsers:
                 results = parse_trait(args, trait, parser, row)
-                outfile.cell(results, trait)
+                outfile.cell(trait, results)
 
             outfile.end_row()
 

@@ -34,7 +34,7 @@ class BodyMass(Base):
                + rx.pair('ozs') + rx.ounces('ozs_units'))
             | (rx.pair('lbs') + rx.pounds('lbs_units')
                + rx.pair('ozs') + rx.ounces('ozs_units')
-               ).setParseAction(lambda tokens: tokens.append('ambiguous'))
+               ).setParseAction(lambda tokens: tokens.append('ambiguous_key'))
             | wt_key + rx.pair
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
@@ -53,7 +53,7 @@ class BodyMass(Base):
         if parts.get('lbs') is not None:
             return self.english(match, parts)
 
-        ambiguous = 'ambiguous' in match[0].asList()
+        flags = self.ambiguous_key(match)
         value = self.to_float(parts['value1'])
         value2 = self.to_float(parts['value2'])
         if value2:
@@ -61,7 +61,7 @@ class BodyMass(Base):
         units = parts.get('units')
         value = convert(value, units)
 
-        return Result(value=value, ambiguous=ambiguous, units=units,
+        return Result(value=value, flags=flags, units=units,
                       start=match[1], end=match[2])
 
     def shorthand(self, match, parts):
@@ -75,8 +75,8 @@ class BodyMass(Base):
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        ambiguous = 'ambiguous' in match[0].asList()
+        flags = self.ambiguous_key(match)
         units = [parts['lbs_units'], parts['ozs_units']]
         value = self.english_value(parts, 'lbs', 'ozs')
-        return Result(value=value, ambiguous=ambiguous, units=units,
+        return Result(value=value, flags=flags, units=units,
                       start=match[1], end=match[2])

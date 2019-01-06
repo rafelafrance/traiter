@@ -1,8 +1,8 @@
 """Write the traiter output to a CSV file."""
 
 import csv
-import json
-from dataclasses import asdict
+# import json
+# from dataclasses import asdict
 from lib.writers.base_writer import BaseWriter
 
 
@@ -32,15 +32,18 @@ class CsvWriter(BaseWriter):
         """Start a report row."""
         self.row = {c: row.get(c, '') for c in self.columns}
 
-    def cell(self, results, trait):
+    def cell(self, trait, results):
         """Build a report cell."""
-        if results:
-            self.row[self.name(trait)] = json.dumps(
-                [asdict(r) for r in results])
+        self.row[self.name(trait)] = results
+        # if results:
+        #     self.row[self.name(trait)] = json.dumps(
+        #         [asdict(r) for r in results])
 
     def end_row(self):
         """End a report row."""
-        self.writer.writerow(self.row)
+        print(self.row)
+        print()
+        # self.writer.writerow(self.row)
 
     def end(self):
         """End the report."""

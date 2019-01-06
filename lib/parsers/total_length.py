@@ -49,7 +49,7 @@ class TotalLength(Base):
 
             | len_key + rx.fraction + rx.len_units
             | (ambiguous + rx.fraction + rx.len_units).setParseAction(
-                self.ambiguous)
+                self.flag_ambiguous_key)
 
 
             | rx.pair + rx.len_units + len_key
@@ -60,17 +60,17 @@ class TotalLength(Base):
                + rx.pair('in') + rx.inches('in_units'))
             | (rx.pair('ft') + rx.feet('ft_units')
                + rx.pair('in') + rx.inches('in_units')).setParseAction(
-                   self.ambiguous)
+                   self.flag_ambiguous_key)
 
             # Due to trailing len_key the leading key it is no longer ambiguous
             | ambiguous + rx.pair + rx.len_units + len_key
             | ambiguous + rx.pair + len_key
 
             | (ambiguous + rx.pair + rx.len_units).setParseAction(
-                self.ambiguous)
+                self.flag_ambiguous_key)
             | (ambiguous + rx.len_units + rx.pair).setParseAction(
-                self.ambiguous)
-            | (ambiguous + rx.pair).setParseAction(self.ambiguous)
+                self.flag_ambiguous_key)
+            | (ambiguous + rx.pair).setParseAction(self.flag_ambiguous_key)
 
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
@@ -87,9 +87,9 @@ class TotalLength(Base):
         return parser
 
     @staticmethod
-    def ambiguous(tokens):
+    def flag_ambiguous_key(tokens):
         """Flag an ambiguous parse."""
-        return tokens.append('ambiguous')
+        return tokens.append('ambiguous_key')
 
     def result(self, match):
         """Convert parsed tokens into a result."""
@@ -102,7 +102,7 @@ class TotalLength(Base):
         if parts.get('numerator') is not None:
             return self.fraction(match, parts)
 
-        ambiguous = 'ambiguous' in match[0].asList()
+        flags = self.ambiguous_key(match)
 
         units = parts.get('units')
         if parts.get('millimeters'):
@@ -114,7 +114,7 @@ class TotalLength(Base):
             value = [value, value2]
         value = convert(value, units)
 
-        return Result(value=value, ambiguous=ambiguous, units=units,
+        return Result(value=value, flags=flags, units=units,
                       start=match[1], end=match[2])
 
     def shorthand(self, match, parts):
@@ -127,15 +127,15 @@ class TotalLength(Base):
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        ambiguous = 'ambiguous' in match[0].asList()
+        flags = self.ambiguous_key(match)
         units = [parts['ft_units'], parts['in_units']]
         value = self.english_value(parts, 'ft', 'in')
-        return Result(value=value, ambiguous=ambiguous, units=units,
+        return Result(value=value, flags=flags, units=units,
                       start=match[1], end=match[2])
 
     def fraction(self, match, parts):
         """Handle fractional values like 10 3/8 inches."""
-        ambiguous = 'ambiguous' in match[0].asList()
+        flags = self.ambiguous_key(match)
         units = parts.get('units')
         whole = self.to_float(parts['whole'])
         whole = whole if whole else 0
@@ -143,5 +143,5 @@ class TotalLength(Base):
         denominator = self.to_float(parts['denominator'])
         value = convert(whole + numerator / denominator, units)
 
-        return Result(value=value, ambiguous=ambiguous, units=units,
+        return Result(value=value, flags=flags, units=units,
                       start=match[1], end=match[2])

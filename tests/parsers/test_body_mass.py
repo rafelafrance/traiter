@@ -35,7 +35,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 - 4.5 oz '),
             [Result(value=[995.07, 1034.76],
-                    ambiguous=True,
+                    flags={'ambiguous_key': True},
                     units=['lbs', 'oz'],
                     start=0, end=19)])
 
@@ -162,5 +162,5 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_29(self):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 oz '),
-            [Result(value=995.07, ambiguous=True, units=['lbs', 'oz'],
-                    start=0, end=13)])
+            [Result(value=995.07, flags={'ambiguous_key': True},
+                    units=['lbs', 'oz'], start=0, end=13)])

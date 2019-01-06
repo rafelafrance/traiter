@@ -11,9 +11,6 @@ flags = re.VERBOSE | re.IGNORECASE
 punct = string.punctuation + punc8bit
 
 
-number_re = r' (?: (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ) '
-
-
 def boundary(regexp, left=True, right=True):
     r"""Wrap a regular expression in \b character class."""
     left = r'\b' if left else ''
@@ -22,6 +19,7 @@ def boundary(regexp, left=True, right=True):
 
 
 # Numbers are positive decimals
+number_re = r' (?: (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ) '
 number = Regex(number_re, flags)
 
 # A number or a pair of numbers like "12 to 34" or "12.3-45.6"
@@ -93,13 +91,16 @@ shorthand_key = Regex(r"""
 #   33 = hind foot length (HFL)
 #   44 = ear length (EL)
 #   99 = body mass is optional, as is the mass units
+#
 # Unknown values are filled with "?" or "x".
-#   Like "11-x-x-44" or "11-?-33-44"
+#   Like: "11-x-x-44" or "11-?-33-44"
+#
 # Ambiguous measurements are enclosed in brackets.
-#   Like 11-[22]-33-[44]:99g
+#   Like: 11-[22]-33-[44]:99g
 
 sh_val = r' {number} | [?x]{repeat} | \[{number}\] | \[[?x]{repeat}\]'.format(
     number=number_re, repeat='{1,2}')
+
 shorthand = Regex(r"""
     (?<! [\d/-] )
     (?P<shorthand_tl> {sh_val} )
@@ -109,9 +110,9 @@ shorthand = Regex(r"""
     (?P<shorthand_hfl> {sh_val} )
     (?P=shorthand_sep)
     (?P<shorthand_eal> {sh_val} )
-    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat14} {sh_val} )* )
+    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat} {sh_val} )* )
     (?: [\s=:/-] \s*
         (?P<shorthand_wt> {sh_val} ) \s*
         (?P<shorthand_wt_units> {units} )? )?
     (?! [\d/:=-] )
-    """.format(sh_val=sh_val, repeat14='{1,4}', units=metric_mass_re), flags)
+    """.format(sh_val=sh_val, repeat='{1,4}', units=metric_mass_re), flags)

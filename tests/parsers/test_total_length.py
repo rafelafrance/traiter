@@ -85,8 +85,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('2 ft. 3.1 - 4.5 in. '),
-            [Result(value=[688.34, 723.9], ambiguous=True, units=['ft', 'in'],
-                    start=0, end=18)])
+            [Result(value=[688.34, 723.9], flags={'ambiguous_key': True},
+                    units=['ft', 'in'], start=0, end=18)])
 
     def test_parse_14(self):
         self.assertEqual(
@@ -101,12 +101,14 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('length=8 mm'),
-            [Result(value=8.0, units='mm', ambiguous=True, start=0, end=11)])
+            [Result(value=8.0, units='mm', flags={'ambiguous_key': True},
+                    start=0, end=11)])
 
     def test_parse_17(self):
         self.assertEqual(
             PAR.parse('another; length=8 mm'),
-            [Result(value=8.0, units='mm', ambiguous=True, start=9, end=20)])
+            [Result(value=8.0, units='mm', flags={'ambiguous_key': True},
+                    start=9, end=20)])
 
     def test_parse_18(self):
         self.assertEqual(
@@ -166,15 +168,16 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse('{"time collected":"0712-0900", "length":"12.0" }'),
-            [Result(value=12.0, units=None, ambiguous=True, start=32, end=45)])
+            [Result(value=12.0, units=None, flags={'ambiguous_key': True},
+                    start=32, end=45)])
 
     def test_parse_29(self):
         self.assertEqual(
             PAR.parse('{"time collected":"1030", "water depth":"1-8", '
                       '"bottom":"abrupt lava cliff dropping off to sand at '
                       '45 ft.", "length":"119-137" }'),
-            [Result(value=[119.0, 137.0], units=None, ambiguous=True,
-                    start=109, end=125)])
+            [Result(value=[119.0, 137.0], units=None,
+                    flags={'ambiguous_key': True}, start=109, end=125)])
 
     def test_parse_30(self):
         self.assertEqual(
@@ -190,7 +193,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_32(self):
         self.assertEqual(
             PAR.parse('{"length":"20-29" }'),
-            [Result(value=[20, 29], ambiguous=True, units=None,
+            [Result(value=[20, 29], flags={'ambiguous_key': True}, units=None,
                     start=2, end=16)])
 
     def test_parse_33(self):
@@ -340,18 +343,20 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_60(self):
         self.assertEqual(
             PAR.parse('LENGTH 10 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Result(value=263.52, ambiguous=True, units='IN',
+            [Result(value=263.52, flags={'ambiguous_key': True}, units='IN',
                     start=0, end=16)])
 
     def test_parse_60a(self):
         self.assertEqual(
             PAR.parse('LENGTH 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Result(value=9.52, ambiguous=True, units='IN', start=0, end=13)])
+            [Result(value=9.52, flags={'ambiguous_key': True}, units='IN',
+                    start=0, end=13)])
 
     def test_parse_60b(self):
         self.assertEqual(
             PAR.parse('LENGTH 0 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Result(value=9.52, ambiguous=True, units='IN', start=0, end=15)])
+            [Result(value=9.52, flags={'ambiguous_key': True}, units='IN',
+                    start=0, end=15)])
 
     def test_parse_61(self):
         self.assertEqual(
@@ -378,7 +383,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_65(self):
         self.assertEqual(
             PAR.parse('LENGTH: 117MM. SOFT PARTS COLOR ON LABEL.'),
-            [Result(value=117, ambiguous=True, units='MM', start=0, end=13)])
+            [Result(value=117, flags={'ambiguous_key': True}, units='MM',
+                    start=0, end=13)])
 
     def test_parse_66(self):
         self.assertEqual(
@@ -408,4 +414,5 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_71(self):
         self.assertEqual(
             PAR.parse('"bottom":"rock?", "length":"278" }'),
-            [Result(value=278, ambiguous=True, units=None, start=19, end=31)])
+            [Result(value=278, flags={'ambiguous_key': True}, units=None,
+                    start=19, end=31)])
