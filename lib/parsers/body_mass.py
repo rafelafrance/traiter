@@ -77,6 +77,8 @@ class BodyMass(Base):
         flags = {}
         if not units:
             flags['units_inferred'] = True
+        if parts.get('shorthand_wt_amb'):
+            flags['ambiguous_value'] = True
         return Result(value=value, units=units, flags=flags,
                       start=match[1], end=match[2])
 

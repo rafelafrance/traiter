@@ -65,7 +65,7 @@ class Base:  # pylint: disable=no-self-use,unused-argument
     @staticmethod
     def to_float(value):
         """Convert string to float."""
-        value = value.replace(',', '') if value else ''
+        value = re.sub(r'[,\[\]]', '', value) if value else ''
         try:
             return float(value)
         except ValueError:

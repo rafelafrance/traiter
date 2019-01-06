@@ -127,7 +127,10 @@ class TotalLength(Base):
         value = self.to_float(parts.get('shorthand_tl'))
         if not value:
             return None
-        return Result(value=value, units='mm_shorthand',
+        flags = {}
+        if parts['shorthand_tl'][0] == '[':
+            flags['ambiguous_value'] = True
+        return Result(value=value, units='mm_shorthand', flags=flags,
                       start=match[1], end=match[2])
 
     def english(self, match, parts):

@@ -98,21 +98,28 @@ shorthand_key = Regex(r"""
 # Ambiguous measurements are enclosed in brackets.
 #   Like: 11-[22]-33-[44]:99g
 
-sh_val = r' {number} | [?x]{repeat} | \[{number}\] | \[[?x]{repeat}\]'.format(
-    number=number_re, repeat='{1,2}')
+sh_val = r' {number} | [?x]{repeat}'.format(number=number_re, repeat='{1,2}')
+
+sh_amb = r' \[? (?: {sh_val} ) \]?'.format(
+    number=number_re, sh_val=sh_val, repeat='{1,2}')
 
 shorthand = Regex(r"""
     (?<! [\d/-] )
-    (?P<shorthand_tl> {sh_val} )
+    (?P<shorthand_tl> {sh_amb} )
     (?P<shorthand_sep> [:/-] )
-    (?P<shorthand_tal> {sh_val} )
+    (?P<shorthand_tal> {sh_amb} )
     (?P=shorthand_sep)
-    (?P<shorthand_hfl> {sh_val} )
+    (?P<shorthand_hfl> {sh_amb} )
     (?P=shorthand_sep)
-    (?P<shorthand_eal> {sh_val} )
-    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat} {sh_val} )* )
+    (?P<shorthand_eal> {sh_amb} )
+    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat} {sh_amb} )* )
     (?: [\s=:/-] \s*
+        (?P<shorthand_wt_amb> \[? \s* )
         (?P<shorthand_wt> {sh_val} ) \s*
-        (?P<shorthand_wt_units> {units} )? )?
+        \s* \]?
+        (?P<shorthand_wt_units> {units} )?
+        \s* \]?
+    )?
     (?! [\d/:=-] )
-    """.format(sh_val=sh_val, repeat='{1,4}', units=metric_mass_re), flags)
+    """.format(sh_val=sh_val, sh_amb=sh_amb, repeat='{1,4}',
+               units=metric_mass_re), flags)

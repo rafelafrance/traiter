@@ -153,25 +153,47 @@ class TestBodyMass(unittest.TestCase):
                       "5589,5587,5586,5585"),
             [])
 
-    def test_parse_26(self):
+    def test_parse_25(self):
         self.assertEqual(
             PAR.parse('weight=5.4 g; unformatted measurements=77-x-7-12=5.4'),
             [Result(value=5.4, units='g', start=0, end=12),
              Result(value=5.4, units=None, flags={'units_inferred': True},
                     start=26, end=52)])
 
-    def test_parse_27(self):
+    def test_parse_26(self):
         self.assertEqual(
             PAR.parse('c701563b-dbd9-4500-184f-1ad61eb8da11'),
             [])
 
-    def test_parse_28(self):
+    def test_parse_27(self):
         self.assertEqual(
             PAR.parse('body mass=0 g'),
             [Result(value=0.0, units='g', start=0, end=13)])
 
-    def test_parse_29(self):
+    def test_parse_28(self):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 oz '),
             [Result(value=995.07, flags={'ambiguous_key': True},
                     units=['lbs', 'oz'], start=0, end=13)])
+
+    def test_parse_29(self):
+        self.assertEqual(
+            PAR.parse(
+                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62]g'),
+            [Result(value=62, units='g', flags={'ambiguous_value': True},
+                    start=41, end=57)])
+
+    def test_parse_30(self):
+        self.assertEqual(
+            PAR.parse(
+                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62g]'),
+            [Result(value=62, units='g', flags={'ambiguous_value': True},
+                    start=41, end=57)])
+
+    def test_parse_31(self):
+        self.assertEqual(
+            PAR.parse(
+                'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62]'),
+            [Result(value=62,
+                    flags={'ambiguous_value': True, 'units_inferred': True},
+                    start=41, end=56)])
