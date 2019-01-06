@@ -89,7 +89,6 @@ class Base:  # pylint: disable=no-self-use,unused-argument
     @staticmethod
     def ambiguous_key(match):
         """Set the ambiguous key flag."""
-        print(match)
         if 'ambiguous_key' in match[0].asList():
             return {'ambiguous_key': True}
         return {}

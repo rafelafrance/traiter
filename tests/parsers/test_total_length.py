@@ -19,14 +19,16 @@ class TestTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('measurements: ToL=230;TaL=115;HF=22;E=18;'
                       ' total length=231 mm; tail length=115 mm;'),
-            [Result(value=230.0, units=None, start=14, end=21),
+            [Result(value=230.0, flags={'units_inferred': True},
+                    start=14, end=21),
              Result(value=231.0, units='mm', start=42, end=61)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('measurements: ToL=230;TaL=115;HF=22;E=18;'
                       ' total length=24 cm; tail length=115 mm;'),
-            [Result(value=230.0, units=None, start=14, end=21),
+            [Result(value=230.0, flags={'units_inferred': True},
+                    start=14, end=21),
              Result(value=240.0, units='cm', start=42, end=60)])
 
     def test_parse_04(self):
@@ -63,7 +65,8 @@ class TestTotalLength(unittest.TestCase):
                 'unformatted measurements=Verbatim weight=X;'
                 'ToL=230;TaL=115;HF=22;E=18;'
                 ' total length=231 mm; tail length=115 mm;')),
-            [Result(value=230.0, units=None, start=43, end=50),
+            [Result(value=230.0, flags={'units_inferred': True},
+                    start=43, end=50),
              Result(value=231.0, units='mm', start=71, end=90)])
 
     def test_parse_10(self):
@@ -113,7 +116,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse('another; TL_120, noise'),
-            [Result(value=120.0, units=None, start=9, end=15)])
+            [Result(value=120.0, flags={'units_inferred': True},
+                    start=9, end=15)])
 
     def test_parse_19(self):
         self.assertEqual(
@@ -123,7 +127,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_20(self):
         self.assertEqual(
             PAR.parse('before; TL153, after'),
-            [Result(value=153.0, units=None, start=8, end=13)])
+            [Result(value=153.0, flags={'units_inferred': True},
+                    start=8, end=13)])
 
     def test_parse_21(self):
         self.assertEqual(
@@ -168,7 +173,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse('{"time collected":"0712-0900", "length":"12.0" }'),
-            [Result(value=12.0, units=None, flags={'ambiguous_key': True},
+            [Result(value=12.0,
+                    flags={'ambiguous_key': True, 'units_inferred': True},
                     start=32, end=45)])
 
     def test_parse_29(self):
@@ -176,8 +182,9 @@ class TestTotalLength(unittest.TestCase):
             PAR.parse('{"time collected":"1030", "water depth":"1-8", '
                       '"bottom":"abrupt lava cliff dropping off to sand at '
                       '45 ft.", "length":"119-137" }'),
-            [Result(value=[119.0, 137.0], units=None,
-                    flags={'ambiguous_key': True}, start=109, end=125)])
+            [Result(value=[119.0, 137.0],
+                    flags={'ambiguous_key': True, 'units_inferred': True},
+                    start=109, end=125)])
 
     def test_parse_30(self):
         self.assertEqual(
@@ -193,7 +200,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_32(self):
         self.assertEqual(
             PAR.parse('{"length":"20-29" }'),
-            [Result(value=[20, 29], flags={'ambiguous_key': True}, units=None,
+            [Result(value=[20, 29],
+                    flags={'ambiguous_key': True, 'units_inferred': True},
                     start=2, end=16)])
 
     def test_parse_33(self):
@@ -262,7 +270,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_45(self):
         self.assertEqual(
             PAR.parse('Meas: L: 21.0'),
-            [Result(value=21.0, units=None, start=0, end=13)])
+            [Result(value=21.0, flags={'units_inferred': True},
+                    start=0, end=13)])
 
     def test_parse_46(self):
         self.assertEqual(
@@ -287,7 +296,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_50(self):
         self.assertEqual(
             PAR.parse('SV 1.2'),
-            [Result(value=1.2, units=None, start=0, end=6)])
+            [Result(value=1.2, flags={'units_inferred': True},
+                    start=0, end=6)])
 
     def test_parse_51(self):
         self.assertEqual(
@@ -307,22 +317,26 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_54(self):
         self.assertEqual(
             PAR.parse('SVL=44'),
-            [Result(value=44, units=None, start=0, end=6)])
+            [Result(value=44, flags={'units_inferred': True},
+                    start=0, end=6)])
 
     def test_parse_55(self):
         self.assertEqual(
             PAR.parse('SVL=0 g'),
-            [Result(value=0.0, start=0, end=5)])
+            [Result(value=0.0, flags={'units_inferred': True},
+                    start=0, end=5)])
 
     def test_parse_56(self):
         self.assertEqual(
             PAR.parse('SVL=44'),
-            [Result(value=44, units=None, start=0, end=6)])
+            [Result(value=44, flags={'units_inferred': True},
+                    start=0, end=6)])
 
     def test_parse_57(self):
         self.assertEqual(
             PAR.parse('TL=50'),
-            [Result(value=50, units=None, start=0, end=5)])
+            [Result(value=50, flags={'units_inferred': True},
+                    start=0, end=5)])
 
     def test_parse_58(self):
         self.assertEqual(
@@ -338,7 +352,8 @@ class TestTotalLength(unittest.TestCase):
         # Infer the units from other measurements in post processing
         self.assertEqual(
             PAR.parse('SV 1.4, TAIL 1.0 CM. HATCHLING'),
-            [Result(value=1.4, units=None, start=0, end=6)])
+            [Result(value=1.4, flags={'units_inferred': True},
+                    start=0, end=6)])
 
     def test_parse_60(self):
         self.assertEqual(
@@ -378,7 +393,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_64(self):
         self.assertEqual(
             PAR.parse('{"totalLength":"970", "wing":"390" }'),
-            [Result(value=970, units=None, start=2, end=19)])
+            [Result(value=970, flags={'units_inferred': True},
+                    start=2, end=19)])
 
     def test_parse_65(self):
         self.assertEqual(
@@ -389,7 +405,8 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_66(self):
         self.assertEqual(
             PAR.parse('Meas:Length (L): 5'),
-            [Result(value=5, units=None, start=0, end=18)])
+            [Result(value=5, flags={'units_inferred': True},
+                    start=0, end=18)])
 
     def test_parse_67(self):
         self.assertEqual(
@@ -414,5 +431,6 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_71(self):
         self.assertEqual(
             PAR.parse('"bottom":"rock?", "length":"278" }'),
-            [Result(value=278, flags={'ambiguous_key': True}, units=None,
+            [Result(value=278,
+                    flags={'ambiguous_key': True, 'units_inferred': True},
                     start=19, end=31)])

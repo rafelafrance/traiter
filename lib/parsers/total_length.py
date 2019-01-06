@@ -101,12 +101,17 @@ class TotalLength(Base):
             return self.english(match, parts)
         if parts.get('numerator') is not None:
             return self.fraction(match, parts)
+        return self.normal_length(match, parts)
 
+    def normal_length(self, match, parts):
+        """Handle a normal length notation."""
         flags = self.ambiguous_key(match)
 
         units = parts.get('units')
         if parts.get('millimeters'):
             units = 'mm'
+        if not units:
+            flags['units_inferred'] = True
 
         value = self.to_float(parts['value1'])
         value2 = self.to_float(parts['value2'])
@@ -137,6 +142,8 @@ class TotalLength(Base):
         """Handle fractional values like 10 3/8 inches."""
         flags = self.ambiguous_key(match)
         units = parts.get('units')
+        if not units:
+            flags['units_inferred'] = True
         whole = self.to_float(parts['whole'])
         whole = whole if whole else 0
         numerator = self.to_float(parts['numerator'])

@@ -58,7 +58,10 @@ class BodyMass(Base):
         value2 = self.to_float(parts['value2'])
         if value2:
             value = [value, value2]
+
         units = parts.get('units')
+        if not units:
+            flags['units_inferred'] = True
         value = convert(value, units)
 
         return Result(value=value, flags=flags, units=units,
@@ -71,7 +74,11 @@ class BodyMass(Base):
             return None
         units = parts.get('shorthand_wt_units')
         value = convert(value, units)
-        return Result(value=value, units=units, start=match[1], end=match[2])
+        flags = {}
+        if not units:
+            flags['units_inferred'] = True
+        return Result(value=value, units=units, flags=flags,
+                      start=match[1], end=match[2])
 
     def english(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
