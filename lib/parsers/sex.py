@@ -1,7 +1,6 @@
 """Parse sex notations."""
 
 from pyparsing import Word, alphanums, FollowedBy
-from pyparsing import CaselessKeyword as kw
 from lib.parsers.base import Base, Result
 import lib.parsers.regexp as rx
 
@@ -11,13 +10,14 @@ class Sex(Base):
 
     def build_parser(self):
         """Return the trait parser."""
-        keyword = kw('sex')
+        keyword = rx.kwd('sex')
 
-        sex = kw('females') | kw('female') | kw('males') | kw('male')
+        sex = (rx.kwd('females') | rx.kwd('female')
+               | rx.kwd('males') | rx.kwd('male'))
         sex_q = sex + Word('?')
 
         # These are words that indicate "sex" is not a key
-        skip = kw('and') | kw('is') | kw('was')
+        skip = rx.kwd('and') | rx.kwd('is') | rx.kwd('was')
 
         parser = (
             (keyword + sex_q('value'))

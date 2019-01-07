@@ -4,12 +4,17 @@
 
 import re
 import string
-from pyparsing import punc8bit, nums, Regex, Word
-from pyparsing import CaselessLiteral as cl
+from pyparsing import punc8bit, nums, Regex, Word, Keyword
+from pyparsing import CaselessLiteral as lit
 
 
 flags = re.VERBOSE | re.IGNORECASE
 punct = string.punctuation + punc8bit
+
+
+def kwd(word):
+    """Workaround bug in pyparsing CaselessKeyword."""
+    return Keyword(word, caseless=True)
 
 
 def boundary(regexp, left=True, right=True):
@@ -20,11 +25,14 @@ def boundary(regexp, left=True, right=True):
 
 
 feet = (
-    cl('foots') | cl('feets') | cl('foot') | cl('feet') | cl('fts') | cl('ft'))
+    lit('foots') | lit('feets') | lit('foot') | lit('feet')
+    | lit('fts') | lit('ft')
+)
 
 inches = (
-    cl('inches') | cl('inche') | cl('inchs') | cl('inch')
-    | cl('ins') | cl('in'))
+    lit('inches') | lit('inche') | lit('inchs') | lit('inch')
+    | lit('ins') | lit('in')
+)
 
 metric_len = Regex(r"""
     millimeters? | centimeters? | meters? | (?: [cm] [\s.]? m )
@@ -32,9 +40,9 @@ metric_len = Regex(r"""
 
 len_units = metric_len | feet | inches
 
-pounds = cl('pounds') | cl('pound') | cl('lbs') | cl('lb')
+pounds = lit('pounds') | lit('pound') | lit('lbs') | lit('lb')
 
-ounces = Regex(r' (?: ounce | oz ) s? ', flags)
+ounces = lit('ounces') | lit('ounce') | lit('ozs') | lit('oz')
 
 metric_mass_re = r"""
     (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
@@ -58,10 +66,10 @@ pair = Regex(r"""
     (?! [/,.-] \d ) (?! \d+ ) (?! \s+ to )
     """.format(val=number_re, joiner=pair_joiner), flags)
 
-# A number times another number like "12 x 34" this is typically
+# A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
 # first two numbers
-cross_joiner = cl('x') | cl('by') or cl('*')
+cross_joiner = lit('x') | lit('by') | lit('*')
 cross = (
     (number('value1') + len_units('units1') + cross_joiner
      + number('value2') + len_units('units2'))
@@ -75,8 +83,9 @@ cross = (
 # We don't allow date like "1/2/34". No part of this is a fraction
 fraction = (
     (Word(nums)('whole')
-     + Word(nums)('numerator') + cl('/') + Word(nums)('denominator'))
-    | Word(nums)('numerator') + cl('/') + Word(nums)('denominator'))
+     + Word(nums)('numerator') + lit('/') + Word(nums)('denominator'))
+    | Word(nums)('numerator') + lit('/') + Word(nums)('denominator')
+)
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.

@@ -1,4 +1,4 @@
-"""Parse body mass notations."""
+"""Parse total length notations."""
 
 from pyparsing import Regex, Word, alphas, alphanums
 from lib.parsers.base import Base, Result

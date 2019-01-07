@@ -109,12 +109,8 @@ class TestTestesState(unittest.TestCase):
     def test_parse_19(self):
         self.assertEqual(
             PAR.parse(
-                ('"ear length":"15.0", "gonad length 1":"7.0", '
-                 '"gonad length 2":"3.0", "hind foot length":"31.0", '
-                 '"tail length":"102.0", "total length":"204.0", '
-                 '"weight":"48.9" )	non-scrotal, sem. ves. 14 mm, '
-                 'little fat')),
-            [Result(value='non scrotal', start=161, end=172)])
+                ('non-scrotal, sem. ves. 14 mm ')),
+            [Result(value='non scrotal', start=0, end=11)])
 
     def test_parse_20(self):
         self.assertEqual(
@@ -143,10 +139,7 @@ class TestTestesState(unittest.TestCase):
 
     def test_parse_24(self):
         self.assertEqual(
-            PAR.parse(
-                ('reproductive data=unknown '
-                 'No ecto/endoparasites found. Part of the tail was missing, '
-                 'puncture wound in left abdominal region.')),
+            PAR.parse('puncture wound in left abdominal region.'),
             [])
 
     def test_parse_25(self):

@@ -1,7 +1,6 @@
 """Parse body mass notations."""
 
 from pyparsing import Regex, Word
-from pyparsing import CaselessKeyword as kw
 from lib.parsers.base import Base, Result
 import lib.parsers.regexp as rx
 from lib.parsers.units import convert
@@ -12,7 +11,7 @@ class BodyMass(Base):
 
     def build_parser(self):
         """Return the trait parser."""
-        key_with_units = kw('weightingrams') | kw('massingrams')
+        key_with_units = rx.kwd('weightingrams') | rx.kwd('massingrams')
 
         wt_key = Regex(r"""
             (?: (?: body | full | observed | total ) \s* )?

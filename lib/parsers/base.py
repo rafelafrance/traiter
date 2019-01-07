@@ -40,7 +40,10 @@ class Base:  # pylint: disable=no-self-use,unused-argument
         """Return the trait parser."""
 
     def result(self, match):
-        """Convert parsed tokens into a result."""
+        """Convert parsed tokens into a result.
+
+        This version works for some controlled vocabulary traits.
+        """
         if isinstance(match[0].value, str):
             value = match[0].value
         else:

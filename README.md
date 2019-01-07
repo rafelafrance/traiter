@@ -27,7 +27,7 @@
 
 We also extract values from controlled vocabularies.
  - These values sometimes have a signifier like `Life Stage: Adult`
- - and other times we see a value like `Adult` without a signifier.
+ - And other times we see a value on its own like `Adult` without the signifier.
 
 ## List of traits extracted
 - Body body mass
@@ -35,7 +35,7 @@ We also extract values from controlled vocabularies.
 - Sex
 - Life stage
 - Testes state
-- Testes size (In progress)
+- Testes size
 - Tail Length (In progress)
 - Hind foot Length (In progress)
 - Ear Length (In progress)
@@ -45,7 +45,7 @@ We also extract values from controlled vocabularies.
 You will need to have Python3 (3.7+) installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
 ```
 git clone https://github.com/rafelafrance/traiter.git
-python3 -m pip install --user -r traiter/requirements.txt
+python3.7 -m pip install --user -r traiter/requirements.txt
 ```
 
 ## Run

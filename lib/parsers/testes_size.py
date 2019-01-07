@@ -1,7 +1,6 @@
 """Parse testes size notations."""
 
 from pyparsing import Regex, Word, alphas
-# from pyparsing import CaselessKeyword as kw
 from lib.parsers.base import Base, Result
 import lib.parsers.regexp as rx
 from lib.parsers.units import convert
@@ -14,9 +13,10 @@ class TestesSize(Base):
         """Return the trait parser."""
         words = Word(alphas)*(1, 3)
 
-        label = Regex(
-            rx.boundary(r' reproductive .? (?: data | state | condition ) '),
-            rx.flags)
+        label = (
+            rx.kwd('reproductive')
+            + (rx.kwd('data') | rx.kwd('state') | rx.kwd('condition'))
+        )
 
         ambiguous_sex = Regex(
             rx.boundary(r"""
@@ -26,17 +26,12 @@ class TestesSize(Base):
                 | (?P<side> left | right ) \s? gonad \s? (?: length | width )
                 """), rx.flags)('ambiguous_sex')
 
-        testes = Regex(
-            rx.boundary(r' testes |  testis | testicles | test '),
-            rx.flags)
+        testes = (rx.kwd('testicles') | rx.kwd('testes') | rx.kwd('testis')
+                  | rx.kwd('test'))
 
-        abbrev = Regex(
-            rx.boundary(r' test | tes | ts | t '),
-            rx.flags)
+        abbrev = rx.kwd('tes') | rx.kwd('ts') | rx.kwd('t')
 
-        scrotal = Regex(
-            rx.boundary(r' scrotum | scrotal | scrot '),
-            rx.flags)
+        scrotal = rx.kwd('scrotum') | rx.kwd('scrotal') | rx.kwd('scrot')
 
         parser = (
             label + (testes | abbrev) + rx.cross
