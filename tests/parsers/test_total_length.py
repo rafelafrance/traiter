@@ -358,19 +358,19 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_60(self):
         self.assertEqual(
             PAR.parse('LENGTH 10 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Result(value=263.52, flags={'ambiguous_key': True}, units='IN',
+            [Result(value=263.52, flags={'ambiguous_key': True}, units='in',
                     start=0, end=16)])
 
     def test_parse_60a(self):
         self.assertEqual(
             PAR.parse('LENGTH 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Result(value=9.52, flags={'ambiguous_key': True}, units='IN',
+            [Result(value=9.52, flags={'ambiguous_key': True}, units='in',
                     start=0, end=13)])
 
     def test_parse_60b(self):
         self.assertEqual(
             PAR.parse('LENGTH 0 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Result(value=9.52, flags={'ambiguous_key': True}, units='IN',
+            [Result(value=9.52, flags={'ambiguous_key': True}, units='in',
                     start=0, end=15)])
 
     def test_parse_61(self):

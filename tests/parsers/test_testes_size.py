@@ -91,9 +91,38 @@ class TestTestesSize(unittest.TestCase):
     def test_parse_14(self):
         self.maxDiff = None
         self.assertEqual(
-            #          0123456789 123456789 123456789 123456789 123456789 12345
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
             [Result(value=12, units='mm', flags={'ambiguous_sex': True},
                     start=1, end=21),
              Result(value=5, units='mm', flags={'ambiguous_sex': True},
                     start=25, end=43)])
+
+    def test_parse_15(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('left gonad width=9.1 mm; right gonad width=9.2 mm; '
+                      'right gonad length=16.1 mm; left gonad length=16.2 mm'),
+            [Result(value=9.1, units='mm',
+                    flags={'ambiguous_sex': True, 'side': 'left'},
+                    start=0, end=23),
+             Result(value=9.2, units='mm',
+                    flags={'ambiguous_sex': True, 'side': 'right'},
+                    start=25, end=49),
+             Result(value=16.1, units='mm',
+                    flags={'ambiguous_sex': True, 'side': 'right'},
+                    start=51, end=77),
+             Result(value=16.2, units='mm',
+                    flags={'ambiguous_sex': True, 'side': 'left'},
+                    start=79, end=104)])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('"gonadLengthInMM":"9mm w.o./epid", '),
+            [Result(value=9, units='mm', flags={'ambiguous_sex': True},
+                    start=1, end=22)])
+
+    def test_parse_17(self):
+        self.assertEqual(
+            #          0123456789 123456789 123456789 123456789 123456789 12345
+            PAR.parse('testis-7mm'),
+            [Result(value=7, units='mm', start=0, end=10)])

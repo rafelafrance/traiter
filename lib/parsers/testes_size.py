@@ -23,7 +23,7 @@ class TestesSize(Base):
                 gonad \s? length \s? (?P<index> [12] )
                 | (?P<millimeters> gonad \s?
                     (?: length | width ) \s? in \s? mm )
-                | (?P<side> left | right ) \s? gonad \s? length
+                | (?P<side> left | right ) \s? gonad \s? (?: length | width )
                 """), rx.flags)('ambiguous_sex')
 
         testes = Regex(
@@ -60,7 +60,6 @@ class TestesSize(Base):
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-        print(parts)
 
         value = self.to_float(parts.get('value1'))
         value2 = self.to_float(parts.get('value2'))

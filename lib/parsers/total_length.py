@@ -82,7 +82,7 @@ class TotalLength(Base):
             | len_key + words + rx.pair
         )
 
-        ignore = Word(rx.punct, excludeChars=';')
+        ignore = Word(rx.punct, excludeChars=';/')
         parser.ignore(ignore)
         return parser
 
@@ -110,8 +110,7 @@ class TotalLength(Base):
         units = parts.get('units')
         if parts.get('millimeters'):
             units = 'mm'
-        if not units:
-            flags['units_inferred'] = True
+        self.set_units_inferred(flags, units)
 
         value = self.to_float(parts['value1'])
         value2 = self.to_float(parts['value2'])
@@ -145,9 +144,8 @@ class TotalLength(Base):
         """Handle fractional values like 10 3/8 inches."""
         flags = self.ambiguous_key(match)
         units = parts.get('units')
-        if not units:
-            flags['units_inferred'] = True
-        whole = self.to_float(parts['whole'])
+        self.set_units_inferred(flags, units)
+        whole = self.to_float(parts.get('whole'))
         whole = whole if whole else 0
         numerator = self.to_float(parts['numerator'])
         denominator = self.to_float(parts['denominator'])

@@ -60,8 +60,7 @@ class BodyMass(Base):
             value = [value, value2]
 
         units = parts.get('units')
-        if not units:
-            flags['units_inferred'] = True
+        self.set_units_inferred(flags, units)
         value = convert(value, units)
 
         return Result(value=value, flags=flags, units=units,
@@ -75,8 +74,7 @@ class BodyMass(Base):
         units = parts.get('shorthand_wt_units')
         value = convert(value, units)
         flags = {}
-        if not units:
-            flags['units_inferred'] = True
+        self.set_units_inferred(flags, units)
         if parts.get('shorthand_wt_amb'):
             flags['estimated_value'] = True
         return Result(value=value, units=units, flags=flags,

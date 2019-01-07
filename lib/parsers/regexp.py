@@ -4,7 +4,8 @@
 
 import re
 import string
-from pyparsing import punc8bit, Regex
+from pyparsing import punc8bit, nums, Regex, Word
+from pyparsing import CaselessLiteral as cl
 
 
 flags = re.VERBOSE | re.IGNORECASE
@@ -18,17 +19,20 @@ def boundary(regexp, left=True, right=True):
     return r'{} (?: {} ) {}'.format(left, regexp, right)
 
 
-feet = Regex(r' (?: foot | feet | ft ) s? ', flags)
+feet = (
+    cl('foots') | cl('feets') | cl('foot') | cl('feet') | cl('fts') | cl('ft'))
 
-inches = Regex(r' (?: inch e? | in ) s? ', flags)
+inches = (
+    cl('inches') | cl('inche') | cl('inchs') | cl('inch')
+    | cl('ins') | cl('in'))
 
 metric_len = Regex(r"""
     millimeters? | centimeters? | meters? | (?: [cm] [\s.]? m )
     """, flags)
 
-len_units = (metric_len | feet | inches)
+len_units = metric_len | feet | inches
 
-pounds = Regex(r' (?: pound | lb ) s? ', flags)
+pounds = cl('pounds') | cl('pound') | cl('lbs') | cl('lb')
 
 ounces = Regex(r' (?: ounce | oz ) s? ', flags)
 
@@ -38,7 +42,7 @@ metric_mass_re = r"""
     """
 metric_mass = Regex(metric_mass_re, flags)
 
-mass_units = (metric_mass | pounds | ounces)
+mass_units = metric_mass | pounds | ounces
 
 # Numbers are positive decimals
 number_re = r' (?: (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ) '
@@ -57,7 +61,7 @@ pair = Regex(r"""
 # A number times another number like "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
 # first two numbers
-cross_joiner = Regex(r'x | by | \*', flags)
+cross_joiner = cl('x') | cl('by') or cl('*')
 cross = (
     (number('value1') + len_units('units1') + cross_joiner
      + number('value2') + len_units('units2'))
@@ -69,21 +73,10 @@ cross = (
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow date like "1/2/34". No part of this is a fraction
-fraction_joiner = '/'
-fraction = Regex(r"""
-    (?<! [\d/] )
-    (?: (?P<whole> \d+ ) \s+ )?
-    (?P<numerator> \d+ ) (?: {joiner} ) (?P<denominator> \d+ )
-    (?! [\d/] )
-    """.format(joiner=fraction_joiner), flags)
-
-shorthand_key = Regex(r"""
-    on \s* tag | specimens? | catalog
-    | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
-        (?: \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
-    | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-    | mesurements | Measurementsnt
-    """, flags)
+fraction = (
+    (Word(nums)('whole')
+     + Word(nums)('numerator') + cl('/') + Word(nums)('denominator'))
+    | Word(nums)('numerator') + cl('/') + Word(nums)('denominator'))
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.
@@ -101,6 +94,14 @@ shorthand_key = Regex(r"""
 #
 # Ambiguous measurements are enclosed in brackets.
 #   Like: 11-[22]-33-[44]:99g
+
+shorthand_key = Regex(r"""
+    on \s* tag | specimens? | catalog
+    | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
+        (?: \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
+    | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
+    | mesurements | Measurementsnt
+    """, flags)
 
 sh_val = r' {number} | [?x]{repeat}'.format(number=number_re, repeat='{1,2}')
 
