@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.total_length import TotalLength
+from lib.base import Result
+from lib.traits.total_length import TotalLength
 
 
 PAR = TotalLength()

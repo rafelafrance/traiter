@@ -1,8 +1,8 @@
 """Parse life stage notations."""
 
 from pyparsing import Regex, Word
-from lib.parsers.base import Base
-import lib.parsers.regexp as rx
+from lib.base import Base
+import lib.regexp as rx
 
 
 class LifeStage(Base):

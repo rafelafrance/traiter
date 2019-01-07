@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.sex import Sex
+from lib.base import Result
+from lib.traits.sex import Sex
 
 
 PAR = Sex()

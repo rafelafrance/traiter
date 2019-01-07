@@ -1,8 +1,8 @@
 """Parse testes state notations."""
 
 from pyparsing import Regex, Word, Group, Optional
-from lib.parsers.base import Base
-import lib.parsers.regexp as rx
+from lib.base import Base
+import lib.regexp as rx
 
 
 class TestesState(Base):

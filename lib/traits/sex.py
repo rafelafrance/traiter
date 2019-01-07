@@ -1,8 +1,9 @@
 """Parse sex notations."""
 
 from pyparsing import Word, alphanums, FollowedBy
-from lib.parsers.base import Base, Result
-import lib.parsers.regexp as rx
+from lib.base import Base
+from lib.result import Result
+import lib.regexp as rx
 
 
 class Sex(Base):

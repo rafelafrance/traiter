@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.as_is import AsIs
+from lib.base import Result
+from lib.traits.as_is import AsIs
 
 
 PAR = AsIs()

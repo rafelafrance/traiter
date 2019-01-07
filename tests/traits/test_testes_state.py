@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.testes_state import TestesState
+from lib.base import Result
+from lib.traits.testes_state import TestesState
 
 
 PAR = TestesState()

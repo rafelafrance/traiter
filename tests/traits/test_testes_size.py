@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.testes_size import TestesSize
+from lib.base import Result
+from lib.traits.testes_size import TestesSize
 
 
 PAR = TestesSize()

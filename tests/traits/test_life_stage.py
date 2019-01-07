@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.life_stage import LifeStage
+from lib.base import Result
+from lib.traits.life_stage import LifeStage
 
 
 PAR = LifeStage()

@@ -1,8 +1,8 @@
 # flake8=noqa
 
 import unittest
-from lib.parsers.base import Result
-from lib.parsers.body_mass import BodyMass
+from lib.base import Result
+from lib.traits.body_mass import BodyMass
 
 
 PAR = BodyMass()

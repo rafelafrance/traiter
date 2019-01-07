@@ -1,9 +1,10 @@
 """Parse total length notations."""
 
 from pyparsing import Regex, Word, alphas, alphanums
-from lib.parsers.base import Base, Result
-import lib.parsers.regexp as rx
-from lib.parsers.units import convert
+from lib.base import Base
+from lib.result import Result
+from lib.units import convert
+import lib.regexp as rx
 
 
 class TotalLength(Base):

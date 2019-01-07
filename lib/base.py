@@ -2,26 +2,9 @@
 
 import re
 from abc import abstractmethod
-from typing import Any, List
-from dataclasses import dataclass, field as datafield
-import lib.parsers.regexp as rx
-from lib.parsers.units import convert
-
-
-@dataclass
-class Result:
-    """This is a rule production."""
-
-    value: Any
-    units: str = None
-    trait: str = None
-    field: str = None
-    start: int = 0
-    end: int = 0
-    flags: dict = datafield(default_factory=dict)
-
-
-Results = List[Result]
+import lib.regexp as rx
+from lib.units import convert
+from lib.result import Result
 
 
 class Base:  # pylint: disable=no-self-use,unused-argument
@@ -38,6 +21,7 @@ class Base:  # pylint: disable=no-self-use,unused-argument
     @abstractmethod
     def build_parser(self):
         """Return the trait parser."""
+        raise NotImplementedError('You need to a build_parser function.')
 
     def result(self, match):
         """Convert parsed tokens into a result.
@@ -52,7 +36,7 @@ class Base:  # pylint: disable=no-self-use,unused-argument
 
     # #########################################################################
 
-    def parse(self, text: str, trait=None, field=None) -> Results:
+    def parse(self, text: str, trait=None, field=None):
         """Parse the text."""
         results = []
         for match in self.parser.parseWithTabs().scanString(text):

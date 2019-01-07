@@ -8,16 +8,16 @@ import textwrap
 from lib.readers.csv_reader import CsvReader
 from lib.writers.csv_writer import CsvWriter
 from lib.writers.html_writer import HtmlWriter
-from lib.parsers.as_is import AsIs
-from lib.parsers.sex import Sex
-from lib.parsers.body_mass import BodyMass
-from lib.parsers.life_stage import LifeStage
-# from lib.parsers.ear_length import EarLength
-# from lib.parsers.tail_length import TailLength
-# from lib.parsers.testes_size import TestesSize
-from lib.parsers.testes_state import TestesState
-from lib.parsers.total_length import TotalLength
-# from lib.parsers.hind_foot_length import HindFootLength
+from lib.as_is import AsIs
+from lib.sex import Sex
+from lib.body_mass import BodyMass
+from lib.life_stage import LifeStage
+# from lib.ear_length import EarLength
+# from lib.tail_length import TailLength
+# from lib.testes_size import TestesSize
+from lib.testes_state import TestesState
+from lib.total_length import TotalLength
+# from lib.hind_foot_length import HindFootLength
 
 __VERSION__ = '0.3.0'
 
