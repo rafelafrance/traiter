@@ -18,6 +18,28 @@ def boundary(regexp, left=True, right=True):
     return r'{} (?: {} ) {}'.format(left, regexp, right)
 
 
+feet = Regex(r' (?: foot | feet | ft ) s? ', flags)
+
+inches = Regex(r' (?: inch e? | in ) s? ', flags)
+
+metric_len = Regex(r"""
+    millimeters? | centimeters? | meters? | (?: [cm] [\s.]? m )
+    """, flags)
+
+len_units = (metric_len | feet | inches)
+
+pounds = Regex(r' (?: pound | lb ) s? ', flags)
+
+ounces = Regex(r' (?: ounce | oz ) s? ', flags)
+
+metric_mass_re = r"""
+    (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
+    | (?: m \.? g | k \.? g | g[mr]? ) (?: s (?! [a-z]) )?
+    """
+metric_mass = Regex(metric_mass_re, flags)
+
+mass_units = (metric_mass | pounds | ounces)
+
 # Numbers are positive decimals
 number_re = r' (?: (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ) '
 number = Regex(number_re, flags)
@@ -35,11 +57,15 @@ pair = Regex(r"""
 # A number times another number like "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
 # first two numbers
-cross_joiner = r'x | by | \*'
-cross = Regex(r"""
-    (?<! [\d/,.-] \d ) (?<! \b by ) (?<! \* ) (?<! x )
-    (?P<value1> {val} ) (?: \s* (?: {joiner} ) \s* (?P<value2> {val} ) )?
-    """.format(val=number_re, joiner=cross_joiner), flags)
+cross_joiner = Regex(r'x | by | \*', flags)
+cross = (
+    (number('value1') + len_units('units1') + cross_joiner
+     + number('value2') + len_units('units2'))
+    | number('value1') + cross_joiner + number('value2') + len_units('units1')
+    | number('value1') + cross_joiner + number('value2')
+    | number('value1') + len_units('units1')
+    | number('value1')
+)
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow date like "1/2/34". No part of this is a fraction
@@ -50,28 +76,6 @@ fraction = Regex(r"""
     (?P<numerator> \d+ ) (?: {joiner} ) (?P<denominator> \d+ )
     (?! [\d/] )
     """.format(joiner=fraction_joiner), flags)
-
-feet = Regex(r' (?: foot | feet | ft ) s? ', flags)
-
-inches = Regex(r' (?: inch e? | in ) s? ', flags)
-
-metric_len = Regex(r"""
-    millimeters? | centimeters? | meters? | (?: [cm] [\s.]? m )
-    """, flags)
-
-len_units = (metric_len | feet | inches)('units')
-
-pounds = Regex(r' (?: pound | lb ) s? ', flags)
-
-ounces = Regex(r' (?: ounce | oz ) s? ', flags)
-
-metric_mass_re = r"""
-    (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
-    | (?: m \.? g | k \.? g | g[mr]? ) (?: s (?! [a-z]) )?
-    """
-metric_mass = Regex(metric_mass_re, flags)
-
-mass_units = (metric_mass | pounds | ounces)('units')
 
 shorthand_key = Regex(r"""
     on \s* tag | specimens? | catalog

@@ -4,7 +4,7 @@ from pyparsing import Regex, Word
 from pyparsing import CaselessKeyword as kw
 from lib.parsers.base import Base, Result
 import lib.parsers.regexp as rx
-from lib.parsers.convert_units import convert
+from lib.parsers.units import convert
 
 
 class BodyMass(Base):
@@ -17,7 +17,7 @@ class BodyMass(Base):
         wt_key = Regex(r"""
             (?: (?: body | full | observed | total ) \s* )?
                 (?: weights?
-                | weigh (?: s | ed | ing )
+                | weigh (?: s | ed | ing )?
                 | mass
                 | w \.? t s? \.? )
             | body
@@ -25,10 +25,10 @@ class BodyMass(Base):
 
         parser = (
             key_with_units('units') + rx.pair
-            | wt_key + rx.mass_units + rx.pair
-            | wt_key + rx.pair + rx.mass_units
-            | rx.shorthand_key + rx.pair + rx.mass_units
-            | rx.shorthand_key + rx.mass_units + rx.pair
+            | wt_key + rx.mass_units('units') + rx.pair
+            | wt_key + rx.pair + rx.mass_units('units')
+            | rx.shorthand_key + rx.pair + rx.mass_units('units')
+            | rx.shorthand_key + rx.mass_units('units') + rx.pair
             | (wt_key
                + rx.pair('lbs') + rx.pounds('lbs_units')
                + rx.pair('ozs') + rx.ounces('ozs_units'))

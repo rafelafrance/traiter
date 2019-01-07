@@ -5,7 +5,7 @@ from abc import abstractmethod
 from typing import Any, List
 from dataclasses import dataclass, field as datafield
 import lib.parsers.regexp as rx
-from lib.parsers.convert_units import convert
+from lib.parsers.units import convert
 
 
 @dataclass
@@ -65,7 +65,7 @@ class Base:  # pylint: disable=no-self-use,unused-argument
     @staticmethod
     def to_float(value):
         """Convert string to float."""
-        value = re.sub(r'[,\[\]]', '', value) if value else ''
+        value = re.sub(r'[^\d.]', '', value) if value else ''
         try:
             return float(value)
         except ValueError:
@@ -87,8 +87,23 @@ class Base:  # pylint: disable=no-self-use,unused-argument
         return value
 
     @staticmethod
+    def set_units_inferred(flags, units):
+        """Set the units inferred flag."""
+        if not units:
+            flags['units_inferred'] = True
+
+    @staticmethod
     def ambiguous_key(match):
         """Set the ambiguous key flag."""
         if 'ambiguous_key' in match[0].asList():
             return {'ambiguous_key': True}
         return {}
+
+    @staticmethod
+    def set_flag(parts, flags, key, as_bool=False):
+        """Get the result flag from the parsed parts."""
+        value = parts.get(key)
+        if value:
+            flags[key] = value
+            if as_bool:
+                flags[key] = bool(value)

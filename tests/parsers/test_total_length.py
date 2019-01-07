@@ -448,3 +448,8 @@ class TestTotalLength(unittest.TestCase):
             [Result(value=308.0, units='mm_shorthand',
                     flags={'estimated_value': True},
                     start=3, end=33)])
+
+    def test_parse_74(self):
+        self.assertEqual(
+            PAR.parse('308-190-45-20-11-22'),
+            [])

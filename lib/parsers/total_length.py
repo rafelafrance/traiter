@@ -3,7 +3,7 @@
 from pyparsing import Regex, Word, alphas, alphanums
 from lib.parsers.base import Base, Result
 import lib.parsers.regexp as rx
-from lib.parsers.convert_units import convert
+from lib.parsers.units import convert
 
 
 class TotalLength(Base):
@@ -41,18 +41,18 @@ class TotalLength(Base):
         parser = (
             key_with_units('millimeters') + rx.pair
 
-            | rx.shorthand_key + rx.pair + rx.len_units
-            | rx.shorthand_key + rx.len_units + rx.pair
+            | rx.shorthand_key + rx.pair + rx.len_units('units')
+            | rx.shorthand_key + rx.len_units('units') + rx.pair
 
-            | key_units_req + rx.fraction + rx.len_units
-            | key_units_req + rx.pair + rx.len_units
+            | key_units_req + rx.fraction + rx.len_units('units')
+            | key_units_req + rx.pair + rx.len_units('units')
 
-            | len_key + rx.fraction + rx.len_units
-            | (ambiguous + rx.fraction + rx.len_units).setParseAction(
+            | len_key + rx.fraction + rx.len_units('units')
+            | (ambiguous + rx.fraction + rx.len_units('units')).setParseAction(
                 self.flag_ambiguous_key)
 
 
-            | rx.pair + rx.len_units + len_key
+            | rx.pair + rx.len_units('units') + len_key
             | rx.pair + len_key
 
             | (len_key
@@ -63,22 +63,22 @@ class TotalLength(Base):
                    self.flag_ambiguous_key)
 
             # Due to trailing len_key the leading key it is no longer ambiguous
-            | ambiguous + rx.pair + rx.len_units + len_key
+            | ambiguous + rx.pair + rx.len_units('units') + len_key
             | ambiguous + rx.pair + len_key
 
-            | (ambiguous + rx.pair + rx.len_units).setParseAction(
+            | (ambiguous + rx.pair + rx.len_units('units')).setParseAction(
                 self.flag_ambiguous_key)
-            | (ambiguous + rx.len_units + rx.pair).setParseAction(
+            | (ambiguous + rx.len_units('units') + rx.pair).setParseAction(
                 self.flag_ambiguous_key)
             | (ambiguous + rx.pair).setParseAction(self.flag_ambiguous_key)
 
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
 
-            | len_key + rx.pair + rx.len_units
-            | len_key + rx.len_units + rx.pair
+            | len_key + rx.pair + rx.len_units('units')
+            | len_key + rx.len_units('units') + rx.pair
             | len_key + rx.pair
-            | len_key + words + rx.pair + rx.len_units
+            | len_key + words + rx.pair + rx.len_units('units')
             | len_key + words + rx.pair
         )
 

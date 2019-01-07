@@ -26,7 +26,7 @@ class TestesState(Base):
             rx.boundary(r' (?: un)? (?: des?c?end (?: ed)? | desc ) '),
             rx.flags)
         abbrev = Regex(
-            rx.boundary(r' tes | ts | t '),
+            rx.boundary(r' test | tes | ts | t '),
             rx.flags)
         scrotal = Regex(
             rx.boundary(r' scrotum | scrotal | scrot '),
