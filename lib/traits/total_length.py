@@ -3,7 +3,6 @@
 from pyparsing import Regex, Word, alphas, alphanums
 from lib.base import Base
 from lib.result import Result
-from lib.units import convert
 import lib.regexp as rx
 
 
@@ -95,62 +94,49 @@ class TotalLength(Base):
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-
         if parts.get('shorthand_tl') is not None:
             return self.shorthand(match, parts)
         if parts.get('ft') is not None:
-            return self.english(match, parts)
+            return self.compound(match, parts)
         if parts.get('numerator') is not None:
             return self.fraction(match, parts)
-        return self.normal_length(match, parts)
+        return self.simple(match, parts)
 
-    def normal_length(self, match, parts):
+    def simple(self, match, parts):
         """Handle a normal length notation."""
-        flags = self.ambiguous_key(match)
-
-        units = parts.get('units')
-        if parts.get('millimeters'):
-            units = 'mm'
-        self.set_units_inferred(flags, units)
-
-        value = self.to_float(parts['value1'])
-        value2 = self.to_float(parts['value2'])
-        if value2:
-            value = [value, value2]
-        value = convert(value, units)
-
-        return Result(value=value, flags=flags, units=units,
-                      start=match[1], end=match[2])
+        units = 'mm' if parts.get('millimeters') else parts.get('units')
+        result = Result()
+        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.float_value(parts['value1'], parts['value2'])
+        result.convert_value(units)
+        result.ends(match[1], match[2])
+        return result
 
     def shorthand(self, match, parts):
         """Handle shorthand notation like 11-22-33-44:55g."""
-        value = self.to_float(parts.get('shorthand_tl'))
-        if not value:
+        result = Result()
+        result.float_value(parts.get('shorthand_tl'))
+        if not result.value:
             return None
-        flags = {}
+        result.units = 'mm_shorthand'
         if parts['shorthand_tl'][-1] == ']':
-            flags['estimated_value'] = True
-        return Result(value=value, units='mm_shorthand', flags=flags,
-                      start=match[1], end=match[2])
+            result.flags['estimated_value'] = True
+        result.ends(match[1], match[2])
+        return result
 
-    def english(self, match, parts):
+    def compound(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        flags = self.ambiguous_key(match)
-        units = [parts['ft_units'], parts['in_units']]
-        value = self.english_value(parts, 'ft', 'in')
-        return Result(value=value, flags=flags, units=units,
-                      start=match[1], end=match[2])
+        result = Result()
+        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.compound_value(parts, ['ft', 'in'])
+        result.ends(match[1], match[2])
+        return result
 
     def fraction(self, match, parts):
         """Handle fractional values like 10 3/8 inches."""
-        flags = self.ambiguous_key(match)
-        units = parts.get('units')
-        self.set_units_inferred(flags, units)
-        whole = self.to_float(parts.get('whole'))
-        whole = whole if whole else 0
-        numerator = self.to_float(parts['numerator'])
-        denominator = self.to_float(parts['denominator'])
-        value = convert(whole + numerator / denominator, units)
-
-        return Result(value=value, flags=flags, units=units,
-                      start=match[1], end=match[2])
+        result = Result()
+        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.fraction_value(parts)
+        result.convert_value(parts.get('units'))
+        result.ends(match[1], match[2])
+        return result

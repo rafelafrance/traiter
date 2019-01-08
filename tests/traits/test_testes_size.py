@@ -1,7 +1,7 @@
 # flake8=noqa
 
 import unittest
-from lib.base import Result
+from lib.result import Result
 from lib.traits.testes_size import TestesSize
 
 

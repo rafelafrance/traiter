@@ -1,7 +1,7 @@
 # flake8=noqa
 
 import unittest
-from lib.base import Result
+from lib.result import Result
 from lib.traits.body_mass import BodyMass
 
 
@@ -36,7 +36,7 @@ class TestBodyMass(unittest.TestCase):
             PAR.parse('2 lbs. 3.1 - 4.5 oz '),
             [Result(value=[995.07, 1034.76],
                     flags={'ambiguous_key': True},
-                    units=['lbs', 'oz'],
+                    units=['lbs', 'ozs'],
                     start=0, end=19)])
 
     def test_parse_06(self):
@@ -174,7 +174,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 oz '),
             [Result(value=995.07, flags={'ambiguous_key': True},
-                    units=['lbs', 'oz'], start=0, end=13)])
+                    units=['lbs', 'ozs'], start=0, end=13)])
 
     def test_parse_29(self):
         self.assertEqual(

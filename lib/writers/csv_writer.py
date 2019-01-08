@@ -21,7 +21,7 @@ class CsvWriter(BaseWriter):
     @staticmethod
     def name(trait):
         """Generate the CSV column name for the parsed trait."""
-        return f'{trait}_results'
+        return '{}_results'.format(trait)
 
     def start(self):
         """Start the report."""

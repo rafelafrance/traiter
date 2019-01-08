@@ -1,7 +1,7 @@
 # flake8=noqa
 
 import unittest
-from lib.base import Result
+from lib.result import Result
 from lib.traits.total_length import TotalLength
 
 
@@ -82,7 +82,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('t.l.= 2 feet 3.1 - 4.5 inches '),
-            [Result(value=[688.34, 723.9], units=['feet', 'inches'],
+            [Result(value=[688.34, 723.9], units=['ft', 'in'],
                     start=0, end=29)])
 
     def test_parse_13(self):

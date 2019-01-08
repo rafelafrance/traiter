@@ -2,6 +2,7 @@
 
 from pyparsing import Regex, Word, Group, Optional
 from lib.base import Base
+from lib.result import Result
 import lib.regexp as rx
 
 
@@ -92,3 +93,10 @@ class TestesState(Base):
         ignore = Word(rx.punct)
         parser.ignore(ignore)
         return parser
+
+    def result(self, match):
+        """Convert parsed tokens into a result."""
+        result = Result()
+        result.vocabulary_value(match[0].value)
+        result.ends(match[1], match[2])
+        return result

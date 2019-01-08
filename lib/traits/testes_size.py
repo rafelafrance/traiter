@@ -3,7 +3,6 @@
 from pyparsing import Regex, Word, alphas
 from lib.base import Base
 from lib.result import Result
-from lib.units import convert
 import lib.regexp as rx
 
 
@@ -56,32 +55,10 @@ class TestesSize(Base):
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-
-        value = self.to_float(parts.get('value1'))
-        value2 = self.to_float(parts.get('value2'))
-
-        units = parts.get('units1')
-        units2 = parts.get('units2')
-        if parts.get('millimeters'):
-            units = 'mm'
-
-        value = convert(value, units)
-        if value2 and units2:
-            value2 = convert(value2, units2)
-        elif value2:
-            value2 = convert(value2, units)
-
-        if value2:
-            value = [value, value2]
-
-        if units2 and units2 != units:
-            units = [units, units2]
-
-        flags = {}
-        self.set_units_inferred(flags, units)
-        self.set_flag(parts, flags, 'index')
-        self.set_flag(parts, flags, 'side')
-        self.set_flag(parts, flags, 'ambiguous_sex', as_bool=True)
-
-        return Result(value=value, flags=flags, units=units,
-                      start=match[1], end=match[2])
+        result = Result()
+        result.cross_value(parts)
+        result.flag_from_dict(parts, 'index')
+        result.flag_from_dict(parts, 'side')
+        result.is_flag_in_dict(parts, 'ambiguous_sex')
+        result.ends(match[1], match[2])
+        return result

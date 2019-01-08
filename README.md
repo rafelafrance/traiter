@@ -42,10 +42,10 @@ We also extract values from controlled vocabularies.
 
 
 ## Install
-You will need to have Python3 (3.7+) installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
+You will need to have Python3 installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
 ```
 git clone https://github.com/rafelafrance/traiter.git
-python3.7 -m pip install --user -r traiter/requirements.txt
+python3 -m pip install --user -r traiter/requirements.txt
 ```
 
 ## Run

@@ -3,7 +3,6 @@
 from pyparsing import Regex, Word
 from lib.base import Base
 from lib.result import Result
-from lib.units import convert
 import lib.regexp as rx
 
 
@@ -30,10 +29,9 @@ class BodyMass(Base):
             | rx.shorthand_key + rx.pair + rx.mass_units('units')
             | rx.shorthand_key + rx.mass_units('units') + rx.pair
             | (wt_key
-               + rx.pair('lbs') + rx.pounds('lbs_units')
-               + rx.pair('ozs') + rx.ounces('ozs_units'))
-            | (rx.pair('lbs') + rx.pounds('lbs_units')
-               + rx.pair('ozs') + rx.ounces('ozs_units')
+               + rx.number('lbs') + rx.pounds
+               + rx.pair('ozs') + rx.ounces)
+            | (rx.number('lbs') + rx.pounds + rx.pair('ozs') + rx.ounces
                ).setParseAction(lambda tokens: tokens.append('ambiguous_key'))
             | wt_key + rx.pair
             | rx.shorthand_key + rx.shorthand
@@ -51,39 +49,33 @@ class BodyMass(Base):
         if parts.get('shorthand_tl') is not None:
             return self.shorthand(match, parts)
         if parts.get('lbs') is not None:
-            return self.english(match, parts)
+            return self.compound(match, parts)
+        return self.simple(match, parts)
 
-        flags = self.ambiguous_key(match)
-        value = self.to_float(parts['value1'])
-        value2 = self.to_float(parts['value2'])
-        if value2:
-            value = [value, value2]
-
-        units = parts.get('units')
-        self.set_units_inferred(flags, units)
-        value = convert(value, units)
-
-        return Result(value=value, flags=flags, units=units,
-                      start=match[1], end=match[2])
+    def simple(self, match, parts):
+        """Convert a simple value into a result."""
+        result = Result()
+        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.float_value(parts['value1'], parts['value2'])
+        result.convert_value(parts.get('units'))
+        result.ends(match[1], match[2])
+        return result
 
     def shorthand(self, match, parts):
-        """Handle shorthand notation like 11-22-33-44:55g."""
-        value = self.to_float(parts.get('shorthand_wt'))
-        if not value:
+        """Convert a shorthand value like 11-22-33-44:55g."""
+        result = Result()
+        result.float_value(parts.get('shorthand_wt'))
+        if not result.value:
             return None
-        units = parts.get('shorthand_wt_units')
-        value = convert(value, units)
-        flags = {}
-        self.set_units_inferred(flags, units)
-        if parts.get('shorthand_wt_amb'):
-            flags['estimated_value'] = True
-        return Result(value=value, units=units, flags=flags,
-                      start=match[1], end=match[2])
+        result.convert_value(parts.get('shorthand_wt_units'))
+        result.is_flag_in_dict(parts, 'shorthand_wt_amb', 'estimated_value')
+        result.ends(match[1], match[2])
+        return result
 
-    def english(self, match, parts):
-        """Handle a pattern like: 4 lbs 9 ozs."""
-        flags = self.ambiguous_key(match)
-        units = [parts['lbs_units'], parts['ozs_units']]
-        value = self.english_value(parts, 'lbs', 'ozs')
-        return Result(value=value, flags=flags, units=units,
-                      start=match[1], end=match[2])
+    def compound(self, match, parts):
+        """Convert a compound pattern like: 4 lbs 9 ozs."""
+        result = Result()
+        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.compound_value(parts, ['lbs', 'ozs'])
+        result.ends(match[1], match[2])
+        return result

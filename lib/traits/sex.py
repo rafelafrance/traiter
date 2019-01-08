@@ -1,5 +1,6 @@
 """Parse sex notations."""
 
+import re
 from pyparsing import Word, alphanums, FollowedBy
 from lib.base import Base
 from lib.result import Result
@@ -34,17 +35,10 @@ class Sex(Base):
 
     def result(self, match):
         """Convert parsed tokens into a result."""
-        if isinstance(match[0].value, str):
-            value = self.normalize(match[0].value)
-        else:
-            values = match[0].value
-            value = self.normalize(values[0])
-            value += values[1] if len(values) > 1 else ''
-        return Result(value=value, start=match[1], end=match[2])
-
-    @staticmethod
-    def normalize(value):
-        """Normalize the value."""
-        value = value.lower()
-        value = 'female' if value[0] == 'f' else value
-        return value
+        result = Result()
+        result.vocabulary_value(match[0].value)
+        result.value = re.sub(r'\s*\?$', '?', result.value)
+        result.value = re.sub(r'^(f\w*)', r'female', result.value)
+        result.value = re.sub(r'^(m\w*)', r'male', result.value)
+        result.ends(match[1], match[2])
+        return result
