@@ -4,7 +4,7 @@
 def convert(value, units):
     """Normalize the units to millimeters or grams."""
     units = units if units else ''
-    factor = UNITS.get(units.lower(), '')
+    factor = UNITS.get(units.lower(), 1.0)
     if isinstance(value, list):
         value = [round(v * factor, 2) for v in value]
     else:
@@ -15,7 +15,6 @@ def convert(value, units):
 
 UNITS = {
     # No units given
-    None: 1.0,
     '': 1.0,
 
     # Length
@@ -34,29 +33,10 @@ UNITS = {
     'inch': 25.4,
     'inches': 25.4,
     'ins': 25.4,
-    'm.m': 1.0,
-    'm.m.': 1.0,
     'meter': 1000.0,
     'meters': 1000.0,
-    'millimeter': 1.0,
-    'millimeters': 1.0,
-    'mm': 1.0,
-    'mm.': 1.0,
-    'mm.s': 1.0,
-    'mms': 1.0,
 
     # Mass
-    'g': 1.0,
-    'g.': 1.0,
-    'gm': 1.0,
-    'gm.': 1.0,
-    'gms': 1.0,
-    'gms.': 1.0,
-    'gr': 1.0,
-    'gr.': 1.0,
-    'gram': 1.0,
-    'grams': 1.0,
-    'grs': 1.0,
     'kg': 1000.0,
     'kg.': 1000.0,
     'kgs': 1000.0,
@@ -78,6 +58,4 @@ UNITS = {
     'ozs.': 28.349,
     'pound': 453.593,
     'pounds': 453.593,
-    'weightingrams': 1.0,
-    'massingrams': 1.0,
 }

@@ -21,7 +21,7 @@ class TestesSize(Base):
         ambiguous_sex = Regex(
             rx.boundary(r"""
                 gonad \s? length \s? (?P<index> [12] )
-                | (?P<millimeters> gonad \s?
+                | (?P<units> gonad \s?
                     (?: length | width ) \s? in \s? mm )
                 | (?P<side> left | right ) \s? gonad \s? (?: length | width )
                 """), rx.flags)('ambiguous_sex')

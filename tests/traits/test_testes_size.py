@@ -92,9 +92,11 @@ class TestTestesSize(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
-            [Result(value=12, units='mm', flags={'ambiguous_sex': True},
+            [Result(value=12, units='gonadLengthInMM',
+                    flags={'ambiguous_sex': True},
                     start=1, end=21),
-             Result(value=5, units='mm', flags={'ambiguous_sex': True},
+             Result(value=5, units='gonadWidthInMM',
+                    flags={'ambiguous_sex': True},
                     start=25, end=43)])
 
     def test_parse_15(self):
@@ -118,11 +120,17 @@ class TestTestesSize(unittest.TestCase):
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"9mm w.o./epid", '),
-            [Result(value=9, units='mm', flags={'ambiguous_sex': True},
+            [Result(value=9, units='gonadLengthInMM',
+                    flags={'ambiguous_sex': True},
                     start=1, end=22)])
 
     def test_parse_17(self):
         self.assertEqual(
-            #          0123456789 123456789 123456789 123456789 123456789 12345
             PAR.parse('testis-7mm'),
             [Result(value=7, units='mm', start=0, end=10)])
+
+    def test_parse_18(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=T=10x4 ; '),
+            [Result(value=[10.0, 4.0], flags={'units_inferred': True},
+                    start=0, end=24)])

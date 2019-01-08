@@ -76,7 +76,8 @@ class Result:
     def cross_value(self, parts):
         """Handle a value like 5 cm x 21 mm."""
         self.float_value(parts.get('value1'), parts.get('value2'))
-        units = 'mm' if parts.get('millimeters') else parts.get('units1')
+        units = parts.get('units')
+        units = units if units else parts.get('units1')
         units2 = parts.get('units2')
         units = [units, units2] if units2 and units != units2 else units
         self.convert_value(units)

@@ -38,7 +38,7 @@ class BodyMass(Base):
             | rx.shorthand
         )
 
-        ignore = Word(rx.punct, excludeChars=';')
+        ignore = Word(rx.punct)
         parser.ignore(ignore)
         return parser
 

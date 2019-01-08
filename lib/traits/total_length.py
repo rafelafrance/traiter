@@ -1,6 +1,7 @@
 """Parse total length notations."""
 
 from pyparsing import Regex, Word, alphas, alphanums
+# from pyparsing import CaselessLiteral as lit
 from lib.base import Base
 from lib.result import Result
 import lib.regexp as rx
@@ -39,7 +40,7 @@ class TotalLength(Base):
         key_units_req = Regex(r'measurements? | body | total', rx.flags)
 
         parser = (
-            key_with_units('millimeters') + rx.pair
+            key_with_units('units') + rx.pair
 
             | rx.shorthand_key + rx.pair + rx.len_units('units')
             | rx.shorthand_key + rx.len_units('units') + rx.pair
@@ -50,7 +51,6 @@ class TotalLength(Base):
             | len_key + rx.fraction + rx.len_units('units')
             | (ambiguous + rx.fraction + rx.len_units('units')).setParseAction(
                 self.flag_ambiguous_key)
-
 
             | rx.pair + rx.len_units('units') + len_key
             | rx.pair + len_key
@@ -104,11 +104,10 @@ class TotalLength(Base):
 
     def simple(self, match, parts):
         """Handle a normal length notation."""
-        units = 'mm' if parts.get('millimeters') else parts.get('units')
         result = Result()
         result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
         result.float_value(parts['value1'], parts['value2'])
-        result.convert_value(units)
+        result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])
         return result
 
