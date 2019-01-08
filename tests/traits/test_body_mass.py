@@ -198,3 +198,13 @@ class TestBodyMass(unittest.TestCase):
             [Result(value=62,
                     flags={'estimated_value': True, 'units_inferred': True},
                     start=41, end=56)])
+
+    def test_parse_32(self):
+        self.assertEqual(
+            PAR.parse('wt=10 g'),
+            [Result(value=10.0, units='g', start=0, end=7)])
+
+    def test_parse_33(self):
+        self.assertEqual(
+            PAR.parse('w.t.=10 g'),
+            [Result(value=10.0, units='g', start=0, end=9)])

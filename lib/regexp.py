@@ -61,9 +61,9 @@ number = Regex(number_re, flags)
 # So: no part of "2014-12-11" would be in a pair
 pair_joiner = r'- | to'
 pair = Regex(r"""
-    (?<! \d ) (?<! \d [/,.-] ) (?<! \b to )
+    (?<! \d ) (?<! [|,.-] ) (?<! \b to )
     (?P<value1> {val} ) (?: \s* (?: {joiner} ) \s* (?P<value2> {val} ) )?
-    (?! [/,.-] \d ) (?! \d+ ) (?! \s+ to )
+    (?! [|,.-] \d ) (?! \d+ ) (?! \s+ to )
     """.format(val=number_re, joiner=pair_joiner), flags)
 
 # A number times another number like: "12 x 34" this is typically
@@ -104,18 +104,19 @@ fraction = (
 # Ambiguous measurements are enclosed in brackets.
 #   Like: 11-[22]-33-[44]:99g
 
-shorthand_key = Regex(r"""
-    on \s* tag | specimens? | catalog
-    | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
-        (?: \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
-    | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-    | mesurements | Measurementsnt
-    """, flags)
+shorthand_key = (
+    kwd('ontag') | kwd('on tag')
+    | kwd('specimens') | kwd('specimen')
+    | kwd('catalog')
+    | kwd('measurements length') | kwd('measurementslength')
+    | kwd('measurements') | kwd('meas')
+    | kwd('meas length') | kwd('measurementslength')
+    | kwd('tag') + Word(nums)
+    | kwd('mesurements') | kwd('measurementsnt')
+)
 
 sh_val = r' {number} | [?x]{repeat}'.format(number=number_re, repeat='{1,2}')
-
 sh_est = r' \[? (?: {sh_val} ) \]? '.format(sh_val=sh_val)
-
 shorthand = Regex(r"""
     (?<! [\d/-] )
     (?P<shorthand_tl> {sh_est} )

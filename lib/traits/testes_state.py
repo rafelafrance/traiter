@@ -90,8 +90,7 @@ class TestesState(Base):
             | scrotal('value')
         )
 
-        ignore = Word(rx.punct)
-        parser.ignore(ignore)
+        parser.ignore(Word(rx.punct))
         return parser
 
     def result(self, match):

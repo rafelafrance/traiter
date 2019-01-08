@@ -13,7 +13,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"123" };'),
-            [Result(value=123.0, units='totalLengthInMM', start=2, end=23)])
+            [Result(value=123.0, units='totallengthinmm', start=2, end=23)])
 
     def test_parse_02(self):
         self.assertEqual(

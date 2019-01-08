@@ -1,7 +1,7 @@
 """Parse total length notations."""
 
 from pyparsing import Regex, Word, alphas, alphanums
-# from pyparsing import CaselessLiteral as lit
+from pyparsing import CaselessLiteral as lit
 from lib.base import Base
 from lib.result import Result
 import lib.regexp as rx
@@ -14,14 +14,24 @@ class TotalLength(Base):
         """Return the trait parser."""
         words = Word(alphas, alphanums)*(1, 3)
 
-        key_with_units = Regex(r"""
-            total  [\s-]* length [\s-]* in [\s-]* (?: mm | millimeters)
-            | length [\s-]* in [\s-]* (?: mm | millimeters)
-            | snout [\s-]* vent [\s-]* lengths? [\s-]* in [\s-]*
-                (?: mm | millimeters)
-            | head  [\s-]* body [\s-]* length [\s-]* in [\s-]*
-                (?: mm | millimeters)
-            """, rx.flags)
+        key_with_units = (
+            rx.kwd('totallengthinmillimeters')
+            | rx.kwd('totallengthinmm')
+            | rx.kwd('total length in millimeters')
+            | rx.kwd('total length in mm')
+            | rx.kwd('snoutventlengthinmillimeters')
+            | rx.kwd('snoutventlengthinmm')
+            | rx.kwd('snoutvent length in millimeters')
+            | rx.kwd('snoutvent length in mm')
+            | rx.kwd('headbodylengthinmillimeters')
+            | rx.kwd('headbodylengthinmm')
+            | rx.kwd('headbody length in millimeters')
+            | rx.kwd('headbody length in mm')
+            | rx.kwd('forklengthinmillimeters')
+            | rx.kwd('forklengthinmm')
+            | rx.kwd('fork length in millimeters')
+            | rx.kwd('fork length in mm')
+        )
 
         len_key = Regex(r"""
             total  [\s-]* length [\s-]* in
@@ -37,7 +47,12 @@ class TotalLength(Base):
             """, rx.flags)
 
         ambiguous = Regex(r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ', rx.flags)
-        key_units_req = Regex(r'measurements? | body | total', rx.flags)
+
+        key_units_req = (
+            lit('measurements') | lit('measurement')
+            | lit('body')
+            | lit('total')
+        )
 
         parser = (
             key_with_units('units') + rx.pair
@@ -82,8 +97,7 @@ class TotalLength(Base):
             | len_key + words + rx.pair
         )
 
-        ignore = Word(rx.punct, excludeChars=';/')
-        parser.ignore(ignore)
+        parser.ignore(Word(rx.punct, excludeChars=';/'))
         return parser
 
     @staticmethod
@@ -106,7 +120,7 @@ class TotalLength(Base):
         """Handle a normal length notation."""
         result = Result()
         result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
-        result.float_value(parts['value1'], parts['value2'])
+        result.float_value(parts['value1'], parts.get('value2'))
         result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])
         return result

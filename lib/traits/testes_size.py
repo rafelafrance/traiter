@@ -48,8 +48,7 @@ class TestesSize(Base):
             | scrotal + rx.cross
         )
 
-        ignore = Word(rx.punct)
-        parser.ignore(ignore)
+        parser.ignore(Word(rx.punct))
         return parser
 
     def result(self, match):

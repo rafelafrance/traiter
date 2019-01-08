@@ -1,6 +1,7 @@
 """Parse body mass notations."""
 
 from pyparsing import Regex, Word
+from pyparsing import CaselessLiteral as lit
 from lib.base import Base
 from lib.result import Result
 import lib.regexp as rx
@@ -13,14 +14,22 @@ class BodyMass(Base):
         """Return the trait parser."""
         key_with_units = rx.kwd('weightingrams') | rx.kwd('massingrams')
 
-        wt_key = Regex(r"""
-            (?: (?: body | full | observed | total ) \s* )?
-                (?: weights?
-                | weigh (?: s | ed | ing )?
-                | mass
-                | w \.? t s? \.? )
-            | body
-            """, rx.flags)
+        key_leader = lit('body') | lit('full') | lit('observed') | lit('total')
+        weight = (
+            lit('weights') | lit('weight') | lit('weighs') | lit('weighed')
+            | lit('weighing')
+        )
+        key = (
+            key_leader + weight
+            | key_leader + rx.lit('mass')
+            | weight
+            | rx.kwd('mass')
+            | rx.kwd('body')
+        )
+
+        key_with_dots = Regex(r' \b w \.? t s? \.? ', rx.flags)
+
+        wt_key = key | key_with_dots
 
         parser = (
             key_with_units('units') + rx.pair
@@ -38,8 +47,7 @@ class BodyMass(Base):
             | rx.shorthand
         )
 
-        ignore = Word(rx.punct)
-        parser.ignore(ignore)
+        parser.ignore(Word(rx.punct))
         return parser
 
     def result(self, match):

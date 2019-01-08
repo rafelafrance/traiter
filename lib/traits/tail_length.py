@@ -1,7 +1,6 @@
 """Parse tail length notations."""
 
 from pyparsing import Word
-# from pyparsing import CaselessLiteral as lit
 from lib.base import Base
 from lib.result import Result
 import lib.regexp as rx
@@ -13,8 +12,10 @@ class TailLength(Base):
     def build_parser(self):
         """Return the trait parser."""
         key_with_units = (
-            rx.kwd('taillengthinmm')
-            | rx.kwd('taillengthinmillimeters')
+            rx.kwd('taillengthinmillimeters')
+            | rx.kwd('taillengthinmm')
+            | rx.kwd('tail length in millimeters')
+            | rx.kwd('tail length in mm')
         )
 
         key = (
@@ -34,8 +35,7 @@ class TailLength(Base):
             | rx.shorthand
         )
 
-        ignore = Word(rx.punct)
-        parser.ignore(ignore)
+        parser.ignore(Word(rx.punct))
         return parser
 
     def result(self, match):

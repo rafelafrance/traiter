@@ -29,8 +29,7 @@ class Sex(Base):
             | sex('value')
         )
 
-        ignore = Word(rx.punct, excludeChars='.;?')
-        parser.ignore(ignore)
+        parser.ignore(Word(rx.punct, excludeChars='.;?'))
         return parser
 
     def result(self, match):
