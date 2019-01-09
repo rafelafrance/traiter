@@ -1,5 +1,7 @@
 """Build parser results."""
 
+# pylint: disable=too-many-arguments
+
 import re
 from lib.units import convert
 import lib.regexp as rx

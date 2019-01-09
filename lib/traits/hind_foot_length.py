@@ -2,11 +2,11 @@
 
 # from pyparsing import Word
 from lib.base import Base
-from lib.result import Result
+from lib.numeric import Numeric
 # import lib.regexp as rx
 
 
-class HindFootLength(Base):
+class HindFootLength(Base, Numeric):
     """Parser logic."""
 
     def build_parser(self):
@@ -18,13 +18,5 @@ class HindFootLength(Base):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
         if parts.get('shorthand_hfl') is not None:
-            return self.shorthand(match, parts, 'shorthand_hfl')
+            return self.shorthand_length(match, parts, 'shorthand_hfl')
         return self.simple(match, parts)
-
-    def simple(self, match, parts):
-        """Convert parsed tokens into a result."""
-        result = Result()
-        result.float_value(parts['value1'], parts['value2'])
-        result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result

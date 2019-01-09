@@ -3,11 +3,12 @@
 from pyparsing import Regex, Word
 from pyparsing import CaselessLiteral as lit
 from lib.base import Base
+from lib.numeric import Numeric
 from lib.result import Result
 import lib.regexp as rx
 
 
-class BodyMass(Base):
+class BodyMass(Base, Numeric):
     """Parser logic."""
 
     def build_parser(self):
@@ -57,17 +58,8 @@ class BodyMass(Base):
         if parts.get('shorthand_tl') is not None:
             return self.shorthand(match, parts)
         if parts.get('lbs') is not None:
-            return self.compound(match, parts)
+            return self.compound(match, parts, ['lbs', 'ozs'])
         return self.simple(match, parts)
-
-    def simple(self, match, parts):
-        """Convert a simple value into a result."""
-        result = Result()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.float_value(parts['value1'], parts['value2'])
-        result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
 
     def shorthand(self, match, parts):
         """Convert a shorthand value like 11-22-33-44:55g."""
@@ -77,13 +69,5 @@ class BodyMass(Base):
             return None
         result.convert_value(parts.get('shorthand_wt_units'))
         result.is_flag_in_dict(parts, 'shorthand_wt_amb', 'estimated_value')
-        result.ends(match[1], match[2])
-        return result
-
-    def compound(self, match, parts):
-        """Convert a compound pattern like: 4 lbs 9 ozs."""
-        result = Result()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.compound_value(parts, ['lbs', 'ozs'])
         result.ends(match[1], match[2])
         return result

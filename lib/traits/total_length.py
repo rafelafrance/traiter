@@ -3,11 +3,11 @@
 from pyparsing import Regex, Word, alphas, alphanums
 from pyparsing import CaselessLiteral as lit
 from lib.base import Base
-from lib.result import Result
+from lib.numeric import Numeric
 import lib.regexp as rx
 
 
-class TotalLength(Base):
+class TotalLength(Base, Numeric):
     """Parser logic."""
 
     def build_parser(self):
@@ -101,35 +101,9 @@ class TotalLength(Base):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
         if parts.get('shorthand_tl') is not None:
-            return self.shorthand(match, parts, 'shorthand_tl')
+            return self.shorthand_length(match, parts, 'shorthand_tl')
         if parts.get('ft') is not None:
-            return self.compound(match, parts)
+            return self.compound(match, parts, ['ft', 'in'])
         if parts.get('numerator') is not None:
             return self.fraction(match, parts)
         return self.simple(match, parts)
-
-    def simple(self, match, parts):
-        """Handle a normal length notation."""
-        result = Result()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.float_value(parts['value1'], parts.get('value2'))
-        result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
-
-    def compound(self, match, parts):
-        """Handle a pattern like: 4 lbs 9 ozs."""
-        result = Result()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.compound_value(parts, ['ft', 'in'])
-        result.ends(match[1], match[2])
-        return result
-
-    def fraction(self, match, parts):
-        """Handle fractional values like 10 3/8 inches."""
-        result = Result()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.fraction_value(parts)
-        result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
