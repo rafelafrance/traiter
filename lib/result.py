@@ -95,11 +95,6 @@ class Result:
         self.start = start
         self.end = end
 
-    def is_flag_in_list(self, lst, flag):
-        """Set a flag if the value is in the list."""
-        if flag in lst:
-            self.flags[flag] = True
-
     def is_flag_in_dict(self, dictn, check, flag=None):
         """Set a flag if it is found in the dict."""
         flag = flag if flag else check

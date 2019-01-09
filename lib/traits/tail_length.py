@@ -48,7 +48,6 @@ class TailLength(Base):
     def simple(self, match, parts):
         """Convert parsed tokens into a result."""
         result = Result()
-        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
         result.float_value(parts['value1'], parts['value2'])
         result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])

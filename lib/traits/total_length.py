@@ -64,8 +64,8 @@ class TotalLength(Base):
             | key_units_req + rx.pair + rx.len_units('units')
 
             | len_key + rx.fraction + rx.len_units('units')
-            | (ambiguous + rx.fraction + rx.len_units('units')).setParseAction(
-                self.flag_ambiguous_key)
+            | (ambiguous + rx.fraction + rx.len_units('units')
+               )('ambiguous_key')
 
             | rx.pair + rx.len_units('units') + len_key
             | rx.pair + len_key
@@ -74,18 +74,15 @@ class TotalLength(Base):
                + rx.pair('ft') + rx.feet('ft_units')
                + rx.pair('in') + rx.inches('in_units'))
             | (rx.pair('ft') + rx.feet('ft_units')
-               + rx.pair('in') + rx.inches('in_units')).setParseAction(
-                   self.flag_ambiguous_key)
+               + rx.pair('in') + rx.inches('in_units'))('ambiguous_key')
 
             # Due to trailing len_key the leading key it is no longer ambiguous
             | ambiguous + rx.pair + rx.len_units('units') + len_key
             | ambiguous + rx.pair + len_key
 
-            | (ambiguous + rx.pair + rx.len_units('units')).setParseAction(
-                self.flag_ambiguous_key)
-            | (ambiguous + rx.len_units('units') + rx.pair).setParseAction(
-                self.flag_ambiguous_key)
-            | (ambiguous + rx.pair).setParseAction(self.flag_ambiguous_key)
+            | (ambiguous + rx.pair + rx.len_units('units'))('ambiguous_key')
+            | (ambiguous + rx.len_units('units') + rx.pair)('ambiguous_key')
+            | (ambiguous + rx.pair)('ambiguous_key')
 
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
@@ -99,11 +96,6 @@ class TotalLength(Base):
 
         parser.ignore(Word(rx.punct, excludeChars=';/'))
         return parser
-
-    @staticmethod
-    def flag_ambiguous_key(tokens):
-        """Flag an ambiguous parse."""
-        return tokens.append('ambiguous_key')
 
     def result(self, match):
         """Convert parsed tokens into a result."""
@@ -119,7 +111,7 @@ class TotalLength(Base):
     def simple(self, match, parts):
         """Handle a normal length notation."""
         result = Result()
-        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.is_flag_in_dict(parts, 'ambiguous_key')
         result.float_value(parts['value1'], parts.get('value2'))
         result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])
@@ -140,7 +132,7 @@ class TotalLength(Base):
     def compound(self, match, parts):
         """Handle a pattern like: 4 lbs 9 ozs."""
         result = Result()
-        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.is_flag_in_dict(parts, 'ambiguous_key')
         result.compound_value(parts, ['ft', 'in'])
         result.ends(match[1], match[2])
         return result
@@ -148,7 +140,7 @@ class TotalLength(Base):
     def fraction(self, match, parts):
         """Handle fractional values like 10 3/8 inches."""
         result = Result()
-        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.is_flag_in_dict(parts, 'ambiguous_key')
         result.fraction_value(parts)
         result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])

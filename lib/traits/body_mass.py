@@ -41,7 +41,7 @@ class BodyMass(Base):
                + rx.number('lbs') + rx.pounds
                + rx.pair('ozs') + rx.ounces)
             | (rx.number('lbs') + rx.pounds + rx.pair('ozs') + rx.ounces
-               ).setParseAction(lambda tokens: tokens.append('ambiguous_key'))
+               )('ambiguous_key')
             | wt_key + rx.pair
             | rx.shorthand_key + rx.shorthand
             | rx.shorthand
@@ -63,7 +63,7 @@ class BodyMass(Base):
     def simple(self, match, parts):
         """Convert a simple value into a result."""
         result = Result()
-        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.is_flag_in_dict(parts, 'ambiguous_key')
         result.float_value(parts['value1'], parts['value2'])
         result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])
@@ -83,7 +83,7 @@ class BodyMass(Base):
     def compound(self, match, parts):
         """Convert a compound pattern like: 4 lbs 9 ozs."""
         result = Result()
-        result.is_flag_in_list(match[0].asList(), 'ambiguous_key')
+        result.is_flag_in_dict(parts, 'ambiguous_key')
         result.compound_value(parts, ['lbs', 'ozs'])
         result.ends(match[1], match[2])
         return result
