@@ -20,24 +20,39 @@ class ParseResult:
         self.start = start
         self.end = end
         self.flags = flags if flags else {}
+        self._old_value = None
+
+    def filtered_dict(self):
+        """Remove hidden attributes from the __dict__."""
+        return {k: v for k, v in self.__dict__.items() if k[0] != '_'}
 
     def __repr__(self):
         """Represent the result."""
-        return 'ParseResult({})'.format(self.__dict__)
+        return 'ParseResult({})'.format(self.filtered_dict())
 
     def __eq__(self, other):
         """Compare results."""
-        return self.__dict__ == other.__dict__
+        return self.filtered_dict() == other.filtered_dict()
 
     def convert_value(self, units):
         """Set the units and convert_value the value."""
+        self._old_value = self.value
         self.units = units
         if not units:
             self.flags['units_inferred'] = True
-        elif isinstance(units, list):
-            self.value = [convert(v, u) for v, u in zip(self.value, units)]
         else:
-            self.value = convert(self.value, units)
+            if self.flags.get('units_inferred'):
+                del self.flags['units_inferred']
+            if isinstance(units, list):
+                self.value = [convert(v, u) for v, u in zip(self.value, units)]
+            else:
+                self.value = convert(self.value, units)
+
+    def unset_units(self):
+        """Rollback setting of units."""
+        self.units = None
+        self.value = self._old_value
+        self.flags['units_inferred'] = True
 
     @staticmethod
     def to_float(value):

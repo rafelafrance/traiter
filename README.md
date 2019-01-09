@@ -29,6 +29,8 @@ We also extract values from controlled vocabularies.
  - These values sometimes have a signifier like `Life Stage: Adult`
  - And other times we see a value on its own like `Adult` without the signifier.
 
+The original version used regular expressions for parsing. As a proof-of-concept it was OK but ultimately too cumbersome to continue to use. This version relies on `pyparsing` which is a definite improvement. However, there are still issues with context that are not easily resolved with LL(k) or LR(k) parsing techniques. For example, the "T" abbreviation is used for both testes notations and tail length notations. Or the double quote '"' is used as both an abbreviation for inches and as a, well, quote character. A human can human can easily tell the difference but these parsers struggle. Ultimately, a machine learning or hybrid of machine learning and parsers approach may work better.
+
 ## List of traits extracted
 - Body body mass
 - Total length (aka snout vent length, fork length, etc.)
@@ -36,9 +38,9 @@ We also extract values from controlled vocabularies.
 - Life stage
 - Testes state
 - Testes size
-- Tail Length (In progress)
-- Hind foot Length (In progress)
-- Ear Length (In progress)
+- Tail Length
+- Hind foot Length
+- Ear Length
 
 
 ## Install

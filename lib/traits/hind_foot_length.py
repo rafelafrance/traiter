@@ -31,11 +31,13 @@ class HindFootLength(NumericTraitMixIn, BaseTrait):
             key_with_units('units') + stp.pair
             | key + stp.pair + stp.len_units('units')
             | key + stp.pair
+            | key + stp.fraction + stp.len_units('units')
+            | key + stp.fraction
             | stp.shorthand_key + stp.shorthand
             | stp.shorthand
         )
 
-        parser.ignore(Word(stp.punct))
+        parser.ignore(Word(stp.punct, excludeChars='"/'))
         return parser
 
     def result(self, match):
@@ -43,4 +45,10 @@ class HindFootLength(NumericTraitMixIn, BaseTrait):
         parts = match[0].asDict()
         if parts.get('shorthand_hfl') is not None:
             return self.shorthand_length(match, parts, 'shorthand_hfl')
+        if parts.get('numerator') is not None:
+            return self.fraction(match, parts)
         return self.simple(match, parts)
+
+    def fix_up_result(self, text, result):
+        """Fix problematic parses."""
+        return self.fix_up_double_quotes(text, result)

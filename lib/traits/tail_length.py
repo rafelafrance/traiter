@@ -17,7 +17,6 @@ class TailLength(NumericTraitMixIn, BaseTrait):
 
     def build_parser(self):
         """Return the trait parser."""
-        global JUNK
         key_with_units = (
             stp.kwd('taillengthinmillimeters')
             | stp.kwd('taillengthinmm')
@@ -25,7 +24,7 @@ class TailLength(NumericTraitMixIn, BaseTrait):
             | stp.kwd('tail length in mm')
         )
 
-        char_key = Regex(r""" \b t """, stp.flags)('check_false_positive')
+        char_key = Regex(r""" \b t """, stp.flags)
 
         key = (
             stp.kwd('tail length')
@@ -41,11 +40,13 @@ class TailLength(NumericTraitMixIn, BaseTrait):
             key_with_units('units') + stp.pair
             | key + stp.pair + stp.len_units('units')
             | key + stp.pair
+            | key + stp.fraction + stp.len_units('units')
+            | key + stp.fraction
             | stp.shorthand_key + stp.shorthand
             | stp.shorthand
         )
 
-        parser.ignore(Word(stp.punct))
+        parser.ignore(Word(stp.punct, excludeChars='"/'))
         return parser
 
     def result(self, match):
@@ -53,14 +54,15 @@ class TailLength(NumericTraitMixIn, BaseTrait):
         parts = match[0].asDict()
         if parts.get('shorthand_tal') is not None:
             return self.shorthand_length(match, parts, 'shorthand_tal')
+        if parts.get('numerator') is not None:
+            return self.fraction(match, parts)
         return self.simple(match, parts)
 
-    @staticmethod
-    def check_false_positive(text, result):
-        """Check if the 'T' abbreviation is actually for testes."""
+    def fix_up_result(self, text, result):
+        """Fix problematic results."""
         start = max(0, result.start - LOOKBACK)
         if IS_TESTES.search(text, start, result.start):
             return None
         if IS_CROSS.search(text, result.end):
             return None
-        return result
+        return self.fix_up_double_quotes(text, result)

@@ -24,11 +24,20 @@ class BaseTrait:
         """Parse the text."""
         results = []
         for match in self.parser.parseWithTabs().scanString(text):
+
             result = self.result(match)
-            if result and result.flags.get('check_false_positive'):
-                result = self.check_false_positive(text, result)
+
             if result:
-                result.trait = trait
-                result.field = field
-                results.append(result)
+                result = self.fix_up_result(text, result)
+
+                if result:
+                    result.trait = trait
+                    result.field = field
+                    results.append(result)
+
         return results
+
+    # pylint: disable=unused-argument,no-self-use
+    def fix_up_result(self, text, result):
+        """Fix problematic parses."""
+        return result
