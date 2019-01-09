@@ -3,11 +3,12 @@
 from pyparsing import Word, alphas, Group
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
+from lib.numeric_trait_mixin import NumericTraitMixIn
 from lib.parse_result import ParseResult
 import lib.shared_trait_patterns as stp
 
 
-class TestesSize(BaseTrait):
+class TestesSize(NumericTraitMixIn, BaseTrait):
     """Parser logic."""
 
     def build_parser(self):

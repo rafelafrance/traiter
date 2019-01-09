@@ -2,11 +2,11 @@
 
 # from pyparsing import Word
 from lib.base_trait import BaseTrait
-from lib.numeric_trait_mix_in import NumericTraitMixIn
+from lib.numeric_trait_mixin import NumericTraitMixIn
 # import lib.shared_trait_patterns as stp
 
 
-class HindFootLength(BaseTrait, NumericTraitMixIn):
+class HindFootLength(NumericTraitMixIn, BaseTrait):
     """Parser logic."""
 
     def build_parser(self):

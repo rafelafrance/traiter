@@ -3,12 +3,12 @@
 from pyparsing import Regex, Word
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
-from lib.numeric_trait_mix_in import NumericTraitMixIn
+from lib.numeric_trait_mixin import NumericTraitMixIn
 from lib.parse_result import ParseResult
 import lib.shared_trait_patterns as stp
 
 
-class BodyMass(BaseTrait, NumericTraitMixIn):
+class BodyMass(NumericTraitMixIn, BaseTrait):
     """Parser logic."""
 
     def build_parser(self):
