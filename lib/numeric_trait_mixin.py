@@ -11,6 +11,7 @@ class NumericTraitMixIn:
         """Handle a normal length notation."""
         result = ParseResult()
         result.is_flag_in_dict(parts, 'ambiguous_key')
+        result.is_flag_in_dict(parts, 'check_false_positive')
         result.float_value(parts['value1'], parts.get('value2'))
         result.convert_value(parts.get('units'))
         result.ends(match[1], match[2])

@@ -62,7 +62,9 @@ pair = Regex(r"""
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
 # first two numbers
-cross_joiner = lit('x') | lit('by') | lit('*')
+# cross_joiner = lit('x') | lit('by') | lit('*')
+cross_re = r' (?: x | by | \* ) '
+cross_joiner = Regex(cross_re, flags)
 cross = (
     (number('value1') + len_units('units1') + cross_joiner
      + number('value2') + len_units('units2'))

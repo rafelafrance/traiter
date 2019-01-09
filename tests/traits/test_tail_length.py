@@ -64,3 +64,8 @@ class TestTailLength(unittest.TestCase):
                 value=95,
                 flags={'units_inferred': True},
                 start=0, end=13)])
+
+    def test_parse_09(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=testes abdominal; T = 3 x 1.8 ;'),
+            [])

@@ -1,7 +1,6 @@
 """Parse hind foot length notations."""
 
-from pyparsing import Word
-from pyparsing import CaselessLiteral as lit
+from pyparsing import Word, Regex
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
@@ -25,7 +24,7 @@ class HindFootLength(NumericTraitMixIn, BaseTrait):
             | stp.kwd('hind foot len') | stp.kwd('hindfootlen')
             | stp.kwd('hind_foot_length') | stp.kwd('hind_foot_len')
             | stp.kwd('hind foot') | stp.kwd('hindfoot')
-            | lit('hfl') | lit('hf')
+            | Regex(r' \b hfl ', stp.flags) | Regex(r' \b hf ', stp.flags)
         )
 
         parser = (

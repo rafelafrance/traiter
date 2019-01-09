@@ -35,15 +35,16 @@ class TotalLength(NumericTraitMixIn, BaseTrait):
 
         len_key = Regex(r"""
             total  [\s-]* length [\s-]* in
-            | (?: total | max | standard ) [\s-]* lengths?
+            | (?: total | max | standard ) [\s-]* lengths? \b
             | meas [\s*:]? \s* length [\s(]* [l] [)\s:]*
-            | meas (?: [a-z]* )? \.? : \s* L
+            | meas (?: [a-z]* )? \.? : \s* l
             | t [o.]? l \.? _?
             | s \.? l \.?
-            | label [\s.]* lengths?
-            | (?: fork | mean | body ) [\s-]* lengths?
+            | label [\s.]* lengths? \b
+            | (?: fork | mean | body ) [\s-]* lengths? \b
             | s \.? v \.? ( l \.? )?
-            | snout [\s-]* vent [\s-]* lengths?
+            | snout [\s-]* vent [\s-]* lengths? \b
+            | (?<! \w \s ) \b l (?! [a-z] )
             """, stp.flags)
 
         ambiguous = Regex(r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ', stp.flags)

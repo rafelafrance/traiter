@@ -25,6 +25,8 @@ class BaseTrait:
         results = []
         for match in self.parser.parseWithTabs().scanString(text):
             result = self.result(match)
+            if result and result.flags.get('check_false_positive'):
+                result = self.check_false_positive(text, result)
             if result:
                 result.trait = trait
                 result.field = field
