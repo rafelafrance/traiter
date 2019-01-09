@@ -1,6 +1,7 @@
 """Parse the notations."""
 
 from abc import abstractmethod
+from lib.result import Result
 
 
 class Base:
@@ -30,3 +31,15 @@ class Base:
                 result.field = field
                 results.append(result)
         return results
+
+    def shorthand(self, match, parts, key):
+        """Handle shorthand notation like 11-22-33-44:55g."""
+        result = Result()
+        result.float_value(parts.get(key))
+        if not result.value:
+            return None
+        result.units = 'mm_shorthand'
+        if parts[key][-1] == ']':
+            result.flags['estimated_value'] = True
+        result.ends(match[1], match[2])
+        return result

@@ -118,7 +118,7 @@ shorthand = Regex(r"""
     (?P=shorthand_sep)
     (?P<shorthand_hfl> {sh_est} )
     (?P=shorthand_sep)
-    (?P<shorthand_eal> {sh_est} )
+    (?P<shorthand_el> {sh_est} )
     (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat} {sh_est} )* )
     (?: [\s=:/-] \s*
         (?P<shorthand_wt_amb> \[? \s* )

@@ -101,7 +101,7 @@ class TotalLength(Base):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
         if parts.get('shorthand_tl') is not None:
-            return self.shorthand(match, parts)
+            return self.shorthand(match, parts, 'shorthand_tl')
         if parts.get('ft') is not None:
             return self.compound(match, parts)
         if parts.get('numerator') is not None:
@@ -114,18 +114,6 @@ class TotalLength(Base):
         result.is_flag_in_dict(parts, 'ambiguous_key')
         result.float_value(parts['value1'], parts.get('value2'))
         result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
-
-    def shorthand(self, match, parts):
-        """Handle shorthand notation like 11-22-33-44:55g."""
-        result = Result()
-        result.float_value(parts.get('shorthand_tl'))
-        if not result.value:
-            return None
-        result.units = 'mm_shorthand'
-        if parts['shorthand_tl'][-1] == ']':
-            result.flags['estimated_value'] = True
         result.ends(match[1], match[2])
         return result
 

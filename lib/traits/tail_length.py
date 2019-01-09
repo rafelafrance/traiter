@@ -41,8 +41,8 @@ class TailLength(Base):
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-        if parts.get('shorthand_tl') is not None:
-            return self.shorthand(match, parts)
+        if parts.get('shorthand_tal') is not None:
+            return self.shorthand(match, parts, 'shorthand_tal')
         return self.simple(match, parts)
 
     def simple(self, match, parts):
@@ -50,17 +50,5 @@ class TailLength(Base):
         result = Result()
         result.float_value(parts['value1'], parts['value2'])
         result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
-
-    def shorthand(self, match, parts):
-        """Handle shorthand notation like 11-22-33-44:55g."""
-        result = Result()
-        result.float_value(parts.get('shorthand_tal'))
-        if not result.value:
-            return None
-        result.units = 'mm_shorthand'
-        if parts['shorthand_tal'][-1] == ']':
-            result.flags['estimated_value'] = True
         result.ends(match[1], match[2])
         return result
