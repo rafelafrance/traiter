@@ -98,7 +98,8 @@ class TestTestesState(unittest.TestCase):
     def test_parse_17(self):
         self.assertEqual(
             PAR.parse(('tag# 1089; bag# 156; no gonads')),
-            [Result(value='no gonads', start=21, end=30)])
+            [Result(value='no gonads', flags={'ambiguous_sex': True},
+                    start=21, end=30)])
 
     def test_parse_18(self):
         self.assertEqual(

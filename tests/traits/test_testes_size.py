@@ -92,10 +92,10 @@ class TestTestesSize(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
-            [Result(value=12, units='gonadLengthInMM',
+            [Result(value=12, units='gonadlengthinmm',
                     flags={'ambiguous_sex': True},
                     start=1, end=21),
-             Result(value=5, units='gonadWidthInMM',
+             Result(value=5, units='gonadwidthinmm',
                     flags={'ambiguous_sex': True},
                     start=25, end=43)])
 
@@ -120,7 +120,7 @@ class TestTestesSize(unittest.TestCase):
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"9mm w.o./epid", '),
-            [Result(value=9, units='gonadLengthInMM',
+            [Result(value=9, units='gonadlengthinmm',
                     flags={'ambiguous_sex': True},
                     start=1, end=22)])
 

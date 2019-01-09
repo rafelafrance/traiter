@@ -18,7 +18,7 @@ class Sex(Base):
                | rx.kwd('males') | rx.kwd('male'))
         sex_q = sex + Word('?')
 
-        # These are words that indicate "sex" is not a key
+        # These are words that indicate that "sex" is not a key
         skip = rx.kwd('and') | rx.kwd('is') | rx.kwd('was')
 
         parser = (

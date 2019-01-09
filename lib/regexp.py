@@ -13,15 +13,8 @@ punct = string.punctuation + punc8bit
 
 
 def kwd(word):
-    """Workaround bug in pyparsing CaselessKeyword."""
+    """Workaround a bug in pyparsing CaselessKeyword."""
     return Keyword(word, caseless=True)
-
-
-def boundary(regexp, left=True, right=True):
-    r"""Wrap a regular expression in \b character class."""
-    left = r'\b' if left else ''
-    right = r'\b' if right else ''
-    return r'{} (?: {} ) {}'.format(left, regexp, right)
 
 
 feet = (

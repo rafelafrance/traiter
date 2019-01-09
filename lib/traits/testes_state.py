@@ -41,7 +41,7 @@ class TestesState(Base):
         state_abbrev = rx.kwd('scr') | rx.kwd('ns') | rx.kwd('sc')
         abdominal = rx.kwd('abdominal') | rx.kwd('abdomin') | rx.kwd('abdom')
         size = rx.kwd('visible') | rx.kwd('enlarged') | rx.kwd('small')
-        gonads = rx.kwd('gonads') | rx.kwd('gonad')
+        gonads = (rx.kwd('gonads') | rx.kwd('gonad'))('ambiguous_sex')
         other = (
             rx.kwd('cryptorchism') | rx.kwd('cryptorchid')
             | rx.kwd('monorchism') | rx.kwd('monorchid')
@@ -95,7 +95,9 @@ class TestesState(Base):
 
     def result(self, match):
         """Convert parsed tokens into a result."""
+        parts = match[0].asDict()
         result = Result()
-        result.vocabulary_value(match[0].value)
+        result.vocabulary_value(parts['value'])
+        result.is_flag_in_dict(parts, 'ambiguous_sex')
         result.ends(match[1], match[2])
         return result

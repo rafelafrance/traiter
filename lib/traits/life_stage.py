@@ -11,11 +11,20 @@ class LifeStage(Base):
 
     def build_parser(self):
         """Return the trait parser."""
-        keyword = Regex(rx.boundary(
-            r""" life \s* stage (?: \s* remarks )?
-                 | age \s* class
-                 | age \s* in \s* (?: hour | day ) s?
-                 | age """), rx.flags)
+        keyword = (
+            Group(rx.kwd('life') + rx.kwd('stage') + rx.kwd('remarks'))
+            | Group(rx.kwd('lifestage') + rx.kwd('remarks'))
+            | rx.kwd('lifestageremarks')
+            | Group(rx.kwd('life') + rx.kwd('stage'))
+            | rx.kwd('lifestage')
+            | Group(rx.kwd('age') + rx.kwd('class'))
+            | rx.kwd('ageclass')
+            | Group(rx.kwd('age') + rx.kwd('in') + rx.kwd('hours'))
+            | rx.kwd('ageinhours')
+            | Group(rx.kwd('age') + rx.kwd('in') + rx.kwd('days'))
+            | rx.kwd('ageindays')
+            | rx.kwd('age')
+        )
 
         years = (
             rx.kwd('first') | rx.kwd('second')
@@ -63,8 +72,8 @@ class LifeStage(Base):
             | rx.kwd('yolk sac') | rx.kwd('yolksac')
         )
 
-        word = Regex(rx.boundary(
-            r' (?! determin \w+ ) \w [\w?./-]* ', right=False), rx.flags)
+        word = Regex(r' \b (?! determin \w+ ) \w [\w?./-]* ', rx.flags)
+
         sep = Regex(r' [;,"?] | $ ', rx.flags)
 
         word_plus = keyless | word

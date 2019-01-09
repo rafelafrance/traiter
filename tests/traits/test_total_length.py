@@ -453,3 +453,13 @@ class TestTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('308-190-45-20-11-22'),
             [])
+
+    def test_parse_75(self):
+        self.assertEqual(
+            PAR.parse('10 12/07/1944'),
+            [])
+
+    def test_parse_76(self):
+        self.assertEqual(
+            PAR.parse('12-07-1944'),
+            [])
