@@ -54,9 +54,9 @@ number = Regex(number_re, flags)
 # So: no part of "2014-12-11" would be in a pair
 pair_joiner = r'- | to'
 pair = Regex(r"""
-    (?<! \d ) (?<! [|,.-] ) (?<! \b to )
+    (?<! \d ) (?<! \d [|,.-] ) (?<! \b to \s )
     (?P<value1> {val} ) (?: \s* (?: {joiner} ) \s* (?P<value2> {val} ) )?
-    (?! [|,.-] \d ) (?! \d+ ) (?! \s+ to )
+    (?! \d+ ) (?! [|,.-] \d ) (?! \s+ to \b )
     """.format(val=number_re, joiner=pair_joiner), flags)
 
 # A number times another number like: "12 x 34" this is typically

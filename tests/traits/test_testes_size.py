@@ -152,6 +152,6 @@ class TestTestesSize(unittest.TestCase):
         self.assertEqual(
             PAR.parse('reproductive data=T=10x4 ; '),
             [ParseResult(
-                value=[10.0, 4.0],
+                value=[10, 4],
                 flags={'units_inferred': True},
                 start=0, end=24)])

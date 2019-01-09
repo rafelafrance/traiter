@@ -13,7 +13,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('762-292-121-76 2435.0g'),
-            [ParseResult(value=2435.0, units='g', start=0, end=22)])
+            [ParseResult(value=2435, units='g', start=0, end=22)])
 
     def test_parse_02(self):
         self.assertEqual(
@@ -128,7 +128,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse(' {"gonadLengthInMM_1":"10", "gonadLengthInMM_2":"6", '
                       '"weight":"1,192.0" }'),
-            [ParseResult(value=1192.0,
+            [ParseResult(value=1192,
                          flags={'units_inferred': True},
                          start=54, end=70)])
 
@@ -188,10 +188,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_27(self):
         self.assertEqual(
             PAR.parse('body mass=0 g'),
-            [ParseResult(
-                value=0.0,
-                units='g',
-                start=0, end=13)])
+            [ParseResult(value=0, units='g', start=0, end=13)])
 
     def test_parse_28(self):
         self.assertEqual(
@@ -233,9 +230,9 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_32(self):
         self.assertEqual(
             PAR.parse('wt=10 g'),
-            [ParseResult(value=10.0, units='g', start=0, end=7)])
+            [ParseResult(value=10, units='g', start=0, end=7)])
 
     def test_parse_33(self):
         self.assertEqual(
             PAR.parse('w.t.=10 g'),
-            [ParseResult(value=10.0, units='g', start=0, end=9)])
+            [ParseResult(value=10, units='g', start=0, end=9)])

@@ -14,20 +14,20 @@ class TestTailLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('tailLengthInmm: 102'),
             [ParseResult(
-                value=102.0,
+                value=102,
                 units='taillengthinmm',
                 start=0, end=19)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('tail length=95 mm;'),
-            [ParseResult(value=95.0, units='mm', start=0, end=17)])
+            [ParseResult(value=95, units='mm', start=0, end=17)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('tail length=95;'),
             [ParseResult(
-                value=95.0,
+                value=95,
                 flags={'units_inferred': True},
                 start=0, end=14)])
 
@@ -61,6 +61,6 @@ class TestTailLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('taillength=95;'),
             [ParseResult(
-                value=95.0,
+                value=95,
                 flags={'units_inferred': True},
                 start=0, end=13)])

@@ -14,23 +14,23 @@ class TestTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"123" };'),
             [ParseResult(
-                value=123.0, units='totallengthinmm', start=2, end=23)])
+                value=123, units='totallengthinmm', start=2, end=23)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('measurements: ToL=230;TaL=115;HF=22;E=18;'
                       ' total length=231 mm; tail length=115 mm;'),
-            [ParseResult(value=230.0, flags={'units_inferred': True},
+            [ParseResult(value=230, flags={'units_inferred': True},
                          start=14, end=21),
-             ParseResult(value=231.0, units='mm', start=42, end=61)])
+             ParseResult(value=231, units='mm', start=42, end=61)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('measurements: ToL=230;TaL=115;HF=22;E=18;'
                       ' total length=24 cm; tail length=115 mm;'),
-            [ParseResult(value=230.0, flags={'units_inferred': True},
+            [ParseResult(value=230, flags={'units_inferred': True},
                          start=14, end=21),
-             ParseResult(value=240.0, units='cm', start=42, end=60)])
+             ParseResult(value=240, units='cm', start=42, end=60)])
 
     def test_parse_04(self):
         self.assertEqual(
@@ -45,20 +45,20 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('"{"measurements":"308-190-45-20" }"'),
-            [ParseResult(value=308.0, units='mm_shorthand', start=3, end=31)])
+            [ParseResult(value=308, units='mm_shorthand', start=3, end=31)])
 
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('308-190-45-20'),
-            [ParseResult(value=308.0, units='mm_shorthand', start=0, end=13)])
+            [ParseResult(value=308, units='mm_shorthand', start=0, end=13)])
 
     def test_parse_08(self):
         self.assertEqual(
             PAR.parse((
                 'snout-vent length=54 mm; total length=111 mm;'
                 ' tail length=57 mm; weight=5 g')),
-            [ParseResult(value=54.0, units='mm', start=0, end=23),
-             ParseResult(value=111.0, units='mm', start=25, end=44)])
+            [ParseResult(value=54, units='mm', start=0, end=23),
+             ParseResult(value=111, units='mm', start=25, end=44)])
 
     def test_parse_09(self):
         self.assertEqual(
@@ -66,19 +66,19 @@ class TestTotalLength(unittest.TestCase):
                 'unformatted measurements=Verbatim weight=X;'
                 'ToL=230;TaL=115;HF=22;E=18;'
                 ' total length=231 mm; tail length=115 mm;')),
-            [ParseResult(value=230.0, flags={'units_inferred': True},
+            [ParseResult(value=230, flags={'units_inferred': True},
                          start=43, end=50),
-             ParseResult(value=231.0, units='mm', start=71, end=90)])
+             ParseResult(value=231, units='mm', start=71, end=90)])
 
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('143-63-20-17=13'),
-            [ParseResult(value=143.0, units='mm_shorthand', start=0, end=15)])
+            [ParseResult(value=143, units='mm_shorthand', start=0, end=15)])
 
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('** Body length =345 cm; Blubber=1 cm '),
-            [ParseResult(value=3450.0, units='cm', start=3, end=22)])
+            [ParseResult(value=3450, units='cm', start=3, end=22)])
 
     def test_parse_12(self):
         self.assertEqual(
@@ -100,24 +100,24 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_15(self):
         self.assertEqual(
             PAR.parse('AJR-32   186-102-23-15  15.0g'),
-            [ParseResult(value=186.0, units='mm_shorthand', start=9, end=29)])
+            [ParseResult(value=186, units='mm_shorthand', start=9, end=29)])
 
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('length=8 mm'),
-            [ParseResult(value=8.0, units='mm', flags={'ambiguous_key': True},
+            [ParseResult(value=8, units='mm', flags={'ambiguous_key': True},
                          start=0, end=11)])
 
     def test_parse_17(self):
         self.assertEqual(
             PAR.parse('another; length=8 mm'),
-            [ParseResult(value=8.0, units='mm', flags={'ambiguous_key': True},
+            [ParseResult(value=8, units='mm', flags={'ambiguous_key': True},
                          start=9, end=20)])
 
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse('another; TL_120, noise'),
-            [ParseResult(value=120.0, flags={'units_inferred': True},
+            [ParseResult(value=120, flags={'units_inferred': True},
                          start=9, end=15)])
 
     def test_parse_19(self):
@@ -128,7 +128,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_20(self):
         self.assertEqual(
             PAR.parse('before; TL153, after'),
-            [ParseResult(value=153.0, flags={'units_inferred': True},
+            [ParseResult(value=153, flags={'units_inferred': True},
                          start=8, end=13)])
 
     def test_parse_21(self):
@@ -141,12 +141,12 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_22(self):
         self.assertEqual(
             PAR.parse('before Snout vent lengths range from 16 to 23 mm. qq'),
-            [ParseResult(value=[16.0, 23.0], units='mm', start=7, end=48)])
+            [ParseResult(value=[16, 23], units='mm', start=7, end=48)])
 
     def test_parse_23(self):
         self.assertEqual(
             PAR.parse('Size=13 cm TL'),
-            [ParseResult(value=130.0, units='cm', start=5, end=13)])
+            [ParseResult(value=130, units='cm', start=5, end=13)])
 
     def test_parse_24(self):
         self.assertEqual(
@@ -169,13 +169,13 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_27(self):
         self.assertEqual(
             PAR.parse('SVL 209 mm, total 272 mm, 4.4 g.'),
-            [ParseResult(value=209.0, units='mm', start=0, end=10),
-             ParseResult(value=272.0, units='mm', start=12, end=24)])
+            [ParseResult(value=209, units='mm', start=0, end=10),
+             ParseResult(value=272, units='mm', start=12, end=24)])
 
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse('{"time collected":"0712-0900", "length":"12.0" }'),
-            [ParseResult(value=12.0,
+            [ParseResult(value=12,
                          flags={'ambiguous_key': True, 'units_inferred': True},
                          start=32, end=45)])
 
@@ -184,7 +184,7 @@ class TestTotalLength(unittest.TestCase):
             PAR.parse('{"time collected":"1030", "water depth":"1-8", '
                       '"bottom":"abrupt lava cliff dropping off to sand at '
                       '45 ft.", "length":"119-137" }'),
-            [ParseResult(value=[119.0, 137.0],
+            [ParseResult(value=[119, 137],
                          flags={'ambiguous_key': True, 'units_inferred': True},
                          start=109, end=125)])
 
@@ -197,7 +197,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_31(self):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"270-165-18-22-31", '),
-            [ParseResult(value=270.0, units='mm_shorthand', start=20, end=36)])
+            [ParseResult(value=270, units='mm_shorthand', start=20, end=36)])
 
     def test_parse_32(self):
         self.assertEqual(
@@ -225,7 +225,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_36(self):
         self.assertEqual(
             PAR.parse('age class: adult; standard length: 18.0-21.5mm'),
-            [ParseResult(value=[18.0, 21.5], units='mm', start=18, end=46)])
+            [ParseResult(value=[18, 21.5], units='mm', start=18, end=46)])
 
     def test_parse_37(self):
         self.assertEqual(
@@ -235,7 +235,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_38(self):
         self.assertEqual(
             PAR.parse('age class: adult; standard length: 18.0-21mm'),
-            [ParseResult(value=[18.0, 21], units='mm', start=18, end=44)])
+            [ParseResult(value=[18, 21], units='mm', start=18, end=44)])
 
     def test_parse_39(self):
         self.assertEqual(
@@ -272,13 +272,13 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_45(self):
         self.assertEqual(
             PAR.parse('Meas: L: 21.0'),
-            [ParseResult(value=21.0, flags={'units_inferred': True},
+            [ParseResult(value=21, flags={'units_inferred': True},
                          start=0, end=13)])
 
     def test_parse_46(self):
         self.assertEqual(
             PAR.parse('Meas: L: 21.0 cm'),
-            [ParseResult(value=210.0, units='cm', start=0, end=16)])
+            [ParseResult(value=210, units='cm', start=0, end=16)])
 
     def test_parse_47(self):
         self.assertEqual(
@@ -314,7 +314,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_53(self):
         self.assertEqual(
             PAR.parse('Measurements: L: 21.0 cm'),
-            [ParseResult(value=210.0, units='cm', start=0, end=24)])
+            [ParseResult(value=210, units='cm', start=0, end=24)])
 
     def test_parse_54(self):
         self.assertEqual(
@@ -325,7 +325,7 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_55(self):
         self.assertEqual(
             PAR.parse('SVL=0 g'),
-            [ParseResult(value=0.0, flags={'units_inferred': True},
+            [ParseResult(value=0, flags={'units_inferred': True},
                          start=0, end=5)])
 
     def test_parse_56(self):
@@ -442,14 +442,14 @@ class TestTotalLength(unittest.TestCase):
     def test_parse_72(self):
         self.assertEqual(
             PAR.parse('[308]-190-45-20'),
-            [ParseResult(value=308.0, units='mm_shorthand',
+            [ParseResult(value=308, units='mm_shorthand',
                          flags={'estimated_value': True},
                          start=1, end=15)])
 
     def test_parse_73(self):
         self.assertEqual(
             PAR.parse('"{"measurements":"[308]-190-45-20" }"'),
-            [ParseResult(value=308.0, units='mm_shorthand',
+            [ParseResult(value=308, units='mm_shorthand',
                          flags={'estimated_value': True},
                          start=3, end=33)])
 
