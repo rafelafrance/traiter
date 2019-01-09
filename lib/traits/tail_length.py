@@ -3,7 +3,7 @@
 from pyparsing import Word
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mix_in import NumericTraitMixIn
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class TailLength(BaseTrait, NumericTraitMixIn):
@@ -12,30 +12,30 @@ class TailLength(BaseTrait, NumericTraitMixIn):
     def build_parser(self):
         """Return the trait parser."""
         key_with_units = (
-            sp.kwd('taillengthinmillimeters')
-            | sp.kwd('taillengthinmm')
-            | sp.kwd('tail length in millimeters')
-            | sp.kwd('tail length in mm')
+            stp.kwd('taillengthinmillimeters')
+            | stp.kwd('taillengthinmm')
+            | stp.kwd('tail length in millimeters')
+            | stp.kwd('tail length in mm')
         )
 
         key = (
-            sp.kwd('tail length')
-            | sp.kwd('tail len')
-            | sp.kwd('taillength')
-            | sp.kwd('taillen')
-            | sp.kwd('tail')
-            | sp.kwd('tal')
+            stp.kwd('tail length')
+            | stp.kwd('tail len')
+            | stp.kwd('taillength')
+            | stp.kwd('taillen')
+            | stp.kwd('tail')
+            | stp.kwd('tal')
         )
 
         parser = (
-            key_with_units('units') + sp.pair
-            | key + sp.pair + sp.len_units('units')
-            | key + sp.pair
-            | sp.shorthand_key + sp.shorthand
-            | sp.shorthand
+            key_with_units('units') + stp.pair
+            | key + stp.pair + stp.len_units('units')
+            | key + stp.pair
+            | stp.shorthand_key + stp.shorthand
+            | stp.shorthand
         )
 
-        parser.ignore(Word(sp.punct))
+        parser.ignore(Word(stp.punct))
         return parser
 
     def result(self, match):

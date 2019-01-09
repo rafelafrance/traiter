@@ -4,7 +4,7 @@ from pyparsing import Word, alphas, Group
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.parse_result import ParseResult
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class TestesSize(BaseTrait):
@@ -15,66 +15,66 @@ class TestesSize(BaseTrait):
         words = Word(alphas)*(1, 3)
 
         label = (
-            sp.kwd('reproductive')
-            + (sp.kwd('data') | sp.kwd('state') | sp.kwd('condition'))
+            stp.kwd('reproductive')
+            + (stp.kwd('data') | stp.kwd('state') | stp.kwd('condition'))
         )
 
         key_with_units = (
-            Group(sp.kwd('gonad') + sp.kwd('length') + sp.kwd('in')
-                  + sp.kwd('mm'))
-            | Group(sp.kwd('gonad') + sp.kwd('length') + sp.kwd('in')
-                    + sp.kwd('millimeters'))
-            | Group(sp.kwd('gonad') + sp.kwd('width') + sp.kwd('in')
-                    + sp.kwd('mm'))
-            | Group(sp.kwd('gonad') + sp.kwd('width') + sp.kwd('in')
-                    + sp.kwd('millimeters'))
-            | sp.kwd('gonadlengthinmm')
-            | sp.kwd('gonadlengthinmillimeters')
-            | sp.kwd('gonadwidthinmm')
-            | sp.kwd('gonadwidthinmillimeters')
+            Group(stp.kwd('gonad') + stp.kwd('length') + stp.kwd('in')
+                  + stp.kwd('mm'))
+            | Group(stp.kwd('gonad') + stp.kwd('length') + stp.kwd('in')
+                    + stp.kwd('millimeters'))
+            | Group(stp.kwd('gonad') + stp.kwd('width') + stp.kwd('in')
+                    + stp.kwd('mm'))
+            | Group(stp.kwd('gonad') + stp.kwd('width') + stp.kwd('in')
+                    + stp.kwd('millimeters'))
+            | stp.kwd('gonadlengthinmm')
+            | stp.kwd('gonadlengthinmillimeters')
+            | stp.kwd('gonadwidthinmm')
+            | stp.kwd('gonadwidthinmillimeters')
         )('units')
 
         ambiguous = (
-            sp.kwd('gonad') + sp.kwd('length') + Word('12', max=1)('index')
-            | sp.kwd('gonad') + sp.kwd('width') + Word('12', max=1)('index')
+            stp.kwd('gonad') + stp.kwd('length') + Word('12', max=1)('index')
+            | stp.kwd('gonad') + stp.kwd('width') + Word('12', max=1)('index')
             | lit('gonadlength') + Word('12', max=1)('index')
             | lit('gonadwidth') + Word('12', max=1)('index')
-            | sp.kwd('left')('side') + sp.kwd('gonad') + sp.kwd('length')
-            | sp.kwd('left')('side') + sp.kwd('gonad') + sp.kwd('width')
-            | sp.kwd('right')('side') + sp.kwd('gonad') + sp.kwd('length')
-            | sp.kwd('right')('side') + sp.kwd('gonad') + sp.kwd('width')
+            | stp.kwd('left')('side') + stp.kwd('gonad') + stp.kwd('length')
+            | stp.kwd('left')('side') + stp.kwd('gonad') + stp.kwd('width')
+            | stp.kwd('right')('side') + stp.kwd('gonad') + stp.kwd('length')
+            | stp.kwd('right')('side') + stp.kwd('gonad') + stp.kwd('width')
             | lit('left')('side') + lit('gonadlength')
             | lit('left')('side') + lit('gonadwidth')
             | lit('right')('side') + lit('gonadlength')
             | lit('right')('side') + lit('gonadwidth')
-            | sp.kwd('gonad') + sp.kwd('length')
-            | sp.kwd('gonad') + sp.kwd('width')
-            | sp.kwd('gonadlength')
-            | sp.kwd('gonadwidth')
+            | stp.kwd('gonad') + stp.kwd('length')
+            | stp.kwd('gonad') + stp.kwd('width')
+            | stp.kwd('gonadlength')
+            | stp.kwd('gonadwidth')
         )
 
         ambiguous_sex = (key_with_units | ambiguous)('ambiguous_sex')
 
-        testes = (sp.kwd('testicles') | sp.kwd('testes') | sp.kwd('testis')
-                  | sp.kwd('test'))
+        testes = (stp.kwd('testicles') | stp.kwd('testes') | stp.kwd('testis')
+                  | stp.kwd('test'))
 
-        abbrev = sp.kwd('tes') | sp.kwd('ts') | sp.kwd('t')
+        abbrev = stp.kwd('tes') | stp.kwd('ts') | stp.kwd('t')
 
-        scrotal = sp.kwd('scrotum') | sp.kwd('scrotal') | sp.kwd('scrot')
+        scrotal = stp.kwd('scrotum') | stp.kwd('scrotal') | stp.kwd('scrot')
 
         parser = (
-            label + (testes | abbrev) + sp.cross
-            | label + sp.cross
-            | label + testes + sp.cross
-            | label + words + sp.cross
-            | ambiguous_sex + sp.cross
-            | ambiguous_sex + words + sp.cross
-            | testes + sp.cross
-            | testes + words + sp.cross
-            | scrotal + sp.cross
+            label + (testes | abbrev) + stp.cross
+            | label + stp.cross
+            | label + testes + stp.cross
+            | label + words + stp.cross
+            | ambiguous_sex + stp.cross
+            | ambiguous_sex + words + stp.cross
+            | testes + stp.cross
+            | testes + words + stp.cross
+            | scrotal + stp.cross
         )
 
-        parser.ignore(Word(sp.punct))
+        parser.ignore(Word(stp.punct))
         return parser
 
     def result(self, match):

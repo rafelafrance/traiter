@@ -4,7 +4,7 @@ import re
 from pyparsing import Word, alphanums, FollowedBy
 from lib.base_trait import BaseTrait
 from lib.parse_result import ParseResult
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class Sex(BaseTrait):
@@ -12,14 +12,14 @@ class Sex(BaseTrait):
 
     def build_parser(self):
         """Return the trait parser."""
-        keyword = sp.kwd('sex')
+        keyword = stp.kwd('sex')
 
-        sex = (sp.kwd('females') | sp.kwd('female')
-               | sp.kwd('males') | sp.kwd('male'))
+        sex = (stp.kwd('females') | stp.kwd('female')
+               | stp.kwd('males') | stp.kwd('male'))
         sex_q = sex + Word('?')
 
         # These are words that indicate that "sex" is not a key
-        skip = sp.kwd('and') | sp.kwd('is') | sp.kwd('was')
+        skip = stp.kwd('and') | stp.kwd('is') | stp.kwd('was')
 
         parser = (
             (keyword + sex_q('value'))
@@ -29,7 +29,7 @@ class Sex(BaseTrait):
             | sex('value')
         )
 
-        parser.ignore(Word(sp.punct, excludeChars='.;?'))
+        parser.ignore(Word(stp.punct, excludeChars='.;?'))
         return parser
 
     def result(self, match):

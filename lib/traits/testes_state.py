@@ -3,7 +3,7 @@
 from pyparsing import Regex, Word, Group, Optional
 from lib.base_trait import BaseTrait
 from lib.parse_result import ParseResult
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class TestesState(BaseTrait):
@@ -12,42 +12,43 @@ class TestesState(BaseTrait):
     def build_parser(self):  # pylint: disable=too-many-locals
         """Return the trait parser."""
         label = (
-            sp.kwd('reproductive')
-            + (sp.kwd('data') | sp.kwd('state') | sp.kwd('condition'))
+            stp.kwd('reproductive')
+            + (stp.kwd('data') | stp.kwd('state') | stp.kwd('condition'))
         )
         testes = (
-            sp.kwd('testicles') | sp.kwd('testes') | sp.kwd('testis')
-            | sp.kwd('test')
+            stp.kwd('testicles') | stp.kwd('testes') | stp.kwd('testis')
+            | stp.kwd('test')
         )
         fully = (
-            sp.kwd('fully') | sp.kwd('incompletely') | sp.kwd('completely')
-            | sp.kwd('complete')
+            stp.kwd('fully') | stp.kwd('incompletely') | stp.kwd('completely')
+            | stp.kwd('complete')
         )
         non = (
-            sp.kwd('not') | sp.kwd('non') | sp.kwd('no') | sp.kwd('semi')
-            | sp.kwd('sub')
+            stp.kwd('not') | stp.kwd('non') | stp.kwd('no') | stp.kwd('semi')
+            | stp.kwd('sub')
         )
         descended = (
-            sp.kwd('undescended') | sp.kwd('undescend') | sp.kwd('undesc')
-            | sp.kwd('undes') | sp.kwd('descended') | sp.kwd('descend')
-            | sp.kwd('desc') | sp.kwd('des') | sp.kwd('undecended')
-            | sp.kwd('undecend') | sp.kwd('decended') | sp.kwd('decend')
-            | sp.kwd('undesended') | sp.kwd('undesend') | sp.kwd('desended')
-            | sp.kwd('desend')
+            stp.kwd('undescended') | stp.kwd('undescend') | stp.kwd('undesc')
+            | stp.kwd('undes') | stp.kwd('descended') | stp.kwd('descend')
+            | stp.kwd('desc') | stp.kwd('des') | stp.kwd('undecended')
+            | stp.kwd('undecend') | stp.kwd('decended') | stp.kwd('decend')
+            | stp.kwd('undesended') | stp.kwd('undesend') | stp.kwd('desended')
+            | stp.kwd('desend')
         )
-        abbrev = sp.kwd('tes') | sp.kwd('ts') | Regex(r'\b t \b', sp.flags)
-        scrotal = sp.kwd('scrotum') | sp.kwd('scrotal') | sp.kwd('scrot')
-        partially = sp.kwd('partially') | sp.kwd('part')
-        state_abbrev = sp.kwd('scr') | sp.kwd('ns') | sp.kwd('sc')
-        abdominal = sp.kwd('abdominal') | sp.kwd('abdomin') | sp.kwd('abdom')
-        size = sp.kwd('visible') | sp.kwd('enlarged') | sp.kwd('small')
-        gonads = (sp.kwd('gonads') | sp.kwd('gonad'))('ambiguous_sex')
+        abbrev = stp.kwd('tes') | stp.kwd('ts') | Regex(r'\b t \b', stp.flags)
+        scrotal = stp.kwd('scrotum') | stp.kwd('scrotal') | stp.kwd('scrot')
+        partially = stp.kwd('partially') | stp.kwd('part')
+        state_abbrev = stp.kwd('scr') | stp.kwd('ns') | stp.kwd('sc')
+        abdominal = (
+            stp.kwd('abdominal') | stp.kwd('abdomin') | stp.kwd('abdom'))
+        size = stp.kwd('visible') | stp.kwd('enlarged') | stp.kwd('small')
+        gonads = (stp.kwd('gonads') | stp.kwd('gonad'))('ambiguous_sex')
         other = (
-            sp.kwd('cryptorchism') | sp.kwd('cryptorchid')
-            | sp.kwd('monorchism') | sp.kwd('monorchid')
-            | sp.kwd('inguinal') | sp.kwd('nscr')
+            stp.kwd('cryptorchism') | stp.kwd('cryptorchid')
+            | stp.kwd('monorchism') | stp.kwd('monorchid')
+            | stp.kwd('inguinal') | stp.kwd('nscr')
         )
-        length = Optional(sp.cross + Optional(sp.len_units))
+        length = Optional(stp.cross + Optional(stp.len_units))
 
         state = (
             Group(non + fully + descended)
@@ -90,7 +91,7 @@ class TestesState(BaseTrait):
             | scrotal('value')
         )
 
-        parser.ignore(Word(sp.punct))
+        parser.ignore(Word(stp.punct))
         return parser
 
     def result(self, match):

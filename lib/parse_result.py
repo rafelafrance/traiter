@@ -4,7 +4,7 @@
 
 import re
 from lib.convert_units import convert
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class ParseResult:
@@ -69,7 +69,7 @@ class ParseResult:
         self.units = units
         big = self.to_float(values[units[0]])
         big = convert(big, units[0])
-        smalls = re.split(sp.pair_joiner, values[units[1]])
+        smalls = re.split(stp.pair_joiner, values[units[1]])
         smalls = [self.to_float(x) for x in smalls]
         self.value = [big + convert(x, units[1]) for x in smalls]
         if len(self.value) == 1:

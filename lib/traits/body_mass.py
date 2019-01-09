@@ -5,7 +5,7 @@ from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mix_in import NumericTraitMixIn
 from lib.parse_result import ParseResult
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class BodyMass(BaseTrait, NumericTraitMixIn):
@@ -13,7 +13,7 @@ class BodyMass(BaseTrait, NumericTraitMixIn):
 
     def build_parser(self):
         """Return the trait parser."""
-        key_with_units = sp.kwd('weightingrams') | sp.kwd('massingrams')
+        key_with_units = stp.kwd('weightingrams') | stp.kwd('massingrams')
 
         key_leader = lit('body') | lit('full') | lit('observed') | lit('total')
         weight = (
@@ -22,33 +22,33 @@ class BodyMass(BaseTrait, NumericTraitMixIn):
         )
         key = (
             key_leader + weight
-            | key_leader + sp.lit('mass')
+            | key_leader + stp.lit('mass')
             | weight
-            | sp.kwd('mass')
-            | sp.kwd('body')
+            | stp.kwd('mass')
+            | stp.kwd('body')
         )
 
-        key_with_dots = Regex(r' \b w \.? t s? \.? ', sp.flags)
+        key_with_dots = Regex(r' \b w \.? t s? \.? ', stp.flags)
 
         wt_key = key | key_with_dots
 
         parser = (
-            key_with_units('units') + sp.pair
-            | wt_key + sp.mass_units('units') + sp.pair
-            | wt_key + sp.pair + sp.mass_units('units')
-            | sp.shorthand_key + sp.pair + sp.mass_units('units')
-            | sp.shorthand_key + sp.mass_units('units') + sp.pair
+            key_with_units('units') + stp.pair
+            | wt_key + stp.mass_units('units') + stp.pair
+            | wt_key + stp.pair + stp.mass_units('units')
+            | stp.shorthand_key + stp.pair + stp.mass_units('units')
+            | stp.shorthand_key + stp.mass_units('units') + stp.pair
             | (wt_key
-               + sp.number('lbs') + sp.pounds
-               + sp.pair('ozs') + sp.ounces)
-            | (sp.number('lbs') + sp.pounds + sp.pair('ozs') + sp.ounces
+               + stp.number('lbs') + stp.pounds
+               + stp.pair('ozs') + stp.ounces)
+            | (stp.number('lbs') + stp.pounds + stp.pair('ozs') + stp.ounces
                )('ambiguous_key')
-            | wt_key + sp.pair
-            | sp.shorthand_key + sp.shorthand
-            | sp.shorthand
+            | wt_key + stp.pair
+            | stp.shorthand_key + stp.shorthand
+            | stp.shorthand
         )
 
-        parser.ignore(Word(sp.punct))
+        parser.ignore(Word(stp.punct))
         return parser
 
     def result(self, match):

@@ -3,7 +3,7 @@
 from pyparsing import Regex
 from lib.base_trait import BaseTrait
 from lib.parse_result import ParseResult
-import lib.shared_parser_patterns as sp
+import lib.shared_trait_patterns as stp
 
 
 class AsIs(BaseTrait):
@@ -11,7 +11,7 @@ class AsIs(BaseTrait):
 
     def build_parser(self):
         """Return the trait parser."""
-        data = Regex(r' \S .* \S | \S', sp.flags)
+        data = Regex(r' \S .* \S | \S', stp.flags)
         parser = data('value')
         return parser
 

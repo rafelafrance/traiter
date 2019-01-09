@@ -3,7 +3,7 @@
 # from pyparsing import Word
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mix_in import NumericTraitMixIn
-# import lib.shared_parser_patterns as sp
+# import lib.shared_trait_patterns as stp
 
 
 class HindFootLength(BaseTrait, NumericTraitMixIn):
@@ -11,7 +11,7 @@ class HindFootLength(BaseTrait, NumericTraitMixIn):
 
     def build_parser(self):
         """Return the trait parser."""
-        # parser.ignore(Word(sp.punct))
+        # parser.ignore(Word(stp.punct))
         # return parser
 
     def result(self, match):
