@@ -1,80 +1,80 @@
 """Parse life stage notations."""
 
 from pyparsing import Regex, Word, Group
-from lib.base import Base
-from lib.result import Result
-import lib.regexp as rx
+from lib.base_trait import BaseTrait
+from lib.parse_result import ParseResult
+import lib.shared_parser_patterns as sp
 
 
-class LifeStage(Base):
+class LifeStage(BaseTrait):
     """Parser logic."""
 
     def build_parser(self):
         """Return the trait parser."""
         keyword = (
-            Group(rx.kwd('life') + rx.kwd('stage') + rx.kwd('remarks'))
-            | Group(rx.kwd('lifestage') + rx.kwd('remarks'))
-            | rx.kwd('lifestageremarks')
-            | Group(rx.kwd('life') + rx.kwd('stage'))
-            | rx.kwd('lifestage')
-            | Group(rx.kwd('age') + rx.kwd('class'))
-            | rx.kwd('ageclass')
-            | Group(rx.kwd('age') + rx.kwd('in') + rx.kwd('hours'))
-            | rx.kwd('ageinhours')
-            | Group(rx.kwd('age') + rx.kwd('in') + rx.kwd('days'))
-            | rx.kwd('ageindays')
-            | rx.kwd('age')
+            Group(sp.kwd('life') + sp.kwd('stage') + sp.kwd('remarks'))
+            | Group(sp.kwd('lifestage') + sp.kwd('remarks'))
+            | sp.kwd('lifestageremarks')
+            | Group(sp.kwd('life') + sp.kwd('stage'))
+            | sp.kwd('lifestage')
+            | Group(sp.kwd('age') + sp.kwd('class'))
+            | sp.kwd('ageclass')
+            | Group(sp.kwd('age') + sp.kwd('in') + sp.kwd('hours'))
+            | sp.kwd('ageinhours')
+            | Group(sp.kwd('age') + sp.kwd('in') + sp.kwd('days'))
+            | sp.kwd('ageindays')
+            | sp.kwd('age')
         )
 
         years = (
-            rx.kwd('first') | rx.kwd('second')
-            | rx.kwd('third') | rx.kwd('fourth')
-            | rx.kwd('1st') | rx.kwd('2nd') | rx.kwd('3rd') | rx.kwd('4th')
-            | rx.kwd('hatching')
+            sp.kwd('first') | sp.kwd('second')
+            | sp.kwd('third') | sp.kwd('fourth')
+            | sp.kwd('1st') | sp.kwd('2nd') | sp.kwd('3rd') | sp.kwd('4th')
+            | sp.kwd('hatching')
          )
 
         keyless = (
-            Group(rx.kwd('after') + years + rx.kwd('year'))
-            | Group(years + rx.kwd('year'))
-            | rx.kwd('larves') | rx.kwd('larvae') | rx.kwd('larva')
-            | rx.kwd('larvals') | rx.kwd('larval')
-            | rx.kwd('imagos') | rx.kwd('imago')
-            | rx.kwd('neonates') | rx.kwd('neonates')
-            | rx.kwd('hatchlings') | rx.kwd('hatchling') | rx.kwd('hatched')
-            | rx.kwd('fry')
-            | rx.kwd('metamorphs') | rx.kwd('metamorph')
-            | rx.kwd('premetamorphs') | rx.kwd('premetamorph')
-            | rx.kwd('tadpoles') | rx.kwd('tadpole')
-            | rx.kwd('têtard')
-            | rx.kwd('young-of-the-year')
-            | rx.kwd('leptocephales') | rx.kwd('leptocephale')
-            | rx.kwd('leptocephalus')
-            | rx.kwd('immatures') | rx.kwd('immature')
-            | rx.kwd('imms') | rx.kwd('imm')
-            | rx.kwd('young adult') | rx.kwd('young')
-            | rx.kwd('ygs') | rx.kwd('yg')
-            | rx.kwd('fleglings') | rx.kwd('flegling')
-            | rx.kwd('fledgelings') | rx.kwd('fledgeling')
-            | rx.kwd('chicks') | rx.kwd('chick')
-            | rx.kwd('nestlings') | rx.kwd('nestling')
-            | rx.kwd('juveniles') | rx.kwd('juvenile')
-            | rx.kwd('juvéniles') | rx.kwd('juvénile')
-            | rx.kwd('juvs') | rx.kwd('juv')
-            | rx.kwd('jeunes') | rx.kwd('jeune')
-            | rx.kwd('subadults') | rx.kwd('subadult')
-            | rx.kwd('subadultes') | rx.kwd('subadulte')
-            | rx.kwd('subads') | rx.kwd('subad')
-            | rx.kwd('sub-adults') | rx.kwd('sub-adult')
-            | rx.kwd('adults') | rx.kwd('adult') | rx.kwd('adulte')
-            | rx.kwd('ads') | rx.kwd('ad')
-            | rx.kwd('yearlings') | rx.kwd('yearling')
-            | rx.kwd('matures') | rx.kwd('mature')
-            | rx.kwd('yolk sac') | rx.kwd('yolksac')
+            Group(sp.kwd('after') + years + sp.kwd('year'))
+            | Group(years + sp.kwd('year'))
+            | sp.kwd('larves') | sp.kwd('larvae') | sp.kwd('larva')
+            | sp.kwd('larvals') | sp.kwd('larval')
+            | sp.kwd('imagos') | sp.kwd('imago')
+            | sp.kwd('neonates') | sp.kwd('neonates')
+            | sp.kwd('hatchlings') | sp.kwd('hatchling') | sp.kwd('hatched')
+            | sp.kwd('fry')
+            | sp.kwd('metamorphs') | sp.kwd('metamorph')
+            | sp.kwd('premetamorphs') | sp.kwd('premetamorph')
+            | sp.kwd('tadpoles') | sp.kwd('tadpole')
+            | sp.kwd('têtard')
+            | sp.kwd('young-of-the-year')
+            | sp.kwd('leptocephales') | sp.kwd('leptocephale')
+            | sp.kwd('leptocephalus')
+            | sp.kwd('immatures') | sp.kwd('immature')
+            | sp.kwd('imms') | sp.kwd('imm')
+            | sp.kwd('young adult') | sp.kwd('young')
+            | sp.kwd('ygs') | sp.kwd('yg')
+            | sp.kwd('fleglings') | sp.kwd('flegling')
+            | sp.kwd('fledgelings') | sp.kwd('fledgeling')
+            | sp.kwd('chicks') | sp.kwd('chick')
+            | sp.kwd('nestlings') | sp.kwd('nestling')
+            | sp.kwd('juveniles') | sp.kwd('juvenile')
+            | sp.kwd('juvéniles') | sp.kwd('juvénile')
+            | sp.kwd('juvs') | sp.kwd('juv')
+            | sp.kwd('jeunes') | sp.kwd('jeune')
+            | sp.kwd('subadults') | sp.kwd('subadult')
+            | sp.kwd('subadultes') | sp.kwd('subadulte')
+            | sp.kwd('subads') | sp.kwd('subad')
+            | sp.kwd('sub-adults') | sp.kwd('sub-adult')
+            | sp.kwd('adults') | sp.kwd('adult') | sp.kwd('adulte')
+            | sp.kwd('ads') | sp.kwd('ad')
+            | sp.kwd('yearlings') | sp.kwd('yearling')
+            | sp.kwd('matures') | sp.kwd('mature')
+            | sp.kwd('yolk sac') | sp.kwd('yolksac')
         )
 
-        word = Regex(r' \b (?! determin \w+ ) \w [\w?./-]* ', rx.flags)
+        word = Regex(r' \b (?! determin \w+ ) \w [\w?./-]* ', sp.flags)
 
-        sep = Regex(r' [;,"?] | $ ', rx.flags)
+        sep = Regex(r' [;,"?] | $ ', sp.flags)
 
         word_plus = keyless | word
 
@@ -86,13 +86,13 @@ class LifeStage(Base):
             | keyless('value')
         )
 
-        parser.ignore(Word(rx.punct, excludeChars='.,;"?/-'))
+        parser.ignore(Word(sp.punct, excludeChars='.,;"?/-'))
         return parser
 
     def result(self, match):
         """Convert parsed tokens into a result."""
         print(match)
-        result = Result()
+        result = ParseResult()
         result.vocabulary_value(match[0].value)
         result.ends(match[1], match[2])
         return result

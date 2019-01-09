@@ -1,41 +1,41 @@
 """Parse tail length notations."""
 
 from pyparsing import Word
-from lib.base import Base
-from lib.numeric import Numeric
-import lib.regexp as rx
+from lib.base_trait import BaseTrait
+from lib.numeric_trait_mix_in import NumericTraitMixIn
+import lib.shared_parser_patterns as sp
 
 
-class TailLength(Base, Numeric):
+class TailLength(BaseTrait, NumericTraitMixIn):
     """Parser logic."""
 
     def build_parser(self):
         """Return the trait parser."""
         key_with_units = (
-            rx.kwd('taillengthinmillimeters')
-            | rx.kwd('taillengthinmm')
-            | rx.kwd('tail length in millimeters')
-            | rx.kwd('tail length in mm')
+            sp.kwd('taillengthinmillimeters')
+            | sp.kwd('taillengthinmm')
+            | sp.kwd('tail length in millimeters')
+            | sp.kwd('tail length in mm')
         )
 
         key = (
-            rx.kwd('tail length')
-            | rx.kwd('tail len')
-            | rx.kwd('taillength')
-            | rx.kwd('taillen')
-            | rx.kwd('tail')
-            | rx.kwd('tal')
+            sp.kwd('tail length')
+            | sp.kwd('tail len')
+            | sp.kwd('taillength')
+            | sp.kwd('taillen')
+            | sp.kwd('tail')
+            | sp.kwd('tal')
         )
 
         parser = (
-            key_with_units('units') + rx.pair
-            | key + rx.pair + rx.len_units('units')
-            | key + rx.pair
-            | rx.shorthand_key + rx.shorthand
-            | rx.shorthand
+            key_with_units('units') + sp.pair
+            | key + sp.pair + sp.len_units('units')
+            | key + sp.pair
+            | sp.shorthand_key + sp.shorthand
+            | sp.shorthand
         )
 
-        parser.ignore(Word(rx.punct))
+        parser.ignore(Word(sp.punct))
         return parser
 
     def result(self, match):

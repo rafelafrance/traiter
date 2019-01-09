@@ -1,15 +1,15 @@
 """Mix-in for parsing length notations."""
 
-from lib.result import Result
+from lib.parse_result import ParseResult
 
 
-class Numeric:
+class NumericTraitMixIn:
     """Shared parser logic."""
 
     @staticmethod
     def simple(match, parts):
         """Handle a normal length notation."""
-        result = Result()
+        result = ParseResult()
         result.is_flag_in_dict(parts, 'ambiguous_key')
         result.float_value(parts['value1'], parts.get('value2'))
         result.convert_value(parts.get('units'))
@@ -19,7 +19,7 @@ class Numeric:
     @staticmethod
     def shorthand_length(match, parts, key):
         """Handle shorthand length notation like 11-22-33-44:55g."""
-        result = Result()
+        result = ParseResult()
         result.float_value(parts.get(key))
         if not result.value:
             return None
@@ -32,7 +32,7 @@ class Numeric:
     @staticmethod
     def compound(match, parts, units):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        result = Result()
+        result = ParseResult()
         result.is_flag_in_dict(parts, 'ambiguous_key')
         result.compound_value(parts, units)
         result.ends(match[1], match[2])
@@ -41,7 +41,7 @@ class Numeric:
     @staticmethod
     def fraction(match, parts):
         """Handle fractional values like 10 3/8 inches."""
-        result = Result()
+        result = ParseResult()
         result.is_flag_in_dict(parts, 'ambiguous_key')
         result.fraction_value(parts)
         result.convert_value(parts.get('units'))

@@ -3,7 +3,7 @@
 from abc import abstractmethod
 
 
-class Base:
+class BaseTrait:
     """Shared parser logic."""
 
     def __init__(self, args=None):

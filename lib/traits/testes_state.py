@@ -1,53 +1,53 @@
 """Parse testes state notations."""
 
 from pyparsing import Regex, Word, Group, Optional
-from lib.base import Base
-from lib.result import Result
-import lib.regexp as rx
+from lib.base_trait import BaseTrait
+from lib.parse_result import ParseResult
+import lib.shared_parser_patterns as sp
 
 
-class TestesState(Base):
+class TestesState(BaseTrait):
     """Parser logic."""
 
     def build_parser(self):  # pylint: disable=too-many-locals
         """Return the trait parser."""
         label = (
-            rx.kwd('reproductive')
-            + (rx.kwd('data') | rx.kwd('state') | rx.kwd('condition'))
+            sp.kwd('reproductive')
+            + (sp.kwd('data') | sp.kwd('state') | sp.kwd('condition'))
         )
         testes = (
-            rx.kwd('testicles') | rx.kwd('testes') | rx.kwd('testis')
-            | rx.kwd('test')
+            sp.kwd('testicles') | sp.kwd('testes') | sp.kwd('testis')
+            | sp.kwd('test')
         )
         fully = (
-            rx.kwd('fully') | rx.kwd('incompletely') | rx.kwd('completely')
-            | rx.kwd('complete')
+            sp.kwd('fully') | sp.kwd('incompletely') | sp.kwd('completely')
+            | sp.kwd('complete')
         )
         non = (
-            rx.kwd('not') | rx.kwd('non') | rx.kwd('no') | rx.kwd('semi')
-            | rx.kwd('sub')
+            sp.kwd('not') | sp.kwd('non') | sp.kwd('no') | sp.kwd('semi')
+            | sp.kwd('sub')
         )
         descended = (
-            rx.kwd('undescended') | rx.kwd('undescend') | rx.kwd('undesc')
-            | rx.kwd('undes') | rx.kwd('descended') | rx.kwd('descend')
-            | rx.kwd('desc') | rx.kwd('des') | rx.kwd('undecended')
-            | rx.kwd('undecend') | rx.kwd('decended') | rx.kwd('decend')
-            | rx.kwd('undesended') | rx.kwd('undesend') | rx.kwd('desended')
-            | rx.kwd('desend')
+            sp.kwd('undescended') | sp.kwd('undescend') | sp.kwd('undesc')
+            | sp.kwd('undes') | sp.kwd('descended') | sp.kwd('descend')
+            | sp.kwd('desc') | sp.kwd('des') | sp.kwd('undecended')
+            | sp.kwd('undecend') | sp.kwd('decended') | sp.kwd('decend')
+            | sp.kwd('undesended') | sp.kwd('undesend') | sp.kwd('desended')
+            | sp.kwd('desend')
         )
-        abbrev = rx.kwd('tes') | rx.kwd('ts') | Regex(r'\b t \b', rx.flags)
-        scrotal = rx.kwd('scrotum') | rx.kwd('scrotal') | rx.kwd('scrot')
-        partially = rx.kwd('partially') | rx.kwd('part')
-        state_abbrev = rx.kwd('scr') | rx.kwd('ns') | rx.kwd('sc')
-        abdominal = rx.kwd('abdominal') | rx.kwd('abdomin') | rx.kwd('abdom')
-        size = rx.kwd('visible') | rx.kwd('enlarged') | rx.kwd('small')
-        gonads = (rx.kwd('gonads') | rx.kwd('gonad'))('ambiguous_sex')
+        abbrev = sp.kwd('tes') | sp.kwd('ts') | Regex(r'\b t \b', sp.flags)
+        scrotal = sp.kwd('scrotum') | sp.kwd('scrotal') | sp.kwd('scrot')
+        partially = sp.kwd('partially') | sp.kwd('part')
+        state_abbrev = sp.kwd('scr') | sp.kwd('ns') | sp.kwd('sc')
+        abdominal = sp.kwd('abdominal') | sp.kwd('abdomin') | sp.kwd('abdom')
+        size = sp.kwd('visible') | sp.kwd('enlarged') | sp.kwd('small')
+        gonads = (sp.kwd('gonads') | sp.kwd('gonad'))('ambiguous_sex')
         other = (
-            rx.kwd('cryptorchism') | rx.kwd('cryptorchid')
-            | rx.kwd('monorchism') | rx.kwd('monorchid')
-            | rx.kwd('inguinal') | rx.kwd('nscr')
+            sp.kwd('cryptorchism') | sp.kwd('cryptorchid')
+            | sp.kwd('monorchism') | sp.kwd('monorchid')
+            | sp.kwd('inguinal') | sp.kwd('nscr')
         )
-        length = Optional(rx.cross + Optional(rx.len_units))
+        length = Optional(sp.cross + Optional(sp.len_units))
 
         state = (
             Group(non + fully + descended)
@@ -90,13 +90,13 @@ class TestesState(Base):
             | scrotal('value')
         )
 
-        parser.ignore(Word(rx.punct))
+        parser.ignore(Word(sp.punct))
         return parser
 
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-        result = Result()
+        result = ParseResult()
         result.vocabulary_value(parts['value'])
         result.is_flag_in_dict(parts, 'ambiguous_sex')
         result.ends(match[1], match[2])

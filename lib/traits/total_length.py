@@ -2,12 +2,12 @@
 
 from pyparsing import Regex, Word, alphas, alphanums
 from pyparsing import CaselessLiteral as lit
-from lib.base import Base
-from lib.numeric import Numeric
-import lib.regexp as rx
+from lib.base_trait import BaseTrait
+from lib.numeric_trait_mix_in import NumericTraitMixIn
+import lib.shared_parser_patterns as sp
 
 
-class TotalLength(Base, Numeric):
+class TotalLength(BaseTrait, NumericTraitMixIn):
     """Parser logic."""
 
     def build_parser(self):
@@ -15,22 +15,22 @@ class TotalLength(Base, Numeric):
         words = Word(alphas, alphanums)*(1, 3)
 
         key_with_units = (
-            rx.kwd('totallengthinmillimeters')
-            | rx.kwd('totallengthinmm')
-            | rx.kwd('total length in millimeters')
-            | rx.kwd('total length in mm')
-            | rx.kwd('snoutventlengthinmillimeters')
-            | rx.kwd('snoutventlengthinmm')
-            | rx.kwd('snoutvent length in millimeters')
-            | rx.kwd('snoutvent length in mm')
-            | rx.kwd('headbodylengthinmillimeters')
-            | rx.kwd('headbodylengthinmm')
-            | rx.kwd('headbody length in millimeters')
-            | rx.kwd('headbody length in mm')
-            | rx.kwd('forklengthinmillimeters')
-            | rx.kwd('forklengthinmm')
-            | rx.kwd('fork length in millimeters')
-            | rx.kwd('fork length in mm')
+            sp.kwd('totallengthinmillimeters')
+            | sp.kwd('totallengthinmm')
+            | sp.kwd('total length in millimeters')
+            | sp.kwd('total length in mm')
+            | sp.kwd('snoutventlengthinmillimeters')
+            | sp.kwd('snoutventlengthinmm')
+            | sp.kwd('snoutvent length in millimeters')
+            | sp.kwd('snoutvent length in mm')
+            | sp.kwd('headbodylengthinmillimeters')
+            | sp.kwd('headbodylengthinmm')
+            | sp.kwd('headbody length in millimeters')
+            | sp.kwd('headbody length in mm')
+            | sp.kwd('forklengthinmillimeters')
+            | sp.kwd('forklengthinmm')
+            | sp.kwd('fork length in millimeters')
+            | sp.kwd('fork length in mm')
         )
 
         len_key = Regex(r"""
@@ -44,9 +44,9 @@ class TotalLength(Base, Numeric):
             | (?: fork | mean | body ) [\s-]* lengths?
             | s \.? v \.? ( l \.? )?
             | snout [\s-]* vent [\s-]* lengths?
-            """, rx.flags)
+            """, sp.flags)
 
-        ambiguous = Regex(r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ', rx.flags)
+        ambiguous = Regex(r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ', sp.flags)
 
         key_units_req = (
             lit('measurements') | lit('measurement')
@@ -55,46 +55,46 @@ class TotalLength(Base, Numeric):
         )
 
         parser = (
-            key_with_units('units') + rx.pair
+            key_with_units('units') + sp.pair
 
-            | rx.shorthand_key + rx.pair + rx.len_units('units')
-            | rx.shorthand_key + rx.len_units('units') + rx.pair
+            | sp.shorthand_key + sp.pair + sp.len_units('units')
+            | sp.shorthand_key + sp.len_units('units') + sp.pair
 
-            | key_units_req + rx.fraction + rx.len_units('units')
-            | key_units_req + rx.pair + rx.len_units('units')
+            | key_units_req + sp.fraction + sp.len_units('units')
+            | key_units_req + sp.pair + sp.len_units('units')
 
-            | len_key + rx.fraction + rx.len_units('units')
-            | (ambiguous + rx.fraction + rx.len_units('units')
+            | len_key + sp.fraction + sp.len_units('units')
+            | (ambiguous + sp.fraction + sp.len_units('units')
                )('ambiguous_key')
 
-            | rx.pair + rx.len_units('units') + len_key
-            | rx.pair + len_key
+            | sp.pair + sp.len_units('units') + len_key
+            | sp.pair + len_key
 
             | (len_key
-               + rx.pair('ft') + rx.feet('ft_units')
-               + rx.pair('in') + rx.inches('in_units'))
-            | (rx.pair('ft') + rx.feet('ft_units')
-               + rx.pair('in') + rx.inches('in_units'))('ambiguous_key')
+               + sp.pair('ft') + sp.feet('ft_units')
+               + sp.pair('in') + sp.inches('in_units'))
+            | (sp.pair('ft') + sp.feet('ft_units')
+               + sp.pair('in') + sp.inches('in_units'))('ambiguous_key')
 
             # Due to trailing len_key the leading key it is no longer ambiguous
-            | ambiguous + rx.pair + rx.len_units('units') + len_key
-            | ambiguous + rx.pair + len_key
+            | ambiguous + sp.pair + sp.len_units('units') + len_key
+            | ambiguous + sp.pair + len_key
 
-            | (ambiguous + rx.pair + rx.len_units('units'))('ambiguous_key')
-            | (ambiguous + rx.len_units('units') + rx.pair)('ambiguous_key')
-            | (ambiguous + rx.pair)('ambiguous_key')
+            | (ambiguous + sp.pair + sp.len_units('units'))('ambiguous_key')
+            | (ambiguous + sp.len_units('units') + sp.pair)('ambiguous_key')
+            | (ambiguous + sp.pair)('ambiguous_key')
 
-            | rx.shorthand_key + rx.shorthand
-            | rx.shorthand
+            | sp.shorthand_key + sp.shorthand
+            | sp.shorthand
 
-            | len_key + rx.pair + rx.len_units('units')
-            | len_key + rx.len_units('units') + rx.pair
-            | len_key + rx.pair
-            | len_key + words + rx.pair + rx.len_units('units')
-            | len_key + words + rx.pair
+            | len_key + sp.pair + sp.len_units('units')
+            | len_key + sp.len_units('units') + sp.pair
+            | len_key + sp.pair
+            | len_key + words + sp.pair + sp.len_units('units')
+            | len_key + words + sp.pair
         )
 
-        parser.ignore(Word(rx.punct, excludeChars=';/'))
+        parser.ignore(Word(sp.punct, excludeChars=';/'))
         return parser
 
     def result(self, match):

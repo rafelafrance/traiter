@@ -2,18 +2,18 @@
 
 from pyparsing import Regex, Word
 from pyparsing import CaselessLiteral as lit
-from lib.base import Base
-from lib.numeric import Numeric
-from lib.result import Result
-import lib.regexp as rx
+from lib.base_trait import BaseTrait
+from lib.numeric_trait_mix_in import NumericTraitMixIn
+from lib.parse_result import ParseResult
+import lib.shared_parser_patterns as sp
 
 
-class BodyMass(Base, Numeric):
+class BodyMass(BaseTrait, NumericTraitMixIn):
     """Parser logic."""
 
     def build_parser(self):
         """Return the trait parser."""
-        key_with_units = rx.kwd('weightingrams') | rx.kwd('massingrams')
+        key_with_units = sp.kwd('weightingrams') | sp.kwd('massingrams')
 
         key_leader = lit('body') | lit('full') | lit('observed') | lit('total')
         weight = (
@@ -22,33 +22,33 @@ class BodyMass(Base, Numeric):
         )
         key = (
             key_leader + weight
-            | key_leader + rx.lit('mass')
+            | key_leader + sp.lit('mass')
             | weight
-            | rx.kwd('mass')
-            | rx.kwd('body')
+            | sp.kwd('mass')
+            | sp.kwd('body')
         )
 
-        key_with_dots = Regex(r' \b w \.? t s? \.? ', rx.flags)
+        key_with_dots = Regex(r' \b w \.? t s? \.? ', sp.flags)
 
         wt_key = key | key_with_dots
 
         parser = (
-            key_with_units('units') + rx.pair
-            | wt_key + rx.mass_units('units') + rx.pair
-            | wt_key + rx.pair + rx.mass_units('units')
-            | rx.shorthand_key + rx.pair + rx.mass_units('units')
-            | rx.shorthand_key + rx.mass_units('units') + rx.pair
+            key_with_units('units') + sp.pair
+            | wt_key + sp.mass_units('units') + sp.pair
+            | wt_key + sp.pair + sp.mass_units('units')
+            | sp.shorthand_key + sp.pair + sp.mass_units('units')
+            | sp.shorthand_key + sp.mass_units('units') + sp.pair
             | (wt_key
-               + rx.number('lbs') + rx.pounds
-               + rx.pair('ozs') + rx.ounces)
-            | (rx.number('lbs') + rx.pounds + rx.pair('ozs') + rx.ounces
+               + sp.number('lbs') + sp.pounds
+               + sp.pair('ozs') + sp.ounces)
+            | (sp.number('lbs') + sp.pounds + sp.pair('ozs') + sp.ounces
                )('ambiguous_key')
-            | wt_key + rx.pair
-            | rx.shorthand_key + rx.shorthand
-            | rx.shorthand
+            | wt_key + sp.pair
+            | sp.shorthand_key + sp.shorthand
+            | sp.shorthand
         )
 
-        parser.ignore(Word(rx.punct))
+        parser.ignore(Word(sp.punct))
         return parser
 
     def result(self, match):
@@ -63,7 +63,7 @@ class BodyMass(Base, Numeric):
 
     def shorthand(self, match, parts):
         """Convert a shorthand value like 11-22-33-44:55g."""
-        result = Result()
+        result = ParseResult()
         result.float_value(parts.get('shorthand_wt'))
         if not result.value:
             return None

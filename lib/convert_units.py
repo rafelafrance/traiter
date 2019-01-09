@@ -14,9 +14,6 @@ def convert(value, units):
 
 
 UNITS = {
-    # No units given
-    '': 1.0,
-
     # Length
     'c.m.': 10.0,
     'centimeters': 10.0,

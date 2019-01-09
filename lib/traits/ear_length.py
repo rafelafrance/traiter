@@ -1,17 +1,17 @@
 """Parse ear length notations."""
 
 # from pyparsing import Word
-from lib.base import Base
-from lib.numeric import Numeric
-# import lib.regexp as rx
+from lib.base_trait import BaseTrait
+from lib.numeric_trait_mix_in import NumericTraitMixIn
+# import lib.shared_parser_patterns as sp
 
 
-class EarLength(Base, Numeric):
+class EarLength(BaseTrait, NumericTraitMixIn):
     """Parser logic."""
 
     def build_parser(self):
         """Return the trait parser."""
-        # parser.ignore(Word(rx.punct))
+        # parser.ignore(Word(sp.punct))
         # return parser
 
     def result(self, match):

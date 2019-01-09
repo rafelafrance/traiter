@@ -3,11 +3,11 @@
 # pylint: disable=too-many-arguments
 
 import re
-from lib.units import convert
-import lib.regexp as rx
+from lib.convert_units import convert
+import lib.shared_parser_patterns as sp
 
 
-class Result:
+class ParseResult:
     """Build a parse result."""
 
     def __init__(self, value=None, units=None, trait=None, field=None,
@@ -23,7 +23,7 @@ class Result:
 
     def __repr__(self):
         """Represent the result."""
-        return 'Result({})'.format(self.__dict__)
+        return 'ParseResult({})'.format(self.__dict__)
 
     def __eq__(self, other):
         """Compare results."""
@@ -69,7 +69,7 @@ class Result:
         self.units = units
         big = self.to_float(values[units[0]])
         big = convert(big, units[0])
-        smalls = re.split(rx.pair_joiner, values[units[1]])
+        smalls = re.split(sp.pair_joiner, values[units[1]])
         smalls = [self.to_float(x) for x in smalls]
         self.value = [big + convert(x, units[1]) for x in smalls]
         if len(self.value) == 1:
