@@ -1,7 +1,7 @@
 # flake8=noqa
 
 import unittest
-from lib.parse_result import ParseResult
+from lib.parsed_trait import ParsedTrait
 from lib.traits.body_mass import BodyMass
 
 
@@ -13,28 +13,28 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('762-292-121-76 2435.0g'),
-            [ParseResult(value=2435, units='g', start=0, end=22)])
+            [ParsedTrait(value=2435, units='g', start=0, end=22)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('TL (mm) 44,SL (mm) 38,Weight (g) 0.77 xx'),
-            [ParseResult(value=0.77, units='g', start=22, end=37)])
+            [ParsedTrait(value=0.77, units='g', start=22, end=37)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-62g'),
-            [ParseResult(value=62, units='g', start=41, end=55)])
+            [ParsedTrait(value=62, units='g', start=41, end=55)])
 
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('body mass=20 g'),
-            [ParseResult(value=20, units='g', start=0, end=14)])
+            [ParsedTrait(value=20, units='g', start=0, end=14)])
 
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 - 4.5 oz '),
-            [ParseResult(
+            [ParsedTrait(
                 value=[995.07, 1034.76],
                 flags={'ambiguous_key': True},
                 units=['lbs', 'ozs'],
@@ -44,40 +44,40 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"x", "earLengthInMM":"20", '
                       '"weight":"[139.5] g" }'),
-            [ParseResult(value=139.5, units='g', start=47, end=65)])
+            [ParsedTrait(value=139.5, units='g', start=47, end=65)])
 
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('{"fat":"No fat", "gonads":"Testes 10 x 6 mm.", '
                       '"molt":"No molt",'
                       ' "stomach contents":"Not recorded", "weight":"94 gr."'),
-            [ParseResult(value=94, units='gr', start=101, end=115)])
+            [ParsedTrait(value=94, units='gr', start=101, end=115)])
 
     def test_parse_08(self):
         self.assertEqual(
             PAR.parse('Note in catalog: 83-0-17-23-fa64-35g'),
-            [ParseResult(value=35, units='g', start=8, end=36)])
+            [ParsedTrait(value=35, units='g', start=8, end=36)])
 
     def test_parse_09(self):
         self.assertEqual(
             PAR.parse('{"measurements":"20.2g, SVL 89.13mm" }'),
-            [ParseResult(value=20.2, units='g', start=2, end=22)])
+            [ParsedTrait(value=20.2, units='g', start=2, end=22)])
 
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('Body: 15 g'),
-            [ParseResult(value=15, units='g', start=0, end=10)])
+            [ParsedTrait(value=15, units='g', start=0, end=10)])
 
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('82-00-15-21-tr7-fa63-41g'),
-            [ParseResult(value=41, units='g', start=0, end=24)])
+            [ParsedTrait(value=41, units='g', start=0, end=24)])
 
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('weight=5.4 g; unformatted measurements=77-30-7-12=5.4'),
-            [ParseResult(value=5.4, units='g', start=0, end=12),
-             ParseResult(
+            [ParsedTrait(value=5.4, units='g', start=0, end=12),
+             ParsedTrait(
                 value=5.4,
                 flags={'units_inferred': True},
                 start=26, end=53)])
@@ -85,11 +85,11 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('unformatted measurements=77-30-7-12=5.4; weight=5.4;'),
-            [ParseResult(
+            [ParsedTrait(
                 value=5.4,
                 flags={'units_inferred': True},
                 start=12, end=39),
-             ParseResult(
+             ParsedTrait(
                 value=5.4,
                 flags={'units_inferred': True},
                 start=41, end=51)])
@@ -97,7 +97,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_14(self):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"270-165-18-22-31", '),
-            [ParseResult(
+            [ParsedTrait(
                 value=31,
                 flags={'units_inferred': True},
                 start=20, end=36)])
@@ -105,37 +105,37 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_15(self):
         self.assertEqual(
             PAR.parse('{"measurements":"143-63-20-17=13 g" }'),
-            [ParseResult(value=13, units='g', start=2, end=34)])
+            [ParsedTrait(value=13, units='g', start=2, end=34)])
 
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('143-63-20-17=13'),
-            [ParseResult(value=13, flags={'units_inferred': True},
+            [ParsedTrait(value=13, flags={'units_inferred': True},
                          start=0, end=15)])
 
     def test_parse_17(self):
         self.assertEqual(
             PAR.parse('reproductive data: Testes descended -10x7 mm; sex: '
                       'male; unformatted measurements: 181-75-21-18=22 g'),
-            [ParseResult(value=22, units='g', start=69, end=100)])
+            [ParsedTrait(value=22, units='g', start=69, end=100)])
 
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse('{ "massingrams"="20.1" }'),
-            [ParseResult(value=20.1, units='massingrams', start=3, end=21)])
+            [ParsedTrait(value=20.1, units='massingrams', start=3, end=21)])
 
     def test_parse_19(self):
         self.assertEqual(
             PAR.parse(' {"gonadLengthInMM_1":"10", "gonadLengthInMM_2":"6", '
                       '"weight":"1,192.0" }'),
-            [ParseResult(value=1192,
+            [ParsedTrait(value=1192,
                          flags={'units_inferred': True},
                          start=54, end=70)])
 
     def test_parse_20(self):
         self.assertEqual(
             PAR.parse('"weight: 20.5-31.8'),
-            [ParseResult(
+            [ParsedTrait(
                 value=[20.5, 31.8],
                 flags={'units_inferred': True},
                 start=1, end=18)])
@@ -143,7 +143,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_21(self):
         self.assertEqual(
             PAR.parse('"weight: 20.5-32'),
-            [ParseResult(
+            [ParsedTrait(
                 value=[20.5, 32],
                 flags={'units_inferred': True},
                 start=1, end=16)])
@@ -151,7 +151,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_22(self):
         self.assertEqual(
             PAR.parse('"weight: 21-31.8'),
-            [ParseResult(
+            [ParsedTrait(
                 value=[21, 31.8],
                 flags={'units_inferred': True},
                 start=1, end=16)])
@@ -159,7 +159,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_23(self):
         self.assertEqual(
             PAR.parse('"weight: 21-32'),
-            [ParseResult(
+            [ParsedTrait(
                 value=[21, 32],
                 flags={'units_inferred': True},
                 start=1, end=14)])
@@ -174,8 +174,8 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_25(self):
         self.assertEqual(
             PAR.parse('weight=5.4 g; unformatted measurements=77-x-7-12=5.4'),
-            [ParseResult(value=5.4, units='g', start=0, end=12),
-             ParseResult(
+            [ParsedTrait(value=5.4, units='g', start=0, end=12),
+             ParsedTrait(
                 value=5.4,
                 flags={'units_inferred': True},
                 start=26, end=52)])
@@ -188,12 +188,12 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_27(self):
         self.assertEqual(
             PAR.parse('body mass=0 g'),
-            [ParseResult(value=0, units='g', start=0, end=13)])
+            [ParsedTrait(value=0, units='g', start=0, end=13)])
 
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 oz '),
-            [ParseResult(
+            [ParsedTrait(
                 value=995.07,
                 flags={'ambiguous_key': True},
                 units=['lbs', 'ozs'],
@@ -203,7 +203,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62]g'),
-            [ParseResult(
+            [ParsedTrait(
                 value=62, units='g',
                 flags={'estimated_value': True},
                 start=41, end=57)])
@@ -212,7 +212,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62g]'),
-            [ParseResult(
+            [ParsedTrait(
                 value=62,
                 units='g',
                 flags={'estimated_value': True},
@@ -222,7 +222,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62] x'),
-            [ParseResult(
+            [ParsedTrait(
                 value=62,
                 flags={'estimated_value': True, 'units_inferred': True},
                 start=41, end=56)])
@@ -230,9 +230,9 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_32(self):
         self.assertEqual(
             PAR.parse('wt=10 g'),
-            [ParseResult(value=10, units='g', start=0, end=7)])
+            [ParsedTrait(value=10, units='g', start=0, end=7)])
 
     def test_parse_33(self):
         self.assertEqual(
             PAR.parse('w.t.=10 g'),
-            [ParseResult(value=10, units='g', start=0, end=9)])
+            [ParsedTrait(value=10, units='g', start=0, end=9)])

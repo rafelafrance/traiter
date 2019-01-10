@@ -95,7 +95,7 @@ class TotalLength(NumericTraitMixIn, BaseTrait):
             | key + words + stp.pair
         )
 
-        parser.ignore(Word(stp.punct, excludeChars='"/;'))
+        parser.ignore(Word(stp.punct, excludeChars='/;'))
         return parser
 
     def result(self, match):
@@ -111,4 +111,4 @@ class TotalLength(NumericTraitMixIn, BaseTrait):
 
     def fix_up_result(self, text, result):
         """Fix problematic parses."""
-        return self.fix_up_double_quotes(text, result)
+        return self.fix_up_inches(text, result)

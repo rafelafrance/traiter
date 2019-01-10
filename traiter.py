@@ -12,12 +12,12 @@ from lib.as_is import AsIs
 from lib.sex import Sex
 from lib.body_mass import BodyMass
 from lib.life_stage import LifeStage
-# from lib.ear_length import EarLength
-# from lib.tail_length import TailLength
-# from lib.testes_size import TestesSize
+from lib.ear_length import EarLength
+from lib.tail_length import TailLength
+from lib.testes_size import TestesSize
 from lib.testes_state import TestesState
 from lib.total_length import TotalLength
-# from lib.hind_foot_length import HindFootLength
+from lib.hind_foot_length import HindFootLength
 
 __VERSION__ = '0.3.0'
 
@@ -39,10 +39,10 @@ TRAITS = [
     ('life_stage', LifeStage),
     ('total_length', TotalLength),
     ('testes_state', TestesState),
-    #   ('ear_length', EarLength)],
-    #   ('testes_size', TestesSize)],
-    #   ('tail_length', TailLength)],
-    #   ('hind_foot_length', HindFootLength)],
+    ('ear_length', EarLength),
+    ('testes_size', TestesSize),
+    ('tail_length', TailLength),
+    ('hind_foot_length', HindFootLength),
 ]
 TRAIT_OPTIONS = [t[0] for t in TRAITS]
 

@@ -4,7 +4,7 @@ from pyparsing import Word, alphas, Group
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
-from lib.parse_result import ParseResult
+from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
 
 
@@ -82,7 +82,7 @@ class TestesSize(NumericTraitMixIn, BaseTrait):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
         print(parts)
-        result = ParseResult()
+        result = ParsedTrait()
         result.cross_value(parts)
         result.flag_from_dict(parts, 'index')
         result.flag_from_dict(parts, 'side')

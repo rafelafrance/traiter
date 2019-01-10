@@ -2,7 +2,7 @@
 
 from pyparsing import Regex, Word, Group
 from lib.base_trait import BaseTrait
-from lib.parse_result import ParseResult
+from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
 
 
@@ -92,7 +92,7 @@ class LifeStage(BaseTrait):
     def result(self, match):
         """Convert parsed tokens into a result."""
         print(match)
-        result = ParseResult()
+        result = ParsedTrait()
         result.vocabulary_value(match[0].value)
         result.ends(match[1], match[2])
         return result

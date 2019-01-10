@@ -4,7 +4,7 @@ from pyparsing import Regex, Word
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
-from lib.parse_result import ParseResult
+from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
 
 
@@ -63,7 +63,7 @@ class BodyMass(NumericTraitMixIn, BaseTrait):
 
     def shorthand(self, match, parts):
         """Convert a shorthand value like 11-22-33-44:55g."""
-        result = ParseResult()
+        result = ParsedTrait()
         result.float_value(parts.get('shorthand_wt'))
         if not result.value:
             return None

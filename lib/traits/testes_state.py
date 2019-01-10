@@ -2,7 +2,7 @@
 
 from pyparsing import Regex, Word, Group, Optional
 from lib.base_trait import BaseTrait
-from lib.parse_result import ParseResult
+from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
 
 
@@ -97,7 +97,7 @@ class TestesState(BaseTrait):
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-        result = ParseResult()
+        result = ParsedTrait()
         result.vocabulary_value(parts['value'])
         result.is_flag_in_dict(parts, 'ambiguous_sex')
         result.ends(match[1], match[2])

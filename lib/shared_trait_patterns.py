@@ -22,9 +22,10 @@ feet = (
     | lit('fts') | lit('ft') | lit("'")
 )
 
+# NOTE: Double quotes as inches is being handled in the fix_up stage.
 inches = (
     lit('inches') | lit('inche') | lit('inchs') | lit('inch')
-    | lit('ins') | lit('in') | lit('"')
+    | lit('ins') | lit('in')
 )
 
 metric_len = Regex(r"""

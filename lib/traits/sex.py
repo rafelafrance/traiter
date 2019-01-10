@@ -3,7 +3,7 @@
 import re
 from pyparsing import Word, alphanums, FollowedBy
 from lib.base_trait import BaseTrait
-from lib.parse_result import ParseResult
+from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
 
 
@@ -34,7 +34,7 @@ class Sex(BaseTrait):
 
     def result(self, match):
         """Convert parsed tokens into a result."""
-        result = ParseResult()
+        result = ParsedTrait()
         result.vocabulary_value(match[0].value)
         result.value = re.sub(r'\s*\?$', '?', result.value)
         result.value = re.sub(r'^(f\w*)', r'female', result.value)

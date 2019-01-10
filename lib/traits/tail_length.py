@@ -46,7 +46,7 @@ class TailLength(NumericTraitMixIn, BaseTrait):
             | stp.shorthand
         )
 
-        parser.ignore(Word(stp.punct, excludeChars='"/'))
+        parser.ignore(Word(stp.punct, excludeChars='/'))
         return parser
 
     def result(self, match):
@@ -65,4 +65,4 @@ class TailLength(NumericTraitMixIn, BaseTrait):
             return None
         if IS_CROSS.search(text, result.end):
             return None
-        return self.fix_up_double_quotes(text, result)
+        return self.fix_up_inches(text, result)

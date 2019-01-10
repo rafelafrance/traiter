@@ -1,6 +1,6 @@
 """Parse ear length notations."""
 
-from pyparsing import Word
+from pyparsing import Word, Regex
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
@@ -18,11 +18,14 @@ class EarLength(NumericTraitMixIn, BaseTrait):
             | stp.kwd('ear length in mm')
         )
 
+        char_key = Regex(r""" \b e """, stp.flags)
+
         key = (
             stp.kwd('ear from notch')
             | stp.kwd('ear from crown')
             | stp.kwd('ear length') | stp.kwd('earlength')
             | stp.kwd('ear')
+            | char_key
         )
 
         parser = (
@@ -35,7 +38,7 @@ class EarLength(NumericTraitMixIn, BaseTrait):
             | stp.shorthand
         )
 
-        parser.ignore(Word(stp.punct, excludeChars='"/'))
+        parser.ignore(Word(stp.punct, excludeChars='/'))
         return parser
 
     def result(self, match):
@@ -49,4 +52,4 @@ class EarLength(NumericTraitMixIn, BaseTrait):
 
     def fix_up_result(self, text, result):
         """Fix problematic parses."""
-        return self.fix_up_double_quotes(text, result)
+        return self.fix_up_inches(text, result)
