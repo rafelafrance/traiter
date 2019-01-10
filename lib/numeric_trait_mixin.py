@@ -51,7 +51,7 @@ class NumericTraitMixIn:
 
     @staticmethod
     def fix_up_inches(text, result):
-        """Try to disambiguate double quotes (") as inch units."""
+        """Disambiguate between double quotes "1" & inch units 3"."""
         if (not result.units
                 and result.end < len(text)
                 and text[result.start:result.end].count('"') == 0
