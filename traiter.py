@@ -5,19 +5,19 @@
 import sys
 import argparse
 import textwrap
+from lib.file_parser import FileParser
 from lib.readers.csv_reader import CsvReader
 from lib.writers.csv_writer import CsvWriter
 from lib.writers.html_writer import HtmlWriter
-from lib.as_is import AsIs
-from lib.sex import Sex
-from lib.body_mass import BodyMass
-from lib.life_stage import LifeStage
-from lib.ear_length import EarLength
-from lib.tail_length import TailLength
-from lib.testes_size import TestesSize
-from lib.testes_state import TestesState
-from lib.total_length import TotalLength
-from lib.hind_foot_length import HindFootLength
+from lib.traits.sex import Sex
+from lib.traits.body_mass import BodyMass
+from lib.traits.life_stage import LifeStage
+from lib.traits.ear_length import EarLength
+from lib.traits.tail_length import TailLength
+from lib.traits.testes_size import TestesSize
+from lib.traits.testes_state import TestesState
+from lib.traits.total_length import TotalLength
+from lib.traits.hind_foot_length import HindFootLength
 
 __VERSION__ = '0.3.0'
 
@@ -38,15 +38,13 @@ TRAITS = [
     ('body_mass', BodyMass),
     ('life_stage', LifeStage),
     ('total_length', TotalLength),
-    ('testes_state', TestesState),
-    ('ear_length', EarLength),
-    ('testes_size', TestesSize),
     ('tail_length', TailLength),
     ('hind_foot_length', HindFootLength),
+    ('ear_length', EarLength),
+    ('testes_size', TestesSize),
+    ('testes_state', TestesState),
 ]
 TRAIT_OPTIONS = [t[0] for t in TRAITS]
-
-AS_IS = None
 
 
 def parse_traits(args):
@@ -57,35 +55,22 @@ def parse_traits(args):
     reader = INPUT_FORMATS[args.input_format](args)
     writer = OUTPUT_FORMATS[args.output_format](args)
 
+    parsed_file = FileParser(args, parsers)
+
     with reader as infile, writer as outfile:
-        for i, row in enumerate(infile, 1):
+
+        for i, record in enumerate(infile, 1):
 
             if args.skip and i <= args.skip:
                 continue
 
-            outfile.start_row(row)
+            parser = parsed_file.new_record_parser()
+            results = parser.parse_record(record)
 
-            for trait, parser in parsers:
-                results = parse_trait(args, trait, parser, row)
-                outfile.cell(trait, results)
-
-            outfile.end_row()
+            outfile.record(record, results)
 
             if args.stop and i >= args.stop:
                 break
-
-
-def parse_trait(args, trait, parser, row):
-    """Get the results from parsing the traits."""
-    results = []
-
-    for field in args.as_is.get(trait, []):
-        results += AS_IS.parse(row[field], trait, field)
-
-    for field in args.search_field:
-        results += parser.parse(row[field], trait, field)
-
-    return results
 
 
 def parse_args():
@@ -158,5 +143,4 @@ def parse_args():
 
 if __name__ == "__main__":
     ARGS = parse_args()
-    AS_IS = AsIs(ARGS)
     parse_traits(ARGS)

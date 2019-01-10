@@ -23,19 +23,14 @@ class BaseWriter:
     @abstractmethod
     def start(self):
         """Start the report."""
+        raise NotImplementedError('You need a start function.')
 
     @abstractmethod
-    def start_row(self, row):
-        """Start a report row."""
-
-    @abstractmethod
-    def cell(self, results, trait):
-        """Build a report cell."""
-
-    @abstractmethod
-    def end_row(self):
-        """End a report row."""
+    def record(self, record):
+        """Output a report record."""
+        raise NotImplementedError('You need a record function.')
 
     @abstractmethod
     def end(self):
         """End the report."""
+        raise NotImplementedError('You need a end function.')

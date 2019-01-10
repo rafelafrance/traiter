@@ -8,6 +8,8 @@ from lib.parsed_numeric_mixin import ParsedNumericMixIn
 class ParsedTrait(ParsedNumericMixIn):
     """Build a parse result."""
 
+    hide = ('trait', 'history')
+
     def __init__(self, value=None, units=None, trait=None, field=None,
                  start=0, end=0, flags=None):
         """Build a parse result."""
@@ -18,19 +20,19 @@ class ParsedTrait(ParsedNumericMixIn):
         self.start = start
         self.end = end
         self.flags = flags if flags else {}
-        self._history = []
+        self.history = []
 
-    def _dict(self):
+    def as_dict(self):
         """Remove hidden attributes from __dict__."""
-        return {k: v for k, v in self.__dict__.items() if k[0] != '_'}
+        return {k: v for k, v in self.__dict__.items() if k not in self.hide}
 
     def __repr__(self):
         """Represent the result."""
-        return 'ParseResult({})'.format(self._dict())
+        return 'ParseResult({})'.format(self.as_dict())
 
     def __eq__(self, other):
         """Compare results."""
-        return self._dict() == other._dict()
+        return self.as_dict() == other.as_dict()
 
     def vocabulary_value(self, value):
         """Set a controlled vocabulary value."""

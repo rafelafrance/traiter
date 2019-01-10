@@ -10,7 +10,7 @@ class ParsedNumericMixIn:
 
     def convert_value(self, units):
         """Set the units and convert_value the value."""
-        self._history.append((self.value, self.units))
+        self.history.append((self.value, self.units))
         self.units = units
         if not units:
             self.flags['units_inferred'] = True
