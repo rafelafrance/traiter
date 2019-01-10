@@ -4,6 +4,9 @@ import re
 from lib.parsed_trait import ParsedTrait
 
 
+QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
+
+
 class NumericTraitMixIn:
     """Shared parser logic."""
 
@@ -51,12 +54,10 @@ class NumericTraitMixIn:
 
     @staticmethod
     def fix_up_inches(text, result):
-        """Disambiguate between double quotes "1" & inch units 3"."""
+        """Disambiguate between double quotes "3" and inch units 3"."""
         if (not result.units
-                and text[result.end-1].isdigit()
-                and result.end < len(text)
-                and text[result.start:result.end].count('"') == 0
-                and re.match(r'"(?!\s*\})', text[result.end:])):
+                and QUOTES_VS_INCHES.match(text[result.end-1:])
+                and text[result.start:result.end].count('"') == 0):
 
             result.end += 1
             result.units = '"'

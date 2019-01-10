@@ -55,7 +55,7 @@ python3 -m pip install --user -r traiter/requirements.txt
 python3 traiter.py ... TODO ...
 ```
 ## Running tests
-Then you can run the tests like so:
+You will need to install `pytest`. After that, you can run the tests like so:
 ```
 python -m pytest tests/
 ```

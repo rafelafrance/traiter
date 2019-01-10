@@ -80,7 +80,7 @@ def parse_trait(args, trait, parser, row):
     results = []
 
     for field in args.as_is.get(trait, []):
-        results += AS_IS.parse(row[field], trait, field, 'as_is')
+        results += AS_IS.parse(row[field], trait, field)
 
     for field in args.search_field:
         results += parser.parse(row[field], trait, field)
