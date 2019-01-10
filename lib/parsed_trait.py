@@ -1,6 +1,6 @@
 """Build parser results."""
 
-# pylint: disable=too-many-arguments,too-many-instance-attributes
+# pylint: disable=too-many-arguments
 
 import re
 from lib.convert_units import convert
