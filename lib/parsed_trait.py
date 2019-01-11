@@ -1,4 +1,4 @@
-"""Build parser results."""
+"""Build a parser trait result."""
 
 # pylint: disable=too-many-arguments,too-many-instance-attributes
 
@@ -31,7 +31,7 @@ class ParsedTrait(ParsedNumericMixIn):
         return 'ParseResult({})'.format(self.as_dict())
 
     def __eq__(self, other):
-        """Compare results."""
+        """Compare traits."""
         return self.as_dict() == other.as_dict()
 
     def vocabulary_value(self, value):

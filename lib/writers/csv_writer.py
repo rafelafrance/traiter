@@ -13,7 +13,7 @@ class CsvWriter(BaseWriter):
         super().__init__(args)
         self.writer = None
         self.columns = args.extra_field
-        self.columns += ['results']
+        self.columns += ['parsed_record']
         self.columns += args.search_field
         self.columns += sorted({f for fds in args.as_is.values() for f in fds})
 
@@ -22,12 +22,12 @@ class CsvWriter(BaseWriter):
         self.writer = csv.DictWriter(self.outfile, self.columns)
         self.writer.writeheader()
 
-    def record(self, row, results):
+    def record(self, row, parsed_record):
         """Output a row to the file."""
         row = {c: row.get(c, '') for c in self.columns}
-        row['results'] = json.dumps(results)
+        row['parsed_record'] = json.dumps(parsed_record)
         self.writer.writerow(row)
 
     def end(self):
         """End the report."""
-        self.outfile.close()
+        self.writer.close()

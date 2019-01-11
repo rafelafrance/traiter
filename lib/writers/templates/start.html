@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<title>Traiter</title>
+
+<style>
+body, table {
+  margin: 40px;
+}
+
+h1 > span {
+  font-size: 20px;
+  float: right;
+  margin-right: 12px;
+}
+
+h2 {
+  margin-left: 40px;
+}
+
+.found {
+  background: lightgreen;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: left;
+}
+</style>
+
+</head>
+
+<body>
+<h1>Traiter <span>{{ now }}</span></h1>
+
+<h2>Totals</h2>
+
+<h2>Parser Results</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Record</th>
+
+      {% for field in args.extra_field %}
+        <th>{{ field }}</th>
+      {% endfor %}
+
+      {% for trait in args.trait %}
+        <th>{{ trait }}</th>
+      {% endfor %}
+
+      {% for field in args.search_field %}
+        <th>{{ field }}</th>
+      {% endfor %}
+
+      {% for field in as_is %}
+        <th>{{ field }}</th>
+      {% endfor %}
+
+    </tr>
+  </thead>
+
+  <tbody>

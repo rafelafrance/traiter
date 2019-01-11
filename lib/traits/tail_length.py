@@ -59,7 +59,7 @@ class TailLength(NumericTraitMixIn, BaseTrait):
         return self.simple(match, parts)
 
     def fix_up_result(self, text, result):
-        """Fix problematic results."""
+        """Fix problematic trait results."""
         start = max(0, result.start - LOOKBACK)
         if IS_TESTES.search(text, start, result.start):
             return None

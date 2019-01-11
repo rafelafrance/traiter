@@ -18,5 +18,7 @@ class FileParser:
         return RecordParser(
             self.parsers, self.search_fields, self.as_is_fields)
 
-    def accumulate(self, record_parser):
+    def accumulate(self, trait_list):
         """Add up totals."""
+        for trait, found in trait_list:
+            pass

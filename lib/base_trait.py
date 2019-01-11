@@ -20,9 +20,10 @@ class BaseTrait:
         """Convert parsed tokens into a result."""
         raise NotImplementedError('You need a build_parser function.')
 
-    def parse(self, text: str, trait=None, field=None, as_dict=False):
+    def parse(self, text, field=None, trait=None, as_dict=False):
         """Parse the text."""
-        results = []
+        trait_list = []
+
         for match in self.parser.parseWithTabs().scanString(text):
 
             result = self.result(match)
@@ -35,9 +36,9 @@ class BaseTrait:
                     result.field = field
                     if as_dict:
                         result = result.as_dict()
-                    results.append(result)
+                    trait_list.append(result)
 
-        return results
+        return trait_list
 
     # pylint: disable=unused-argument,no-self-use
     def fix_up_result(self, text, result):

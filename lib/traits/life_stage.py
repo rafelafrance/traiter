@@ -91,7 +91,6 @@ class LifeStage(BaseTrait):
 
     def result(self, match):
         """Convert parsed tokens into a result."""
-        print(match)
         result = ParsedTrait()
         result.vocabulary_value(match[0].value)
         result.ends(match[1], match[2])

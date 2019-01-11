@@ -81,7 +81,6 @@ class TestesSize(NumericTraitMixIn, BaseTrait):
     def result(self, match):
         """Convert parsed tokens into a result."""
         parts = match[0].asDict()
-        print(parts)
         result = ParsedTrait()
         result.cross_value(parts)
         result.flag_from_dict(parts, 'index')

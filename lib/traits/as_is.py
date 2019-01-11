@@ -17,4 +17,7 @@ class AsIs(BaseTrait):
 
     def result(self, match):
         """Convert parsed tokens into a result."""
-        return ParsedTrait(value=match[0].value, start=match[1], end=match[2])
+        return ParsedTrait(
+            value=match[0].value,
+            flags={'as_is': True},
+            start=match[1], end=match[2])

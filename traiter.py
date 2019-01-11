@@ -65,9 +65,9 @@ def parse_traits(args):
                 continue
 
             parser = parsed_file.new_record_parser()
-            results = parser.parse_record(record)
+            parsed_record = parser.parse_record(record)
 
-            outfile.record(record, results)
+            outfile.record(record, parsed_record)
 
             if args.stop and i >= args.stop:
                 break
@@ -100,9 +100,9 @@ def parse_args():
             argument more than once.""")
 
     parser.add_argument(
-        '--as-is', '-a', action='append', metavar='FIELD=TRAIT', default=[],
-        help="""A field=trait to pull in as is. For example:
-            --as-is='life_stage:age' will use the value in the row's "age"
+        '--as-is', '-a', action='append', metavar='FIELD:TRAIT', default=[],
+        help="""A FIELD:TRAIT to use as is. For example:
+            --as-is='age:life_stage' will use the value in the record's "age"
             field, if there is one, as a parsed value of "life_stage". You may
             use this argument more than once and you may need to quote it.""")
 
