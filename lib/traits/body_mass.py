@@ -1,13 +1,11 @@
 """Parse body mass notations."""
 
-from pyparsing import Regex, Word, ParserElement
+from pyparsing import Regex, Word
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
-
-ParserElement.enablePackrat()
 
 
 class BodyMass(NumericTraitMixIn, BaseTrait):
@@ -63,7 +61,8 @@ class BodyMass(NumericTraitMixIn, BaseTrait):
             return self.compound(match, parts, ['lbs', 'ozs'])
         return self.simple(match, parts)
 
-    def shorthand(self, match, parts):
+    @staticmethod
+    def shorthand(match, parts):
         """Convert a shorthand value like 11-22-33-44:55g."""
         result = ParsedTrait()
         result.float_value(parts.get('shorthand_wt'))

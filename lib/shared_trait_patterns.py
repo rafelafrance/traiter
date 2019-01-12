@@ -4,10 +4,8 @@
 
 import re
 import string
-from pyparsing import punc8bit, nums, Regex, Word, Keyword, ParserElement
+from pyparsing import punc8bit, nums, Regex, Word, Keyword
 from pyparsing import CaselessLiteral as lit
-
-ParserElement.enablePackrat()
 
 
 flags = re.VERBOSE | re.IGNORECASE

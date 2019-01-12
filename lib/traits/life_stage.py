@@ -1,11 +1,9 @@
 """Parse life stage notations."""
 
-from pyparsing import Regex, Word, Group, ParserElement
+from pyparsing import Regex, Word, Group
 from lib.base_trait import BaseTrait
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
-
-ParserElement.enablePackrat()
 
 
 class LifeStage(BaseTrait):
@@ -33,7 +31,7 @@ class LifeStage(BaseTrait):
             | stp.kwd('third') | stp.kwd('fourth')
             | stp.kwd('1st') | stp.kwd('2nd') | stp.kwd('3rd') | stp.kwd('4th')
             | stp.kwd('hatching')
-         )
+        )
 
         keyless = (
             Group(stp.kwd('after') + years + stp.kwd('year'))

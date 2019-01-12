@@ -1,11 +1,9 @@
 """Parse testes state notations."""
 
-from pyparsing import Regex, Word, Group, Optional, ParserElement
+from pyparsing import Regex, Word, Group, Optional
 from lib.base_trait import BaseTrait
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
-
-ParserElement.enablePackrat()
 
 
 class TestesState(BaseTrait):

@@ -1,13 +1,11 @@
 """Parse testes size notations."""
 
-from pyparsing import Word, alphas, ParserElement
+from pyparsing import Word, alphas
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
-
-ParserElement.enablePackrat()
 
 
 class TestesSize(NumericTraitMixIn, BaseTrait):
