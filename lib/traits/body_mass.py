@@ -1,11 +1,13 @@
 """Parse body mass notations."""
 
-from pyparsing import Regex, Word
+from pyparsing import Regex, Word, ParserElement
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
+
+ParserElement.enablePackrat()
 
 
 class BodyMass(NumericTraitMixIn, BaseTrait):

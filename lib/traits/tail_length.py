@@ -1,10 +1,12 @@
 """Parse tail length notations."""
 
 import re
-from pyparsing import Word, Regex
+from pyparsing import Word, Regex, ParserElement
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
+
+ParserElement.enablePackrat()
 
 
 LOOKBACK = 40

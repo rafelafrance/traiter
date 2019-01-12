@@ -34,6 +34,8 @@ class HtmlWriter(BaseWriter):
     def record(self, raw_record, parsed_record):
         """Output a row to the file."""
         self.index += 1
+        if self.index % 1000 == 0:
+            print(self.index)
         row = self.row_template.render(
             args=self.args,
             as_is=self.as_is,
@@ -50,7 +52,7 @@ class HtmlWriter(BaseWriter):
         self.writer.close()
 
     # #########################################################################
-    # HACK: : This is a temporary set of actions
+    # HACK: : I hope that this is a temporary set of actions
 
     @staticmethod
     def format_parsed_record(raw_record):
@@ -102,7 +104,8 @@ class HtmlWriter(BaseWriter):
                 parts.append(raw_record[field][start:last])
                 parts.append(SPAN1)
 
-            raw_record[field] = ''.join(parts)
+            hilit = ''.join(parts)
+            raw_record[field] = hilit if hilit else raw_record[field]
 
         return raw_record
 

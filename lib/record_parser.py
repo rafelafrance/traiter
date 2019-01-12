@@ -15,7 +15,7 @@ class RecordParser:
         self.as_is_fields = as_is_fields if as_is_fields else {}
 
     # #########################################################################
-    # HACK: : This is a temporary set of actions
+    # HACK: : I hope that this is a temporary set of actions
 
     def parse_record(self, record):
         """Parse the traits for record."""

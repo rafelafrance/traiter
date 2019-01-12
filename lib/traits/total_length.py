@@ -1,10 +1,12 @@
 """Parse total length notations."""
 
-from pyparsing import Regex, Word, alphas, alphanums
+from pyparsing import Regex, Word, alphas, alphanums, ParserElement
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
+
+ParserElement.enablePackrat()
 
 
 class TotalLength(NumericTraitMixIn, BaseTrait):

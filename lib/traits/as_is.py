@@ -1,9 +1,11 @@
 """Parse life stage notations."""
 
-from pyparsing import Regex
+from pyparsing import Regex, ParserElement
 from lib.base_trait import BaseTrait
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
+
+ParserElement.enablePackrat()
 
 
 class AsIs(BaseTrait):
