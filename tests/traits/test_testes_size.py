@@ -91,12 +91,14 @@ class TestTestesSize(unittest.TestCase):
                 value=3,
                 flags={'units_inferred': True,
                        'index': '1',
+                       'dimension': 'length',
                        'ambiguous_sex': True},
                 start=1, end=21),
              ParsedTrait(
                 value=2,
                 flags={'units_inferred': True,
                        'index': '2',
+                       'dimension': 'length',
                        'ambiguous_sex': True},
                 start=25, end=45)])
 
@@ -105,12 +107,12 @@ class TestTestesSize(unittest.TestCase):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
             [ParsedTrait(
-                value=12, units='gonadlengthinmm',
-                flags={'ambiguous_sex': True},
+                value=12, units='mm',
+                flags={'ambiguous_sex': True, 'dimension': 'length'},
                 start=1, end=21),
              ParsedTrait(
-                value=5, units='gonadwidthinmm',
-                flags={'ambiguous_sex': True},
+                value=5, units='mm',
+                flags={'ambiguous_sex': True, 'dimension': 'width'},
                 start=25, end=43)])
 
     def test_parse_15(self):
@@ -120,27 +122,31 @@ class TestTestesSize(unittest.TestCase):
                       'right gonad length=16.1 mm; left gonad length=16.2 mm'),
             [ParsedTrait(
                 value=9.1, units='mm',
-                flags={'ambiguous_sex': True, 'side': 'left'},
+                flags={'ambiguous_sex': True,
+                       'side': 'left',
+                       'dimension': 'width'},
                 start=0, end=23),
              ParsedTrait(
                 value=9.2, units='mm',
-                flags={'ambiguous_sex': True, 'side': 'right'},
+                flags={'ambiguous_sex': True,
+                       'side': 'right',
+                       'dimension': 'width'},
                 start=25, end=49),
              ParsedTrait(
                 value=16.1, units='mm',
-                flags={'ambiguous_sex': True, 'side': 'right'},
+                flags={'ambiguous_sex': True, 'side': 'right', 'dimension': 'length'},
                 start=51, end=77),
              ParsedTrait(
                 value=16.2, units='mm',
-                flags={'ambiguous_sex': True, 'side': 'left'},
+                flags={'ambiguous_sex': True, 'side': 'left', 'dimension': 'length'},
                 start=79, end=104)])
 
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"9mm w.o./epid", '),
             [ParsedTrait(
-                value=9, units='gonadlengthinmm',
-                flags={'ambiguous_sex': True},
+                value=9, units='mm',
+                flags={'ambiguous_sex': True, 'dimension': 'length'},
                 start=1, end=22)])
 
     def test_parse_17(self):

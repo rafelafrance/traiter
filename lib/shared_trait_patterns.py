@@ -56,11 +56,12 @@ number = Regex(number_re, flags)
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a pair
 pair_joiner = r'- | to'
-pair = Regex(r"""
+pair = Regex(fr"""
     (?<! \d ) (?<! \d [|,.-] ) (?<! \b to \s )
-    (?P<value1> {val} ) (?: \s* (?: {joiner} ) \s* (?P<value2> {val} ) )?
+    (?P<value1> {number_re} )
+        (?: \s* (?: {pair_joiner} ) \s* (?P<value2> {number_re} ) )?
     (?! \d+ ) (?! [|,.-] \d ) (?! \s+ to \b )
-    """.format(val=number_re, joiner=pair_joiner), flags)
+    """, flags)
 
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
@@ -112,9 +113,9 @@ shorthand_key = (
     | kwd('mesurements') | kwd('measurementsnt')
 )
 
-sh_val = r' {number} | [?x]{repeat}'.format(number=number_re, repeat='{1,2}')
-sh_est = r' \[? (?: {sh_val} ) \]? '.format(sh_val=sh_val)
-shorthand = Regex(r"""
+sh_val = f' {number_re} | [?x]{{1,2}} '
+sh_est = fr' \[? (?: {sh_val} ) \]? '
+shorthand = Regex(fr"""
     (?<! [\d/-] )
     (?P<shorthand_tl> {sh_est} )
     (?P<shorthand_sep> [:/-] )
@@ -123,14 +124,13 @@ shorthand = Regex(r"""
     (?P<shorthand_hfl> {sh_est} )
     (?P=shorthand_sep)
     (?P<shorthand_el> {sh_est} )
-    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{repeat} {sh_est} )* )
+    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{{1,4}} {sh_est} )* )
     (?: [\s=:/-] \s*
         (?P<shorthand_wt_amb> \[? \s* )
         (?P<shorthand_wt> {sh_val} ) \s*
         \]?
-        (?P<shorthand_wt_units> {units} )?
+        (?P<shorthand_wt_units> {metric_mass_re} )?
         \s*? \]?
     )?
     (?! [\d/:=-] )
-    """.format(sh_val=sh_val, sh_est=sh_est, repeat='{1,4}',
-               units=metric_mass_re), flags)
+    """, flags)
