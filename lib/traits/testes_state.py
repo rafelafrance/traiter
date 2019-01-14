@@ -50,6 +50,7 @@ class TestesState(BaseTrait):
             | stp.kwd('monorchism') | stp.kwd('monorchid')
             | stp.kwd('inguinal') | stp.kwd('nscr')
         )
+
         length = Optional(stp.cross + Optional(stp.len_units))
 
         state = (
