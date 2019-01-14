@@ -1,11 +1,10 @@
 """Parse hind foot length notations."""
 
-from pyparsing import Word, Regex, ParserElement
+from pyparsing import Word, Regex
+from pyparsing import CaselessKeyword as kwd
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
-
-ParserElement.enablePackrat()
 
 
 class HindFootLength(NumericTraitMixIn, BaseTrait):
@@ -14,18 +13,18 @@ class HindFootLength(NumericTraitMixIn, BaseTrait):
     def build_parser(self):
         """Return the trait parser."""
         key_with_units = (
-            stp.kwd('hindfootlengthinmillimeters')
-            | stp.kwd('hindfootlengthinmm')
-            | stp.kwd('hindfoot length in millimeters')
-            | stp.kwd('hindfoot length in mm')
+            kwd('hindfootlengthinmillimeters')
+            | kwd('hindfootlengthinmm')
+            | kwd('hindfoot length in millimeters')
+            | kwd('hindfoot length in mm')
         )
 
         key = (
-            stp.kwd('hind foot with claw') | stp.kwd('hindfootwithclaw')
-            | stp.kwd('hind foot length') | stp.kwd('hindfootlength')
-            | stp.kwd('hind foot len') | stp.kwd('hindfootlen')
-            | stp.kwd('hind_foot_length') | stp.kwd('hind_foot_len')
-            | stp.kwd('hind foot') | stp.kwd('hindfoot')
+            kwd('hind foot with claw') | kwd('hindfootwithclaw')
+            | kwd('hind foot length') | kwd('hindfootlength')
+            | kwd('hind foot len') | kwd('hindfootlen')
+            | kwd('hind_foot_length') | kwd('hind_foot_len')
+            | kwd('hind foot') | kwd('hindfoot')
             | Regex(r' \b hfl ', stp.flags) | Regex(r' \b hf ', stp.flags)
         )
 

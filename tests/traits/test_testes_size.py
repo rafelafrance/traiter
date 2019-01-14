@@ -1,5 +1,3 @@
-# flake8=noqa
-
 import unittest
 from lib.parsed_trait import ParsedTrait
 from lib.traits.testes_size import TestesSize
@@ -134,11 +132,15 @@ class TestTestesSize(unittest.TestCase):
                 start=25, end=49),
              ParsedTrait(
                 value=16.1, units='mm',
-                flags={'ambiguous_sex': True, 'side': 'right', 'dimension': 'length'},
+                flags={'ambiguous_sex': True,
+                       'side': 'right',
+                       'dimension': 'length'},
                 start=51, end=77),
              ParsedTrait(
                 value=16.2, units='mm',
-                flags={'ambiguous_sex': True, 'side': 'left', 'dimension': 'length'},
+                flags={'ambiguous_sex': True,
+                       'side': 'left',
+                       'dimension': 'length'},
                 start=79, end=104)])
 
     def test_parse_16(self):

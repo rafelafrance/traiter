@@ -1,12 +1,11 @@
 """Parse tail length notations."""
 
 import re
-from pyparsing import Word, Regex, ParserElement
+from pyparsing import Word, Regex
+from pyparsing import CaselessKeyword as kwd
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
-
-ParserElement.enablePackrat()
 
 
 LOOKBACK = 40
@@ -20,21 +19,21 @@ class TailLength(NumericTraitMixIn, BaseTrait):
     def build_parser(self):
         """Return the trait parser."""
         key_with_units = (
-            stp.kwd('taillengthinmillimeters')
-            | stp.kwd('taillengthinmm')
-            | stp.kwd('tail length in millimeters')
-            | stp.kwd('tail length in mm')
+            kwd('taillengthinmillimeters')
+            | kwd('taillengthinmm')
+            | kwd('tail length in millimeters')
+            | kwd('tail length in mm')
         )
 
         char_key = Regex(r""" \b t """, stp.flags)
 
         key = (
-            stp.kwd('tail length')
-            | stp.kwd('tail len')
-            | stp.kwd('taillength')
-            | stp.kwd('taillen')
-            | stp.kwd('tail')
-            | stp.kwd('tal')
+            kwd('tail length')
+            | kwd('tail len')
+            | kwd('taillength')
+            | kwd('taillen')
+            | kwd('tail')
+            | kwd('tal')
             | char_key
         )
 

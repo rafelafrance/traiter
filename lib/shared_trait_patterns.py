@@ -4,19 +4,13 @@
 
 import re
 import string
-from pyparsing import punc8bit, nums, Regex, Word, Keyword, ParserElement
+from pyparsing import punc8bit, nums, Regex, Word
+from pyparsing import CaselessKeyword as kwd
 from pyparsing import CaselessLiteral as lit
-
-ParserElement.enablePackrat()
 
 
 flags = re.VERBOSE | re.IGNORECASE
 punct = string.punctuation + punc8bit
-
-
-def kwd(word):
-    """Workaround a bug in pyparsing CaselessKeyword."""
-    return Keyword(word, caseless=True)
 
 
 feet = (
