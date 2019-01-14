@@ -1,6 +1,7 @@
 """Parse total length notations."""
 
 from pyparsing import Regex, Word, alphas, alphanums
+from pyparsing import CaselessKeyword as kwd
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
@@ -15,22 +16,22 @@ class TotalLength(NumericTraitMixIn, BaseTrait):
         words = Word(alphas, alphanums)*(1, 3)
 
         key_with_units = (
-            stp.kwd('totallengthinmillimeters')
-            | stp.kwd('totallengthinmm')
-            | stp.kwd('total length in millimeters')
-            | stp.kwd('total length in mm')
-            | stp.kwd('snoutventlengthinmillimeters')
-            | stp.kwd('snoutventlengthinmm')
-            | stp.kwd('snoutvent length in millimeters')
-            | stp.kwd('snoutvent length in mm')
-            | stp.kwd('headbodylengthinmillimeters')
-            | stp.kwd('headbodylengthinmm')
-            | stp.kwd('headbody length in millimeters')
-            | stp.kwd('headbody length in mm')
-            | stp.kwd('forklengthinmillimeters')
-            | stp.kwd('forklengthinmm')
-            | stp.kwd('fork length in millimeters')
-            | stp.kwd('fork length in mm')
+            kwd('totallengthinmillimeters')
+            | kwd('totallengthinmm')
+            | kwd('total length in millimeters')
+            | kwd('total length in mm')
+            | kwd('snoutventlengthinmillimeters')
+            | kwd('snoutventlengthinmm')
+            | kwd('snoutvent length in millimeters')
+            | kwd('snoutvent length in mm')
+            | kwd('headbodylengthinmillimeters')
+            | kwd('headbodylengthinmm')
+            | kwd('headbody length in millimeters')
+            | kwd('headbody length in mm')
+            | kwd('forklengthinmillimeters')
+            | kwd('forklengthinmm')
+            | kwd('fork length in millimeters')
+            | kwd('fork length in mm')
         )
 
         key = Regex(r"""

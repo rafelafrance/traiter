@@ -2,6 +2,7 @@
 
 import re
 from pyparsing import Word, alphanums, FollowedBy
+from pyparsing import CaselessKeyword as kwd
 from lib.base_trait import BaseTrait
 from lib.parsed_trait import ParsedTrait
 import lib.shared_trait_patterns as stp
@@ -12,14 +13,14 @@ class Sex(BaseTrait):
 
     def build_parser(self):
         """Return the trait parser."""
-        keyword = stp.kwd('sex')
+        keyword = kwd('sex')
 
-        sex = (stp.kwd('females') | stp.kwd('female')
-               | stp.kwd('males') | stp.kwd('male'))
+        sex = (kwd('females') | kwd('female')
+               | kwd('males') | kwd('male'))
         sex_q = sex + Word('?')
 
         # These are words that indicate that "sex" is not a key
-        skip = stp.kwd('and') | stp.kwd('is') | stp.kwd('was')
+        skip = kwd('and') | kwd('is') | kwd('was')
 
         parser = (
             (keyword + sex_q('value'))

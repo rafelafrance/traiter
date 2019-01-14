@@ -1,6 +1,7 @@
 """Parse ear length notations."""
 
 from pyparsing import Word, Regex
+from pyparsing import CaselessKeyword as kwd
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
 import lib.shared_trait_patterns as stp
@@ -12,19 +13,19 @@ class EarLength(NumericTraitMixIn, BaseTrait):
     def build_parser(self):
         """Return the trait parser."""
         key_with_units = (
-            stp.kwd('earlengthinmillimeters')
-            | stp.kwd('earlengthinmm')
-            | stp.kwd('ear length in millimeters')
-            | stp.kwd('ear length in mm')
+            kwd('earlengthinmillimeters')
+            | kwd('earlengthinmm')
+            | kwd('ear length in millimeters')
+            | kwd('ear length in mm')
         )
 
         char_key = Regex(r""" \b e """, stp.flags)
 
         key = (
-            stp.kwd('ear from notch')
-            | stp.kwd('ear from crown')
-            | stp.kwd('ear length') | stp.kwd('earlength')
-            | stp.kwd('ear')
+            kwd('ear from notch')
+            | kwd('ear from crown')
+            | kwd('ear length') | kwd('earlength')
+            | kwd('ear')
             | char_key
         )
 

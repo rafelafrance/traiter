@@ -1,6 +1,7 @@
 """Parse body mass notations."""
 
 from pyparsing import Regex, Word
+from pyparsing import CaselessKeyword as kwd
 from pyparsing import CaselessLiteral as lit
 from lib.base_trait import BaseTrait
 from lib.numeric_trait_mixin import NumericTraitMixIn
@@ -13,7 +14,7 @@ class BodyMass(NumericTraitMixIn, BaseTrait):
 
     def build_parser(self):
         """Return the trait parser."""
-        key_with_units = stp.kwd('weightingrams') | stp.kwd('massingrams')
+        key_with_units = kwd('weightingrams') | kwd('massingrams')
 
         key_leader = lit('body') | lit('full') | lit('observed') | lit('total')
         weight = (
@@ -24,8 +25,8 @@ class BodyMass(NumericTraitMixIn, BaseTrait):
             key_leader + weight
             | key_leader + stp.lit('mass')
             | weight
-            | stp.kwd('mass')
-            | stp.kwd('body')
+            | kwd('mass')
+            | kwd('body')
         )
 
         key_with_dots = Regex(r' \b w \.? t s? \.? ', stp.flags)
