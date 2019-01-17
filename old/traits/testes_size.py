@@ -30,6 +30,7 @@ class TestesSize(NumericTraitMixIn, BaseTrait):
                + kwd('in') + kwd('mm')('units'))
             | (kwd('gonad') + kwd('width')('dimension')
                + kwd('in') + kwd('millimeters')('units'))
+
             | (lit('gonad') + lit('length')('dimension')
                + lit('in') + lit('mm')('units'))
             | (lit('gonad') + lit('length')('dimension')
@@ -49,18 +50,17 @@ class TestesSize(NumericTraitMixIn, BaseTrait):
                + Word('12', max=1)('index'))
             | (lit('gonad') + lit('width')('dimension')
                + Word('12', max=1)('index'))
-            | (kwd('left')('side') + kwd('gonad')
-               + kwd('length')('dimension'))
-            | (kwd('left')('side') + kwd('gonad')
-               + kwd('width')('dimension'))
-            | (kwd('right')('side') + kwd('gonad')
-               + kwd('length')('dimension'))
-            | (kwd('right')('side') + kwd('gonad')
-               + kwd('width')('dimension'))
+
+            | (kwd('left')('side') + kwd('gonad')  + kwd('length')('dimension'))
+            | (kwd('left')('side') + kwd('gonad') + kwd('width')('dimension'))
+            | (kwd('right')('side') + kwd('gonad') + kwd('length')('dimension'))
+            | (kwd('right')('side') + kwd('gonad') + kwd('width')('dimension'))
+
             | lit('left')('side') + lit('gonad') + lit('length')('dimension')
             | lit('left')('side') + lit('gonad') + lit('width')('dimension')
             | lit('right')('side') + lit('gonad') + lit('length')('dimension')
             | lit('right')('side') + lit('gonad') + lit('width')('dimension')
+
             | kwd('gonad') + kwd('length')('dimension')
             | kwd('gonad') + kwd('width')('dimension')
             | kwd('gonad') + lit('length')('dimension')

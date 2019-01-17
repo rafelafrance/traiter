@@ -1,5 +1,3 @@
-# flake8=noqa
-
 import unittest
 from lib.parsed_trait import ParsedTrait
 from lib.traits.life_stage import LifeStage

@@ -2,10 +2,10 @@
 
 # pylint: disable=too-many-arguments,too-many-instance-attributes
 
-from lib.parsed_numeric_mixin import ParsedNumericMixIn
+from lib.numeric_trait_mixin import NumericTraitMixIn
 
 
-class ParsedTrait(ParsedNumericMixIn):
+class Trait(NumericTraitMixIn):
     """Build a parse result."""
 
     hide = ('trait', 'history')
@@ -34,27 +34,13 @@ class ParsedTrait(ParsedNumericMixIn):
         """Compare traits."""
         return self.as_dict() == other.as_dict()
 
-    def vocabulary_value(self, value):
-        """Set a controlled vocabulary value."""
-        if isinstance(value, str):
-            self.value = value
-        else:
-            self.value = ' '.join(value)
-        self.value = self.value.lower()
-
-    def ends(self, start, end):
-        """Fill in the start and end location of the result."""
-        self.start = start
-        self.end = end
-
-    def is_flag_in_dict(self, dictn, check, flag=None):
+    def is_flag_in_token(self, flag, token):
         """Set a flag if it is found in the dict."""
-        flag = flag if flag else check
-        if dictn.get(check):
+        if token.groups.get(flag):
             self.flags[flag] = True
 
-    def flag_from_dict(self, dictn, flag):
+    def flag_from_token(self, flag, token):
         """Set a flag if it is found in the dict."""
-        value = dictn.get(flag)
+        value = token.groups.get(flag)
         if value:
-            self.flags[flag] = value
+            self.flags[flag] = value.lower()

@@ -107,8 +107,8 @@ shorthand_key = (
     | kwd('mesurements') | kwd('measurementsnt')
 )
 
-sh_val = f' {number_re} | [?x]{{1,2}} '
-sh_est = fr' \[? (?: {sh_val} ) \]? '
+sh_val = f' {number_re} | [?x]{{1,2}} '     # A possibly unknown value
+sh_est = fr' \[? (?: {sh_val} ) \]? '       # A possibly estimated value
 shorthand = Regex(fr"""
     (?<! [\d/-] )
     (?P<shorthand_tl> {sh_est} )

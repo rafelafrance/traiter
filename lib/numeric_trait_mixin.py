@@ -1,66 +1,71 @@
-"""Mix-in for parsing length notations."""
+"""Functions for building a numeric trait."""
 
 import re
-from lib.parsed_trait import ParsedTrait
-
-
-QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
+from lib.convert_units import convert
+import lib.shared_tokens as stn
 
 
 class NumericTraitMixIn:
-    """Shared parser logic."""
+    """Handle parsed trait numeric values."""
+
+    def convert_value(self, units):
+        """Set the units and convert_value the value."""
+        self.history.append((self.value, self.units))
+        if not units:
+            self.flags['units_inferred'] = True
+        else:
+            if self.flags.get('units_inferred'):
+                del self.flags['units_inferred']
+            if isinstance(units, list):
+                units = [x.lower() for x in units]
+                self.value = [convert(v, u) for v, u in zip(self.value, units)]
+            else:
+                units = units.lower()
+                self.value = convert(self.value, units)
+        self.units = units
 
     @staticmethod
-    def simple(match, parts):
-        """Handle a normal length notation."""
-        result = ParsedTrait()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.float_value(parts['value1'], parts.get('value2'))
-        result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
-
-    @staticmethod
-    def shorthand_length(match, parts, key):
-        """Handle shorthand length notation like 11-22-33-44:55g."""
-        result = ParsedTrait()
-        result.float_value(parts.get(key))
-        if not result.value:
+    def to_float(value):
+        """Convert the value to a float."""
+        value = re.sub(r'[^\d.]', '', value) if value else ''
+        try:
+            return float(value)
+        except ValueError:
             return None
-        result.units = 'mm_shorthand'
-        if parts[key][-1] == ']':
-            result.flags['estimated_value'] = True
-        result.ends(match[1], match[2])
-        return result
 
-    @staticmethod
-    def compound(match, parts, units):
-        """Handle a pattern like: 4 lbs 9 ozs."""
-        result = ParsedTrait()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.compound_value(parts, units)
-        result.ends(match[1], match[2])
-        return result
+    def float_value(self, value1, value2=None):
+        """Convert the value to a float before setting it."""
+        value1 = self.to_float(value1)
+        value2 = self.to_float(value2)
+        self.value = value1
+        if value2:
+            self.value = [value1, value2]
 
-    @staticmethod
-    def fraction(match, parts):
-        """Handle fractional values like 10 3/8 inches."""
-        result = ParsedTrait()
-        result.is_flag_in_dict(parts, 'ambiguous_key')
-        result.fraction_value(parts)
-        result.convert_value(parts.get('units'))
-        result.ends(match[1], match[2])
-        return result
+    def fraction_value(self, values):
+        """Calculate a fraction value like: 10 3/8."""
+        whole = self.to_float(values.get('whole'))
+        numerator = self.to_float(values['numerator'])
+        denominator = self.to_float(values['denominator'])
+        whole = whole if whole else 0
+        self.value = whole + numerator / denominator
 
-    @staticmethod
-    def fix_up_inches(text, result):
-        """Disambiguate between double quotes "3" and inch units 3"."""
-        if (not result.units
-                and QUOTES_VS_INCHES.match(text[result.end-1:])
-                and text[result.start:result.end].count('"') == 0):
+    def compound_value(self, values, units):
+        """Calculate value for compound units like: 5 lbs 4 ozs."""
+        self.units = units
+        big = self.to_float(values[units[0]])
+        big = convert(big, units[0])
+        smalls = re.split(stn.pair_joiner, values[units[1]])
+        smalls = [self.to_float(x) for x in smalls]
+        self.value = [big + convert(x, units[1]) for x in smalls]
+        if len(self.value) == 1:
+            self.value = self.value[0]
 
-            result.end += 1
-            result.units = '"'
-            result.convert_value(result.units)
-
-        return result
+    def cross_value(self, token):
+        """Handle a value like 5 cm x 21 mm."""
+        self.float_value(token.groups.get('value1'),
+                         token.groups.get('value2'))
+        units = token.groups.get('units')
+        units = units if units else token.groups.get('units1')
+        units2 = token.groups.get('units2')
+        units = [units, units2] if units2 and units != units2 else units
+        self.convert_value(units)
