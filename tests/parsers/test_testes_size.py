@@ -1,4 +1,5 @@
 # pylint: disable=missing-docstring,too-many-public-methods
+
 import unittest
 from lib.trait import Trait
 from lib.parsers.testes_size import TestesSize
@@ -92,52 +93,43 @@ class TestTestesSize(unittest.TestCase):
                 start=1, end=21),
              Trait(
                  value=2,
-                flags={'units_inferred': True, 'index': '2',
-                       'dimension': 'length', 'ambiguous_sex': True},
+                 flags={'units_inferred': True, 'index': '2',
+                        'dimension': 'length', 'ambiguous_sex': True},
                  start=25, end=45)])
 
     def test_parse_14(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
-            [Trait(
-                value=12, units='mm',
-                flags={'ambiguous_sex': True, 'dimension': 'length'},
-                start=1, end=21),
-             Trait(
-                value=5, units='mm',
-                flags={'ambiguous_sex': True, 'dimension': 'width'},
-                start=25, end=43)])
+            [Trait(value=12, units='mm',
+                   flags={'ambiguous_sex': True, 'dimension': 'length'},
+                   start=1, end=21),
+             Trait(value=5, units='mm',
+                   flags={'ambiguous_sex': True, 'dimension': 'width'},
+                   start=25, end=43)])
 
     def test_parse_15(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('left gonad width=9.1 mm; right gonad width=9.2 mm; '
                       'right gonad length=16.1 mm; left gonad length=16.2 mm'),
-            [Trait(
-                value=9.1, units='mm',
-                flags={'ambiguous_sex': True,
-                       'side': 'left',
-                       'dimension': 'width'},
-                start=0, end=23),
-             Trait(
-                value=9.2, units='mm',
-                flags={'ambiguous_sex': True,
-                       'side': 'right',
-                       'dimension': 'width'},
-                start=25, end=49),
-             Trait(
-                value=16.1, units='mm',
-                flags={'ambiguous_sex': True,
-                       'side': 'right',
-                       'dimension': 'length'},
-                start=51, end=77),
-             Trait(
-                value=16.2, units='mm',
-                flags={'ambiguous_sex': True,
-                       'side': 'left',
-                       'dimension': 'length'},
-                start=79, end=104)])
+            [Trait(value=9.1, units='mm',
+                   flags={'ambiguous_sex': True,
+                          'side': 'left', 'dimension': 'width'},
+                   start=0, end=23),
+             Trait(value=9.2, units='mm',
+                   flags={'ambiguous_sex': True,
+                          'side': 'right',
+                          'dimension': 'width'},
+                   start=25, end=49),
+             Trait(value=16.1, units='mm',
+                   flags={'ambiguous_sex': True,
+                          'side': 'right',
+                          'dimension': 'length'},
+                   start=51, end=77),
+             Trait(value=16.2, units='mm',
+                   flags={'ambiguous_sex': True,
+                          'side': 'left',
+                          'dimension': 'length'},
+                   start=79, end=104)])
 
     def test_parse_16(self):
         self.assertEqual(

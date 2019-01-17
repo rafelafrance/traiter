@@ -2,14 +2,14 @@
 
 import re
 from typing import Dict, Pattern, Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as datafield
 
 
 @dataclass
 class Token:
     """Token data."""
     token: str = None
-    groups: Dict = field(default_factory={})
+    groups: Dict = datafield(default_factory={})
     start: int = 0
     end: int = 0
 
@@ -24,7 +24,7 @@ class Regexp:
     func: Callable = None
 
 
-class Base:
+class Base:  # pylint: disable=too-many-instance-attributes
     """Shared lexer logic."""
 
     flags = re.VERBOSE | re.IGNORECASE
@@ -40,8 +40,9 @@ class Base:
 
     width = 4   # Token width from 001_ to 999_
 
-    def __init__(self):
+    def __init__(self, args=None):
         """Build the trait parser."""
+        self.args = args
         self.regexps = []       # Token types
         self.regexp = {}        # Get at the regexp via its name
         self.groups = {}        # Use this so we can quickly find regex groups
@@ -69,13 +70,14 @@ class Base:
                         if x.type == 'product']),
             self.flags)
 
-    def parse(self, text):
+    def parse(self, text, field=None, as_dict=False):
         """Find the traits in the text."""
         token_list = self.tokenize(text)
         want_replace = bool(self.replacer.pattern)
         while want_replace:
             (token_list, want_replace) = self.replace_tokens(token_list, text)
-        return self.tokens_to_traits(token_list, text)
+        traits = self.tokens_to_traits(token_list, text, field, as_dict)
+        return traits
 
     def tokenize(self, text):
         """Split the text into a token list."""
@@ -108,10 +110,8 @@ class Base:
             token_list[start:end] = [token]
         return (token_list, want_replace)
 
-    def tokens_to_traits(self, token_list, text):
+    def tokens_to_traits(self, token_list, text, field=None, as_dict=False):
         """Produce the final results from the remaining tokens."""
-        for tkn in token_list:
-            print(tkn)
         traits = []
         token_text = ''.join([t.token for t in token_list])
         for match in self.producer.finditer(token_text):
@@ -123,7 +123,11 @@ class Base:
                 groups=self.merge_token_groups(text, token_list, match),
                 start=token_list[start].start,
                 end=token_list[end-1].end)
-            traits.append(self.regexp[name].func(token))
+            trait = self.regexp[name].func(token)
+            trait.field = field
+            if as_dict:
+                trait = trait.as_dict()
+            traits.append(trait)
         return traits
 
     def merge_token_groups(self, text, token_list, match):
@@ -138,6 +142,8 @@ class Base:
                 name = self.group_name(group)
                 groups[name] = text[
                     token_list[start].start:token_list[end-1].end]
+        start = match.start() // self.width
+        end = match.end() // self.width
         for token in token_list[start:end]:
             groups = {**groups, **token.groups}
         return groups

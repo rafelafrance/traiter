@@ -60,7 +60,7 @@ class HtmlWriter(BaseWriter):
         traits = {}
         for trait, data in raw_record.items():
             traits[trait] = []
-            for flag, value in data['flags'].items():
+            for _, value in data['flags'].items():
                 traits[trait].append({'msg': value})
             for parse in data['parsed']:
                 parse['new_flags'] = []
@@ -80,7 +80,7 @@ class HtmlWriter(BaseWriter):
         """Format the record for output."""
         colors = {f: bytearray(len(raw_record[f]))
                   for f in self.args.search_field + self.as_is}
-        for trait, data in parsed_record.items():
+        for _, data in parsed_record.items():
             for parse in data['parsed']:
                 field = parse['field']
                 start = parse['start']

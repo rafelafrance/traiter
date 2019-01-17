@@ -35,12 +35,12 @@ class Trait(NumericTraitMixIn):
         return self.as_dict() == other.as_dict()
 
     def is_flag_in_token(self, flag, token):
-        """Set a flag if it is found in the dict."""
+        """Set a flag if it is found in the token's groups field."""
         if token.groups.get(flag):
             self.flags[flag] = True
 
     def flag_from_token(self, flag, token):
-        """Set a flag if it is found in the dict."""
+        """Set a flag if it is found in the token's groups field."""
         value = token.groups.get(flag)
         if value:
             self.flags[flag] = value.lower()

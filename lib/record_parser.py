@@ -1,6 +1,6 @@
 """Parse all traits for the input record."""
 
-from lib.traits.as_is import AsIs
+from lib.parsers.as_is import AsIs
 
 
 class RecordParser:

@@ -1,4 +1,4 @@
-"""Tokens for testes size notations."""
+"""Parse testes size notations."""
 
 from lib.trait import Trait
 from lib.parsers.base import Base
@@ -8,9 +8,9 @@ import lib.shared_tokens as tkn
 class TestesSize(Base):
     """Parser logic."""
 
-    def __init__(self):
+    def __init__(self, args=None):
         """Build the trait parser."""
-        super().__init__()
+        super().__init__(args)
 
         # Build the tokens
         self.kwd('label', r' reproductive .? (?: data | state | condition ) ')
@@ -34,6 +34,7 @@ class TestesSize(Base):
         self.shared_token(tkn.cross)
         self.lit('word', r' [a-z]+ ')
 
+        # Build a rules for parsing the trait
         self.product(self.convert, r"""
             label (?: testes | abbrev) cross
             | label cross
