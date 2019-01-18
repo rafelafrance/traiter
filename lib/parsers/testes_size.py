@@ -22,7 +22,7 @@ class TestesSize(Base):
 
         self.kwd('ambiguous', r"""
             (?P<ambiguous_sex> gonad ) \s* (?P<dimension> length | width )
-                \s* (?: (?P<index> [12] ) |  )
+                \s* (?: (?P<side> [12] ) |  )
             | (?P<side> left | right ) \s* (?P<ambiguous_sex> gonad )
                 \s* (?P<dimension> length | width )
             | (?P<ambiguous_sex> gonad ) \s* (?P<dimension> length | width )
@@ -34,7 +34,7 @@ class TestesSize(Base):
         self.shared_token(tkn.cross)
         self.lit('word', r' [a-z]+ ')
 
-        # Build a rules for parsing the trait
+        # Build rules for parsing the trait
         self.product(self.convert, r"""
             label (?: testes | abbrev) cross
             | label cross
@@ -56,6 +56,5 @@ class TestesSize(Base):
         trait.cross_value(token)
         trait.is_flag_in_token('ambiguous_sex', token)
         trait.flag_from_token('dimension', token)
-        trait.flag_from_token('index', token)
         trait.flag_from_token('side', token)
         return trait

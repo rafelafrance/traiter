@@ -30,7 +30,8 @@ class Base:  # pylint: disable=too-many-instance-attributes
     flags = re.VERBOSE | re.IGNORECASE
 
     # get all group names from a regex
-    groups_rx = re.compile(r""" \( \? P? < ( \w+ ) > """, flags)
+    groups_rx = re.compile(r""" \( \? P< ( \w+ ) > """, flags)
+    back_ref_rx = re.compile(r""" \( \? P= ( \w+ ) \) """, flags)
     # Get words that are not group names
     token_rx = re.compile(
         r""" (?<! [?\\a-z] ) (?<! < \s )(?<! < )
@@ -95,10 +96,14 @@ class Base:  # pylint: disable=too-many-instance-attributes
 
     def replace_tokens(self, token_list, text):
         """Replace tokens with token combinations."""
+        for tkn in token_list:
+            print(tkn)
+        print(self.replacer)
         token_text = ''.join([t.token for t in token_list])
         matches = list(self.replacer.finditer(token_text))
         want_replace = False
         for match in reversed(matches):
+            print(match)
             want_replace = True
             start = match.start() // self.width
             end = match.end() // self.width
@@ -124,10 +129,11 @@ class Base:  # pylint: disable=too-many-instance-attributes
                 start=token_list[start].start,
                 end=token_list[end-1].end)
             trait = self.regexp[name].func(token)
-            trait.field = field
-            if as_dict:
-                trait = trait.as_dict()
-            traits.append(trait)
+            if trait:   # The function can return a null = fail
+                trait.field = field
+                if as_dict:
+                    trait = trait.as_dict()
+                traits.append(trait)
         return traits
 
     def merge_token_groups(self, text, token_list, match):
@@ -164,7 +170,9 @@ class Base:  # pylint: disable=too-many-instance-attributes
         return re.sub(r'_\d+$', '', group)
 
     def adjust_group_names(self, regexp):
-        """Make sure all group names are unique."""
+        """Make sure all group names are unique & handle back references."""
+        # Rename group names
+        back_refs = {}
         matches = list(self.groups_rx.finditer(regexp.regexp))[1:]
         for match in reversed(matches):
             group = match.group(1)
@@ -178,6 +186,16 @@ class Base:  # pylint: disable=too-many-instance-attributes
             start = regexp.regexp[:match.start(1)]
             end = regexp.regexp[match.end(1):]
             regexp.regexp = start + name + end
+            back_refs[group] = name
+
+        # Now rename back references
+        matches = list(self.back_ref_rx.finditer(regexp.regexp))
+        for match in reversed(matches):
+            name = back_refs[match.group(1)]
+            start = regexp.regexp[:match.start(1)]
+            end = regexp.regexp[match.end(1):]
+            regexp.regexp = start + name + end
+
         return regexp.regexp
 
     def add_regex(self, regexp):

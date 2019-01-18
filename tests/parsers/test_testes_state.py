@@ -13,7 +13,7 @@ class TestTestesState(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('some words reproductive data=No testicles; more words'),
-            [Trait(value='No testicles', start=11, end=41)])
+            [Trait(value='no testicles', start=11, end=41)])
 
     def test_parse_02(self):
         self.assertEqual(
@@ -118,7 +118,7 @@ class TestTestesState(unittest.TestCase):
             PAR.parse(
                 ('verbatim preservation date=8 October 1986 ; '
                  'reproductive data=No testicles')),
-            [Trait(value='No testicles', start=44, end=74)])
+            [Trait(value='no testicles', start=44, end=74)])
 
     def test_parse_21(self):
         self.assertEqual(
@@ -157,7 +157,7 @@ class TestTestesState(unittest.TestCase):
     def test_parse_27(self):
         self.assertEqual(
             PAR.parse('Mixed woods // TESTES NOT DESCENDED'),
-            [Trait(value='NOT DESCENDED', start=15, end=35)])
+            [Trait(value='not descended', start=15, end=35)])
 
     def test_parse_28(self):
         self.assertEqual(

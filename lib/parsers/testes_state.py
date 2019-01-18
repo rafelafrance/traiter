@@ -31,7 +31,7 @@ class TestesState(Base):
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
 
-        # Build a rules for token replacement
+        # Build rules for token replacement
         self.replace('state', """
             non fully descended | abdominal non descended
             | abdominal descended | non descended | fully descended
@@ -40,7 +40,7 @@ class TestesState(Base):
             """)
         self.replace('length', ' cross (?: len_units )? ')
 
-        # Build a rules for parsing the trait
+        # Build rules for parsing the trait
         self.product(
             self.convert,
             """label (testes | abbrev) (?: length )?
@@ -76,7 +76,7 @@ class TestesState(Base):
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed token into a trait product."""
         trait = Trait(
-            value=token.groups['value'],
+            value=token.groups['value'].lower(),
             start=token.start,
             end=token.end)
         trait.is_flag_in_token('ambiguous_sex', token)

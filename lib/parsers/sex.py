@@ -21,7 +21,7 @@ class Sex(Base):
         # These are words that indicate that "sex" is not a key
         self.kwd('skip', r' and | is | was ')
 
-        self.lit('word', r' [a-z]\S+ ')
+        self.lit('word', r' \b [a-z]\S+ ')
 
         # Build a rules for parsing the trait
         self.product(

@@ -14,7 +14,7 @@ class AsIs(Base):
         # Build the tokens
         self.lit('data', r' \S .* \S | \S')
 
-        # Build a rules for parsing the trait
+        # Build rules for parsing the trait
         self.product(self.convert, r' (?P<value> data )')
 
         self.finish_init()

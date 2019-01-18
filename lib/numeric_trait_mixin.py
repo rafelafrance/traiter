@@ -2,7 +2,7 @@
 
 import re
 from lib.convert_units import convert
-import lib.shared_tokens as stn
+import lib.shared_tokens as tkn
 
 
 class NumericTraitMixIn:
@@ -41,20 +41,20 @@ class NumericTraitMixIn:
         if value2:
             self.value = [value1, value2]
 
-    def fraction_value(self, values):
+    def fraction_value(self, token):
         """Calculate a fraction value like: 10 3/8."""
-        whole = self.to_float(values.get('whole'))
-        numerator = self.to_float(values['numerator'])
-        denominator = self.to_float(values['denominator'])
+        whole = self.to_float(token.groups.get('whole'))
+        numerator = self.to_float(token.groups['numerator'])
+        denominator = self.to_float(token.groups['denominator'])
         whole = whole if whole else 0
         self.value = whole + numerator / denominator
 
     def compound_value(self, values, units):
         """Calculate value for compound units like: 5 lbs 4 ozs."""
         self.units = units
-        big = self.to_float(values[units[0]])
+        big = self.to_float(values[0])
         big = convert(big, units[0])
-        smalls = re.split(stn.pair_joiner, values[units[1]])
+        smalls = re.split(tkn.pair_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         self.value = [big + convert(x, units[1]) for x in smalls]
         if len(self.value) == 1:

@@ -82,30 +82,30 @@ fraction = ('fraction', r"""
 shorthand_key = ('shorthand_key', r"""
     on \s* tag | specimens? | catalog
     | meas (?: urements )? [:.,]{0,2} (?: \s* length \s* )?
-        (?: \s* [({\[})]? [\p{Letter}]{1,2} [)}\]]? \.? )?
+        (?: \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
     | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
     | mesurements | Measurementsnt
     """)
 
 # A possibly unknown value
-sh_val = ('sh_val', f' (?: {number[1]} | [?x]{{1,2}}) ')
+sh_val = ('sh_val', f' (?: {number[1]} | [?x]{{1,2}} ) ')
 
 # A possibly estimated value
-sh_est = ('sh_est', fr' \[? (?: {sh_val} ) \]? ')
+sh_est = ('sh_est', fr' (?P<estimated_value> \[? ) {sh_val[1]} \]? ')
 
 shorthand = ('shorthand', fr"""
     (?<! [\d/-] )
-    (?P<shorthand_tl> {sh_est} )
+    (?P<shorthand_tl> {sh_est[1]} )
     (?P<shorthand_sep> [:/-] )
-    (?P<shorthand_tal> {sh_est} )
+    (?P<shorthand_tal> {sh_est[1]} )
     (?P=shorthand_sep)
-    (?P<shorthand_hfl> {sh_est} )
+    (?P<shorthand_hfl> {sh_est[1]} )
     (?P=shorthand_sep)
-    (?P<shorthand_el> {sh_est} )
-    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{{1,4}} {sh_est} )* )
+    (?P<shorthand_el> {sh_est[1]} )
+    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{{1,4}} {sh_est[1]} )* )
     (?: [\s=:/-] \s*
-        (?P<shorthand_wt_amb> \[? \s* )
-        (?P<shorthand_wt> {sh_val} ) \s*
+        (?P<estimated_value> \[? \s* )
+        (?P<shorthand_wt> {sh_val[1]} ) \s*
         \]?
         (?P<shorthand_wt_units> {metric_mass[1]} )?
         \s*? \]?

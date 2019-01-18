@@ -88,12 +88,12 @@ class TestTestesSize(unittest.TestCase):
             PAR.parse('"gonad length 1":"3.0", "gonad length 2":"2.0",'),
             [Trait(
                 value=3,
-                flags={'units_inferred': True, 'index': '1',
+                flags={'units_inferred': True, 'side': '1',
                        'dimension': 'length', 'ambiguous_sex': True},
                 start=1, end=21),
              Trait(
                  value=2,
-                 flags={'units_inferred': True, 'index': '2',
+                 flags={'units_inferred': True, 'side': '2',
                         'dimension': 'length', 'ambiguous_sex': True},
                  start=25, end=45)])
 
