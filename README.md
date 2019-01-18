@@ -48,7 +48,7 @@ This implementation is using a technique that I call **"Stacked Regular Expressi
   self.lit('quest', r' \? ')
   ```
 
-  The tokenizer will elide over anything that is not recognized in one of the regular expressions. This greatly simplifies parsing.
+  The tokenizer will elide over anything that is not recognized in one of the regular expressions. This simplifies parsing.
 
 - Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
 
@@ -69,15 +69,17 @@ This implementation is using a technique that I call **"Stacked Regular Expressi
           | keyword (?P<value> sex | word )""")
 ```
 
-However, there are still issues with context that are not easily resolved with LL(k) or LR(k) parsing techniques. For example, the "T" abbreviation is used for both testes notations and tail length notations. Or the double quote '"' is used as both an abbreviation for inches and as a, well, quote character. A human can human can easily tell the difference but these parsers struggle. Ultimately, a machine learning or hybrid of machine learning and parsers approach may work better.
+There are still issues with context that are not easily resolved with this parsing technique. For example, the double quote '"' is used as both an abbreviation for inches and as a quote character. A human can human can easily tell the difference but these parsers struggle. To help with this and other issues I use post processing heuristics.
+
+Ultimately, a machine learning or hybrid of machine learning and parsers approach may work better.
 
 Some of the other techniques that I tried include:
 
-- The original version used lists of regular expressions for parsing. As a proof-of-concept it was OK but ultimately proved too cumbersome to use. One of the problems with the regular expression only technique is the multiple meanings for certain characters or words as mentioned above. I was playing Whack-a-Mole with subtle parser bugs.
+- The original version used lists of regular expressions for parsing. As a proof-of-concept it was OK but ultimately proved too cumbersome to use. One of the problems with the regular expression only technique is the multiple meanings for certain characters or words as mentioned above. I was playing Whack-a-Mole with subtle regular expression bugs.
 
 - I tried using Flex and Bison. This didn't work because there was not enough look-ahead in the parser for our needs.
 
-- I tried writing my own shift-reduce parser. The resulting Python code was slow and the parsers began to become very *ad hoc*.
+- I also attempted writing my own shift-reduce parsers. The resulting Python code was slow and the parsers began to become very *ad hoc*.
 
 - I also tried to use a parser combinator library (`pyparsing`) which was a vast improvement in developer time and code clarity but ballooned the run-time by two orders of magnitude.
 
@@ -91,7 +93,6 @@ Some of the other techniques that I tried include:
 - Tail Length
 - Hind foot Length
 - Ear Length
-
 
 ## Install
 
