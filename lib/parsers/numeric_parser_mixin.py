@@ -49,7 +49,7 @@ class NumericParserMixIn:
         return trait
 
     @staticmethod
-    def fix_up_inches(text, trait):
+    def fix_up_inches(trait, text):
         """Disambiguate between double quotes "3" and inch units 3"."""
         if (not trait.units
                 and QUOTES_VS_INCHES.match(text[trait.end-1:])

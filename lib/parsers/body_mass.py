@@ -4,7 +4,7 @@ from functools import partial
 from lib.trait import Trait
 from lib.parsers.base import Base
 from lib.parsers.numeric_parser_mixin import NumericParserMixIn
-import lib.shared_tokens as tkn
+import lib.parsers.shared_tokens as tkn
 
 
 class BodyMass(NumericParserMixIn, Base):

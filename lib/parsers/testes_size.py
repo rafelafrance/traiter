@@ -2,7 +2,7 @@
 
 from lib.trait import Trait
 from lib.parsers.base import Base
-import lib.shared_tokens as tkn
+import lib.parsers.shared_tokens as tkn
 
 
 class TestesSize(Base):

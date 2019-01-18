@@ -9,6 +9,7 @@ from dataclasses import dataclass, field as datafield
 class Token:
     """Token data."""
     token: str = None
+    name: str = None
     groups: Dict = datafield(default_factory={})
     start: int = 0
     end: int = 0
@@ -89,6 +90,7 @@ class Base:  # pylint: disable=too-many-instance-attributes
                       for x in self.groups[name] if match.group(x)}
             token_list.append(Token(
                 token=self.regexp[name].token,
+                name=name,
                 groups=groups,
                 start=match.start(),
                 end=match.end()))
@@ -96,19 +98,17 @@ class Base:  # pylint: disable=too-many-instance-attributes
 
     def replace_tokens(self, token_list, text):
         """Replace tokens with token combinations."""
-        for tkn in token_list:
-            print(tkn)
-        print(self.replacer)
         token_text = ''.join([t.token for t in token_list])
         matches = list(self.replacer.finditer(token_text))
         want_replace = False
         for match in reversed(matches):
-            print(match)
+            name = match.lastgroup
             want_replace = True
             start = match.start() // self.width
             end = match.end() // self.width
             token = Token(
-                token=self.regexp[match.lastgroup].token,
+                token=self.regexp[name].token,
+                name=name,
                 groups=self.merge_token_groups(text, token_list, match),
                 start=token_list[start].start,
                 end=token_list[end-1].end)
@@ -125,16 +125,24 @@ class Base:  # pylint: disable=too-many-instance-attributes
             end = match.end() // self.width
             token = Token(
                 token=name,
+                name=name,
                 groups=self.merge_token_groups(text, token_list, match),
                 start=token_list[start].start,
                 end=token_list[end-1].end)
             trait = self.regexp[name].func(token)
-            if trait:   # The function can return a null = fail
-                trait.field = field
-                if as_dict:
-                    trait = trait.as_dict()
-                traits.append(trait)
+            if trait:   # The function can still return a null & fail
+                trait = self.fix_up_trait(trait, text)
+                if trait:
+                    trait.field = field
+                    if as_dict:
+                        trait = trait.as_dict()
+                    traits.append(trait)
         return traits
+
+    # pylint: disable=unused-argument,no-self-use
+    def fix_up_trait(self, trait, text):
+        """Fix problematic parses."""
+        return trait
 
     def merge_token_groups(self, text, token_list, match):
         """Combine the token groups from a sequence of tokens."""

@@ -2,7 +2,7 @@
 
 import re
 from lib.convert_units import convert
-import lib.shared_tokens as tkn
+import lib.parsers.shared_tokens as tkn
 
 
 class NumericTraitMixIn:

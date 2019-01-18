@@ -5,8 +5,6 @@ from lib.trait import Trait
 from lib.parsers.body_mass import BodyMass
 
 
-
-
 PAR = BodyMass()
 
 

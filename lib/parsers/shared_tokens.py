@@ -8,9 +8,8 @@ feet = ('feet', " foots? | feets? | fts? | ' ")
 # NOTE: Double quotes as inches is handled during fix up
 inches = ('inches', ' inche?s? | ins? ')
 
-
 metric_len = (
-    'metric_len', r'(?:milli | centi)? meters? | (?: [cm] [\s.]? m ) ')
+    'metric_len', r'(?: milli | centi )? meters? | (?: [cm] [\s.]? m ) ')
 
 len_units = ('len_units', '|'.join([x[1] for x in (metric_len, feet, inches)]))
 
