@@ -73,11 +73,11 @@ There are still issues with context that are not easily resolved with this parsi
 
 Ultimately, a machine learning or hybrid of machine learning and parsers approach may work better.
 
-Some of the other techniques that I tried include:
+Some of the other techniques that I tried but didn't use:
 
 - The original version used lists of regular expressions for parsing. As a proof-of-concept it was OK but ultimately proved too cumbersome to use. One of the problems with the regular expression only technique is the multiple meanings for certain characters or words as mentioned above. I was playing Whack-a-Mole with subtle regular expression bugs.
 
-- I tried using Flex and Bison. This didn't work because there was not enough look-ahead in the parser for our needs.
+- I tried using Flex and Bison. This didn't work for various reasons.
 
 - I also attempted writing my own shift-reduce parsers. The resulting Python code was slow and the parsers began to become very *ad hoc*.
 
