@@ -19,8 +19,9 @@ class TailLength(NumericParserMixIn, Base):
         super().__init__(args)
 
         # Build the tokens
-        self.kwd('key_with_units',
-                 r' tail \s* length \s* in \s* (?: millimeters | mm ) ')
+        self.kwd(
+            'key_with_units',
+            r' tail \s* len (?: gth )? \s* in \s* (?: millimeters | mm ) ')
 
         self.lit('char_key', r' \b t ')
 
@@ -47,7 +48,7 @@ class TailLength(NumericParserMixIn, Base):
 
         self.product(
             partial(self.shorthand_length, measurement='shorthand_tal'),
-            r""" shorthand_key shorthand | shorthand """)
+            r' shorthand_key shorthand | shorthand ')
 
         self.finish_init()
 

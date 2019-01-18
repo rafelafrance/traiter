@@ -15,7 +15,7 @@ class EarLength(NumericParserMixIn, Base):
 
         # Build the tokens
         self.kwd('key_with_units',
-                 r' ear \s* length \s* in \s* (?: millimeters | mm ) ')
+                 r' ear \s* len (?: gth )? \s* in \s* (?: millimeters | mm ) ')
 
         self.lit('char_key', r' \b e ')
 
@@ -45,7 +45,7 @@ class EarLength(NumericParserMixIn, Base):
 
         self.product(
             partial(self.shorthand_length, measurement='shorthand_el'),
-            r""" shorthand_key shorthand | shorthand """)
+            r' shorthand_key shorthand | shorthand ')
 
         self.finish_init()
 

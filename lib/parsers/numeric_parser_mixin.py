@@ -27,7 +27,9 @@ class NumericParserMixIn:
         if not trait.value:
             return None
         trait.units = 'mm_shorthand'
-        trait.is_flag_in_token('estimated_value', token)
+        flag = measurement.split('_')[1]
+        flag = f'estimated_{flag}'
+        trait.is_flag_in_token(flag, token, rename='estimated_value')
         return trait
 
     @staticmethod

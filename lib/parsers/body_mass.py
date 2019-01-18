@@ -47,8 +47,7 @@ class BodyMass(NumericParserMixIn, Base):
             | (?P<ambiguous_key>
                 (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units )""")
 
-        self.product(self.shorthand, r"""
-            shorthand_key shorthand | shorthand""")
+        self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
 
         self.finish_init()
 
@@ -59,5 +58,5 @@ class BodyMass(NumericParserMixIn, Base):
         if not trait.value:
             return None
         trait.convert_value(token.groups.get('shorthand_wt_units'))
-        trait.is_flag_in_token('estimated_value', token)
+        trait.is_flag_in_token('estimated_wt', token, rename='estimated_value')
         return trait

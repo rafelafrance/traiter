@@ -34,13 +34,15 @@ class Trait(NumericTraitMixIn):
         """Compare traits."""
         return self.as_dict() == other.as_dict()
 
-    def is_flag_in_token(self, flag, token):
+    def is_flag_in_token(self, flag, token, rename=None):
         """Set a flag if it is found in the token's groups field."""
         if token.groups.get(flag):
+            flag = rename if rename else flag
             self.flags[flag] = True
 
-    def flag_from_token(self, flag, token):
+    def flag_from_token(self, flag, token, rename=None):
         """Set a flag if it is found in the token's groups field."""
         value = token.groups.get(flag)
         if value:
+            flag = rename if rename else flag
             self.flags[flag] = value.lower()
