@@ -26,6 +26,7 @@ class BodyMass(NumericParserMixIn, Base):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
+        self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement
         self.replace('wt_key', r"""

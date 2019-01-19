@@ -28,6 +28,7 @@ class HindFootLength(NumericParserMixIn, Base):
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
+        self.lit('sep', r' [;,] | $ ')
 
         # Build rules for parsing the trait
         self.product(self.fraction, r"""

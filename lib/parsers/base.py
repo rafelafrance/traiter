@@ -8,6 +8,7 @@ from dataclasses import dataclass, field as datafield
 @dataclass
 class Token:
     """Token data."""
+
     token: str = None
     name: str = None
     groups: Dict = datafield(default_factory={})
@@ -18,6 +19,7 @@ class Token:
 @dataclass
 class Regexp:
     """Regular expression data."""
+
     type: str = None
     name: str = None
     token: str = None
@@ -51,7 +53,7 @@ class Base:  # pylint: disable=too-many-instance-attributes
         self.tokenizer = None   # Regular expression for creating tokens
         self.replacer = None    # Regular expression for replacing tokens
         self.producer = None    # Regular expression for producing traits
-        self.used_groups = set() # Used to rename groups
+        self.used_groups = set()  # Used to rename groups
 
     def finish_init(self):
         """Finish initialization."""

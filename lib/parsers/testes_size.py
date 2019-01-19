@@ -33,18 +33,19 @@ class TestesSize(Base):
         self.kwd('scrotal', r' scrotum | scrotal | scrot | nscr ')
         self.shared_token(tkn.cross)
         self.lit('word', r' [a-z]+ ')
+        self.lit('sep', r' [;,] | $ ')
 
         # Build rules for parsing the trait
         self.product(self.convert, r"""
             label (?: testes | abbrev) cross
             | label cross
             | label testes cross
-            | label (?: testes | abbrev | scrotal | word ){1,3} cross
+            | label (?: testes | abbrev | scrotal | word | sep ){1,4} cross
             | (?: key_with_units | ambiguous ) cross
             | (?: key_with_units | ambiguous )
-                (?: testes | abbrev | scrotal | word ){1,3} cross
+                (?: testes | abbrev | scrotal | word | sep ){1,4} cross
             | testes cross
-            | testes (?: abbrev | scrotal | word ){1,3} cross
+            | testes (?: abbrev | scrotal | word | sep ){1,4} cross
             | scrotal cross
             """)
 

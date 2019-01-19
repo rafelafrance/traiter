@@ -32,6 +32,7 @@ class TailLength(NumericParserMixIn, Base):
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
+        self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement
         self.replace('key', ' keyword | char_key ')

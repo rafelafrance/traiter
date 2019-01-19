@@ -3,7 +3,7 @@
 # pylint: disable=invalid-name
 
 
-feet = ('feet', " foots? | feets? | fts? | ' ")
+feet = ('feet', r" foots? | feets? | fts? | (?<= \d ) ' ")
 
 # NOTE: Double quotes as inches is handled during fix up
 inches = ('inches', ' inche?s? | ins? ')

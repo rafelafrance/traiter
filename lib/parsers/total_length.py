@@ -71,8 +71,8 @@ class TotalLength(NumericParserMixIn, Base):
             | key pair (?P<units> len_units)
             | key (?P<units> len_units) pair
             | key pair
-            | key (?: word ){1,3} pair (?P<units> len_units)
-            | key (?: word ){1,3} pair
+            | key (?: word | sep ){1,3} pair (?P<units> len_units)
+            | key (?: word | sep ){1,3} pair
             """)
 
         self.product(
