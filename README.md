@@ -3,7 +3,9 @@
 ## All right, what's this all about then?
 **Challenge**: Extract trait information from unstructured or semi-structured natural history notations. That is, if I'm given text like:
 
- ```This rather large female specimen is 12 lbs 7 oz and 3 feet 7 inches in total length.```
+ ```
+ This rather large female specimen is 12 lbs 7 oz and 3 feet 7 inches in total length.
+ ```
 
  I should be able to extract:
 
@@ -41,12 +43,12 @@ This implementation is using a technique that I call **"Stacked Regular Expressi
 
   So the following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
 
-  ```
-  self.kwd('keyword', 'sex')
-  self.kwd('sex', r' females? | males? | f | m')
-  self.lit('word', r' \b [a-z] \S+ ')
-  self.lit('quest', r' \? ')
-  ```
+```
+    self.kwd('keyword', 'sex')
+    self.kwd('sex', r' females? | males? | f | m')
+    self.lit('word', r' \b [a-z] \S+ ')
+    self.lit('quest', r' \? ')
+```
 
   The tokenizer will elide over anything that is not recognized in one of the regular expressions. This simplifies parsing.
 
@@ -54,19 +56,19 @@ This implementation is using a technique that I call **"Stacked Regular Expressi
 
   The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token.
 
-  ```
-  self.replace('state', 'non fully descended | abdominal non descended')
-  ```
+```
+    self.replace('state', 'non fully descended | abdominal non descended')
+```
 
 - Use regular expressions to find patterns of tokens to extract into traits. This is a single pass.
 
-  Here's a rule for recognizing when a sex. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
+  Here's a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
 
-  ```
-  self.product(
-      self.convert,
-      r"""  keyword (?P<value> (?: sex | word ) quest )
-          | keyword (?P<value> sex | word )""")
+```
+    self.product(
+        self.convert,
+        r"""  keyword (?P<value> (?: sex | word ) quest )
+            | keyword (?P<value> sex | word )""")
 ```
 
 There are still issues with context that are not easily resolved with this parsing technique. For example, the double quote '"' is used as both an abbreviation for inches and as a quote character. A human can human can easily tell the difference but these parsers struggle. To help with this and other issues I use post processing heuristics.
@@ -106,8 +108,14 @@ python3 -m pip install --user -r traiter/requirements.txt
 ```
 python3 traiter.py ... TODO ...
 ```
+
 ## Running tests
 You will need to install `pytest`. After that, you can run the tests like so:
 ```
 python -m pytest tests/
 ```
+
+
+## Example output
+
+TODO
