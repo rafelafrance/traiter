@@ -22,12 +22,11 @@ class CsvWriter(BaseWriter):
         self.writer = csv.DictWriter(self.outfile, self.columns)
         self.writer.writeheader()
 
-    def record(self, row, parsed_record):
+    def record(self, raw_record, parsed_record):
         """Output a row to the file."""
-        row = {c: row.get(c, '') for c in self.columns}
+        row = {c: raw_record.get(c, '') for c in self.columns}
         row['parsed_record'] = json.dumps(parsed_record)
         self.writer.writerow(row)
 
     def end(self):
         """End the report."""
-        self.writer.close()

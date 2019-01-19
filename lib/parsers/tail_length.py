@@ -23,7 +23,7 @@ class TailLength(NumericParserMixIn, Base):
             'key_with_units',
             r' tail \s* len (?: gth )? \s* in \s* (?: millimeters | mm ) ')
 
-        self.lit('char_key', r' \b t ')
+        self.lit('char_key', r' \b t (?! [a-z] )')
 
         self.kwd('keyword', r' tail \s* len (?: gth )? | tal ')
 

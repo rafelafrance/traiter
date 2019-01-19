@@ -26,7 +26,7 @@ class BaseWriter:
         raise NotImplementedError('You need a start function.')
 
     @abstractmethod
-    def record(self, record):
+    def record(self, raw_record, parsed_record):
         """Output a report record."""
         raise NotImplementedError('You need a record function.')
 

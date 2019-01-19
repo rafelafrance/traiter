@@ -1,5 +1,7 @@
 """Parse all traits for the input record."""
 
+# pylint: disable=no-self-use
+
 from lib.parsers.as_is import AsIs
 
 
@@ -35,7 +37,7 @@ class RecordParser:
                 if data[trait]['flags'].get('break'):
                     break
 
-            self.between_action(data, trait, field)
+            self.between_action(data, trait)
             if data[trait]['flags'].get('break'):
                 continue
 
@@ -70,7 +72,7 @@ class RecordParser:
             data[trait]['flags']['break'] = (
                 "Using preferred field '{}'".format(field))
 
-    def between_action(self, data, trait, field):
+    def between_action(self, data, trait):
         """Handle action between as_is parsing & normal trait parsing."""
 
     def search_fields_break_action(self, data, trait, field):

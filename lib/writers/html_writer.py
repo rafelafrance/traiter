@@ -4,8 +4,12 @@ from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from lib.writers.base_writer import BaseWriter
 
-SPAN0 = '<span class="found">'
-SPAN1 = '</span>'
+SPAN_OPEN = '<span class="found">'
+SPAN_CLOSE = '</span>'
+OPEN = 1
+CLOSE = 0
+WHITE = 0
+GREEN = 1
 
 
 class HtmlWriter(BaseWriter):
@@ -78,34 +82,33 @@ class HtmlWriter(BaseWriter):
 
     def format_raw_record(self, raw_record, parsed_record):
         """Format the record for output."""
-        colors = {f: bytearray(len(raw_record[f]))
+        colors = {f: [WHITE] * len(raw_record[f])
                   for f in self.args.search_field + self.as_is}
+
         for _, data in parsed_record.items():
             for parse in data['parsed']:
                 field = parse['field']
                 start = parse['start']
                 end = parse['end']
-                colors[field][start:end] = bytearray([1] * (end - start))
+                colors[field][start:end] = [GREEN] * (end - start)
 
-        for field, color_map in colors.items():
-            last = len(color_map)
-            parts = []
-            find = b'\x01'
-            start = 0
-            end = color_map.find(find, start, last)
-            while end > -1:
-                parts.append(raw_record[field][start:end])
-                span = SPAN1 if find == b'\x00' else SPAN0
-                parts.append(span)
-                find = b'\x00' if find == b'\x01' else b'\x01'
-                start = end
-                end = color_map.find(find, start, last)
-            if find == b'\x00':
-                parts.append(raw_record[field][start:last])
-                parts.append(SPAN1)
-
-            hilit = ''.join(parts)
-            raw_record[field] = hilit if hilit else raw_record[field]
+        for field, color in colors.items():
+            if not color:
+                continue
+            ends = [0]
+            ends += [i for i in range(1, len(color)-1)
+                     if color[i-1] != color[i]]
+            parts = [SPAN_OPEN] if color[0] == GREEN else []
+            for i, end in enumerate(ends[1:], 1):
+                parts.append(raw_record[field][ends[i-1]:end])
+                if color[end] == WHITE:
+                    parts.append(SPAN_CLOSE)
+                else:
+                    parts.append(SPAN_OPEN)
+            parts.append(raw_record[field][ends[-1]:])
+            if color[-1] == GREEN:
+                parts.append(SPAN_CLOSE)
+            raw_record[field] = ''.join(parts)
 
         return raw_record
 

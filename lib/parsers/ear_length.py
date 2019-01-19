@@ -17,7 +17,7 @@ class EarLength(NumericParserMixIn, Base):
         self.kwd('key_with_units',
                  r' ear \s* len (?: gth )? \s* in \s* (?: millimeters | mm ) ')
 
-        self.lit('char_key', r' \b e ')
+        self.lit('char_key', r' \b e (?! [a-z] ) ')
 
         self.kwd('keyword', r"""
             ear \s* from \s* (?: notch | crown )
