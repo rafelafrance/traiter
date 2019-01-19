@@ -45,3 +45,6 @@ junk*
 # R
 .Rhistory
 .RData
+
+# Other code
+src/

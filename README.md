@@ -33,38 +33,38 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-Note that I am trying to extract data from text and not parse a formal language. Most importantly, I don't need to worry about recursive structures and the characters in the text can take on different meaning depending on the form. For is instance, in the form `15.7cm T.L.` the dot is used as both a decimal point and as an abbreviation indicator. Elsewhere, it is usually noise. This problem gets even more pronounced when words have multiple meanings like the letter "T" on its own. One some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation.
+Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures. One complication is that the characters in the text can take on different meaning depending on the form. For is instance, in the form `15.7cm T.L.` the dot is used as both a decimal point and as an abbreviation indicator. Elsewhere, it is usually elided noise. This problem gets even more pronounced when words have multiple meanings like the letter "T" on its own. One some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation or an initial in some one's name.
 
 Also note that we want to parse gigabytes (or terabytes) of data in relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
 
 This implementation is using a technique that I call **"Stacked Regular Expressions"**. The concept is very simple:
 
-1. Tokenize the text analogous to this method in the python `re` module documentation, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer).
+1. Tokenize the text analogous to this method in the python `re` module documentation, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
 
-  So the following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
+So the following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
 
-```
+```python
     self.kwd('keyword', 'sex')
     self.kwd('sex', r' females? | males? | f | m')
     self.lit('word', r' \b [a-z] \S+ ')
     self.lit('quest', r' \? ')
 ```
 
-  The tokenizer will elide over anything that is not recognized in one of the regular expressions. This simplifies parsing.
+The tokenizer will elide over anything that is not recognized in one of the regular expressions. This simplifies parsing.
 
 - Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
 
-  The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token.
+The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token.
 
-```
+```python
     self.replace('state', 'non fully descended | abdominal non descended')
 ```
 
 - Use regular expressions to find patterns of tokens to extract into traits. This is a single pass.
 
-  Here's a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
+Here's a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
 
-```
+```python
     self.product(
         self.convert,
         r"""  keyword (?P<value> (?: sex | word ) quest )
@@ -83,7 +83,7 @@ Some of the other techniques that I tried but didn't use:
 
 - I also attempted writing my own shift-reduce parsers. The resulting Python code was slow and the parsers began to become very *ad hoc*.
 
-- I also tried to use a parser combinator library (`pyparsing`) which was a vast improvement in developer time and code clarity but ballooned the run-time by two orders of magnitude.
+- Finally, I tried to use a parser combinator library (`pyparsing`) which was a vast improvement in developer time and code clarity but ballooned the run-time by two orders of magnitude.
 
 ## List of traits extracted (so far)
 - Body body mass
