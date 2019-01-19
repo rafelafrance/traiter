@@ -18,7 +18,7 @@ class TestHindFootLength(unittest.TestCase):
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('"hindfootLengthInMM":"36"'),
-            [Trait(value=36, units='hindfootlengthinmm', start=1, end=24)])
+            [Trait(value=36, units='mm', start=1, end=24)])
 
     def test_parse_03(self):
         self.assertEqual(

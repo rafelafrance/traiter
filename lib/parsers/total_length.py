@@ -16,7 +16,7 @@ class TotalLength(NumericParserMixIn, Base):
         # Build the tokens
         self.kwd('key_with_units', r"""
             (?: total | snout \s* vent | head \s* body | fork ) \s*
-            len (?: gth )? \s* in \s* (?: millimeters | mm )
+            len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
             """)
 
         self.lit('key', r"""
@@ -57,7 +57,7 @@ class TotalLength(NumericParserMixIn, Base):
             """)
 
         self.product(self.simple, r"""
-            (?P<units> key_with_units) pair
+            key_with_units pair
             | shorthand_key pair (?P<units> len_units)
             | shorthand_key (?P<units> len_units) pair
             | key_units_req pair (?P<units> len_units)

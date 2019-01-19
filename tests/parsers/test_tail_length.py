@@ -13,7 +13,7 @@ class TestTailLength(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('tailLengthInmm: 102'),
-            [Trait(value=102, units='taillengthinmm', start=0, end=19)])
+            [Trait(value=102, units='mm', start=0, end=19)])
 
     def test_parse_02(self):
         self.assertEqual(
@@ -33,7 +33,7 @@ class TestTailLength(unittest.TestCase):
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('"tailLengthInMillimeters"="104",'),
-            [Trait(value=104, units='taillengthinmillimeters',
+            [Trait(value=104, units='millimeters',
                    start=1, end=30)])
 
     def test_parse_06(self):

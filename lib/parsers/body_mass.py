@@ -15,7 +15,8 @@ class BodyMass(NumericParserMixIn, Base):
         super().__init__(args)
 
         # Build the tokens
-        self.kwd('key_with_units', r' (?: weight | mass) \s* in \s* grams ')
+        self.kwd('key_with_units', r"""
+            (?: weight | mass) \s* in \s* (?P<units> grams ) """)
         self.lit('key_leader', ' full | observed | total ')
         self.lit('weight', r' weights? | weigh (?: s | ed | ing ) ')
         self.lit('key_with_dots', r' \b w \.? t s? \.? ')
@@ -35,7 +36,7 @@ class BodyMass(NumericParserMixIn, Base):
 
         # Build rules for parsing the trait
         self.product(self.simple, r"""
-            (?P<units> key_with_units ) pair
+            key_with_units pair
             | wt_key (?P<units> mass_units ) pair
             | wt_key pair (?P<units> mass_units )
             | shorthand_key pair (?P<units> mass_units )

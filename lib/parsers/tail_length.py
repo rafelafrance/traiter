@@ -19,13 +19,13 @@ class TailLength(NumericParserMixIn, Base):
         super().__init__(args)
 
         # Build the tokens
-        self.kwd(
-            'key_with_units',
-            r' tail \s* len (?: gth )? \s* in \s* (?: millimeters | mm ) ')
+        self.kwd('key_with_units', r"""
+            tail \s* len (?: gth )? \s* in \s*
+            (?P<units> millimeters | mm ) """)
 
         self.lit('char_key', r' \b t (?! [a-z] )')
 
-        self.kwd('keyword', r' tail \s* len (?: gth )? | tal ')
+        self.kwd('keyword', r' tail \s* len (?: gth )? | tail | tal ')
 
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
@@ -41,7 +41,7 @@ class TailLength(NumericParserMixIn, Base):
             key fraction (?P<units> len_units ) | key fraction """)
 
         self.product(self.simple, r"""
-            (?P<units> key_with_units ) pair
+            key_with_units pair
             | key pair (?P<units> len_units )
             | key pair
             """)

@@ -14,20 +14,22 @@ class EarLength(NumericParserMixIn, Base):
         super().__init__(args)
 
         # Build the tokens
-        self.kwd('key_with_units',
-                 r' ear \s* len (?: gth )? \s* in \s* (?: millimeters | mm ) ')
+        self.kwd('key_with_units', r"""
+            ear \s* len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
+            """)
 
         self.lit('char_key', r' \b e (?! [a-z] ) ')
 
         self.kwd('keyword', r"""
             ear \s* from \s* (?: notch | crown )
             | ear \s* len (?: gth )?
+            | ear
             """)
 
         self.shared_token(tkn.len_units)
+        self.shared_token(tkn.fraction)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
-        self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
 
         # Build rules for token replacement
@@ -38,7 +40,7 @@ class EarLength(NumericParserMixIn, Base):
             key fraction (?P<units> len_units ) | key fraction """)
 
         self.product(self.simple, r"""
-            (?P<units> key_with_units ) pair
+            key_with_units pair
             | key pair (?P<units> len_units )
             | key pair
             """)

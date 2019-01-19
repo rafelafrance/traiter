@@ -13,7 +13,7 @@ class TestEarLength(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('earLengthInmm: 9'),
-            [Trait(value=9, units='earlengthinmm', start=0, end=16)])
+            [Trait(value=9, units='mm', start=0, end=16)])
 
     def test_parse_02(self):
         self.assertEqual(

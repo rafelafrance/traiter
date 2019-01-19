@@ -116,7 +116,7 @@ class TestBodyMass(unittest.TestCase):
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse('{ "massingrams"="20.1" }'),
-            [Trait(value=20.1, units='massingrams', start=3, end=21)])
+            [Trait(value=20.1, units='grams', start=3, end=21)])
 
     def test_parse_19(self):
         self.assertEqual(

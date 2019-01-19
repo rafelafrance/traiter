@@ -15,14 +15,13 @@ class HindFootLength(NumericParserMixIn, Base):
 
         # Build the tokens
         self.kwd('key_with_units', r"""
-            hind \s* foot \s* len (?: gth )? \s* in \s* (?: millimeters | mm )
-            """)
+            hind \s* foot \s* len (?: gth )? \s* in \s*
+            (?P<units> millimeters | mm ) """)
 
         self.kwd('key', r"""
             hind \s* foot \s* with \s* claw
             | hind \s* foot (?: \s* len (?: gth )? )?
-            | \b hfl | \b hf
-            """)
+            | \b hfl | \b hf """)
 
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
@@ -35,7 +34,7 @@ class HindFootLength(NumericParserMixIn, Base):
             key fraction (?P<units> len_units ) | key fraction """)
 
         self.product(self.simple, r"""
-            (?P<units> key_with_units ) pair
+            key_with_units pair
             | key pair (?P<units> len_units )
             | key pair
             """)
