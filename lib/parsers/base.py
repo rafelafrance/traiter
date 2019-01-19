@@ -119,6 +119,8 @@ class Base:  # pylint: disable=too-many-instance-attributes
 
     def tokens_to_traits(self, token_list, text, field=None, as_dict=False):
         """Produce the final results from the remaining tokens."""
+        # for tkn in token_list:
+        #     print(tkn)
         traits = []
         token_text = ''.join([t.token for t in token_list])
         for match in self.producer.finditer(token_text):

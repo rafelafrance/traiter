@@ -40,12 +40,15 @@ class TestesSize(Base):
             label (?: testes | abbrev) cross
             | label cross
             | label testes cross
-            | label (?: testes | abbrev | scrotal | word | sep ){1,4} cross
+            | label (?: testes | abbrev | scrotal | word | sep ){1,3}
+                (?: testes | abbrev | scrotal ) cross
             | (?: key_with_units | ambiguous ) cross
             | (?: key_with_units | ambiguous )
-                (?: testes | abbrev | scrotal | word | sep ){1,4} cross
+                (?: testes | abbrev | scrotal | word | sep ){1,3}
+                (?: testes | abbrev | scrotal ) cross
             | testes cross
-            | testes (?: abbrev | scrotal | word | sep ){1,4} cross
+            | testes (?: abbrev | scrotal | word | sep ){1,3}
+                (?: testes | abbrev | scrotal ) cross
             | scrotal cross
             """)
 

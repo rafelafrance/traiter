@@ -151,3 +151,12 @@ class TestTestesSize(unittest.TestCase):
                 value=[10, 4],
                 flags={'units_inferred': True},
                 start=0, end=24)])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            PAR.parse(
+                'x=male ; reproductive data=testes abdominal ; '
+                'weight=30 g; hind foot with claw=32 mm; ear from '
+                'notch=28 mm; tail length=89 mm; unformatted '
+                'measurements=196-89-32-28=30 ; total length=196 mm'),
+            [])
