@@ -29,7 +29,8 @@ class TestesSize(Base):
             """)
 
         self.kwd('testes', r' testes |  testis | testicles | test ')
-        self.kwd('abbrev', r' tes | ts | t ')
+        self.kwd('abbrev', r' tes | ts ')
+        self.lit('char_key', r' \b t (?! [a-z] )')
         self.kwd('scrotal', r' scrotum | scrotal | scrot | nscr ')
         self.shared_token(tkn.cross)
         self.lit('word', r' [a-z]+ ')
@@ -37,26 +38,29 @@ class TestesSize(Base):
 
         # Build rules for parsing the trait
         self.product(self.convert, r"""
-            label (?: testes | abbrev) cross
+            label (?: testes | abbrev | char_key ) cross
             | label cross
             | label testes cross
-            | label (?: testes | abbrev | scrotal | word | sep ){1,3}
-                (?: testes | abbrev | scrotal ) cross
+            | label (?: testes | abbrev | scrotal | word | sep | char_key){1,3}
+                (?: testes | abbrev | scrotal | char_key ) cross
             | (?: key_with_units | ambiguous ) cross
             | (?: key_with_units | ambiguous )
-                (?: testes | abbrev | scrotal | word | sep ){1,3}
-                (?: testes | abbrev | scrotal ) cross
-            | testes cross
-            | testes (?: abbrev | scrotal | word | sep ){1,3}
-                (?: abbrev | scrotal ) cross
-            | testes (?: abbrev | scrotal | word ) cross
-            | scrotal cross
+                (?: testes | abbrev | scrotal | word | sep | char_key ){1,3}
+                (?: testes | abbrev | scrotal | char_key ) cross
+            | testes (?: abbrev | scrotal | word | sep | char_key ){1,3}
+                (?: abbrev | scrotal | char_key ) cross
+            | testes (?: abbrev | scrotal | word | char_key ) cross
+            | (?: testes | scrotal | abbrev ) cross
+            | (?P<ambiguous_char> char_key ) cross
             """)
 
         self.finish_init()
 
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed token into a trait product."""
+        if token.groups.get('ambiguous_char') \
+                and not token.groups.get('value2'):
+            return None
         trait = Trait(start=token.start, end=token.end)
         trait.cross_value(token)
         trait.is_flag_in_token('ambiguous_sex', token)

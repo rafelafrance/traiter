@@ -161,3 +161,16 @@ class TestTestesSize(unittest.TestCase):
                 'notch=28 mm; tail length=89 mm; unformatted '
                 'measurements=196-89-32-28=30 ; total length=196 mm'),
             [])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            PAR.parse('adult ; T=9x4 ; endoparasite '),
+            [Trait(
+                value=[9, 4],
+                flags={'units_inferred': True},
+                start=8, end=13)])
+
+    def test_parse_21(self):
+        self.assertEqual(
+            PAR.parse('adult ; T=9 ; endoparasite '),
+            [])
