@@ -13,7 +13,6 @@
  - body mass = 5,641 g
  - total length = 1,092 mm
 
-
  Of course this is a rather straight-forward example. Natural history/museum notations are highly idiosyncratic and may use various shorthand notations. Here are just a few examples of how total length measurements appear:
 
  - `Total Length: 15.7cm`
@@ -24,7 +23,7 @@
  - `t.l.= 2 feet 3.1 - 4.5 inches`
  - As well as measurements embedded in prose like: `Snout vent lengths range anywhere from 16 to 23 cm.` I am experimenting with various distances between the anchor token `Snout vent lengths` and the measurements `16 to 23 cm`.
  - We flag ambiguous measurements like: `length: 12.0`. This may be a total length measurement or another length measurement.
- - We also flag numeric measurements without units like: `total length = 120`. The units may be the default millimeters.
+ - We also flag numeric measurements without units like: `total length = 120`. The units may or may not be the default millimeters.
  - etc.
 
 Values from controlled vocabularies are also extracted.
@@ -41,7 +40,7 @@ This implementation is using a technique that I call **"Stacked Regular Expressi
 
 1. Tokenize the text analogous to this method in the python `re` module documentation, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
 
-So the following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
+The following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
 
 ```python
     self.kwd('keyword', 'sex')
@@ -50,9 +49,9 @@ So the following regular expressions will replace the regular expressions with t
     self.lit('quest', r' \? ')
 ```
 
-The tokenizer will elide over anything that is not recognized in one of the regular expressions. This simplifies parsing.
+The tokenizer will elide over anything that is not recognized in one of the regular expressions. We still need some separator tokens so that we don't bring unrelated tokens next to each other.
 
-- Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
+2. Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
 
 The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token.
 
@@ -60,9 +59,9 @@ The following regular expression will replace the "non fully descended" or "abdo
     self.replace('state', 'non fully descended | abdominal non descended')
 ```
 
-- Use regular expressions to find patterns of tokens to extract into traits. This is a single pass.
+3. Use regular expressions to find patterns of tokens to extract into traits. This is a single pass.
 
-Here's a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
+Here is a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
 
 ```python
     self.product(
@@ -114,7 +113,6 @@ You will need to install `pytest`. After that, you can run the tests like so:
 ```
 python -m pytest tests/
 ```
-
 
 ## Example output
 

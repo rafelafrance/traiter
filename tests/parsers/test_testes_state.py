@@ -164,3 +164,19 @@ class TestTestesState(unittest.TestCase):
             PAR.parse(
                 ('reproductive data=Uteri small, clear')),
             [])
+
+    def test_parse_29(self):
+        self.assertEqual(
+            PAR.parse(
+                ('sex=male ; age class=adult ; reproductive data=scrotal ; '
+                 'hind foot with claw=32 mm; weight=82 g; weight=78 g; '
+                 'weight=87 g; weight=94 g; reproductive data=nonscrotal ; '
+                 'sex=male ; sex=male ; reproductive data=nonscrotal ; '
+                 'reproductive data=nonscrotal ; sex=male ; hind foot with '
+                 'claw=32 mm; hind foot with claw=34 mm; hind foot with '
+                 'claw=34 mm; age class=adult ; age class=adult ; '
+                 'age class=adult')),
+            [Trait(value='scrotal', start=29, end=54),
+             Trait(value='nonscrotal', start=136, end=164),
+             Trait(value='nonscrotal', start=189, end=217),
+             Trait(value='nonscrotal', start=220, end=248)])

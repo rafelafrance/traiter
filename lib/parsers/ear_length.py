@@ -23,7 +23,7 @@ class EarLength(NumericParserMixIn, Base):
         self.kwd('keyword', r"""
             ear \s* from \s* (?: notch | crown )
             | ear \s* len (?: gth )?
-            | ear
+            | ear (?! \s* tag )
             """)
 
         self.shared_token(tkn.len_units)

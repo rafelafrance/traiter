@@ -37,3 +37,8 @@ class TestEarLength(unittest.TestCase):
             PAR.parse('{"earLength":"13", "gonadLength":"3"}'),
             [Trait(value=13, flags={'units_inferred': True},
                    start=2, end=16)])
+
+    def test_parse_06(self):
+        self.assertEqual(
+            PAR.parse('ear tag 570'),
+            [])

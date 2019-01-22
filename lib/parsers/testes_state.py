@@ -14,13 +14,13 @@ class TestesState(Base):
 
         # Build the tokens
         self.kwd('label', r' reproductive .? (?: data |state | condition ) ')
-        self.kwd('testes', r' testes |  testis | testicles | test ')
+        self.lit('testes', r' (?: testes |  testis | testicles | test ) \b ')
         self.kwd('fully', r' fully | (:? in ) complete (?: ly) ')
-        self.kwd('non', r' not | non | no | semi | sub ')
+        self.lit('non', r' \b (?: not | non | no | semi | sub) ')
         self.kwd('descended', r' (?: un)? (?: des?c?end (?: ed)? | desc? ) ')
         self.kwd('abbrev', r' tes | ts | t ')
-        self.kwd('scrotal', r' scrotum | scrotal | scrot | nscr ')
-        self.kwd('partially', r' partially | part ')
+        self.lit('scrotal', r' (?: scrotum | scrotal | scrot | nscr ) \b ')
+        self.lit('partially', r' partially | part ')
         self.kwd('state_abbrev', r' scr | ns | sc ')
         self.kwd('abdominal', r' abdominal | abdomin | abdom ')
         self.kwd('size', r' visible | enlarged | small ')
@@ -45,31 +45,16 @@ class TestesState(Base):
             self.convert,
             """label (testes | abbrev) (?: length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
-                | non scrotal | other | non testes )
-            """)
-        self.product(
-            self.convert,
-            'label (?: length )? (?P<value> non testes | non scrotal ) ')
-
-        self.product(
-            self.convert,
-            'label (?: length )? (?P<value> non scrotal | scrotal )')
-
-        self.product(
-            self.convert,
-            """abbrev (?: length )?
+                    | non scrotal | other | non testes )
+            | label (?: length )? (?P<value> non testes | testes )
+            | label (?: length )? (?P<value> non scrotal | scrotal )
+            | abbrev (?: length )?
                 (?P<value> state | abdominal | non scrotal | scrotal | other)
-                """)
-
-        self.product(
-            self.convert,
-            """testes (?: length )?
+            | testes (?: length )?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
-                | scrotal | other ) """)
-
-        self.product(
-            self.convert,
-            '(?P<value> non testes | non scrotal | non gonads | scrotal )')
+                | scrotal | other )
+            | (?P<value> non testes | non scrotal | non gonads | scrotal )
+            """)
 
         self.finish_init()
 

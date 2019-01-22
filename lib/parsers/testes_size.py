@@ -48,7 +48,8 @@ class TestesSize(Base):
                 (?: testes | abbrev | scrotal ) cross
             | testes cross
             | testes (?: abbrev | scrotal | word | sep ){1,3}
-                (?: testes | abbrev | scrotal ) cross
+                (?: abbrev | scrotal ) cross
+            | testes (?: abbrev | scrotal | word ) cross
             | scrotal cross
             """)
 

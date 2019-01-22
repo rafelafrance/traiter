@@ -80,6 +80,7 @@ class TestTestesSize(unittest.TestCase):
 
     def test_parse_12(self):
         self.assertEqual(
+            #          0123456789 123456789 123456789 123456789
             PAR.parse('testes scrotal, L testis 13x5mm'),
             [Trait(value=[13, 5], units='mm', start=18, end=31)])
 
