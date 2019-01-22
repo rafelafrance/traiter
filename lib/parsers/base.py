@@ -1,40 +1,15 @@
 """Tokenize the notations."""
 
 import re
-from typing import Dict, Pattern, Callable
-from dataclasses import dataclass, field as datafield
+from lib.parsers.rule_builder_mixin import RuleBuilerMixin
+from lib.parsers.token import Token
 
 
-@dataclass
-class Token:
-    """Token data."""
-
-    token: str = None
-    name: str = None
-    groups: Dict = datafield(default_factory={})
-    start: int = 0
-    end: int = 0
-
-
-@dataclass
-class Regexp:
-    """Regular expression data."""
-
-    type: str = None
-    name: str = None
-    token: str = None
-    regexp: Pattern = None
-    func: Callable = None
-
-
-class Base:  # pylint: disable=too-many-instance-attributes
+class Base(RuleBuilerMixin):
     """Shared lexer logic."""
 
     flags = re.VERBOSE | re.IGNORECASE
 
-    # get all group names from a regex
-    groups_rx = re.compile(r""" \( \? P< ( \w+ ) > """, flags)
-    back_ref_rx = re.compile(r""" \( \? P= ( \w+ ) \) """, flags)
     # Get words that are not group names
     token_rx = re.compile(
         r""" (?<! [?\\a-z] ) (?<! < \s )(?<! < )
@@ -46,6 +21,7 @@ class Base:  # pylint: disable=too-many-instance-attributes
 
     def __init__(self, args=None):
         """Build the trait parser."""
+        super().__init__()
         self.args = args
         self.regexps = []       # Token types
         self.regexp = {}        # Get at the regexp via its name
@@ -53,7 +29,6 @@ class Base:  # pylint: disable=too-many-instance-attributes
         self.tokenizer = None   # Regular expression for creating tokens
         self.replacer = None    # Regular expression for replacing tokens
         self.producer = None    # Regular expression for producing traits
-        self.used_groups = set()  # Used to rename groups
 
     def finish_init(self):
         """Finish initialization."""
@@ -134,7 +109,7 @@ class Base:  # pylint: disable=too-many-instance-attributes
                 start=token_list[start].start,
                 end=token_list[end-1].end)
             trait = self.regexp[name].func(token)
-            if trait:   # The function can still return a null & fail
+            if trait:   # The function can return a null & fail
                 trait = self.fix_up_trait(trait, text)
                 if trait:
                     trait.field = field
@@ -180,71 +155,3 @@ class Base:  # pylint: disable=too-many-instance-attributes
     def group_name(group):
         """Strip the unique suffix off of the group name."""
         return re.sub(r'_\d+$', '', group)
-
-    def adjust_group_names(self, regexp):
-        """Make sure all group names are unique & handle back references."""
-        # Rename group names
-        back_refs = {}
-        matches = list(self.groups_rx.finditer(regexp.regexp))[1:]
-        for match in reversed(matches):
-            group = match.group(1)
-            i = 0
-            while True:
-                i += 1
-                name = f'{group}_{i}'
-                if name not in self.used_groups:
-                    break
-            self.used_groups.add(name)
-            start = regexp.regexp[:match.start(1)]
-            end = regexp.regexp[match.end(1):]
-            regexp.regexp = start + name + end
-            back_refs[group] = name
-
-        # Now rename back references
-        matches = list(self.back_ref_rx.finditer(regexp.regexp))
-        for match in reversed(matches):
-            name = back_refs[match.group(1)]
-            start = regexp.regexp[:match.start(1)]
-            end = regexp.regexp[match.end(1):]
-            regexp.regexp = start + name + end
-
-        return regexp.regexp
-
-    def add_regex(self, regexp):
-        """Update regex to make it unique & put add it."""
-        regexp.token = f'{len(self.regexps) + 1}'.zfill(self.width - 1) + '_'
-        regexp.regexp = ' '.join(self.adjust_group_names(regexp).split())
-        self.groups[regexp.name] = self.groups_rx.findall(regexp.regexp)
-        self.regexp[regexp.name] = regexp
-        self.regexps.append(regexp)
-
-    def shared_token(self, shared):
-        """Build a regular expression with a named group."""
-        self.add_regex(Regexp(
-            type='token', name=shared[0],
-            regexp=f'(?P<{shared[0]}> {shared[1]} )'))
-
-    def lit(self, name, regexp):
-        """Build a regular expression with a named group."""
-        self.add_regex(Regexp(
-            type='token', name=name,
-            regexp=f'(?P<{name}> {regexp} )'))
-
-    def kwd(self, name, regexp):
-        r"""Wrap a regular expression in \b character class."""
-        self.add_regex(Regexp(
-            type='token', name=name,
-            regexp=fr'\b (?P<{name}> {regexp} ) \b'))
-
-    def replace(self, name, regexp):
-        """Build a replacer regular expression."""
-        self.add_regex(Regexp(
-            type='replace', name=name,
-            regexp=f'(?P<{name}> {regexp} )'))
-
-    def product(self, func, regexp):
-        """Build a replacer regular expression."""
-        name = f'product_{len(self.regexps) + 1}'
-        self.add_regex(Regexp(
-            type='product', name=name, func=func,
-            regexp=f'(?P<{name}> {regexp} )'))

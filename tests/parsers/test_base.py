@@ -1,7 +1,8 @@
 """Verify various parts of the base trait class."""
 
 import unittest
-from lib.parsers.base import Base, Regexp
+from lib.parsers.base import Base
+from lib.parsers.regexp import Regexp
 
 
 class TestBase(unittest.TestCase):
