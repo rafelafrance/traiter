@@ -28,7 +28,7 @@ class Trait(NumericTraitMixIn):
 
     def __repr__(self):
         """Represent the result."""
-        return 'ParseResult({})'.format(self.as_dict())
+        return '{}({})'.format(self.__class__.__name__, self.as_dict())
 
     def __eq__(self, other):
         """Compare traits."""
