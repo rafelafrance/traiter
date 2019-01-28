@@ -42,7 +42,7 @@ pair = ('pair', fr"""
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
 # first two numbers
-cross_joiner = r' (?: x | by | \* ) '
+cross_joiner = r' (?: x | by | \* | - ) '
 cross = ('cross', fr"""
     (?<! [\d/,.-]\d ) (?<! \b by )
     (?P<value1> {number[1]} ) \s* (?P<units1> {len_units[1]} )

@@ -4,35 +4,8 @@
 <head>
 <meta charset="utf-8" />
 <title>Traiter</title>
-
 <style>
-body, table {
-  margin: 40px;
-}
-
-h1 > span {
-  font-size: 20px;
-  float: right;
-  margin-right: 12px;
-}
-
-h2 {
-  margin-left: 40px;
-}
-
-.found {
-  background: lightgreen;
-}
-
-table {
-  border-collapse: collapse;
-}
-
-td, th {
-  border: 1px solid #999;
-  padding: 0.5rem;
-  text-align: left;
-}
+{% include 'html_writer.css' -%}
 </style>
 </head>
 <body>
@@ -58,3 +31,19 @@ td, th {
     </tr>
   </thead>
   <tbody>
+  </tbody>
+</table>
+<div class="pager-container">
+  <button class="first-page" title="First page">&lt;&lt;</button>
+  <button  class="previous-page" title="Previous page">&lt;</button>
+  <label>Page:</label>
+  <input class="pager" type="number" min="1" step="1" value="1"/>
+  <label class="max-page"></label>
+  <button class="next-page" title="Next page">&gt;</button>
+  <button class="last-page" title="Last page">&gt;&gt;</button>
+</div>
+</body>
+<script>
+{% include 'html_writer.js' -%}
+</script>
+</html>

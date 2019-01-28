@@ -174,3 +174,8 @@ class TestTestesSize(unittest.TestCase):
         self.assertEqual(
             PAR.parse('adult ; T=9 ; endoparasite '),
             [])
+
+    def test_parse_22(self):
+        self.assertEqual(
+            PAR.parse('TESTES 5-3.5 MM,'),
+            [Trait(value=[5, 3.5], units='mm', start=0, end=15)])
