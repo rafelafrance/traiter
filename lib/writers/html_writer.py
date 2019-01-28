@@ -13,8 +13,8 @@ class HtmlWriter(BaseWriter):
         """Build the writer."""
         super().__init__(args)
         self.index = 0
-        self.started = None
         self.rows = []
+        self.started = None
 
     def start(self):
         """Start the report."""
@@ -24,7 +24,7 @@ class HtmlWriter(BaseWriter):
     def record(self, raw_record, parsed_record):
         """Output a row to the file."""
         self.index += 1
-        if self.index % 1000 == 0:
+        if self.args.log_every and self.index % self.args.log_every == 0:
             print(self.index)
         for _, record in parsed_record.items():
             for parse in record['parsed']:

@@ -123,6 +123,10 @@ def parse_args():
         help="""Stop after this many records are processed.""")
 
     parser.add_argument(
+        '--log-every', type=int, metavar='N',
+        help="""Log after message after processing every N input records.""")
+
+    parser.add_argument(
         'infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
         help='''The input file containing the traits. Defaults to stdin.''')
 
