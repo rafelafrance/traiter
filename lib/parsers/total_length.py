@@ -38,6 +38,7 @@ class TotalLength(NumericParserMixIn, Base):
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
+        self.shared_token(tkn.triple)
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
         self.kwd('word', r' (?: [a-z] \w* ) ')
@@ -58,26 +59,28 @@ class TotalLength(NumericParserMixIn, Base):
 
         self.product(self.simple, r"""
             key_with_units pair
-            | shorthand_key pair (?P<units> len_units)
-            | shorthand_key (?P<units> len_units) pair
-            | key_units_req pair (?P<units> len_units)
+            | shorthand_key (?: triple )? pair (?P<units> len_units)
+            | shorthand_key (?: triple )? (?P<units> len_units) pair
+            | key_units_req (?: triple )? pair (?P<units> len_units)
             | pair (?P<units> len_units) key
             | pair key
-            | ambiguous pair (?P<units> len_units) key
-            | ambiguous pair key
+            | ambiguous (?: triple )? pair (?P<units> len_units) key
+            | ambiguous (?: triple )?  pair key
             | (?P<ambiguous_key> ambiguous) pair (?P<units> len_units)
             | (?P<ambiguous_key> ambiguous) (?P<units> len_units) pair
             | (?P<ambiguous_key> ambiguous) pair
             | key pair (?P<units> len_units)
             | key (?P<units> len_units) pair
-            | key pair
+            | key (?: triple )? pair
             | key (?: word | sep ){1,3} pair (?P<units> len_units)
             | key (?: word | sep ){1,3} pair
             """)
 
         self.product(
-            partial(self.shorthand_length, measurement='shorthand_tl'),
-            r' shorthand_key shorthand | key_units_req shorthand | shorthand ')
+            partial(self.shorthand_length, measurement='shorthand_tl'), r"""
+            (?: shorthand_key | key_units_req ) shorthand | shorthand
+            | (?: shorthand_key | key_units_req ) triple (?! shorthand | pair )
+            """)
 
         self.finish_init()
 

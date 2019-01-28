@@ -55,3 +55,18 @@ class TestTailLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('reproductive data=testes abdominal; T = 3 x 1.8 ;'),
             [])
+
+    def test_parse_10(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"210-92-30" }'),
+            [Trait(value=92, units='mm_shorthand', start=2, end=26)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse('measurements:210-92-30 308-190-45-20'),
+            [Trait(value=190, units='mm_shorthand', start=23, end=36)])
+
+    def test_parse_12(self):
+        self.assertEqual(
+            PAR.parse('measurements:210-92-30 185-252 mm'),
+            [])

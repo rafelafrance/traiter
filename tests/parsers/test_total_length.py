@@ -465,3 +465,18 @@ class TestTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('12-07-1944'),
             [])
+
+    def test_parse_77(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"210-92-30" }'),
+            [Trait(value=210, units='mm_shorthand', start=2, end=26)])
+
+    def test_parse_78(self):
+        self.assertEqual(
+            PAR.parse('measurements:210-92-30 308-190-45-20'),
+            [Trait(value=308, units='mm_shorthand', start=23, end=36)])
+
+    def test_parse_79(self):
+        self.assertEqual(
+            PAR.parse('measurements:210-92-30 185-252 mm'),
+            [Trait(value=[185, 252], units='mm', start=0, end=33)])

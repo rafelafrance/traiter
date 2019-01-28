@@ -108,3 +108,16 @@ shorthand = ('shorthand', fr"""
     )?
     (?! [\d/:=-] )
     """)
+
+# Apparently, they sometimes don't fill in the last number. We have to be extra
+# careful using this pattern so we don't pick up dates. Surround this token
+# with keys and lookarounds.
+triple = ('triple', fr"""
+    (?<! [\d/-] )
+    (?P<shorthand_tl> (?P<estimated_tl> \[ )? {sh_val[1]} \]? )
+    (?P<shorthand_sep> [:/-] )
+    (?P<shorthand_tal> (?P<estimated_tal> \[ )? {sh_val[1]} \]? )
+    (?P=shorthand_sep)
+    (?P<shorthand_hfl> (?P<estimated_hfl> \[ )? {sh_val[1]} \]? )
+    (?! [\d/:=-] )
+    """)
