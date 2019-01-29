@@ -29,6 +29,7 @@ class HindFootLength(NumericParserMixIn, Base):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
         self.shared_token(tkn.triple)
+        self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for parsing the trait

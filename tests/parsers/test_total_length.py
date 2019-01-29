@@ -344,11 +344,6 @@ class TestTotalLength(unittest.TestCase):
             PAR.parse('SVL=44mm'),
             [Trait(value=44, units='mm', start=0, end=8)])
 
-    def test_parse_58a(self):
-        self.assertEqual(
-            PAR.parse('unformatted measurements=42-51 mm SL'),
-            [Trait(value=[42, 51], units='mm', start=12, end=33)])
-
     def test_parse_59(self):
         # Infer the units from other measurements in post processing
         self.assertEqual(
@@ -363,18 +358,6 @@ class TestTotalLength(unittest.TestCase):
                 value=263.52,
                 flags={'ambiguous_key': True}, units='in',
                 start=0, end=16)])
-
-    def test_parse_60a(self):
-        self.assertEqual(
-            PAR.parse('LENGTH 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Trait(value=9.52, flags={'ambiguous_key': True}, units='in',
-                   start=0, end=13)])
-
-    def test_parse_60b(self):
-        self.assertEqual(
-            PAR.parse('LENGTH 0 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
-            [Trait(value=9.52, flags={'ambiguous_key': True}, units='in',
-                   start=0, end=15)])
 
     def test_parse_61(self):
         self.assertEqual(
@@ -480,3 +463,30 @@ class TestTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('measurements:210-92-30 185-252 mm'),
             [Trait(value=[185, 252], units='mm', start=0, end=33)])
+
+    def test_parse_80(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=scars R2, L2 ;'),
+            [])
+
+    def test_parse_81(self):
+        self.assertEqual(
+            PAR.parse('LENGTH 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
+            [Trait(value=9.52, flags={'ambiguous_key': True}, units='in',
+                   start=0, end=13)])
+
+    def test_parse_82(self):
+        self.assertEqual(
+            PAR.parse('LENGTH 0 3/8 IN. WING CHORD 5.25 IN. TAIL 4.25 IN.'),
+            [Trait(value=9.52, flags={'ambiguous_key': True}, units='in',
+                   start=0, end=15)])
+
+    def test_parse_83(self):
+        self.assertEqual(
+            PAR.parse('unformatted measurements=42-51 mm SL'),
+            [Trait(value=[42, 51], units='mm', start=12, end=33)])
+
+    def test_parse_84(self):
+        self.assertEqual(
+            PAR.parse('verbatim collector=R. D. Svihla 31-605 ; sex=male'),
+            [])

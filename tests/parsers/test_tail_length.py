@@ -70,3 +70,8 @@ class TestTailLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('measurements:210-92-30 185-252 mm'),
             [])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('T15N, R9W, Sec 12NW'),
+            [])

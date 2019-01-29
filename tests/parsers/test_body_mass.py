@@ -44,7 +44,8 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"x", "earLengthInMM":"20", '
                       '"weight":"[139.5] g" }'),
-            [Trait(value=139.5, units='g', start=47, end=65)])
+            [Trait(value=139.5, units='g', flags={'estimated_value': True},
+                   start=47, end=65)])
 
     def test_parse_07(self):
         self.assertEqual(
@@ -212,3 +213,18 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             PAR.parse('w.t.=10 g'),
             [Trait(value=10, units='g', start=0, end=9)])
+
+    def test_parse_34(self):
+        self.assertEqual(
+            PAR.parse('DATA HISTORY: Inventory catalogued/verified by '
+                      'Collections staff (2008-2010 inventory). Record last '
+                      'updated in Excel (prior to Arctos migration) by Dawn '
+                      'R. Roberts (2013-11-30). Date listed as entered in '
+                      'original FileMaker database: 1988-07-29.'),
+            [])
+
+    def test_parse_35(self):
+        self.assertEqual(
+            PAR.parse('; weight = [50.8] g ;'),
+            [Trait(value=50.8, units='g', flags={'estimated_value': True},
+                   start=2, end=19)])

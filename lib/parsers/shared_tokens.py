@@ -34,8 +34,10 @@ number = ('number', r' (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ')
 pair_joiner = r'- | to'
 pair = ('pair', fr"""
     (?<! \d ) (?<! \d [|,.-] ) (?<! \b to \s )
+    (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} )
-        (?: \s* (?: {pair_joiner} ) \s* (?P<value2> {number[1]} ) )?
+    \]? \s*?
+    (?: \s* (?: {pair_joiner} ) \s* (?P<value2> {number[1]} ) )?
     (?! \d+ | [|,.-] \d | \s+ to \b )
     """)
 
@@ -45,7 +47,10 @@ pair = ('pair', fr"""
 cross_joiner = r' (?: x | by | \* | - ) '
 cross = ('cross', fr"""
     (?<! [\d/,.-]\d ) (?<! \b by )
-    (?P<value1> {number[1]} ) \s* (?P<units1> {len_units[1]} )
+    (?P<estimated_value> \[ \s* )?
+    (?P<value1> {number[1]} ) \s*
+    \]? \s*?
+    (?P<units1> {len_units[1]} )
         \s* {cross_joiner}
         \s* (?P<value2> {number[1]} ) \s* (?P<units2> {len_units[1]} )
     | (?P<value1> {number[1]} )

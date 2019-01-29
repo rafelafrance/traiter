@@ -18,10 +18,14 @@ class EarLength(NumericParserMixIn, Base):
             ear \s* len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
             """)
 
-        self.lit('char_key', r' \b e (?! \.? [a-z] ) ')
+        self.lit('char_key', r"""
+            (?<! [a-z] ) (?<! [a-z] \s )
+            (?P<ambiguous_char> e )
+            (?! \.? [a-z] )
+            """)
 
         self.kwd('keyword', r"""
-            ear \s* from \s* (?: notch | crown )
+            ear \s* from \s* (?P<measured_from> notch | crown )
             | ear \s* len (?: gth )?
             | ear (?! \s* tag )
             """)
@@ -31,6 +35,7 @@ class EarLength(NumericParserMixIn, Base):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
+        self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement

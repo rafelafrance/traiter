@@ -23,7 +23,7 @@ class TailLength(NumericParserMixIn, Base):
             tail \s* len (?: gth )? \s* in \s*
             (?P<units> millimeters | mm ) """)
 
-        self.lit('char_key', r' \b t (?! [a-z] )')
+        self.lit('char_key', r' \b (?P<ambiguous_char> t ) (?! [a-z] )')
 
         self.kwd('keyword', r' tail \s* len (?: gth )? | tail | tal ')
 
@@ -33,6 +33,7 @@ class TailLength(NumericParserMixIn, Base):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
         self.shared_token(tkn.triple)
+        self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement
@@ -58,7 +59,11 @@ class TailLength(NumericParserMixIn, Base):
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
-        start = max(0, trait.start - LOOKBACK)
-        if IS_TESTES.search(text, start, trait.start):
-            return None
+        if trait.flags.get('ambiguous_char'):
+            start = max(0, trait.start - LOOKBACK)
+            if IS_TESTES.search(text, start, trait.start):
+                return None
+            if len(text) > trait.end and text[trait.end].isalpha():
+                return None
+
         return self.fix_up_inches(trait, text)

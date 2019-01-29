@@ -23,14 +23,13 @@ class TotalLength(NumericParserMixIn, Base):
             total  [\s-]* length [\s-]* in
             | (?: total | max | standard ) [\s-]* lengths? \b
             | meas [\s*:]? \s* length [\s(]* [l] [)\s:]*
-            | meas (?: [a-z]* )? \.? : \s* l
-            | t [o.]? l \.? _?
-            | s \.? l \.?
+            | meas (?: [a-z]* )? \.? : \s* l (?! [a-z.] )
+            | t [o.]? l \.? _? (?! [a-z.] )
+            | s \.? l \.? (?! [a-z.] )
             | label [\s.]* lengths? \b
             | (?: fork | mean | body ) [\s-]* lengths? \b
-            | s \.? v \.? ( l \.? )?
+            | s \.? v \.? ( l \.? )? (?! [a-z.] )
             | snout [\s-]* vent [\s-]* lengths? \b
-            | (?<! \w \s ) \b l (?! [a-z] )
             """)
 
         self.lit('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')

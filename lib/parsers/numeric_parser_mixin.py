@@ -15,6 +15,9 @@ class NumericParserMixIn:
         """Handle a normal length notation."""
         trait = Trait(start=token.start, end=token.end)
         trait.is_flag_in_token('ambiguous_key', token)
+        trait.is_flag_in_token('ambiguous_char', token)
+        trait.is_flag_in_token('estimated_value', token)
+        trait.flag_from_token('measured_from', token)
         trait.float_value(token.groups['value1'], token.groups.get('value2'))
         trait.convert_value(token.groups.get('units'))
         return trait

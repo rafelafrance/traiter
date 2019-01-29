@@ -23,7 +23,8 @@ class TestEarLength(unittest.TestCase):
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('L. 9", T. 4", HF. 2", E 1",'),
-            [Trait(value=25.4, units='"', start=22, end=26)])
+            [Trait(value=25.4, units='"', flags={'ambiguous_char': True},
+                   start=22, end=26)])
 
     def test_parse_04(self):
         self.assertEqual(
@@ -42,3 +43,25 @@ class TestEarLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('ear tag 570'),
             [])
+
+    def test_parse_07(self):
+        self.assertEqual(
+            PAR.parse('verbatim collector=E. E. Makela 2432 ; sex=female'),
+            [])
+
+    def test_parse_08(self):
+        self.assertEqual(
+            PAR.parse('grid 9, station E1.'),
+            [])
+
+    def test_parse_09(self):
+        self.assertEqual(
+            PAR.parse('ear from notch=17 mm;'),
+            [Trait(value=17, units='mm', flags={'measured_from': 'notch'},
+                   start=0, end=20)])
+
+    def test_parse_10(self):
+        self.assertEqual(
+            PAR.parse('earfromcrown=17mm;'),
+            [Trait(value=17, units='mm', flags={'measured_from': 'crown'},
+                   start=0, end=17)])
