@@ -490,3 +490,8 @@ class TestTotalLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('verbatim collector=R. D. Svihla 31-605 ; sex=male'),
             [])
+
+    def test_parse_85(self):
+        self.assertEqual(
+            PAR.parse('Cataloged by: R.L. Humphrey, 31 January 1995'),
+            [])
