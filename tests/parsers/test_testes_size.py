@@ -191,3 +191,14 @@ class TestTestesSize(unittest.TestCase):
             PAR.parse('reproductive data=T: L-2x4mm ; '),
             [Trait(value=[2, 4], units='mm', flags={'side': 'l'},
                    start=0, end=28)])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('testes (R) 6 x 1.5 & 5 x 2 mm'),
+            [Trait(value=[6, 1.5], flags={'units_inferred': True, 'side': 'r'},
+                   start=0, end=18)])
+
+    def test_parse_26(self):
+        self.assertEqual(
+            PAR.parse('Cataloged by: R.L. Humphrey, 31 January 1995'),
+            [])

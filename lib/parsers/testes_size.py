@@ -33,14 +33,17 @@ class TestesSize(Base):
         self.lit('char_key', r' \b t (?! [a-z] )')
         self.kwd('scrotal', r' scrotum | scrotal | scrot | nscr ')
         self.kwd('lr', r' (?P<side> left | right | l | r ) ')
+        self.lit('lr_delim', r' [/(\[] \s* (?P<side> l | r ) \s* [)\]] ')
         self.shared_token(tkn.cross)
+        self.lit('and', r' and | & ')
         self.lit('word', r' [a-z]+ ')
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for parsing the trait
         self.product(self.convert, r"""
             label (?: testes | abbrev | char_key ) cross
-            | label (?: testes | abbrev | char_key ) lr cross
+            | label (?: testes | abbrev | char_key ) (?: lr | lr_delim ) cross
+            | (?: testes | abbrev | char_key ) (?: lr | lr_delim ) cross
             | label cross
             | label testes cross
             | label (?: testes | abbrev | scrotal | word | sep | char_key){1,3}
@@ -60,6 +63,7 @@ class TestesSize(Base):
 
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed token into a trait product."""
+        print(token)
         if token.groups.get('ambiguous_char') \
                 and not token.groups.get('value2'):
             return None
