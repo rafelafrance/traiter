@@ -179,3 +179,15 @@ class TestTestesSize(unittest.TestCase):
         self.assertEqual(
             PAR.parse('TESTES 5-3.5 MM,'),
             [Trait(value=[5, 3.5], units='mm', start=0, end=15)])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=T: R-2x4mm ; '),
+            [Trait(value=[2, 4], units='mm', flags={'side': 'r'},
+                   start=0, end=28)])
+
+    def test_parse_24(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=T: L-2x4mm ; '),
+            [Trait(value=[2, 4], units='mm', flags={'side': 'l'},
+                   start=0, end=28)])

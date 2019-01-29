@@ -136,7 +136,7 @@ class TestTestesState(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 ('weight=75.6 g; reproductive data=small')),
-            [])
+            [Trait(value='small', start=15, end=38)])
 
     def test_parse_24(self):
         self.assertEqual(
@@ -180,3 +180,18 @@ class TestTestesState(unittest.TestCase):
              Trait(value='nonscrotal', start=136, end=164),
              Trait(value='nonscrotal', start=189, end=217),
              Trait(value='nonscrotal', start=220, end=248)])
+
+    def test_parse_30(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=NS ;'),
+            [Trait(value='ns', start=0, end=20)])
+
+    def test_parse_31(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=SCR ;'),
+            [Trait(value='scr', start=0, end=21)])
+
+    def test_parse_32(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=testes = 4x3 mm; '),
+            [])

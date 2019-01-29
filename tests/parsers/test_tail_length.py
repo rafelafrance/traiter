@@ -75,3 +75,8 @@ class TestTailLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('T15N, R9W, Sec 12NW'),
             [])
+
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
+            [Trait(value=109, units='mm_shorthand', start=2, end=34)])

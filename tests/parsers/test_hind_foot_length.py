@@ -66,3 +66,13 @@ class TestHindFootLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('measurements:210-92-30 185-252 mm'),
             [])
+
+    def test_parse_12(self):
+        self.assertEqual(
+            PAR.parse('"footLengthInMillimeters"="31",'),
+            [Trait(value=31, units='millimeters', start=1, end=29)])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
+            [Trait(value=37, units='mm_shorthand', start=2, end=34)])

@@ -15,7 +15,7 @@ class HindFootLength(NumericParserMixIn, Base):
 
         # Build the tokens
         self.kwd('key_with_units', r"""
-            hind \s* foot \s* len (?: gth )? \s* in \s*
+            (?: hind \s* )? foot \s* len (?: gth )? \s* in \s*
             (?P<units> millimeters | mm ) """)
 
         self.kwd('key', r"""

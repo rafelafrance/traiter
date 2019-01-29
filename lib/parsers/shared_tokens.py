@@ -92,7 +92,7 @@ shorthand_key = ('shorthand_key', r"""
     """)
 
 # A possibly unknown value
-sh_val = ('sh_val', f' (?: {number[1]} | [?x]{{1,2}} ) ')
+sh_val = ('sh_val', f' (?: {number[1]} | [?x]{{1,2}} | n/?d ) ')
 
 shorthand = ('shorthand', fr"""
     (?<! [\d/-] )

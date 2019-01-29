@@ -228,3 +228,8 @@ class TestBodyMass(unittest.TestCase):
             PAR.parse('; weight = [50.8] g ;'),
             [Trait(value=50.8, units='g', flags={'estimated_value': True},
                    start=2, end=19)])
+
+    def test_parse_36(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
+            [])

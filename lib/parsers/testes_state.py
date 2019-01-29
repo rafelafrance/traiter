@@ -19,9 +19,10 @@ class TestesState(Base):
         self.lit('non', r' \b (?: not | non | no | semi | sub) ')
         self.kwd('descended', r' (?: un)? (?: des?c?end (?: ed)? | desc? ) ')
         self.kwd('abbrev', r' tes | ts | t ')
-        self.lit('scrotal', r' (?: scrotum | scrotal | scrot | nscr ) \b ')
+        self.lit(
+            'scrotal', r' (?: scrotum | scrotal | scrot | nscr | scr) \b ')
         self.lit('partially', r' partially | part ')
-        self.kwd('state_abbrev', r' scr | ns | sc ')
+        self.kwd('state_abbrev', r' ns | sc ')
         self.kwd('abdominal', r' abdominal | abdomin | abdom ')
         self.kwd('size', r' visible | enlarged | small ')
         self.kwd('gonads', r' (?P<ambiguous_sex> gonads? ) ')
@@ -30,6 +31,7 @@ class TestesState(Base):
             ' cryptorchism | cryptorchid | monorchism | monorchid | inguinal ')
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
+        self.lit('word', r' [a-z]+ ')
 
         # Build rules for token replacement
         self.replace('state', """
@@ -43,11 +45,11 @@ class TestesState(Base):
         # Build rules for parsing the trait
         self.product(
             self.convert,
-            """label (testes | abbrev) (?: length )?
+            """label (testes | abbrev)? (?: length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )
-            | label (?: length )? (?P<value> non testes | testes )
-            | label (?: length )? (?P<value> non scrotal | scrotal )
+            | label (?: length )?
+                (?P<value> non testes | non scrotal | scrotal )
             | abbrev (?: length )?
                 (?P<value> state | abdominal | non scrotal | scrotal | other)
             | testes (?: length )?

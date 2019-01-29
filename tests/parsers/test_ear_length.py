@@ -65,3 +65,8 @@ class TestEarLength(unittest.TestCase):
             PAR.parse('earfromcrown=17mm;'),
             [Trait(value=17, units='mm', flags={'measured_from': 'crown'},
                    start=0, end=17)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
+            [Trait(value=34, units='mm_shorthand', start=2, end=34)])
