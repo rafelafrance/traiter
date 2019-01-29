@@ -70,3 +70,17 @@ class TestEarLength(unittest.TestCase):
         self.assertEqual(
             PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
             [Trait(value=34, units='mm_shorthand', start=2, end=34)])
+
+    def test_parse_12(self):
+        self.assertEqual(
+            PAR.parse('E/n-21mm'),
+            [Trait(value=21, units='mm',
+                   flags={'ambiguous_char': True, 'measured_from': 'n'},
+                   start=0, end=8)])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('E/c-21mm'),
+            [Trait(value=21, units='mm',
+                   flags={'ambiguous_char': True, 'measured_from': 'c'},
+                   start=0, end=8)])

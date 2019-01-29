@@ -18,6 +18,12 @@ class EarLength(NumericParserMixIn, Base):
             ear \s* len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
             """)
 
+        self.lit('char_measured_from', r"""
+            (?<! [a-z] ) (?<! [a-z] \s )
+            (?P<ambiguous_char> e ) /? (?P<measured_from> n | c )
+            (?! \.? [a-z] )
+            """)
+
         self.lit('char_key', r"""
             (?<! [a-z] ) (?<! [a-z] \s )
             (?P<ambiguous_char> e )
@@ -39,7 +45,7 @@ class EarLength(NumericParserMixIn, Base):
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement
-        self.replace('key', ' keyword | char_key ')
+        self.replace('key', ' keyword | char_key | char_measured_from ')
 
         # Build rules for parsing the trait
         self.product(self.fraction, r"""
