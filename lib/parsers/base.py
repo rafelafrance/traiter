@@ -5,7 +5,7 @@ from lib.parsers.rule_builder_mixin import RuleBuilerMixin
 from lib.parsers.token import Token
 
 
-class Base(RuleBuilerMixin):
+class Base(RuleBuilerMixin):  # pylint: disable=too-many-instance-attributes
     """Shared lexer logic."""
 
     flags = re.VERBOSE | re.IGNORECASE
@@ -23,12 +23,13 @@ class Base(RuleBuilerMixin):
         """Build the trait parser."""
         super().__init__()
         self.args = args
-        self.regexps = []       # Token types
-        self.regexp = {}        # Get at the regexp via its name
-        self.groups = {}        # Use this so we can quickly find regex groups
-        self.tokenizer = None   # Regular expression for creating tokens
-        self.replacer = None    # Regular expression for replacing tokens
-        self.producer = None    # Regular expression for producing traits
+        self.regexps = []        # Token types
+        self.regexp = {}         # Get at the regexp via its name
+        self.renamed_group = {}  # Used to quickly find renamed groups
+        self.inner_groups = {}   # Used to quickly find regex inner groups
+        self.tokenizer = None    # Regular expression for creating tokens
+        self.replacer = None     # Regular expression for replacing tokens
+        self.producer = None     # Regular expression for producing traits
 
     def finish_init(self):
         """Finish initialization."""
@@ -63,8 +64,8 @@ class Base(RuleBuilerMixin):
         token_list = []
         for match in self.tokenizer.finditer(text):
             name = match.lastgroup
-            groups = {self.group_name(x): text[match.start(x):match.end(x)]
-                      for x in self.groups[name] if match.group(x)}
+            groups = {self.renamed_group[x]: text[match.start(x):match.end(x)]
+                      for x in self.inner_groups[name] if match.group(x)}
             token_list.append(Token(
                 token=self.regexp[name].token,
                 name=name,
@@ -128,11 +129,11 @@ class Base(RuleBuilerMixin):
         groups = {}
         if not match.lastgroup:
             return groups
-        for group in self.groups[match.lastgroup]:
+        for group in self.inner_groups[match.lastgroup]:
             if match.group(group):
                 start = match.start(group) // self.width
                 end = match.end(group) // self.width
-                name = self.group_name(group)
+                name = self.renamed_group[group]
                 groups[name] = text[
                     token_list[start].start:token_list[end-1].end]
         start = match.start() // self.width
@@ -150,8 +151,3 @@ class Base(RuleBuilerMixin):
             end = regexp.regexp[match.end(1):]
             regexp.regexp = start + token + end
         return ' '.join(regexp.regexp.split())
-
-    @staticmethod
-    def group_name(group):
-        """Strip the unique suffix off of the group name."""
-        return re.sub(r'_\d+$', '', group)

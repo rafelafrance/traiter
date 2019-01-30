@@ -37,9 +37,9 @@ class RecordParser:
                 if data[trait]['flags'].get('break'):
                     break
 
-            self.between_action(data, trait)
-            if data[trait]['flags'].get('break'):
-                continue
+            # self.between_action(data, trait)
+            # if data[trait]['flags'].get('break'):
+            #     continue
 
             for field in self.search_fields:
                 parsed = parser.parse(record[field], field, as_dict=True)
@@ -48,7 +48,7 @@ class RecordParser:
                 if data[trait]['flags'].get('break'):
                     break
 
-            self.after_action(data, trait)
+            # self.after_action(data, trait)
 
         return data
 

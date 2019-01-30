@@ -25,12 +25,14 @@ class RuleBuilerMixin:
 
     def rename_group_names(self, regexp):
         """Make regular expression group names unique."""
+        self.renamed_group[regexp.name] = regexp.name
         back_refs = {}
         matches = list(self.groups_rx.finditer(regexp.regexp))[1:]
         for match in reversed(matches):
             group = match.group(1)
             self.tie_breaker += 1
             name = f'{group}_{self.tie_breaker}'
+            self.renamed_group[name] = group
             start = regexp.regexp[:match.start(1)]
             end = regexp.regexp[match.end(1):]
             regexp.regexp = start + name + end
@@ -51,7 +53,7 @@ class RuleBuilerMixin:
         """Update regex to make it unique & put add it."""
         regexp.token = f'{len(self.regexps) + 1}'.zfill(self.width - 1) + '_'
         regexp.regexp = ' '.join(self.adjust_group_names(regexp).split())
-        self.groups[regexp.name] = self.groups_rx.findall(regexp.regexp)
+        self.inner_groups[regexp.name] = self.groups_rx.findall(regexp.regexp)
         self.regexp[regexp.name] = regexp
         self.regexps.append(regexp)
 
