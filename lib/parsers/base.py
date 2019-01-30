@@ -1,53 +1,39 @@
-"""Tokenize the notations."""
+"""Common logic for parsing trait notations."""
 
 import re
 from lib.parsers.rule_builder_mixin import RuleBuilerMixin
-from lib.parsers.token import Token
+from lib.parsers.token import Token, TOKEN_WIDTH
 
 
-class Base(RuleBuilerMixin):  # pylint: disable=too-many-instance-attributes
+class Base(RuleBuilerMixin):
     """Shared lexer logic."""
 
     flags = re.VERBOSE | re.IGNORECASE
 
-    # Get words that are not group names
-    token_rx = re.compile(
-        r""" (?<! [?\\a-z] ) (?<! < \s )(?<! < )
-             ( \b [a-z]\w* \b )
-             (?! \s* > | [a-z] )
-        """, flags)
-
-    width = 4   # Token width from 001_ to 999_
-
     def __init__(self, args=None):
         """Build the trait parser."""
-        super().__init__()
         self.args = args
-        self.regexps = []        # Token types
-        self.regexp = {}         # Get at the regexp via its name
-        self.renamed_group = {}  # Used to quickly find renamed groups
-        self.inner_groups = {}   # Used to quickly find regex inner groups
+        self.regexps = {}        # Get at the regexp via its name
         self.tokenizer = None    # Regular expression for creating tokens
         self.replacer = None     # Regular expression for replacing tokens
         self.producer = None     # Regular expression for producing traits
 
     def finish_init(self):
         """Finish initialization."""
-        for regexp in self.regexps:
-            if regexp.type != 'token':
-                regexp.regexp = self.tokenize_regex(regexp)
+        for regexp in self.regexps.values():
+            regexp.tokenize_regex(self.regexps)
 
         self.tokenizer = re.compile(
-            ' | '.join([x.regexp for x in self.regexps
-                        if x.type == 'token']),
+            ' | '.join([x.regexp for x in self.regexps.values()
+                        if x.phase == 'token']),
             self.flags)
         self.replacer = re.compile(
-            ' | '.join([x.regexp for x in self.regexps
-                        if x.type == 'replace']),
+            ' | '.join([x.regexp for x in self.regexps.values()
+                        if x.phase == 'replace']),
             self.flags)
         self.producer = re.compile(
-            ' | '.join([x.regexp for x in self.regexps
-                        if x.type == 'product']),
+            ' | '.join([x.regexp for x in self.regexps.values()
+                        if x.phase == 'product']),
             self.flags)
 
     def parse(self, text, field=None, as_dict=False):
@@ -64,10 +50,11 @@ class Base(RuleBuilerMixin):  # pylint: disable=too-many-instance-attributes
         token_list = []
         for match in self.tokenizer.finditer(text):
             name = match.lastgroup
-            groups = {self.renamed_group[x]: text[match.start(x):match.end(x)]
-                      for x in self.inner_groups[name] if match.group(x)}
+            groups = {old: text[match.start(new):match.end(new)]
+                      for new, old
+                      in self.regexps[name].groups if match.group(new)}
             token_list.append(Token(
-                token=self.regexp[name].token,
+                token=self.regexps[name].token,
                 name=name,
                 groups=groups,
                 start=match.start(),
@@ -82,12 +69,13 @@ class Base(RuleBuilerMixin):  # pylint: disable=too-many-instance-attributes
         for match in reversed(matches):
             name = match.lastgroup
             want_replace = True
-            start = match.start() // self.width
-            end = match.end() // self.width
+            start = match.start() // TOKEN_WIDTH
+            end = match.end() // TOKEN_WIDTH
             token = Token(
-                token=self.regexp[name].token,
+                token=self.regexps[name].token,
                 name=name,
-                groups=self.merge_token_groups(text, token_list, match),
+                groups=Token.merge_token_groups(
+                    text, token_list, match, self.regexps[match.lastgroup]),
                 start=token_list[start].start,
                 end=token_list[end-1].end)
             token_list[start:end] = [token]
@@ -101,15 +89,16 @@ class Base(RuleBuilerMixin):  # pylint: disable=too-many-instance-attributes
         token_text = ''.join([t.token for t in token_list])
         for match in self.producer.finditer(token_text):
             name = match.lastgroup
-            start = match.start() // self.width
-            end = match.end() // self.width
+            start = match.start() // TOKEN_WIDTH
+            end = match.end() // TOKEN_WIDTH
             token = Token(
                 token=name,
                 name=name,
-                groups=self.merge_token_groups(text, token_list, match),
+                groups=Token.merge_token_groups(
+                    text, token_list, match, self.regexps[match.lastgroup]),
                 start=token_list[start].start,
                 end=token_list[end-1].end)
-            trait = self.regexp[name].func(token)
+            trait = self.regexps[name].func(token)
             if trait:   # The function can return a null & fail
                 trait = self.fix_up_trait(trait, text)
                 if trait:
@@ -123,31 +112,3 @@ class Base(RuleBuilerMixin):  # pylint: disable=too-many-instance-attributes
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
         return trait
-
-    def merge_token_groups(self, text, token_list, match):
-        """Combine the token groups from a sequence of tokens."""
-        groups = {}
-        if not match.lastgroup:
-            return groups
-        for group in self.inner_groups[match.lastgroup]:
-            if match.group(group):
-                start = match.start(group) // self.width
-                end = match.end(group) // self.width
-                name = self.renamed_group[group]
-                groups[name] = text[
-                    token_list[start].start:token_list[end-1].end]
-        start = match.start() // self.width
-        end = match.end() // self.width
-        for token in token_list[start:end]:
-            groups = {**groups, **token.groups}
-        return groups
-
-    def tokenize_regex(self, regexp):
-        """Replace names in regex with their tokens."""
-        matches = list(self.token_rx.finditer(regexp.regexp))
-        for match in reversed(matches):
-            token = self.regexp[match.group(1)].token
-            start = regexp.regexp[:match.start(1)]
-            end = regexp.regexp[match.end(1):]
-            regexp.regexp = start + token + end
-        return ' '.join(regexp.regexp.split())
