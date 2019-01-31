@@ -1,5 +1,7 @@
 """Write the traiter output to an HTML file."""
 
+# pylint: disable=import-error
+
 import json
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
@@ -27,7 +29,7 @@ class HtmlWriter(BaseWriter):
         if self.args.log_every and self.index % self.args.log_every == 0:
             print(self.index)
         for _, record in parsed_record.items():
-            for parse in record['parsed']:
+            for parse in record:
                 parse['value'] = json.dumps(parse['value'])
         self.rows.append(
             {'raw': raw_record, 'parsed': parsed_record, 'index': self.index})

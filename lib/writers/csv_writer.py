@@ -29,18 +29,37 @@ class CsvWriter(BaseWriter):
         row = {c: raw_record.get(c, '') for c in self.columns}
 
         for trait, data in parsed_record.items():
-            column = f'{trait}_flag'
-            row[column] = data['flags'].get('break', '')
-            for i, parse in enumerate(data['parsed'], 1):
-                for part in ('value', 'units', 'field', 'start', 'end'):
-                    column = f'{trait}_{i}_{part}'
-                    row[column] = parse[part]
-                for flag, value in parse['flags'].items():
-                    column = f'{trait}_{i}_{flag}'
-                    row[column] = value
+            TRAITS[trait](row, data)
 
         self.rows.append(row)
 
     def end(self):
         """End the report."""
-        pd.DataFrame(self.rows).to_csv(self.args.outfile, index=False)
+        dfm = pd.DataFrame(self.rows)
+        dfm.to_csv(self.args.outfile, index=False)
+
+
+def vocab_columns(row, data):
+    """Output the trait into CSV columns."""
+    for i, parse in enumerate(data, 1):
+        row[f'sex_{i}'] = parse['value']
+        flags = []
+        for flag, value in parse['flags'].items():
+            if value is True:
+                flags.append(flag)
+            else:
+                flags.append(f'{flag}={value}')
+        row[f'sex_{i}_flags'] = ', '.join(flags) if flags else ''
+
+
+TRAITS = {
+    'sex': vocab_columns,
+    # 'life_stage': life_stage.to_csv,
+    # 'total_length': total_length.to_csv,
+    # 'tail_length': tail_length.to_csv,
+    # 'hind_foot_length': hind_foot_length.to_csv,
+    # 'ear_length': ear_length.to_csv,
+    # 'body_mass': body_mass.to_csv,
+    # 'testes_size': testes_size.to_csv,
+    # 'testes_state': testes_state.to_csv,
+}
