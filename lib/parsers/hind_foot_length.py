@@ -19,7 +19,7 @@ class HindFootLength(NumericParserMixIn, Base):
             (?P<units> millimeters | mm ) """)
 
         self.kwd('key', r"""
-            hind \s* foot \s* (?P<includes> with \s* claw )
+            hind \s* foot \s* with \s* (?P<includes> claw )
             | hind \s* foot (?: \s* len (?: gth )? )?
             | \b hfl | \b hf """)
 
