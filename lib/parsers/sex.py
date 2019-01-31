@@ -16,19 +16,17 @@ class Sex(Base):
         self.kwd('keyword', 'sex')
         self.kwd('sex', r' females? | males? ')
         self.lit('quest', r' \? ')
-
         # These are words that indicate that "sex" is not a key
         self.kwd('skip', r' and | is | was ')
-
         self.lit('word', r' \b [a-z]\S* ')
+        self.lit('sep', r' [;,"] | $ ')
 
         # Build a rules for parsing the trait
         self.product(
             self.convert,
-            r""" keyword (?P<value> (?: sex | word ) quest )
-                | keyword (?P<value> sex | word )
-                | (?P<value> sex quest )
-                | (?P<value> sex )
+            r""" keyword (?P<value> (?: sex | word ){1,2} (?: quest )? ) sep
+                | keyword (?P<value> (?: sex | word ) (?: quest )? )
+                | (?P<value> sex (?: quest )? )
                 """)
 
         self.finish_init()

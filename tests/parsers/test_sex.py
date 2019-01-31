@@ -18,7 +18,7 @@ class TestSex(unittest.TestCase):
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('sex=unknown ; crown-rump length=8 mm'),
-            [Trait(value='unknown', start=0, end=11)])
+            [Trait(value='unknown', start=0, end=13)])
 
     def test_parse_03(self):
         self.assertEqual(
@@ -58,3 +58,8 @@ class TestSex(unittest.TestCase):
         self.assertEqual(
             PAR.parse('sex=female?'),
             [Trait(value='female?', start=0, end=11)])
+
+    def test_parse_10(self):
+        self.assertEqual(
+            PAR.parse('sex=not recorded ;'),
+            [Trait(value='not recorded', start=0, end=18)])
