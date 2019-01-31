@@ -24,13 +24,16 @@ class Regexp:
     groups_rx = re.compile(r""" \( \? P< ( \w+ ) > """, flags)
     back_ref_rx = re.compile(r""" \( \? P= ( \w+ ) \) """, flags)
 
+    hide = ('groups', 'func')
+
+    # pylint: disable=too-many-arguments
     def __init__(
-            self, phase=None, name=None, func=None, regexp=None):
+            self, phase=None, name=None, func=None, regexp=None, token=None):
         """Build a regexp."""
         self.name = name
         self.func = func
         self.phase = phase
-        self.token = None
+        self.token = token
         self.groups = []  # A list of tuples (new_group_name, old_group_name)
 
         self.token = Token.build_token()
@@ -39,6 +42,19 @@ class Regexp:
         back_refs = self.rename_group_names()
         self.rename_back_references(back_refs)
         self.regexp = ' '.join(self.regexp.split())
+
+    def as_dict(self):
+        """Remove hidden attributes from __dict__."""
+        return {k: v for k, v in self.__dict__.items() if k not in self.hide}
+
+    def __repr__(self):
+        """Represent the result."""
+        return '{}({})'.format(self.__class__.__name__, self.as_dict())
+
+    def __eq__(self, other):
+        """Compare traits."""
+        print(self.as_dict())
+        return self.as_dict() == other.as_dict()
 
     def rename_group_names(self):
         """Make regular expression group names unique."""
