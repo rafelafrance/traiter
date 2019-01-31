@@ -14,14 +14,13 @@ class Sex(Base):
 
         # Build the tokens
         self.kwd('keyword', 'sex')
-
-        self.kwd('sex', r' females? | males? | f | m')
+        self.kwd('sex', r' females? | males? ')
         self.lit('quest', r' \? ')
 
         # These are words that indicate that "sex" is not a key
         self.kwd('skip', r' and | is | was ')
 
-        self.lit('word', r' \b [a-z]\S+ ')
+        self.lit('word', r' \b [a-z]\S* ')
 
         # Build a rules for parsing the trait
         self.product(
