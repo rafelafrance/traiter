@@ -1,4 +1,4 @@
-# The Traits Database Project
+# The Traits Database Project [![Build Status](https://travis-ci.org/rafelafrance/traiter.svg?branch=master)](https://travis-ci.org/rafelafrance/traiter)
 
 ## All right, what's this all about then?
 **Challenge**: Extract trait information from unstructured or semi-structured natural history notations. That is, if I'm given text like:
@@ -13,7 +13,7 @@
  - body mass = 5,641 g
  - total length = 1,092 mm
 
- Of course this is a rather straight-forward example. Natural history/museum notations are highly idiosyncratic and may use various shorthand notations. Here are just a few examples of how total length measurements appear:
+ Of course, this is a rather straight-forward example. Natural history/museum notations are highly idiosyncratic and may use various shorthand notations. Here are just a few examples of how total length measurements appear:
 
  - `Total Length: 15.7cm`
  - `15.7cm T.L.`
@@ -32,11 +32,11 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures. One complication is that the characters in the text can take on different meaning depending on the form. For is instance, in the form `15.7cm T.L.` the dot is used as both a decimal point and as an abbreviation indicator. Elsewhere, it is usually elided noise. This problem gets even more pronounced when words have multiple meanings like the letter "T" on its own. One some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation or an initial in some one's name.
+Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures. One complication is that the characters in the text can take on different meaning depending on the context. For is instance, in `15.7cm T.L.` the dot is used as both a decimal point and as an abbreviation indicator. Elsewhere, it is usually elided noise. This problem gets even more pronounced when words or characters have multiple meanings like the letter "T" on its own. One some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation and it may also be an initial in some one's name.
 
-Also note that we want to parse gigabytes (or terabytes) of data in relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
+Also note that we want to parse gigabytes (or terabytes) of data in a relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
 
-This implementation is using a technique that I call **"Stacked Regular Expressions"**. The concept is very simple:
+This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple:
 
 1. Tokenize the text analogous to this method in the python `re` module documentation, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
 
@@ -49,7 +49,9 @@ The following regular expressions will replace the regular expressions with the 
     self.lit('quest', r' \? ')
 ```
 
-The tokenizer will elide over anything that is not recognized in one of the regular expressions. We still need some separator tokens so that we don't bring unrelated tokens next to each other.
+The tokenizer will elide over anything that is not recognized in one of the tokenizer patterns. We cannot remove all irrelevant text because that can bring unrelated valid text next to each other, causing a false positive.
+
+The `kwd` method surrounds a pattern with `\b` word-separator tokens and the `lit` method does not.
 
 2. Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
 
@@ -66,7 +68,7 @@ Here is a rule for recognizing when a sex trait is present. The first argument i
 ```python
     self.product(
         self.convert,
-        r"""  keyword (?P<value> (?: sex | word ) quest )
+        r"""  keyword (?P<value> (?: sex | word ) (?: quest )? )
             | keyword (?P<value> sex | word )""")
 ```
 
@@ -82,7 +84,7 @@ Some of the other techniques that I tried but didn't use:
 
 - I also attempted writing my own shift-reduce parsers. The resulting Python code was slow and the parsers began to become very *ad hoc*.
 
-- Finally, I tried to use a parser combinator library (`pyparsing`) which was a vast improvement in developer time and code clarity but ballooned the run-time by two orders of magnitude.
+- Finally, I tried to use a parser combinator library (`pyparsing`) which was a vast improvement in developer time and code clarity but ballooned the run-time by two orders of magnitude. My test case of ~75,000 records went from over 30 minutes to roughly 15 seconds.
 
 ## List of traits extracted (so far)
 - Body body mass
