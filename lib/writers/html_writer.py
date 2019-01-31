@@ -30,7 +30,8 @@ class HtmlWriter(BaseWriter):
             print(self.index)
         for _, record in parsed_record.items():
             for parse in record:
-                parse['value'] = json.dumps(parse['value'])
+                if parse.get('value'):
+                    parse['value'] = json.dumps(parse['value'])
         self.rows.append(
             {'raw': raw_record, 'parsed': parsed_record, 'index': self.index})
 
