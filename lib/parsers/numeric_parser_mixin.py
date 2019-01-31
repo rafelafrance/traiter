@@ -11,14 +11,35 @@ class NumericParserMixIn:
     """Shared parser logic."""
 
     @staticmethod
-    def simple(token):
-        """Handle a normal length notation."""
-        trait = Trait(start=token.start, end=token.end)
+    def add_flags(token, trait):
+        """Add common flags to the numeric trait."""
         trait.is_flag_in_token('ambiguous_key', token)
         trait.is_flag_in_token('ambiguous_char', token)
         trait.is_flag_in_token('estimated_value', token)
         trait.flag_from_token('measured_from', token)
+        trait.flag_from_token('includes', token)
+
+    def simple(self, token):
+        """Handle a normal length notation."""
+        trait = Trait(start=token.start, end=token.end)
+        self.add_flags(token, trait)
         trait.float_value(token.groups['value1'], token.groups.get('value2'))
+        trait.convert_value(token.groups.get('units'))
+        return trait
+
+    def compound(self, token, units=None):
+        """Handle a pattern like: 4 lbs 9 ozs."""
+        trait = Trait(start=token.start, end=token.end)
+        self.add_flags(token, trait)
+        values = [token.groups[units[0]], token.groups[units[1]]]
+        trait.compound_value(values, units)
+        return trait
+
+    def fraction(self, token):
+        """Handle fractional values like 10 3/8 inches."""
+        trait = Trait(start=token.start, end=token.end)
+        self.add_flags(token, trait)
+        trait.fraction_value(token)
         trait.convert_value(token.groups.get('units'))
         return trait
 
@@ -33,24 +54,6 @@ class NumericParserMixIn:
         flag = measurement.split('_')[1]
         flag = f'estimated_{flag}'
         trait.is_flag_in_token(flag, token, rename='estimated_value')
-        return trait
-
-    @staticmethod
-    def compound(token, units=None):
-        """Handle a pattern like: 4 lbs 9 ozs."""
-        trait = Trait(start=token.start, end=token.end)
-        trait.is_flag_in_token('ambiguous_key', token)
-        values = [token.groups[units[0]], token.groups[units[1]]]
-        trait.compound_value(values, units)
-        return trait
-
-    @staticmethod
-    def fraction(token):
-        """Handle fractional values like 10 3/8 inches."""
-        trait = Trait(start=token.start, end=token.end)
-        trait.is_flag_in_token('ambiguous_key', token)
-        trait.fraction_value(token)
-        trait.convert_value(token.groups.get('units'))
         return trait
 
     @staticmethod
