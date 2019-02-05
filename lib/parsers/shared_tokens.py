@@ -6,7 +6,9 @@
 feet = ('feet', r" foots? | feets? | fts? | (?<= \d ) ' ")
 
 # NOTE: Double quotes as inches is handled during fix up
-inches = ('inches', ' inche?s? | ins? ')
+# The negative look-ahead is trying to distinguish between cases like inTL with
+# other words.
+inches = ('inches', ' (?: inche?s? | ins? ) (?! [a-dgi-km-ru-z] ) ')
 
 metric_len = (
     'metric_len', r'(?: milli | centi )? meters? | (?: [cm] [\s.]? m ) ')

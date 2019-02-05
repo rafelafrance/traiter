@@ -31,6 +31,7 @@ class TestesState(Base):
             ' cryptorchism | cryptorchid | monorchism | monorchid | inguinal ')
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
+        self.kwd('and', r' and | & ')
         self.lit('word', r' [a-z]+ ')
 
         # Build rules for token replacement
@@ -45,7 +46,7 @@ class TestesState(Base):
         # Build rules for parsing the trait
         self.product(
             self.convert,
-            """label (testes | abbrev)? (?: length )?
+            """label (?: testes | abbrev )? (?: length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )
             | label (?: length )?
@@ -53,9 +54,18 @@ class TestesState(Base):
             | abbrev (?: length )?
                 (?P<value> state | abdominal | non scrotal | scrotal | other)
             | testes (?: length )?
+                (?P<value>
+                    (?: state | state_abbrev | abdominal | non scrotal
+                        | scrotal | other )
+                    (?: state | state_abbrev | abdominal | non scrotal
+                        | scrotal | other | and ){,3}
+                    (?: state | state_abbrev | abdominal | non scrotal
+                        | scrotal | other )
+                )
+            | testes (?: length )?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
-                | scrotal | other )
-            | (?P<value> non testes | non scrotal | non gonads | scrotal )
+                    | scrotal | other )
+            | (?P<value> non (?: testes | scrotal | gonads ) | scrotal )
             """)
 
         self.finish_init()

@@ -32,30 +32,33 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures. One complication is that the characters in the text can take on different meaning depending on the context. For is instance, in `15.7cm T.L.` the dot is used as both a decimal point and as an abbreviation indicator. Elsewhere, it is usually elided noise. This problem gets even more pronounced when words or characters have multiple meanings like the letter "T" on its own. One some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation and it may also be an initial in some one's name.
+Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures.
 
-Also note that we want to parse gigabytes (or terabytes) of data in a relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
+One complication is that the characters in the text can take on different meaning depending on the context. For is instance, is a double quote after a number `"` an inch symbol (like `3' 4"`or a closing quote (like `"length=4"`)? It's just as tricky to handle single characters have multiple meanings like the letter "T" on its own. In some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation and most contexts it is an initial in some one's name. In this project, we differentiate and capture the first two cases and try to ignore the last one.
 
-This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple:
+Another important point is that we want to parse gigabytes (or terabytes) of data in a relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
+
+This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple we build tokens in one step and in all further steps we use those tokens to reduce combinations to other tokens or productions.
 
 1. Tokenize the text analogous to this method in the python `re` module documentation, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
 
-The following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
+The following regular expressions will replace the regular expressions with the "sex", "word", "keyword", "quest", and "abdominal" tokens respectively.
 
 ```python
     self.kwd('keyword', 'sex')
     self.kwd('sex', r' females? | males? | f | m')
     self.lit('word', r' \b [a-z] \S+ ')
     self.lit('quest', r' \? ')
+    self.kwd('abdominal', r' abdominal | abdomin | abdom ')
 ```
 
-The tokenizer will elide over anything that is not recognized in one of the tokenizer patterns. We cannot remove all irrelevant text because that can bring unrelated valid text next to each other, causing a false positive.
+The tokenizer will elide over anything that is not recognized in one of the tokenizer patterns. We cannot remove all irrelevant text because that can bring unrelated valid text next to each other, causing false positives. Removing noise from the text is critical to efficiency but removing too much will cause problems later. The regular expressions for tokens are sometimes quite complex.
 
 The `kwd` method surrounds a pattern with `\b` word-separator tokens and the `lit` method does not.
 
 2. Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
 
-The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token.
+The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token. Here, each word represents a single token. So, we're no longer dealing with the characters for `abdominal` but the token that represents what was captured in step 1 as the keyword. So, it represents any of, "abdominal", "abdomin", or "abdom" or whatever was captured during tokenization.
 
 ```python
     self.replace('state', 'non fully descended | abdominal non descended')
@@ -63,7 +66,7 @@ The following regular expression will replace the "non fully descended" or "abdo
 
 3. Use regular expressions to find patterns of tokens to extract into traits. This is a single pass.
 
-Here is a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways.
+Here is a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways. Just like in step 2, each word represents a single token.
 
 ```python
     self.product(
@@ -76,9 +79,9 @@ There are still issues with context that are not easily resolved with this parsi
 
 Ultimately, a machine learning or hybrid of machine learning and parsers approach may work better.
 
-Some of the other techniques that I tried but didn't use:
+Some of the other techniques that I tried but don't currently use:
 
-- The original version used lists of regular expressions for parsing. As a proof-of-concept it was OK but ultimately proved too cumbersome to use. One of the problems with the regular expression only technique is the multiple meanings for certain characters or words as mentioned above. I was playing Whack-a-Mole with subtle regular expression bugs.
+- The original version used lists of regular expressions for parsing. As a proof-of-concept it was OK but ultimately proved too cumbersome to use. I was playing Whack-a-Mole with subtle regular expression bugs. Also, regular expressions lack the full transformational capabilities of parsers.
 
 - I tried using Flex and Bison. This didn't work for various reasons.
 
@@ -113,7 +116,7 @@ python3 traiter.py ... TODO ...
 ## Running tests
 You will need to install `pytest`. After that, you can run the tests like so:
 ```
-python -m pytest tests/
+pytest tests/
 ```
 
 ## Example output

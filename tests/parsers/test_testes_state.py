@@ -195,3 +195,8 @@ class TestTestesState(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; reproductive data=testes = 4x3 mm; '),
             [])
+
+    def test_parse_33(self):
+        self.assertEqual(
+            PAR.parse('Deciduous woods // TESTES DESCENDED, AND ENLARGED'),
+            [Trait(value='descended, and enlarged', start=19, end=49)])
