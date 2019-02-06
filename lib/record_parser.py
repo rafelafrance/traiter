@@ -1,6 +1,6 @@
 """Parse all traits for the input record."""
 
-from lib.parsers.as_is import AsIs
+from lib.as_is import AsIsTrait
 
 
 class StopLooking(Exception):
@@ -10,7 +10,7 @@ class StopLooking(Exception):
 class RecordParser:
     """Handles all of the parsed traits for a record."""
 
-    as_is = AsIs()
+    as_is = AsIsTrait()
 
     def __init__(self, parsers, search_fields=None, as_is_fields=None):
         """Create the record container."""
@@ -55,7 +55,6 @@ class RecordParser:
         if not data['sex'] or data['sex'][0]['value'] != 'female':
             return False
 
-        data[trait].append({
-            'flags': {'skipped': "Skipped because sex is 'female'"}})
+        data[trait].skipped = "Skipped because sex is 'female'"
 
         return True

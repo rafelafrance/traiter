@@ -2,7 +2,7 @@
 
 import re
 from lib.convert_units import convert
-import lib.parsers.shared_tokens as tkn
+import lib.shared_tokens as tkn
 
 
 class NumericTraitMixIn:
@@ -12,10 +12,10 @@ class NumericTraitMixIn:
         """Set the units and convert_value the value."""
         self.history.append((self.value, self.units))
         if not units:
-            self.flags['units_inferred'] = True
+            self.units_inferred = True
         else:
-            if self.flags.get('units_inferred'):
-                del self.flags['units_inferred']
+            if self.units_inferred:
+                del self.units_inferred
             if isinstance(units, list):
                 units = [x.lower() for x in units]
                 self.value = [convert(v, u) for v, u in zip(self.value, units)]

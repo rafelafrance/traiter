@@ -5,19 +5,11 @@
 import sys
 import argparse
 import textwrap
+from lib.traits import TRAIT_LIST, TRAIT_NAMES
 from lib.file_parser import FileParser
-from lib.readers.csv_reader import CsvReader
-from lib.writers.csv_writer import CsvWriter
-from lib.writers.html_writer import HtmlWriter
-from lib.parsers.sex import Sex
-from lib.parsers.body_mass import BodyMass
-from lib.parsers.life_stage import LifeStage
-from lib.parsers.ear_length import EarLength
-from lib.parsers.tail_length import TailLength
-from lib.parsers.testes_size import TestesSize
-from lib.parsers.testes_state import TestesState
-from lib.parsers.total_length import TotalLength
-from lib.parsers.hind_foot_length import HindFootLength
+from lib.csv_reader import CsvReader
+from lib.csv_writer import CsvWriter
+from lib.html_writer import HtmlWriter
 
 __VERSION__ = '0.3.0'
 
@@ -33,23 +25,10 @@ OUTPUT_FORMATS = {
 }
 OUTPUT_OPTIONS = [k for k, v in OUTPUT_FORMATS.items()]
 
-TRAITS = [
-    ('sex', Sex),
-    ('body_mass', BodyMass),
-    ('life_stage', LifeStage),
-    ('total_length', TotalLength),
-    ('tail_length', TailLength),
-    ('hind_foot_length', HindFootLength),
-    ('ear_length', EarLength),
-    ('testes_size', TestesSize),
-    ('testes_state', TestesState),
-]
-TRAIT_OPTIONS = [t[0] for t in TRAITS]
-
 
 def parse_traits(args):
     """Parse the input."""
-    parsers = [(trait, parser(args)) for (trait, parser) in TRAITS
+    parsers = [(trait, parser(args)) for (trait, parser) in TRAIT_LIST
                if trait in args.trait]
 
     reader = INPUT_FORMATS[args.input_format](args)
@@ -86,7 +65,7 @@ def parse_args():
         version='%(prog)s v{}'.format(__VERSION__))
 
     parser.add_argument(
-        '--trait', '-t', required=True, action='append', choices=TRAIT_OPTIONS,
+        '--trait', '-t', required=True, action='append', choices=TRAIT_NAMES,
         help="""A trait to extract.""")
 
     parser.add_argument(
