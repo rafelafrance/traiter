@@ -1,7 +1,7 @@
 """Parse life stage notations."""
 
 from lib.trait import Trait
-from lib.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait
 
 
 class LifeStageTrait(BaseTrait):

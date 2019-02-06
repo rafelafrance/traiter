@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.life_stage_trait import LifeStageTrait
+from lib.traits.life_stage_trait import LifeStageTrait
 
 
 PAR = LifeStageTrait()

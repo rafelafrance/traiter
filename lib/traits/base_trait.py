@@ -1,6 +1,9 @@
 """Common logic for parsing trait notations."""
 
+# pylint: disable=unused-argument,no-self-use
+
 import re
+import inflect
 from lib.rule_builder_mixin import RuleBuilerMixin
 from lib.token import Token, TOKEN_WIDTH
 
@@ -9,6 +12,8 @@ class BaseTrait(RuleBuilerMixin):
     """Shared lexer logic."""
 
     flags = re.VERBOSE | re.IGNORECASE
+
+    inflector = inflect.engine()
 
     def __init__(self, args=None):
         """Build the trait parser."""
@@ -108,7 +113,17 @@ class BaseTrait(RuleBuilerMixin):
                     traits.append(trait)
         return traits
 
-    # pylint: disable=unused-argument,no-self-use
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
         return trait
+
+    @staticmethod
+    def csv_formater(trait, row, parses):
+        """Format the trait for CSV output."""
+        values = []
+        for parse in parses:
+            if parse['value'] not in values:
+                values.append(parse['value'])
+
+        for i, value in enumerate(values, 1):
+            row[f'{BaseTrait.inflector.ordinal(i)} {trait} trait'] = value

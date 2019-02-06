@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.testes_state_trait import TestesStateTrait
+from lib.traits.testes_state_trait import TestesStateTrait
 
 
 PAR = TestesStateTrait()

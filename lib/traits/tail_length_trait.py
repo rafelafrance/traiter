@@ -1,12 +1,17 @@
-"""Parse ear length notations."""
+"""Parse tail length notations."""
 
+import re
 from functools import partial
-from lib.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait
 from lib.numeric_parser_mixin import NumericParserMixIn
 import lib.shared_tokens as tkn
 
 
-class EarLengthTrait(NumericParserMixIn, BaseTrait):
+LOOKBACK = 40
+IS_TESTES = re.compile(r' repoductive | gonad | test ', BaseTrait.flags)
+
+
+class TailLengthTrait(NumericParserMixIn, BaseTrait):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -15,37 +20,24 @@ class EarLengthTrait(NumericParserMixIn, BaseTrait):
 
         # Build the tokens
         self.kwd('key_with_units', r"""
-            ear \s* len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
-            """)
+            tail \s* len (?: gth )? \s* in \s*
+            (?P<units> millimeters | mm ) """)
 
-        self.lit('char_measured_from', r"""
-            (?<! [a-z] ) (?<! [a-z] \s )
-            (?P<ambiguous_key> e ) /? (?P<measured_from> n | c )
-            (?! \.? [a-z] )
-            """)
+        self.lit('char_key', r' \b (?P<ambiguous_key> t ) (?! [a-z] )')
 
-        self.lit('char_key', r"""
-            (?<! [a-z] ) (?<! [a-z] \s )
-            (?P<ambiguous_key> e )
-            (?! \.? [a-z] )
-            """)
-
-        self.kwd('keyword', r"""
-            ear \s* from \s* (?P<measured_from> notch | crown )
-            | ear \s* len (?: gth )?
-            | ear (?! \s* tag )
-            """)
+        self.kwd('keyword', r' tail \s* len (?: gth )? | tail | tal ')
 
         self.shared_token(tkn.len_units)
-        self.shared_token(tkn.fraction)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
+        self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
+        self.shared_token(tkn.triple)
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement
-        self.replace('key', ' keyword | char_key | char_measured_from ')
+        self.replace('key', ' keyword | char_key ')
 
         # Build rules for parsing the trait
         self.product(self.fraction, r"""
@@ -58,11 +50,20 @@ class EarLengthTrait(NumericParserMixIn, BaseTrait):
             """)
 
         self.product(
-            partial(self.shorthand_length, measurement='shorthand_el'),
-            r' shorthand_key shorthand | shorthand ')
+            partial(self.shorthand_length, measurement='shorthand_tal'), r"""
+            shorthand_key shorthand | shorthand
+            | shorthand_key triple (?! shorthand | pair )
+            """)
 
         self.finish_init()
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
+        if trait.ambiguous_key:
+            start = max(0, trait.start - LOOKBACK)
+            if IS_TESTES.search(text, start, trait.start):
+                return None
+            if len(text) > trait.end and text[trait.end].isalpha():
+                return None
+
         return self.fix_up_inches(trait, text)

@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.total_length_trait import TotalLengthTrait
+from lib.traits.total_length_trait import TotalLengthTrait
 
 
 PAR = TotalLengthTrait()

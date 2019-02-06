@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.hind_foot_length_trait import HindFootLengthTrait
+from lib.traits.hind_foot_length_trait import HindFootLengthTrait
 
 
 PAR = HindFootLengthTrait()

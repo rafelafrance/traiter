@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.as_is_trait import AsIsTrait
+from lib.traits.as_is_trait import AsIsTrait
 
 
 PAR = AsIsTrait()

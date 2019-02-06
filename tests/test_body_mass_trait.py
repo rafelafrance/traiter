@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.body_mass_trait import BodyMassTrait
+from lib.traits.body_mass_trait import BodyMassTrait
 
 
 PAR = BodyMassTrait()

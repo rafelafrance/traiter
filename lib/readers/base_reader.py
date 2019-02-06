@@ -3,7 +3,7 @@
 from abc import abstractmethod
 
 
-class BaseReader:
+class BaseReader:  # pylint: disable=too-few-public-methods
     """Read the traiter input from a file."""
 
     def __init__(self, args):
@@ -14,6 +14,6 @@ class BaseReader:
     def __iter__(self):
         """We need to iterate thru the input file."""
 
-    @abstractmethod
-    def next(self):
-        """Get the next row in the file."""
+    # @abstractmethod
+    # def next(self):
+    #     """Get the next row in the file."""

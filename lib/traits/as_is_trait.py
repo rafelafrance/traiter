@@ -1,7 +1,7 @@
 """Just grab the notations as they are."""
 
 from lib.trait import Trait
-from lib.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait
 
 
 class AsIsTrait(BaseTrait):

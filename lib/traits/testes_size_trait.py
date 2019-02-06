@@ -1,7 +1,7 @@
 """Parse testes size notations."""
 
 from lib.trait import Trait
-from lib.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait
 import lib.shared_tokens as tkn
 
 

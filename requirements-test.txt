@@ -1,5 +1,6 @@
 atomicwrites==1.2.1
 attrs==18.2.0
+inflect==2.1.0
 Jinja2==2.10
 MarkupSafe==1.1.0
 more-itertools==5.0.0

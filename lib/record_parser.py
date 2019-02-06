@@ -1,6 +1,6 @@
 """Parse all traits for the input record."""
 
-from lib.as_is import AsIsTrait
+from lib.traits.as_is_trait import AsIsTrait
 
 
 class StopLooking(Exception):

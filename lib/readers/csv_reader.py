@@ -1,7 +1,7 @@
 """Read the traiter input from a CSV file."""
 
 import csv
-from lib.base_reader import BaseReader
+from lib.readers.base_reader import BaseReader
 
 
 class CsvReader(BaseReader):
@@ -9,6 +9,7 @@ class CsvReader(BaseReader):
 
     def __init__(self, args):
         """Build the reader."""
+        super().__init__(args)
         self.args = args
         self.reader = None
         self.infile = args.infile

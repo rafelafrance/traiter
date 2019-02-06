@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.sex_trait import SexTrait
+from lib.traits.sex_trait import SexTrait
 
 
 PAR = SexTrait()

@@ -1,8 +1,8 @@
 """Write the traiter output to a CSV file."""
 
 import pandas as pd
-from lib.traits import TRAIT_DICT
-from lib.base_writer import BaseWriter
+from lib.all_traits import TRAIT_DICT
+from lib.writers.base_writer import BaseWriter
 
 
 class CsvWriter(BaseWriter):
@@ -30,7 +30,7 @@ class CsvWriter(BaseWriter):
         row = {c: raw_record.get(c, '') for c in self.columns}
 
         for trait, parses in parsed_record.items():
-            TRAIT_DICT[trait](trait, row, parses)
+            TRAIT_DICT[trait].csv_formater(trait, row, parses)
 
         self.rows.append(row)
 

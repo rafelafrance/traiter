@@ -5,11 +5,11 @@
 import sys
 import argparse
 import textwrap
-from lib.traits import TRAIT_LIST, TRAIT_NAMES
+from lib.all_traits import TRAIT_LIST, TRAIT_NAMES
 from lib.file_parser import FileParser
-from lib.csv_reader import CsvReader
-from lib.csv_writer import CsvWriter
-from lib.html_writer import HtmlWriter
+from lib.readers.csv_reader import CsvReader
+from lib.writers.csv_writer import CsvWriter
+from lib.writers.html_writer import HtmlWriter
 
 __VERSION__ = '0.3.0'
 

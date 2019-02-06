@@ -3,7 +3,7 @@
 # pylint: disable=no-self-use,unused-argument
 
 import unittest
-from lib.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait
 import lib.token as token
 import lib.regexp as regexp
 from lib.regexp import Regexp

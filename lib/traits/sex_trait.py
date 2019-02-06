@@ -2,7 +2,7 @@
 
 import re
 from lib.trait import Trait
-from lib.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait
 
 
 class SexTrait(BaseTrait):
@@ -42,7 +42,3 @@ class SexTrait(BaseTrait):
         trait.value = re.sub(
             r'^f\w*', r'female', trait.value, flags=self.flags)
         return trait
-
-    @staticmethod
-    def csv_formater():
-        """Format the trait for CSV output."""

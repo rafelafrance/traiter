@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.ear_length_trait import EarLengthTrait
+from lib.traits.ear_length_trait import EarLengthTrait
 
 
 PAR = EarLengthTrait()

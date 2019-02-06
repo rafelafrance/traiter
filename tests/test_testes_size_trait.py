@@ -2,7 +2,7 @@
 
 import unittest
 from lib.trait import Trait
-from lib.testes_size_trait import TestesSizeTrait
+from lib.traits.testes_size_trait import TestesSizeTrait
 
 
 PAR = TestesSizeTrait()
