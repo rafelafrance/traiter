@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8" />
+<title>Traiter</title>
+<style>
+{% include 'html_writer.css' -%}
+</style>
+</head>
+<body>
+<h1>Traiter <span>{{ now }}</span></h1>
+<h2>Totals</h2>
+<h2>Parser Results</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Record</th>
+      {%- for field in args.extra_field -%}
+        <th>{{ field }}</th>
+      {%- endfor -%}
+      {%- for trait in args.trait -%}
+        <th>{{ trait }}</th>
+      {%- endfor -%}
+      {%- for field in args.search_field -%}
+        <th>{{ field }}</th>
+      {%- endfor -%}
+      {%- for field in as_is -%}
+        <th>{{ field }}</th>
+      {%- endfor -%}
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+<div class="pager-container">
+  <button class="first-page" title="First page">&lt;&lt;</button>
+  <button  class="previous-page" title="Previous page">&lt;</button>
+  <label>Page:</label>
+  <input class="pager" type="number" min="1" step="1" value="1"/>
+  <label class="max-page"></label>
+  <button class="next-page" title="Next page">&gt;</button>
+  <button class="last-page" title="Last page">&gt;&gt;</button>
+</div>
+</body>
+<script>
+{% include 'html_writer.js' -%}
+</script>
+</html>
