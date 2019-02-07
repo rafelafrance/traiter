@@ -29,14 +29,13 @@ class RecordParser:
                     raise StopLooking()
 
                 for field in self.as_is_fields.get(trait, []):
-                    parsed = self.as_is.parse(
-                        record[field], field, as_dict=True)
+                    parsed = self.as_is.parse(record[field], field)
                     if parsed:
                         data[trait] += parsed
                         raise StopLooking()
 
                 for field in self.search_fields:
-                    parsed = parser.parse(record[field], field, as_dict=True)
+                    parsed = parser.parse(record[field], field)
                     if parsed:
                         data[trait] += parsed
                         raise StopLooking()
@@ -52,9 +51,10 @@ class RecordParser:
         if trait not in ('testes_size', 'testes_state') or not data.get('sex'):
             return False
 
-        if not data['sex'] or data['sex'][0]['value'] != 'female':
+        if not data['sex'] or data['sex'][0].value != 'female':
             return False
 
-        data[trait].skipped = "Skipped because sex is 'female'"
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'female'"
 
         return True

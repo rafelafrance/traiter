@@ -10,12 +10,10 @@ class NumericTraitMixIn:
 
     def convert_value(self, units):
         """Set the units and convert_value the value."""
-        self.history.append((self.value, self.units))
         if not units:
             self.units_inferred = True
         else:
-            if self.units_inferred:
-                del self.units_inferred
+            self.units_inferred = False
             if isinstance(units, list):
                 units = [x.lower() for x in units]
                 self.value = [convert(v, u) for v, u in zip(self.value, units)]

@@ -38,7 +38,6 @@ class SexTrait(BaseTrait):
             start=token.start,
             end=token.end)
         trait.value = re.sub(r'\s*\?$', '?', trait.value, flags=self.flags)
-        trait.value = re.sub(r'^m\w*', r'male', trait.value, flags=self.flags)
-        trait.value = re.sub(
-            r'^f\w*', r'female', trait.value, flags=self.flags)
+        trait.value = re.sub(r'^m\w*', 'male', trait.value, flags=self.flags)
+        trait.value = re.sub(r'^f\w*', 'female', trait.value, flags=self.flags)
         return trait

@@ -63,3 +63,9 @@ class TestSexTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('sex=not recorded ;'),
             [Trait(value='not recorded', start=0, end=18)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse('sex=male ; sex=male ;'),
+            [Trait(value='male', start=0, end=10),
+             Trait(value='male', start=11, end=21)])

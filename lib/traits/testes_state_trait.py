@@ -1,7 +1,7 @@
 """Parse testes state notations."""
 
 from lib.trait import Trait
-from lib.traits.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait, ordinal
 import lib.shared_tokens as tkn
 
 
@@ -78,3 +78,22 @@ class TestesStateTrait(BaseTrait):
             end=token.end)
         trait.is_flag_in_token('ambiguous_key', token)
         return trait
+
+    @staticmethod
+    def csv_formater(trait, row, parses):
+        """Format the trait for CSV output."""
+        if not parses:
+            return
+
+        values = []
+        ambigs = []
+        for parse in parses:
+            value = parse.value.lower()
+            if value not in values:
+                values.append(value)
+                ambigs.append(parse.ambiguous_key)
+
+        for i, (value, ambig) in enumerate(zip(values, ambigs), 1):
+            ambig = True if ambig else ''
+            row[f'{ordinal(i)} testes state'] = value
+            row[f'{ordinal(i)} testes state is ambiguous'] = ambig

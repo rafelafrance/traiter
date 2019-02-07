@@ -16,8 +16,8 @@ class NumericParserMixIn:
         trait.is_flag_in_token('ambiguous_key', token)
         trait.is_flag_in_token('ambiguous_key', token)
         trait.is_flag_in_token('estimated_value', token)
-        trait.flag_from_token('measured_from', token)
-        trait.flag_from_token('includes', token)
+        trait.is_value_in_token('measured_from', token)
+        trait.is_value_in_token('includes', token)
 
     def simple(self, token):
         """Handle a normal length notation."""
@@ -27,7 +27,7 @@ class NumericParserMixIn:
         trait.convert_value(token.groups.get('units'))
         return trait
 
-    def compound(self, token, units=None):
+    def compound(self, token, units=''):
         """Handle a pattern like: 4 lbs 9 ozs."""
         trait = Trait(start=token.start, end=token.end)
         self.add_flags(token, trait)
@@ -44,7 +44,7 @@ class NumericParserMixIn:
         return trait
 
     @staticmethod
-    def shorthand_length(token, measurement=None):
+    def shorthand_length(token, measurement=''):
         """Handle shorthand length notation like 11-22-33-44:55g."""
         trait = Trait(start=token.start, end=token.end)
         trait.float_value(token.groups.get(measurement))

@@ -197,6 +197,7 @@ class TestBodyMassTrait(unittest.TestCase):
                    start=41, end=57)])
 
     def test_parse_31(self):
+        self.maxDiff = None
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62] x'),

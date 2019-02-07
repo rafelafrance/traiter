@@ -9,8 +9,6 @@ TOKEN_COUNT = 0
 class Token:
     """Token data."""
 
-    hide = tuple()
-
     # pylint: disable=too-many-arguments
     def __init__(self, token=None, name=None, groups=None, start=0, end=0):
         """Build a token."""
@@ -19,18 +17,6 @@ class Token:
         self.start = start
         self.end = end
         self.groups = groups if groups else {}
-
-    def as_dict(self):
-        """Remove hidden attributes from __dict__."""
-        return {k: v for k, v in self.__dict__.items() if k not in self.hide}
-
-    def __repr__(self):
-        """Represent the result."""
-        return '{}({})'.format(self.__class__.__name__, self.as_dict())
-
-    def __eq__(self, other):
-        """Compare traits."""
-        return self.as_dict() == other.as_dict()
 
     @staticmethod
     def build_token():

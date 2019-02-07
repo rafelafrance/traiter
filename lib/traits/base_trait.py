@@ -41,13 +41,13 @@ class BaseTrait(RuleBuilerMixin):
                         if x.phase == 'product']),
             self.flags)
 
-    def parse(self, text, field=None, as_dict=False):
+    def parse(self, text, field=None):
         """Find the traits in the text."""
         token_list = self.tokenize(text)
         want_replace = bool(self.replacer.pattern)
         while want_replace:
             (token_list, want_replace) = self.replace_tokens(token_list, text)
-        traits = self.tokens_to_traits(token_list, text, field, as_dict)
+        traits = self.tokens_to_traits(token_list, text)
         return traits
 
     def tokenize(self, text):
@@ -86,7 +86,7 @@ class BaseTrait(RuleBuilerMixin):
             token_list[start:end] = [token]
         return (token_list, want_replace)
 
-    def tokens_to_traits(self, token_list, text, field=None, as_dict=False):
+    def tokens_to_traits(self, token_list, text, field=''):
         """Produce the final results from the remaining tokens."""
         # for tkn in token_list:
         #     print(tkn)
@@ -108,8 +108,6 @@ class BaseTrait(RuleBuilerMixin):
                 trait = self.fix_up_trait(trait, text)
                 if trait:
                     trait.field = field
-                    if as_dict:
-                        trait = trait.as_dict()
                     traits.append(trait)
         return traits
 
@@ -122,8 +120,14 @@ class BaseTrait(RuleBuilerMixin):
         """Format the trait for CSV output."""
         values = []
         for parse in parses:
-            if parse['value'] not in values:
-                values.append(parse['value'])
+            value = parse.value.lower()
+            if value not in values:
+                values.append(value)
 
         for i, value in enumerate(values, 1):
-            row[f'{BaseTrait.inflector.ordinal(i)} {trait} trait'] = value
+            row[f'{ordinal(i)} {trait} notation'] = value
+
+
+def ordinal(i):
+    """Convert the digit to an ordinal value: 1->1st, 2->2nd, etc."""
+    return BaseTrait.inflector.ordinal(i)

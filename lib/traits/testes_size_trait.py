@@ -1,5 +1,6 @@
 """Parse testes size notations."""
 
+from operator import itemgetter
 from lib.trait import Trait
 from lib.traits.base_trait import BaseTrait
 import lib.shared_tokens as tkn
@@ -7,6 +8,8 @@ import lib.shared_tokens as tkn
 
 class TestesSizeTrait(BaseTrait):
     """Parser logic."""
+
+    side_pairs = {'left': 'right', 'right': 'left', '1': '2', '2': '1'}
 
     def __init__(self, args=None):
         """Build the trait parser."""
@@ -70,6 +73,58 @@ class TestesSizeTrait(BaseTrait):
         trait.cross_value(token)
         trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
         trait.is_flag_in_token('ambiguous_key', token)
-        trait.flag_from_token('dimension', token)
-        trait.flag_from_token('side', token)
+        trait.is_value_in_token('dimension', token)
+        trait.is_value_in_token('side', token)
         return trait
+
+    @staticmethod
+    def csv_formater(trait, row, parses):
+        """Format the trait for CSV output."""
+        if not parses:
+            return
+
+        records = []
+        for parse in parses:
+            if isinstance(parse.value, list):
+                length, width = parse.value
+                if width > length:
+                    length, width = width, length
+            elif parse.dimension == 'width':
+                length, width = -1, parse.value
+            else:
+                length, width = parse.value, -1
+            records.append({'side': parse.side,
+                            'length': length,
+                            'width': width,
+                            'ambiguous_key': parse.ambiguous_key,
+                            'units_inferred': parse.units_inferred})
+
+        records = sorted(records, key=itemgetter('side', 'length', 'width'))
+        merged = [records[0]]
+
+        for curr in records:
+            prev = merged[-1]
+            if prev['side'] == curr['side']:
+                if prev['length'] == curr['length'] \
+                        and prev['width'] == curr['width']:
+                    _merge_flags(prev, curr)
+                    continue
+                elif prev['length'] == -1 and curr['length'] != -1:
+                    prev['length'] = curr['length']
+                    _merge_flags(prev, curr)
+                    continue
+                elif prev['width'] == -1 and curr['width'] != -1:
+                    _merge_flags(prev, curr)
+                    prev['width'] = curr['width']
+                    continue
+            merged.append(curr)
+
+        # Testis1side, Testis1state, Testis 1L, Testis 1W
+        # Testis2side, Testis2state, Testis 2L, Testis 2W
+        # for i, rec in enumerate(merged):
+        #     row[f'{ordinal(i)} testes state'] = value
+
+
+def _merge_flags(prev, curr):
+    prev['ambiguous_key'] |= curr['ambiguous_key']
+    prev['units_inferred'] |= curr['units_inferred']
