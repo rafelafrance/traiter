@@ -47,7 +47,7 @@ class BaseTrait(RuleBuilerMixin):
         want_replace = bool(self.replacer.pattern)
         while want_replace:
             (token_list, want_replace) = self.replace_tokens(token_list, text)
-        traits = self.tokens_to_traits(token_list, text)
+        traits = self.tokens_to_traits(token_list, text, field)
         return traits
 
     def tokenize(self, text):

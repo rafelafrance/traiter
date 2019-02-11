@@ -2,7 +2,6 @@
 
 # pylint: disable=import-error
 
-import json
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from lib.writers.base_writer import BaseWriter
@@ -28,10 +27,8 @@ class HtmlWriter(BaseWriter):
         self.index += 1
         if self.args.log_every and self.index % self.args.log_every == 0:
             print(self.index)
-        for _, record in parsed_record.items():
-            for parse in record:
-                if parse.get('value'):
-                    parse['value'] = json.dumps(parse['value'])
+        for trait, parses in parsed_record.items():
+            parsed_record[trait] = [x.__dict__ for x in parses]
         self.rows.append(
             {'raw': raw_record, 'parsed': parsed_record, 'index': self.index})
 
