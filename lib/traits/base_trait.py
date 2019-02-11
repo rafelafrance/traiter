@@ -41,7 +41,7 @@ class BaseTrait(RuleBuilerMixin):
                         if x.phase == 'product']),
             self.flags)
 
-    def parse(self, text, field=None):
+    def parse(self, text, field=''):
         """Find the traits in the text."""
         token_list = self.tokenize(text)
         want_replace = bool(self.replacer.pattern)
