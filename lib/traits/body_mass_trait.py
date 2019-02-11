@@ -3,7 +3,7 @@
 from functools import partial
 from lib.trait import Trait
 from lib.traits.base_trait import BaseTrait
-from lib.numeric_parser_mixin import NumericParserMixIn
+from lib.traits.numeric_parser_mixin import NumericParserMixIn
 import lib.shared_tokens as tkn
 
 

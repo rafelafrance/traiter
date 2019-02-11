@@ -4,7 +4,7 @@
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-locals
 
-from lib.traits.numeric_trait_mixin import NumericTraitMixIn
+from lib.numeric_trait_mixin import NumericTraitMixIn
 
 
 class Trait(NumericTraitMixIn):
