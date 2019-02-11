@@ -1,13 +1,13 @@
 """Parse body mass notations."""
 
 from functools import partial
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait
-from lib.traits.numeric_parser_mixin import NumericParserMixIn
+from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
-class BodyMassTrait(NumericParserMixIn, BaseTrait):
+class BodyMassTrait(NumericTrait, BaseTrait):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -56,7 +56,7 @@ class BodyMassTrait(NumericParserMixIn, BaseTrait):
 
     def shorthand(self, token):  # pylint: disable=no-self-use
         """Convert a shorthand value like 11-22-33-44:55g."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = Parse(start=token.start, end=token.end)
         trait.float_value(token.groups.get('shorthand_wt'))
         if not trait.value:
             return None

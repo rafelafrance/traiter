@@ -3,7 +3,7 @@
 import re
 from functools import partial
 from lib.traits.base_trait import BaseTrait
-from lib.traits.numeric_parser_mixin import NumericParserMixIn
+from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
@@ -11,7 +11,7 @@ LOOKBACK = 40
 IS_TESTES = re.compile(r' repoductive | gonad | test ', BaseTrait.flags)
 
 
-class TailLengthTrait(NumericParserMixIn, BaseTrait):
+class TailLengthTrait(NumericTrait, BaseTrait):
     """Parser logic."""
 
     def __init__(self, args=None):

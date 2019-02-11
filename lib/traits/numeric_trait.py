@@ -1,13 +1,13 @@
 """Mix-in for parsing length notations."""
 
 import re
-from lib.trait import Trait
+from lib.parse import Parse
 
 
 QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
 
 
-class NumericParserMixIn:
+class NumericTrait:
     """Shared parser logic."""
 
     @staticmethod
@@ -21,7 +21,7 @@ class NumericParserMixIn:
 
     def simple(self, token):
         """Handle a normal length notation."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = Parse(start=token.start, end=token.end)
         self.add_flags(token, trait)
         trait.float_value(token.groups['value1'], token.groups.get('value2'))
         trait.convert_value(token.groups.get('units'))
@@ -29,7 +29,7 @@ class NumericParserMixIn:
 
     def compound(self, token, units=''):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = Parse(start=token.start, end=token.end)
         self.add_flags(token, trait)
         values = [token.groups[units[0]], token.groups[units[1]]]
         trait.compound_value(values, units)
@@ -37,7 +37,7 @@ class NumericParserMixIn:
 
     def fraction(self, token):
         """Handle fractional values like 10 3/8 inches."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = Parse(start=token.start, end=token.end)
         self.add_flags(token, trait)
         trait.fraction_value(token)
         trait.convert_value(token.groups.get('units'))
@@ -46,7 +46,7 @@ class NumericParserMixIn:
     @staticmethod
     def shorthand_length(token, measurement=''):
         """Handle shorthand length notation like 11-22-33-44:55g."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = Parse(start=token.start, end=token.end)
         trait.float_value(token.groups.get(measurement))
         if not trait.value:
             return None

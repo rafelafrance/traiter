@@ -1,6 +1,6 @@
 """Parse life stage notations."""
 
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait
 
 
@@ -70,5 +70,5 @@ class LifeStageTrait(BaseTrait):
 
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed tokens into a result."""
-        return Trait(value=token.groups['value'].lower(),
+        return Parse(value=token.groups['value'].lower(),
                      start=token.start, end=token.end)

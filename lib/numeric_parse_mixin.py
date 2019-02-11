@@ -5,7 +5,7 @@ from lib.convert_units import convert
 import lib.shared_tokens as tkn
 
 
-class NumericTraitMixIn:
+class NumericParseMixIn:
     """Handle parsed trait numeric values."""
 
     def convert_value(self, units):

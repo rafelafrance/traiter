@@ -1,7 +1,7 @@
 """Parse sex notations."""
 
 import re
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait
 
 
@@ -33,7 +33,7 @@ class SexTrait(BaseTrait):
 
     def convert(self, token):
         """Convert parsed tokens into a result."""
-        trait = Trait(
+        trait = Parse(
             value=token.groups['value'],
             start=token.start,
             end=token.end)

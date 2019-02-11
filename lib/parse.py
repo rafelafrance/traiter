@@ -4,10 +4,10 @@
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-locals
 
-from lib.numeric_trait_mixin import NumericTraitMixIn
+from lib.numeric_parse_mixin import NumericParseMixIn
 
 
-class Trait(NumericTraitMixIn):
+class Parse(NumericParseMixIn):
     """Build a parse result."""
 
     def __init__(self, value=None, field='', start=0, end=0,

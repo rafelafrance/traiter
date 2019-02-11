@@ -1,7 +1,7 @@
 # pylint: disable=missing-docstring,too-many-public-methods
 
 import unittest
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.testes_state_trait import TestesStateTrait
 
 
@@ -13,67 +13,67 @@ class TestTestesStateTrait(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('some words reproductive data=No testicles; more words'),
-            [Trait(value='no testicles', start=11, end=41)])
+            [Parse(value='no testicles', start=11, end=41)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('testes descended'),
-            [Trait(value='descended', start=0, end=16)])
+            [Parse(value='descended', start=0, end=16)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('testes undescended'),
-            [Trait(value='undescended', start=0, end=18)])
+            [Parse(value='undescended', start=0, end=18)])
 
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('testes undesc.'),
-            [Trait(value='undesc', start=0, end=13)])
+            [Parse(value='undesc', start=0, end=13)])
 
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('testes undesc'),
-            [Trait(value='undesc', start=0, end=13)])
+            [Parse(value='undesc', start=0, end=13)])
 
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('testes not fully descended'),
-            [Trait(value='not fully descended', start=0, end=26)])
+            [Parse(value='not fully descended', start=0, end=26)])
 
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('testes not-scrotal'),
-            [Trait(value='not-scrotal', start=0, end=18)])
+            [Parse(value='not-scrotal', start=0, end=18)])
 
     def test_parse_08(self):
         self.assertEqual(
             PAR.parse('testes no scrotum'),
-            [Trait(value='no scrotum', start=0, end=17)])
+            [Parse(value='no scrotum', start=0, end=17)])
 
     def test_parse_09(self):
         self.assertEqual(
             PAR.parse('testis nscr'),
-            [Trait(value='nscr', start=0, end=11)])
+            [Parse(value='nscr', start=0, end=11)])
 
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('testes ns'),
-            [Trait(value='ns', start=0, end=9)])
+            [Parse(value='ns', start=0, end=9)])
 
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('tes undescend.'),
-            [Trait(value='undescend', start=0, end=13)])
+            [Parse(value='undescend', start=0, end=13)])
 
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('t abdominal'),
-            [Trait(value='abdominal', start=0, end=11)])
+            [Parse(value='abdominal', start=0, end=11)])
 
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('t nscr'),
-            [Trait(value='nscr', start=0, end=6)])
+            [Parse(value='nscr', start=0, end=6)])
 
     def test_parse_14(self):
         self.assertEqual(
@@ -86,56 +86,56 @@ class TestTestesStateTrait(unittest.TestCase):
                 ('hind foot with claw=35 mm; '
                  'reproductive data=Testes partially descended. '
                  'Sperm present.')),
-            [Trait(value='partially descended', start=27, end=71)])
+            [Parse(value='partially descended', start=27, end=71)])
 
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse(
                 ('sex=male ; reproductive data=testis 5mm, abdominal '
                  '; ear from notch=20 mm; ')),
-            [Trait(value='abdominal', start=11, end=50)])
+            [Parse(value='abdominal', start=11, end=50)])
 
     def test_parse_17(self):
         self.assertEqual(
             PAR.parse(('tag# 1089; bag# 156; no gonads')),
-            [Trait(value='no gonads', ambiguous_key=True, start=21, end=30)])
+            [Parse(value='no gonads', ambiguous_key=True, start=21, end=30)])
 
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse(
                 'weight=36 g; reproductive data=testes: 11x7 mm (scrotal)'),
-            [Trait(value='scrotal', start=13, end=55)])
+            [Parse(value='scrotal', start=13, end=55)])
 
     def test_parse_19(self):
         self.assertEqual(
             PAR.parse(
                 ('non-scrotal, sem. ves. 14 mm ')),
-            [Trait(value='non-scrotal', start=0, end=11)])
+            [Parse(value='non-scrotal', start=0, end=11)])
 
     def test_parse_20(self):
         self.assertEqual(
             PAR.parse(
                 ('verbatim preservation date=8 October 1986 ; '
                  'reproductive data=No testicles')),
-            [Trait(value='no testicles', start=44, end=74)])
+            [Parse(value='no testicles', start=44, end=74)])
 
     def test_parse_21(self):
         self.assertEqual(
             PAR.parse(
                 ('weight=53 g; reproductive data=testes decended, T=8x3 ;')),
-            [Trait(value='decended', start=13, end=46)])
+            [Parse(value='decended', start=13, end=46)])
 
     def test_parse_22(self):
         self.assertEqual(
             PAR.parse(
                 ('weight=75.6 g; reproductive data=Testes small')),
-            [Trait(value='small', start=15, end=45)])
+            [Parse(value='small', start=15, end=45)])
 
     def test_parse_23(self):
         self.assertEqual(
             PAR.parse(
                 ('weight=75.6 g; reproductive data=small')),
-            [Trait(value='small', start=15, end=38)])
+            [Parse(value='small', start=15, end=38)])
 
     def test_parse_24(self):
         self.assertEqual(
@@ -151,12 +151,12 @@ class TestTestesStateTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse(
                 ('junk before reproductive data=Testes small, not descended')),
-            [Trait(value='small, not descended', start=12, end=57)])
+            [Parse(value='small, not descended', start=12, end=57)])
 
     def test_parse_27(self):
         self.assertEqual(
             PAR.parse('Mixed woods // TESTES NOT DESCENDED'),
-            [Trait(value='not descended', start=15, end=35)])
+            [Parse(value='not descended', start=15, end=35)])
 
     def test_parse_28(self):
         self.assertEqual(
@@ -175,20 +175,20 @@ class TestTestesStateTrait(unittest.TestCase):
                  'claw=32 mm; hind foot with claw=34 mm; hind foot with '
                  'claw=34 mm; age class=adult ; age class=adult ; '
                  'age class=adult')),
-            [Trait(value='scrotal', start=29, end=54),
-             Trait(value='nonscrotal', start=136, end=164),
-             Trait(value='nonscrotal', start=189, end=217),
-             Trait(value='nonscrotal', start=220, end=248)])
+            [Parse(value='scrotal', start=29, end=54),
+             Parse(value='nonscrotal', start=136, end=164),
+             Parse(value='nonscrotal', start=189, end=217),
+             Parse(value='nonscrotal', start=220, end=248)])
 
     def test_parse_30(self):
         self.assertEqual(
             PAR.parse('reproductive data=NS ;'),
-            [Trait(value='ns', start=0, end=20)])
+            [Parse(value='ns', start=0, end=20)])
 
     def test_parse_31(self):
         self.assertEqual(
             PAR.parse('reproductive data=SCR ;'),
-            [Trait(value='scr', start=0, end=21)])
+            [Parse(value='scr', start=0, end=21)])
 
     def test_parse_32(self):
         self.assertEqual(
@@ -198,4 +198,4 @@ class TestTestesStateTrait(unittest.TestCase):
     def test_parse_33(self):
         self.assertEqual(
             PAR.parse('Deciduous woods // TESTES DESCENDED, AND ENLARGED'),
-            [Trait(value='descended, and enlarged', start=19, end=49)])
+            [Parse(value='descended, and enlarged', start=19, end=49)])

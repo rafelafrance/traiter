@@ -1,7 +1,7 @@
 """Parse testes size notations."""
 
 from operator import itemgetter
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait, ordinal
 import lib.shared_tokens as tkn
 
@@ -69,7 +69,7 @@ class TestesSizeTrait(BaseTrait):
         if token.groups.get('ambiguous_char') \
                 and not token.groups.get('value2'):
             return None
-        trait = Trait(start=token.start, end=token.end)
+        trait = Parse(start=token.start, end=token.end)
         trait.cross_value(token)
         trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
         trait.is_flag_in_token('ambiguous_key', token)

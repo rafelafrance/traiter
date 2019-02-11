@@ -2,11 +2,11 @@
 
 from functools import partial
 from lib.traits.base_trait import BaseTrait
-from lib.traits.numeric_parser_mixin import NumericParserMixIn
+from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
-class TotalLengthTrait(NumericParserMixIn, BaseTrait):
+class TotalLengthTrait(NumericTrait, BaseTrait):
     """Parser logic."""
 
     def __init__(self, args=None):

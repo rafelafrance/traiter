@@ -1,6 +1,6 @@
 """Just grab the notations as they are."""
 
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait
 
 
@@ -21,7 +21,7 @@ class AsIsTrait(BaseTrait):
 
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed token into a trait product."""
-        return Trait(
+        return Parse(
             value=token.groups['value'],
             as_is=True,
             start=token.start,

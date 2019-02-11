@@ -1,6 +1,6 @@
 """Parse testes state notations."""
 
-from lib.trait import Trait
+from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait, ordinal
 import lib.shared_tokens as tkn
 
@@ -72,7 +72,7 @@ class TestesStateTrait(BaseTrait):
 
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed token into a trait product."""
-        trait = Trait(
+        trait = Parse(
             value=token.groups['value'].lower(),
             start=token.start,
             end=token.end)
