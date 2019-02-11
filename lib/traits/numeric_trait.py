@@ -1,19 +1,19 @@
 """Mix-in for parsing length notations."""
 
 import re
+from lib.traits.base_trait import BaseTrait, ordinal
 from lib.parse import Parse
 
 
 QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
 
 
-class NumericTrait:
+class NumericTrait(BaseTrait):
     """Shared parser logic."""
 
     @staticmethod
     def add_flags(token, trait):
         """Add common flags to the numeric trait."""
-        trait.is_flag_in_token('ambiguous_key', token)
         trait.is_flag_in_token('ambiguous_key', token)
         trait.is_flag_in_token('estimated_value', token)
         trait.is_value_in_token('measured_from', token)
@@ -66,3 +66,46 @@ class NumericTrait:
             trait.units = '"'
             trait.convert_value(trait.units)
         return trait
+
+    @staticmethod
+    def csv_formater(trait, row, parses):
+        """Format the trait for CSV output."""
+        if not parses:
+            return
+
+        records = {}
+        has_range = False
+        for parse in parses:
+            key = parse.as_key()
+            has_range |= bool(key.high)
+            if key in records:
+                records[key].merge_flags(parse)
+            else:
+                records[key] = parse
+
+        low_key = ' low' if has_range else ''
+        label = trait.replace('_', ' ')
+        for i, (key, parse) in enumerate(records.items(), 1):
+            col = f'{trait}_{i}01:{ordinal(i)} {label}{low_key}'
+            row[col] = key.low
+            if key.high:
+                col = f'{trait}_{i}02:{ordinal(i)} {label} high'
+                row[col] = key.high
+            if parse.dimension:
+                col = f'{trait}_{i}03:{ordinal(i)} {label} dimension'
+                row[col] = parse.dimension
+            if parse.includes:
+                col = f'{trait}_{i}04:{ordinal(i)} {label} includes'
+                row[col] = parse.includes
+            if parse.measured_from:
+                col = f'{trait}_{i}05:{ordinal(i)} {label} measured from'
+                row[col] = parse.measured_from
+            if parse.ambiguous_key:
+                col = f'{trait}_{i}06:{ordinal(i)} {label} ambiguous'
+                row[col] = parse.ambiguous_key
+            if parse.units_inferred:
+                col = f'{trait}_{i}07:{ordinal(i)} {label} units inferred'
+                row[col] = parse.units_inferred
+            if parse.estimated_value:
+                col = f'{trait}_{i}08:{ordinal(i)} {label} estimated'
+                row[col] = parse.estimated_value

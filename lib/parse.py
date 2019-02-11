@@ -4,7 +4,12 @@
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-many-locals
 
+from collections import namedtuple
 from lib.numeric_parse_mixin import NumericParseMixIn
+
+
+ParseKey = namedtuple(
+    'ParseKey', 'low high dimension includes measured_from side')
 
 
 class Parse(NumericParseMixIn):
@@ -35,7 +40,7 @@ class Parse(NumericParseMixIn):
         return '{}({})'.format(self.__class__.__name__, self.__dict__)
 
     def __eq__(self, other):
-        """Compare traits."""
+        """Compare traits for testing."""
         return self.__dict__ == other.__dict__
 
     def is_flag_in_token(self, flag, token, rename=None):
@@ -50,3 +55,24 @@ class Parse(NumericParseMixIn):
         if value:
             flag = rename if rename else flag
             setattr(self, flag, value.lower())
+
+    def merge_flags(self, other):
+        """Capture the meaning across all parses."""
+        self.ambiguous_key &= other.ambiguous_key
+        self.units_inferred &= other.units_inferred
+        self.estimated_value |= other.estimated_value
+
+    def as_key(self):
+        """Used to tell if the parses describe the same trait."""
+        low, high = self.value, ''
+        if isinstance(self.value, list):
+            low, high = self.value
+            if low > high:
+                low, high = high, low
+        return ParseKey(
+            low=low,
+            high=high,
+            dimension=self.dimension,
+            includes=self.includes,
+            measured_from=self.measured_from,
+            side=self.side)

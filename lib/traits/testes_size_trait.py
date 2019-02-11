@@ -78,15 +78,6 @@ class TestesSizeTrait(BaseTrait):
         return trait
 
     @staticmethod
-    def csv_formater(trait, row, parses):
-        """Format the trait for CSV output."""
-        if not parses:
-            return
-        records = _build_records(parses)
-        records = _merge_records(records)
-        _format_records(records, row)
-
-    @staticmethod
     def should_skip(data, trait):
         """Check if this record should be skipped because of other fields."""
         if not data['sex'] or data['sex'][0].value != 'female':
@@ -104,10 +95,14 @@ class TestesSizeTrait(BaseTrait):
             parse.ambiguous_key = False
 
 
-def _merge_flags(prev, curr):
-    prev['ambiguous_key'] |= curr['ambiguous_key']
-    prev['units_inferred'] |= curr['units_inferred']
-
+    @staticmethod
+    def csv_formater(trait, row, parses):
+        """Format the trait for CSV output."""
+        if not parses:
+            return
+        records = _build_records(parses)
+        records = _merge_records(records)
+        _format_records(records, row)
 
 def _build_records(parses):
     records = []
@@ -147,6 +142,12 @@ def _merge_records(records):
                 continue
         merged.append(curr)
     return merged
+
+
+def _merge_flags(prev, curr):
+    """If one of the flags is unambiguous then they all are."""
+    prev['ambiguous_key'] |= curr['ambiguous_key']
+    prev['units_inferred'] |= curr['units_inferred']
 
 
 def _format_records(records, row):

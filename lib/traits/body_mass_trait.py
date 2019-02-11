@@ -2,12 +2,11 @@
 
 from functools import partial
 from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait
 from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
-class BodyMassTrait(NumericTrait, BaseTrait):
+class BodyMassTrait(NumericTrait):
     """Parser logic."""
 
     def __init__(self, args=None):

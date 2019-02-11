@@ -1,12 +1,11 @@
 """Parse hind foot length notations."""
 
 from functools import partial
-from lib.traits.base_trait import BaseTrait
 from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
-class HindFootLengthTrait(NumericTrait, BaseTrait):
+class HindFootLengthTrait(NumericTrait):
     """Parser logic."""
 
     def __init__(self, args=None):

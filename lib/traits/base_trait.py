@@ -118,14 +118,14 @@ class BaseTrait(RuleBuilerMixin):
     @staticmethod
     def csv_formater(trait, row, parses):
         """Format the trait for CSV output."""
-        values = []
+        records = {}
         for parse in parses:
-            value = parse.value.lower()
-            if value not in values:
-                values.append(value)
+            key = parse.as_key()
+            if key not in records:
+                records[key] = parse
 
-        for i, value in enumerate(values, 1):
-            row[f'{trait}:{ordinal(i)} {trait} notation'] = value
+        for i, parse in enumerate(records.values()):
+            row[f'{trait}:{ordinal(i)} {trait} notation'] = parse.value
 
     @staticmethod
     def should_skip(data, trait):

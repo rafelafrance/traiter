@@ -1,12 +1,11 @@
 """Parse ear length notations."""
 
 from functools import partial
-from lib.traits.base_trait import BaseTrait
 from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
-class EarLengthTrait(NumericTrait, BaseTrait):
+class EarLengthTrait(NumericTrait):
     """Parser logic."""
 
     def __init__(self, args=None):
