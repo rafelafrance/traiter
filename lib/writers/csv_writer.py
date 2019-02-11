@@ -1,5 +1,6 @@
 """Write the traiter output to a CSV file."""
 
+import re
 import pandas as pd
 from lib.all_traits import TRAIT_DICT
 from lib.writers.base_writer import BaseWriter
@@ -37,4 +38,5 @@ class CsvWriter(BaseWriter):
     def end(self):
         """End the report."""
         dfm = pd.DataFrame(self.rows)
+        dfm.rename(columns=lambda x: re.sub(r'^.+?:\s*', '', x), inplace=True)
         dfm.to_csv(self.args.outfile, index=False)

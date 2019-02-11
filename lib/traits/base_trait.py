@@ -125,7 +125,17 @@ class BaseTrait(RuleBuilerMixin):
                 values.append(value)
 
         for i, value in enumerate(values, 1):
-            row[f'{ordinal(i)} {trait} notation'] = value
+            row[f'{trait}:{ordinal(i)} {trait} notation'] = value
+
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        return False
+
+    @staticmethod
+    def adjust_record(data, trait):
+        """Adjust the trait based on other fields."""
+        return
 
 
 def ordinal(i):

@@ -2,7 +2,7 @@
 
 from operator import itemgetter
 from lib.trait import Trait
-from lib.traits.base_trait import BaseTrait
+from lib.traits.base_trait import BaseTrait, ordinal
 import lib.shared_tokens as tkn
 
 
@@ -82,49 +82,84 @@ class TestesSizeTrait(BaseTrait):
         """Format the trait for CSV output."""
         if not parses:
             return
+        records = _build_records(parses)
+        records = _merge_records(records)
+        _format_records(records, row)
 
-        records = []
-        for parse in parses:
-            if isinstance(parse.value, list):
-                length, width = parse.value
-                if width > length:
-                    length, width = width, length
-            elif parse.dimension == 'width':
-                length, width = -1, parse.value
-            else:
-                length, width = parse.value, -1
-            records.append({'side': parse.side,
-                            'length': length,
-                            'width': width,
-                            'ambiguous_key': parse.ambiguous_key,
-                            'units_inferred': parse.units_inferred})
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        if not data['sex'] or data['sex'][0].value != 'female':
+            return False
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'female'"
+        return True
 
-        records = sorted(records, key=itemgetter('side', 'length', 'width'))
-        merged = [records[0]]
-
-        for curr in records:
-            prev = merged[-1]
-            if prev['side'] == curr['side']:
-                if prev['length'] == curr['length'] \
-                        and prev['width'] == curr['width']:
-                    _merge_flags(prev, curr)
-                    continue
-                elif prev['length'] == -1 and curr['length'] != -1:
-                    prev['length'] = curr['length']
-                    _merge_flags(prev, curr)
-                    continue
-                elif prev['width'] == -1 and curr['width'] != -1:
-                    _merge_flags(prev, curr)
-                    prev['width'] = curr['width']
-                    continue
-            merged.append(curr)
-
-        # Testis1side, Testis1state, Testis 1L, Testis 1W
-        # Testis2side, Testis2state, Testis 2L, Testis 2W
-        # for i, rec in enumerate(merged):
-        #     row[f'{ordinal(i)} testes state'] = value
+    @staticmethod
+    def adjust_record(data, trait):
+        """Adjust the trait based on other fields."""
+        if not data['sex'] or data['sex'][0].value != 'male':
+            return
+        for parse in data[trait]:
+            parse.ambiguous_key = False
 
 
 def _merge_flags(prev, curr):
     prev['ambiguous_key'] |= curr['ambiguous_key']
     prev['units_inferred'] |= curr['units_inferred']
+
+
+def _build_records(parses):
+    records = []
+    for parse in parses:
+        if isinstance(parse.value, list):
+            length, width = parse.value
+            if width > length:
+                length, width = width, length
+        elif parse.dimension == 'width':
+            length, width = -1, parse.value
+        else:
+            length, width = parse.value, -1
+        records.append({'side': parse.side,
+                        'length': length,
+                        'width': width,
+                        'ambiguous_key': parse.ambiguous_key,
+                        'units_inferred': parse.units_inferred})
+    return sorted(records, key=itemgetter('side', 'length', 'width'))
+
+
+def _merge_records(records):
+    merged = [records[0]]
+    for curr in records:
+        prev = merged[-1]
+        if prev['side'] == curr['side']:
+            if prev['length'] == curr['length'] \
+                    and prev['width'] == curr['width']:
+                _merge_flags(prev, curr)
+                continue
+            elif prev['length'] == -1 and curr['length'] != -1:
+                prev['length'] = curr['length']
+                _merge_flags(prev, curr)
+                continue
+            elif prev['width'] == -1 and curr['width'] != -1:
+                _merge_flags(prev, curr)
+                prev['width'] = curr['width']
+                continue
+        merged.append(curr)
+    return merged
+
+
+def _format_records(records, row):
+    for i, rec in enumerate(records, 1):
+        key = f'testes_{i}01:{ordinal(i)} testes side'
+        row[key] = rec['side']
+        key = f'testes_{i}20:{ordinal(i)} testes length'
+        row[key] = rec['length'] if rec['length'] > 0 else ''
+        key = f'testes_{i}21:{ordinal(i)} testes width'
+        row[key] = rec['width'] if rec['width'] > 0 else ''
+        if rec['ambiguous_key']:
+            key = f'testes_{i}30:{ordinal(i)} testes ambiguous key'
+            row[key] = rec['ambiguous_key']
+        if rec['units_inferred']:
+            key = f'testes_{i}31:{ordinal(i)} testes units inferred'
+            row[key] = rec['units_inferred']

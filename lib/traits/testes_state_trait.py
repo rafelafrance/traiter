@@ -86,14 +86,32 @@ class TestesStateTrait(BaseTrait):
             return
 
         values = []
-        ambigs = []
+        # ambs = []
         for parse in parses:
             value = parse.value.lower()
             if value not in values:
                 values.append(value)
-                ambigs.append(parse.ambiguous_key)
+                # ambs.append(parse.ambiguous_key)
 
-        for i, (value, ambig) in enumerate(zip(values, ambigs), 1):
-            ambig = True if ambig else ''
-            row[f'{ordinal(i)} testes state'] = value
-            row[f'{ordinal(i)} testes state is ambiguous'] = ambig
+        # for i, (value, amb) in enumerate(zip(values, ambs), 1):
+        for i, value in enumerate(values, 1):
+            row[f'testes_{i}10:{ordinal(i)} testes state'] = value
+            # if amb and value not in ('no gonads', ):
+            #    row[f'testes_{i}11:{ordinal(i)} testes state ambiguous'] = amb
+
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        if not data['sex'] or data['sex'][0].value != 'female':
+            return False
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'female'"
+        return True
+
+    @staticmethod
+    def adjust_record(data, trait):
+        """Adjust the trait based on other fields."""
+        if not data['sex'] or data['sex'][0].value != 'male':
+            return
+        for parse in data[trait]:
+            parse.ambiguous_key = False

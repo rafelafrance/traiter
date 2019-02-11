@@ -3,11 +3,15 @@
 from lib.traits.as_is_trait import AsIsTrait
 
 
-class StopLooking(Exception):
+class TraitFound(Exception):
     """Stop looking for parses because we found one."""
 
 
-class RecordParser:
+class ShouldSkip(Exception):
+    """Stop looking for parses because we found one."""
+
+
+class RecordParser:  # pylint: disable=too-few-public-methods
     """Handles all of the parsed traits for a record."""
 
     as_is = AsIsTrait()
@@ -25,36 +29,25 @@ class RecordParser:
         for trait, parser in self.parsers:
             try:
 
-                if self.should_skip(data, trait):
-                    raise StopLooking()
+                if parser.should_skip(data, trait):
+                    raise ShouldSkip()
 
                 for field in self.as_is_fields.get(trait, []):
                     parsed = self.as_is.parse(record[field], field)
                     if parsed:
                         data[trait] += parsed
-                        raise StopLooking()
+                        raise TraitFound()
 
                 for field in self.search_fields:
                     parsed = parser.parse(record[field], field)
                     if parsed:
                         data[trait] += parsed
-                        raise StopLooking()
+                        raise TraitFound()
 
-            except StopLooking:
+            except TraitFound:
+                parser.adjust_record(data, trait)
+
+            except ShouldSkip:
                 pass
 
         return data
-
-    @staticmethod
-    def should_skip(data, trait):
-        """Handle pre-processing for the trait."""
-        if trait not in ('testes_size', 'testes_state') or not data.get('sex'):
-            return False
-
-        if not data['sex'] or data['sex'][0].value != 'female':
-            return False
-
-        if data[trait]:
-            data[trait].skipped = "Skipped because sex is 'female'"
-
-        return True
