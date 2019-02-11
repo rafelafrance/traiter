@@ -15,20 +15,20 @@ class Trait(NumericTraitMixIn):
                  estimated_value=False, includes='', measured_from='',
                  side='', units=None, units_inferred=False):
         """Build a parse result."""
-        self.value = value
-        self.field = field
-        self.start = start
-        self.end = end
-        self.ambiguous_key = ambiguous_key
-        self.as_is = as_is
-        self.dimension = dimension
-        self.estimated_value = estimated_value
-        self.includes = includes
-        self.measured_from = measured_from
-        self.side = side
-        self.units = units
-        self.units_inferred = units_inferred
-        self.skipped = ''
+        self.value = value                  # Normalized value
+        self.field = field                  # Which CSV field was matched
+        self.start = start                  # Match start position
+        self.end = end                      # Match end position
+        self.ambiguous_key = ambiguous_key  # Key may have different meaning?
+        self.as_is = as_is                  # Is measurement taken as is?
+        self.dimension = dimension          # Length, width, etc.
+        self.estimated_value = estimated_value  # Is value noted as estimated?
+        self.includes = includes                # Claw, etc.
+        self.measured_from = measured_from      # Crown, notch, etc.
+        self.side = side                        # Left, right, 1, 2, etc.
+        self.units = units                      # Original units in notation
+        self.units_inferred = units_inferred    # Were units found or guessed?
+        self.skipped = ''                       # If the trait is skipped, why?
 
     def __repr__(self):
         """Represent the result."""
