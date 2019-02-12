@@ -21,14 +21,17 @@ ounces = (' ounces', r' ounces? | ozs? ')
 
 metric_mass = ('metric_mass', r"""
     (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
-    | (?: m \.? g | k \.? g | g[mr]? ) (?: s (?! [a-z]) )?
+    | (?: m (?: \. \s?)? g | k (?: \. \s?)? g | g[mr]? ) (?: s (?! [a-z]) )?
     """)
 
 mass_units = (
     'mass_units', '|'.join([x[1] for x in (metric_mass, pounds, ounces)]))
 
 # Numbers are positive decimals
-number = ('number', r' (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )? ')
+number = ('number', r"""
+    (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )?
+    | (?<= \s ) \. \d+ | ^ \. \d+
+    """)
 
 # A number or a pair of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates

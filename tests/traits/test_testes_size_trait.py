@@ -179,3 +179,8 @@ class TestTestesSizeTrait(unittest.TestCase):
             PAR.parse('; reproductive data=5x3 inguinal ;'),
             [Parse(value=[5, 3], units_inferred=True,
                    start=2, end=23)])
+
+    def test_parse_28(self):
+        self.assertEqual(
+            PAR.parse("sex=male ; reproductive data=Testes .5' , scrotal"),
+            [Parse(value=152.4, units="'", start=11, end=39)])

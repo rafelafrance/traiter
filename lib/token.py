@@ -18,6 +18,10 @@ class Token:
         self.end = end
         self.groups = groups if groups else {}
 
+    def __repr__(self):
+        """Represent the result."""
+        return '{}({})'.format(self.__class__.__name__, self.__dict__)
+
     @staticmethod
     def build_token():
         """Build a token for a expression."""

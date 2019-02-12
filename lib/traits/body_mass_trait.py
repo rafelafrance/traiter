@@ -18,7 +18,7 @@ class BodyMassTrait(NumericTrait):
             (?: weight | mass) \s* in \s* (?P<units> g (?: rams )? ) """)
         self.lit('key_leader', ' full | observed | total ')
         self.lit('weight', r' weights? | weigh (?: s | ed | ing ) ')
-        self.lit('key_with_dots', r' \b w \.? t s? \.? ')
+        self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
         self.lit('mass', r' mass ')
         self.lit('body', r' body ')
         self.shared_token(tkn.mass_units)

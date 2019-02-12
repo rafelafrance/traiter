@@ -488,3 +488,9 @@ class TestTotalLengthTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Cataloged by: R.L. Humphrey, 31 January 1995'),
             [])
+
+    def test_parse_86(self):
+        self.assertEqual(
+            PAR.parse(
+                'measurement on tag for T. L. (141 mm) cannot be correct'),
+            [Parse(value=141, units='mm', start=23, end=36)])
