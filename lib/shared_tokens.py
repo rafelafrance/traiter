@@ -21,7 +21,7 @@ ounces = (' ounces', r' ounces? | ozs? ')
 
 metric_mass = ('metric_mass', r"""
     (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
-    | (?: m (?: \. \s?)? g | k (?: \. \s?)? g | g[mr]? ) (?: s (?! [a-z]) )?
+    | (?: m \.? \s? g | k \.? \s? g | g[mr]? ) (?: s (?! [a-z]) )?
     """)
 
 mass_units = (
