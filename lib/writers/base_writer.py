@@ -10,6 +10,8 @@ class BaseWriter:
         """Build the writer."""
         self.args = args
         self.outfile = args.outfile
+        self.index = 0
+        self.rows = []
 
     def __enter__(self):
         """Use the writer in with statements."""
@@ -19,6 +21,12 @@ class BaseWriter:
     def __exit__(self, exc_type, exc_value, traceback):
         """Use the writer in with statements."""
         self.end()
+
+    def progress(self):
+        """Log progress."""
+        self.index += 1
+        if self.args.log_every and self.index % self.args.log_every == 0:
+            print(self.index)
 
     @abstractmethod
     def start(self):

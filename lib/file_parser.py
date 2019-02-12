@@ -20,5 +20,3 @@ class FileParser:
 
     def accumulate(self, trait_list):
         """Add up totals."""
-        for trait, found in trait_list:
-            pass

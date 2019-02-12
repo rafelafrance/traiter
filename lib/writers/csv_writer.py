@@ -12,8 +12,6 @@ class CsvWriter(BaseWriter):
     def __init__(self, args):
         """Build the writer."""
         super().__init__(args)
-        self.index = 0
-        self.rows = []
         self.columns = args.extra_field
         self.columns += args.search_field
         self.columns += sorted({f for fds in args.as_is.values() for f in fds})
@@ -24,9 +22,7 @@ class CsvWriter(BaseWriter):
 
     def record(self, raw_record, parsed_record):
         """Output a row to the file."""
-        self.index += 1
-        if self.args.log_every and self.index % self.args.log_every == 0:
-            print(self.index)
+        self.progress()
 
         row = {c: raw_record.get(c, '') for c in self.columns}
 
