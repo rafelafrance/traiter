@@ -494,3 +494,9 @@ class TestTotalLengthTrait(unittest.TestCase):
             PAR.parse(
                 'measurement on tag for T. L. (141 mm) cannot be correct'),
             [Parse(value=141, units='mm', start=23, end=36)])
+
+    def test_parse_87(self):
+        self.assertEqual(
+            PAR.parse('L: 275. T: 65.; '),
+            [Parse(value=275, units_inferred=True, ambiguous_key=True,
+                   start=0, end=6)])

@@ -184,3 +184,13 @@ class TestTestesSizeTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse("sex=male ; reproductive data=Testes .5' , scrotal"),
             [Parse(value=152.4, units="'", start=11, end=39)])
+
+    def test_parse_29(self):
+        self.assertEqual(
+            PAR.parse("; reproductive data=TESTES NOT DESCENDED - 6 MM age"),
+            [Parse(value=6, units="mm", start=2, end=47)])
+
+    def test_parse_30(self):
+        self.assertEqual(
+            PAR.parse('A. Svihla ; verbatim collector=Dept. No. 2025, W. '),
+            [])

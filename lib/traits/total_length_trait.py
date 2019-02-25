@@ -39,6 +39,9 @@ class TotalLengthTrait(NumericTrait):
         self.shared_token(tkn.triple)
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
+
+        self.lit('char_key', r""" \b (?P<ambiguous_key> l ) (?= [:=] ) """)
+
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
@@ -72,6 +75,8 @@ class TotalLengthTrait(NumericTrait):
             | key (?: triple )? pair
             | key (?: word | sep ){1,3} pair (?P<units> len_units)
             | key (?: word | sep ){1,3} pair
+            | char_key pair (?P<units> len_units)
+            | char_key pair
             """)
 
         self.product(

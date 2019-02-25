@@ -199,3 +199,8 @@ class TestTestesStateTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Deciduous woods // TESTES DESCENDED, AND ENLARGED'),
             [Parse(value='descended, and enlarged', start=19, end=49)])
+
+    def test_parse_34(self):
+        self.assertEqual(
+            PAR.parse('Testis abd. Collected with 22 cal. pellet rifle.'),
+            [Parse(value='abd', start=0, end=10)])

@@ -15,7 +15,7 @@ class TestesStateTrait(BaseTrait):
         # Build the tokens
         self.kwd('label', r' reproductive .? (?: data |state | condition ) ')
         self.lit('testes', r' (?: testes |  testis | testicles | test ) \b ')
-        self.kwd('fully', r' fully | (:? in ) complete (?: ly) ')
+        self.kwd('fully', r' fully | (:? in )? complete (?: ly)? ')
         self.lit('non', r' \b (?: not | non | no | semi | sub) ')
         self.kwd('descended', r' (?: un)? (?: des?c?end (?: ed)? | desc? ) ')
         self.kwd('abbrev', r' tes | ts | t ')
@@ -23,7 +23,7 @@ class TestesStateTrait(BaseTrait):
             'scrotal', r' (?: scrotum | scrotal | scrot | nscr | scr) \b ')
         self.lit('partially', r' partially | part ')
         self.kwd('state_abbrev', r' ns | sc ')
-        self.kwd('abdominal', r' abdominal | abdomin | abdom ')
+        self.kwd('abdominal', r' abdominal | abdomin | abdom | abd ')
         self.kwd('size', r' visible | enlarged | small ')
         self.kwd('gonads', r' (?P<ambiguous_key> gonads? ) ')
         self.kwd(
