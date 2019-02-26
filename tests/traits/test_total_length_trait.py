@@ -500,3 +500,14 @@ class TestTotalLengthTrait(unittest.TestCase):
             PAR.parse('L: 275. T: 65.; '),
             [Parse(value=275, units_inferred=True, ambiguous_key=True,
                    start=0, end=6)])
+
+    def test_parse_88(self):
+        self.assertEqual(
+            PAR.parse('unformatted measurements=L-11&#34;, T-3.125&#34;, '
+                      'HF-1.5&#34; ; sex=male ; hind foot with claw=1.5 in; '
+                      'total length=11 in; tail length=3.125 in   | .  '
+                      '4/12/39 . | 1.5 TRUE'),
+            [Parse(value=11, units_inferred=True, ambiguous_key=True,
+                   start=25, end=29),
+             Parse(value=279.4, units='in', units_inferred=False,
+                   start=103, end=121)])

@@ -197,7 +197,6 @@ class TestBodyMassTrait(unittest.TestCase):
                    start=41, end=57)])
 
     def test_parse_31(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse(
                 'Note in catalog: Mus. SW Biol. NK 30009; 91-0-17-22-[62] x'),
@@ -234,3 +233,15 @@ class TestBodyMassTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
             [])
+
+    def test_parse_37(self):
+        self.assertEqual(
+            PAR.parse('ear from notch=9 mm; weight=.65 kg; reproductive data'),
+            [Parse(value=650, units='kg', start=21, end=34)])
+
+    def test_parse_38(self):
+        # self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('; weight=22 oz; Verbatim weight=1lb 6oz;'),
+            [Parse(value=623.7, units='oz', start=2, end=14),
+             Parse(value=623.69, units=['lbs', 'ozs'], start=25, end=39)])

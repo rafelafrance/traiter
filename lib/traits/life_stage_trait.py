@@ -60,7 +60,7 @@ class LifeStageTrait(BaseTrait):
             keyword (?P<value> (?: keyless | word ) joiner keyless )
             | keyword (?P<value> (?: keyless | word ) keyless )
             | keyword (?P<value> keyless )
-            | keyword (?P<value> (?: keyless | word ){1,4} ) sep
+            | keyword (?P<value> (?: keyless | word | joiner ){1,5} ) sep
             | keyword (?P<value> year_num )
             | (?P<value> keyless )
             | (?P<value> year_num )

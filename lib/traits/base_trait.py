@@ -124,7 +124,7 @@ class BaseTrait(RuleBuilerMixin):
             if key not in records:
                 records[key] = parse
 
-        for i, parse in enumerate(records.values()):
+        for i, parse in enumerate(records.values(), 1):
             row[f'{trait}:{ordinal(i)} {trait} notation'] = parse.value
 
     @staticmethod

@@ -55,6 +55,7 @@ class NumericParseMixIn:
         smalls = re.split(tkn.pair_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         self.value = [big + convert(x, units[1]) for x in smalls]
+        self.value = [round(v, 2) for v in self.value]
         if len(self.value) == 1:
             self.value = self.value[0]
 

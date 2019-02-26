@@ -77,3 +77,8 @@ class TestHindFootLengthTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
             [Parse(value=37, units='mm_shorthand', start=2, end=34)])
+
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse('; hind foot with claw=2 in;'),
+            [Parse(value=50.8, units='in', includes='claw', start=2, end=26)])

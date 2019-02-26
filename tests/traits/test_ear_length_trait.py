@@ -81,3 +81,9 @@ class TestEarLengthTrait(unittest.TestCase):
             PAR.parse('E/c-21mm'),
             [Parse(value=21, units='mm', ambiguous_key=True,
                    measured_from='c', start=0, end=8)])
+
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse('; ear from notch=.25 in'),
+            [Parse(value=6.35, units='in', measured_from='notch',
+                   start=2, end=23)])

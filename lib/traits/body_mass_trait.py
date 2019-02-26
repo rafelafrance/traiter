@@ -36,6 +36,13 @@ class BodyMassTrait(NumericTrait):
             """)
 
         # Build rules for parsing the trait
+        self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
+
+        self.product(partial(self.compound, units=['lbs', 'ozs']), r"""
+            wt_key (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units
+            | (?P<ambiguous_key>
+                (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units )""")
+
         self.product(self.simple, r"""
             key_with_units pair
             | wt_key (?P<units> mass_units ) pair
@@ -43,13 +50,6 @@ class BodyMassTrait(NumericTrait):
             | shorthand_key pair (?P<units> mass_units )
             | shorthand_key (?P<units> mass_units ) pair
             | wt_key pair""")
-
-        self.product(partial(self.compound, units=['lbs', 'ozs']), r"""
-            wt_key (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units
-            | (?P<ambiguous_key>
-                (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units )""")
-
-        self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
 
         self.finish_init()
 

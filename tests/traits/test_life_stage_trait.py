@@ -134,3 +134,8 @@ class TestLifeStageTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('YOLK SAC'),
             [Parse(value='yolk sac', start=0, end=8)])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('Specimen Age Estimate - minimum date: 15030'),
+            [Parse(value='estimate - minimum date: 15030', start=9, end=43)])

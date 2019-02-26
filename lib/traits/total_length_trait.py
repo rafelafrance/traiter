@@ -40,7 +40,7 @@ class TotalLengthTrait(NumericTrait):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
 
-        self.lit('char_key', r""" \b (?P<ambiguous_key> l ) (?= [:=] ) """)
+        self.lit('char_key', r""" \b (?P<ambiguous_key> l ) (?= [:=-] ) """)
 
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')

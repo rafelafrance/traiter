@@ -15,9 +15,9 @@ metric_len = (
 
 len_units = ('len_units', '|'.join([x[1] for x in (metric_len, feet, inches)]))
 
-pounds = (' pounds', r' pounds? | lbs? ')
+pounds = ('pounds', r' pounds? | lbs? ')
 
-ounces = (' ounces', r' ounces? | ozs? ')
+ounces = ('ounces', r' ounces? | ozs? ')
 
 metric_mass = ('metric_mass', r"""
     (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
@@ -30,7 +30,7 @@ mass_units = (
 # Numbers are positive decimals
 number = ('number', r"""
     (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )?
-    | (?<= \s ) \. \d+ | ^ \. \d+
+    | (?<= [^\d] ) \. \d+ | ^ \. \d+
     """)
 
 # A number or a pair of numbers like "12 to 34" or "12.3-45.6"
