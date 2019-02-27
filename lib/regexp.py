@@ -85,3 +85,12 @@ class Regexp:
                 end = self.regexp[match.end(1):]
                 self.regexp = start + token + end
         self.regexp = ' '.join(self.regexp.split())
+
+    def find_matches(self, string):
+        """Look for a match in the string."""
+        groups = {}
+        match = re.search(self.regexp, string, self.flags)
+        for old_group_name, new_group_name in self.groups:
+            if match.group(old_group_name):
+                groups[new_group_name] = match.group(old_group_name).lower()
+        return groups

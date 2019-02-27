@@ -4,6 +4,8 @@ from operator import itemgetter
 from lib.parse import Parse
 from lib.traits.base_trait import BaseTrait, ordinal
 import lib.shared_tokens as tkn
+from lib.regexp import Regexp
+from lib.token import Token
 
 
 class TestesSizeTrait(BaseTrait):
@@ -31,7 +33,7 @@ class TestesSizeTrait(BaseTrait):
             | (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
             """)
 
-        self.kwd('testes', r' testes |  testis | testicles | test ')
+        self.kwd('testes', r' testes |  testis | testicles? | test ')
         self.kwd('abbrev', r' tes | ts ')
         self.lit('char_key', r' \b t (?! [a-z] )')
         self.kwd('state', r"""
@@ -44,34 +46,80 @@ class TestesSizeTrait(BaseTrait):
             | gonads?
             | cryptorchism | cryptorchid | monorchism | monorchid | inguinal
             """)
-        self.kwd('lr', r' (?P<side> left | right | l | r ) ')
-        self.lit('lr_delim', r' [/(\[] \s* (?P<side> l | r ) \s* [)\]] ')
+
+        self.side = r' (?P<side> left | right | l | r ) '
+        self.kwd('lr', self.side)
+
+        self.lr_delim = r' [/(\[] \s* (?P<side> l | r ) \s* [)\]] '
+        self.lit('lr_delim', self.lr_delim)
+
         self.shared_token(tkn.cross)
         self.lit('and', r' and | & ')
         self.lit('word', r' [a-z]+ ')
-        self.lit('sep', r' [;,] | $ ')
+        self.lit('sep', r' [;] | $ ')
 
         # Build rules for parsing the trait
+        self.product(self.double, r"""
+            label (?: testes | abbrev | char_key )
+                (?P<first> (?: lr | lr_delim ) cross )
+                (?P<second> (?: lr | lr_delim ) cross )?
+            | label
+                (?P<first> (?: lr | lr_delim ) cross )
+                (?P<second> (?: lr | lr_delim ) cross )?
+            | (?: testes | abbrev | char_key )
+                (?P<first> (?: lr | lr_delim ) cross )
+                (?P<second> (?: lr | lr_delim ) cross )?
+            """)
+
         self.product(self.convert, r"""
             label (?: testes | abbrev | char_key ) cross
-            | label (?: testes | abbrev | char_key ) (?: lr | lr_delim ) cross
-            | (?: testes | abbrev | char_key ) (?: lr | lr_delim ) cross
+            | label (?: lr | lr_delim ) (?: testes | abbrev | char_key ) cross
             | label cross
-            | label testes cross
-            | label (?: testes | abbrev | state | word | sep | char_key){1,3}
+            | label (?: testes | abbrev | state | word | sep | char_key){0,3}
                 (?: testes | abbrev | state | char_key ) cross
             | (?: key_with_units | ambiguous ) cross
             | (?: key_with_units | ambiguous )
-                (?: testes | abbrev | state | word | sep | char_key ){1,3}
+                (?: testes | abbrev | state | word | sep | char_key ){0,3}
                 (?: testes | abbrev | state | char_key ) cross
-            | testes (?: abbrev | state | word | sep | char_key ){1,3}
+            | testes (?: abbrev | state | word | sep | char_key ){0,3}
                 (?: abbrev | state | char_key ) cross
             | testes (?: abbrev | state | word | char_key ) cross
             | (?: testes | state | abbrev ) cross
             | (?P<ambiguous_char> char_key ) cross
             """)
 
+        # These are used to get compunds traits from a single parse
+        self.double_side = Regexp(
+            phase='token', name='double_side',
+            regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
+        self.double_cross = Regexp(
+            phase='token', name='double_cross',
+            regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
+
         self.finish_init()
+
+    def double(self, token):
+        """Convert a single token into multiple (two) traits."""
+        if not token.groups.get('second'):
+            return self.convert(token)
+
+        # Regex second match groups will overwrite the first match groups
+        trait2 = Parse(start=token.start, end=token.end)
+        trait2.cross_value(token)
+        trait2.is_value_in_token('side', token)
+
+        # We need to re-extract the first match groups
+        trait1 = Parse(start=token.start, end=token.end)
+
+        groups = self.double_cross.find_matches(token.groups['first'])
+        token1 = Token(groups=groups)
+        trait1.cross_value(token1)
+
+        groups = self.double_side.find_matches(token.groups['first'])
+        token1 = Token(groups=groups)
+        trait1.is_value_in_token('side', token1)
+
+        return [trait1, trait2]
 
     def convert(self, token):  # pylint: disable=no-self-use
         """Convert parsed token into a trait product."""

@@ -194,3 +194,37 @@ class TestTestesSizeTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('A. Svihla ; verbatim collector=Dept. No. 2025, W. '),
             [])
+
+    def test_parse_31(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Right testicle: 20x9 mm ;'),
+            [Parse(value=[20.0, 9.0], units="mm", side='right',
+                   start=0, end=41)])
+
+    def test_parse_32(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=Testes scrotal, 32x11'),
+            [Parse(value=[32, 11], units_inferred=True, start=2, end=41)])
+
+    def test_parse_33(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=R 20mm L x 6 mm Wne scars ;'),
+            [Parse(value=20, units='mm', side='r', start=2, end=26)])
+
+    def test_parse_34(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=R 20mm L 6 mm ;'),
+            [Parse(value=20, units='mm', side='r', start=2, end=33),
+             Parse(value=6, units='mm', side='l', start=2, end=33)])
+
+    def test_parse_35(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=(R) 20x10mm L 6x4 mm ;'),
+            [Parse(value=[20, 10], units='mm', side='r', start=2, end=40),
+             Parse(value=[6, 4], units='mm', side='l', start=2, end=40)])
+
+    def test_parse_36(self):
+        # self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('; reproductive data=R 20x10mm ;'),
+            [Parse(value=[20, 10], units='mm', side='r', start=2, end=29)])

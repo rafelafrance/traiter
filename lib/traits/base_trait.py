@@ -104,11 +104,18 @@ class BaseTrait(RuleBuilerMixin):
                 start=token_list[start].start,
                 end=token_list[end-1].end)
             trait = self.regexps[name].func(token)
-            if trait:   # The function can return a null & fail
-                trait = self.fix_up_trait(trait, text)
-                if trait:
-                    trait.field = field
-                    traits.append(trait)
+            if trait:   # The function can return a null indicating a bad parse
+                # Handle the case when a parse represents multiple traits
+                if isinstance(trait, list):
+                    for single_trait in trait:
+                        single_trait.field = field
+                        traits.append(single_trait)
+                # Normal single trait per parse
+                else:
+                    trait = self.fix_up_trait(trait, text)
+                    if trait:
+                        trait.field = field
+                        traits.append(trait)
         return traits
 
     def fix_up_trait(self, trait, text):
