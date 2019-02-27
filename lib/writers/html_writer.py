@@ -1,14 +1,12 @@
 """Write the traiter output to an HTML file."""
 
-# pylint: disable=import-error
-
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from lib.writers.base_writer import BaseWriter
 
 
 class HtmlWriter(BaseWriter):
-    """Write the traiter output to a file."""
+    """Write the traiter output to an HTML file."""
 
     def __init__(self, args):
         """Build the writer."""
@@ -33,8 +31,8 @@ class HtmlWriter(BaseWriter):
     def end(self):
         """End the report."""
         env = Environment(loader=FileSystemLoader('./lib/writers/templates'))
-        args = {k: v for k, v in vars(self.args).items() if k
-                in ('as_is', 'extra_field', 'search_field', 'trait')}
+        args = {k: v for k, v in vars(self.args).items()
+                if k in ('as_is', 'extra_field', 'search_field', 'trait')}
         template = env.get_template('html_writer.html').render(
             now=self.started,
             as_is=sorted({f for fds in self.args.as_is.values() for f in fds}),
