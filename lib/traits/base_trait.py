@@ -132,7 +132,7 @@ class BaseTrait(RuleBuilerMixin):
                 records[key] = parse
 
         for i, parse in enumerate(records.values(), 1):
-            row[f'{trait}:{ordinal(i)} {trait} notation'] = parse.value
+            row[f'{trait}:{ordinal(i)}_{trait}_notation'] = parse.value
 
     @staticmethod
     def should_skip(data, trait):

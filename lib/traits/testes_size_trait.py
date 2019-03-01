@@ -209,15 +209,15 @@ def _merge_flags(prev, curr):
 
 def _format_records(records, row):
     for i, rec in enumerate(records, 1):
-        key = f'testes_{i}01:{ordinal(i)} testes side'
+        key = f'testes_{i}01:{ordinal(i)}_testes_side'
         row[key] = rec['side']
-        key = f'testes_{i}20:{ordinal(i)} testes length'
+        key = f'testes_{i}20:{ordinal(i)}_testes_length'
         row[key] = rec['length'] if rec['length'] > 0 else ''
         key = f'testes_{i}21:{ordinal(i)} testes width'
         row[key] = rec['width'] if rec['width'] > 0 else ''
         if rec['ambiguous_key']:
-            key = f'testes_{i}30:{ordinal(i)} testes ambiguous key'
+            key = f'testes_{i}30:{ordinal(i)}_testes_ambiguous_key'
             row[key] = rec['ambiguous_key']
         if rec['units_inferred']:
-            key = f'testes_{i}31:{ordinal(i)} testes units inferred'
+            key = f'testes_{i}31:{ordinal(i)}_testes_units_inferred'
             row[key] = rec['units_inferred']

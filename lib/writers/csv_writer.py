@@ -12,6 +12,7 @@ class CsvWriter(BaseWriter):
     def __init__(self, args):
         """Build the writer."""
         super().__init__(args)
+        self.limit = 4
         self.columns = args.extra_field
         self.columns += args.search_field
         self.columns += sorted({f for fds in args.as_is.values() for f in fds})
@@ -27,7 +28,7 @@ class CsvWriter(BaseWriter):
         row = {c: raw_record.get(c, '') for c in self.columns}
 
         for trait, parses in parsed_record.items():
-            TRAIT_DICT[trait].csv_formater(trait, row, parses)
+            TRAIT_DICT[trait].csv_formater(trait, row, parses[:self.limit])
 
         self.rows.append(row)
 

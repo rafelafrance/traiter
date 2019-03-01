@@ -83,29 +83,28 @@ class NumericTrait(BaseTrait):
             else:
                 records[key] = parse
 
-        low_key = ' low' if has_range else ''
-        label = trait.replace('_', ' ')
+        low_key = '_low' if has_range else ''
         for i, (key, parse) in enumerate(records.items(), 1):
-            col = f'{trait}_{i}01:{ordinal(i)} {label}{low_key}'
+            col = f'{trait}_{i}01:{ordinal(i)}_{trait}{low_key}'
             row[col] = key.low
             if key.high:
-                col = f'{trait}_{i}02:{ordinal(i)} {label} high'
+                col = f'{trait}_{i}02:{ordinal(i)}_{trait}_high'
                 row[col] = key.high
             if parse.dimension:
-                col = f'{trait}_{i}03:{ordinal(i)} {label} dimension'
+                col = f'{trait}_{i}03:{ordinal(i)}_{trait}_dimension'
                 row[col] = parse.dimension
             if parse.includes:
-                col = f'{trait}_{i}04:{ordinal(i)} {label} includes'
+                col = f'{trait}_{i}04:{ordinal(i)}_{trait}_includes'
                 row[col] = parse.includes
             if parse.measured_from:
-                col = f'{trait}_{i}05:{ordinal(i)} {label} measured from'
+                col = f'{trait}_{i}05:{ordinal(i)}_{trait}_measured_from'
                 row[col] = parse.measured_from
             if parse.ambiguous_key:
-                col = f'{trait}_{i}06:{ordinal(i)} {label} ambiguous'
+                col = f'{trait}_{i}06:{ordinal(i)}_{trait}_ambiguous'
                 row[col] = parse.ambiguous_key
             if parse.units_inferred:
-                col = f'{trait}_{i}07:{ordinal(i)} {label} units inferred'
+                col = f'{trait}_{i}07:{ordinal(i)}_{trait}_units_inferred'
                 row[col] = parse.units_inferred
             if parse.estimated_value:
-                col = f'{trait}_{i}08:{ordinal(i)} {label} estimated'
+                col = f'{trait}_{i}08:{ordinal(i)}_{trait}_estimated'
                 row[col] = parse.estimated_value

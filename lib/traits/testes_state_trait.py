@@ -95,9 +95,9 @@ class TestesStateTrait(BaseTrait):
 
         # for i, (value, amb) in enumerate(zip(values, ambs), 1):
         for i, value in enumerate(values, 1):
-            row[f'testes_{i}10:{ordinal(i)} testes state'] = value
+            row[f'testes_{i}10:{ordinal(i)}_testes_state'] = value
             # if amb and value not in ('no gonads', ):
-            #    row[f'testes_{i}11:{ordinal(i)} testes state ambiguous'] = amb
+            #    row[f'testes_{i}11:{ordinal(i)}_testes_state_ambiguous'] = amb
 
     @staticmethod
     def should_skip(data, trait):
