@@ -511,3 +511,9 @@ class TestTotalLengthTrait(unittest.TestCase):
                    start=25, end=29),
              Parse(value=279.4, units='in', units_inferred=False,
                    start=103, end=121)])
+
+    def test_parse_89(self):
+        self.assertEqual(
+            PAR.parse('"relatedresourceid": '
+                      '"99846657-2832-4987-94cd-451b9679725c"'),
+            [])

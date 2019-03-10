@@ -24,7 +24,7 @@ class EarLengthTrait(NumericTrait):
             """)
 
         self.lit('char_key', r"""
-            (?<! [a-z] ) (?<! [a-z] \s )
+            (?<! \w ) (?<! \w \s )
             (?P<ambiguous_key> e )
             (?! \.? [a-z] )
             """)
@@ -33,6 +33,7 @@ class EarLengthTrait(NumericTrait):
             ear \s* from \s* (?P<measured_from> notch | crown )
             | ear \s* len (?: gth )?
             | ear (?! \s* tag )
+            | ef (?P<measured_from> n | c )
             """)
 
         self.shared_token(tkn.len_units)

@@ -15,6 +15,7 @@ class NumericParseMixIn:
         else:
             self.units_inferred = False
             if isinstance(units, list):
+                print(units)
                 units = [x.lower() for x in units]
                 self.value = [convert(v, u) for v, u in zip(self.value, units)]
             else:

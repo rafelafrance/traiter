@@ -228,3 +228,8 @@ class TestTestesSizeTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; reproductive data=R 20x10mm ;'),
             [Parse(value=[20, 10], units='mm', side='r', start=2, end=29)])
+
+    def test_parse_37(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=t=233mg ;'),
+            [])

@@ -87,3 +87,21 @@ class TestEarLengthTrait(unittest.TestCase):
             PAR.parse('; ear from notch=.25 in'),
             [Parse(value=6.35, units='in', measured_from='notch',
                    start=2, end=23)])
+
+    def test_parse_15(self):
+        self.assertEqual(
+            PAR.parse('"relatedresourceid": '
+                      '"99846657-2832-4987-94cd-451b9679725c"'),
+            [])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('"356142E 4805438N. Very small"'),
+            [])
+
+    def test_parse_17(self):
+        # self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('Hind Foot: 19 EFN: 13 Weight: 16.3'),
+            [Parse(value=13, measured_from='n', units_inferred=True,
+                   start=14, end=21)])

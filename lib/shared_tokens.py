@@ -55,13 +55,16 @@ cross = ('cross', fr"""
     (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} ) \s*
     \]? \s*?
-    (?P<units1> {len_units[1]} )
-        \s* {cross_joiner}
-        \s* (?P<value2> {number[1]} ) \s* (?P<units2> {len_units[1]} )
-    | (?P<value1> {number[1]} )
-        (?: \s* (?: {cross_joiner} ) \s* (?P<value2> {number[1]} ) )?
-        (?: \s* (?P<units1> {len_units[1]} ))?
-    """)
+    (?: (?P<units1> {len_units[1]})
+            \s* {cross_joiner}
+            \s* (?P<value2> {number[1]}) \s* (?P<units2> {len_units[1]})
+        | {cross_joiner}
+            \s* (?P<value2> {number[1]}) \s* (?P<units1> {len_units[1]})
+        | {cross_joiner}
+            \s* (?P<value2> {number[1]}) \b (?! {mass_units[1]})
+        | (?P<units1> {len_units[1]})
+        | \b (?! {mass_units[1]})
+    )""")
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow date like "1/2/34". No part of this is a fraction
@@ -100,7 +103,7 @@ shorthand_key = ('shorthand_key', r"""
 sh_val = ('sh_val', f' (?: {number[1]} | [?x]{{1,2}} | n/?d ) ')
 
 shorthand = ('shorthand', fr"""
-    (?<! [\d/-] )
+    (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {sh_val[1]} \]? )
     (?P<shorthand_sep> [:/-] )
     (?P<shorthand_tal> (?P<estimated_tal> \[ )? {sh_val[1]} \]? )
@@ -116,18 +119,18 @@ shorthand = ('shorthand', fr"""
         (?P<shorthand_wt_units> {metric_mass[1]} )?
         \s*? \]?
     )?
-    (?! [\d/:=-] )
+    (?! [\d/:=a-z-] )
     """)
 
 # Apparently, they sometimes don't fill in the last number. We have to be extra
 # careful using this pattern so we don't pick up dates. Surround this token
 # with keys and lookarounds.
 triple = ('triple', fr"""
-    (?<! [\d/-] )
+    (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {sh_val[1]} \]? )
     (?P<shorthand_sep> [:/-] )
     (?P<shorthand_tal> (?P<estimated_tal> \[ )? {sh_val[1]} \]? )
     (?P=shorthand_sep)
     (?P<shorthand_hfl> (?P<estimated_hfl> \[ )? {sh_val[1]} \]? )
-    (?! [\d/:=-] )
+    (?! [\d/:=a-z-] )
     """)

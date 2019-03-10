@@ -240,8 +240,17 @@ class TestBodyMassTrait(unittest.TestCase):
             [Parse(value=650, units='kg', start=21, end=34)])
 
     def test_parse_38(self):
-        # self.maxDiff = None
         self.assertEqual(
             PAR.parse('; weight=22 oz; Verbatim weight=1lb 6oz;'),
             [Parse(value=623.7, units='oz', start=2, end=14),
              Parse(value=623.69, units=['lbs', 'ozs'], start=25, end=39)])
+
+    def test_parse_39(self):
+        self.assertEqual(
+            PAR.parse('bacu wt=0.09'),
+            [])
+
+    def test_parse_40(self):
+        self.assertEqual(
+            PAR.parse('femur wt=1.05'),
+            [])

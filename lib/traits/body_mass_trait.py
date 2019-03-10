@@ -31,7 +31,7 @@ class BodyMassTrait(NumericTrait):
         # Build rules for token replacement
         self.replace('wt_key', r"""
             key_leader weight | key_leader mass
-            body weight | body mass | body
+            | body weight | body mass | body
             | weight | mass | key_with_dots
             """)
 

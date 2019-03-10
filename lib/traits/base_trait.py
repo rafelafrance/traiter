@@ -88,8 +88,8 @@ class BaseTrait(RuleBuilerMixin):
 
     def tokens_to_traits(self, token_list, text, field=''):
         """Produce the final results from the remaining tokens."""
-        # for tkn in token_list:
-        #     print(tkn)
+        for tkn in token_list:
+            print(tkn)
         traits = []
         token_text = ''.join([t.token for t in token_list])
         for match in self.producer.finditer(token_text):
