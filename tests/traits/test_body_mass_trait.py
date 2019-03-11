@@ -278,3 +278,14 @@ class TestBodyMassTrait(unittest.TestCase):
                 '"57d3efd8-2b9c-4952-8976-e27401a01251;'
                 '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
             [])
+
+    def test_parse_44(self):
+        self.assertEqual(
+            PAR.parse('Weight=22 lbs., 7 oz.; Length=41 in. T.L.'),
+            [Parse(value=10177.47, units=['lbs', 'ozs'], start=0, end=20)])
+
+    def test_parse_45(self):
+        # self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('{"earLengthInmm":"X", "weightInlbs":"22"}'),
+            [Parse(value=9979.02, units='lbs', start=23, end=39)])

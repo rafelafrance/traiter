@@ -502,6 +502,7 @@ class TestTotalLengthTrait(unittest.TestCase):
                    start=0, end=6)])
 
     def test_parse_88(self):
+        self.maxDiff = None
         self.assertEqual(
             PAR.parse('unformatted measurements=L-11&#34;, T-3.125&#34;, '
                       'HF-1.5&#34; ; sex=male ; hind foot with claw=1.5 in; '
@@ -509,8 +510,7 @@ class TestTotalLengthTrait(unittest.TestCase):
                       '4/12/39 . | 1.5 TRUE'),
             [Parse(value=11, units_inferred=True, ambiguous_key=True,
                    start=25, end=29),
-             Parse(value=279.4, units='in', units_inferred=False,
-                   start=103, end=121)])
+             Parse(value=279.4, units='in', start=103, end=121)])
 
     def test_parse_89(self):
         self.assertEqual(
@@ -541,3 +541,22 @@ class TestTotalLengthTrait(unittest.TestCase):
                 '"57d3efd8-2b9c-4952-8976-e27401a01251;'
                 '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
             [])
+
+    def test_parse_93(self):
+        self.assertEqual(
+            PAR.parse('{"measurements":"TL=216.4 cm (+ 5 cm)" }'),
+            [Parse(value=2164, units='cm', start=17, end=28)])
+
+    def test_parse_94(self):
+        self.assertEqual(
+            PAR.parse('t.l.= 2 feet, 4.5 inches '),
+            [Parse(value=723.9, units=['ft', 'in'], start=0, end=24)])
+
+    def test_parse_95(self):
+        target = ('The length reported (2560 cm = 85 feet) is a bit '
+                  'large for B. physalus and is more in keeping with B. '
+                  'musculus. Redman, N. (2014). Whales\' Bones of France, '
+                  'Southern Europe, Middle East and North Africa. '
+                  'Teddington, England, Redman Publishing. '
+                  'p. 24-25, 41-42')
+        self.assertEqual(PAR.parse(target), [])

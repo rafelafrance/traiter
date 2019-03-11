@@ -34,7 +34,9 @@ class TotalLengthTrait(NumericTrait):
         self.lit('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')
         self.lit('key_units_req', r' measurements? | body | total ')
         self.shared_token(tkn.uuid)
-        self.shared_token(tkn.len_units)
+        self.shared_token(tkn.metric_len)
+        self.shared_token(tkn.feet)
+        self.shared_token(tkn.inches)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.triple)
@@ -44,39 +46,48 @@ class TotalLengthTrait(NumericTrait):
         self.lit('char_key', r""" \b (?P<ambiguous_key> l ) (?= [:=-] ) """)
 
         self.kwd('word', r' (?: [a-z] \w* ) ')
-        self.lit('sep', r' [;,] | $ ')
+        self.lit('semicolon', r' [;] | $ ')
+        self.lit('comma', r' [,] | $ ')
 
         # Build rules for parsing the trait
         self.product(self.fraction, r"""
-            key_units_req fraction (?P<units> len_units)
-            | key fraction (?P<units> len_units)
-            | (?P<ambiguous_key> ambiguous) fraction (?P<units> len_units)
+            key_units_req fraction (?P<units> metric_len | feet | inches )
+            | key fraction (?P<units> metric_len | feet | inches )
+            | (?P<ambiguous_key> ambiguous) fraction
+                (?P<units> metric_len | feet | inches )
             """)
 
         self.product(partial(self.compound, units=['ft', 'in']), r"""
-            key (?P<ft> pair) len_units (?P<in> pair) len_units
-            | (?P<ambiguous_key>(?P<ft> pair) len_units
-                (?P<in> pair) len_units)
+            key (?P<ft> pair) feet (?: comma )? (?P<in> pair) inches
+            | (?P<ambiguous_key>
+                (?P<ft> pair) feet (?: comma )? (?P<in> pair) inches )
             """)
 
         self.product(self.simple, r"""
             key_with_units pair
-            | shorthand_key (?: triple )? pair (?P<units> len_units)
-            | shorthand_key (?: triple )? (?P<units> len_units) pair
-            | key_units_req (?: triple )? pair (?P<units> len_units)
-            | pair (?P<units> len_units) key
+            | shorthand_key (?: triple )? pair
+                (?P<units> metric_len | feet | inches )
+            | shorthand_key (?: triple )? (?P<units>
+                metric_len | feet | inches ) pair
+            | key_units_req (?: triple )? pair
+                (?P<units> metric_len | feet | inches )
+            | pair (?P<units> metric_len | feet | inches ) key
             | pair key
-            | ambiguous (?: triple )? pair (?P<units> len_units) key
+            | ambiguous (?: triple )? pair
+                (?P<units> metric_len | feet | inches ) key
             | ambiguous (?: triple )?  pair key
-            | (?P<ambiguous_key> ambiguous) pair (?P<units> len_units)
-            | (?P<ambiguous_key> ambiguous) (?P<units> len_units) pair
             | (?P<ambiguous_key> ambiguous) pair
-            | key pair (?P<units> len_units)
-            | key (?P<units> len_units) pair
+                (?P<units> metric_len | feet | inches )
+            | (?P<ambiguous_key> ambiguous)
+                (?P<units> metric_len | feet | inches ) pair
+            | (?P<ambiguous_key> ambiguous) pair
+            | key pair (?P<units> metric_len | feet | inches )
+            | key (?P<units> metric_len | feet | inches ) pair
             | key (?: triple )? pair
-            | key (?: word | sep ){1,3} pair (?P<units> len_units)
-            | key (?: word | sep ){1,3} pair
-            | char_key pair (?P<units> len_units)
+            | key (?: word | semicolon | comma ){1,3} pair
+                (?P<units> metric_len | feet | inches )
+            | key (?: word | semicolon | comma ){1,3} pair
+            | char_key pair (?P<units> metric_len | feet | inches )
             | char_key pair
             """)
 

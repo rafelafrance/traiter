@@ -15,20 +15,23 @@ class BodyMassTrait(NumericTrait):
 
         # Build the tokens
         self.kwd('key_with_units', r"""
-            (?: weight | mass) \s* in \s* (?P<units> g (?: rams )? ) """)
+            (?: weight | mass) \s* in \s* (?P<units> g (?: rams )? | lbs ) """)
         self.lit('key_leader', ' full | observed | total ')
         self.lit('weight', r' weights? | weigh (?: s | ed | ing ) ')
         self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
         self.lit('mass', r' mass ')
         self.lit('body', r' body ')
         self.shared_token(tkn.uuid)
-        self.shared_token(tkn.mass_units)
+        self.shared_token(tkn.metric_mass)
+        self.shared_token(tkn.pounds)
+        self.shared_token(tkn.ounces)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
         self.kwd('other_wt', r""" femur |  bac u? (?: lum)? """)
         self.kwd('word', r' (?: [a-z] \w* ) ')
-        self.lit('sep', r' [;,] | $ ')
+        self.lit('semicolon', r' [;] | $ ')
+        self.lit('comma', r' [,] | $ ')
 
         # Build rules for token replacement
         self.replace('wt_key', r"""
@@ -42,16 +45,17 @@ class BodyMassTrait(NumericTrait):
         self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
 
         self.product(partial(self.compound, units=['lbs', 'ozs']), r"""
-            wt_key (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units
+            wt_key (?P<lbs> pair ) pounds (?: comma )? (?P<ozs> pair ) ounces
             | (?P<ambiguous_key>
-                (?P<lbs> pair ) mass_units (?P<ozs> pair ) mass_units )""")
+                (?P<lbs> pair ) pounds (?: comma )?
+                (?P<ozs> pair ) ounces )""")
 
         self.product(self.simple, r"""
             key_with_units pair
-            | wt_key (?P<units> mass_units ) pair
-            | wt_key pair (?P<units> mass_units )
-            | shorthand_key pair (?P<units> mass_units )
-            | shorthand_key (?P<units> mass_units ) pair
+            | wt_key (?P<units> metric_mass | pounds | ounces ) pair
+            | wt_key pair (?P<units> metric_mass | pounds | ounces )
+            | shorthand_key pair (?P<units> metric_mass | pounds | ounces )
+            | shorthand_key (?P<units> metric_mass | pounds | ounces ) pair
             | wt_key pair""")
 
         self.finish_init()

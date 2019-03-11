@@ -32,7 +32,7 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures.
+Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures. Pattern recognition is a common technique in **Natural Language Processing, Information Extraction**.
 
 One complication is that the characters in the text can take on different meaning depending on the context. For is instance, is a double quote after a number `"` an inch symbol (like `3' 4"`or a closing quote (like `"length=4"`)? It's just as tricky to handle single characters have multiple meanings like the letter "T" on its own. In some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation and most contexts it is an initial in some one's name. In this project, we differentiate and capture the first two cases and try to ignore the last one.
 
@@ -40,31 +40,45 @@ Another important point is that we want to parse gigabytes (or terabytes) of dat
 
 This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple we build tokens in one step and in all further steps we use those tokens to reduce combinations to other tokens or productions.
 
-1. Tokenize the text analogous to this method in the python `re` module documentation, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
+1. Tokenize the text.
+2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
+3. Convert sequences of tokens into the final productions.
 
-The following regular expressions will replace the regular expressions with the "sex", "word", "keyword", "quest", and "abdominal" tokens respectively.
+
+#### 1. Tokenize the text
+This step is directly analogous to this method in the documentation for python's `re` module, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
+
+The following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
 
 ```python
     self.kwd('keyword', 'sex')
     self.kwd('sex', r' females? | males? | f | m')
     self.lit('word', r' \b [a-z] \S+ ')
     self.lit('quest', r' \? ')
-    self.kwd('abdominal', r' abdominal | abdomin | abdom ')
 ```
 
-The tokenizer will elide over anything that is not recognized in one of the tokenizer patterns. We cannot remove all irrelevant text because that can bring unrelated valid text next to each other, causing false positives. Removing noise from the text is critical to efficiency but removing too much will cause problems later. The regular expressions for tokens are sometimes quite complex.
+`kwd` and `lit` are methods for adding token regular expressions to the parser. The `kwd` surrounds a pattern with `\b` word-separator character class and the `lit` method does not. So `self.lit('pattern_name', r'my pattern')` just adds the pattern as is but `self.kwd('pattern_name', r'my pattern')` will add the pattern like so: `\b (?: my pattern) \b`.
 
-The `kwd` method surrounds a pattern with `\b` word-separator tokens and the `lit` method does not.
+Given these rules and the following text: `Specimen 2399: sex is female? ,`
 
-2. Use regular expressions to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine.
+We will produce the following tokens: `word keyword word sex quest`.
 
-The following regular expression will replace the "non fully descended" or "abdominal non descended" sequence of tokens with the "state" token. Here, each word represents a single token. So, we're no longer dealing with the characters for `abdominal` but the token that represents what was captured in step 1 as the keyword. So, it represents any of, "abdominal", "abdomin", or "abdom" or whatever was captured during tokenization.
+Notice that there are no tokens for any of the spaces, the `2399:` character sequence or the final `;` semicolon. We have removed the "noise". This turns out to be very helpful with simplifying the parsers. However, nothing codes for free. If you elide over too much text you can bring unrelated text next to each other and cause false positives.
+
+I should also note that the regular expressions for tokens can get fairly complex. See `lib/shared_tokens.py` for some examples.
+
+#### 2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
+
+Use regular expressions on the tokens to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine. These are regular expressions just like any other they're just matching on the token names instead of on raw text.
 
 ```python
-    self.replace('state', 'non fully descended | abdominal non descended')
+self.replace('key', ' keyword | char_key | char_measured_from ')
 ```
 
-3. Use regular expressions to find patterns of tokens to extract into traits. This is a single pass.
+In this example any of the three tokens (`keyword`, `char_key`, or `char_measured_from`) will be replaced with the `key` token. The key token is what is used in the final rules. This is a pretty trivial example strictly for simplifying the notation but other examples do get more complex.
+
+#### 3. Convert sequences of tokens into the final productions
+Use regular expressions to find patterns of tokens that are then converted into traits. This is a single pass.
 
 Here is a rule for recognizing when a sex trait is present. The first argument is a pointer to the function that will do the conversion. Traits may be converted in several ways. Just like in step 2, each word represents a single token.
 
@@ -77,7 +91,7 @@ Here is a rule for recognizing when a sex trait is present. The first argument i
 
 There are still issues with context that are not easily resolved with this parsing technique. For example, the double quote '"' is used as both an abbreviation for inches and as a quote character. A human can human can easily tell the difference but these parsers struggle. To help with this and other issues I use post processing heuristics.
 
-Ultimately, a machine learning or hybrid of machine learning and parsers approach may work better.
+#### Notes on the algorithm
 
 Some of the other techniques that I tried but don't currently use:
 

@@ -24,6 +24,8 @@ metric_mass = ('metric_mass', r"""
     | (?: m \.? \s? g | k \.? \s? g | g[mr]? ) (?: s (?! [a-z]) )?
     """)
 
+us_mass = ('us_mass', '|'.join([x[1] for x in (pounds, ounces)]))
+
 mass_units = (
     'mass_units', '|'.join([x[1] for x in (metric_mass, pounds, ounces)]))
 
@@ -38,12 +40,12 @@ number = ('number', r"""
 # So: no part of "2014-12-11" would be in a pair
 pair_joiner = r'- | to'
 pair = ('pair', fr"""
-    (?<! \d ) (?<! \d [|,.-] ) (?<! \b to \s )
+    (?<! \d ) (?<! \d [|,.+-] ) (?<! \b to \s )
     (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} )
     \]? \s*?
     (?: \s* (?: {pair_joiner} ) \s* (?P<value2> {number[1]} ) )?
-    (?! \d+ | [|,.-] \d | \s+ to \b )
+    (?! \d+ | [|,.+-] \d | \s+ to \b )
     """)
 
 # A number times another number like: "12 x 34" this is typically
