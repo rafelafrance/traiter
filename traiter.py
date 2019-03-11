@@ -36,9 +36,9 @@ def parse_traits(args):
 
     parsed_file = FileParser(args, parsers)
 
-    with reader as infile, writer as outfile:
+    with reader as input_file, writer as output_file:
 
-        for i, record in enumerate(infile, 1):
+        for i, record in enumerate(input_file, 1):
 
             if args.skip and i <= args.skip:
                 continue
@@ -46,7 +46,7 @@ def parse_traits(args):
             parser = parsed_file.new_record_parser()
             parsed_record = parser.parse_record(record)
 
-            outfile.record(record, parsed_record)
+            output_file.record(record, parsed_record)
 
             if args.stop and i >= args.stop:
                 break
@@ -63,6 +63,14 @@ def parse_args():
     parser.add_argument(
         '--version', '-V', action='version',
         version='%(prog)s v{}'.format(__VERSION__))
+
+    parser.add_argument(
+        '--input-file', '-i', type=argparse.FileType('r'), default=sys.stdin,
+        help='''The input file containing the traits. Defaults to stdin.''')
+
+    parser.add_argument(
+        '--output-file', '-o', type=argparse.FileType('w'), default=sys.stdout,
+        help='''Output the results to this file. Defaults to stdout.''')
 
     parser.add_argument(
         '--trait', '-t', required=True, action='append', choices=TRAIT_NAMES,
@@ -86,11 +94,11 @@ def parse_args():
             use this argument more than once and you may need to quote it.""")
 
     parser.add_argument(
-        '--input-format', '-i', default='csv', choices=INPUT_OPTIONS,
+        '--input-format', '-I', default='csv', choices=INPUT_OPTIONS,
         help="""The data input format. The default is "csv".""")
 
     parser.add_argument(
-        '--output-format', '-o', default='csv', choices=OUTPUT_OPTIONS,
+        '--output-format', '-O', default='csv', choices=OUTPUT_OPTIONS,
         help="""Output the result in this format. The default is "csv".""")
 
     parser.add_argument(
@@ -104,14 +112,6 @@ def parse_args():
     parser.add_argument(
         '--log-every', type=int, metavar='N',
         help="""Log after message after processing every N input records.""")
-
-    parser.add_argument(
-        'infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
-        help='''The input file containing the traits. Defaults to stdin.''')
-
-    parser.add_argument(
-        'outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
-        help='''Output the results to this file. Defaults to stdout.''')
 
     args = parser.parse_args()
 

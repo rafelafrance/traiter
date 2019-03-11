@@ -39,5 +39,5 @@ class HtmlWriter(BaseWriter):
             args=args,
             rows=self.rows,
         )
-        self.args.outfile.write(template)
-        self.args.outfile.close()
+        self.args.output_file.write(template)
+        self.args.output_file.close()

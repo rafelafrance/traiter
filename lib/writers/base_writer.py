@@ -9,7 +9,7 @@ class BaseWriter:
     def __init__(self, args):
         """Build the writer."""
         self.args = args
-        self.outfile = args.outfile
+        self.output_file = args.output_file
         self.index = 0
         self.rows = []
 

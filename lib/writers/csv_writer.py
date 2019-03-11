@@ -36,4 +36,4 @@ class CsvWriter(BaseWriter):
         """End the report."""
         dfm = pd.DataFrame(self.rows)
         dfm.rename(columns=lambda x: re.sub(r'^.+?:\s*', '', x), inplace=True)
-        dfm.to_csv(self.args.outfile, index=False)
+        dfm.to_csv(self.args.output_file, index=False)
