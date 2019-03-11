@@ -26,6 +26,7 @@ class TailLengthTrait(NumericTrait):
 
         self.kwd('keyword', r' tail \s* len (?: gth )? | tail | tal ')
 
+        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)

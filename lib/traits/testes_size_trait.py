@@ -33,6 +33,8 @@ class TestesSizeTrait(BaseTrait):
             | (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
             """)
 
+        self.shared_token(tkn.uuid)
+
         self.kwd('testes', r' testes |  testis | testicles? | test ')
         self.kwd('abbrev', r' tes | ts ')
         self.lit('char_key', r' \b t (?! [a-z] )')

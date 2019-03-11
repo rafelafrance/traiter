@@ -245,12 +245,36 @@ class TestBodyMassTrait(unittest.TestCase):
             [Parse(value=623.7, units='oz', start=2, end=14),
              Parse(value=623.69, units=['lbs', 'ozs'], start=25, end=39)])
 
-    # def test_parse_39(self):
-    #     self.assertEqual(
-    #         PAR.parse('bacu wt=0.09'),
-    #         [])
+    def test_parse_39(self):
+        self.assertEqual(
+            PAR.parse('bacu wt=0.09'),
+            [])
 
-    # def test_parse_40(self):
-    #     self.assertEqual(
-    #         PAR.parse('femur wt=1.05'),
-    #         [])
+    def test_parse_40(self):
+        self.assertEqual(
+            PAR.parse('femur wt=1.05'),
+            [])
+
+    def test_parse_41(self):
+        self.assertEqual(
+            PAR.parse(
+                '{"created": "2014-10-29", "relatedresourceid": '
+                '"eeba8b10-040e-4477-a0a6-870102b56234;'
+                'abbf14f5-1a7c-48f6-8f2f-2a8af53c8c86"}'),
+            [])
+
+    def test_parse_42(self):
+        self.assertEqual(
+            PAR.parse(
+                '{"created": "2007-05-27", "relatedresourceid": '
+                '"92bc5a20-577e-4504-aab6-bb409d06871a;'
+                '0460ccc4-a461-43ec-86b6-1c252377b126"}'),
+            [])
+
+    def test_parse_43(self):
+        self.assertEqual(
+            PAR.parse(
+                '{"created": "2014-10-29", "relatedresourceid": '
+                '"57d3efd8-2b9c-4952-8976-e27401a01251;'
+                '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
+            [])

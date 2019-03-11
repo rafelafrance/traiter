@@ -233,3 +233,27 @@ class TestTestesSizeTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; reproductive data=t=233mg ;'),
             [])
+
+    def test_parse_38(self):
+        self.assertEqual(
+            PAR.parse(
+                '{"created": "2014-10-29", "relatedresourceid": '
+                '"eeba8b10-040e-4477-a0a6-870102b56234;'
+                'abbf14f5-1a7c-48f6-8f2f-2a8af53c8c86"}'),
+            [])
+
+    def test_parse_39(self):
+        self.assertEqual(
+            PAR.parse(
+                '{"created": "2007-05-27", "relatedresourceid": '
+                '"92bc5a20-577e-4504-aab6-bb409d06871a;'
+                '0460ccc4-a461-43ec-86b6-1c252377b126"}'),
+            [])
+
+    def test_parse_40(self):
+        self.assertEqual(
+            PAR.parse(
+                '{"created": "2014-10-29", "relatedresourceid": '
+                '"57d3efd8-2b9c-4952-8976-e27401a01251;'
+                '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
+            [])

@@ -36,6 +36,7 @@ class EarLengthTrait(NumericTrait):
             | ef (?P<measured_from> n | c )
             """)
 
+        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.shorthand_key)

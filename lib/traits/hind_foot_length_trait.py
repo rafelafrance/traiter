@@ -22,6 +22,7 @@ class HindFootLengthTrait(NumericTrait):
             | hind \s* foot (?: \s* len (?: gth )? )?
             | \b hfl | \b hf """)
 
+        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)

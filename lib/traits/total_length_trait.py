@@ -33,6 +33,7 @@ class TotalLengthTrait(NumericTrait):
 
         self.lit('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')
         self.lit('key_units_req', r' measurements? | body | total ')
+        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)

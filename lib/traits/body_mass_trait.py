@@ -21,18 +21,21 @@ class BodyMassTrait(NumericTrait):
         self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
         self.lit('mass', r' mass ')
         self.lit('body', r' body ')
+        self.shared_token(tkn.uuid)
         self.shared_token(tkn.mass_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
+        self.kwd('other_wt', r""" femur |  bac u? (?: lum)? """)
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
         # Build rules for token replacement
         self.replace('wt_key', r"""
-            key_leader weight | key_leader mass
+            (?<! other_wt )
+            (?: key_leader weight | key_leader mass
             | body weight | body mass | body
-            | weight | mass | key_with_dots
+            | weight | mass | key_with_dots )
             """)
 
         # Build rules for parsing the trait
