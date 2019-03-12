@@ -12,6 +12,7 @@ class BodyMassTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self.shared_token(tkn.uuid)
 
         # Build the tokens
         self.kwd('key_with_units', r"""
@@ -21,7 +22,6 @@ class BodyMassTrait(NumericTrait):
         self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
         self.lit('mass', r' mass ')
         self.lit('body', r' body ')
-        self.shared_token(tkn.uuid)
         self.shared_token(tkn.metric_mass)
         self.shared_token(tkn.pounds)
         self.shared_token(tkn.ounces)

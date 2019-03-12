@@ -16,6 +16,7 @@ class TestesSizeTrait(BaseTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self.shared_token(tkn.uuid)
 
         # Build the tokens
         self.kwd('label', r' reproductive .? (?: data | state | condition ) ')
@@ -32,8 +33,6 @@ class TestesSizeTrait(BaseTrait):
                 \s* (?P<dimension> length | width )
             | (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
             """)
-
-        self.shared_token(tkn.uuid)
 
         self.kwd('testes', r' testes |  testis | testicles? | test ')
         self.kwd('abbrev', r' tes | ts ')

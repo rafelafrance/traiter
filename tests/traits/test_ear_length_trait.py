@@ -129,3 +129,10 @@ class TestEarLengthTrait(unittest.TestCase):
                 '"57d3efd8-2b9c-4952-8976-e27401a01251;'
                 '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
             [])
+
+    def test_parse_21(self):
+        self.assertEqual(
+            PAR.parse(
+                '"relatedresourceid": "6f3eabaf-cc3f-4f5a-8b20-d38705711eb6;'
+                'e9759595-c666-4666-9c65-befd5bb79958"'),
+            [])

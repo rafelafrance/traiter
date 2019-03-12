@@ -69,7 +69,7 @@ cross = ('cross', fr"""
     )""")
 
 # For fractions like "1 2/3" or "1/2".
-# We don't allow date like "1/2/34". No part of this is a fraction
+# We don't allow dates like "1/2/34".
 fraction = ('fraction', r"""
     (?<! [\d/,.] )
     (?P<whole> \d+ \s+ )? (?P<numerator> \d+ ) / (?P<denominator> \d+ )
@@ -102,7 +102,8 @@ shorthand_key = ('shorthand_key', r"""
     """)
 
 # A possibly unknown value
-sh_val = ('sh_val', f' (?: {number[1]} | [?x]{{1,2}} | n/?d ) ')
+sh_num = ('sh_num', r""" \d+ (?: \. \d+ )? | (?<= [^\d] ) \. \d+ """)
+sh_val = ('sh_val', f' (?: {sh_num[1]} | [?x]{{1,2}} | n/?d ) ')
 
 shorthand = ('shorthand', fr"""
     (?<! [\d/a-z-] )

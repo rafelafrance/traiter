@@ -11,6 +11,7 @@ class TotalLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self.shared_token(tkn.uuid)
 
         # Build the tokens
         self.kwd('key_with_units', r"""
@@ -33,7 +34,6 @@ class TotalLengthTrait(NumericTrait):
 
         self.lit('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')
         self.lit('key_units_req', r' measurements? | body | total ')
-        self.shared_token(tkn.uuid)
         self.shared_token(tkn.metric_len)
         self.shared_token(tkn.feet)
         self.shared_token(tkn.inches)

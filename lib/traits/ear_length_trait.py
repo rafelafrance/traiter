@@ -11,6 +11,7 @@ class EarLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self.shared_token(tkn.uuid)
 
         # Build the tokens
         self.kwd('key_with_units', r"""
@@ -36,7 +37,6 @@ class EarLengthTrait(NumericTrait):
             | ef (?P<measured_from> n | c )
             """)
 
-        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.shorthand_key)

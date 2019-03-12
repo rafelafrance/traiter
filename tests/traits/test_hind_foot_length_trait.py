@@ -106,3 +106,9 @@ class TestHindFootLengthTrait(unittest.TestCase):
                 '"57d3efd8-2b9c-4952-8976-e27401a01251;'
                 '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
             [])
+
+    def test_parse_18(self):
+        self.assertEqual(
+            PAR.parse(
+                '2010:15,27,41,69,106-107.112-115,118-128;'),
+            [])

@@ -8,6 +8,7 @@ import lib.shared_tokens as tkn
 
 LOOKBACK = 40
 IS_TESTES = re.compile(r' repoductive | gonad | test ', NumericTrait.flags)
+IS_ELEVATION = re.compile(r' elev (?: ation )? ', NumericTrait.flags)
 
 
 class TailLengthTrait(NumericTrait):
@@ -16,17 +17,19 @@ class TailLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self.shared_token(tkn.uuid)
 
         # Build the tokens
         self.kwd('key_with_units', r"""
             tail \s* len (?: gth )? \s* in \s*
             (?P<units> millimeters | mm ) """)
 
-        self.lit('char_key', r' \b (?P<ambiguous_key> t ) (?! [a-z] )')
+        self.lit('char_key', r"""
+            \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
+            """)
 
         self.kwd('keyword', r' tail \s* len (?: gth )? | tail | tal ')
 
-        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
@@ -62,6 +65,8 @@ class TailLengthTrait(NumericTrait):
         if trait.ambiguous_key:
             start = max(0, trait.start - LOOKBACK)
             if IS_TESTES.search(text, start, trait.start):
+                return None
+            if IS_ELEVATION.search(text, start, trait.start):
                 return None
             if len(text) > trait.end and text[trait.end].isalpha():
                 return None

@@ -11,6 +11,7 @@ class HindFootLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self.shared_token(tkn.uuid)
 
         # Build the tokens
         self.kwd('key_with_units', r"""
@@ -22,7 +23,6 @@ class HindFootLengthTrait(NumericTrait):
             | hind \s* foot (?: \s* len (?: gth )? )?
             | \b hfl | \b hf """)
 
-        self.shared_token(tkn.uuid)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)

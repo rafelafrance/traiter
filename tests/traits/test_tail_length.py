@@ -78,3 +78,17 @@ class TestTailLengthTrait(unittest.TestCase):
                 '"57d3efd8-2b9c-4952-8976-e27401a01251;'
                 '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
             [])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('ELEV G.T. 3900 FT'), [])
+
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse(
+                '"Dry muscle tissue accessioned into the Southwest Fisheries '
+                'Science Center (SWFSC) collection, T_ID 178858, LABID '
+                '144207. Recovered by Henry Swanson. Scheffer, V. B. (1949). '
+                '"Notes of three beaked whales from the Aleutian Islands." '
+                'Pacific Science 3(4):353."'),
+            [])
