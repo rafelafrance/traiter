@@ -136,3 +136,28 @@ class TestEarLengthTrait(unittest.TestCase):
                 '"relatedresourceid": "6f3eabaf-cc3f-4f5a-8b20-d38705711eb6;'
                 'e9759595-c666-4666-9c65-befd5bb79958"'),
             [])
+
+    def test_parse_22(self):
+        self.assertEqual(
+            PAR.parse('E.T., E3781185 / N3701740, LLTA 89-116, T=10x7'),
+            [])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            PAR.parse('Cert #E0554185; Skull Seal #0406307'),
+            [])
+
+    def test_parse_24(self):
+        self.assertEqual(
+            PAR.parse('T=12x8, E379700/N3740240'),
+            [])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('Hawaiian chain.  Magnemite 610-E 7050.'),
+            [])
+
+    def test_parse_26(self):
+        self.assertEqual(
+            PAR.parse('Gray, J. E. (1866).'),
+            [])

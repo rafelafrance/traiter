@@ -92,3 +92,24 @@ class TestTailLengthTrait(unittest.TestCase):
                 '"Notes of three beaked whales from the Aleutian Islands." '
                 'Pacific Science 3(4):353."'),
             [])
+
+    def test_parse_15(self):
+        self.assertEqual(
+            PAR.parse('95 on skull; [total: 773.5mm tail: 280.0 foot: 65.0 '
+                      'pina: 41.0; 24 June 1986]'),
+            [Parse(value=85344, units='foot', start=29, end=45)])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('Body and tail: 1690 mm; Body: 114000 g'),
+            [])
+
+    def test_parse_17(self):
+        self.assertEqual(
+            PAR.parse('Other Measurements: nose-tail=60in., girth=39in.'),
+            [])
+
+    def test_parse_18(self):
+        self.assertEqual(
+            PAR.parse('Imm. weight 50 kg, L. snout to tip of tail 1510,'),
+            [])

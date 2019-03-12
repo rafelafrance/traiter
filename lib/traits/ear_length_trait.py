@@ -1,8 +1,19 @@
 """Parse ear length notations."""
 
+import re
 from functools import partial
 from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
+
+
+LOOKBACK_FAR = 40
+LOOKBACK_NEAR = 10
+IS_ET = re.compile(r' e \.? t ', NumericTrait.flags)
+IS_NUMBER = re.compile(r' [#] ', NumericTrait.flags)
+IS_MAG = re.compile(r' magnemite', NumericTrait.flags)
+
+LOOKAHEAD_NEAR = 5
+IS_EAST = re.compile(r' \b n ', NumericTrait.flags)
 
 
 class EarLengthTrait(NumericTrait):
@@ -27,7 +38,7 @@ class EarLengthTrait(NumericTrait):
         self.lit('char_key', r"""
             (?<! \w ) (?<! \w \s )
             (?P<ambiguous_key> e )
-            (?! \.? [a-z] )
+            (?! \.? \s? [a-z\(] )
             """)
 
         self.kwd('keyword', r"""
@@ -66,4 +77,19 @@ class EarLengthTrait(NumericTrait):
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
+        if trait.ambiguous_key:
+            start = max(0, trait.start - LOOKBACK_NEAR)
+            if IS_ET.search(text, start, trait.start):
+                return None
+            if IS_NUMBER.search(text, start, trait.start):
+                return None
+
+            start = max(0, trait.start - LOOKBACK_FAR)
+            if IS_MAG.search(text, start, trait.start):
+                return None
+
+            end = min(len(text), trait.end + LOOKAHEAD_NEAR)
+            if IS_EAST.search(text, trait.end, end):
+                return None
+
         return self.fix_up_inches(trait, text)

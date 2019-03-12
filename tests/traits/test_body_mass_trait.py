@@ -285,7 +285,6 @@ class TestBodyMassTrait(unittest.TestCase):
             [Parse(value=10177.48, units=['lbs', 'ozs'], start=0, end=20)])
 
     def test_parse_45(self):
-        # self.maxDiff = None
         self.assertEqual(
             PAR.parse('{"earLengthInmm":"X", "weightInlbs":"22"}'),
             [Parse(value=9979.03, units='lbs', start=23, end=39)])

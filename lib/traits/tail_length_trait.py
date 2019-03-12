@@ -6,9 +6,12 @@ from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
 
 
-LOOKBACK = 40
+LOOKBACK_FAR = 40
+LOOKBACK_NEAR = 20
 IS_TESTES = re.compile(r' repoductive | gonad | test ', NumericTrait.flags)
 IS_ELEVATION = re.compile(r' elev (?: ation )? ', NumericTrait.flags)
+IS_TOTAL = re.compile(r' body | nose | snout ', NumericTrait.flags)
+IS_TAG = re.compile(r' tag ', NumericTrait.flags)
 
 
 class TailLengthTrait(NumericTrait):
@@ -62,12 +65,22 @@ class TailLengthTrait(NumericTrait):
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
+
+        start = max(0, trait.start - LOOKBACK_NEAR)
+        if IS_TOTAL.search(text, start, trait.start):
+            return None
+
         if trait.ambiguous_key:
-            start = max(0, trait.start - LOOKBACK)
+            start = max(0, trait.start - LOOKBACK_FAR)
             if IS_TESTES.search(text, start, trait.start):
                 return None
             if IS_ELEVATION.search(text, start, trait.start):
                 return None
+
+            start = max(0, trait.start - LOOKBACK_NEAR)
+            if IS_TAG.search(text, start, trait.start):
+                return None
+
             if len(text) > trait.end and text[trait.end].isalpha():
                 return None
 
