@@ -67,12 +67,10 @@ class TotalLengthTrait(NumericTrait):
             key_with_units pair
             | shorthand_key (?: triple )? pair
                 (?P<units> metric_len | feet | inches )
-            | shorthand_key (?: triple )? (?P<units>
-                metric_len | feet | inches ) pair
+            | shorthand_key (?: triple )? (?P<units> metric_len ) pair
             | key_units_req (?: triple )? pair
                 (?P<units> metric_len | feet | inches )
             | pair (?P<units> metric_len | feet | inches ) key
-            | pair key
             | ambiguous (?: triple )? pair
                 (?P<units> metric_len | feet | inches ) key
             | ambiguous (?: triple )?  pair key

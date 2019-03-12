@@ -11,7 +11,7 @@ feet = ('feet', r" foots? | feets? | fts? | (?<= \d ) ' ")
 inches = ('inches', ' (?: inche?s? | ins? ) (?! [a-dgi-km-ru-z] ) ')
 
 metric_len = (
-    'metric_len', r'(?: milli | centi )? meters? | (?: [cm] [\s.]? m ) ')
+    'metric_len', r' (?: milli | centi )? meters? | (?: [cm] [\s.]? m ) ')
 
 len_units = ('len_units', '|'.join([x[1] for x in (metric_len, feet, inches)]))
 
@@ -40,7 +40,7 @@ number = ('number', r"""
 # So: no part of "2014-12-11" would be in a pair
 pair_joiner = r'- | to'
 pair = ('pair', fr"""
-    (?<! \d ) (?<! \d [|,.+-] ) (?<! \b to \s )
+    (?<! \d ) (?<! \d [|,.#+-] ) (?<! \b to \s ) (?<! [#] )
     (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} )
     \]? \s*?
