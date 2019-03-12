@@ -35,7 +35,7 @@ class TestBodyMassTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 - 4.5 oz '),
             [Parse(
-                value=[995.07, 1034.76],
+                value=[995.06, 1034.75],
                 ambiguous_key=True,
                 units=['lbs', 'ozs'],
                 start=0, end=19)])
@@ -179,7 +179,7 @@ class TestBodyMassTrait(unittest.TestCase):
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse('2 lbs. 3.1 oz '),
-            [Parse(value=995.07, ambiguous_key=True,
+            [Parse(value=995.06, ambiguous_key=True,
                    units=['lbs', 'ozs'], start=0, end=13)])
 
     def test_parse_29(self):
@@ -242,7 +242,7 @@ class TestBodyMassTrait(unittest.TestCase):
     def test_parse_38(self):
         self.assertEqual(
             PAR.parse('; weight=22 oz; Verbatim weight=1lb 6oz;'),
-            [Parse(value=623.7, units='oz', start=2, end=14),
+            [Parse(value=623.69, units='oz', start=2, end=14),
              Parse(value=623.69, units=['lbs', 'ozs'], start=25, end=39)])
 
     def test_parse_39(self):
@@ -282,10 +282,10 @@ class TestBodyMassTrait(unittest.TestCase):
     def test_parse_44(self):
         self.assertEqual(
             PAR.parse('Weight=22 lbs., 7 oz.; Length=41 in. T.L.'),
-            [Parse(value=10177.47, units=['lbs', 'ozs'], start=0, end=20)])
+            [Parse(value=10177.48, units=['lbs', 'ozs'], start=0, end=20)])
 
     def test_parse_45(self):
         # self.maxDiff = None
         self.assertEqual(
             PAR.parse('{"earLengthInmm":"X", "weightInlbs":"22"}'),
-            [Parse(value=9979.02, units='lbs', start=23, end=39)])
+            [Parse(value=9979.03, units='lbs', start=23, end=39)])
