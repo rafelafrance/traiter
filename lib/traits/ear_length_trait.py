@@ -10,9 +10,10 @@ LOOKBACK_FAR = 40
 LOOKBACK_NEAR = 10
 IS_ET = re.compile(r' e \.? t ', NumericTrait.flags)
 IS_NUMBER = re.compile(r' [#] ', NumericTrait.flags)
-IS_MAG = re.compile(r' magnemite', NumericTrait.flags)
+IS_MAG = re.compile(r' magnemite ', NumericTrait.flags)
+IS_ID = re.compile(r' id (?: ent )? (?: ifier )? ', NumericTrait.flags)
 
-LOOKAHEAD_NEAR = 5
+LOOK_AROUND = 10
 IS_EAST = re.compile(r' \b n ', NumericTrait.flags)
 
 
@@ -75,6 +76,7 @@ class EarLengthTrait(NumericTrait):
 
         self.finish_init()
 
+    # pylint: disable=too-many-return-statements
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
         if trait.ambiguous_key:
@@ -87,9 +89,14 @@ class EarLengthTrait(NumericTrait):
             start = max(0, trait.start - LOOKBACK_FAR)
             if IS_MAG.search(text, start, trait.start):
                 return None
+            if IS_ID.search(text, start, trait.start):
+                return None
 
-            end = min(len(text), trait.end + LOOKAHEAD_NEAR)
+            start = max(0, trait.start - LOOK_AROUND)
+            end = min(len(text), trait.end + LOOK_AROUND)
+            if IS_EAST.search(text, start, trait.start):
+                return None
             if IS_EAST.search(text, trait.end, end):
                 return None
 
-        return self.fix_up_inches(trait, text)
+        return self.numeric_fixups(trait, text)

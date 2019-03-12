@@ -42,12 +42,14 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_006(self):
         self.assertEqual(
             PAR.parse('"{"measurements":"308-190-45-20" }"'),
-            [Parse(value=308, units='mm_shorthand', start=3, end=31)])
+            [Parse(value=308, units='mm_shorthand', is_shorthand=True,
+                   start=3, end=31)])
 
     def test_parse_007(self):
         self.assertEqual(
             PAR.parse('308-190-45-20'),
-            [Parse(value=308, units='mm_shorthand', start=0, end=13)])
+            [Parse(value=308, units='mm_shorthand', is_shorthand=True,
+                   start=0, end=13)])
 
     def test_parse_008(self):
         self.assertEqual(
@@ -69,7 +71,8 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_010(self):
         self.assertEqual(
             PAR.parse('143-63-20-17=13'),
-            [Parse(value=143, units='mm_shorthand', start=0, end=15)])
+            [Parse(value=143, units='mm_shorthand', is_shorthand=True,
+                   start=0, end=15)])
 
     def test_parse_011(self):
         self.assertEqual(
@@ -96,7 +99,8 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_015(self):
         self.assertEqual(
             PAR.parse('AJR-32   186-102-23-15  15.0g'),
-            [Parse(value=186, units='mm_shorthand', start=9, end=29)])
+            [Parse(value=186, units='mm_shorthand', is_shorthand=True,
+                   start=9, end=29)])
 
     def test_parse_016(self):
         self.assertEqual(
@@ -191,7 +195,8 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_031(self):
         self.assertEqual(
             PAR.parse('{"totalLengthInMM":"270-165-18-22-31", '),
-            [Parse(value=270, units='mm_shorthand', start=20, end=36)])
+            [Parse(value=270, units='mm_shorthand', is_shorthand=True,
+                   start=20, end=36)])
 
     def test_parse_032(self):
         self.assertEqual(
@@ -203,7 +208,8 @@ class TestTotalLengthTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('field measurements on fresh dead specimen were '
                       '157-60-20-19-21g'),
-            [Parse(value=157, units='mm_shorthand', start=47, end=63)])
+            [Parse(value=157, units='mm_shorthand', is_shorthand=True,
+                   start=47, end=63)])
 
     def test_parse_034(self):
         self.assertEqual(
@@ -255,7 +261,8 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_043(self):
         self.assertEqual(
             PAR.parse('{"measurements":"159-?-22-16=21.0" }'),
-            [Parse(value=159, units='mm_shorthand', start=2, end=33)])
+            [Parse(value=159, units='mm_shorthand', is_shorthand=True,
+                   start=2, end=33)])
 
     def test_parse_044(self):
         self.assertEqual(
@@ -416,13 +423,13 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_072(self):
         self.assertEqual(
             PAR.parse('[308]-190-45-20'),
-            [Parse(value=308, units='mm_shorthand',
+            [Parse(value=308, units='mm_shorthand', is_shorthand=True,
                    estimated_value=True, start=0, end=15)])
 
     def test_parse_073(self):
         self.assertEqual(
             PAR.parse('"{"measurements":"[308]-190-45-20" }"'),
-            [Parse(value=308, units='mm_shorthand',
+            [Parse(value=308, units='mm_shorthand', is_shorthand=True,
                    estimated_value=True,
                    start=3, end=33)])
 
@@ -444,12 +451,14 @@ class TestTotalLengthTrait(unittest.TestCase):
     def test_parse_077(self):
         self.assertEqual(
             PAR.parse('{"measurements":"210-92-30" }'),
-            [Parse(value=210, units='mm_shorthand', start=2, end=26)])
+            [Parse(value=210, units='mm_shorthand', is_shorthand=True,
+                   start=2, end=26)])
 
     def test_parse_078(self):
         self.assertEqual(
             PAR.parse('measurements:210-92-30 308-190-45-20'),
-            [Parse(value=308, units='mm_shorthand', start=23, end=36)])
+            [Parse(value=308, units='mm_shorthand', is_shorthand=True,
+                   start=23, end=36)])
 
     def test_parse_079(self):
         self.assertEqual(
@@ -501,7 +510,6 @@ class TestTotalLengthTrait(unittest.TestCase):
                    start=0, end=6)])
 
     def test_parse_088(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('unformatted measurements=L-11&#34;, T-3.125&#34;, '
                       'HF-1.5&#34; ; sex=male ; hind foot with claw=1.5 in; '
@@ -600,10 +608,19 @@ class TestTotalLengthTrait(unittest.TestCase):
             [Parse(value=1487.5, units_inferred=True, start=30, end=48)])
 
     def test_parse_103(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse(
                 'Tail=239.0 mm; Hind Foot=74.0 mm (81.0 mm); Ear=34.0 mm.; '
                 'Weight=560 g; Length=522.0 mm'),
             [Parse(value=522, units='mm', ambiguous_key=True,
                    start=72, end=87)])
+
+    def test_parse_104(self):
+        self.assertEqual(
+            PAR.parse('; trap identifier=SV01 S29/40 ;'),
+            [])
+
+    def test_parse_105(self):
+        self.assertEqual(
+            PAR.parse('vagina opened; 4 embryos, R=3, L=1, CRL=28mm'),
+            [])

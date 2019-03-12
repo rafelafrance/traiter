@@ -68,7 +68,8 @@ class TestEarLengthTrait(unittest.TestCase):
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
-            [Parse(value=34, units='mm_shorthand', start=2, end=34)])
+            [Parse(value=34, units='mm_shorthand', is_shorthand=True,
+                   start=2, end=34)])
 
     def test_parse_12(self):
         self.assertEqual(
@@ -160,4 +161,9 @@ class TestEarLengthTrait(unittest.TestCase):
     def test_parse_26(self):
         self.assertEqual(
             PAR.parse('Gray, J. E. (1866).'),
+            [])
+
+    def test_parse_27(self):
+        self.assertEqual(
+            PAR.parse('verbatim collector=C. H. Nellis 71-7-30-1'),
             [])

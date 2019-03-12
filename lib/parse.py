@@ -18,7 +18,8 @@ class Parse(NumericParseMixIn):
     def __init__(self, value=None, field='', start=0, end=0,
                  ambiguous_key=False, as_is=False, dimension='',
                  estimated_value=False, includes='', measured_from='',
-                 side='', units=None, units_inferred=False):
+                 side='', units=None, units_inferred=False,
+                 is_shorthand=False):
         """Build a parse result."""
         self.value = value                  # Normalized value
         self.field = field                  # Which CSV field was matched
@@ -33,6 +34,7 @@ class Parse(NumericParseMixIn):
         self.side = side                        # Left, right, 1, 2, etc.
         self.units = units                      # Original units in notation
         self.units_inferred = units_inferred    # Were units found or guessed?
+        self.is_shorthand = is_shorthand        # Is in shorthand notation?
         self.skipped = ''                       # If the trait is skipped, why?
 
     def __repr__(self):

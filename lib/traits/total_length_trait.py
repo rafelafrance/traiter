@@ -1,8 +1,18 @@
 """Parse total length notations."""
 
+import re
 from functools import partial
 from lib.traits.numeric_trait import NumericTrait
 import lib.shared_tokens as tkn
+
+
+LOOKBACK_FAR = 40
+IS_ID = re.compile(
+    r' id (?: ent )? (?: ifier )? | collector ',
+    NumericTrait.flags)
+
+LOOK_AROUND = 10
+IS_LEFT = re.compile(r' \b r \b ', NumericTrait.flags)
 
 
 class TotalLengthTrait(NumericTrait):
@@ -99,4 +109,16 @@ class TotalLengthTrait(NumericTrait):
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
+        start = max(0, trait.start - LOOKBACK_FAR)
+        if IS_ID.search(text, start, trait.start):
+            return None
+
+        if trait.ambiguous_key:
+            start = max(0, trait.start - LOOK_AROUND)
+            end = min(len(text), trait.end + LOOK_AROUND)
+            if IS_LEFT.search(text, start, trait.start):
+                return None
+            if IS_LEFT.search(text, trait.end, end):
+                return None
+
         return self.fix_up_inches(trait, text)

@@ -8,10 +8,13 @@ import lib.shared_tokens as tkn
 
 LOOKBACK_FAR = 40
 LOOKBACK_NEAR = 20
-IS_TESTES = re.compile(r' repoductive | gonad | test ', NumericTrait.flags)
+IS_TESTES = re.compile(
+    r' repoductive | gonad | test | scrot (?: al | um )? ',
+    NumericTrait.flags)
 IS_ELEVATION = re.compile(r' elev (?: ation )? ', NumericTrait.flags)
 IS_TOTAL = re.compile(r' body | nose | snout ', NumericTrait.flags)
 IS_TAG = re.compile(r' tag ', NumericTrait.flags)
+IS_ID = re.compile(r' id (?: ent )? (?: ifier )? ', NumericTrait.flags)
 
 
 class TailLengthTrait(NumericTrait):
@@ -63,6 +66,7 @@ class TailLengthTrait(NumericTrait):
 
         self.finish_init()
 
+    # pylint: disable=too-many-return-statements
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
 
@@ -76,6 +80,9 @@ class TailLengthTrait(NumericTrait):
                 return None
             if IS_ELEVATION.search(text, start, trait.start):
                 return None
+            if IS_ID.search(text, start, trait.start):
+                return None
+
 
             start = max(0, trait.start - LOOKBACK_NEAR)
             if IS_TAG.search(text, start, trait.start):

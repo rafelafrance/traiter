@@ -34,12 +34,13 @@ class TestHindFootLengthTrait(unittest.TestCase):
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('{"measurements":"192-84-31-19=38g" }'),
-            [Parse(value=31, units='mm_shorthand', start=2, end=33)])
+            [Parse(value=31, units='mm_shorthand', is_shorthand=True,
+                   start=2, end=33)])
 
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('{"measurements":"192-84-[31]-19=38g" }'),
-            [Parse(value=31, units='mm_shorthand',
+            [Parse(value=31, units='mm_shorthand', is_shorthand=True,
                    estimated_value=True,
                    start=2, end=35)])
 
@@ -56,12 +57,14 @@ class TestHindFootLengthTrait(unittest.TestCase):
     def test_parse_09(self):
         self.assertEqual(
             PAR.parse('{"measurements":"210-92-30" }'),
-            [Parse(value=30, units='mm_shorthand', start=2, end=26)])
+            [Parse(value=30, units='mm_shorthand', is_shorthand=True,
+                   start=2, end=26)])
 
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('measurements:210-92-30 308-190-45-20'),
-            [Parse(value=45, units='mm_shorthand', start=23, end=36)])
+            [Parse(value=45, units='mm_shorthand', is_shorthand=True,
+                   start=23, end=36)])
 
     def test_parse_11(self):
         self.assertEqual(
@@ -76,7 +79,8 @@ class TestHindFootLengthTrait(unittest.TestCase):
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
-            [Parse(value=37, units='mm_shorthand', start=2, end=34)])
+            [Parse(value=37, units='mm_shorthand', is_shorthand=True,
+                   start=2, end=34)])
 
     def test_parse_14(self):
         self.assertEqual(

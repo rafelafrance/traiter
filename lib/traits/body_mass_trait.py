@@ -22,13 +22,16 @@ class BodyMassTrait(NumericTrait):
         self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
         self.lit('mass', r' mass ')
         self.lit('body', r' body ')
+        self.shared_token(tkn.len_units)
         self.shared_token(tkn.metric_mass)
         self.shared_token(tkn.pounds)
         self.shared_token(tkn.ounces)
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
-        self.kwd('other_wt', r""" femur |  bac u? (?: lum)? """)
+        self.kwd('other_wt', r"""
+            femur | bac u? (?: lum)? | spleen | thymus | kidney
+            | testes | testis | ovaries | epid (?: idymis )? """)
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('semicolon', r' [;] | $ ')
         self.lit('comma', r' [,] | $ ')
@@ -52,11 +55,13 @@ class BodyMassTrait(NumericTrait):
 
         self.product(self.simple, r"""
             key_with_units pair
-            | wt_key (?P<units> metric_mass | pounds | ounces ) pair
+            | wt_key (?P<units> metric_mass | pounds | ounces )
+                pair (?! len_units )
             | wt_key pair (?P<units> metric_mass | pounds | ounces )
             | shorthand_key pair (?P<units> metric_mass | pounds | ounces )
-            | shorthand_key (?P<units> metric_mass | pounds | ounces ) pair
-            | wt_key pair""")
+            | shorthand_key (?P<units> metric_mass | pounds | ounces )
+                pair (?! len_units )
+            | wt_key pair (?! len_units ) """)
 
         self.finish_init()
 
@@ -68,4 +73,5 @@ class BodyMassTrait(NumericTrait):
             return None
         trait.convert_value(token.groups.get('shorthand_wt_units'))
         trait.is_flag_in_token('estimated_wt', token, rename='estimated_value')
+        trait.is_shorthand = True
         return trait

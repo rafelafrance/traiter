@@ -4,8 +4,10 @@ import re
 from lib.traits.base_trait import BaseTrait, ordinal
 from lib.parse import Parse
 
+LOOKBACK_FAR = 40
 
 QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
+IS_COLLECTOR = re.compile(r' collector ', re.VERBOSE)
 
 
 class NumericTrait(BaseTrait):
@@ -51,9 +53,25 @@ class NumericTrait(BaseTrait):
         if not trait.value:
             return None
         trait.units = 'mm_shorthand'
+        trait.is_shorthand = True
         flag = measurement.split('_')[1]
         flag = f'estimated_{flag}'
         trait.is_flag_in_token(flag, token, rename='estimated_value')
+        return trait
+
+    def numeric_fixups(self, trait, text):
+        """All of the numeric fixups."""
+        return self.fixup_shorthand(trait, text) \
+            and self.fix_up_inches(trait, text)
+
+    @staticmethod
+    def fixup_shorthand(trait, text):
+        """All of the fixups for numbers."""
+        if not trait.is_shorthand:
+            return trait
+        start = max(0, trait.start - LOOKBACK_FAR)
+        if IS_COLLECTOR.search(text, start, trait.start):
+            return None
         return trait
 
     @staticmethod

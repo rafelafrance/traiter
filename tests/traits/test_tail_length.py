@@ -38,12 +38,14 @@ class TestTailLengthTrait(unittest.TestCase):
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('measurements:213-91-32-23'),
-            [Parse(value=91, units='mm_shorthand', start=0, end=25)])
+            [Parse(value=91, units='mm_shorthand', is_shorthand=True,
+                   start=0, end=25)])
 
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('213-91-32-23'),
-            [Parse(value=91, units='mm_shorthand', start=0, end=12)])
+            [Parse(value=91, units='mm_shorthand', is_shorthand=True,
+                   start=0, end=12)])
 
     def test_parse_08(self):
         self.assertEqual(
@@ -112,4 +114,14 @@ class TestTailLengthTrait(unittest.TestCase):
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse('Imm. weight 50 kg, L. snout to tip of tail 1510,'),
+            [])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            PAR.parse('; trap identifier=CN02-T01/19 ;'),
+            [])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            PAR.parse('scrotal t.21mm'),
             [])
