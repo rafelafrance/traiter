@@ -38,11 +38,12 @@ One complication is that the characters in the text can take on different meanin
 
 Another important point is that we want to parse gigabytes (or terabytes) of data in a relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
 
-This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple we build tokens in one step and in all further steps we use those tokens to reduce combinations to other tokens or productions.
+This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple we build tokens in one step and in the next two steps we use those tokens to reduce combinations to other tokens or productions. Finally, there is a post-processing step where we handle things like ovaries cannot be a male trait or testes cannot be a female trait.
 
 1. Tokenize the text.
 2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
 3. Convert sequences of tokens into the final productions.
+4. Post processing of traits.
 
 
 #### 1. Tokenize the text
@@ -75,7 +76,7 @@ Use regular expressions on the tokens to combine groups of tokens into a single 
 self.replace('key', ' keyword | char_key | char_measured_from ')
 ```
 
-In this example any of the three tokens (`keyword`, `char_key`, or `char_measured_from`) will be replaced with the `key` token. The key token is what is used in the final rules. This is a pretty trivial example strictly for simplifying the notation but other examples do get more complex.
+In this example any of the three tokens (`keyword`, `char_key`, or `char_measured_from`) will be replaced with the `key` token. The `key` token may be used in the final rules for producing traits. This is a trivial example that only simplifies the notation but other examples do get more complex and use the full power of regular expressions.
 
 #### 3. Convert sequences of tokens into the final productions
 Use regular expressions to find patterns of tokens that are then converted into traits. This is a single pass.
@@ -89,7 +90,12 @@ Here is a rule for recognizing when a sex trait is present. The first argument i
             | keyword (?P<value> sex | word )""")
 ```
 
-There are still issues with context that are not easily resolved with this parsing technique. For example, the double quote '"' is used as both an abbreviation for inches and as a quote character. A human can human can easily tell the difference but these parsers struggle. To help with this and other issues I use post processing heuristics.
+This rule will convert token sequences like `keyword sex quest` (handling strings similar to `sex = female?`) or `keyword word` (handling string similar to `sex: unknown`) into the a sex trait.
+
+#### 4. Post processing of traits
+This is where I apply a set of heuristics to modify traits to handle things like missing units, or to make sure we don't assign an ovary trait to a male or a testis trait to female.
+
+There is also where we handle issues that are not easily resolved with this parsing technique. For example, the double quote '"' is used as both an abbreviation for inches and as a quote character. A human can human can easily tell the difference but these parsers struggle.
 
 #### Notes on the algorithm
 
