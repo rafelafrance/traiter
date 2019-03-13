@@ -95,7 +95,7 @@ This rule will convert token sequences like `keyword sex quest` (handling string
 #### 4. Post processing of traits
 This is where I apply a set of heuristics to modify traits to handle things like missing units, or to make sure we don't assign an ovary trait to a male or a testis trait to female.
 
-There is also where we handle issues that are not easily resolved with this parsing technique. For example, the double quote '"' is used as both an abbreviation for inches and as a quote character. A human can human can easily tell the difference but these parsers struggle.
+There is also where we handle issues that are not easily resolved with this parsing technique. For example, the double quote `"` is used as both an abbreviation for inches and as a quote character. A human can human can usually tell the difference but these parsers struggle.
 
 #### Notes on the algorithm
 
@@ -103,7 +103,7 @@ Some of the other techniques that I tried but don't currently use:
 
 - The original version used lists of regular expressions for parsing. As a proof-of-concept it was OK but ultimately proved too cumbersome to use. I was playing Whack-a-Mole with subtle regular expression bugs. Also, regular expressions lack the full transformational capabilities of parsers.
 
-- I tried using Flex and Bison. This didn't work for various reasons.
+- I tried using Flex and Bison. This didn't work for various reasons. Most notably, there is only one token of look-ahead.
 
 - I also attempted writing my own shift-reduce parsers. The resulting Python code was slow and the parsers began to become very *ad hoc*.
 
@@ -133,12 +133,14 @@ python3 -m pip install --user -r traiter/requirements.txt
 python3 traiter.py ... TODO ...
 ```
 
-## Running tests
+## Tests
+Having a test suite is absolutely critical. The strategy I use is every new pattern gets its own test. And any time there is a parser error I the relevant parts that caused the error to the test suite and correct the parser. I.e. I use the standard red/green testing methodology.
+
 You will need to install `pytest`. After that, you can run the tests like so:
 ```
 pytest tests/
 ```
 
-## Example output
+## Example parser output
 
 TODO
