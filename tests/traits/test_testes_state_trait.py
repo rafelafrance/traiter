@@ -204,3 +204,9 @@ class TestTestesStateTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Testis abd. Collected with 22 cal. pellet rifle.'),
             [Parse(value='abd', start=0, end=10)])
+
+    def test_parse_35(self):
+        # self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('reproductive data=test 3.5x2, pt desc, Et not visib,'),
+            [Parse(value='pt desc', start=0, end=37)])
