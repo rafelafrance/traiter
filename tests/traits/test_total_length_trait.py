@@ -296,10 +296,7 @@ class TestTotalLengthTrait(unittest.TestCase):
             [Parse(value=[12, 14], units='mm', start=5, end=16)])
 
     def test_parse_050(self):
-        self.assertEqual(
-            PAR.parse('SV 1.2'),
-            [Parse(value=1.2, units_inferred=True,
-                   start=0, end=6)])
+        self.assertEqual(PAR.parse('SV 1.2'), [])
 
     def test_parse_051(self):
         self.assertEqual(
@@ -345,11 +342,7 @@ class TestTotalLengthTrait(unittest.TestCase):
             [Parse(value=44, units='mm', start=0, end=8)])
 
     def test_parse_059(self):
-        # Infer the units from other measurements in post processing
-        self.assertEqual(
-            PAR.parse('SV 1.4, TAIL 1.0 CM. HATCHLING'),
-            [Parse(value=1.4, units_inferred=True,
-                   start=0, end=6)])
+        self.assertEqual(PAR.parse('SV 1.4, TAIL 1.0 CM. HATCHLING'), [])
 
     def test_parse_060(self):
         self.assertEqual(
@@ -624,3 +617,9 @@ class TestTotalLengthTrait(unittest.TestCase):
         self.assertEqual(
             PAR.parse('vagina opened; 4 embryos, R=3, L=1, CRL=28mm'),
             [])
+
+    def test_parse_106(self):
+        self.assertEqual(
+            PAR.parse('trap TL01  26g; 212-115-27-20=26g;'),
+            [Parse(value=212, units='mm_shorthand', is_shorthand=True,
+                   start=16, end=33)])

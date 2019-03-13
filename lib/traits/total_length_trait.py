@@ -7,8 +7,13 @@ import lib.shared_tokens as tkn
 
 
 LOOKBACK_FAR = 40
+LOOKBACK_NEAR = 10
 IS_ID = re.compile(
     r' id (?: ent )? (?: ifier )? | collector ',
+    NumericTrait.flags)
+IS_TRAP = re.compile(r' trap ', NumericTrait.flags)
+IS_TESTES = re.compile(
+    r' repoductive | gonad | test | scrot (?: al | um )? ',
     NumericTrait.flags)
 
 LOOK_AROUND = 10
@@ -22,6 +27,8 @@ class TotalLengthTrait(NumericTrait):
         """Build the trait parser."""
         super().__init__(args)
         self.shared_token(tkn.uuid)
+
+        self.kwd('skip', r' horns? ')
 
         # Build the tokens
         self.kwd('key_with_units', r"""
@@ -38,7 +45,7 @@ class TotalLengthTrait(NumericTrait):
             | s \.? \s? l \.? (?! [a-z.] )
             | label [\s.]* lengths? \b
             | (?: fork | mean | body ) [\s-]* lengths? \b
-            | s \.? \s? v \.? \s? (?: l \.? )? (?! [a-z.] )
+            | s \.? \s? v \.? \s? l \.? (?! [a-z.] )
             | snout [\s-]* vent [\s-]* lengths? \b
             """)
 
@@ -112,10 +119,15 @@ class TotalLengthTrait(NumericTrait):
         start = max(0, trait.start - LOOKBACK_FAR)
         if IS_ID.search(text, start, trait.start):
             return None
+        start = max(0, trait.start - LOOKBACK_NEAR)
+        if IS_TRAP.search(text, start, trait.start):
+            return None
 
         if trait.ambiguous_key:
             start = max(0, trait.start - LOOK_AROUND)
             end = min(len(text), trait.end + LOOK_AROUND)
+            if IS_TESTES.search(text, start, trait.start):
+                return None
             if IS_LEFT.search(text, start, trait.start):
                 return None
             if IS_LEFT.search(text, trait.end, end):
