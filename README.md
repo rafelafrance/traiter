@@ -6,7 +6,6 @@
  ```
  This rather large female specimen is 12 lbs 7 oz and 3 feet 7 inches in total length.
  ```
-
  I should be able to extract:
 
  - sex = female
