@@ -124,7 +124,7 @@ class TestesSizeTrait(BaseTrait):
 
         return [trait1, trait2]
 
-    def convert(self, token):  # pylint: disable=no-self-use
+    def convert(self, token):
         """Convert parsed token into a trait product."""
         if token.groups.get('ambiguous_char') \
                 and not token.groups.get('value2'):

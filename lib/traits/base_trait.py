@@ -1,7 +1,5 @@
 """Common logic for parsing trait notations."""
 
-# pylint: disable=unused-argument,no-self-use
-
 import re
 import inflect
 from lib.rule_builder_mixin import RuleBuilerMixin

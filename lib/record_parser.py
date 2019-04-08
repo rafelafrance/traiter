@@ -4,14 +4,23 @@ from lib.traits.as_is_trait import AsIsTrait
 
 
 class TraitFound(Exception):
-    """Stop looking for parses because we found one."""
+    """
+    Stop looking for parses because we found one.
+
+    If one field has a trait notation (or multiple) the don't look for the
+    trait in other fields.
+    """
 
 
 class ShouldSkip(Exception):
-    """Stop looking for parses because we found one."""
+    """
+    Don't parse the trait because of another condition.
+
+    For instance, don't look for testes traits on females.
+    """
 
 
-class RecordParser:  # pylint: disable=too-few-public-methods
+class RecordParser:
     """Handles all of the parsed traits for a record."""
 
     as_is = AsIsTrait()

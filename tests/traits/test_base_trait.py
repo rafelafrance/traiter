@@ -1,7 +1,5 @@
 """Verify various parts of the base trait class."""
 
-# pylint: disable=no-self-use,unused-argument
-
 import unittest
 from lib.traits.base_trait import BaseTrait
 import lib.token as token

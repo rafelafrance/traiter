@@ -66,10 +66,8 @@ class TailLengthTrait(NumericTrait):
 
         self.finish_init()
 
-    # pylint: disable=too-many-return-statements
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
-
         start = max(0, trait.start - LOOKBACK_NEAR)
         if IS_TOTAL.search(text, start, trait.start):
             return None
@@ -82,7 +80,6 @@ class TailLengthTrait(NumericTrait):
                 return None
             if IS_ID.search(text, start, trait.start):
                 return None
-
 
             start = max(0, trait.start - LOOKBACK_NEAR)
             if IS_TAG.search(text, start, trait.start):

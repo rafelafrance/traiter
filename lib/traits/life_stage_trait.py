@@ -68,7 +68,7 @@ class LifeStageTrait(BaseTrait):
 
         self.finish_init()
 
-    def convert(self, token):  # pylint: disable=no-self-use
+    def convert(self, token):
         """Convert parsed tokens into a result."""
         return Parse(value=token.groups['value'].lower(),
                      start=token.start, end=token.end)

@@ -1,9 +1,5 @@
 """Build a parser trait result."""
 
-# pylint: disable=too-many-arguments
-# pylint: disable=too-many-instance-attributes
-# pylint: disable=too-many-locals
-
 from collections import namedtuple
 from lib.numeric_parse_mixin import NumericParseMixIn
 
@@ -65,7 +61,7 @@ class Parse(NumericParseMixIn):
         self.estimated_value |= other.estimated_value
 
     def as_key(self):
-        """Used to tell if the parses describe the same trait."""
+        """Do the parses describe the same trait."""
         low, high = self.value, ''
         if isinstance(self.value, list):
             low, high = self.value

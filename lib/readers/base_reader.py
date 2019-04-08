@@ -3,7 +3,7 @@
 from abc import abstractmethod
 
 
-class BaseReader:  # pylint: disable=too-few-public-methods
+class BaseReader:
     """Read the traiter input from a file."""
 
     def __init__(self, args):

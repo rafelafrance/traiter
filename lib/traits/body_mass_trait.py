@@ -65,7 +65,7 @@ class BodyMassTrait(NumericTrait):
 
         self.finish_init()
 
-    def shorthand(self, token):  # pylint: disable=no-self-use
+    def shorthand(self, token):
         """Convert a shorthand value like 11-22-33-44:55g."""
         trait = Parse(start=token.start, end=token.end)
         trait.float_value(token.groups.get('shorthand_wt'))

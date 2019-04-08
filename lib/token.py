@@ -1,7 +1,6 @@
 """Class to hold token data."""
 
 
-# pylint: disable=global-statement
 TOKEN_WIDTH = 4  # Token width from 001_ to 999_
 TOKEN_COUNT = 0
 
@@ -9,7 +8,6 @@ TOKEN_COUNT = 0
 class Token:
     """Token data."""
 
-    # pylint: disable=too-many-arguments
     def __init__(self, token=None, name=None, groups=None, start=0, end=0):
         """Build a token."""
         self.token = token

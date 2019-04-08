@@ -1,7 +1,5 @@
 """Shared token patterns."""
 
-# pylint: disable=invalid-name
-
 
 feet = ('feet', r" foots? | feets? | fts? | (?<= \d ) ' ")
 

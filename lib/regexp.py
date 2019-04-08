@@ -4,7 +4,6 @@ import re
 from lib.token import Token
 
 
-# pylint: disable=global-statement
 GROUP_COUNT = 0
 
 
@@ -24,7 +23,6 @@ class Regexp:
     groups_rx = re.compile(r""" \( \? P< ( \w+ ) > """, flags)
     back_ref_rx = re.compile(r""" \( \? P= ( \w+ ) \) """, flags)
 
-    # pylint: disable=too-many-arguments
     def __init__(
             self, phase=None, name=None, func=None, regexp=None, token=None):
         """Build a regexp."""

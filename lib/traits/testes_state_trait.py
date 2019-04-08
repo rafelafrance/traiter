@@ -70,7 +70,7 @@ class TestesStateTrait(BaseTrait):
 
         self.finish_init()
 
-    def convert(self, token):  # pylint: disable=no-self-use
+    def convert(self, token):
         """Convert parsed token into a trait product."""
         trait = Parse(
             value=token.groups['value'].lower(),

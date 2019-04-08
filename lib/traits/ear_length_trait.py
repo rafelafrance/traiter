@@ -76,7 +76,6 @@ class EarLengthTrait(NumericTrait):
 
         self.finish_init()
 
-    # pylint: disable=too-many-return-statements
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
         if trait.ambiguous_key:

@@ -1,5 +1,3 @@
-# pylint: disable=missing-docstring,too-many-public-methods
-
 import unittest
 from lib.parse import Parse
 from lib.traits.ear_length_trait import EarLengthTrait
