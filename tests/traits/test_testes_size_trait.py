@@ -77,7 +77,6 @@ class TestTestesSizeTrait(unittest.TestCase):
 
     def test_parse_12(self):
         self.assertEqual(
-            #          0123456789 123456789 123456789 123456789
             PAR.parse('testes scrotal, L testis 13x5mm'),
             [Parse(value=[13, 5], units='mm', start=18, end=31)])
 
@@ -92,8 +91,8 @@ class TestTestesSizeTrait(unittest.TestCase):
     def test_parse_14(self):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
-            [Parse(value=12, units='mm', ambiguous_key=True, dimension='length',
-                   start=1, end=21),
+            [Parse(value=12, units='mm', ambiguous_key=True,
+                   dimension='length', start=1, end=21),
              Parse(value=5, units='mm', ambiguous_key=True, dimension='width',
                    start=25, end=43)])
 
@@ -136,12 +135,14 @@ class TestTestesSizeTrait(unittest.TestCase):
             [])
 
     def test_parse_20(self):
+        self.maxDiff = None
         self.assertEqual(
             PAR.parse('adult ; T=9x4 ; endoparasite '),
-            [Parse(value=[9, 4], units_inferred=True, ambiguous_key=True,
+            [Parse(value=[9.0, 4.0], units_inferred=True, ambiguous_key=True,
                    start=8, end=13)])
 
     def test_parse_21(self):
+        self.maxDiff = None
         self.assertEqual(
             PAR.parse('adult ; T=9 ; endoparasite '),
             [])

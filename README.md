@@ -139,7 +139,7 @@ Having a test suite is absolutely critical. The strategy I use is every new patt
 
 You will need to install `pytest`. After that, you can run the tests like so:
 ```
-pytest tests/
+python3 -m pytest tests/
 ```
 
 ## Example parser output

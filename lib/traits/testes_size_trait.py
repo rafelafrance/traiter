@@ -35,7 +35,9 @@ class TestesSizeTrait(BaseTrait):
             """)
 
         self.kwd('testes', r' testes |  testis | testicles? | test ')
-        self.kwd('abbrev', r' tes | ts ')
+
+        # Note: abbrev differs from the one in the testes_state_trait
+        self.kwd('abbrev', r' tes | ts | tnd | td | tns | ta ')
         self.lit('char_key', r' \b t (?! [a-z] )')
         self.kwd('state', r"""
             scrotum | scrotal | scrot | nscr | scr | ns | sc
@@ -152,7 +154,6 @@ class TestesSizeTrait(BaseTrait):
         for parse in data[trait]:
             parse.ambiguous_key = False
 
-
     @staticmethod
     def csv_formater(trait, row, parses):
         """Format the trait for CSV output."""
@@ -161,6 +162,7 @@ class TestesSizeTrait(BaseTrait):
         records = _build_records(parses)
         records = _merge_records(records)
         _format_records(records, row)
+
 
 def _build_records(parses):
     records = []

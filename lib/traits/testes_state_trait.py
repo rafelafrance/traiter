@@ -14,11 +14,11 @@ class TestesStateTrait(BaseTrait):
 
         # Build the tokens
         self.kwd('label', r' reproductive .? (?: data |state | condition ) ')
-        self.lit('testes', r' (?: testes |  testis | testicles | test ) \b ')
+        self.lit('testes', r' (?: testes |  testis | testicles? | test ) \b ')
         self.kwd('fully', r' fully | (:? in )? complete (?: ly)? ')
         self.lit('non', r' \b (?: not | non | no | semi | sub ) ')
         self.kwd('descended', r' (?: un)? (?: des?c?end (?: ed)? | desc? ) ')
-        self.kwd('abbrev', r' tes | ts | t | tnd ')
+        self.kwd('abbrev', r' tes | ts | tnd | td | tns | ta | t ')
         self.lit(
             'scrotal', r' (?: scrotum | scrotal | scrot | nscr | scr) \b ')
         self.lit('partially', r' partially | part | \b pt \b ')
