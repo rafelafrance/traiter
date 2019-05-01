@@ -11,9 +11,16 @@ class HindFootLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+
+        self._build_token_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+
+    def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
-        # Build the tokens
         self.kwd('key_with_units', r"""
             (?: hind \s* )? foot \s* len (?: gth )? \s* in \s*
             (?P<units> millimeters | mm ) """)
@@ -32,7 +39,7 @@ class HindFootLengthTrait(NumericTrait):
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.fraction, r"""
             key fraction (?P<units> len_units ) | key fraction """)
 
@@ -47,8 +54,6 @@ class HindFootLengthTrait(NumericTrait):
             shorthand_key shorthand | shorthand
             | shorthand_key triple (?! shorthand | pair )
             """)
-
-        self.finish_init()
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""

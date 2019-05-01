@@ -140,7 +140,6 @@ class BaseTrait(RuleBuilerMixin):
     @staticmethod
     def adjust_record(data, trait):
         """Adjust the trait based on other fields."""
-        return
 
 
 def ordinal(i):

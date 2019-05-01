@@ -12,9 +12,16 @@ class BodyMassTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+
+        self._build_token_rules()
+        self._build_replace_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
-        # Build the tokens
         self.kwd('key_with_units', r"""
             (?: weight | mass) \s* in \s* (?P<units> g (?: rams )? | lbs ) """)
         self.lit('key_leader', ' full | observed | total ')
@@ -36,7 +43,7 @@ class BodyMassTrait(NumericTrait):
         self.lit('semicolon', r' [;] | $ ')
         self.lit('comma', r' [,] | $ ')
 
-        # Build rules for token replacement
+    def _build_replace_rules(self):
         self.replace('wt_key', r"""
             (?<! other_wt )
             (?: key_leader weight | key_leader mass
@@ -44,7 +51,7 @@ class BodyMassTrait(NumericTrait):
             | weight | mass | key_with_dots )
             """)
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
 
         self.product(partial(self.compound, units=['lbs', 'ozs']), r"""
@@ -63,9 +70,8 @@ class BodyMassTrait(NumericTrait):
                 pair (?! len_units )
             | wt_key pair (?! len_units ) """)
 
-        self.finish_init()
-
-    def shorthand(self, token):
+    @staticmethod
+    def shorthand(token):
         """Convert a shorthand value like 11-22-33-44:55g."""
         trait = Parse(start=token.start, end=token.end)
         trait.float_value(token.groups.get('shorthand_wt'))

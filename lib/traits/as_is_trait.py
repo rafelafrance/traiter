@@ -19,7 +19,8 @@ class AsIsTrait(BaseTrait):
 
         self.finish_init()
 
-    def convert(self, token):
+    @staticmethod
+    def convert(token):
         """Convert parsed token into a trait product."""
         return Parse(
             value=token.groups['value'],

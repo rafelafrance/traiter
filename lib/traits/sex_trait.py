@@ -12,24 +12,28 @@ class SexTrait(BaseTrait):
         """Build the trait parser."""
         super().__init__(args)
 
-        # Build the tokens
+        self._build_token_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.kwd('keyword', 'sex')
         self.kwd('sex', r' females? | males? ')
         self.lit('quest', r' \? ')
+
         # These are words that indicate that "sex" is not a key
         self.kwd('skip', r' and | is | was ')
         self.lit('word', r' \b [a-z]\S* ')
         self.lit('sep', r' [;,"] | $ ')
 
-        # Build a rules for parsing the trait
+    def _build_product_rules(self):
         self.product(
             self.convert,
             r""" keyword (?P<value> (?: sex | word ){1,2} (?: quest )? ) sep
                 | keyword (?P<value> (?: sex | word ) (?: quest )? )
                 | (?P<value> sex (?: quest )? )
                 """)
-
-        self.finish_init()
 
     def convert(self, token):
         """Convert parsed tokens into a result."""

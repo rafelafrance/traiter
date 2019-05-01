@@ -12,7 +12,13 @@ class TestesStateTrait(BaseTrait):
         """Build the trait parser."""
         super().__init__(args)
 
-        # Build the tokens
+        self._build_token_rules()
+        self._build_replace_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.kwd('label', r' reproductive .? (?: data |state | condition ) ')
         self.lit('testes', r' (?: testes |  testis | testicles? | test ) \b ')
         self.kwd('fully', r' fully | (:? in )? complete (?: ly)? ')
@@ -34,7 +40,7 @@ class TestesStateTrait(BaseTrait):
         self.kwd('and', r' and | & ')
         self.lit('word', r' [a-z]+ ')
 
-        # Build rules for token replacement
+    def _build_replace_rules(self):
         self.replace('state', """
             non fully descended | abdominal non descended
             | abdominal descended | non descended | fully descended
@@ -43,7 +49,7 @@ class TestesStateTrait(BaseTrait):
             """)
         self.replace('length', ' cross (?: len_units )? ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(
             self.convert,
             """label (?: testes | abbrev )? (?: length )?
@@ -68,9 +74,8 @@ class TestesStateTrait(BaseTrait):
             | (?P<value> non (?: testes | scrotal | gonads ) | scrotal )
             """)
 
-        self.finish_init()
-
-    def convert(self, token):
+    @staticmethod
+    def convert(token):
         """Convert parsed token into a trait product."""
         trait = Parse(
             value=token.groups['value'].lower(),

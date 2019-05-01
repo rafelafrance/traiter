@@ -20,7 +20,7 @@ I should be able to extract:
  - `SVL 157 mm`
  - `standard length: 157-215mm`
  - `t.l.= 2 feet 3.1 - 4.5 inches`
- - As well as measurements embedded in prose like: `Snout vent lengths range anywhere from 16 to 23 cm.` I am experimenting with various distances between the anchor token `Snout vent lengths` and the measurements `16 to 23 cm`.
+ - As well as measurements embedded in prose like: `Snout vent lengths range anywhere from 16 to 23 cm.`
  - We flag ambiguous measurements like: `length: 12.0`. This may be a total length measurement or another length measurement.
  - We also flag numeric measurements without units like: `total length = 120`. The units may or may not be the default millimeters.
  - etc.
@@ -31,13 +31,13 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-Note that I am trying to extract data from text and not parse a formal language. I am just looking for for patterns of text. Most importantly, I don't need to worry about recursive structures. Pattern recognition is a common technique in **Natural Language Processing, Information Extraction**.
+Note that I am trying to extract data from patterns of text and not parse a formal language. Most importantly, I don't need to worry about recursive structures. Pattern recognition is a common technique in **Natural Language Processing, Information Extraction**.
 
-One complication is that the characters in the text can take on different meaning depending on the context. For is instance, is a double quote after a number `"` an inch symbol (like `3' 4"`or a closing quote (like `"length=4"`)? It's just as tricky to handle single characters have multiple meanings like the letter "T" on its own. In some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation and most contexts it is an initial in some one's name. In this project, we differentiate and capture the first two cases and try to ignore the last one.
+One complication is that the characters in the text can take on different meaning depending on the context. For instance, is a double quote after a number `"` an inch symbol (like `3' 4"`or a closing quote (like `"length=4"`)? It's just as tricky to handle single characters have multiple meanings like the letter "T" on its own. In some contexts it indicates a tail length measurement and in other contexts it indicates a testes notation and most contexts it is an initial in some one's name.
 
 Another important point is that we want to parse gigabytes (or terabytes) of data in a relatively short amount of time. Speed isn't the primary concern but having fast turnaround is still important.
 
-This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple we build tokens in one step and in the next two steps we use those tokens to reduce combinations to other tokens or productions. Finally, there is a post-processing step where we handle things like ovaries cannot be a male trait or testes cannot be a female trait.
+This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple, we build tokens in one step and in the next two steps we use those tokens to reduce combinations to other tokens or productions. Finally, there is a post-processing step where we handle things like ovaries cannot be a male trait or testes cannot be a female trait.
 
 1. Tokenize the text.
 2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
@@ -46,7 +46,7 @@ This implementation uses a technique that I call **"Stacked Regular Expressions"
 
 
 #### 1. Tokenize the text
-This step is directly analogous to the method used in python's `re` module, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
+This step is analogous to the method used in python's `re` module, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
 
 The following regular expressions will replace the regular expressions with the "sex", "word", "keyword", and "quest" tokens respectively.
 
@@ -111,15 +111,15 @@ Some of the other techniques that I tried but don't currently use:
 - Finally, I tried to use a parser combinator library (`pyparsing`) which was a vast improvement in developer time and code clarity but ballooned the run-time by two orders of magnitude. My test case of ~75,000 records went from roughly 15 seconds to over 30 minutes to process.
 
 ## List of traits extracted (so far)
-- Body body mass
 - Total length (aka snout vent length, fork length, etc.)
-- Sex
-- Life stage
-- Testes state
-- Testes size
 - Tail Length
 - Hind foot Length
 - Ear Length
+- Body body mass
+- Life stage
+- Sex
+- Ovaries state & size
+- Testes state & size
 
 ## Install
 

@@ -23,9 +23,16 @@ class TailLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+
+        self._build_token_rules()
+        self._build_replace_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
-        # Build the tokens
         self.kwd('key_with_units', r"""
             tail \s* len (?: gth )? \s* in \s*
             (?P<units> millimeters | mm ) """)
@@ -45,10 +52,10 @@ class TailLengthTrait(NumericTrait):
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
-        # Build rules for token replacement
+    def _build_replace_rules(self):
         self.replace('key', ' keyword | char_key ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.fraction, r"""
             key fraction (?P<units> len_units ) | key fraction """)
 
@@ -64,8 +71,6 @@ class TailLengthTrait(NumericTrait):
             | shorthand_key triple (?! shorthand | pair )
             """)
 
-        self.finish_init()
-
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
         start = max(0, trait.start - LOOKBACK_NEAR)
@@ -74,11 +79,9 @@ class TailLengthTrait(NumericTrait):
 
         if trait.ambiguous_key:
             start = max(0, trait.start - LOOKBACK_FAR)
-            if IS_TESTES.search(text, start, trait.start):
-                return None
-            if IS_ELEVATION.search(text, start, trait.start):
-                return None
-            if IS_ID.search(text, start, trait.start):
+            if IS_TESTES.search(text, start, trait.start) \
+                    or IS_ELEVATION.search(text, start, trait.start) \
+                    or IS_ID.search(text, start, trait.start):
                 return None
 
             start = max(0, trait.start - LOOKBACK_NEAR)

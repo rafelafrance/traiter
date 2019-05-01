@@ -26,11 +26,17 @@ class TotalLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+
+        self._build_token_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
         self.kwd('skip', r' horns? ')
 
-        # Build the tokens
         self.kwd('key_with_units', r"""
             (?: total | snout \s* vent | head \s* body | fork ) \s*
             len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
@@ -66,7 +72,7 @@ class TotalLengthTrait(NumericTrait):
         self.lit('semicolon', r' [;] | $ ')
         self.lit('comma', r' [,] | $ ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.fraction, r"""
             key_units_req fraction (?P<units> metric_len | feet | inches )
             | key fraction (?P<units> metric_len | feet | inches )
@@ -111,8 +117,6 @@ class TotalLengthTrait(NumericTrait):
             (?: shorthand_key | key_units_req ) shorthand | shorthand
             | (?: shorthand_key | key_units_req ) triple (?! shorthand | pair )
             """)
-
-        self.finish_init()
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""

@@ -11,7 +11,12 @@ class LifeStageTrait(BaseTrait):
         """Build the trait parser."""
         super().__init__(args)
 
-        # Build the tokens
+        self._build_token_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.kwd('keyword', r"""
             life \s* stage \s* (?: remarks? )?
             | age \s* class
@@ -55,7 +60,7 @@ class LifeStageTrait(BaseTrait):
         self.lit('joiner', r' \s* [/-] \s* ')
         self.lit('sep', r' [;,"?] | $ ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.convert, r"""
             keyword (?P<value> (?: keyless | word ) joiner keyless )
             | keyword (?P<value> (?: keyless | word ) keyless )
@@ -66,9 +71,8 @@ class LifeStageTrait(BaseTrait):
             | (?P<value> year_num )
             """)
 
-        self.finish_init()
-
-    def convert(self, token):
+    @staticmethod
+    def convert(token):
         """Convert parsed tokens into a result."""
         return Parse(value=token.groups['value'].lower(),
                      start=token.start, end=token.end)

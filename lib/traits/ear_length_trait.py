@@ -23,9 +23,16 @@ class EarLengthTrait(NumericTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+
+        self._build_token_rules()
+        self._build_replace_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
-        # Build the tokens
         self.kwd('key_with_units', r"""
             ear \s* len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
             """)
@@ -57,10 +64,10 @@ class EarLengthTrait(NumericTrait):
         self.kwd('word', r' (?: [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
-        # Build rules for token replacement
+    def _build_replace_rules(self):
         self.replace('key', ' keyword | char_key | char_measured_from ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.fraction, r"""
             key fraction (?P<units> len_units ) | key fraction """)
 
@@ -74,28 +81,23 @@ class EarLengthTrait(NumericTrait):
             partial(self.shorthand_length, measurement='shorthand_el'),
             r' shorthand_key shorthand | shorthand ')
 
-        self.finish_init()
-
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
         if trait.ambiguous_key:
             start = max(0, trait.start - LOOKBACK_NEAR)
-            if IS_ET.search(text, start, trait.start):
-                return None
-            if IS_NUMBER.search(text, start, trait.start):
+            if IS_ET.search(text, start, trait.start) \
+                    or IS_NUMBER.search(text, start, trait.start):
                 return None
 
             start = max(0, trait.start - LOOKBACK_FAR)
-            if IS_MAG.search(text, start, trait.start):
-                return None
-            if IS_ID.search(text, start, trait.start):
+            if IS_MAG.search(text, start, trait.start) \
+                    or IS_ID.search(text, start, trait.start):
                 return None
 
             start = max(0, trait.start - LOOK_AROUND)
             end = min(len(text), trait.end + LOOK_AROUND)
-            if IS_EAST.search(text, start, trait.start):
-                return None
-            if IS_EAST.search(text, trait.end, end):
+            if IS_EAST.search(text, start, trait.start) \
+                    or IS_EAST.search(text, trait.end, end):
                 return None
 
         return self.numeric_fixups(trait, text)

@@ -16,9 +16,14 @@ class TestesSizeTrait(BaseTrait):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
+        self._build_token_rules()
+        self._build_product_rules()
+
+        self.finish_init()
+
+    def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
-        # Build the tokens
         self.kwd('label', r' reproductive .? (?: data | state | condition ) ')
 
         self.kwd('key_with_units', r"""
@@ -61,7 +66,7 @@ class TestesSizeTrait(BaseTrait):
         self.lit('word', r' [a-z]+ ')
         self.lit('sep', r' [;] | $ ')
 
-        # Build rules for parsing the trait
+    def _build_product_rules(self):
         self.product(self.double, r"""
             label (?: testes | abbrev | char_key )
                 (?P<first> (?: lr | lr_delim ) cross )
@@ -124,7 +129,8 @@ class TestesSizeTrait(BaseTrait):
 
         return [trait1, trait2]
 
-    def convert(self, token):
+    @staticmethod
+    def convert(token):
         """Convert parsed token into a trait product."""
         if token.groups.get('ambiguous_char') \
                 and not token.groups.get('value2'):
