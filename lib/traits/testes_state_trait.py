@@ -30,7 +30,7 @@ class TestesStateTrait(BaseTrait):
         self.lit('partially', r' partially | part | \b pt \b ')
         self.kwd('state_abbrev', r' ns | sc ')
         self.kwd('abdominal', r' abdominal | abdomin | abdom | abd ')
-        self.kwd('size', r' visible | enlarged | small ')
+        self.kwd('size', r' visible | (?: en )? larged? | small ')
         self.kwd('gonads', r' (?P<ambiguous_key> gonads? ) ')
         self.kwd(
             'other',
@@ -85,7 +85,7 @@ class TestesStateTrait(BaseTrait):
         return trait
 
     @staticmethod
-    def csv_formater(trait, row, parses):
+    def csv_formatter(trait, row, parses):
         """Format the trait for CSV output."""
         if not parses:
             return

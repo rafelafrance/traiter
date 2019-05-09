@@ -86,7 +86,7 @@ class NumericTrait(BaseTrait):
         return trait
 
     @staticmethod
-    def csv_formater(trait, row, parses):
+    def csv_formatter(trait, row, parses):
         """Format the trait for CSV output."""
         if not parses:
             return

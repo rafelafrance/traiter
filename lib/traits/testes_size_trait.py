@@ -55,10 +55,10 @@ class TestesSizeTrait(BaseTrait):
             | cryptorchism | cryptorchid | monorchism | monorchid | inguinal
             """)
 
-        self.side = r' (?P<side> left | right | l | r ) '
+        self.side = r' (?P<side> left | right | [lr] ) '
         self.kwd('lr', self.side)
 
-        self.lr_delim = r' [/(\[] \s* (?P<side> l | r ) \s* [)\]] '
+        self.lr_delim = r' [/(\[] \s* (?P<side> [lr] ) \s* [)\]] '
         self.lit('lr_delim', self.lr_delim)
 
         self.shared_token(tkn.cross)
@@ -96,7 +96,7 @@ class TestesSizeTrait(BaseTrait):
             | (?P<ambiguous_char> char_key ) cross
             """)
 
-        # These are used to get compunds traits from a single parse
+        # These are used to get compounds traits from a single parse
         self.double_side = Regexp(
             phase='token', name='double_side',
             regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
@@ -161,7 +161,7 @@ class TestesSizeTrait(BaseTrait):
             parse.ambiguous_key = False
 
     @staticmethod
-    def csv_formater(trait, row, parses):
+    def csv_formatter(trait, row, parses):
         """Format the trait for CSV output."""
         if not parses:
             return

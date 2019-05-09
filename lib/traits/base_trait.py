@@ -82,12 +82,12 @@ class BaseTrait(RuleBuilerMixin):
                 start=token_list[start].start,
                 end=token_list[end-1].end)
             token_list[start:end] = [token]
-        return (token_list, want_replace)
+        return token_list, want_replace
 
     def tokens_to_traits(self, token_list, text, field=''):
         """Produce the final results from the remaining tokens."""
-        # for tkn in token_list:
-        #     print(tkn)
+        for tkn in token_list:
+            print(tkn)
         traits = []
         token_text = ''.join([t.token for t in token_list])
         for match in self.producer.finditer(token_text):
@@ -121,7 +121,7 @@ class BaseTrait(RuleBuilerMixin):
         return trait
 
     @staticmethod
-    def csv_formater(trait, row, parses):
+    def csv_formatter(trait, row, parses):
         """Format the trait for CSV output."""
         records = {}
         for parse in parses:

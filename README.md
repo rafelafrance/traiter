@@ -119,6 +119,11 @@ Some of the other techniques that I tried but don't currently use:
 - Life stage
 - Sex
 - Ovaries state & size
+- Pregnancy state
+- Embryo count & size
+- Nipple state
+- Lactation state
+- Placental scar state, count, & location
 - Testes state & size
 
 ## Install

@@ -1,6 +1,8 @@
 # Editors
 .ropeproject/
 .spyproject/
+.vscode/
+.idea/
 
 # Environment
 .env
@@ -42,6 +44,7 @@ junk*
 .coverage
 .cache
 .hypothesis
+.pytest_cache/
 
 # R
 .Rhistory

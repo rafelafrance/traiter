@@ -133,14 +133,12 @@ class TestTestesSizeTrait(unittest.TestCase):
             [])
 
     def test_parse_20(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('adult ; T=9x4 ; endoparasite '),
             [Parse(value=[9.0, 4.0], units_inferred=True, ambiguous_key=True,
                    start=8, end=13)])
 
     def test_parse_21(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('adult ; T=9 ; endoparasite '),
             [])
@@ -223,7 +221,6 @@ class TestTestesSizeTrait(unittest.TestCase):
              Parse(value=[6, 4], units='mm', side='l', start=2, end=40)])
 
     def test_parse_36(self):
-        # self.maxDiff = None
         self.assertEqual(
             PAR.parse('; reproductive data=R 20x10mm ;'),
             [Parse(value=[20, 10], units='mm', side='r', start=2, end=29)])
