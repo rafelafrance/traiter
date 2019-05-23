@@ -52,6 +52,7 @@ class LifeStageTrait(BaseTrait):
             | yearlings?
             | matures?
             | yolk \s? sac
+            | nulliparous
             """)
 
         self.kwd('determined', r'determin \w+')

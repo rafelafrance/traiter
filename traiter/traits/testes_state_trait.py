@@ -91,18 +91,13 @@ class TestesStateTrait(BaseTrait):
             return
 
         values = []
-        # ambs = []
         for parse in parses:
             value = parse.value.lower()
             if value not in values:
                 values.append(value)
-                # ambs.append(parse.ambiguous_key)
 
-        # for i, (value, amb) in enumerate(zip(values, ambs), 1):
         for i, value in enumerate(values, 1):
             row[f'testes_{i}10:{ordinal(i)}_testes_state'] = value
-            # if amb and value not in ('no gonads', ):
-            #    row[f'testes_{i}11:{ordinal(i)}_testes_state_ambiguous'] = amb
 
     @staticmethod
     def should_skip(data, trait):

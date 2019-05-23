@@ -19,7 +19,7 @@ class OvariesStateTrait(BaseTrait):
 
     def _build_token_rules(self):
         # self.kwd('label', r' reproductive .? (data |state | condition) ')
-        self.lit('ovary', r' (ovaries | ovary | ovas | ova) \b ')
+        self.lit('ovary', r' (ovaries | ovary s? ) \b ')
 
         self.kwd('size', r"""
             (enlarged | enlarge | large
@@ -28,6 +28,7 @@ class OvariesStateTrait(BaseTrait):
             ) (\s+ size d?)?
             """)
         self.kwd('uterus', r' uterus | uterine ')
+        self.kwd('fallopian', r' fallopian \s* (tubes?)? ')
         self.kwd('immature', r' immature | mature ')
         self.kwd('horns', r' horns? ')
         self.kwd('covered', r' covered ')
@@ -36,14 +37,16 @@ class OvariesStateTrait(BaseTrait):
         self.kwd('alb', r' albicans | alb ')
         self.kwd('lut', r' luteum | lute | lut ')
         self.kwd('side', r' (?P<side> both | left | right | [lr]) ')
+        self.kwd('color', r""" (dark | light | pale)? \s* (red | pink) """)
 
         self.lit('sign', r' \+ | \- ')
         self.lit('and', r' and | & ')
         self.lit('word', r' [a-z]+ ')
 
     def _build_replace_rules(self):
-        self.replace(
-            'ovaries', r' ovary ( (and)? uterus (horns)? )? ')
+        self.replace('ovaries', r""" 
+            ovary ( ( (and)? uterus (horns)? ) 
+                    | (and)? fallopian )?""")
         self.replace('coverage', r' covered (word){0,2} fat ')
         self.replace('luteum', r' (sign)? (corpus)? (alb | lut) ')
 
@@ -55,10 +58,13 @@ class OvariesStateTrait(BaseTrait):
 
         self.product(
             self.convert, r"""
-            ovaries (?P<value> size)
+            side ovaries (word){0,3} (?P<value> color)
+            | ovaries (?P<value> (size) (immature)? )
+            | ovaries (?P<value> (size)? (immature) )
             | ovaries (?P<value> coverage)
-            | (?P<value> luteum (side)?) ovaries
-            | ovaries side luteum
+            | ovaries (?P<value> color)
+            | (?P<value> luteum) (side)? ovaries
+            | ovaries (side)? luteum
             """)
 
     @staticmethod
@@ -69,6 +75,7 @@ class OvariesStateTrait(BaseTrait):
             start=token.start,
             end=token.end)
         trait.is_flag_in_token('ambiguous_key', token)
+        trait.is_value_in_token('side', token)
         return trait
 
     @staticmethod
