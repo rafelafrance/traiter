@@ -5,31 +5,28 @@
 import sys
 import argparse
 import textwrap
-from traiter.all_traits import TRAIT_LIST, TRAIT_NAMES
+from traiter.all_traits import TRAITS
 from traiter.file_parser import FileParser
 from traiter.readers.csv_reader import CsvReader
 from traiter.writers.csv_writer import CsvWriter
 from traiter.writers.html_writer import HtmlWriter
 
+
 __VERSION__ = '0.4.0'
 
 
 INPUT_FORMATS = {
-    'csv': CsvReader,
-}
-INPUT_OPTIONS = [k for k in INPUT_FORMATS.keys()]
+    'csv': CsvReader}
 
 OUTPUT_FORMATS = {
     'csv': CsvWriter,
-    'html': HtmlWriter,
-}
-OUTPUT_OPTIONS = [k for k in OUTPUT_FORMATS.keys()]
+    'html': HtmlWriter}
 
 
 def parse_traits(args):
     """Parse the input."""
     trait_parsers = [(trait, trait_parser(args))
-                     for (trait, trait_parser) in TRAIT_LIST
+                     for trait, trait_parser in TRAITS.items()
                      if trait in args.trait]
 
     reader = INPUT_FORMATS[args.input_format](args)
@@ -74,7 +71,8 @@ def parse_args():
         help='''Output the results to this file. Defaults to stdout.''')
 
     arg_parser.add_argument(
-        '--trait', '-t', required=True, action='append', choices=TRAIT_NAMES,
+        '--trait', '-t', required=True, action='append',
+        choices=TRAITS.keys(),
         help="""A trait to extract.""")
 
     arg_parser.add_argument(
@@ -95,11 +93,11 @@ def parse_args():
             use this argument more than once and you may need to quote it.""")
 
     arg_parser.add_argument(
-        '--input-format', '-I', default='csv', choices=INPUT_OPTIONS,
+        '--input-format', '-I', default='csv', choices=INPUT_FORMATS.keys(),
         help="""The data input format. The default is "csv".""")
 
     arg_parser.add_argument(
-        '--output-format', '-O', default='csv', choices=OUTPUT_OPTIONS,
+        '--output-format', '-O', default='csv', choices=OUTPUT_FORMATS.keys(),
         help="""Output the result in this format. The default is "csv".""")
 
     arg_parser.add_argument(

@@ -11,17 +11,13 @@ from traiter.traits.total_length_trait import TotalLengthTrait
 from traiter.traits.hind_foot_length_trait import HindFootLengthTrait
 
 
-TRAIT_LIST = [
-    ('sex', SexTrait),
-    ('body_mass', BodyMassTrait),
-    ('life_stage', LifeStageTrait),
-    ('total_length', TotalLengthTrait),
-    ('tail_length', TailLengthTrait),
-    ('hind_foot_length', HindFootLengthTrait),
-    ('ear_length', EarLengthTrait),
-    ('testes_size', TestesSizeTrait),
-    ('testes_state', TestesStateTrait),
-]
-
-TRAIT_NAMES = [t[0] for t in TRAIT_LIST]
-TRAIT_DICT = {k: v for k, v in TRAIT_LIST}
+TRAITS = {
+    'sex': SexTrait,
+    'body_mass': BodyMassTrait,
+    'life_stage': LifeStageTrait,
+    'total_length': TotalLengthTrait,
+    'tail_length': TailLengthTrait,
+    'hind_foot_length': HindFootLengthTrait,
+    'ear_length': EarLengthTrait,
+    'testes_size': TestesSizeTrait,
+    'testes_state': TestesStateTrait}

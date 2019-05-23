@@ -2,7 +2,7 @@
 
 import re
 import pandas as pd
-from traiter.all_traits import TRAIT_DICT
+from traiter.all_traits import TRAITS
 from traiter.writers.base_writer import BaseWriter
 
 
@@ -28,7 +28,7 @@ class CsvWriter(BaseWriter):
         row = {c: raw_record.get(c, '') for c in self.columns}
 
         for trait, parses in parsed_record.items():
-            TRAIT_DICT[trait].csv_formatter(trait, row, parses[:self.limit])
+            TRAITS[trait].csv_formatter(trait, row, parses[:self.limit])
 
         self.rows.append(row)
 
