@@ -1,11 +1,7 @@
 """Parse ovaries size notations."""
 
-from operator import itemgetter
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait, ordinal
-import lib.shared_tokens as tkn
-from lib.regexp import Regexp
-from lib.token import Token
+from traiter.traits.base_trait import BaseTrait
+import traiter.shared_tokens as tkn
 
 
 class OvariesSizeTrait(BaseTrait):
@@ -19,7 +15,7 @@ class OvariesSizeTrait(BaseTrait):
         self._build_token_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)

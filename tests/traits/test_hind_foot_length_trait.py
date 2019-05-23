@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.hind_foot_length_trait import HindFootLengthTrait
+from traiter.parse import Parse
+from traiter.traits.hind_foot_length_trait import HindFootLengthTrait
 
 
-PAR = HindFootLengthTrait()
+PAR = None
 
 
 class TestHindFootLengthTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = HindFootLengthTrait()
 
     def test_parse_01(self):
         self.assertEqual(

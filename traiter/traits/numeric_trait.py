@@ -1,8 +1,8 @@
 """Mix-in for parsing length notations."""
 
 import re
-from lib.traits.base_trait import BaseTrait, ordinal
-from lib.parse import Parse
+from traiter.traits.base_trait import BaseTrait, ordinal
+from traiter.parse import Parse
 
 LOOKBACK_FAR = 40
 

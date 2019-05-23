@@ -4,8 +4,8 @@
 feet = ('feet', r" foots? | feets? | fts? | (?<= \d ) ' ")
 
 # NOTE: Double quotes as inches is handled during fix up
-# The negative look-ahead is trying to distinguish between cases like inTL with
-# other words.
+# The negative look-ahead is trying to distinguish between cases like inTL
+# with other words.
 inches = ('inches', ' (?: inche?s? | ins? ) (?! [a-dgi-km-ru-z] ) ')
 
 metric_len = (
@@ -126,7 +126,7 @@ shorthand = ('shorthand', fr"""
 
 # Apparently, they sometimes don't fill in the last number. We have to be extra
 # careful using this pattern so we don't pick up dates. Surround this token
-# with keys and lookarounds.
+# with keys and look-arounds.
 triple = ('triple', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {sh_val[1]} \]? )

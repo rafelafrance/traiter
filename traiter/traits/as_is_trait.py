@@ -1,7 +1,7 @@
 """Just grab the notations as they are."""
 
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait
+from traiter.parse import Parse
+from traiter.traits.base_trait import BaseTrait
 
 
 class AsIsTrait(BaseTrait):
@@ -17,7 +17,7 @@ class AsIsTrait(BaseTrait):
         # Build rules for parsing the trait
         self.product(self.convert, r' (?P<value> data )')
 
-        self.finish_init()
+        self.compile_regex()
 
     @staticmethod
     def convert(token):

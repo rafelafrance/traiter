@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.sex_trait import SexTrait
+from traiter.parse import Parse
+from traiter.traits.sex_trait import SexTrait
 
 
-PAR = SexTrait()
+PAR = None
 
 
 class TestSexTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = SexTrait()
 
     def test_parse_01(self):
         self.assertEqual(

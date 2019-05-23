@@ -1,11 +1,10 @@
 """Parse testes size notations."""
 
 from operator import itemgetter
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait, ordinal
-import lib.shared_tokens as tkn
-from lib.regexp import Regexp
-from lib.token import Token
+from stacked_regex.token import Token
+from traiter.parse import Parse
+from traiter.traits.base_trait import BaseTrait, ordinal
+import traiter.shared_tokens as tkn
 
 
 class TestesSizeTrait(BaseTrait):
@@ -19,7 +18,7 @@ class TestesSizeTrait(BaseTrait):
         self._build_token_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)
@@ -97,14 +96,14 @@ class TestesSizeTrait(BaseTrait):
             """)
 
         # These are used to get compounds traits from a single parse
-        self.double_side = Regexp(
-            phase='token', name='double_side',
+        self.double_side = self.compile(
+            name='double_sided',
             regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
-        self.double_cross = Regexp(
-            phase='token', name='double_cross',
+        self.double_cross = self.compile(
+            name='double_crossed',
             regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
 
-        self.finish_init()
+        self.compile_regex()
 
     def double(self, token):
         """Convert a single token into multiple (two) traits."""

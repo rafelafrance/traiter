@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.total_length_trait import TotalLengthTrait
+from traiter.parse import Parse
+from traiter.traits.total_length_trait import TotalLengthTrait
 
 
-PAR = TotalLengthTrait()
+PAR = None
 
 
 class TestTotalLengthTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = TotalLengthTrait()
 
     def test_parse_001(self):
         self.assertEqual(

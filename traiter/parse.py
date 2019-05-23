@@ -1,7 +1,7 @@
 """Build a parser trait result."""
 
 from collections import namedtuple
-from lib.numeric_parse_mixin import NumericParseMixIn
+from traiter.numeric_parse_mixin import NumericParseMixIn
 
 
 ParseKey = namedtuple(

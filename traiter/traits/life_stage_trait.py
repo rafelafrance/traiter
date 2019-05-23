@@ -1,7 +1,7 @@
 """Parse life stage notations."""
 
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait
+from traiter.parse import Parse
+from traiter.traits.base_trait import BaseTrait
 
 
 class LifeStageTrait(BaseTrait):
@@ -14,7 +14,7 @@ class LifeStageTrait(BaseTrait):
         self._build_token_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.kwd('keyword', r"""

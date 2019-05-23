@@ -2,8 +2,8 @@
 
 import re
 import pandas as pd
-from lib.all_traits import TRAIT_DICT
-from lib.writers.base_writer import BaseWriter
+from traiter.all_traits import TRAIT_DICT
+from traiter.writers.base_writer import BaseWriter
 
 
 class CsvWriter(BaseWriter):

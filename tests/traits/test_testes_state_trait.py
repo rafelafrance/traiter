@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.testes_state_trait import TestesStateTrait
+from traiter.parse import Parse
+from traiter.traits.testes_state_trait import TestesStateTrait
 
 
-PAR = TestesStateTrait()
+PAR = None
 
 
 class TestTestesStateTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = TestesStateTrait()
 
     def test_parse_01(self):
         self.assertEqual(

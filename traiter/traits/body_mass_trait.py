@@ -1,9 +1,9 @@
 """Parse body mass notations."""
 
 from functools import partial
-from lib.parse import Parse
-from lib.traits.numeric_trait import NumericTrait
-import lib.shared_tokens as tkn
+from traiter.parse import Parse
+from traiter.traits.numeric_trait import NumericTrait
+import traiter.shared_tokens as tkn
 
 
 class BodyMassTrait(NumericTrait):
@@ -17,7 +17,7 @@ class BodyMassTrait(NumericTrait):
         self._build_replace_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)

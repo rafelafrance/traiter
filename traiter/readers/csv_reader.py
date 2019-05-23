@@ -1,7 +1,7 @@
 """Read the traiter input from a CSV file."""
 
 import csv
-from lib.readers.base_reader import BaseReader
+from traiter.readers.base_reader import BaseReader
 
 
 class CsvReader(BaseReader):

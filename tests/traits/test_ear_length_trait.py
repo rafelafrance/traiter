@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.ear_length_trait import EarLengthTrait
+from traiter.parse import Parse
+from traiter.traits.ear_length_trait import EarLengthTrait
 
 
-PAR = EarLengthTrait()
+PAR = None
 
 
 class TestEarLengthTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = EarLengthTrait()
 
     def test_parse_01(self):
         self.assertEqual(
@@ -99,7 +104,6 @@ class TestEarLengthTrait(unittest.TestCase):
             [])
 
     def test_parse_17(self):
-        # self.maxDiff = None
         self.assertEqual(
             PAR.parse('Hind Foot: 19 EFN: 13 Weight: 16.3'),
             [Parse(value=13, measured_from='n', units_inferred=True,

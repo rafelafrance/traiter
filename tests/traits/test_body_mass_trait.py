@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.body_mass_trait import BodyMassTrait
+from traiter.parse import Parse
+from traiter.traits.body_mass_trait import BodyMassTrait
 
 
-PAR = BodyMassTrait()
+PAR = None
 
 
 class TestBodyMassTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = BodyMassTrait()
 
     def test_parse_01(self):
         self.assertEqual(

@@ -1,8 +1,8 @@
 """Functions for building a numeric trait."""
 
 import re
-from lib.convert_units import convert
-import lib.shared_tokens as tkn
+from traiter.convert_units import convert
+import traiter.shared_tokens as tkn
 
 
 class NumericParseMixIn:

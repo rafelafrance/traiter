@@ -1,6 +1,6 @@
 """Parse all traits for the input record."""
 
-from lib.traits.as_is_trait import AsIsTrait
+from traiter.traits.as_is_trait import AsIsTrait
 
 
 class TraitFound(Exception):

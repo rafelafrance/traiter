@@ -2,8 +2,8 @@
 
 import re
 from functools import partial
-from lib.traits.numeric_trait import NumericTrait
-import lib.shared_tokens as tkn
+from traiter.traits.numeric_trait import NumericTrait
+import traiter.shared_tokens as tkn
 
 
 LOOKBACK_FAR = 40
@@ -28,7 +28,7 @@ class EarLengthTrait(NumericTrait):
         self._build_replace_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)

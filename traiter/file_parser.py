@@ -5,7 +5,7 @@ This object holds entire file accumulators while parsing and it retruns a per
 row record parser.
 """
 
-from lib.record_parser import RecordParser
+from traiter.record_parser import RecordParser
 
 
 class FileParser:

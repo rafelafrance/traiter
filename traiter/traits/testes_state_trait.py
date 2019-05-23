@@ -1,8 +1,8 @@
 """Parse testes state notations."""
 
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait, ordinal
-import lib.shared_tokens as tkn
+from traiter.parse import Parse
+from traiter.traits.base_trait import BaseTrait, ordinal
+import traiter.shared_tokens as tkn
 
 
 class TestesStateTrait(BaseTrait):
@@ -16,7 +16,7 @@ class TestesStateTrait(BaseTrait):
         self._build_replace_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.kwd('label', r' reproductive .? (?: data |state | condition ) ')

@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.life_stage_trait import LifeStageTrait
+from traiter.parse import Parse
+from traiter.traits.life_stage_trait import LifeStageTrait
 
 
-PAR = LifeStageTrait()
+PAR = None
 
 
 class TestLifeStageTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = LifeStageTrait()
 
     def test_parse_01(self):
         self.assertEqual(

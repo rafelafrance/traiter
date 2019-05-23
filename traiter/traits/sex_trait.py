@@ -1,8 +1,8 @@
 """Parse sex notations."""
 
 import re
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait
+from traiter.parse import Parse
+from traiter.traits.base_trait import BaseTrait
 
 
 class SexTrait(BaseTrait):
@@ -15,7 +15,7 @@ class SexTrait(BaseTrait):
         self._build_token_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.kwd('keyword', 'sex')

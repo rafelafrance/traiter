@@ -1,7 +1,7 @@
 """Parse testes state notations."""
 
-from lib.parse import Parse
-from lib.traits.base_trait import BaseTrait
+from traiter.parse import Parse
+from traiter.traits.base_trait import BaseTrait
 
 
 class OvariesStateTrait(BaseTrait):
@@ -15,7 +15,7 @@ class OvariesStateTrait(BaseTrait):
         self._build_replace_rules()
         self._build_product_rules()
 
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         # self.kwd('label', r' reproductive .? (data |state | condition) ')

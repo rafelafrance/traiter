@@ -5,25 +5,25 @@
 import sys
 import argparse
 import textwrap
-from lib.all_traits import TRAIT_LIST, TRAIT_NAMES
-from lib.file_parser import FileParser
-from lib.readers.csv_reader import CsvReader
-from lib.writers.csv_writer import CsvWriter
-from lib.writers.html_writer import HtmlWriter
+from traiter.all_traits import TRAIT_LIST, TRAIT_NAMES
+from traiter.file_parser import FileParser
+from traiter.readers.csv_reader import CsvReader
+from traiter.writers.csv_writer import CsvWriter
+from traiter.writers.html_writer import HtmlWriter
 
-__VERSION__ = '0.3.0'
+__VERSION__ = '0.4.0'
 
 
 INPUT_FORMATS = {
     'csv': CsvReader,
 }
-INPUT_OPTIONS = [k for k, v in INPUT_FORMATS.items()]
+INPUT_OPTIONS = [k for k in INPUT_FORMATS.keys()]
 
 OUTPUT_FORMATS = {
     'csv': CsvWriter,
     'html': HtmlWriter,
 }
-OUTPUT_OPTIONS = [k for k, v in OUTPUT_FORMATS.items()]
+OUTPUT_OPTIONS = [k for k in OUTPUT_FORMATS.keys()]
 
 
 def parse_traits(args):

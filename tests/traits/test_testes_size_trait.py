@@ -1,12 +1,17 @@
 import unittest
-from lib.parse import Parse
-from lib.traits.testes_size_trait import TestesSizeTrait
+from traiter.parse import Parse
+from traiter.traits.testes_size_trait import TestesSizeTrait
 
 
-PAR = TestesSizeTrait()
+PAR = None
 
 
 class TestTestesSizeTrait(unittest.TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        global PAR
+        PAR = TestesSizeTrait()
 
     def test_parse_01(self):
         self.assertEqual(

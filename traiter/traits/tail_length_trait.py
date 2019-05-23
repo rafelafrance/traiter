@@ -2,19 +2,19 @@
 
 import re
 from functools import partial
-from lib.traits.numeric_trait import NumericTrait
-import lib.shared_tokens as tkn
+from traiter.traits.numeric_trait import NumericTrait
+import traiter.shared_tokens as tkn
 
 
-LOOKBACK_FAR = 40
-LOOKBACK_NEAR = 20
+LOOK_BACK_FAR = 40
+LOOK_BACK_NEAR = 20
 IS_TESTES = re.compile(
-    r' repoductive | gonad | test | scrot (?: al | um )? ',
+    r' reproductive | gonad | test | scrotal | scrotum | scrot ',
     NumericTrait.flags)
-IS_ELEVATION = re.compile(r' elev (?: ation )? ', NumericTrait.flags)
+IS_ELEVATION = re.compile(r' elevation | elev ', NumericTrait.flags)
 IS_TOTAL = re.compile(r' body | nose | snout ', NumericTrait.flags)
 IS_TAG = re.compile(r' tag ', NumericTrait.flags)
-IS_ID = re.compile(r' id (?: ent )? (?: ifier )? ', NumericTrait.flags)
+IS_ID = re.compile(r' identifier | ident | id ', NumericTrait.flags)
 
 
 class TailLengthTrait(NumericTrait):
@@ -27,8 +27,7 @@ class TailLengthTrait(NumericTrait):
         self._build_token_rules()
         self._build_replace_rules()
         self._build_product_rules()
-
-        self.finish_init()
+        self.compile_regex()
 
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)
@@ -73,18 +72,18 @@ class TailLengthTrait(NumericTrait):
 
     def fix_up_trait(self, trait, text):
         """Fix problematic parses."""
-        start = max(0, trait.start - LOOKBACK_NEAR)
+        start = max(0, trait.start - LOOK_BACK_NEAR)
         if IS_TOTAL.search(text, start, trait.start):
             return None
 
         if trait.ambiguous_key:
-            start = max(0, trait.start - LOOKBACK_FAR)
+            start = max(0, trait.start - LOOK_BACK_FAR)
             if IS_TESTES.search(text, start, trait.start) \
                     or IS_ELEVATION.search(text, start, trait.start) \
                     or IS_ID.search(text, start, trait.start):
                 return None
 
-            start = max(0, trait.start - LOOKBACK_NEAR)
+            start = max(0, trait.start - LOOK_BACK_NEAR)
             if IS_TAG.search(text, start, trait.start):
                 return None
 
