@@ -31,14 +31,14 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-We are using the stacked-regex module to do most of the parsing. This module returns a list of putative traits. However, there is some ambiguity remaining in some trait parses. To fix this we perform a postprocessing step. This is nothing more than applying heuristics on the traits and their surrounding context to resolve the ambiguities. Here are some issues that are resolved in postprocessing:
+We are using the stacked-regex module to do most of the parsing. This module returns a list of putative traits. There may be ambiguity in some trait parses. To fix this we perform a postprocessing step. This is nothing more than applying heuristics on the traits and their surrounding context to resolve them. Here are a few issues that are resolved in postprocessing:
 
 - Add missing units
 - Not assigning inappropriate traits like assigning ovary traits to males or testes traits to females
 - Determine if a `"` character is an abbreviation for inches or a quote character.
 - We also have a situations where the same abbreviation is used for different traits. For instance `T` can indicate either a testes measurement or a tail length measurement. 
 
-## List of traits extracted (so far)
+## List of traits extracted
 - Total length (aka snout vent length, fork length, etc.)
 - Tail Length
 - Hind foot Length
@@ -46,11 +46,11 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Body body mass
 - Life stage
 - Sex
-- Ovaries state & size
-- Pregnancy state
-- Embryo count & size
-- Nipple state
-- Lactation state
+- Ovaries state & size (in progress)
+- Pregnancy state (planned)
+- Embryo count & size (planned)
+- Nipple state (planned)
+- Lactation state (planned)
 - Placental scar state, count, & location
 - Testes state & size
 
