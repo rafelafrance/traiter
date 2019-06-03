@@ -1,12 +1,47 @@
 """Functions for building a numeric trait."""
 
 import re
+from collections import namedtuple
+from traiter.trait import Trait
 from traiter.convert_units import convert
 import traiter.shared_tokens as tkn
 
 
-class NumericTraitMixIn:
-    """Handle parsed trait numeric values."""
+ParseKey = namedtuple(
+    'ParseKey', 'low high dimension includes measured_from side')
+
+
+class NumericTrait(Trait):
+    """Handle numeric traits values."""
+
+    def __init__(self, **kwargs):
+        """Build a numeric trait.
+
+        units:           Original units in notation
+        units_inferred:  Were units found or guessed?
+
+        estimated_value: Did the reporter indicate this was an estimate
+        is_shorthand:    Flag 99-99-99-99=99 shorthand notation
+        dimension:       Length, width, etc.
+        includes:        Claw, etc. What is included changes he meaning
+        measured_from:   Crown, notch, etc.
+        """
+        super().__init__(**kwargs)
+
+        self.units = kwargs.get('units', None)
+        self.units_inferred = kwargs.get('units_inferred', False)
+
+        self.estimated_value = kwargs.get('estimated_value', False)
+        self.is_shorthand = kwargs.get('is_shorthand', False)
+        self.dimension = kwargs.get('dimension', '')
+        self.includes = kwargs.get('includes', '')
+        self.measured_from = kwargs.get('measured_from', '')
+
+    def merge_flags(self, other):
+        """Capture the meaning across all parses."""
+        super().merge_flags(other)
+        self.units_inferred &= other.units_inferred
+        self.estimated_value |= other.estimated_value
 
     def convert_value(self, units):
         """Set the units and convert_value the value."""
@@ -68,3 +103,18 @@ class NumericTraitMixIn:
         units2 = token.groups.get('units2')
         units = [units, units2] if units2 and units != units2 else units
         self.convert_value(units)
+
+    def as_key(self):
+        """Do the parses describe the same trait."""
+        low, high = self.value, ''
+        if isinstance(self.value, list):
+            low, high = self.value
+            if low > high:
+                low, high = high, low
+        return ParseKey(
+            low=low,
+            high=high,
+            dimension=self.dimension,
+            includes=self.includes,
+            measured_from=self.measured_from,
+            side=self.side)

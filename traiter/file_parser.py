@@ -1,7 +1,7 @@
 """
 Build parsed record objects and accumulate totals.
 
-This object holds entire file accumulators while parsing and it retruns a per
+This object holds entire file accumulators while parsing and it returns a per
 row record parser.
 """
 

@@ -1,37 +1,36 @@
 """Build a parser trait result."""
 
-from collections import namedtuple
-from traiter.numeric_trait_mixin import NumericTraitMixIn
 
-
-ParseKey = namedtuple(
-    'ParseKey', 'low high dimension includes measured_from side')
-
-
-class Trait(NumericTraitMixIn):
+class Trait:
     """Build a parse result."""
 
-    def __init__(self, value=None, field='', start=0, end=0,
-                 ambiguous_key=False, as_is=False, dimension='',
-                 estimated_value=False, includes='', measured_from='',
-                 side='', units=None, units_inferred=False,
-                 is_shorthand=False):
-        """Build a parse result."""
-        self.value = value                  # Normalized value
-        self.field = field                  # Which CSV field was matched
-        self.start = start                  # Match start position
-        self.end = end                      # Match end position
-        self.ambiguous_key = ambiguous_key  # Key may have different meaning?
-        self.as_is = as_is                  # Is measurement taken as is?
-        self.dimension = dimension          # Length, width, etc.
-        self.estimated_value = estimated_value  # Is value noted as estimated?
-        self.includes = includes                # Claw, etc.
-        self.measured_from = measured_from      # Crown, notch, etc.
-        self.side = side                        # Left, right, 1, 2, etc.
-        self.units = units                      # Original units in notation
-        self.units_inferred = units_inferred    # Were units found or guessed?
-        self.is_shorthand = is_shorthand        # Is in shorthand notation?
-        self.skipped = ''                       # If the trait is skipped, why?
+    def __init__(self, **kwargs):
+        """Build a trait.
+
+        value:           Normalized value
+
+        field:           What field contained the trait
+        start:           Starting index for the trait
+        end:             Ending index for the trait
+
+        as_is:           Sometimes we take an entire cell as-is
+        ambiguous_key:   Abbreviations can be ambiguous
+        side:            Left, right, 1, 2, etc.
+
+        skipped:         If the trait is skipped, why
+        """
+        self.value = kwargs.get('value', None)
+
+        self.field = kwargs.get('field', '')
+        self.start = kwargs.get('start', 0)
+        self.end = kwargs.get('end', 0)
+
+        self.as_is = kwargs.get('as_is', False)
+        self.ambiguous_key = kwargs.get('ambiguous_key', False)
+
+        self.side = kwargs.get('side', '')
+
+        self.skipped = ''
 
     def __repr__(self):
         """Represent the result."""
@@ -57,20 +56,3 @@ class Trait(NumericTraitMixIn):
     def merge_flags(self, other):
         """Capture the meaning across all parses."""
         self.ambiguous_key &= other.ambiguous_key
-        self.units_inferred &= other.units_inferred
-        self.estimated_value |= other.estimated_value
-
-    def as_key(self):
-        """Do the parses describe the same trait."""
-        low, high = self.value, ''
-        if isinstance(self.value, list):
-            low, high = self.value
-            if low > high:
-                low, high = high, low
-        return ParseKey(
-            low=low,
-            high=high,
-            dimension=self.dimension,
-            includes=self.includes,
-            measured_from=self.measured_from,
-            side=self.side)

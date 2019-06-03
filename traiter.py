@@ -64,11 +64,12 @@ def parse_args():
 
     arg_parser.add_argument(
         '--input-file', '-i', type=argparse.FileType('r'), default=sys.stdin,
-        help='''The input file containing the trait_builders. Defaults to stdin.''')
+        help="""The input file containing the trait_builders.
+            Defaults to stdin.""")
 
     arg_parser.add_argument(
         '--output-file', '-o', type=argparse.FileType('w'), default=sys.stdout,
-        help='''Output the results to this file. Defaults to stdout.''')
+        help="""Output the results to this file. Defaults to stdout.""")
 
     arg_parser.add_argument(
         '--trait', '-t', required=True, action='append',
@@ -77,8 +78,8 @@ def parse_args():
 
     arg_parser.add_argument(
         '--search-field', '-s', action='append', metavar='FIELD',
-        help=f"""A field that contains trait_builders. You may use this argument more
-            than once.""")
+        help=f"""A field that contains trait_builders. 
+            You may use this argument more than once.""")
 
     arg_parser.add_argument(
         '--extra-field', '-e', action='append', metavar='FIELD',

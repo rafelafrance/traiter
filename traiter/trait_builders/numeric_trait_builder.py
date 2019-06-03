@@ -2,9 +2,9 @@
 
 import re
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder, ordinal
-from traiter.trait import Trait
+from traiter.numeric_trait import NumericTrait
 
-LOOKBACK_FAR = 40
+LOOK_BACK_FAR = 40
 
 QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
 IS_COLLECTOR = re.compile(r' collector ', re.VERBOSE)
@@ -23,7 +23,7 @@ class NumericTraitBuilder(BaseTraitBuilder):
 
     def simple(self, token):
         """Handle a normal length notation."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = NumericTrait(start=token.start, end=token.end)
         self.add_flags(token, trait)
         trait.float_value(token.groups['value1'], token.groups.get('value2'))
         trait.convert_value(token.groups.get('units'))
@@ -31,7 +31,7 @@ class NumericTraitBuilder(BaseTraitBuilder):
 
     def compound(self, token, units=''):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = NumericTrait(start=token.start, end=token.end)
         self.add_flags(token, trait)
         values = [token.groups[units[0]], token.groups[units[1]]]
         trait.compound_value(values, units)
@@ -39,7 +39,7 @@ class NumericTraitBuilder(BaseTraitBuilder):
 
     def fraction(self, token):
         """Handle fractional values like 10 3/8 inches."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = NumericTrait(start=token.start, end=token.end)
         self.add_flags(token, trait)
         trait.fraction_value(token)
         trait.convert_value(token.groups.get('units'))
@@ -48,7 +48,7 @@ class NumericTraitBuilder(BaseTraitBuilder):
     @staticmethod
     def shorthand_length(token, measurement=''):
         """Handle shorthand length notation like 11-22-33-44:55g."""
-        trait = Trait(start=token.start, end=token.end)
+        trait = NumericTrait(start=token.start, end=token.end)
         trait.float_value(token.groups.get(measurement))
         if not trait.value:
             return None
@@ -59,17 +59,17 @@ class NumericTraitBuilder(BaseTraitBuilder):
         trait.is_flag_in_token(flag, token, rename='estimated_value')
         return trait
 
-    def numeric_fixups(self, trait, text):
-        """All of the numeric fixups."""
-        return self.fixup_shorthand(trait, text) \
+    def numeric_fix_ups(self, trait, text):
+        """All of the numeric fix-ups."""
+        return self.fix_up_shorthand(trait, text) \
             and self.fix_up_inches(trait, text)
 
     @staticmethod
-    def fixup_shorthand(trait, text):
-        """All of the fixups for numbers."""
+    def fix_up_shorthand(trait, text):
+        """All of the fix-ups for numbers."""
         if not trait.is_shorthand:
             return trait
-        start = max(0, trait.start - LOOKBACK_FAR)
+        start = max(0, trait.start - LOOK_BACK_FAR)
         if IS_COLLECTOR.search(text, start, trait.start):
             return None
         return trait

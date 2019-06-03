@@ -100,4 +100,4 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
                     or IS_EAST.search(text, trait.end, end):
                 return None
 
-        return self.numeric_fixups(trait, text)
+        return self.numeric_fix_ups(trait, text)
