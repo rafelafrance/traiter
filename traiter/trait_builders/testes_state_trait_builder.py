@@ -1,11 +1,11 @@
 """Parse testes state notations."""
 
-from traiter.parse import Parse
-from traiter.traits.base_trait import BaseTrait, ordinal
+from traiter.trait import Trait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder, ordinal
 import traiter.shared_tokens as tkn
 
 
-class TestesStateTrait(BaseTrait):
+class TestesStateTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -77,7 +77,7 @@ class TestesStateTrait(BaseTrait):
     @staticmethod
     def convert(token):
         """Convert parsed token into a trait product."""
-        trait = Parse(
+        trait = Trait(
             value=token.groups['value'].lower(),
             start=token.start,
             end=token.end)

@@ -5,7 +5,7 @@ from traiter.convert_units import convert
 import traiter.shared_tokens as tkn
 
 
-class NumericParseMixIn:
+class NumericTraitMixIn:
     """Handle parsed trait numeric values."""
 
     def convert_value(self, units):

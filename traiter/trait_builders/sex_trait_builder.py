@@ -1,11 +1,11 @@
 """Parse sex notations."""
 
 import re
-from traiter.parse import Parse
-from traiter.traits.base_trait import BaseTrait
+from traiter.trait import Trait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 
 
-class SexTrait(BaseTrait):
+class SexTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -37,7 +37,7 @@ class SexTrait(BaseTrait):
 
     def convert(self, token):
         """Convert parsed tokens into a result."""
-        trait = Parse(
+        trait = Trait(
             value=token.groups['value'],
             start=token.start,
             end=token.end)

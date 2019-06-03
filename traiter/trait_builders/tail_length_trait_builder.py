@@ -2,7 +2,7 @@
 
 import re
 from functools import partial
-from traiter.traits.numeric_trait import NumericTrait
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
@@ -10,14 +10,14 @@ LOOK_BACK_FAR = 40
 LOOK_BACK_NEAR = 20
 IS_TESTES = re.compile(
     r' reproductive | gonad | test | scrotal | scrotum | scrot ',
-    NumericTrait.flags)
-IS_ELEVATION = re.compile(r' elevation | elev ', NumericTrait.flags)
-IS_TOTAL = re.compile(r' body | nose | snout ', NumericTrait.flags)
-IS_TAG = re.compile(r' tag ', NumericTrait.flags)
-IS_ID = re.compile(r' identifier | ident | id ', NumericTrait.flags)
+    NumericTraitBuilder.flags)
+IS_ELEVATION = re.compile(r' elevation | elev ', NumericTraitBuilder.flags)
+IS_TOTAL = re.compile(r' body | nose | snout ', NumericTraitBuilder.flags)
+IS_TAG = re.compile(r' tag ', NumericTraitBuilder.flags)
+IS_ID = re.compile(r' identifier | ident | id ', NumericTraitBuilder.flags)
 
 
-class TailLengthTrait(NumericTrait):
+class TailLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):

@@ -1,10 +1,10 @@
 """Parse ovaries size notations."""
 
-from traiter.traits.base_trait import BaseTrait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-class OvariesSizeTrait(BaseTrait):
+class OvariesSizeTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     side_pairs = {'left': 'right', 'right': 'left', '1': '2', '2': '1'}

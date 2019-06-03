@@ -2,7 +2,7 @@
 
 import re
 from functools import partial
-from traiter.traits.numeric_trait import NumericTrait
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
@@ -10,17 +10,17 @@ LOOKBACK_FAR = 40
 LOOKBACK_NEAR = 10
 IS_ID = re.compile(
     r' id (?: ent )? (?: ifier )? | collector ',
-    NumericTrait.flags)
-IS_TRAP = re.compile(r' trap ', NumericTrait.flags)
+    NumericTraitBuilder.flags)
+IS_TRAP = re.compile(r' trap ', NumericTraitBuilder.flags)
 IS_TESTES = re.compile(
     r' repoductive | gonad | test | scrot (?: al | um )? ',
-    NumericTrait.flags)
+    NumericTraitBuilder.flags)
 
 LOOK_AROUND = 10
-IS_LEFT = re.compile(r' \b r \b ', NumericTrait.flags)
+IS_LEFT = re.compile(r' \b r \b ', NumericTraitBuilder.flags)
 
 
-class TotalLengthTrait(NumericTrait):
+class TotalLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):

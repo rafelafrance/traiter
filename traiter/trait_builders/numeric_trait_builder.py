@@ -1,8 +1,8 @@
 """Mix-in for parsing length notations."""
 
 import re
-from traiter.traits.base_trait import BaseTrait, ordinal
-from traiter.parse import Parse
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder, ordinal
+from traiter.trait import Trait
 
 LOOKBACK_FAR = 40
 
@@ -10,7 +10,7 @@ QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', re.VERBOSE)
 IS_COLLECTOR = re.compile(r' collector ', re.VERBOSE)
 
 
-class NumericTrait(BaseTrait):
+class NumericTraitBuilder(BaseTraitBuilder):
     """Shared parser logic."""
 
     @staticmethod
@@ -23,7 +23,7 @@ class NumericTrait(BaseTrait):
 
     def simple(self, token):
         """Handle a normal length notation."""
-        trait = Parse(start=token.start, end=token.end)
+        trait = Trait(start=token.start, end=token.end)
         self.add_flags(token, trait)
         trait.float_value(token.groups['value1'], token.groups.get('value2'))
         trait.convert_value(token.groups.get('units'))
@@ -31,7 +31,7 @@ class NumericTrait(BaseTrait):
 
     def compound(self, token, units=''):
         """Handle a pattern like: 4 lbs 9 ozs."""
-        trait = Parse(start=token.start, end=token.end)
+        trait = Trait(start=token.start, end=token.end)
         self.add_flags(token, trait)
         values = [token.groups[units[0]], token.groups[units[1]]]
         trait.compound_value(values, units)
@@ -39,7 +39,7 @@ class NumericTrait(BaseTrait):
 
     def fraction(self, token):
         """Handle fractional values like 10 3/8 inches."""
-        trait = Parse(start=token.start, end=token.end)
+        trait = Trait(start=token.start, end=token.end)
         self.add_flags(token, trait)
         trait.fraction_value(token)
         trait.convert_value(token.groups.get('units'))
@@ -48,7 +48,7 @@ class NumericTrait(BaseTrait):
     @staticmethod
     def shorthand_length(token, measurement=''):
         """Handle shorthand length notation like 11-22-33-44:55g."""
-        trait = Parse(start=token.start, end=token.end)
+        trait = Trait(start=token.start, end=token.end)
         trait.float_value(token.groups.get(measurement))
         if not trait.value:
             return None

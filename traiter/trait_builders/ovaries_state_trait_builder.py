@@ -1,10 +1,10 @@
 """Parse testes state notations."""
 
-from traiter.parse import Parse
-from traiter.traits.base_trait import BaseTrait
+from traiter.trait import Trait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 
 
-class OvariesStateTrait(BaseTrait):
+class OvariesStateTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -70,7 +70,7 @@ class OvariesStateTrait(BaseTrait):
     @staticmethod
     def convert(token):
         """Convert parsed token into a trait product."""
-        trait = Parse(
+        trait = Trait(
             value=token.groups['value'].lower(),
             start=token.start,
             end=token.end)
@@ -80,13 +80,13 @@ class OvariesStateTrait(BaseTrait):
 
     @staticmethod
     def double(token):
-        """Convert a single token into multiple (two) traits."""
-        trait1 = Parse(
+        """Convert a single token into multiple (two) trait_builders."""
+        trait1 = Trait(
             value=token.groups['value1'].lower(),
             side=token.groups['side1'].lower(),
             start=token.start,
             end=token.end)
-        trait2 = Parse(
+        trait2 = Trait(
             value=token.groups['value2'].lower(),
             side=token.groups['side2'].lower(),
             start=token.start,

@@ -1,10 +1,10 @@
 """Just grab the notations as they are."""
 
-from traiter.parse import Parse
-from traiter.traits.base_trait import BaseTrait
+from traiter.trait import Trait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 
 
-class AsIsTrait(BaseTrait):
+class AsIsTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -22,7 +22,7 @@ class AsIsTrait(BaseTrait):
     @staticmethod
     def convert(token):
         """Convert parsed token into a trait product."""
-        return Parse(
+        return Trait(
             value=token.groups['value'],
             as_is=True,
             start=token.start,

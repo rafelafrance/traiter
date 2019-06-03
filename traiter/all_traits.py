@@ -1,23 +1,23 @@
-"""All of the traits."""
+"""All of the trait_builders."""
 
-from traiter.traits.sex_trait import SexTrait
-from traiter.traits.body_mass_trait import BodyMassTrait
-from traiter.traits.life_stage_trait import LifeStageTrait
-from traiter.traits.ear_length_trait import EarLengthTrait
-from traiter.traits.tail_length_trait import TailLengthTrait
-from traiter.traits.testes_size_trait import TestesSizeTrait
-from traiter.traits.testes_state_trait import TestesStateTrait
-from traiter.traits.total_length_trait import TotalLengthTrait
-from traiter.traits.hind_foot_length_trait import HindFootLengthTrait
+from traiter.trait_builders.sex_trait_builder import SexTraitBuilder
+from traiter.trait_builders.body_mass_trait_builder import BodyMassTraitBuilder
+from traiter.trait_builders.life_stage_trait_builder import LifeStageTraitBuilder
+from traiter.trait_builders.ear_length_trait_builder import EarLengthTraitBuilder
+from traiter.trait_builders.tail_length_trait_builder import TailLengthTraitBuilder
+from traiter.trait_builders.testes_size_trait_builder import TestesSizeTraitBuilder
+from traiter.trait_builders.testes_state_trait_builder import TestesStateTraitBuilder
+from traiter.trait_builders.total_length_trait_builder import TotalLengthTraitBuilder
+from traiter.trait_builders.hind_foot_length_trait_builder import HindFootLengthTraitBuilder
 
 
 TRAITS = {
-    'sex': SexTrait,
-    'body_mass': BodyMassTrait,
-    'life_stage': LifeStageTrait,
-    'total_length': TotalLengthTrait,
-    'tail_length': TailLengthTrait,
-    'hind_foot_length': HindFootLengthTrait,
-    'ear_length': EarLengthTrait,
-    'testes_size': TestesSizeTrait,
-    'testes_state': TestesStateTrait}
+    'sex': SexTraitBuilder,
+    'body_mass': BodyMassTraitBuilder,
+    'life_stage': LifeStageTraitBuilder,
+    'total_length': TotalLengthTraitBuilder,
+    'tail_length': TailLengthTraitBuilder,
+    'hind_foot_length': HindFootLengthTraitBuilder,
+    'ear_length': EarLengthTraitBuilder,
+    'testes_size': TestesSizeTraitBuilder,
+    'testes_state': TestesStateTraitBuilder}

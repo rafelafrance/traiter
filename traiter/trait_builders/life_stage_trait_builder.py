@@ -1,10 +1,10 @@
 """Parse life stage notations."""
 
-from traiter.parse import Parse
-from traiter.traits.base_trait import BaseTrait
+from traiter.trait import Trait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 
 
-class LifeStageTrait(BaseTrait):
+class LifeStageTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -75,5 +75,5 @@ class LifeStageTrait(BaseTrait):
     @staticmethod
     def convert(token):
         """Convert parsed tokens into a result."""
-        return Parse(value=token.groups['value'].lower(),
+        return Trait(value=token.groups['value'].lower(),
                      start=token.start, end=token.end)

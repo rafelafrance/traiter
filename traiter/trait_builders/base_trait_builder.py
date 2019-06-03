@@ -5,7 +5,7 @@ from stacked_regex.stacked_regex import StackedRegex
 from traiter.util import ordinal
 
 
-class BaseTrait(StackedRegex):
+class BaseTraitBuilder(StackedRegex):
     """Shared lexer logic."""
 
     flags = re.VERBOSE | re.IGNORECASE
@@ -18,7 +18,7 @@ class BaseTrait(StackedRegex):
         self.shared_token = self.from_tuple
 
     def parse(self, text, field=''):
-        """Find the traits in the text.
+        """Find the trait_builders in the text.
 
         We get the trait list from the StackedRegex engine & then fix them up
         afterwards.
@@ -33,11 +33,11 @@ class BaseTrait(StackedRegex):
             if not trait:
                 continue
 
-            # Some parses represent multiple traits, fix them all up
+            # Some parses represent multiple trait_builders, fix them all up
             if not isinstance(trait, list):
                 trait = [trait]
 
-            # Add the traits after any fix up.
+            # Add the trait_builders after any fix up.
             for single_trait in trait:
                 trait = self.fix_up_trait(single_trait, text)
                 if trait:

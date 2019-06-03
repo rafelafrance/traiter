@@ -1,11 +1,11 @@
 """Parse hind foot length notations."""
 
 from functools import partial
-from traiter.traits.numeric_trait import NumericTrait
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-class HindFootLengthTrait(NumericTrait):
+class HindFootLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -16,7 +16,6 @@ class HindFootLengthTrait(NumericTrait):
         self._build_product_rules()
 
         self.compile_regex()
-
 
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)

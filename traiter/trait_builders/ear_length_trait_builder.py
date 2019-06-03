@@ -2,22 +2,22 @@
 
 import re
 from functools import partial
-from traiter.traits.numeric_trait import NumericTrait
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
 LOOKBACK_FAR = 40
 LOOKBACK_NEAR = 10
-IS_ET = re.compile(r' e \.? t ', NumericTrait.flags)
-IS_NUMBER = re.compile(r' [#] ', NumericTrait.flags)
-IS_MAG = re.compile(r' magnemite ', NumericTrait.flags)
-IS_ID = re.compile(r' id (?: ent )? (?: ifier )? ', NumericTrait.flags)
+IS_ET = re.compile(r' e \.? t ', NumericTraitBuilder.flags)
+IS_NUMBER = re.compile(r' [#] ', NumericTraitBuilder.flags)
+IS_MAG = re.compile(r' magnemite ', NumericTraitBuilder.flags)
+IS_ID = re.compile(r' id (?: ent )? (?: ifier )? ', NumericTraitBuilder.flags)
 
 LOOK_AROUND = 10
-IS_EAST = re.compile(r' \b n ', NumericTrait.flags)
+IS_EAST = re.compile(r' \b n ', NumericTraitBuilder.flags)
 
 
-class EarLengthTrait(NumericTrait):
+class EarLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):

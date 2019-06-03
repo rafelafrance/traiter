@@ -1,37 +1,37 @@
 import unittest
-from traiter.parse import Parse
-from traiter.traits.as_is_trait import AsIsTrait
+from traiter.trait import Trait
+from traiter.trait_builders.as_is_trait_builder import AsIsTraitBuilder
 
 
 PAR = None
 
 
-class TestAsIsTrait(unittest.TestCase):
+class TestAsIsTraitBuilder(unittest.TestCase):
 
     @classmethod
     def setup_class(cls):
         global PAR
-        PAR = AsIsTrait()
+        PAR = AsIsTraitBuilder()
 
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('word'),
-            [Parse(value='word', as_is=True, start=0, end=4)])
+            [Trait(value='word', as_is=True, start=0, end=4)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse(' word  '),
-            [Parse(value='word', as_is=True, start=1, end=5)])
+            [Trait(value='word', as_is=True, start=1, end=5)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse(' x  '),
-            [Parse(value='x', as_is=True, start=1, end=2)])
+            [Trait(value='x', as_is=True, start=1, end=2)])
 
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('x'),
-            [Parse(value='x', as_is=True, start=0, end=1)])
+            [Trait(value='x', as_is=True, start=0, end=1)])
 
     def test_parse_05(self):
         self.assertEqual(PAR.parse(''), [])
@@ -42,4 +42,4 @@ class TestAsIsTrait(unittest.TestCase):
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse(' word  word '),
-            [Parse(value='word  word', as_is=True, start=1, end=11)])
+            [Trait(value='word  word', as_is=True, start=1, end=11)])

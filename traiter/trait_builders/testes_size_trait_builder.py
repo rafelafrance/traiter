@@ -2,12 +2,12 @@
 
 from operator import itemgetter
 from stacked_regex.token import Token
-from traiter.parse import Parse
-from traiter.traits.base_trait import BaseTrait, ordinal
+from traiter.trait import Trait
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder, ordinal
 import traiter.shared_tokens as tkn
 
 
-class TestesSizeTrait(BaseTrait):
+class TestesSizeTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     side_pairs = {'left': 'right', 'right': 'left', '1': '2', '2': '1'}
@@ -95,7 +95,7 @@ class TestesSizeTrait(BaseTrait):
             | (?P<ambiguous_char> char_key ) cross
             """)
 
-        # These are used to get compounds traits from a single parse
+        # These are used to get compounds trait_builders from a single parse
         self.double_side = self.compile(
             name='double_sided',
             regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
@@ -106,17 +106,17 @@ class TestesSizeTrait(BaseTrait):
         self.compile_regex()
 
     def double(self, token):
-        """Convert a single token into multiple (two) traits."""
+        """Convert a single token into multiple (two) trait_builders."""
         if not token.groups.get('second'):
             return self.convert(token)
 
         # Regex second match groups will overwrite the first match groups
-        trait2 = Parse(start=token.start, end=token.end)
+        trait2 = Trait(start=token.start, end=token.end)
         trait2.cross_value(token)
         trait2.is_value_in_token('side', token)
 
         # We need to re-extract the first match groups
-        trait1 = Parse(start=token.start, end=token.end)
+        trait1 = Trait(start=token.start, end=token.end)
 
         groups = self.double_cross.find_matches(token.groups['first'])
         token1 = Token(groups=groups)
@@ -134,7 +134,7 @@ class TestesSizeTrait(BaseTrait):
         if token.groups.get('ambiguous_char') \
                 and not token.groups.get('value2'):
             return None
-        trait = Parse(start=token.start, end=token.end)
+        trait = Trait(start=token.start, end=token.end)
         trait.cross_value(token)
         trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
         trait.is_flag_in_token('ambiguous_key', token)

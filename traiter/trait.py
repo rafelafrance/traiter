@@ -1,14 +1,14 @@
 """Build a parser trait result."""
 
 from collections import namedtuple
-from traiter.numeric_parse_mixin import NumericParseMixIn
+from traiter.numeric_trait_mixin import NumericTraitMixIn
 
 
 ParseKey = namedtuple(
     'ParseKey', 'low high dimension includes measured_from side')
 
 
-class Parse(NumericParseMixIn):
+class Trait(NumericTraitMixIn):
     """Build a parse result."""
 
     def __init__(self, value=None, field='', start=0, end=0,
@@ -38,7 +38,7 @@ class Parse(NumericParseMixIn):
         return '{}({})'.format(self.__class__.__name__, self.__dict__)
 
     def __eq__(self, other):
-        """Compare traits for testing."""
+        """Compare trait_builders for testing."""
         return self.__dict__ == other.__dict__
 
     def is_flag_in_token(self, flag, token, rename=None):

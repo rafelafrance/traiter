@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Given a CSV file of natural history notes, parse traits."""
+"""Given a CSV file of natural history notes, parse trait_builders."""
 
 import sys
 import argparse
@@ -52,7 +52,7 @@ def parse_traits(args):
 
 def parse_args():
     """Process command-line arguments."""
-    description = """Extract traits from the file."""
+    description = """Extract trait_builders from the file."""
     arg_parser = argparse.ArgumentParser(
         allow_abbrev=True,
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -64,7 +64,7 @@ def parse_args():
 
     arg_parser.add_argument(
         '--input-file', '-i', type=argparse.FileType('r'), default=sys.stdin,
-        help='''The input file containing the traits. Defaults to stdin.''')
+        help='''The input file containing the trait_builders. Defaults to stdin.''')
 
     arg_parser.add_argument(
         '--output-file', '-o', type=argparse.FileType('w'), default=sys.stdout,
@@ -77,7 +77,7 @@ def parse_args():
 
     arg_parser.add_argument(
         '--search-field', '-s', action='append', metavar='FIELD',
-        help=f"""A field that contains traits. You may use this argument more
+        help=f"""A field that contains trait_builders. You may use this argument more
             than once.""")
 
     arg_parser.add_argument(
