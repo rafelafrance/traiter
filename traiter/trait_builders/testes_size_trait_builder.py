@@ -23,7 +23,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
     def _build_token_rules(self):
         self.shared_token(tkn.uuid)
 
-        self.kwd('label', r' reproductive .? (?: data | state | condition ) ')
+        self.kwd('label', r' reproductive .? ( data | state | condition ) ')
 
         self.kwd('key_with_units', r"""
             (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width ) \s*
@@ -32,7 +32,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
 
         self.kwd('ambiguous', r"""
             (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
-                \s* (?: (?P<side> [12] ) |  )
+                \s* ( (?P<side> [12] ) |  )
             | (?P<side> left | right ) \s* (?P<ambiguous_key> gonad )
                 \s* (?P<dimension> length | width )
             | (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
@@ -45,9 +45,9 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         self.lit('char_key', r' \b t (?! [a-z] )')
         self.kwd('state', r"""
             scrotum | scrotal | scrot | nscr | scr | ns | sc
-            | (?: not | non | no | semi | sub | un | partially | part
-                    | fully | (:? in )? complete (?: ly)? )?
-                (?: des?c?end (?: ed)? | desc? )
+            | ( not | non | no | semi | sub | un | partially | part
+                    | fully | ( in )? complete ( ly )? )?
+                ( des?c?end ( ed )? | desc? )
             | abdominal | abdomin | abdom | abd
             | visible | enlarged | small
             | gonads?
@@ -67,31 +67,31 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
 
     def _build_product_rules(self):
         self.product(self.double, r"""
-            label (?: testes | abbrev | char_key )
-                (?P<first> (?: lr | lr_delim ) cross )
-                (?P<second> (?: lr | lr_delim ) cross )?
+            label ( testes | abbrev | char_key )
+                (?P<first> ( lr | lr_delim ) cross )
+                (?P<second> ( lr | lr_delim ) cross )?
             | label
-                (?P<first> (?: lr | lr_delim ) cross )
-                (?P<second> (?: lr | lr_delim ) cross )?
-            | (?: testes | abbrev | char_key )
-                (?P<first> (?: lr | lr_delim ) cross )
-                (?P<second> (?: lr | lr_delim ) cross )?
+                (?P<first> ( lr | lr_delim ) cross )
+                (?P<second> ( lr | lr_delim ) cross )?
+            | ( testes | abbrev | char_key )
+                (?P<first> ( lr | lr_delim ) cross )
+                (?P<second> ( lr | lr_delim ) cross )?
             """)
 
         self.product(self.convert, r"""
-            label (?: testes | abbrev | char_key ) cross
-            | label (?: lr | lr_delim ) (?: testes | abbrev | char_key ) cross
+            label ( testes | abbrev | char_key ) cross
+            | label ( lr | lr_delim ) ( testes | abbrev | char_key ) cross
             | label cross
-            | label (?: testes | abbrev | state | word | sep | char_key){0,3}
-                (?: testes | abbrev | state | char_key ) cross
-            | (?: key_with_units | ambiguous ) cross
-            | (?: key_with_units | ambiguous )
-                (?: testes | abbrev | state | word | sep | char_key ){0,3}
-                (?: testes | abbrev | state | char_key ) cross
-            | testes (?: abbrev | state | word | sep | char_key ){0,3}
-                (?: abbrev | state | char_key ) cross
-            | testes (?: abbrev | state | word | char_key ) cross
-            | (?: testes | state | abbrev ) cross
+            | label ( testes | abbrev | state | word | sep | char_key){0,3}
+                ( testes | abbrev | state | char_key ) cross
+            | ( key_with_units | ambiguous ) cross
+            | ( key_with_units | ambiguous )
+                ( testes | abbrev | state | word | sep | char_key ){0,3}
+                ( testes | abbrev | state | char_key ) cross
+            | testes ( abbrev | state | word | sep | char_key ){0,3}
+                ( abbrev | state | char_key ) cross
+            | testes ( abbrev | state | word | char_key ) cross
+            | ( testes | state | abbrev ) cross
             | (?P<ambiguous_char> char_key ) cross
             """)
 

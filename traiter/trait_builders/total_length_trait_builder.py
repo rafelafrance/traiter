@@ -6,14 +6,14 @@ from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-LOOKBACK_FAR = 40
-LOOKBACK_NEAR = 10
+LOOK_BACK_FAR = 40
+LOOK_BACK_NEAR = 10
 IS_ID = re.compile(
-    r' id (?: ent )? (?: ifier )? | collector ',
+    r' identifier | ident | id | collector ',
     NumericTraitBuilder.flags)
 IS_TRAP = re.compile(r' trap ', NumericTraitBuilder.flags)
 IS_TESTES = re.compile(
-    r' repoductive | gonad | test | scrot (?: al | um )? ',
+    r' reproductive | gonad | test | scrotal | scrotum | scrot ',
     NumericTraitBuilder.flags)
 
 LOOK_AROUND = 10
@@ -38,19 +38,19 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         self.kwd('skip', r' horns? ')
 
         self.kwd('key_with_units', r"""
-            (?: total | snout \s* vent | head \s* body | fork ) \s*
-            len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
+            ( total | snout \s* vent | head \s* body | fork ) \s*
+            ( length | len )? \s* in \s* (?P<units> millimeters | mm )
             """)
 
         self.lit('key', r"""
             total  [\s-]* length [\s-]* in
-            | (?: total | max | standard ) [\s-]* lengths? \b
+            | ( total | max | standard ) [\s-]* lengths? \b
             | meas [\s*:]? \s* length [\s(]* [l] [)\s:]*
-            | meas (?: [a-z]* )? \.? : \s* l (?! [a-z.] )
+            | meas ( [a-z]* )? \.? : \s* l (?! [a-z.] )
             | t [o.]? \s? l \.? \s? _? (?! [a-z.] )
             | s \.? \s? l \.? (?! [a-z.] )
             | label [\s.]* lengths? \b
-            | (?: fork | mean | body ) [\s-]* lengths? \b
+            | ( fork | mean | body ) [\s-]* lengths? \b
             | s \.? \s? v \.? \s? l \.? (?! [a-z.] )
             | snout [\s-]* vent [\s-]* lengths? \b
             """)
@@ -68,7 +68,7 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
 
         self.lit('char_key', r""" \b (?P<ambiguous_key> l ) (?= [:=-] ) """)
 
-        self.kwd('word', r' (?: [a-z] \w* ) ')
+        self.kwd('word', r' ( [a-z] \w* ) ')
         self.lit('semicolon', r' [;] | $ ')
         self.lit('comma', r' [,] | $ ')
 
@@ -81,22 +81,22 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
             """)
 
         self.product(partial(self.compound, units=['ft', 'in']), r"""
-            key (?P<ft> pair) feet (?: comma )? (?P<in> pair) inches
+            key (?P<ft> pair) feet ( comma )? (?P<in> pair) inches
             | (?P<ambiguous_key>
-                (?P<ft> pair) feet (?: comma )? (?P<in> pair) inches )
+                (?P<ft> pair) feet ( comma )? (?P<in> pair) inches )
             """)
 
         self.product(self.simple, r"""
             key_with_units pair
-            | shorthand_key (?: triple )? pair
+            | shorthand_key ( triple )? pair
                 (?P<units> metric_len | feet | inches )
-            | shorthand_key (?: triple )? (?P<units> metric_len ) pair
-            | key_units_req (?: triple )? pair
+            | shorthand_key ( triple )? (?P<units> metric_len ) pair
+            | key_units_req ( triple )? pair
                 (?P<units> metric_len | feet | inches )
             | pair (?P<units> metric_len | feet | inches ) key
-            | ambiguous (?: triple )? pair
+            | ambiguous ( triple )? pair
                 (?P<units> metric_len | feet | inches ) key
-            | ambiguous (?: triple )?  pair key
+            | ambiguous ( triple )?  pair key
             | (?P<ambiguous_key> ambiguous) pair
                 (?P<units> metric_len | feet | inches )
             | (?P<ambiguous_key> ambiguous)
@@ -104,26 +104,26 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
             | (?P<ambiguous_key> ambiguous) pair
             | key pair (?P<units> metric_len | feet | inches )
             | key (?P<units> metric_len | feet | inches ) pair
-            | key (?: triple )? pair
-            | key (?: word | semicolon | comma ){1,3} pair
+            | key ( triple )? pair
+            | key ( word | semicolon | comma ){1,3} pair
                 (?P<units> metric_len | feet | inches )
-            | key (?: word | semicolon | comma ){1,3} pair
+            | key ( word | semicolon | comma ){1,3} pair
             | char_key pair (?P<units> metric_len | feet | inches )
             | char_key pair
             """)
 
         self.product(
             partial(self.shorthand_length, measurement='shorthand_tl'), r"""
-            (?: shorthand_key | key_units_req ) shorthand | shorthand
-            | (?: shorthand_key | key_units_req ) triple (?! shorthand | pair )
+            ( shorthand_key | key_units_req ) shorthand | shorthand
+            | ( shorthand_key | key_units_req ) triple (?! shorthand | pair )
             """)
 
-    def fix_up_trait(self, trait, text):
+    def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
-        start = max(0, trait.start - LOOKBACK_FAR)
+        start = max(0, trait.start - LOOK_BACK_FAR)
         if IS_ID.search(text, start, trait.start):
             return None
-        start = max(0, trait.start - LOOKBACK_NEAR)
+        start = max(0, trait.start - LOOK_BACK_NEAR)
         if IS_TRAP.search(text, start, trait.start):
             return None
 

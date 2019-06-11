@@ -6,12 +6,12 @@ from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-LOOKBACK_FAR = 40
-LOOKBACK_NEAR = 10
+LOOK_BACK_FAR = 40
+LOOK_BACK_NEAR = 10
 IS_ET = re.compile(r' e \.? t ', NumericTraitBuilder.flags)
 IS_NUMBER = re.compile(r' [#] ', NumericTraitBuilder.flags)
 IS_MAG = re.compile(r' magnemite ', NumericTraitBuilder.flags)
-IS_ID = re.compile(r' id (?: ent )? (?: ifier )? ', NumericTraitBuilder.flags)
+IS_ID = re.compile(r' identifier | ident | id ', NumericTraitBuilder.flags)
 
 LOOK_AROUND = 10
 IS_EAST = re.compile(r' \b n ', NumericTraitBuilder.flags)
@@ -34,7 +34,7 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.uuid)
 
         self.kwd('key_with_units', r"""
-            ear \s* len (?: gth )? \s* in \s* (?P<units> millimeters | mm )
+            ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )
             """)
 
         self.lit('char_measured_from', r"""
@@ -51,7 +51,7 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
 
         self.kwd('keyword', r"""
             ear \s* from \s* (?P<measured_from> notch | crown )
-            | ear \s* len (?: gth )?
+            | ear \s* ( length | len )
             | ear (?! \s* tag )
             | ef (?P<measured_from> n | c )
             """)
@@ -61,7 +61,7 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
-        self.kwd('word', r' (?: [a-z] \w* ) ')
+        self.kwd('word', r' ( [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
     def _build_replace_rules(self):
@@ -81,15 +81,15 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
             partial(self.shorthand_length, measurement='shorthand_el'),
             r' shorthand_key shorthand | shorthand ')
 
-    def fix_up_trait(self, trait, text):
+    def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
         if trait.ambiguous_key:
-            start = max(0, trait.start - LOOKBACK_NEAR)
+            start = max(0, trait.start - LOOK_BACK_NEAR)
             if IS_ET.search(text, start, trait.start) \
                     or IS_NUMBER.search(text, start, trait.start):
                 return None
 
-            start = max(0, trait.start - LOOKBACK_FAR)
+            start = max(0, trait.start - LOOK_BACK_FAR)
             if IS_MAG.search(text, start, trait.start) \
                     or IS_ID.search(text, start, trait.start):
                 return None

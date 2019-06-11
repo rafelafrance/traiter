@@ -1,15 +1,15 @@
 """Shared token patterns."""
 
 
-feet = ('feet', r" foots? | feets? | fts? | (?<= \d ) ' ")
+feet = ('feet', r" foot s? | feet s? | ft s? | (?<= \d ) ' ")
 
 # NOTE: Double quotes as inches is handled during fix up
 # The negative look-ahead is trying to distinguish between cases like inTL
 # with other words.
-inches = ('inches', ' (?: inche?s? | ins? ) (?! [a-dgi-km-ru-z] ) ')
+inches = ('inches', ' ( inch e? s? | in s? ) (?! [a-dgi-km-ru-z] ) ')
 
 metric_len = (
-    'metric_len', r' (?: milli | centi )? meters? | (?: [cm] [\s.]? m ) ')
+    'metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
 
 len_units = ('len_units', '|'.join([x[1] for x in (metric_len, feet, inches)]))
 
@@ -18,9 +18,9 @@ pounds = ('pounds', r' pounds? | lbs? ')
 ounces = ('ounces', r' ounces? | ozs? ')
 
 metric_mass = ('metric_mass', r"""
-    (?: milligram | kilogram | gram ) (?: s (?! [a-z]) )?
-    | (?: m \.? g | k \.? \s? g | g[mr]? )
-        (?: s (?! [a-z]) )?
+    ( milligram | kilogram | gram ) ( s (?! [a-z]) )?
+    | ( m \.? g | k \.? \s? g | g[mr]? )
+        ( s (?! [a-z]) )?
     """)
 
 us_mass = ('us_mass', '|'.join([x[1] for x in (pounds, ounces)]))
@@ -30,7 +30,7 @@ mass_units = (
 
 # Numbers are positive decimals
 number = ('number', r"""
-    (?: \d{1,3} (?: , \d{3} ){1,3} | \d+ ) (?: \. \d+ )?
+    ( \d{1,3} ( , \d{3} ){1,3} | \d+ ) ( \. \d+ )?
     | (?<= [^\d] ) \. \d+ | ^ \. \d+
     """)
 
@@ -43,20 +43,20 @@ pair = ('pair', fr"""
     (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} )
     \]? \s*?
-    (?: \s* (?: {pair_joiner} ) \s* (?P<value2> {number[1]} ) )?
+    ( \s* ( {pair_joiner} ) \s* (?P<value2> {number[1]} ) )?
     (?! \d+ | [|,.+-] \d | \s+ to \b )
     """)
 
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take the
 # first two numbers
-cross_joiner = r' (?: x | by | \* | - ) '
+cross_joiner = r' ( x | by | \* | - ) '
 cross = ('cross', fr"""
     (?<! [\d/,.-]\d ) (?<! \b by )
     (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} ) \s*
     \]? \s*?
-    (?: (?P<units1> {len_units[1]})
+    ( (?P<units1> {len_units[1]})
             \s* {cross_joiner}
             \s* (?P<value2> {number[1]}) \s* (?P<units2> {len_units[1]})
         | {cross_joiner}
@@ -94,15 +94,15 @@ fraction = ('fraction', r"""
 
 shorthand_key = ('shorthand_key', r"""
     on \s* tag | specimens? | catalog
-    | meas (?: urements? )? [:.,]{0,2} (?: \s* length \s* )?
-        (?: \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
-    | tag \s+ \d+ \s* =? (?: male | female)? \s* ,
-    | measurements? | mesurements? | Measurementsnt
+    | ( measurement s? | meas ) [:.,]{0,2} ( \s* length \s* )?
+        ( \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
+    | tag \s+ \d+ \s* =? ( male | female)? \s* ,
+    | measurements? | mesurements? | measurementsnt
     """)
 
 # A possibly unknown value
-sh_num = ('sh_num', r""" \d+ (?: \. \d+ )? | (?<= [^\d] ) \. \d+ """)
-sh_val = ('sh_val', f' (?: {sh_num[1]} | [?x]{{1,2}} | n/?d ) ')
+sh_num = ('sh_num', r""" \d+ ( \. \d+ )? | (?<= [^\d] ) \. \d+ """)
+sh_val = ('sh_val', f' ( {sh_num[1]} | [?x]{{1,2}} | n/?d ) ')
 
 shorthand = ('shorthand', fr"""
     (?<! [\d/a-z-] )
@@ -113,8 +113,8 @@ shorthand = ('shorthand', fr"""
     (?P<shorthand_hfl> (?P<estimated_hfl> \[ )? {sh_val[1]} \]? )
     (?P=shorthand_sep)
     (?P<shorthand_el> (?P<estimated_el> \[ )? {sh_val[1]} \]? )
-    (?P<shorthand_ext> (?: (?P=shorthand_sep) [a-z]{{1,4}} {sh_val[1]} )* )
-    (?: [\s=:/-] \s*
+    (?P<shorthand_ext> ( (?P=shorthand_sep) [a-z]{{1,4}} {sh_val[1]} )* )
+    ( [\s=:/-] \s*
         (?P<estimated_wt> \[? \s* )
         (?P<shorthand_wt> {sh_val[1]} ) \s*
         \]?
@@ -124,9 +124,7 @@ shorthand = ('shorthand', fr"""
     (?! [\d/:=a-z-] )
     """)
 
-# Apparently, they sometimes don't fill in the last number. We have to be extra
-# careful using this pattern so we don't pick up dates. Surround this token
-# with keys and look-arounds.
+# Sometimes the last number is missing. Be careful to not pick up dates.
 triple = ('triple', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {sh_val[1]} \]? )
@@ -137,7 +135,7 @@ triple = ('triple', fr"""
     (?! [\d/:=a-z-] )
     """)
 
-# UUIDs cause problems when extracting certain trait_builders
+# UUIDs cause problems when extracting certain shorthand notations.
 uuid = ('uuid', r"""
     \b [0-9a-f]{8} - [0-9a-f]{4} - [1-5][0-9a-f]{3}
         - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """)

@@ -25,10 +25,10 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             (enlarged | enlarge | large
                 | small
                 | moderate | mod
-            ) (\s+ size d?)?
+            ) ( \s+ size d? )?
             """)
         self.kwd('uterus', r' uterus | uterine ')
-        self.kwd('fallopian', r' fallopian \s* (tubes?)? ')
+        self.kwd('fallopian', r' fallopian \s* ( tubes? )? ')
         self.kwd('immature', r' immature | mature ')
         self.kwd('horns', r' horns? ')
         self.kwd('covered', r' covered ')
@@ -37,7 +37,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.kwd('alb', r' albicans | alb ')
         self.kwd('lut', r' luteum | lute | lut ')
         self.kwd('side', r' (?P<side> both | left | right | [lr]) ')
-        self.kwd('color', r""" (dark | light | pale)? \s* (red | pink) """)
+        self.kwd('color', r""" ( dark | light | pale )? \s* (red | pink) """)
 
         self.lit('sign', r' \+ | \- ')
         self.lit('and', r' and | & ')
@@ -45,26 +45,26 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     def _build_replace_rules(self):
         self.replace('ovaries', r""" 
-            ovary ( ( (and)? uterus (horns)? ) 
-                    | (and)? fallopian )?""")
+            ovary ( ( ( and )? uterus ( horns )? ) 
+                    | ( and )? fallopian )?""")
         self.replace('coverage', r' covered (word){0,2} fat ')
-        self.replace('luteum', r' (sign)? (corpus)? (alb | lut) ')
+        self.replace('luteum', r' ( sign )? ( corpus )? (alb | lut) ')
 
     def _build_product_rules(self):
         self.product(self.double, r"""
-            ovaries (?P<side1> side) (?P<value1> (word)? luteum) 
-                (?P<side2> side) (?P<value2> (word)? luteum)
+            ovaries (?P<side1> side) (?P<value1> ( word )? luteum) 
+                (?P<side2> side) (?P<value2> ( word )? luteum)
             """)
 
         self.product(
             self.convert, r"""
             side ovaries (word){0,3} (?P<value> color)
-            | ovaries (?P<value> (size) (immature)? )
-            | ovaries (?P<value> (size)? (immature) )
+            | ovaries (?P<value> ( size ) ( immature )? )
+            | ovaries (?P<value> ( size )? ( immature ) )
             | ovaries (?P<value> coverage)
             | ovaries (?P<value> color)
-            | (?P<value> luteum) (side)? ovaries
-            | ovaries (side)? luteum
+            | (?P<value> luteum) ( side )? ovaries
+            | ovaries ( side )? luteum
             """)
 
     @staticmethod

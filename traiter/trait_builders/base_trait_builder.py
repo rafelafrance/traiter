@@ -27,26 +27,26 @@ class BaseTraitBuilder(StackedRegex):
 
         for token in self.match(text):
 
-            trait = self.regexps[token.name].action(token)
+            trait_list = self.regexps[token.name].action(token)
 
-            # The function can reject the token
-            if not trait:
+            # The action function can reject the token
+            if not trait_list:
                 continue
 
             # Some parses represent multiple trait_builders, fix them all up
-            if not isinstance(trait, list):
-                trait = [trait]
+            if not isinstance(trait_list, list):
+                trait_list = [trait_list]
 
-            # Add the trait_builders after any fix up.
-            for single_trait in trait:
-                trait = self.fix_up_trait(single_trait, text)
+            # Add the traits after any fix up.
+            for trait in trait_list:
+                trait = self.fix_problem_parses(trait, text)
                 if trait:
-                    single_trait.field = field
-                    traits.append(single_trait)
+                    trait.field = field
+                    traits.append(trait)
 
         return traits
 
-    def fix_up_trait(self, trait, text):
+    def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
         return trait
 

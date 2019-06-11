@@ -21,12 +21,12 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.uuid)
 
         self.kwd('key_with_units', r"""
-            (?: hind \s* )? foot \s* len (?: gth )? \s* in \s*
+            ( hind \s* )? foot \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """)
 
         self.kwd('key', r"""
             hind \s* foot \s* with \s* (?P<includes> claw )
-            | hind \s* foot (?: \s* len (?: gth )? )?
+            | hind \s* foot ( \s* ( length | len ) )?
             | \b hfl | \b hf """)
 
         self.shared_token(tkn.len_units)
@@ -35,7 +35,7 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
         self.shared_token(tkn.triple)
-        self.kwd('word', r' (?: [a-z] \w* ) ')
+        self.kwd('word', r' ( [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
     def _build_product_rules(self):
@@ -54,6 +54,6 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
             | shorthand_key triple (?! shorthand | pair )
             """)
 
-    def fix_up_trait(self, trait, text):
+    def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
         return self.fix_up_inches(trait, text)

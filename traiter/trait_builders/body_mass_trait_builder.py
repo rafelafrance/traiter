@@ -23,9 +23,9 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.uuid)
 
         self.kwd('key_with_units', r"""
-            (?: weight | mass) \s* in \s* (?P<units> g (?: rams )? | lbs ) """)
+            ( weight | mass) \s* in \s* (?P<units> grams | g | lbs ) """)
         self.lit('key_leader', ' full | observed | total ')
-        self.lit('weight', r' weights? | weigh (?: s | ed | ing ) ')
+        self.lit('weight', r' weights? | weighed | weighing | weighs? ')
         self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
         self.lit('mass', r' mass ')
         self.lit('body', r' body ')
@@ -36,17 +36,20 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
         self.shared_token(tkn.pair)
+
+        # These indicate that the mass is not a total body mass
         self.kwd('other_wt', r"""
-            femur | bac u? (?: lum)? | spleen | thymus | kidney
-            | testes | testis | ovaries | epid (?: idymis )? """)
-        self.kwd('word', r' (?: [a-z] \w* ) ')
+            femur | baculum | bacu | bac | spleen | thymus | kidney
+            | testes | testis | ovaries | epididymis | epid """)
+
+        self.kwd('word', r' ( [a-z] \w* ) ')
         self.lit('semicolon', r' [;] | $ ')
         self.lit('comma', r' [,] | $ ')
 
     def _build_replace_rules(self):
         self.replace('wt_key', r"""
             (?<! other_wt )
-            (?: key_leader weight | key_leader mass
+            ( key_leader weight | key_leader mass
             | body weight | body mass | body
             | weight | mass | key_with_dots )
             """)
@@ -55,9 +58,9 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
 
         self.product(partial(self.compound, units=['lbs', 'ozs']), r"""
-            wt_key (?P<lbs> pair ) pounds (?: comma )? (?P<ozs> pair ) ounces
+            wt_key (?P<lbs> pair ) pounds ( comma )? (?P<ozs> pair ) ounces
             | (?P<ambiguous_key>
-                (?P<lbs> pair ) pounds (?: comma )?
+                (?P<lbs> pair ) pounds ( comma )?
                 (?P<ozs> pair ) ounces )""")
 
         self.product(self.simple, r"""

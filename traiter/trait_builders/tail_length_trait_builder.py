@@ -33,14 +33,14 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.uuid)
 
         self.kwd('key_with_units', r"""
-            tail \s* len (?: gth )? \s* in \s*
+            tail \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """)
 
         self.lit('char_key', r"""
             \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
             """)
 
-        self.kwd('keyword', r' tail \s* len (?: gth )? | tail | tal ')
+        self.kwd('keyword', r' tail \s* length | len | tail | tal ')
 
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
@@ -48,7 +48,7 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
         self.shared_token(tkn.triple)
-        self.kwd('word', r' (?: [a-z] \w* ) ')
+        self.kwd('word', r' ( [a-z] \w* ) ')
         self.lit('sep', r' [;,] | $ ')
 
     def _build_replace_rules(self):
@@ -70,7 +70,7 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
             | shorthand_key triple (?! shorthand | pair )
             """)
 
-    def fix_up_trait(self, trait, text):
+    def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
         start = max(0, trait.start - LOOK_BACK_NEAR)
         if IS_TOTAL.search(text, start, trait.start):

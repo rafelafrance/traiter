@@ -18,7 +18,7 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
     def _build_token_rules(self):
         self.kwd('keyword', r"""
-            life \s* stage \s* (?: remarks? )?
+            life \s* stage \s* ( remarks? )?
             | age \s* class
             | age \s* in \s* (?P<time_units> hours? )
             | age \s* in \s* (?P<time_units> days? )
@@ -26,8 +26,8 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
             """)
 
         self.kwd('year_num', r"""
-            (?: after \s* )?
-            (?: first | second | third | fourth | 1st | 2nd | 3rd | 4th
+            ( after \s* )?
+            ( first | second | third | fourth | 1st | 2nd | 3rd | 4th
             | hatching ) \s* (?P<time_units> years? )
             """)
 
@@ -63,10 +63,10 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
     def _build_product_rules(self):
         self.product(self.convert, r"""
-            keyword (?P<value> (?: keyless | word ) joiner keyless )
-            | keyword (?P<value> (?: keyless | word ) keyless )
+            keyword (?P<value> ( keyless | word ) joiner keyless )
+            | keyword (?P<value> ( keyless | word ) keyless )
             | keyword (?P<value> keyless )
-            | keyword (?P<value> (?: keyless | word | joiner ){1,5} ) sep
+            | keyword (?P<value> ( keyless | word | joiner ){1,5} ) sep
             | keyword (?P<value> year_num )
             | (?P<value> keyless )
             | (?P<value> year_num )

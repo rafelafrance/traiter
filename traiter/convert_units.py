@@ -1,8 +1,8 @@
-"""Unit conversions."""
+"""Normalize units to millimeters or grams."""
 
 
 def convert(value, units):
-    """Normalize the units to millimeters or grams."""
+    """Normalize either single units or a list of units."""
     units = units if units else ''
     factor = UNITS.get(units.lower(), 1.0)
     if isinstance(value, list):

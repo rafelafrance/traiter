@@ -30,9 +30,9 @@ class SexTraitBuilder(BaseTraitBuilder):
     def _build_product_rules(self):
         self.product(
             self.convert,
-            r""" keyword (?P<value> (?: sex | word ){1,2} (?: quest )? ) sep
-                | keyword (?P<value> (?: sex | word ) (?: quest )? )
-                | (?P<value> sex (?: quest )? )
+            r""" keyword (?P<value> ( sex | word ){1,2} ( quest )? ) sep
+                | keyword (?P<value> ( sex | word ) ( quest )? )
+                | (?P<value> sex ( quest )? )
                 """)
 
     def convert(self, token):

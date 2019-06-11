@@ -19,18 +19,18 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         self.compile_regex()
 
     def _build_token_rules(self):
-        self.kwd('label', r' reproductive .? (?: data |state | condition ) ')
-        self.lit('testes', r' (?: testes |  testis | testicles? | test ) \b ')
-        self.kwd('fully', r' fully | (:? in )? complete (?: ly)? ')
-        self.lit('non', r' \b (?: not | non | no | semi | sub ) ')
-        self.kwd('descended', r' (?: un)? (?: des?c?end (?: ed)? | desc? ) ')
+        self.kwd('label', r' reproductive .? ( data |state | condition ) ')
+        self.lit('testes', r' ( testes |  testis | testicles? | test ) \b ')
+        self.kwd('fully', r' fully | ( in )? complete ( ly )? ')
+        self.lit('non', r' \b ( not | non | no | semi | sub ) ')
+        self.kwd('descended', r' ( un )? ( des?c?end ( ed )? | desc? ) ')
         self.kwd('abbrev', r' tes | ts | tnd | td | tns | ta | t ')
         self.lit(
-            'scrotal', r' (?: scrotum | scrotal | scrot | nscr | scr) \b ')
+            'scrotal', r' ( scrotum | scrotal | scrot | nscr | scr) \b ')
         self.lit('partially', r' partially | part | \b pt \b ')
         self.kwd('state_abbrev', r' ns | sc ')
         self.kwd('abdominal', r' abdominal | abdomin | abdom | abd ')
-        self.kwd('size', r' visible | (?: en )? larged? | small ')
+        self.kwd('size', r' visible | ( en )? large d? | small ')
         self.kwd('gonads', r' (?P<ambiguous_key> gonads? ) ')
         self.kwd(
             'other',
@@ -47,31 +47,31 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
             | partially descended | size non descended | size descended
             | descended | size
             """)
-        self.replace('length', ' cross (?: len_units )? ')
+        self.replace('length', ' cross ( len_units )? ')
 
     def _build_product_rules(self):
         self.product(
             self.convert,
-            """label (?: testes | abbrev )? (?: length )?
+            """label ( testes | abbrev )? ( length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )
-            | label (?: length )?
+            | label ( length )?
                 (?P<value> non testes | non scrotal | scrotal )
-            | abbrev (?: length )?
+            | abbrev ( length )?
                 (?P<value> state | abdominal | non scrotal | scrotal | other)
-            | testes (?: length )?
+            | testes ( length )?
                 (?P<value>
-                    (?: state | state_abbrev | abdominal | non scrotal
+                    ( state | state_abbrev | abdominal | non scrotal
                         | scrotal | other )
-                    (?: state | state_abbrev | abdominal | non scrotal
+                    ( state | state_abbrev | abdominal | non scrotal
                         | scrotal | other | and ){,3}
-                    (?: state | state_abbrev | abdominal | non scrotal
+                    ( state | state_abbrev | abdominal | non scrotal
                         | scrotal | other )
                 )
-            | testes (?: length )?
+            | testes ( length )?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
                     | scrotal | other )
-            | (?P<value> non (?: testes | scrotal | gonads ) | scrotal )
+            | (?P<value> non ( testes | scrotal | gonads ) | scrotal )
             """)
 
     @staticmethod
