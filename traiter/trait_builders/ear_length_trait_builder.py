@@ -98,7 +98,7 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         # Handle fractional values like: ear 9/16"
         self.product(self.fraction, [
 
-            # Like: ear = 9/16 in
+            # E.g.: ear = 9/16 in
             'key fraction (?P<units> len_units )',
 
             # Without units, like: ear = 9/16
@@ -108,10 +108,10 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         # A typical ear length notation
         self.product(self.simple, [
 
-            # Like: earLengthInMM 9-10
+            # E.g.: earLengthInMM 9-10
             'key_with_units pair',
 
-            # Like: ear 9-10 mm
+            # E.g.: ear 9-10 mm
             'key pair (?P<units> len_units )',
 
             # Missing units like: ear: 9-10

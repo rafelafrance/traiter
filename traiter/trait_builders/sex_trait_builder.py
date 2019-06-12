@@ -41,14 +41,14 @@ class SexTraitBuilder(BaseTraitBuilder):
         """Define rules for output."""
         self.product(self.convert, [
 
-            # Like: sex might be female;
+            # E.g.: sex might be female;
             'keyword (?P<value> ( sex | word ){1,2} ( quest )? ) sep',
 
-            # Like: sex=female?
+            # E.g.: sex=female?
             # Or:   sex=unknown
             'keyword (?P<value> ( sex | word ) ( quest )? )',
 
-            # Like: male
+            # E.g.: male
             # Or:   male?
             '(?P<value> sex ( quest )? )',
         ])

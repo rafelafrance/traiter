@@ -112,21 +112,21 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         # A typical testes state notation
         self.product(self.convert, [
 
-            # Like: reproductiveData: ts 5x3 fully descended
+            # E.g.: reproductiveData: ts 5x3 fully descended
             """label ( testes | abbrev )? ( length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )""",
 
-            # Like: reproductive data = nonScrotal
+            # E.g.: reproductive data = nonScrotal
             """label ( length )?
                 (?P<value> non testes | non scrotal | scrotal )""",
 
-            # Like: ts inguinal
+            # E.g.: ts inguinal
             """abbrev ( length )?
                 (?P<value> state | abdominal | non scrotal 
                     | scrotal | other)""",
 
-            # Like: testes 5x4 mm pt desc
+            # E.g.: testes 5x4 mm pt desc
             """testes ( length )?
                 (?P<value>
                     ( state | state_abbrev | abdominal | non scrotal
@@ -137,12 +137,12 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
                         | scrotal | other )
                 )""",
 
-            # Like: testes 5x4 desc
+            # E.g.: testes 5x4 desc
             """testes ( length )?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
                     | scrotal | other )""",
 
-            # Like: no gonads
+            # E.g.: no gonads
             """(?P<value> non ( testes | scrotal | gonads ) | scrotal )""",
         ])
 

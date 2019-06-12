@@ -85,7 +85,7 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         # Handle fractional values like: tailLength 9/16"
         self.product(self.fraction, [
 
-            # Like: tail = 9/16 in
+            # E.g.: tail = 9/16 in
             'key fraction (?P<units> len_units )',
 
             # Without units, like: tail = 9/16
@@ -95,10 +95,10 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         # A typical tail length notation
         self.product(self.simple, [
 
-            # Like: tailLengthInMM=9-10
+            # E.g.: tailLengthInMM=9-10
             'key_with_units pair',
 
-            # Like: tailLength=9-10 mm
+            # E.g.: tailLength=9-10 mm
             'key pair (?P<units> len_units )',
 
             # Missing units like: tailLength 9-10

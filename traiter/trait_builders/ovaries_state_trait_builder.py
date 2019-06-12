@@ -26,7 +26,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             r' ovaries \b ',
         ])
 
-        # Like: small sized
+        # E.g.: small sized
         self.keyword('size', r"""
             ( enlarged | enlarge | large | small | moderate | mod )      
             ( \s+ size d? )?
@@ -72,22 +72,22 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
-        # Like: ovaries and uterine horns
+        # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes
         self.replace('ovaries', r"""
             ovary ( ( ( and )? uterus ( horns )? )
                     | ( and )? fallopian )?""")
 
-        # Like: covered in copious fat
+        # E.g.: covered in copious fat
         self.replace('coverage', r' covered (word){0,2} fat ')
 
-        # Like: +corpus luteum
+        # E.g.: +corpus luteum
         self.replace('luteum', r' ( sign )? ( corpus )? (alb | lut) ')
 
     def build_product_rules(self):
         """Define rules for output."""
         # Get left and right side measurements
-        # Like: ovaries: R 2 c. alb, L sev c. alb
+        # E.g.: ovaries: R 2 c. alb, L sev c. alb
         self.product(self.double, r"""
             ovaries (?P<side1> side) (?P<value1> ( word )? luteum)
                     (?P<side2> side) (?P<value2> ( word )? luteum)
@@ -97,7 +97,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.product(self.convert, [
 
             # Only one side is reported
-            # Like: left ovary=3x1.5mm, pale pink in color
+            # E.g.: left ovary=3x1.5mm, pale pink in color
             'side ovaries (word){0,3} (?P<value> color)',
 
             # Has the size but is possibly missing the maturity
@@ -106,16 +106,16 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             # Has the maturity but is possibly missing the size
             'ovaries (?P<value> ( size )? ( immature ) )',
 
-            # Like: ovaries and uterine horns covered with copious fat
+            # E.g.: ovaries and uterine horns covered with copious fat
             'ovaries (?P<value> coverage)',
 
-            # Like: reproductive data=Ovary, fallopian tubes dark red
+            # E.g.: reproductive data=Ovary, fallopian tubes dark red
             'ovaries (?P<value> color)',
 
-            # Like: +corp. alb both ovaries
+            # E.g.: +corp. alb both ovaries
             '(?P<value> luteum) ( side )? ovaries',
 
-            # Like: ovaries L +lut
+            # E.g.: ovaries L +lut
             'ovaries ( side )? luteum',
         ])
 

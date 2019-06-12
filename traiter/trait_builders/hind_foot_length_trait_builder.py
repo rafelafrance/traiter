@@ -62,20 +62,20 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
         # Handle fractional values like: hindFoot 9/16"
         self.product(self.fraction, [
 
-            # Like: hindFoot = 9/16 inches
+            # E.g.: hindFoot = 9/16 inches
             'key fraction (?P<units> len_units )',
 
-            # Like: hindFoot = 9/16
+            # E.g.: hindFoot = 9/16
             'key fraction',
         ])
 
         # A typical body mass notation
         self.product(self.simple, [
 
-            # Like: hindFootLengthInMM=9-10
+            # E.g.: hindFootLengthInMM=9-10
             'key_with_units pair',
 
-            # Like: hindFootLength=9-10 mm
+            # E.g.: hindFootLength=9-10 mm
             'key pair (?P<units> len_units )',
 
             # Missing units like: hindFootLength 9-10

@@ -87,10 +87,10 @@ fraction = ('fraction', r"""
 #   99 = body mass is optional, as is the mass units
 #
 # Unknown values are filled with "?" or "x".
-#   Like: "11-x-x-44" or "11-?-33-44"
+#   E.g.: "11-x-x-44" or "11-?-33-44"
 #
 # Ambiguous measurements are enclosed in brackets.
-#   Like: 11-[22]-33-[44]:99g
+#   E.g.: 11-[22]-33-[44]:99g
 
 shorthand_key = ('shorthand_key', r"""
     on \s* tag | specimens? | catalog

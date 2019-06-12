@@ -52,41 +52,41 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         # Various total length keys
         self.fragment('key', [
 
-            # Like: total-length-in
+            # E.g.: total-length-in
             r'total  [\s-]* length [\s-]* in',
 
-            # Like: standardLengths
+            # E.g.: standardLengths
             r'( total | max | standard ) [\s-]* lengths? \b',
 
-            # Like: Meas: length (L):
+            # E.g.: Meas: length (L):
             r'meas [\s*:]? \s* length [\s(]* [l] [)\s:]*',
 
-            # Like: measured: L
+            # E.g.: measured: L
             r'meas ( [a-z]* )? \.? : \s* l (?! [a-z.] )',
 
-            # Like: tol_
+            # E.g.: tol_
             r't [o.]? \s? l \.? \s? _? (?! [a-z.] )',
 
-            # Like: s.l.
+            # E.g.: s.l.
             r's \.? \s? l \.? (?! [a-z.] )',
 
-            # Like: label length
+            # E.g.: label length
             r'label [\s.]* lengths? \b',
 
-            # Like: fork-length
+            # E.g.: fork-length
             r'( fork | mean | body ) [\s-]* lengths? \b',
 
-            # Like: s.v.l.
+            # E.g.: s.v.l.
             r's \.? \s? v \.? \s? l \.? (?! [a-z.] )',
 
-            # Like: snout-vent-length
+            # E.g.: snout-vent-length
             r'snout [\s-]* vent [\s-]* lengths? \b',
         ])
 
         # The word length on its own. Make sure it isn't proceeded by a letter
         self.fragment('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')
 
-        # A length that is a total length if we have units
+        # We don't know if this is a length until we see the units
         self.fragment('key_units_req', 'measurements? body total'.split())
 
         # Units
@@ -120,69 +120,93 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         # Handle fractional values like: total length 9/16"
         self.product(self.fraction, [
 
+            # E.g.: total = 9/16 inches
             'key_units_req fraction (?P<units> metric_len | feet | inches )',
 
+            # E.g.: svl 9/16 inches
             'key fraction (?P<units> metric_len | feet | inches )',
 
+            # E.g.: len 9/16 in
             """(?P<ambiguous_key> ambiguous) fraction
                 (?P<units> metric_len | feet | inches )""",
             ])
 
         self.product(partial(self.compound, units=['ft', 'in']), [
 
+            # E.g.: total length 4 feet 7 inches
             'key (?P<ft> pair) feet ( comma )? (?P<in> pair) inches',
 
+            # E.g.: length 4 ft 7 in
             """(?P<ambiguous_key>
                 (?P<ft> pair) feet ( comma )? (?P<in> pair) inches )""",
         ])
 
+        # A typical total length notation
         self.product(self.simple, [
+
+            # E.g.: total length in mm 10 - 13
             'key_with_units pair',
 
+            # E.g.: tag 10-20-39 10 - 13 in
             """shorthand_key ( triple )? pair
                 (?P<units> metric_len | feet | inches )""",
 
+            # E.g.: tag 10-20-39 cm 10-12
             'shorthand_key ( triple )? (?P<units> metric_len ) pair',
 
+            # E.g.: total 10/20/30 10 to 12 cm
             """key_units_req ( triple )? pair
                 (?P<units> metric_len | feet | inches )""",
 
+            # E.g.: 10 to 11 inches TL
             'pair (?P<units> metric_len | feet | inches ) key',
 
+            # E.g.: total 10-20-40 10 to 20 inches ToL
             """ambiguous ( triple )? pair
                 (?P<units> metric_len | feet | inches ) key""",
 
-            'ambiguous ( triple )?  pair key',
+            # E.g.: total 10-20-40 10 to 20 ToL
+            'ambiguous ( triple )? pair key',
 
+            # E.g.: length 10 to 11 inches
             """(?P<ambiguous_key> ambiguous) pair
                 (?P<units> metric_len | feet | inches )""",
 
+            # E.g.: length feet 10 to 11
             """(?P<ambiguous_key> ambiguous)
                 (?P<units> metric_len | feet | inches ) pair""",
 
+            # E.g.: length 10 to 11
             '(?P<ambiguous_key> ambiguous) pair',
 
+            # E.g.: SVL 10-11 cm
             'key pair (?P<units> metric_len | feet | inches )',
 
+            # E.g.: forkLen cm 10-11
             'key (?P<units> metric_len | feet | inches ) pair',
 
+            # E.g.: total length: 10-29-39 10-11
             'key ( triple )? pair',
 
+            # E.g.: head body length is a whopping 12.4 meters
             """key ( word | semicolon | comma ){1,3} pair
                 (?P<units> metric_len | feet | inches )""",
 
+            # E.g.: SVL is 10-12
             'key ( word | semicolon | comma ){1,3} pair',
 
+            # E.g.: L 12.4 cm
             'char_key pair (?P<units> metric_len | feet | inches )',
 
+            # E.g.: L 12.4
             'char_key pair',
         ])
 
         self.product(
             partial(self.shorthand_length, measurement='shorthand_tl'), [
-
-                '( shorthand_key | key_units_req ) shorthand | shorthand',
-
+                '( shorthand_key | key_units_req ) shorthand',  # With a key
+                'shorthand',                                   # Without a key
+                # Handle a truncated shorthand notation
                 """( shorthand_key | key_units_req ) triple 
                     (?! shorthand | pair )""",
             ])

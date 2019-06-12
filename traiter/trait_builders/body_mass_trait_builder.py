@@ -87,7 +87,7 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         # Pounds and ounces notation: 5lbs, 3-4oz.
         self.product(partial(self.compound, units=['lbs', 'ozs']), [
 
-            # Like: body mass: 5lbs, 3-4oz
+            # E.g.: body mass: 5lbs, 3-4oz
             'wt_key (?P<lbs> pair ) pounds ( comma )? (?P<ozs> pair ) ounces',
 
             # Missing a weight key: 5lbs, 3-4oz
@@ -99,24 +99,24 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         # A typical body mass notation
         self.product(self.simple, [
 
-            # Like: MassInGrams=22
+            # E.g.: MassInGrams=22
             'key_with_units pair',
 
-            # Like: body weight ozs 26 - 42
+            # E.g.: body weight ozs 26 - 42
             """wt_key (?P<units> metric_mass | pounds | ounces )
                 pair (?! len_units )""",
 
-            # Like: body weight 26 - 42 grams
+            # E.g.: body weight 26 - 42 grams
             'wt_key pair (?P<units> metric_mass | pounds | ounces )',
 
-            # Like: measurement 26 - 42 grams
+            # E.g.: measurement 26 - 42 grams
             'shorthand_key pair (?P<units> metric_mass | pounds | ounces )',
 
-            # Like: specimen: 8 to 15 grams"
+            # E.g.: specimen: 8 to 15 grams"
             """shorthand_key (?P<units> metric_mass | pounds | ounces )
                 pair (?! len_units )""",
 
-            # Like: body mass 8 to 15 grams"
+            # E.g.: body mass 8 to 15 grams"
             'wt_key pair (?! len_units )',
         ])
 

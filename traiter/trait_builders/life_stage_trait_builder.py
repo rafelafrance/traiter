@@ -80,26 +80,26 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         """Define rules for output."""
         self.product(self.convert, [
 
-            # Like: life stage juvenile/yearling
+            # E.g.: life stage juvenile/yearling
             'keyword (?P<value> ( keyless | word ) joiner keyless )',
 
-            # Like: life stage young adult
+            # E.g.: life stage young adult
             'keyword (?P<value> ( keyless | word ) keyless )',
 
-            # Like: life stage yearling
+            # E.g.: life stage yearling
             'keyword (?P<value> keyless )',
 
             # A sequence of words bracketed by a keyword and a separator
-            # Like: LifeStage Remarks: 5-6 wks;
+            # E.g.: LifeStage Remarks: 5-6 wks;
             'keyword (?P<value> ( keyless | word | joiner ){1,5} ) sep',
 
-            # Like: LifeStage = 1st month
+            # E.g.: LifeStage = 1st month
             'keyword (?P<value> year_num )',
 
-            # Like: Juvenile
+            # E.g.: Juvenile
             '(?P<value> keyless )',
 
-            # Like: 1st year
+            # E.g.: 1st year
             '(?P<value> year_num )',
         ])
 

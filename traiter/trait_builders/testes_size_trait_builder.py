@@ -54,15 +54,15 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # Male or female ambiguous, like: gonadLength1
         self.keyword('ambiguous', [
 
-            # Like: GonadWidth2
+            # E.g.: GonadWidth2
             r"""(?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
                 \s* ( (?P<side> [12] ) |  )""",
 
-            # Like: LeftGonadLength
+            # E.g.: LeftGonadLength
             r"""(?P<side> left | right ) \s* (?P<ambiguous_key> gonad )
                 \s* (?P<dimension> length | width )""",
 
-            # Like: Gonad Length
+            # E.g.: Gonad Length
             r'(?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )',
         ])
 
@@ -111,19 +111,19 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # These patterns contain measurements to both left & right testes
         self.product(self.double, [
 
-            # Like: reproductive data: tests left 10x5 mm, right 10x6 mm
+            # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
             """label ( testes | abbrev | char_key )
                 (?P<first> ( lr | lr_delim ) cross )
                 (?P<second> ( lr | lr_delim ) cross )?""",
 
             # As above but without the testes marker:
-            # Like: reproductive data: left 10x5 mm, right 10x6 mm
+            # E.g.: reproductive data: left 10x5 mm, right 10x6 mm
             """label
                 (?P<first> ( lr | lr_delim ) cross )
                 (?P<second> ( lr | lr_delim ) cross )?""",
 
             # Has the testes marker but is lacking the label
-            # Like: testes left 10x5 mm, right 10x6 mm
+            # E.g.: testes left 10x5 mm, right 10x6 mm
             """( testes | abbrev | char_key )
                 (?P<first> ( lr | lr_delim ) cross )
                 (?P<second> ( lr | lr_delim ) cross )?""",
@@ -132,17 +132,17 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # A typical testes size notation
         self.product(self.convert, [
 
-            # Like: reproductive data: tests 10x5 mm
+            # E.g.: reproductive data: tests 10x5 mm
             'label ( testes | abbrev | char_key ) cross',
 
-            # Like: reproductive data: left tests 10x5 mm
+            # E.g.: reproductive data: left tests 10x5 mm
             'label ( lr | lr_delim ) ( testes | abbrev | char_key ) cross',
 
-            # Like: reproductive data: 10x5 mm
+            # E.g.: reproductive data: 10x5 mm
             'label cross',
 
             # May have a few words between the label and the measurement
-            # Like: reproductive data=testes not descended - 6 mm
+            # E.g.: reproductive data=testes not descended - 6 mm
             """label ( testes | abbrev | state | word | sep | char_key){0,3}
                 ( testes | abbrev | state | char_key ) cross""",
 
@@ -150,24 +150,24 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
             # And:     gonadLength 4x3
             '( key_with_units | ambiguous ) cross',
 
-            # Like: gonadLengthInMM 6 x 8
+            # E.g.: gonadLengthInMM 6 x 8
             """( key_with_units | ambiguous )
                 ( testes | abbrev | state | word | sep | char_key ){0,3}
                 ( testes | abbrev | state | char_key ) cross""",
 
             # Anchored by testes but with words between
-            # Like: testes scrotal; T = 9mm
+            # E.g.: testes scrotal; T = 9mm
             """testes ( abbrev | state | word | sep | char_key ){0,3}
                 ( abbrev | state | char_key ) cross""",
 
             # Anchored by testes but with only one word in between
-            # Like: testes scrotal 9mm
+            # E.g.: testes scrotal 9mm
             'testes ( abbrev | state | word | char_key ) cross',
 
-            # Like: Testes 5 x 3
+            # E.g.: Testes 5 x 3
             '( testes | state | abbrev ) cross',
 
-            # Like: T 5 x 4
+            # E.g.: T 5 x 4
             '(?P<ambiguous_char> char_key ) cross',
         ])
 
