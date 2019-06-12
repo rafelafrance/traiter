@@ -11,9 +11,13 @@ class BaseReader:
         self.args = args
 
     @abstractmethod
-    def __iter__(self):
-        """We need to iterate thru the input file."""
+    def __enter__(self):
+        """Setup the iterator."""
 
-    # @abstractmethod
-    # def next(self):
-    #     """Get the next row in the file."""
+    @abstractmethod
+    def __iter__(self):
+        """Iterate thru the input file."""
+
+    @abstractmethod
+    def __exit__(self, exc_type, exc_value, traceback):
+        """Teardown the iterator."""

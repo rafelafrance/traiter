@@ -11,48 +11,50 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_replace_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
-        # self.kwd('label', r' reproductive .? (data |state | condition) ')
-        self.lit('ovary', r' (ovaries | ovary s? ) \b ')
+    def build_token_rules(self):
+        # self.keyword('label', r' reproductive .? (data |state | condition) ')
+        self.fragment('ovary', r' (ovaries | ovary s? ) \b ')
 
-        self.kwd('size', r"""
+        self.keyword('size', r"""
             (enlarged | enlarge | large
                 | small
                 | moderate | mod
             ) ( \s+ size d? )?
             """)
-        self.kwd('uterus', r' uterus | uterine ')
-        self.kwd('fallopian', r' fallopian \s* ( tubes? )? ')
-        self.kwd('immature', r' immature | mature ')
-        self.kwd('horns', r' horns? ')
-        self.kwd('covered', r' covered ')
-        self.kwd('fat', r' fat ')
-        self.kwd('corpus', r' corpus | corpora | corp | cor | c ')
-        self.kwd('alb', r' albicans | alb ')
-        self.kwd('lut', r' luteum | lute | lut ')
-        self.kwd('side', r' (?P<side> both | left | right | [lr]) ')
-        self.kwd('color', r""" ( dark | light | pale )? \s* (red | pink) """)
+        self.keyword('uterus', r' uterus | uterine ')
+        self.keyword('fallopian', r' fallopian \s* ( tubes? )? ')
+        self.keyword('immature', r' immature | mature ')
+        self.keyword('horns', r' horns? ')
+        self.keyword('covered', r' covered ')
+        self.keyword('fat', r' fat ')
+        self.keyword('corpus', r' corpus | corpora | corp | cor | c ')
+        self.keyword('alb', r' albicans | alb ')
+        self.keyword('lut', r' luteum | lute | lut ')
+        self.keyword('side', r' (?P<side> both | left | right | [lr]) ')
+        self.keyword('color', r' ( dark | light | pale )? \s* (red | pink) ')
 
-        self.lit('sign', r' \+ | \- ')
-        self.lit('and', r' and | & ')
-        self.lit('word', r' [a-z]+ ')
+        self.fragment('sign', r' \+ | \- ')
+        self.fragment('and', r' and | & ')
+        self.fragment('word', r' [a-z]+ ')
 
-    def _build_replace_rules(self):
-        self.replace('ovaries', r""" 
-            ovary ( ( ( and )? uterus ( horns )? ) 
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+        self.replace('ovaries', r"""
+            ovary ( ( ( and )? uterus ( horns )? )
                     | ( and )? fallopian )?""")
         self.replace('coverage', r' covered (word){0,2} fat ')
         self.replace('luteum', r' ( sign )? ( corpus )? (alb | lut) ')
 
-    def _build_product_rules(self):
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(self.double, r"""
-            ovaries (?P<side1> side) (?P<value1> ( word )? luteum) 
+            ovaries (?P<side1> side) (?P<value1> ( word )? luteum)
                 (?P<side2> side) (?P<value2> ( word )? luteum)
             """)
 

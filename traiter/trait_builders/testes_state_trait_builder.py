@@ -12,35 +12,38 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_replace_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
-        self.kwd('label', r' reproductive .? ( data |state | condition ) ')
-        self.lit('testes', r' ( testes |  testis | testicles? | test ) \b ')
-        self.kwd('fully', r' fully | ( in )? complete ( ly )? ')
-        self.lit('non', r' \b ( not | non | no | semi | sub ) ')
-        self.kwd('descended', r' ( un )? ( des?c?end ( ed )? | desc? ) ')
-        self.kwd('abbrev', r' tes | ts | tnd | td | tns | ta | t ')
-        self.lit(
+    def build_token_rules(self):
+        """Define the tokens."""
+        self.keyword('label', r' reproductive .? ( data |state | condition ) ')
+        self.fragment(
+                'testes', r' ( testes |  testis | testicles? | test ) \b ')
+        self.keyword('fully', r' fully | ( in )? complete ( ly )? ')
+        self.fragment('non', r' \b ( not | non | no | semi | sub ) ')
+        self.keyword('descended', r' ( un )? ( des?c?end ( ed )? | desc? ) ')
+        self.keyword('abbrev', r' tes | ts | tnd | td | tns | ta | t ')
+        self.fragment(
             'scrotal', r' ( scrotum | scrotal | scrot | nscr | scr) \b ')
-        self.lit('partially', r' partially | part | \b pt \b ')
-        self.kwd('state_abbrev', r' ns | sc ')
-        self.kwd('abdominal', r' abdominal | abdomin | abdom | abd ')
-        self.kwd('size', r' visible | ( en )? large d? | small ')
-        self.kwd('gonads', r' (?P<ambiguous_key> gonads? ) ')
-        self.kwd(
+        self.fragment('partially', r' partially | part | \b pt \b ')
+        self.keyword('state_abbrev', r' ns | sc ')
+        self.keyword('abdominal', r' abdominal | abdomin | abdom | abd ')
+        self.keyword('size', r' visible | ( en )? large d? | small ')
+        self.keyword('gonads', r' (?P<ambiguous_key> gonads? ) ')
+        self.keyword(
             'other',
             ' cryptorchism | cryptorchid | monorchism | monorchid | inguinal ')
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
-        self.kwd('and', r' and | & ')
-        self.lit('word', r' [a-z]+ ')
+        self.keyword('and', r' and | & ')
+        self.fragment('word', r' [a-z]+ ')
 
-    def _build_replace_rules(self):
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
         self.replace('state', """
             non fully descended | abdominal non descended
             | abdominal descended | non descended | fully descended
@@ -49,7 +52,8 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
             """)
         self.replace('length', ' cross ( len_units )? ')
 
-    def _build_product_rules(self):
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(
             self.convert,
             """label ( testes | abbrev )? ( length )?

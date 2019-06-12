@@ -12,10 +12,13 @@ class AsIsTraitBuilder(BaseTraitBuilder):
         super().__init__(args)
 
         # Build the tokens
-        self.lit('data', r' \S .* \S | \S')
+        self.fragment('data', [
+            r' \S .* \S ',  # Strip leading and trailing spaces
+            r' \S ',        # Get a string with a single character
+        ])
 
         # Build rules for parsing the trait
-        self.product(self.convert, r' (?P<value> data )')
+        self.product(self.convert, '(?P<value> data )')
 
         self.compile_regex()
 

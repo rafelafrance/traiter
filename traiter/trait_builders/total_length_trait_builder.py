@@ -27,22 +27,23 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
+    def build_token_rules(self):
+        """Define the tokens."""
         self.shared_token(tkn.uuid)
 
-        self.kwd('skip', r' horns? ')
+        self.keyword('skip', r' horns? ')
 
-        self.kwd('key_with_units', r"""
+        self.keyword('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
             ( length | len )? \s* in \s* (?P<units> millimeters | mm )
             """)
 
-        self.lit('key', r"""
+        self.fragment('key', r"""
             total  [\s-]* length [\s-]* in
             | ( total | max | standard ) [\s-]* lengths? \b
             | meas [\s*:]? \s* length [\s(]* [l] [)\s:]*
@@ -55,8 +56,8 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
             | snout [\s-]* vent [\s-]* lengths? \b
             """)
 
-        self.lit('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')
-        self.lit('key_units_req', r' measurements? | body | total ')
+        self.fragment('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')
+        self.fragment('key_units_req', r' measurements? | body | total ')
         self.shared_token(tkn.metric_len)
         self.shared_token(tkn.feet)
         self.shared_token(tkn.inches)
@@ -66,13 +67,14 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
 
-        self.lit('char_key', r""" \b (?P<ambiguous_key> l ) (?= [:=-] ) """)
+        self.fragment('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) ')
 
-        self.kwd('word', r' ( [a-z] \w* ) ')
-        self.lit('semicolon', r' [;] | $ ')
-        self.lit('comma', r' [,] | $ ')
+        self.keyword('word', r' ( [a-z] \w* ) ')
+        self.fragment('semicolon', r' [;] | $ ')
+        self.fragment('comma', r' [,] | $ ')
 
-    def _build_product_rules(self):
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(self.fraction, r"""
             key_units_req fraction (?P<units> metric_len | feet | inches )
             | key fraction (?P<units> metric_len | feet | inches )

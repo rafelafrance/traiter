@@ -13,65 +13,110 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_replace_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
-        self.shared_token(tkn.uuid)
+    def build_token_rules(self):
+        """Define the tokens."""
+        self.shared_token(tkn.uuid)  # UUIDs cause problems with numeric parses
 
-        self.kwd('key_with_units', r"""
-            ( weight | mass) \s* in \s* (?P<units> grams | g | lbs ) """)
-        self.lit('key_leader', ' full | observed | total ')
-        self.lit('weight', r' weights? | weighed | weighing | weighs? ')
-        self.lit('key_with_dots', r' \b w \.? \s? t s? \.? ')
-        self.lit('mass', r' mass ')
-        self.lit('body', r' body ')
+        # Looking for keys like: mass in grams
+        self.keyword('key_with_units', r"""
+            ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """)
+
+        # These words indicate a body mass follows
+        self.fragment('key_leader', 'full observed total'.split())
+
+        # Words for weight
+        self.fragment('weight', 'weights? weighed weighing weighs?'.split())
+
+        # Keys like: w.t.
+        self.fragment('key_with_dots', r' \b w \.? \s? t s? \.? ')
+
+        # Common prefixes that indicate a body mass
+        self.fragment('mass', 'mass')
+        self.fragment('body', 'body')
+
+        # Units
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.metric_mass)
         self.shared_token(tkn.pounds)
         self.shared_token(tkn.ounces)
+
+        # Shorthand notation
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
+
+        # Possible pairs of numbers like: "10 - 20" or just "10"
         self.shared_token(tkn.pair)
 
-        # These indicate that the mass is not a total body mass
-        self.kwd('other_wt', r"""
-            femur | baculum | bacu | bac | spleen | thymus | kidney
-            | testes | testis | ovaries | epididymis | epid """)
+        # These indicate that the mass is NOT a total body mass
+        self.keyword('other_wt', r"""
+            femur baculum bacu bac spleen thymus kidney
+            testes testis ovaries epididymis epid """.split())
 
-        self.kwd('word', r' ( [a-z] \w* ) ')
-        self.lit('semicolon', r' [;] | $ ')
-        self.lit('comma', r' [,] | $ ')
+        self.keyword('word', r' ( [a-z] \w* ) ')
 
-    def _build_replace_rules(self):
+        # Separators
+        self.fragment('semicolon', ' [;] | $ ')
+        self.fragment('comma', ' [,] | $ ')
+
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+        # Any key not preceding by "other_wt" is considered a weight key
         self.replace('wt_key', r"""
             (?<! other_wt )
             ( key_leader weight | key_leader mass
-            | body weight | body mass | body
-            | weight | mass | key_with_dots )
+                | body weight | body mass | body
+                | weight | mass | key_with_dots )
             """)
 
-    def _build_product_rules(self):
-        self.product(self.shorthand, r' shorthand_key shorthand | shorthand ')
+    def build_product_rules(self):
+        """Define rules for output."""
+        # Shorthand notation like: on tag: 11-22-33-44=99g
+        self.product(self.shorthand, [
+            'shorthand_key shorthand',  # With a key
+            'shorthand',                # Without a key
+        ])
 
-        self.product(partial(self.compound, units=['lbs', 'ozs']), r"""
-            wt_key (?P<lbs> pair ) pounds ( comma )? (?P<ozs> pair ) ounces
-            | (?P<ambiguous_key>
+        # Pounds and ounces notation: 5lbs, 3-4oz.
+        self.product(partial(self.compound, units=['lbs', 'ozs']), [
+
+            # Like: body mass: 5lbs, 3-4oz
+            'wt_key (?P<lbs> pair ) pounds ( comma )? (?P<ozs> pair ) ounces',
+
+            # Missing a weight key: 5lbs, 3-4oz
+            """(?P<ambiguous_key>
                 (?P<lbs> pair ) pounds ( comma )?
-                (?P<ozs> pair ) ounces )""")
+                (?P<ozs> pair ) ounces )""",
+        ])
 
-        self.product(self.simple, r"""
-            key_with_units pair
-            | wt_key (?P<units> metric_mass | pounds | ounces )
-                pair (?! len_units )
-            | wt_key pair (?P<units> metric_mass | pounds | ounces )
-            | shorthand_key pair (?P<units> metric_mass | pounds | ounces )
-            | shorthand_key (?P<units> metric_mass | pounds | ounces )
-                pair (?! len_units )
-            | wt_key pair (?! len_units ) """)
+        # A typical body mass notation
+        self.product(self.simple, [
+
+            # Like: mass in grams: 22
+            'key_with_units pair',
+
+            # Like: body weight ozs 26 - 42
+            """wt_key (?P<units> metric_mass | pounds | ounces )
+                pair (?! len_units )""",
+
+            # Like: body weight 26 - 42 grams
+            'wt_key pair (?P<units> metric_mass | pounds | ounces )',
+
+            # Like: body weight 26 - 42 grams
+            'shorthand_key pair (?P<units> metric_mass | pounds | ounces )',
+
+            # Like: specimen: 8 to 15 grams"
+            """shorthand_key (?P<units> metric_mass | pounds | ounces )
+                pair (?! len_units )""",
+
+            # Like: body mass 8 to 15 grams"
+            'wt_key pair (?! len_units )',
+        ])
 
     @staticmethod
     def shorthand(token):

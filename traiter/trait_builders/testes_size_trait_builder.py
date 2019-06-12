@@ -15,22 +15,31 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
-        self._build_token_rules()
-        self._build_product_rules()
+
+        # Defined later
+        self.side = None
+        self.lr_delim = None
+        self.double_side = None
+        self.double_cross = None
+
+        self.build_token_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
+    def build_token_rules(self):
+        """Define the tokens."""
         self.shared_token(tkn.uuid)
 
-        self.kwd('label', r' reproductive .? ( data | state | condition ) ')
+        self.keyword(
+                'label', r' reproductive .? ( data | state | condition ) ')
 
-        self.kwd('key_with_units', r"""
+        self.keyword('key_with_units', r"""
             (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width ) \s*
                 in \s* (?P<units> millimeters | mm )
             """)
 
-        self.kwd('ambiguous', r"""
+        self.keyword('ambiguous', r"""
             (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
                 \s* ( (?P<side> [12] ) |  )
             | (?P<side> left | right ) \s* (?P<ambiguous_key> gonad )
@@ -38,12 +47,12 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
             | (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
             """)
 
-        self.kwd('testes', r' testes |  testis | testicles? | test ')
+        self.keyword('testes', r' testes |  testis | testicles? | test ')
 
         # Note: abbrev differs from the one in the testes_state_trait
-        self.kwd('abbrev', r' tes | ts | tnd | td | tns | ta ')
-        self.lit('char_key', r' \b t (?! [a-z] )')
-        self.kwd('state', r"""
+        self.keyword('abbrev', r' tes | ts | tnd | td | tns | ta ')
+        self.fragment('char_key', r' \b t (?! [a-z] )')
+        self.keyword('state', r"""
             scrotum | scrotal | scrot | nscr | scr | ns | sc
             | ( not | non | no | semi | sub | un | partially | part
                     | fully | ( in )? complete ( ly )? )?
@@ -55,17 +64,18 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
             """)
 
         self.side = r' (?P<side> left | right | [lr] ) '
-        self.kwd('lr', self.side)
+        self.keyword('lr', self.side)
 
         self.lr_delim = r' [/(\[] \s* (?P<side> [lr] ) \s* [)\]] '
-        self.lit('lr_delim', self.lr_delim)
+        self.fragment('lr_delim', self.lr_delim)
 
         self.shared_token(tkn.cross)
-        self.lit('and', r' and | & ')
-        self.lit('word', r' [a-z]+ ')
-        self.lit('sep', r' [;] | $ ')
+        self.fragment('and', r' and | & ')
+        self.fragment('word', r' [a-z]+ ')
+        self.fragment('sep', r' [;] | $ ')
 
-    def _build_product_rules(self):
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(self.double, r"""
             label ( testes | abbrev | char_key )
                 (?P<first> ( lr | lr_delim ) cross )

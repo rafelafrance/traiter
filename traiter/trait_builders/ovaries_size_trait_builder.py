@@ -12,13 +12,14 @@ class OvariesSizeTraitBuilder(BaseTraitBuilder):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
-        self._build_token_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
+    def build_token_rules(self):
+        """Define the tokens."""
         self.shared_token(tkn.uuid)
 
-    def _build_product_rules(self):
-        pass
+    def build_product_rules(self):
+        """Define rules for output."""

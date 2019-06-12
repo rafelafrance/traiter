@@ -11,57 +11,73 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
-        self.kwd('keyword', r"""
-            life \s* stage \s* ( remarks? )?
-            | age \s* class
-            | age \s* in \s* (?P<time_units> hours? )
-            | age \s* in \s* (?P<time_units> days? )
-            | age
-            """)
+    def build_token_rules(self):
+        """Define the tokens."""
+        # Keywords that indicates that a life stage follows
+        self.keyword('keyword', [
+            r' life \s * stage \s * (remarks?)? ',
+            r' age \s * class ',
+            r' age \s * in \s * (?P<time_units> hours?) ',
+            r' age \s * in \s * (?P<time_units> days?) ',
+            r' age ',
+        ])
 
-        self.kwd('year_num', r"""
+        # Life stage is sometimes reported as an age
+        self.keyword('year_num', r"""
             ( after \s* )?
             ( first | second | third | fourth | 1st | 2nd | 3rd | 4th
-            | hatching ) \s* (?P<time_units> years? )
+                | hatching ) \s*
+            (?P<time_units> years? )
             """)
 
-        self.kwd('keyless', r"""
-            larves? | larvae? | larvals?
-            | imagos?
-            | neonates?
-            | hatchlings? | hatched
-            | fry
-            | metamorphs? | premetamorphs?
-            | tadpoles? | têtard
-            | young [\s-]? of [\s-]? the [\s-]? year
-            | leptocephales? | leptocephalus
-            | immatures? | imms?
-            | young \s* adult | young | ygs | yg
-            | fleglings? | fledgelings?
-            | chicks?
-            | nestlings?
-            | juveniles? | juvéniles? | juvs? | jeunes?
-            | subadulte?s? | subads? | sub-adults?
-            | adulte?s? | ads?
-            | yearlings?
-            | matures?
-            | yolk \s? sac
-            | nulliparous
-            """)
+        # These words are a life stage without a keyword indicator
+        self.keyword('keyless', [
+            r' yolk \s? sac',
+            r' young [\s-]? of [\s-]? the [\s-]? year',
+            r' young \s* adult']
+            + """
+                ads? adulte?s? 
+                chicks? 
+                fledgelings? fleglings? 
+                fry 
+                hatched hatchlings? 
+                imagos? 
+                imms? immatures? 
+                jeunes? juvs? juveniles? juvéniles? 
+                larvae? larvals? larves? 
+                leptocephales? leptocephalus
+                matures? metamorphs? 
+                neonates? 
+                nestlings? 
+                nulliparous 
+                premetamorphs? 
+                sub-adults? subads? subadulte?s? 
+                tadpoles? 
+                têtard 
+                yearlings? 
+                yg ygs young
+            """.split())
 
-        self.kwd('determined', r'determin \w+')
+        # This indicates that the following words are NOT a life stage
+        self.keyword('determined', r' determin \w* ')
 
-        self.lit('word', r' \b \w [\w?./-]* (?! [./-] ) ')
-        self.lit('joiner', r' \s* [/-] \s* ')
-        self.lit('sep', r' [;,"?] | $ ')
+        # Match any word
+        self.fragment('word', r' \b \w [\w?./-]* (?! [./-] ) ')
 
-    def _build_product_rules(self):
+        # Compound words separated by dashes or slashes
+        # E.g. adult/juvenile or over-winter
+        self.fragment('joiner', r' \s* [/-] \s* ')
+
+        # Use this to find the end of a life stage pattern
+        self.fragment('sep', r' [;,"?] | $ ')
+
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(self.convert, r"""
             keyword (?P<value> ( keyless | word ) joiner keyless )
             | keyword (?P<value> ( keyless | word ) keyless )

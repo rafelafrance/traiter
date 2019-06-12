@@ -24,62 +24,102 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_replace_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
 
         self.compile_regex()
 
-    def _build_token_rules(self):
+    def build_token_rules(self):
+        """Define the tokens."""
         self.shared_token(tkn.uuid)
 
-        self.kwd('key_with_units', r"""
+        # Units are in the key, like: earlengthinmillimeters
+        self.keyword('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )
             """)
 
-        self.lit('char_measured_from', r"""
+        # Abbreviation containing the measured from notation, like: e/n or e/c
+        self.fragment('char_measured_from', r"""
             (?<! [a-z] ) (?<! [a-z] \s )
             (?P<ambiguous_key> e ) /? (?P<measured_from> n | c )
             (?! \.? [a-z] )
             """)
 
-        self.lit('char_key', r"""
+        # The abbreviation key, just: e. This can be a problem
+        self.fragment('char_key', r"""
             (?<! \w ) (?<! \w \s )
             (?P<ambiguous_key> e )
             (?! \.? \s? [a-z\(] )
             """)
 
-        self.kwd('keyword', r"""
-            ear \s* from \s* (?P<measured_from> notch | crown )
-            | ear \s* ( length | len )
-            | ear (?! \s* tag )
-            | ef (?P<measured_from> n | c )
-            """)
+        # Standard keywords that indicate an ear length follows
+        self.keyword('keyword', [
+            r' ear \s* from \s* (?P<measured_from> notch | crown )',
+            r' ear \s* ( length | len )',
+            r' ear (?! \s* tag )',
+            r' ef (?P<measured_from> n | c )',
+            ])
 
+        # Units
         self.shared_token(tkn.len_units)
+
+        # Fractional numbers, like: 9/16
         self.shared_token(tkn.fraction)
+
+        # Shorthand notation
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
+
+        # Possible pairs of numbers like: "10 - 20" or just "10"
         self.shared_token(tkn.pair)
-        self.kwd('word', r' ( [a-z] \w* ) ')
-        self.lit('sep', r' [;,] | $ ')
 
-    def _build_replace_rules(self):
-        self.replace('key', ' keyword | char_key | char_measured_from ')
+        # We allow random words in some situations
+        self.keyword('word', r' ( [a-z] \w* ) ')
 
-    def _build_product_rules(self):
-        self.product(self.fraction, r"""
-            key fraction (?P<units> len_units ) | key fraction """)
+        # Some patterns require a separator
+        self.fragment('sep', r' [;,] | $ ')
 
-        self.product(self.simple, r"""
-            key_with_units pair
-            | key pair (?P<units> len_units )
-            | key pair
-            """)
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+        # Consider any of the following as just a key
+        self.replace('key', [
+            'keyword',
+            'char_key',
+            'char_measured_from',
+        ])
 
+    def build_product_rules(self):
+        """Define rules for output."""
+        # Handle fractional values like: ear 9/16"
+        self.product(self.fraction, [
+
+            # Like: ear = 9/16 inches
+            'key fraction (?P<units> len_units )',
+
+            # Like: ear = 9/16
+            'key fraction',
+        ])
+
+        # A typical ear length notation
+        self.product(self.simple, [
+
+            # Like: earlengthinmmm 9-10
+            'key_with_units pair',
+
+            # Like: ear 9-10 mm
+            'key pair (?P<units> len_units )',
+
+            # Missing units like: ear: 9-10
+            'key pair',
+        ])
+
+        # Shorthand notation like: on tag: 11-22-33-44=99g
         self.product(
-            partial(self.shorthand_length, measurement='shorthand_el'),
-            r' shorthand_key shorthand | shorthand ')
+            partial(self.shorthand_length, measurement='shorthand_el'), [
+                'shorthand_key shorthand',  # With a key
+                'shorthand',                # Without a key
+            ])
 
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""

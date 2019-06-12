@@ -24,23 +24,24 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self._build_token_rules()
-        self._build_replace_rules()
-        self._build_product_rules()
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
         self.compile_regex()
 
-    def _build_token_rules(self):
+    def build_token_rules(self):
+        """Define the tokens."""
         self.shared_token(tkn.uuid)
 
-        self.kwd('key_with_units', r"""
+        self.keyword('key_with_units', r"""
             tail \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """)
 
-        self.lit('char_key', r"""
+        self.fragment('char_key', r"""
             \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
             """)
 
-        self.kwd('keyword', r' tail \s* length | len | tail | tal ')
+        self.keyword('keyword', r' tail \s* length | len | tail | tal ')
 
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.shorthand_key)
@@ -48,13 +49,15 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.fraction)
         self.shared_token(tkn.pair)
         self.shared_token(tkn.triple)
-        self.kwd('word', r' ( [a-z] \w* ) ')
-        self.lit('sep', r' [;,] | $ ')
+        self.keyword('word', r' ( [a-z] \w* ) ')
+        self.fragment('sep', r' [;,] | $ ')
 
-    def _build_replace_rules(self):
-        self.replace('key', ' keyword | char_key ')
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+        self.replace('key', ['keyword', 'char_key'])
 
-    def _build_product_rules(self):
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(self.fraction, r"""
             key fraction (?P<units> len_units ) | key fraction """)
 

@@ -3,6 +3,7 @@
 .spyproject/
 .vscode/
 .idea/
+.mypy_cache/
 
 # Environment
 .env
