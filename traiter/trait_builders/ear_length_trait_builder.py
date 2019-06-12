@@ -6,19 +6,23 @@ from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-LOOK_BACK_FAR = 40
-LOOK_BACK_NEAR = 10
-IS_ET = re.compile(r' e \.? t ', NumericTraitBuilder.flags)
-IS_NUMBER = re.compile(r' [#] ', NumericTraitBuilder.flags)
-IS_MAG = re.compile(r' magnemite ', NumericTraitBuilder.flags)
-IS_ID = re.compile(r' identifier | ident | id ', NumericTraitBuilder.flags)
-
-LOOK_AROUND = 10
-IS_EAST = re.compile(r' \b n ', NumericTraitBuilder.flags)
-
-
 class EarLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
+
+    # How far to look into the surrounding context to disambiguate the parse
+    look_back_far = 40
+    look_back_near = 10
+
+    # These indicate that the parse is not really for an ear length
+    is_et = re.compile(r' e \.? t ', NumericTraitBuilder.flags)
+    is_number = re.compile(' [#] ', NumericTraitBuilder.flags)
+    is_mag = re.compile(' magnemite ', NumericTraitBuilder.flags)
+    is_id = re.compile(' identifier | ident | id ', NumericTraitBuilder.flags)
+
+    # The 'E' abbreviation gets confused with abbreviation for East sometimes.
+    # Try to disambiguate the two by looking for a North near by.
+    look_around = 10
+    is_east = re.compile(r' \b n ', NumericTraitBuilder.flags)
 
     def __init__(self, args=None):
         """Build the trait parser."""
@@ -32,9 +36,9 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)
+        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
 
-        # Units are in the key, like: earlengthinmillimeters
+        # Units are in the key, like: EarLengthInMillimeters
         self.keyword('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )
             """)
@@ -46,7 +50,7 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
             (?! \.? [a-z] )
             """)
 
-        # The abbreviation key, just: e. This can be a problem
+        # The abbreviation key, just: e. This can be a problem.
         self.fragment('char_key', r"""
             (?<! \w ) (?<! \w \s )
             (?P<ambiguous_key> e )
@@ -94,17 +98,17 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         # Handle fractional values like: ear 9/16"
         self.product(self.fraction, [
 
-            # Like: ear = 9/16 inches
+            # Like: ear = 9/16 in
             'key fraction (?P<units> len_units )',
 
-            # Like: ear = 9/16
+            # Without units, like: ear = 9/16
             'key fraction',
         ])
 
         # A typical ear length notation
         self.product(self.simple, [
 
-            # Like: earlengthinmmm 9-10
+            # Like: earLengthInMM 9-10
             'key_with_units pair',
 
             # Like: ear 9-10 mm
@@ -123,21 +127,27 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
 
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
+        # Problem parses happen mostly with an ambiguous key
         if trait.ambiguous_key:
-            start = max(0, trait.start - LOOK_BACK_NEAR)
-            if IS_ET.search(text, start, trait.start) \
-                    or IS_NUMBER.search(text, start, trait.start):
+
+            # "E.T." is not an ear length measurement
+            start = max(0, trait.start - self.look_back_near)
+            if self.is_et.search(text, start, trait.start) \
+                    or self.is_number.search(text, start, trait.start):
                 return None
 
-            start = max(0, trait.start - LOOK_BACK_FAR)
-            if IS_MAG.search(text, start, trait.start) \
-                    or IS_ID.search(text, start, trait.start):
+            # Magnemite confounds the abbreviation
+            start = max(0, trait.start - self.look_back_far)
+            if self.is_mag.search(text, start, trait.start) \
+                    or self.is_id.search(text, start, trait.start):
                 return None
 
-            start = max(0, trait.start - LOOK_AROUND)
-            end = min(len(text), trait.end + LOOK_AROUND)
-            if IS_EAST.search(text, start, trait.start) \
-                    or IS_EAST.search(text, trait.end, end):
+            # Make sure it's not actually an abbreviation for "East"
+            start = max(0, trait.start - self.look_around)
+            end = min(len(text), trait.end + self.look_around)
+            if self.is_east.search(text, start, trait.start) \
+                    or self.is_east.search(text, trait.end, end):
                 return None
 
+        # Try to disambiguate doubles quotes from inches
         return self.numeric_fix_ups(trait, text)

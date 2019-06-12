@@ -21,9 +21,9 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with numeric parses
+        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
 
-        # Looking for keys like: mass in grams
+        # Looking for keys like: MassInGrams
         self.keyword('key_with_units', r"""
             ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """)
 
@@ -50,14 +50,16 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
 
-        # Possible pairs of numbers like: "10 - 20" or just "10"
+        # Possible pairs of numbers like: 10 - 20
+        # Or just: 10
         self.shared_token(tkn.pair)
 
-        # These indicate that the mass is NOT a total body mass
+        # These indicate that the mass is NOT a body mass
         self.keyword('other_wt', r"""
             femur baculum bacu bac spleen thymus kidney
             testes testis ovaries epididymis epid """.split())
 
+        # We allow random words in some situations
         self.keyword('word', r' ( [a-z] \w* ) ')
 
         # Separators
@@ -97,7 +99,7 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         # A typical body mass notation
         self.product(self.simple, [
 
-            # Like: mass in grams: 22
+            # Like: MassInGrams=22
             'key_with_units pair',
 
             # Like: body weight ozs 26 - 42
@@ -107,7 +109,7 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
             # Like: body weight 26 - 42 grams
             'wt_key pair (?P<units> metric_mass | pounds | ounces )',
 
-            # Like: body weight 26 - 42 grams
+            # Like: measurement 26 - 42 grams
             'shorthand_key pair (?P<units> metric_mass | pounds | ounces )',
 
             # Like: specimen: 8 to 15 grams"
@@ -121,6 +123,7 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
     @staticmethod
     def shorthand(token):
         """Convert a shorthand value like 11-22-33-44:55g."""
+        # Handling shorthand notation for weights is different form lengths
         trait = NumericTrait(start=token.start, end=token.end)
         trait.float_value(token.groups.get('shorthand_wt'))
         if not trait.value:

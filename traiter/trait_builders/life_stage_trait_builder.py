@@ -41,25 +41,25 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
             r' young [\s-]? of [\s-]? the [\s-]? year',
             r' young \s* adult']
             + """
-                ads? adulte?s? 
-                chicks? 
-                fledgelings? fleglings? 
-                fry 
-                hatched hatchlings? 
-                imagos? 
-                imms? immatures? 
-                jeunes? juvs? juveniles? juvéniles? 
-                larvae? larvals? larves? 
+                ads? adulte?s?
+                chicks?
+                fledgelings? fleglings?
+                fry
+                hatched hatchlings?
+                imagos?
+                imms? immatures?
+                jeunes? juvs? juveniles? juvéniles?
+                larvae? larvals? larves?
                 leptocephales? leptocephalus
-                matures? metamorphs? 
-                neonates? 
-                nestlings? 
-                nulliparous 
-                premetamorphs? 
-                sub-adults? subads? subadulte?s? 
-                tadpoles? 
-                têtard 
-                yearlings? 
+                matures? metamorphs?
+                neonates?
+                nestlings?
+                nulliparous
+                premetamorphs?
+                sub-adults? subads? subadulte?s?
+                tadpoles?
+                têtard
+                yearlings?
                 yg ygs young
             """.split())
 
@@ -78,15 +78,30 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
     def build_product_rules(self):
         """Define rules for output."""
-        self.product(self.convert, r"""
-            keyword (?P<value> ( keyless | word ) joiner keyless )
-            | keyword (?P<value> ( keyless | word ) keyless )
-            | keyword (?P<value> keyless )
-            | keyword (?P<value> ( keyless | word | joiner ){1,5} ) sep
-            | keyword (?P<value> year_num )
-            | (?P<value> keyless )
-            | (?P<value> year_num )
-            """)
+        self.product(self.convert, [
+
+            # Like: life stage juvenile/yearling
+            'keyword (?P<value> ( keyless | word ) joiner keyless )',
+
+            # Like: life stage young adult
+            'keyword (?P<value> ( keyless | word ) keyless )',
+
+            # Like: life stage yearling
+            'keyword (?P<value> keyless )',
+
+            # A sequence of words bracketed by a keyword and a separator
+            # Like: LifeStage Remarks: 5-6 wks;
+            'keyword (?P<value> ( keyless | word | joiner ){1,5} ) sep',
+
+            # Like: LifeStage = 1st month
+            'keyword (?P<value> year_num )',
+
+            # Like: Juvenile
+            '(?P<value> keyless )',
+
+            # Like: 1st year
+            '(?P<value> year_num )',
+        ])
 
     @staticmethod
     def convert(token):

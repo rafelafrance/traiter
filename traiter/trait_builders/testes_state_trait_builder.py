@@ -20,50 +20,114 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.keyword('label', r' reproductive .? ( data |state | condition ) ')
+        # A label, like: reproductive data
+        self.keyword('label', 'reproductive .? ( data |state | condition )')
+
+        # Various spellings of testes
         self.fragment(
-                'testes', r' ( testes |  testis | testicles? | test ) \b ')
-        self.keyword('fully', r' fully | ( in )? complete ( ly )? ')
+            'testes', r' ( testes |  testis | testicles? | test ) \b ')
+
+        # Fully or incompletely
+        self.keyword('fully', [
+            'fully',
+            '( in )? complete ( ly )?',
+        ])
+
+        # Negation
         self.fragment('non', r' \b ( not | non | no | semi | sub ) ')
-        self.keyword('descended', r' ( un )? ( des?c?end ( ed )? | desc? ) ')
-        self.keyword('abbrev', r' tes | ts | tnd | td | tns | ta | t ')
+
+        # Descended
+        self.keyword('descended', [
+            '( un )? ( des?c?end ( ed )?',
+            'desc? )',
+        ])
+
+        # Abbreviations for testes
+        self.keyword('abbrev', 'tes ts tnd td tns ta t'.split())
+
+        # Spellings of scrotum
         self.fragment(
-            'scrotal', r' ( scrotum | scrotal | scrot | nscr | scr) \b ')
-        self.fragment('partially', r' partially | part | \b pt \b ')
-        self.keyword('state_abbrev', r' ns | sc ')
-        self.keyword('abdominal', r' abdominal | abdomin | abdom | abd ')
-        self.keyword('size', r' visible | ( en )? large d? | small ')
-        self.keyword('gonads', r' (?P<ambiguous_key> gonads? ) ')
+                'scrotal',
+                r'( scrotum | scrotal | scrot | nscr | scr) \b')
+
+        # Spellings of partially
+        self.fragment('partially', [
+            'partially',
+            'part',
+            r'\b pt \b',
+        ])
+
+        # Abbreviations for testes state
+        self.keyword('state_abbrev', 'ns sc'.split())
+
+        # Spellings of abdominal
+        self.keyword('abdominal', 'abdominal abdomin abdom abd'.split())
+
+        # Various size words
+        self.keyword('size', [
+            'visible',
+            '( en )? large d?',
+            'small',
+        ])
+
+        # Spellings of gonads
+        self.keyword('gonads', ' (?P<ambiguous_key> gonads? ) ')
+
+        # Other state words
         self.keyword(
             'other',
-            ' cryptorchism | cryptorchid | monorchism | monorchid | inguinal ')
+            'cryptorchism cryptorchid monorchism monorchid inguinal'.split())
+
+        # We will skip over testes size measurements
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
-        self.keyword('and', r' and | & ')
+
+        # Links ovaries and other related traits
+        self.fragment('and', ['and', '[&]'])
+
+        # We allow random words in some situations
         self.fragment('word', r' [a-z]+ ')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
-        self.replace('state', """
-            non fully descended | abdominal non descended
-            | abdominal descended | non descended | fully descended
-            | partially descended | size non descended | size descended
-            | descended | size
-            """)
-        self.replace('length', ' cross ( len_units )? ')
+        # Simplify state to contain various descended and size tokens
+        self.replace('state', [
+            'non fully descended',
+            'abdominal non descended',
+            'abdominal descended',
+            'non descended',
+            'fully descended',
+            'partially descended',
+            'size non descended',
+            'size descended',
+            'descended',
+            'size',
+        ])
+
+        # Simplify the testes length so it can be skipped easily
+        self.replace('length', 'cross ( len_units )?')
 
     def build_product_rules(self):
         """Define rules for output."""
-        self.product(
-            self.convert,
+        # A typical testes state notation
+        self.product(self.convert, [
+
+            # Like: reproductiveData: ts 5x3 fully descended
             """label ( testes | abbrev )? ( length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
-                    | non scrotal | other | non testes )
-            | label ( length )?
-                (?P<value> non testes | non scrotal | scrotal )
-            | abbrev ( length )?
-                (?P<value> state | abdominal | non scrotal | scrotal | other)
-            | testes ( length )?
+                    | non scrotal | other | non testes )""",
+
+            # Like: reproductive data = nonScrotal
+            """label ( length )?
+                (?P<value> non testes | non scrotal | scrotal )""",
+
+            # Like: ts inguinal
+            """abbrev ( length )?
+                (?P<value> state | abdominal | non scrotal 
+                    | scrotal | other)""",
+
+            # Like: testes 5x4 mm pt desc
+            """testes ( length )?
                 (?P<value>
                     ( state | state_abbrev | abdominal | non scrotal
                         | scrotal | other )
@@ -71,12 +135,16 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
                         | scrotal | other | and ){,3}
                     ( state | state_abbrev | abdominal | non scrotal
                         | scrotal | other )
-                )
-            | testes ( length )?
+                )""",
+
+            # Like: testes 5x4 desc
+            """testes ( length )?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
-                    | scrotal | other )
-            | (?P<value> non ( testes | scrotal | gonads ) | scrotal )
-            """)
+                    | scrotal | other )""",
+
+            # Like: no gonads
+            """(?P<value> non ( testes | scrotal | gonads ) | scrotal )""",
+        ])
 
     @staticmethod
     def convert(token):

@@ -10,17 +10,28 @@ import traiter.shared_tokens as tkn
 class TestesSizeTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
+    # We need to pair the sides with the correct partner
     side_pairs = {'left': 'right', 'right': 'left', '1': '2', '2': '1'}
 
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
 
-        # Defined later
-        self.side = None
-        self.lr_delim = None
-        self.double_side = None
-        self.double_cross = None
+        # Side keywords, like: left
+        self.side = ' (?P<side> left | right | [lr] ) '
+
+        # Side abbreviation surrounded by brackets, like: [r]
+        self.lr_delim = r' [/(\[] \s* (?P<side> [lr] ) \s* [)\]] '
+
+        # Used to get compounds traits from a single parse
+        self.double_side = self.compile(
+            name='double_sided',
+            regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
+
+        # Used to get compounds traits from a single parse
+        self.double_cross = self.compile(
+            name='double_crossed',
+            regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
 
         self.build_token_rules()
         self.build_product_rules()
@@ -29,91 +40,136 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)
+        self.shared_token(tkn.uuid)  # UUIDs cause problems with numeric traits
 
-        self.keyword(
-                'label', r' reproductive .? ( data | state | condition ) ')
+        # A label, like: reproductive data
+        self.keyword('label', 'reproductive .? ( data | state | condition )')
 
+        # A key with units, like: gonadLengthInMM
         self.keyword('key_with_units', r"""
             (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width ) \s*
                 in \s* (?P<units> millimeters | mm )
             """)
 
-        self.keyword('ambiguous', r"""
-            (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
-                \s* ( (?P<side> [12] ) |  )
-            | (?P<side> left | right ) \s* (?P<ambiguous_key> gonad )
-                \s* (?P<dimension> length | width )
-            | (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
-            """)
+        # Male or female ambiguous, like: gonadLength1
+        self.keyword('ambiguous', [
 
-        self.keyword('testes', r' testes |  testis | testicles? | test ')
+            # Like: GonadWidth2
+            r"""(?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
+                \s* ( (?P<side> [12] ) |  )""",
+
+            # Like: LeftGonadLength
+            r"""(?P<side> left | right ) \s* (?P<ambiguous_key> gonad )
+                \s* (?P<dimension> length | width )""",
+
+            # Like: Gonad Length
+            r'(?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )',
+        ])
+
+        # Various spellings of testes
+        self.keyword('testes', 'testes testis testicles? test'.split())
 
         # Note: abbrev differs from the one in the testes_state_trait
-        self.keyword('abbrev', r' tes | ts | tnd | td | tns | ta ')
-        self.fragment('char_key', r' \b t (?! [a-z] )')
-        self.keyword('state', r"""
-            scrotum | scrotal | scrot | nscr | scr | ns | sc
-            | ( not | non | no | semi | sub | un | partially | part
-                    | fully | ( in )? complete ( ly )? )?
-                ( des?c?end ( ed )? | desc? )
-            | abdominal | abdomin | abdom | abd
-            | visible | enlarged | small
-            | gonads?
-            | cryptorchism | cryptorchid | monorchism | monorchid | inguinal
-            """)
+        self.keyword('abbrev', 'tes ts tnd td tns ta'.split())
 
-        self.side = r' (?P<side> left | right | [lr] ) '
+        # The abbreviation key, just: t. This can be a problem.
+        self.fragment('char_key', r' \b t (?! [a-z] )')
+
+        # Various testes state words
+        self.keyword('state', [
+            r"""(not | non | no | semi | sub | un | partially | part
+                | fully | ( in)? complete(ly)? )?
+                (des?c?end ( ed)? | desc? )"""]
+            + """
+                scrotum scrotal scrot nscr scr ns sc
+                abdominal abdomin abdom abd
+                visible enlarged small
+                gonads?
+                cryptorchism cryptorchid monorchism monorchid inguinal
+            """.split())
+
+        # Side keywords, like: left
         self.keyword('lr', self.side)
 
-        self.lr_delim = r' [/(\[] \s* (?P<side> [lr] ) \s* [)\]] '
+        # Side abbreviation surrounded by brackets, like: [r]
         self.fragment('lr_delim', self.lr_delim)
 
+        # Length by width, like: 10 x 5
         self.shared_token(tkn.cross)
-        self.fragment('and', r' and | & ')
-        self.fragment('word', r' [a-z]+ ')
-        self.fragment('sep', r' [;] | $ ')
+
+        # Links ovaries and other related traits
+        self.fragment('and', ['and', '[&]'])
+
+        # We allow random words in some situations
+        self.fragment('word', ' [a-z]+ ')
+
+        # Some patterns require a separator
+        self.fragment('sep', ' [;] | $ ')
 
     def build_product_rules(self):
         """Define rules for output."""
-        self.product(self.double, r"""
-            label ( testes | abbrev | char_key )
-                (?P<first> ( lr | lr_delim ) cross )
-                (?P<second> ( lr | lr_delim ) cross )?
-            | label
-                (?P<first> ( lr | lr_delim ) cross )
-                (?P<second> ( lr | lr_delim ) cross )?
-            | ( testes | abbrev | char_key )
-                (?P<first> ( lr | lr_delim ) cross )
-                (?P<second> ( lr | lr_delim ) cross )?
-            """)
+        # These patterns contain measurements to both left & right testes
+        self.product(self.double, [
 
-        self.product(self.convert, r"""
-            label ( testes | abbrev | char_key ) cross
-            | label ( lr | lr_delim ) ( testes | abbrev | char_key ) cross
-            | label cross
-            | label ( testes | abbrev | state | word | sep | char_key){0,3}
-                ( testes | abbrev | state | char_key ) cross
-            | ( key_with_units | ambiguous ) cross
-            | ( key_with_units | ambiguous )
+            # Like: reproductive data: tests left 10x5 mm, right 10x6 mm
+            """label ( testes | abbrev | char_key )
+                (?P<first> ( lr | lr_delim ) cross )
+                (?P<second> ( lr | lr_delim ) cross )?""",
+
+            # As above but without the testes marker:
+            # Like: reproductive data: left 10x5 mm, right 10x6 mm
+            """label
+                (?P<first> ( lr | lr_delim ) cross )
+                (?P<second> ( lr | lr_delim ) cross )?""",
+
+            # Has the testes marker but is lacking the label
+            # Like: testes left 10x5 mm, right 10x6 mm
+            """( testes | abbrev | char_key )
+                (?P<first> ( lr | lr_delim ) cross )
+                (?P<second> ( lr | lr_delim ) cross )?""",
+        ])
+
+        # A typical testes size notation
+        self.product(self.convert, [
+
+            # Like: reproductive data: tests 10x5 mm
+            'label ( testes | abbrev | char_key ) cross',
+
+            # Like: reproductive data: left tests 10x5 mm
+            'label ( lr | lr_delim ) ( testes | abbrev | char_key ) cross',
+
+            # Like: reproductive data: 10x5 mm
+            'label cross',
+
+            # May have a few words between the label and the measurement
+            # Like: reproductive data=testes not descended - 6 mm
+            """label ( testes | abbrev | state | word | sep | char_key){0,3}
+                ( testes | abbrev | state | char_key ) cross""",
+
+            # Handles: gonadLengthInMM 4x3
+            # And:     gonadLength 4x3
+            '( key_with_units | ambiguous ) cross',
+
+            # Like: gonadLengthInMM 6 x 8
+            """( key_with_units | ambiguous )
                 ( testes | abbrev | state | word | sep | char_key ){0,3}
-                ( testes | abbrev | state | char_key ) cross
-            | testes ( abbrev | state | word | sep | char_key ){0,3}
-                ( abbrev | state | char_key ) cross
-            | testes ( abbrev | state | word | char_key ) cross
-            | ( testes | state | abbrev ) cross
-            | (?P<ambiguous_char> char_key ) cross
-            """)
+                ( testes | abbrev | state | char_key ) cross""",
 
-        # These are used to get compounds trait_builders from a single parse
-        self.double_side = self.compile(
-            name='double_sided',
-            regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
-        self.double_cross = self.compile(
-            name='double_crossed',
-            regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
+            # Anchored by testes but with words between
+            # Like: testes scrotal; T = 9mm
+            """testes ( abbrev | state | word | sep | char_key ){0,3}
+                ( abbrev | state | char_key ) cross""",
 
-        self.compile_regex()
+            # Anchored by testes but with only one word in between
+            # Like: testes scrotal 9mm
+            'testes ( abbrev | state | word | char_key ) cross',
+
+            # Like: Testes 5 x 3
+            '( testes | state | abbrev ) cross',
+
+            # Like: T 5 x 4
+            '(?P<ambiguous_char> char_key ) cross',
+        ])
 
     def double(self, token):
         """Convert a single token into multiple (two) trait_builders."""

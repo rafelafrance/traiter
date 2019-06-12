@@ -19,59 +19,109 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         # self.keyword('label', r' reproductive .? (data |state | condition) ')
-        self.fragment('ovary', r' (ovaries | ovary s? ) \b ')
 
+        # Various spellings of ovary
+        self.fragment('ovary', [
+            r' ovary s? \b ',
+            r' ovaries \b ',
+        ])
+
+        # Like: small sized
         self.keyword('size', r"""
-            (enlarged | enlarge | large
-                | small
-                | moderate | mod
-            ) ( \s+ size d? )?
-            """)
-        self.keyword('uterus', r' uterus | uterine ')
-        self.keyword('fallopian', r' fallopian \s* ( tubes? )? ')
-        self.keyword('immature', r' immature | mature ')
-        self.keyword('horns', r' horns? ')
-        self.keyword('covered', r' covered ')
-        self.keyword('fat', r' fat ')
-        self.keyword('corpus', r' corpus | corpora | corp | cor | c ')
-        self.keyword('alb', r' albicans | alb ')
-        self.keyword('lut', r' luteum | lute | lut ')
-        self.keyword('side', r' (?P<side> both | left | right | [lr]) ')
+            ( enlarged | enlarge | large | small | moderate | mod )      
+            ( \s+ size d? )?
+        """)
+
+        # Various spellings of uterus
+        self.keyword('uterus', 'uterus uterine'.split())
+
+        # Various forms of fallopian tubes
+        self.keyword('fallopian', r' fallopian ( \s* tubes? )? ')
+
+        # Forms of maturity
+        self.keyword('immature', 'immature mature'.split())
+
+        # Words related to ovaries
+        self.keyword('horns', 'horns?')
+        self.keyword('covered', 'covered')
+        self.keyword('fat', 'fat')
+
+        # Spellings of corpus
+        self.keyword('corpus', 'corpus corpora corp cor c'.split())
+
+        # Spellings of albicans
+        self.keyword('alb', 'albicans alb'.split())
+
+        # Spellings of luteum
+        self.keyword('lut', ' luteum lute lut'.split())
+
+        # Side keywords
+        self.keyword('side', ' (?P<side> both | left | right | [lr] )')
+
+        # Colors associated with ovaries
         self.keyword('color', r' ( dark | light | pale )? \s* (red | pink) ')
 
-        self.fragment('sign', r' \+ | \- ')
-        self.fragment('and', r' and | & ')
-        self.fragment('word', r' [a-z]+ ')
+        # Sign for presence or absence
+        self.fragment('sign', ' [+-] ')
+
+        # Links ovaries and other related traits
+        self.fragment('and', ['and', '[&]'])
+
+        # We allow random words in some situations
+        self.fragment('word', r'[a-z]+ \w*')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
+        # Like: ovaries and uterine horns
+        # Or:   ovaries and fallopian tubes
         self.replace('ovaries', r"""
             ovary ( ( ( and )? uterus ( horns )? )
                     | ( and )? fallopian )?""")
+
+        # Like: covered in copious fat
         self.replace('coverage', r' covered (word){0,2} fat ')
+
+        # Like: +corpus luteum
         self.replace('luteum', r' ( sign )? ( corpus )? (alb | lut) ')
 
     def build_product_rules(self):
         """Define rules for output."""
+        # Get left and right side measurements
+        # Like: ovaries: R 2 c. alb, L sev c. alb
         self.product(self.double, r"""
             ovaries (?P<side1> side) (?P<value1> ( word )? luteum)
-                (?P<side2> side) (?P<value2> ( word )? luteum)
+                    (?P<side2> side) (?P<value2> ( word )? luteum)
             """)
 
-        self.product(
-            self.convert, r"""
-            side ovaries (word){0,3} (?P<value> color)
-            | ovaries (?P<value> ( size ) ( immature )? )
-            | ovaries (?P<value> ( size )? ( immature ) )
-            | ovaries (?P<value> coverage)
-            | ovaries (?P<value> color)
-            | (?P<value> luteum) ( side )? ovaries
-            | ovaries ( side )? luteum
-            """)
+        # Typical ovary notation
+        self.product(self.convert, [
+
+            # Only one side is reported
+            # Like: left ovary=3x1.5mm, pale pink in color
+            'side ovaries (word){0,3} (?P<value> color)',
+
+            # Has the size but is possibly missing the maturity
+            'ovaries (?P<value> ( size ) ( immature )? )',
+
+            # Has the maturity but is possibly missing the size
+            'ovaries (?P<value> ( size )? ( immature ) )',
+
+            # Like: ovaries and uterine horns covered with copious fat
+            'ovaries (?P<value> coverage)',
+
+            # Like: reproductive data=Ovary, fallopian tubes dark red
+            'ovaries (?P<value> color)',
+
+            # Like: +corp. alb both ovaries
+            '(?P<value> luteum) ( side )? ovaries',
+
+            # Like: ovaries L +lut
+            'ovaries ( side )? luteum',
+        ])
 
     @staticmethod
     def convert(token):
-        """Convert parsed token into a trait product."""
+        """Convert parsed token into a trait."""
         trait = Trait(
             value=token.groups['value'].lower(),
             start=token.start,
@@ -82,15 +132,17 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     @staticmethod
     def double(token):
-        """Convert a single token into multiple (two) trait_builders."""
+        """Convert a single token into two traits."""
         trait1 = Trait(
             value=token.groups['value1'].lower(),
             side=token.groups['side1'].lower(),
             start=token.start,
             end=token.end)
+
         trait2 = Trait(
             value=token.groups['value2'].lower(),
             side=token.groups['side2'].lower(),
             start=token.start,
             end=token.end)
+
         return [trait1, trait2]

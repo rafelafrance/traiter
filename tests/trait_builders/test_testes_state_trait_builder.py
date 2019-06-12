@@ -1,6 +1,7 @@
 import unittest
 from traiter.trait import Trait
-from traiter.trait_builders.testes_state_trait_builder import TestesStateTraitBuilder
+from traiter.trait_builders.testes_state_trait_builder \
+    import TestesStateTraitBuilder
 
 
 PAR = None
@@ -100,7 +101,7 @@ class TestTestesStateTraitBuilder(unittest.TestCase):
 
     def test_parse_17(self):
         self.assertEqual(
-            PAR.parse(('tag# 1089; bag# 156; no gonads')),
+            PAR.parse('tag# 1089; bag# 156; no gonads'),
             [Trait(value='no gonads', ambiguous_key=True, start=21, end=30)])
 
     def test_parse_18(self):
@@ -111,8 +112,7 @@ class TestTestesStateTraitBuilder(unittest.TestCase):
 
     def test_parse_19(self):
         self.assertEqual(
-            PAR.parse(
-                ('non-scrotal, sem. ves. 14 mm ')),
+            PAR.parse('non-scrotal, sem. ves. 14 mm '),
             [Trait(value='non-scrotal', start=0, end=11)])
 
     def test_parse_20(self):
@@ -125,19 +125,17 @@ class TestTestesStateTraitBuilder(unittest.TestCase):
     def test_parse_21(self):
         self.assertEqual(
             PAR.parse(
-                ('weight=53 g; reproductive data=testes decended, T=8x3 ;')),
+                'weight=53 g; reproductive data=testes decended, T=8x3 ;'),
             [Trait(value='decended', start=13, end=46)])
 
     def test_parse_22(self):
         self.assertEqual(
-            PAR.parse(
-                ('weight=75.6 g; reproductive data=Testes small')),
+            PAR.parse('weight=75.6 g; reproductive data=Testes small'),
             [Trait(value='small', start=15, end=45)])
 
     def test_parse_23(self):
         self.assertEqual(
-            PAR.parse(
-                ('weight=75.6 g; reproductive data=small')),
+            PAR.parse('weight=75.6 g; reproductive data=small'),
             [Trait(value='small', start=15, end=38)])
 
     def test_parse_24(self):
@@ -153,7 +151,7 @@ class TestTestesStateTraitBuilder(unittest.TestCase):
     def test_parse_26(self):
         self.assertEqual(
             PAR.parse(
-                ('junk before reproductive data=Testes small, not descended')),
+                'junk before reproductive data=Testes small, not descended'),
             [Trait(value='small, not descended', start=12, end=57)])
 
     def test_parse_27(self):
@@ -163,8 +161,7 @@ class TestTestesStateTraitBuilder(unittest.TestCase):
 
     def test_parse_28(self):
         self.assertEqual(
-            PAR.parse(
-                ('reproductive data=Uteri small, clear')),
+            PAR.parse('reproductive data=Uteri small, clear'),
             [])
 
     def test_parse_29(self):

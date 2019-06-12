@@ -101,7 +101,7 @@ class TestLifeStageTraitBuilder(unittest.TestCase):
             [Trait(value='tadpole', start=4, end=11)])
 
     def test_parse_18(self):
-        # Lifestage removed
+        # Life stage removed
         self.assertEqual(
             PAR.parse('some embryos'),
             [])
