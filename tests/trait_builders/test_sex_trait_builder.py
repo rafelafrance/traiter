@@ -72,7 +72,3 @@ class TestSexTraitBuilder(unittest.TestCase):
             PAR.parse('sex=male ; sex=male ;'),
             [Trait(value='male', start=0, end=10),
              Trait(value='male', start=11, end=21)])
-
-
-if __name__ == '__main__':
-    unittest.main()

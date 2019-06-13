@@ -143,7 +143,3 @@ class TestLifeStageTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Specimen Age Estimate - minimum date: 15030'),
             [Trait(value='estimate - minimum date: 15030', start=9, end=43)])
-
-
-if __name__ == '__main__':
-    unittest.main()

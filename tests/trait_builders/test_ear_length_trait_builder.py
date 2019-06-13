@@ -176,7 +176,3 @@ class TestEarLengthTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('verbatim collector=C. H. Nellis 71-7-30-1'),
             [])
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -41,8 +41,11 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
 
     def test_parse_05(self):
         self.assertEqual(
-            PAR.parse('; +corp. alb both ovaries;'),
-            [Trait(value='+corp. alb', side='both', start=2, end=25)])
+                PAR.parse(
+                    'reproductive data=L ov 2 lg foll + 2 c.l.; '
+                    'R ov 3 c.l.; L horn 4 dark scars, 3 lt; '
+                    'R horn 6 dark, 6 lt; +corp. alb both ovaries;'),
+                [Trait(value='+corp. alb', side='both', start=104, end=127)])
 
     def test_parse_06(self):
         self.assertEqual(
@@ -83,14 +86,60 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
             PAR.parse('ovaries mod size;'),
             [Trait(value='mod size', start=0, end=16)])
 
-    # def test_parse_13(self):
-    #     self.assertEqual(
-    #         PAR.parse(
-    #             'reproductive data=L ov 2 lg foll + 2 c.l.; '
-    #             'R ov 3 c.l.; L horn 4 dark scars, 3 lt; '
-    #             'R horn 6 dark, 6 lt; +corp. alb both ovaries;'),
-    #         [])
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Ovaries minute, not embryos.'),
+            [Trait(value='minute', start=18, end=32)])
 
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse('; both ovaries sev c.alb.;'),
+            [Trait(value='sev c.alb', side='both', start=2, end=24)])
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_parse_15(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=pelvis fused, ovaries inactive;'),
+            [Trait(value='inactive', start=32, end=48)])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=right ovary destroyed ;'),
+            [Trait(value='destroyed', side='right', start=18, end=39)])
+
+    def test_parse_17(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=large ovaries ;'),
+            [Trait(value='large', start=18, end=31)])
+
+    def test_parse_18(self):
+        self.assertEqual(
+            PAR.parse('ovaries somewhat enlarged'),
+            [Trait(value='somewhat enlarged', start=0, end=25)])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            PAR.parse('ovaries imm.'),
+            [Trait(value='imm', start=0, end=11)])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            PAR.parse('ovaries: both w/sev c. alb;'),
+            [Trait(value='w/sev c. alb', side='both', start=0, end=26)])
+
+    def test_parse_21(self):
+        self.assertEqual(
+            PAR.parse('corpus luteum visible in both ovaries'),
+            [Trait(
+                value='corpus luteum visible', side='both',
+                start=0, end=37)])
+
+    def test_parse_22(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=only 1 fully developed ovary ;'),
+            [Trait(value='only 1 fully developed', start=18, end=46)])
+
+    def test_parse_23(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('ovaries shrunken'),
+            [Trait(value='shrunken', start=0, end=16)])

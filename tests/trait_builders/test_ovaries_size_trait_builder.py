@@ -17,7 +17,3 @@
 #         self.assertEqual(
 #             PAR.parse('testes = 8x5 mm'),
 #             [Parse(value=[8, 5], units='mm', start=0, end=15)])
-
-
-# if __name__ == '__main__':
-#     unittest.main()

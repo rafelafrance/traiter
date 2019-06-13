@@ -131,7 +131,3 @@ class TestTailLengthTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('scrotal t.21mm'),
             [])
-
-
-if __name__ == '__main__':
-    unittest.main()

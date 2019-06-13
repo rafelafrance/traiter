@@ -125,7 +125,3 @@ class TestHindFootLengthTraitBuilder(unittest.TestCase):
             PAR.parse(
                 '2010:15,27,41,69,106-107.112-115,118-128;'),
             [])
-
-
-if __name__ == '__main__':
-    unittest.main()

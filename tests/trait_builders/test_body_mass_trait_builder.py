@@ -311,7 +311,3 @@ class TestBodyMassTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; unformatted measurements=g 0.24 mm ;'),
             [])
-
-
-if __name__ == '__main__':
-    unittest.main()
