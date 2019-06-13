@@ -2,6 +2,7 @@
 
 from traiter.trait import Trait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
+import traiter.shared_tokens as tkn
 
 
 class OvariesStateTraitBuilder(BaseTraitBuilder):
@@ -18,14 +19,13 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.compile_regex()
 
     def build_token_rules(self):
-        # self.keyword('label', r' reproductive .? (data |state | condition) ')
-
         # Various spellings of ovary
         self.fragment('ovary', r' ( ovary s? | ovaries | ov ) \b ')
 
         # E.g.: small sized
         self.keyword('size', r"""
-            ( enlarged | enlarge | large | small | moderate | mod )      
+            ( enlarged | enlarge | large | small | shrunken | shrunk 
+                | moderate | mod | minute )      
             ( \s* size d? )?
             """)
 
@@ -36,21 +36,42 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.keyword('fallopian', r' fallopian ( \s* tubes? )? ')
 
         # Forms of maturity
-        self.keyword('immature', 'immature mature'.split())
+        self.keyword('mature', 'immature mature imm'.split())
+
+        # Forms of active
+        self.keyword('active', 'active inactive'.split())
+
+        # Types of visibility
+        self.keyword('visible', 'visible invisible hidden prominent'.split())
+
+        # Forms of destroyed
+        self.keyword('destroyed', 'destroy(ed)?')
+
+        # Forms of developed
+        self.keyword('developed', r"""
+            (fully | incompletely | partially | part)? 
+            [.\s-]{0,2}
+            (developed | undeveloped | devel | undevel | undev)
+        """)
+
+        # Ovary count
+        self.keyword('count', r"""(only | all | both)? \s* [12]""")
 
         # Words related to ovaries
         self.keyword('horns', 'horns?')
         self.keyword('covered', 'covered')
         self.keyword('fat', 'fat')
 
+        # Spellings of luteum
+        self.keyword('lut', [
+            r' c \.? l \.\? '      # Abbreviation for corpus luteum
+        ] + 'luteum lute lut'.split())
+
         # Spellings of corpus
         self.keyword('corpus', 'corpus corpora corp cor c'.split())
 
         # Spellings of albicans
         self.keyword('alb', 'albicans alb'.split())
-
-        # Spellings of luteum
-        self.keyword('lut', ' luteum lute lut'.split())
 
         # Side keywords
         self.keyword('side', ' (?P<side> both | left | right | [lr] )')
@@ -64,8 +85,12 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # Links ovaries and other related traits
         self.fragment('and', ['and', '[&]'])
 
+        # We will exclude testes measurements
+        self.shared_token(tkn.cross)
+        self.shared_token(tkn.len_units)
+
         # We allow random words in some situations
-        self.fragment('word', r'[a-z]+ \w*')
+        self.fragment('word', r'[a-z] \w*')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
@@ -77,32 +102,52 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             """)
 
         # E.g.: covered in copious fat
-        self.replace('coverage', r' covered (word){0,2} fat ')
+        self.replace('coverage', ' covered (word){0,2} fat ')
 
         # E.g.: +corpus luteum
-        self.replace('luteum', r' ( sign )? ( corpus )? (alb | lut) ')
+        self.replace('luteum', ' ( sign )? ( corpus )? (alb | lut) ')
+
+        # E.g.: active
+        # Or:   immature
+        self.replace(
+            'state', 'active mature destroyed visible developed'.split())
+
+        # E.g.: 6 x 4 mm
+        self.replace('measurement', [
+            'cross len_units',
+            'len_units cross',
+            'cross',
+        ])
 
     def build_product_rules(self):
         """Define rules for output."""
         # Get left and right side measurements
         # E.g.: ovaries: R 2 c. alb, L sev c. alb
         self.product(self.double, r"""
-            ovaries (?P<side1> side) (?P<value1> ( word )? luteum)
-                    (?P<side2> side) (?P<value2> ( word )? luteum)
+            ovaries
+                (?P<side_a> side) (measurement | count)? (?P<value_a> (word)? 
+                luteum)
+                (?P<side_b> side) (measurement | count)? (?P<value_b> (word)? 
+                luteum)
             """)
 
         # Typical ovary notation
         self.product(self.convert, [
 
-            # Only one side is reported
+            # One side may be reported
             # E.g.: left ovary=3x1.5mm, pale pink in color
-            'side ovaries (word){0,3} (?P<value> color)',
-
-            # Has the size but is possibly missing the maturity
-            'ovaries (?P<value> ( size ) ( immature )? )',
+            """(side)? ovaries
+                (measurement)?
+                (?P<value>
+                    ( word | color | luteum | state | size){0,3}
+                    ( color | luteum | state | size ))
+            """,
 
             # Has the maturity but is possibly missing the size
-            'ovaries (?P<value> ( size )? ( immature ) )',
+            'ovaries (side)? (?P<value> (word){0,3} (size | state | luteum))',
+
+            # E.g.: large ovaries
+            '(?P<value> (size | state | count){1,3} ) ovaries',
 
             # E.g.: ovaries and uterine horns covered with copious fat
             'ovaries (?P<value> coverage)',
@@ -111,10 +156,15 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             'ovaries (?P<value> color)',
 
             # E.g.: +corp. alb both ovaries
-            '(?P<value> luteum) ( side )? ovaries',
+            '(?P<value> luteum) (side)? ovaries',
 
             # E.g.: ovaries L +lut
-            'ovaries ( side )? luteum',
+            'ovaries (side)? luteum',
+
+            # E.g.: corpus luteum visible in both ovaries
+            """(?P<value> luteum (state)? )
+                (word | len_units){0,3} (side)? ovaries
+            """,
         ])
 
     @staticmethod
@@ -132,14 +182,14 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
     def double(token):
         """Convert a single token into two traits."""
         trait1 = Trait(
-            value=token.groups['value1'].lower(),
-            side=token.groups['side1'].lower(),
+            value=token.groups['value_a'].lower(),
+            side=token.groups['side_a'].lower(),
             start=token.start,
             end=token.end)
 
         trait2 = Trait(
-            value=token.groups['value2'].lower(),
-            side=token.groups['side2'].lower(),
+            value=token.groups['value_b'].lower(),
+            side=token.groups['side_b'].lower(),
             start=token.start,
             end=token.end)
 
