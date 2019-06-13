@@ -226,31 +226,31 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
             parse.ambiguous_key = False
 
     @staticmethod
-    def csv_formatter(trait, row, parses):
+    def csv_formatter(trait_name, row, traits):
         """Format the trait for CSV output."""
-        if not parses:
+        if not traits:
             return
-        records = _build_records(parses)
+        records = _build_records(traits)
         records = _merge_records(records)
         _format_records(records, row)
 
 
-def _build_records(parses):
+def _build_records(traits):
     records = []
-    for parse in parses:
-        if isinstance(parse.value, list):
-            length, width = parse.value
+    for trait in traits:
+        if isinstance(trait.value, list):
+            length, width = trait.value
             if width > length:
                 length, width = width, length
-        elif parse.dimension == 'width':
-            length, width = -1, parse.value
+        elif trait.dimension == 'width':
+            length, width = -1, trait.value
         else:
-            length, width = parse.value, -1
-        records.append({'side': parse.side,
+            length, width = trait.value, -1
+        records.append({'side': trait.side,
                         'length': length,
                         'width': width,
-                        'ambiguous_key': parse.ambiguous_key,
-                        'units_inferred': parse.units_inferred})
+                        'ambiguous_key': trait.ambiguous_key,
+                        'units_inferred': trait.units_inferred})
     return sorted(records, key=itemgetter('side', 'length', 'width'))
 
 

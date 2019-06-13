@@ -157,14 +157,14 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         return trait
 
     @staticmethod
-    def csv_formatter(trait, row, parses):
+    def csv_formatter(trait_name, row, traits):
         """Format the trait for CSV output."""
-        if not parses:
+        if not traits:
             return
 
         values = []
-        for parse in parses:
-            value = parse.value.lower()
+        for trait in traits:
+            value = trait.value.lower()
             if value not in values:
                 values.append(value)
 

@@ -51,16 +51,17 @@ class BaseTraitBuilder(StackedRegex):
         return trait
 
     @staticmethod
-    def csv_formatter(trait, row, parses):
+    def csv_formatter(trait_name, row, traits):
         """Format the trait for CSV output."""
         records = {}
-        for parse in parses:
-            key = parse.as_key()
+        for trait in traits:
+            key = trait.as_key()
             if key not in records:
-                records[key] = parse
+                records[key] = trait
 
-        for i, parse in enumerate(records.values(), 1):
-            row[f'{trait}:{ordinal(i)}_{trait}_notation'] = parse.value
+        for i, trait in enumerate(records.values(), 1):
+            row[f'{trait_name}:{ordinal(i)}_{trait_name}_notation'] = \
+                trait.value
 
     @staticmethod
     def should_skip(data, trait):

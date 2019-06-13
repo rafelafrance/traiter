@@ -1,5 +1,10 @@
 """Build a parser trait result."""
 
+from collections import namedtuple
+
+
+TraitKey = namedtuple('TraitKey', 'value side')
+
 
 class Trait:
     """Build a parse result."""
@@ -56,3 +61,7 @@ class Trait:
     def merge_flags(self, other):
         """Capture the meaning across all parses."""
         self.ambiguous_key &= other.ambiguous_key
+
+    def as_key(self):
+        """Used to tell if the traits are the same trait."""
+        return TraitKey(value=self.value, side=self.side)
