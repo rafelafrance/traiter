@@ -83,6 +83,14 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
             PAR.parse('ovaries mod size;'),
             [Trait(value='mod size', start=0, end=16)])
 
+    # def test_parse_13(self):
+    #     self.assertEqual(
+    #         PAR.parse(
+    #             'reproductive data=L ov 2 lg foll + 2 c.l.; '
+    #             'R ov 3 c.l.; L horn 4 dark scars, 3 lt; '
+    #             'R horn 6 dark, 6 lt; +corp. alb both ovaries;'),
+    #         [])
+
 
 if __name__ == '__main__':
     unittest.main()

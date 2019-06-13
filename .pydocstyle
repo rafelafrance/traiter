@@ -1,5 +1,0 @@
-[pydocstyle]
-inherit = false
-ignore = D203,D405
-match = (?!test_).*\.py
-
