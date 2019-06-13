@@ -1,7 +1,7 @@
 # The Traits Database Project [![Build Status](https://travis-ci.org/rafelafrance/traiter.svg?branch=master)](https://travis-ci.org/rafelafrance/traiter)
 
 ## All right, what's this all about then?
-**Challenge**: Extract trait information from unstructured or semi-structured natural history notations. That is, if I'm given text like:
+**Challenge**: Extract trait information from unstructured or semi-structured natural history field notations. That is, if I'm given text like:
 
  ```
  This rather large female specimen is 12 lbs 7 oz and 3 feet 7 inches in total length.
@@ -39,6 +39,7 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - We also have a situations where the same abbreviation is used for different traits. For instance `T` can indicate either a testes measurement or a tail length measurement. 
 
 ## List of traits extracted
+**Note: This list is currently biased towards Vertebrate traits.**
 - Total length (aka snout vent length, fork length, etc.)
 - Tail Length
 - Hind foot Length
@@ -46,20 +47,20 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Body body mass
 - Life stage
 - Sex
+- Testes state & size
 - Ovaries state & size (in progress)
 - Pregnancy state (planned)
 - Embryo count & size (planned)
 - Nipple state (planned)
 - Lactation state (planned)
-- Placental scar state, count, & location
-- Testes state & size
+- Placental scar state, count, & location (planned)
 
 ## Install
 
 You will need to have Python3 installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
 ```
 git clone https://github.com/rafelafrance/traiter.git
-python3 -m pip install --user -r traiter/requirements.txt
+python3 -m pip install --user --requirement traiter/requirements.txt
 ```
 
 ## Run
@@ -68,13 +69,10 @@ python3 traiter.py ... TODO ...
 ```
 
 ## Tests
-Having a test suite is absolutely critical. The strategy I use is every new pattern gets its own test. And any time there is a parser error I the relevant parts that caused the error to the test suite and correct the parser. I.e. I use the standard red/green testing methodology.
+Having a test suite is absolutely critical. The strategy I use is every new pattern gets its own test. Any time there is a parser error I add the parts that caused the error to the test suite and correct the parser. I.e. I use the standard red/green testing methodology.
 
-You will need to install `pytest`. After that, you can run the tests like so:
+You can run the tests like so:
 ```
-python3 -m pytest tests/
+cd /my/path/to/traiter
+python -m unittest discover
 ```
-
-## Example parser output
-
-TODO
