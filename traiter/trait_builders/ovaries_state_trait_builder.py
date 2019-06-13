@@ -21,16 +21,13 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # self.keyword('label', r' reproductive .? (data |state | condition) ')
 
         # Various spellings of ovary
-        self.fragment('ovary', [
-            r' ovary s? \b ',
-            r' ovaries \b ',
-        ])
+        self.fragment('ovary', r' ( ovary s? | ovaries | ov ) \b ')
 
         # E.g.: small sized
         self.keyword('size', r"""
             ( enlarged | enlarge | large | small | moderate | mod )      
             ( \s* size d? )?
-        """)
+            """)
 
         # Various spellings of uterus
         self.keyword('uterus', 'uterus uterine'.split())
@@ -76,7 +73,8 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # Or:   ovaries and fallopian tubes
         self.replace('ovaries', r"""
             ovary ( ( ( and )? uterus ( horns )? )
-                    | ( and )? fallopian )?""")
+                    | ( and )? fallopian )?
+            """)
 
         # E.g.: covered in copious fat
         self.replace('coverage', r' covered (word){0,2} fat ')
