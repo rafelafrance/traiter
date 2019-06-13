@@ -56,7 +56,8 @@ def parse_args():
     arg_parser = argparse.ArgumentParser(
         allow_abbrev=True,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=textwrap.dedent(description))
+        description=textwrap.dedent(description),
+        fromfile_prefix_chars='@')
 
     arg_parser.add_argument(
         '--version', '-V', action='version',
