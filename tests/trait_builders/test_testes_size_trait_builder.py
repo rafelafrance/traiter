@@ -10,7 +10,7 @@ PAR = None
 class TestTestesSizeTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = TestesSizeTraitBuilder()
 
@@ -270,3 +270,7 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
                 '"57d3efd8-2b9c-4952-8976-e27401a01251;'
                 '8a35be5e-27fb-4875-81f6-42a5d7787760"}'),
             [])
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -29,7 +29,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # E.g.: small sized
         self.keyword('size', r"""
             ( enlarged | enlarge | large | small | moderate | mod )      
-            ( \s+ size d? )?
+            ( \s* size d? )?
         """)
 
         # Various spellings of uterus

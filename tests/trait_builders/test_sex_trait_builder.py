@@ -9,7 +9,7 @@ PAR = None
 class TestSexTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = SexTraitBuilder()
 
@@ -72,3 +72,7 @@ class TestSexTraitBuilder(unittest.TestCase):
             PAR.parse('sex=male ; sex=male ;'),
             [Trait(value='male', start=0, end=10),
              Trait(value='male', start=11, end=21)])
+
+
+if __name__ == '__main__':
+    unittest.main()

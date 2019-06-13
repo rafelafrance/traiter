@@ -15,11 +15,11 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
 
     # These indicate that the parse is not a total length
     is_id = re.compile(
-            r' identifier | ident | id | collector ',
+            ' identifier | ident | id | collector ',
             NumericTraitBuilder.flags)
-    is_trap = re.compile(r' trap ', NumericTraitBuilder.flags)
+    is_trap = re.compile(' trap ', NumericTraitBuilder.flags)
     is_testes = re.compile(
-            r' reproductive | gonad | test | scrotal | scrotum | scrot ',
+            ' reproductive | gonad | test | scrotal | scrotum | scrot ',
             NumericTraitBuilder.flags)
 
     # The 'L' abbreviation gets confused with abbreviation for Left sometimes.

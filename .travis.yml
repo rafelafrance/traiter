@@ -5,4 +5,4 @@ install:
   - pip install -r requirements.txt
   - pip install git+https://github.com/rafelafrance/stacked-regex.git#egg=stackedregex
 script:
-  - pytest tests
+  - python -m unittest discover

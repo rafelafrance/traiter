@@ -9,7 +9,7 @@ PAR = None
 class TestAsIsTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = AsIsTraitBuilder()
 
@@ -43,3 +43,7 @@ class TestAsIsTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse(' word  word '),
             [Trait(value='word  word', as_is=True, start=1, end=11)])
+
+
+if __name__ == '__main__':
+    unittest.main()

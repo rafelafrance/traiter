@@ -10,7 +10,7 @@ PAR = None
 class TestTailLengthTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = TailLengthTraitBuilder()
 
@@ -131,3 +131,7 @@ class TestTailLengthTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('scrotal t.21mm'),
             [])
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -10,7 +10,7 @@ PAR = None
 class TestTotalLengthTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = TotalLengthTraitBuilder()
 
@@ -645,3 +645,7 @@ class TestTotalLengthTraitBuilder(unittest.TestCase):
             [NumericTrait(
                 value=212, units='mm_shorthand', is_shorthand=True,
                 start=16, end=33)])
+
+
+if __name__ == '__main__':
+    unittest.main()

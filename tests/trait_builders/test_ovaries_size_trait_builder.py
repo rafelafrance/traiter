@@ -9,7 +9,7 @@
 # class TestOvariesSizeTraitBuilder(unittest.TestCase):
 #
 #     @classmethod
-#     def setup_class(cls):
+#     def setUpClass(cls):
 #         global PAR
 #         PAR = OvariesSizeTraitBuilder()
 #
@@ -17,3 +17,7 @@
 #         self.assertEqual(
 #             PAR.parse('testes = 8x5 mm'),
 #             [Parse(value=[8, 5], units='mm', start=0, end=15)])
+
+
+# if __name__ == '__main__':
+#     unittest.main()

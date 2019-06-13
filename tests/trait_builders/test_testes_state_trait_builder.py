@@ -10,7 +10,7 @@ PAR = None
 class TestTestesStateTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = TestesStateTraitBuilder()
 
@@ -210,3 +210,7 @@ class TestTestesStateTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('reproductive data=test 3.5x2, pt desc, Et not visib,'),
             [Trait(value='pt desc', start=0, end=37)])
+
+
+if __name__ == '__main__':
+    unittest.main()

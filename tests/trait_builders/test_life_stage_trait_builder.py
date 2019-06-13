@@ -1,6 +1,7 @@
 import unittest
 from traiter.trait import Trait
-from traiter.trait_builders.life_stage_trait_builder import LifeStageTraitBuilder
+from traiter.trait_builders.life_stage_trait_builder \
+    import LifeStageTraitBuilder
 
 
 PAR = None
@@ -9,7 +10,7 @@ PAR = None
 class TestLifeStageTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = LifeStageTraitBuilder()
 
@@ -142,3 +143,7 @@ class TestLifeStageTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Specimen Age Estimate - minimum date: 15030'),
             [Trait(value='estimate - minimum date: 15030', start=9, end=43)])
+
+
+if __name__ == '__main__':
+    unittest.main()

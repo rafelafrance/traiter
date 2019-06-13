@@ -1,6 +1,7 @@
 import unittest
 from traiter.trait import Trait
-from traiter.trait_builders.ovaries_state_trait_builder import OvariesStateTraitBuilder
+from traiter.trait_builders.ovaries_state_trait_builder \
+    import OvariesStateTraitBuilder
 
 
 PAR = None
@@ -9,7 +10,7 @@ PAR = None
 class TestOvariesStateTraitBuilder(unittest.TestCase):
 
     @classmethod
-    def setup_class(cls):
+    def setUpClass(cls):
         global PAR
         PAR = OvariesStateTraitBuilder()
 
@@ -62,14 +63,26 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
 
     def test_parse_09(self):
         self.assertEqual(
-                PAR.parse('reproductive data=Left ovary=3x1.5mm, '
-                          'pale pink in color; uterus thin'),
-                [Trait(value='pale pink', side='left', start=18, end=47)])
+            PAR.parse('reproductive data=Left ovary=3x1.5mm, '
+                      'pale pink in color; uterus thin'),
+            [Trait(value='pale pink', side='left', start=18, end=47)])
 
     def test_parse_10(self):
-        self.maxDiff = None
         self.assertEqual(
-                PAR.parse(', ovaries immature (no lg folls) ;'),
-                [Trait(value='immature', start=2, end=18)])
+            PAR.parse(', ovaries immature (no lg folls) ;'),
+            [Trait(value='immature', start=2, end=18)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse(
+                'reproductive data=Ovaries and uterus small, immature'),
+            [Trait(value='small, immature', start=18, end=52)])
+
+    def test_parse_12(self):
+        self.assertEqual(
+            PAR.parse('ovaries mod size;'),
+            [Trait(value='mod size', start=0, end=16)])
 
 
+if __name__ == '__main__':
+    unittest.main()

@@ -123,7 +123,7 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
     @staticmethod
     def shorthand(token):
         """Convert a shorthand value like 11-22-33-44:55g."""
-        # Handling shorthand notation for weights is different form lengths
+        # Handling shorthand notation for weights is different from lengths
         trait = NumericTrait(start=token.start, end=token.end)
         trait.float_value(token.groups.get('shorthand_wt'))
         if not trait.value:
