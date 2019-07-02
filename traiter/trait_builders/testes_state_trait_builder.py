@@ -1,12 +1,16 @@
 """Parse testes state notations."""
 
 from traiter.trait import Trait
-from traiter.trait_builders.base_trait_builder import BaseTraitBuilder, ordinal
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
+import traiter.writers.csv_formatters.testes_state_csv_formatter as \
+    testes_state_csv_formatter
 
 
 class TestesStateTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
+
+    csv_formatter = testes_state_csv_formatter.csv_formatter
 
     def __init__(self, args=None):
         """Build the trait parser."""
@@ -157,21 +161,6 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         return trait
 
     @staticmethod
-    def csv_formatter(trait_name, row, traits):
-        """Format the trait for CSV output."""
-        if not traits:
-            return
-
-        values = []
-        for trait in traits:
-            value = trait.value.lower()
-            if value not in values:
-                values.append(value)
-
-        for i, value in enumerate(values, 1):
-            row[f'testes_{i}10:{ordinal(i)}_testes_state'] = value
-
-    @staticmethod
     def should_skip(data, trait):
         """Check if this record should be skipped because of other fields."""
         if not data['sex'] or data['sex'][0].value != 'female':
@@ -182,7 +171,11 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
 
     @staticmethod
     def adjust_record(data, trait):
-        """Adjust the trait based on other fields."""
+        """
+        Adjust the trait based on other fields.
+
+        If this is definitely a male then don't flag "gonads" as ambiguous.
+        """
         if not data['sex'] or data['sex'][0].value != 'male':
             return
         for parse in data[trait]:

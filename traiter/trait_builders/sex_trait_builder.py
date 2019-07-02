@@ -19,11 +19,11 @@ class SexTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        # The only keyword so far is: sex
-        self.keyword('keyword', 'sex')
+        # JSON keys for sex
+        self.keyword('json_key', 'sex')
 
         # The sexes
-        self.keyword('sex', 'females? males?'.split())
+        self.keyword('intrinsic', 'females? males?'.split())
 
         # To handle a guessed sex
         self.fragment('quest', '[?]')
@@ -35,22 +35,24 @@ class SexTraitBuilder(BaseTraitBuilder):
         self.fragment('word', r' \b [a-z]\S* ')
 
         # Some patterns need a terminator
-        self.fragment('sep', ' [;,"] | $ ')
+        self.fragment('separator', ' [;,"] | $ ')
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
 
             # E.g.: sex might be female;
-            'keyword (?P<value> ( sex | word ){1,2} ( quest )? ) sep',
+            """json_key 
+                (?P<value> ( intrinsic | word ){1,2} ( quest )? )
+                separator""",
 
             # E.g.: sex=female?
             # Or:   sex=unknown
-            'keyword (?P<value> ( sex | word ) ( quest )? )',
+            'json_key (?P<value> ( intrinsic | word ) ( quest )? )',
 
             # E.g.: male
             # Or:   male?
-            '(?P<value> sex ( quest )? )',
+            '(?P<value> intrinsic ( quest )? )',
         ])
 
     def convert(self, token):

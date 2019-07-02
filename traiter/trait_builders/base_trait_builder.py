@@ -1,14 +1,14 @@
 """Common logic for parsing trait notations."""
 
-import re
 from stacked_regex.stacked_regex import StackedRegex
-from traiter.util import ordinal
+import traiter.writers.csv_formatters.base_trait_csv_formatter as \
+    base_trait_csv_formatter
 
 
 class BaseTraitBuilder(StackedRegex):
     """Shared lexer logic."""
 
-    flags = re.VERBOSE | re.IGNORECASE
+    csv_formatter = base_trait_csv_formatter.csv_formatter
 
     def __init__(self, args=None):
         """Build the trait parser."""
@@ -51,21 +51,12 @@ class BaseTraitBuilder(StackedRegex):
         return trait
 
     @staticmethod
-    def csv_formatter(trait_name, row, traits):
-        """Format the trait for CSV output."""
-        records = {}
-        for trait in traits:
-            key = trait.as_key()
-            if key not in records:
-                records[key] = trait
-
-        for i, trait in enumerate(records.values(), 1):
-            row[f'{trait_name}:{ordinal(i)}_{trait_name}_notation'] = \
-                trait.value
-
-    @staticmethod
     def should_skip(data, trait):
-        """Check if this record should be skipped because of other fields."""
+        """
+        Check if this record should be skipped because of other fields.
+
+        For instance, we skip parsing testes traits for females.
+        """
         return False
 
     @staticmethod

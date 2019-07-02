@@ -18,8 +18,8 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        # Keywords that indicates that a life stage follows
-        self.keyword('keyword', [
+        # JSON keys for life stage
+        self.keyword('json_key', [
             r' life \s * stage \s * (remarks?)? ',
             r' age \s * class ',
             r' age \s * in \s * (?P<time_units> hours?) ',
@@ -35,11 +35,12 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
             (?P<time_units> years? )
             """)
 
-        # These words are a life stage without a keyword indicator
-        self.keyword('keyless', [
+        # These words are life stages without a keyword indicator
+        self.keyword('intrinsic', [
             r' yolk \s? sac',
             r' young [\s-]? of [\s-]? the [\s-]? year',
-            r' young \s* adult']
+            r' young \s* adult',
+            ]
             + """
                 ads? adulte?s?
                 chicks?
@@ -76,28 +77,31 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         # Use this to find the end of a life stage pattern
         self.fragment('sep', r' [;,"?] | $ ')
 
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
 
             # E.g.: life stage juvenile/yearling
-            'keyword (?P<value> ( keyless | word ) joiner keyless )',
+            'json_key (?P<value> ( intrinsic | word ) joiner intrinsic )',
 
             # E.g.: life stage young adult
-            'keyword (?P<value> ( keyless | word ) keyless )',
+            'json_key (?P<value> ( intrinsic | word ) intrinsic )',
 
             # E.g.: life stage yearling
-            'keyword (?P<value> keyless )',
+            'json_key (?P<value> intrinsic )',
 
             # A sequence of words bracketed by a keyword and a separator
             # E.g.: LifeStage Remarks: 5-6 wks;
-            'keyword (?P<value> ( keyless | word | joiner ){1,5} ) sep',
+            'json_key (?P<value> ( intrinsic | word | joiner ){1,5} ) sep',
 
             # E.g.: LifeStage = 1st month
-            'keyword (?P<value> year_num )',
+            'json_key (?P<value> year_num )',
 
             # E.g.: Juvenile
-            '(?P<value> keyless )',
+            '(?P<value> intrinsic )',
 
             # E.g.: 1st year
             '(?P<value> year_num )',

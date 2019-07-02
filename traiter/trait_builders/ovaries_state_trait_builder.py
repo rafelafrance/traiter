@@ -52,7 +52,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             (fully | incompletely | partially | part)? 
             [.\s-]{0,2}
             (developed | undeveloped | devel | undevel | undev)
-        """)
+            """)
 
         # Ovary count
         self.keyword('count', r"""(only | all | both)? \s* [12]""")
@@ -65,7 +65,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # Spellings of luteum
         self.keyword('lut', [
             r' c \.? l \.\? '      # Abbreviation for corpus luteum
-        ] + 'luteum lute lut'.split())
+            ] + 'luteum lute lut'.split())
 
         # Spellings of corpus
         self.keyword('corpus', 'corpus corpora corp cor c'.split())
@@ -117,7 +117,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             'cross len_units',
             'len_units cross',
             'cross',
-        ])
+            ])
 
     def build_product_rules(self):
         """Define rules for output."""

@@ -1,5 +1,7 @@
 """Shared token patterns."""
 
+from traiter.util import ordinal, number_to_words
+
 
 feet = ('feet', r" foot s? | feet s? | ft s? | (?<= \d ) ' ")
 
@@ -139,3 +141,13 @@ triple = ('triple', fr"""
 uuid = ('uuid', r"""
     \b [0-9a-f]{8} - [0-9a-f]{4} - [1-5][0-9a-f]{3}
         - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """)
+
+# Some numeric values are reported as ordinals or words
+number_words = [ordinal(x) for x in range(1, 5)]
+number_words += [number_to_words(x) for x in number_words]
+number_words += ['hatching']
+number_words = ('number_words', '|'.join([x[1] for x in number_words]))
+
+
+# Time units
+time_units = ('time_units', r'years? | months? | weeks? | days? | hours?')
