@@ -52,8 +52,7 @@ class SexTraitBuilder(BaseTraitBuilder):
 
             # E.g.: male
             # Or:   male?
-            '(?P<value> intrinsic ( quest )? )',
-        ])
+            '(?P<value> intrinsic ( quest )? )'])
 
     def convert(self, token):
         """Convert parsed tokens into a result."""

@@ -2,6 +2,7 @@
 
 from traiter.trait import Trait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
+import traiter.shared_tokens as tkn
 
 
 class LifeStageTraitBuilder(BaseTraitBuilder):
@@ -11,7 +12,10 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
+        self.time_options = tkn.time_units[1]
+
         self.build_token_rules()
+        self.build_replace_rules()
         self.build_product_rules()
 
         self.compile_regex()
@@ -22,18 +26,8 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         self.keyword('json_key', [
             r' life \s * stage \s * (remarks?)? ',
             r' age \s * class ',
-            r' age \s * in \s * (?P<time_units> hours?) ',
-            r' age \s * in \s * (?P<time_units> days?) ',
-            r' age ',
-        ])
-
-        # Life stage is sometimes reported as an age
-        self.keyword('year_num', r"""
-            ( after \s* )?
-            ( first | second | third | fourth | 1st | 2nd | 3rd | 4th
-                | hatching ) \s*
-            (?P<time_units> years? )
-            """)
+            r' age \s * in \s * (?P<time_units> {}) '.format(self.time_options),
+            r' age '])
 
         # These words are life stages without a keyword indicator
         self.keyword('intrinsic', [
@@ -65,20 +59,32 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
             """.split())
 
         # This indicates that the following words are NOT a life stage
-        self.keyword('determined', r' determin \w* ')
-
-        # Match any word
-        self.fragment('word', r' \b \w [\w?./-]* (?! [./-] ) ')
+        self.keyword('skip', r' determin \w* ')
 
         # Compound words separated by dashes or slashes
         # E.g. adult/juvenile or over-winter
         self.fragment('joiner', r' \s* [/-] \s* ')
 
         # Use this to find the end of a life stage pattern
-        self.fragment('sep', r' [;,"?] | $ ')
+        self.fragment('separator', r' [;,"?] | $ ')
+
+        # For life stages with numbers as words in them
+        self.shared_token(tkn.ordinals)
+
+        # Time units
+        self.shared_token(tkn.time_units)
+
+        # Literals
+        self.fragment('after', 'after')
+        self.fragment('hatching', 'hatching')
+
+        # Match any word
+        self.fragment('word', r' \b \w [\w?./-]* (?! [./-] ) ')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
+        self.replace(
+            'as_number', '( after )? (ordinals | hatching) time_units')
 
     def build_product_rules(self):
         """Define rules for output."""
@@ -95,20 +101,21 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
             # A sequence of words bracketed by a keyword and a separator
             # E.g.: LifeStage Remarks: 5-6 wks;
-            'json_key (?P<value> ( intrinsic | word | joiner ){1,5} ) sep',
+            """json_key (?P<value> ( intrinsic | word | joiner ){1,5} ) 
+                separator""",
 
             # E.g.: LifeStage = 1st month
-            'json_key (?P<value> year_num )',
+            'json_key (?P<value> as_number )',
 
             # E.g.: Juvenile
             '(?P<value> intrinsic )',
 
             # E.g.: 1st year
-            '(?P<value> year_num )',
-        ])
+            '(?P<value> as_number )'])
 
     @staticmethod
     def convert(token):
         """Convert parsed tokens into a result."""
-        return Trait(value=token.groups['value'].lower(),
-                     start=token.start, end=token.end)
+        return Trait(
+            value=token.groups['value'].lower(),
+            start=token.start, end=token.end)

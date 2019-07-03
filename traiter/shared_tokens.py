@@ -143,10 +143,9 @@ uuid = ('uuid', r"""
         - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """)
 
 # Some numeric values are reported as ordinals or words
-number_words = [ordinal(x) for x in range(1, 5)]
-number_words += [number_to_words(x) for x in number_words]
-number_words += ['hatching']
-number_words = ('number_words', '|'.join([x[1] for x in number_words]))
+ordinals = [ordinal(x) for x in range(1, 6)]
+ordinals += [number_to_words(x) for x in number_words]
+ordinals = ('number_words', ' | '.join([x for x in number_words]))
 
 
 # Time units
