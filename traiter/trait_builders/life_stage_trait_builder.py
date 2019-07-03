@@ -84,7 +84,7 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
     def build_replace_rules(self):
         """Define rules for token simplification."""
         self.replace(
-            'as_number', '( after )? (ordinals | hatching) time_units')
+            'as_ordinal', '( after )? (ordinals | hatching) time_units')
 
     def build_product_rules(self):
         """Define rules for output."""
@@ -105,13 +105,13 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
                 separator""",
 
             # E.g.: LifeStage = 1st month
-            'json_key (?P<value> as_number )',
+            'json_key (?P<value> as_ordinal )',
 
             # E.g.: Juvenile
             '(?P<value> intrinsic )',
 
             # E.g.: 1st year
-            '(?P<value> as_number )'])
+            '(?P<value> as_ordinal )'])
 
     @staticmethod
     def convert(token):

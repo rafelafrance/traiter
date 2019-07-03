@@ -144,8 +144,8 @@ uuid = ('uuid', r"""
 
 # Some numeric values are reported as ordinals or words
 ordinals = [ordinal(x) for x in range(1, 6)]
-ordinals += [number_to_words(x) for x in number_words]
-ordinals = ('number_words', ' | '.join([x for x in number_words]))
+ordinals += [number_to_words(x) for x in ordinals]
+ordinals = ('ordinals', ' | '.join([x for x in ordinals]))
 
 
 # Time units
