@@ -24,17 +24,16 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         """Define the tokens."""
         # JSON keys for life stage
         self.keyword('json_key', [
-            r' life \s * stage \s * (remarks?)? ',
-            r' age \s * class ',
-            r' age \s * in \s * (?P<time_units> {}) '.format(self.time_options),
+            r' life \s* stage \s* (remarks?)? ',
+            r' age \s* class ',
+            r' age \s* in \s* (?P<time_units> {}) '.format(self.time_options),
             r' age '])
 
         # These words are life stages without a keyword indicator
         self.keyword('intrinsic', [
             r' yolk \s? sac',
             r' young [\s-]? of [\s-]? the [\s-]? year',
-            r' young \s* adult',
-            ]
+            r' young \s* adult']
             + """
                 ads? adulte?s?
                 chicks?
