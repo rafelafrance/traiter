@@ -102,8 +102,8 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         # Fractional numbers, like: 9/16
         self.shared_token(tkn.fraction)
 
-        # Possible pairs of numbers like: "10 - 20" or just "10"
-        self.shared_token(tkn.pair)
+        # Possible range of numbers like: "10 - 20" or just "10"
+        self.shared_token(tkn.range_)
 
         # The abbreviation key, just: t. This can be a problem.
         self.fragment('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) ')
@@ -134,81 +134,81 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         self.product(partial(self.compound, units=['ft', 'in']), [
 
             # E.g.: total length 4 feet 7 inches
-            'key (?P<ft> pair) feet ( comma )? (?P<in> pair) inches',
+            'key (?P<ft> range) feet ( comma )? (?P<in> range) inches',
 
             # E.g.: length 4 ft 7 in
             """(?P<ambiguous_key>
-                (?P<ft> pair) feet ( comma )? (?P<in> pair) inches )""",
+                (?P<ft> range) feet ( comma )? (?P<in> range) inches )""",
         ])
 
         # A typical total length notation
         self.product(self.simple, [
 
             # E.g.: total length in mm 10 - 13
-            'key_with_units pair',
+            'key_with_units range',
 
             # E.g.: tag 10-20-39 10 - 13 in
-            """shorthand_key ( triple )? pair
+            """shorthand_key ( triple )? range
                 (?P<units> metric_len | feet | inches )""",
 
             # E.g.: tag 10-20-39 cm 10-12
-            'shorthand_key ( triple )? (?P<units> metric_len ) pair',
+            'shorthand_key ( triple )? (?P<units> metric_len ) range',
 
             # E.g.: total 10/20/30 10 to 12 cm
-            """key_units_req ( triple )? pair
+            """key_units_req ( triple )? range
                 (?P<units> metric_len | feet | inches )""",
 
             # E.g.: 10 to 11 inches TL
-            'pair (?P<units> metric_len | feet | inches ) key',
+            'range (?P<units> metric_len | feet | inches ) key',
 
             # E.g.: total 10-20-40 10 to 20 inches ToL
-            """ambiguous ( triple )? pair
+            """ambiguous ( triple )? range
                 (?P<units> metric_len | feet | inches ) key""",
 
             # E.g.: total 10-20-40 10 to 20 ToL
-            'ambiguous ( triple )? pair key',
+            'ambiguous ( triple )? range key',
 
             # E.g.: length 10 to 11 inches
-            """(?P<ambiguous_key> ambiguous) pair
+            """(?P<ambiguous_key> ambiguous) range
                 (?P<units> metric_len | feet | inches )""",
 
             # E.g.: length feet 10 to 11
             """(?P<ambiguous_key> ambiguous)
-                (?P<units> metric_len | feet | inches ) pair""",
+                (?P<units> metric_len | feet | inches ) range""",
 
             # E.g.: length 10 to 11
-            '(?P<ambiguous_key> ambiguous) pair',
+            '(?P<ambiguous_key> ambiguous) range',
 
             # E.g.: SVL 10-11 cm
-            'key pair (?P<units> metric_len | feet | inches )',
+            'key range (?P<units> metric_len | feet | inches )',
 
             # E.g.: forkLen cm 10-11
-            'key (?P<units> metric_len | feet | inches ) pair',
+            'key (?P<units> metric_len | feet | inches ) range',
 
             # E.g.: total length: 10-29-39 10-11
-            'key ( triple )? pair',
+            'key ( triple )? range',
 
             # E.g.: head body length is a whopping 12.4 meters
-            """key ( word | semicolon | comma ){1,3} pair
+            """key ( word | semicolon | comma ){1,3} range
                 (?P<units> metric_len | feet | inches )""",
 
             # E.g.: SVL is 10-12
-            'key ( word | semicolon | comma ){1,3} pair',
+            'key ( word | semicolon | comma ){1,3} range',
 
             # E.g.: L 12.4 cm
-            'char_key pair (?P<units> metric_len | feet | inches )',
+            'char_key range (?P<units> metric_len | feet | inches )',
 
             # E.g.: L 12.4
-            'char_key pair',
+            'char_key range',
         ])
 
         self.product(
             partial(self.shorthand_length, measurement='shorthand_tl'), [
                 '( shorthand_key | key_units_req ) shorthand',  # With a key
-                'shorthand',                                   # Without a key
+                'shorthand',                                    # Without a key
                 # Handle a truncated shorthand notation
                 """( shorthand_key | key_units_req ) triple 
-                    (?! shorthand | pair )""",
+                    (?! shorthand | range )""",
             ])
 
     def fix_problem_parses(self, trait, text):

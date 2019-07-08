@@ -78,6 +78,7 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
             [NumericTrait(value=[13, 5], units='mm', start=18, end=31)])
 
     def test_parse_13(self):
+        self.maxDiff = None
         self.assertEqual(
             PAR.parse('"gonad length 1":"3.0", "gonad length 2":"2.0",'),
             [NumericTrait(

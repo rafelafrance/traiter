@@ -50,9 +50,9 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
 
-        # Possible pairs of numbers like: 10 - 20
+        # Possible range of numbers like: 10 - 20
         # Or just: 10
-        self.shared_token(tkn.pair)
+        self.shared_token(tkn.range_)
 
         # These indicate that the mass is NOT a body mass
         self.keyword('other_wt', r"""
@@ -88,36 +88,36 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.product(partial(self.compound, units=['lbs', 'ozs']), [
 
             # E.g.: body mass: 5lbs, 3-4oz
-            'wt_key (?P<lbs> pair ) pounds ( comma )? (?P<ozs> pair ) ounces',
+            'wt_key (?P<lbs> range ) pounds ( comma )? (?P<ozs> range ) ounces',
 
             # Missing a weight key: 5lbs, 3-4oz
             """(?P<ambiguous_key>
-                (?P<lbs> pair ) pounds ( comma )?
-                (?P<ozs> pair ) ounces )""",
+                (?P<lbs> range ) pounds ( comma )?
+                (?P<ozs> range ) ounces )""",
         ])
 
         # A typical body mass notation
         self.product(self.simple, [
 
             # E.g.: MassInGrams=22
-            'key_with_units pair',
+            'key_with_units range',
 
             # E.g.: body weight ozs 26 - 42
             """wt_key (?P<units> metric_mass | pounds | ounces )
-                pair (?! len_units )""",
+                range (?! len_units )""",
 
             # E.g.: body weight 26 - 42 grams
-            'wt_key pair (?P<units> metric_mass | pounds | ounces )',
+            'wt_key range (?P<units> metric_mass | pounds | ounces )',
 
             # E.g.: measurement 26 - 42 grams
-            'shorthand_key pair (?P<units> metric_mass | pounds | ounces )',
+            'shorthand_key range (?P<units> metric_mass | pounds | ounces )',
 
             # E.g.: specimen: 8 to 15 grams"
             """shorthand_key (?P<units> metric_mass | pounds | ounces )
-                pair (?! len_units )""",
+                range (?! len_units )""",
 
             # E.g.: body mass 8 to 15 grams"
-            'wt_key pair (?! len_units )',
+            'wt_key range (?! len_units )',
         ])
 
     @staticmethod

@@ -14,8 +14,7 @@ class AsIsTraitBuilder(BaseTraitBuilder):
         # Build the tokens
         self.fragment('data', [
             r' \S .* \S ',  # Strip leading and trailing spaces
-            r' \S ',        # Get a string with a single character
-        ])
+            r' \S '])       # Get a string with a single character
 
         # Build rules for parsing the trait
         self.product(self.convert, '(?P<value> data )')

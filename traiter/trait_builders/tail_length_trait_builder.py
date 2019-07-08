@@ -15,8 +15,8 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
 
     # These indicate that the parse is not really for a tail length
     is_testes = re.compile(
-            ' reproductive | gonad | test | scrotal | scrotum | scrot ',
-            NumericTraitBuilder.flags)
+        ' reproductive | gonad | test | scrotal | scrotum | scrot ',
+        NumericTraitBuilder.flags)
     is_elevation = re.compile(' elevation | elev ', NumericTraitBuilder.flags)
     is_total = re.compile(' body | nose | snout ', NumericTraitBuilder.flags)
     is_tag = re.compile(' tag ', NumericTraitBuilder.flags)
@@ -50,8 +50,7 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
             r' tail \s* length ',
             r' tail \s* len ',
             'tail',
-            'tal',
-        ])
+            'tal'])
 
         # Units
         self.shared_token(tkn.len_units)
@@ -64,7 +63,7 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.fraction)
 
         # Possible pairs of numbers like: "10 - 20" or just "10"
-        self.shared_token(tkn.pair)
+        self.shared_token(tkn.range_)
 
         # Sometimes the last number is missing in the shorthand notation
         self.shared_token(tkn.triple)
@@ -89,29 +88,27 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
             'key fraction (?P<units> len_units )',
 
             # Without units, like: tail = 9/16
-            'key fraction',
-        ])
+            'key fraction'])
 
         # A typical tail length notation
         self.product(self.simple, [
 
             # E.g.: tailLengthInMM=9-10
-            'key_with_units pair',
+            'key_with_units range',
 
             # E.g.: tailLength=9-10 mm
-            'key pair (?P<units> len_units )',
+            'key range (?P<units> len_units )',
 
             # Missing units like: tailLength 9-10
-            'key pair',
-            ])
+            'key range',
+        ])
 
         self.product(
-                partial(self.shorthand_length, measurement='shorthand_tal'), [
-                    'shorthand_key shorthand',  # With a key
-                    'shorthand',                # Without a key
-                    # Handle a truncated shorthand notation
-                    'shorthand_key triple (?! shorthand | pair )',
-                ])
+            partial(self.shorthand_length, measurement='shorthand_tal'), [
+                'shorthand_key shorthand',  # With a key
+                'shorthand',  # Without a key
+                # Handle a truncated shorthand notation
+                'shorthand_key triple (?! shorthand | range )'])
 
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""

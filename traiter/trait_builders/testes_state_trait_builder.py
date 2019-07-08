@@ -34,8 +34,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         # Fully or incompletely
         self.keyword('fully', [
             'fully',
-            '( in )? complete ( ly )?',
-        ])
+            '( in )? complete ( ly )?'])
 
         # Negation
         self.fragment('non', r' \b ( not | non | no | semi | sub ) ')
@@ -43,8 +42,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         # Descended
         self.keyword('descended', [
             '( un )? ( des?c?end ( ed )?',
-            'desc? )',
-        ])
+            'desc? )'])
 
         # Abbreviations for testes
         self.keyword('abbrev', 'tes ts tnd td tns ta t'.split())
@@ -58,8 +56,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         self.fragment('partially', [
             'partially',
             'part',
-            r'\b pt \b',
-        ])
+            r'\b pt \b'])
 
         # Abbreviations for testes state
         self.keyword('state_abbrev', 'ns sc'.split())
@@ -71,8 +68,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         self.keyword('size', [
             'visible',
             '( en )? large d?',
-            'small',
-        ])
+            'small'])
 
         # Spellings of gonads
         self.keyword('gonads', ' (?P<ambiguous_key> gonads? ) ')
@@ -105,8 +101,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
             'size non descended',
             'size descended',
             'descended',
-            'size',
-        ])
+            'size'])
 
         # Simplify the testes length so it can be skipped easily
         self.replace('length', 'cross ( len_units )?')
@@ -147,8 +142,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
                     | scrotal | other )""",
 
             # E.g.: no gonads
-            """(?P<value> non ( testes | scrotal | gonads ) | scrotal )""",
-        ])
+            """(?P<value> non ( testes | scrotal | gonads ) | scrotal )"""])
 
     @staticmethod
     def convert(token):

@@ -36,16 +36,16 @@ number = ('number', r"""
     | (?<= [^\d] ) \. \d+ | ^ \. \d+
     """)
 
-# A number or a pair of numbers like "12 to 34" or "12.3-45.6"
+# A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
-# So: no part of "2014-12-11" would be in a pair
-pair_joiner = r'- | to'
-pair = ('pair', fr"""
+# So: no part of "2014-12-11" would be in a range
+range_joiner = r'- | to'
+range_ = ('range', fr"""
     (?<! \d ) (?<! \d [|,.#+-] ) (?<! \b to \s ) (?<! [#] )
     (?P<estimated_value> \[ \s* )?
     (?P<value1> {number[1]} )
     \]? \s*?
-    ( \s* ( {pair_joiner} ) \s* (?P<value2> {number[1]} ) )?
+    ( \s* ( {range_joiner} ) \s* (?P<value2> {number[1]} ) )?
     (?! \d+ | [|,.+-] \d | \s+ to \b )
     """)
 
@@ -150,3 +150,17 @@ ordinals = ('ordinals', ' | '.join([x for x in ordinals]))
 
 # Time units
 time_units = ('time_units', r'years? | months? | weeks? | days? | hours?')
+
+
+# Side keywords
+side = ('side', r""" 
+    [/(\[] \s* (?P<side> [lr] \b ) \s* [)\]]? 
+    | (?P<side> left | right | [lr] \b ) """)
+
+
+# Dimension
+dimension = ('dimension', r' (?P<dimension> length | width ) ')
+
+
+# Numeric sides interfere with the number parsing so combine it with dimension
+dim_side = ('dim_side', fr""" {dimension[1]} \s* (?P<side> [12] ) \b """)

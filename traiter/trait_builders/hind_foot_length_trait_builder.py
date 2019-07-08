@@ -25,15 +25,13 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
         self.keyword(
             'key_with_units',
             r"""( hind \s* )? foot \s* ( length | len ) \s* in \s*
-                    (?P<units> millimeters | mm )"""
-        )
+                    (?P<units> millimeters | mm )""")
 
         # Standard keywords that indicate a hind foot length follows
         self.keyword('key', [
             r'hind \s* foot \s* with \s* (?P<includes> claw )',
             r'hind \s* foot ( \s* ( length | len ) )?',
-            'hfl | hf',
-        ])
+            'hfl | hf'])
 
         # Units
         self.shared_token(tkn.len_units)
@@ -45,8 +43,8 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
         # Fractional numbers, like: 9/16
         self.shared_token(tkn.fraction)
 
-        # Possible pairs of numbers like: "10 - 20" or just "10"
-        self.shared_token(tkn.pair)
+        # Possible range of numbers like: "10 - 20" or just "10"
+        self.shared_token(tkn.range_)
 
         # Sometimes the last number is missing in the shorthand notation
         self.shared_token(tkn.triple)
@@ -66,29 +64,26 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
             'key fraction (?P<units> len_units )',
 
             # E.g.: hindFoot = 9/16
-            'key fraction',
-        ])
+            'key fraction'])
 
         # A typical body mass notation
         self.product(self.simple, [
 
             # E.g.: hindFootLengthInMM=9-10
-            'key_with_units pair',
+            'key_with_units range',
 
             # E.g.: hindFootLength=9-10 mm
-            'key pair (?P<units> len_units )',
+            'key range (?P<units> len_units )',
 
             # Missing units like: hindFootLength 9-10
-            'key pair',
-        ])
+            'key range'])
 
         self.product(
             partial(self.shorthand_length, measurement='shorthand_hfl'), [
                 'shorthand_key shorthand',  # With a key
                 'shorthand',                # Without a key
                 # Handle a truncated shorthand notation
-                'shorthand_key triple (?! shorthand | pair )',
-        ])
+                'shorthand_key triple (?! shorthand | range )'])
 
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""

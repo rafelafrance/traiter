@@ -64,8 +64,8 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
         # Spellings of luteum
         self.keyword('lut', [
-            r' c \.? l \.\? '      # Abbreviation for corpus luteum
-            ] + 'luteum lute lut'.split())
+            r' c \.? l \.\? '  # Abbreviation for corpus luteum
+        ] + 'luteum lute lut'.split())
 
         # Spellings of corpus
         self.keyword('corpus', 'corpus corpora corp cor c'.split())
@@ -116,8 +116,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.replace('measurement', [
             'cross len_units',
             'len_units cross',
-            'cross',
-            ])
+            'cross'])
 
     def build_product_rules(self):
         """Define rules for output."""
@@ -164,8 +163,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             # E.g.: corpus luteum visible in both ovaries
             """(?P<value> luteum (state)? )
                 (word | len_units){0,3} (side)? ovaries
-            """,
-        ])
+            """])
 
     @staticmethod
     def convert(token):

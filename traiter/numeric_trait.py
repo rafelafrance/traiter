@@ -87,7 +87,7 @@ class NumericTrait(Trait):
         self.units = units
         big = self.to_float(values[0])
         big = convert(big, units[0])
-        smalls = re.split(tkn.pair_joiner, values[1])
+        smalls = re.split(tkn.range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         self.value = [big + convert(x, units[1]) for x in smalls]
         self.value = [round(v, 2) for v in self.value]

@@ -65,8 +65,8 @@ class NumericTraitBuilder(BaseTraitBuilder):
 
     def numeric_fix_ups(self, trait, text):
         """All of the numeric fix-ups."""
-        return self.fix_up_shorthand(trait, text) \
-            and self.fix_up_inches(trait, text)
+        return (self.fix_up_shorthand(trait, text)
+                and self.fix_up_inches(trait, text))
 
     @staticmethod
     def fix_up_shorthand(trait, text):
@@ -82,7 +82,7 @@ class NumericTraitBuilder(BaseTraitBuilder):
     def fix_up_inches(trait, text):
         """Disambiguate between double quotes "3" and inch units 3"."""
         if (not trait.units
-                and QUOTES_VS_INCHES.match(text[trait.end-1:])
+                and QUOTES_VS_INCHES.match(text[trait.end - 1:])
                 and text[trait.start:trait.end].count('"') == 0):
             trait.end += 1
             trait.units = '"'

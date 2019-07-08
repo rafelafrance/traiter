@@ -75,8 +75,8 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         self.shared_token(tkn.shorthand_key)
         self.shared_token(tkn.shorthand)
 
-        # Possible pairs of numbers like: "10 - 20" or just "10"
-        self.shared_token(tkn.pair)
+        # Possible ranges of numbers like: "10 - 20" or just "10"
+        self.shared_token(tkn.range_)
 
         # We allow random words in some situations
         self.keyword('word', r' ( [a-z] \w* ) ')
@@ -109,13 +109,13 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
         self.product(self.simple, [
 
             # E.g.: earLengthInMM 9-10
-            'key_with_units pair',
+            'key_with_units range',
 
             # E.g.: ear 9-10 mm
-            'key pair (?P<units> len_units )',
+            'key range (?P<units> len_units )',
 
             # Missing units like: ear: 9-10
-            'key pair',
+            'key range',
         ])
 
         # Shorthand notation like: on tag: 11-22-33-44=99g

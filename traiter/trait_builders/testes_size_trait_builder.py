@@ -13,30 +13,22 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
 
     csv_formatter = testes_size_csv_formatter.csv_formatter
 
-    # We need to pair the sides with the correct partner
-    side_pairs = {'left': 'right', 'right': 'left', '1': '2', '2': '1'}
-
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)
 
-        # Side keywords, like: left
-        self.side = ' (?P<side> left | right | [lr] ) '
-
-        # Side abbreviation surrounded by brackets, like: [r]
-        self.lr_delim = r' [/(\[] \s* (?P<side> [lr] ) \s* [)\]] '
-
         # Used to get compounds traits from a single parse
-        self.double_side = self.compile(
-            name='double_sided',
-            regexp=f' (?P<double_side> {self.side} | {self.lr_delim} ) ')
+        self.two_sides = self.compile(
+            name='two_sides',
+            regexp=f' (?P<two_sides> {tkn.side[1]} ) ')
 
         # Used to get compounds traits from a single parse
         self.double_cross = self.compile(
-            name='double_crossed',
+            name='double_cross',
             regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
 
         self.build_token_rules()
+        self.build_replace_rules()
         self.build_product_rules()
 
         self.compile_regex()
@@ -48,26 +40,8 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # A label, like: reproductive data
         self.keyword('label', 'reproductive .? ( data | state | condition )')
 
-        # A key with units, like: gonadLengthInMM
-        self.keyword('key_with_units', r"""
-            (?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width ) \s*
-                in \s* (?P<units> millimeters | mm )
-            """)
-
-        # Male or female ambiguous, like: gonadLength1
-        self.keyword('ambiguous', [
-
-            # E.g.: GonadWidth2
-            r"""(?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )
-                \s* ( (?P<side> [12] ) |  )""",
-
-            # E.g.: LeftGonadLength
-            r"""(?P<side> left | right ) \s* (?P<ambiguous_key> gonad )
-                \s* (?P<dimension> length | width )""",
-
-            # E.g.: Gonad Length
-            r'(?P<ambiguous_key> gonad ) \s* (?P<dimension> length | width )',
-        ])
+        # Gonads can be for female or male
+        self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonad ) ')
 
         # Various spellings of testes
         self.keyword('testes', 'testes testis testicles? test'.split())
@@ -91,14 +65,23 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
                 cryptorchism cryptorchid monorchism monorchid inguinal
             """.split())
 
-        # Side keywords, like: left
-        self.keyword('lr', self.side)
+        # Side: left or [r]
+        self.shared_token(tkn.side)
 
-        # Side abbreviation surrounded by brackets, like: [r]
-        self.fragment('lr_delim', self.lr_delim)
+        # Number as a side: side 1 or side2
+        self.shared_token(tkn.dim_side)
+
+        # Dimensions: length or width
+        self.shared_token(tkn.dimension)
 
         # Length by width, like: 10 x 5
         self.shared_token(tkn.cross)
+
+        # Units
+        self.shared_token(tkn.len_units)
+
+        # Links ovaries and other related traits
+        self.fragment('in', ' in ')
 
         # Links ovaries and other related traits
         self.fragment('and', ['and', '[&]'])
@@ -109,6 +92,26 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # Some patterns require a separator
         self.fragment('sep', ' [;] | $ ')
 
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+
+        # A key with units, like: gonadLengthInMM
+        self.replace('key_with_units', r"""
+            ambiguous_key \s* dimension \s* in \s* (?P<units> len_units )
+            """)
+
+        # Male or female ambiguous, like: gonadLength1
+        self.replace('ambiguous', [
+
+            # E.g.: GonadWidth2
+            r' ambiguous_key \s* dim_side',
+
+            # E.g.: LeftGonadLength
+            r' side \s* ambiguous_key \s* dimension ',
+
+            # E.g.: Gonad Length
+            r' ambiguous_key \s* dimension '])
+
     def build_product_rules(self):
         """Define rules for output."""
         # These patterns contain measurements to both left & right testes
@@ -116,21 +119,20 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
 
             # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
             """label ( testes | abbrev | char_key )
-                (?P<first> ( lr | lr_delim ) cross )
-                (?P<second> ( lr | lr_delim ) cross )?""",
+                (?P<first> side cross )
+                (?P<second> side cross )?""",
 
             # As above but without the testes marker:
             # E.g.: reproductive data: left 10x5 mm, right 10x6 mm
             """label
-                (?P<first> ( lr | lr_delim ) cross )
-                (?P<second> ( lr | lr_delim ) cross )?""",
+                (?P<first> side cross )
+                (?P<second> side cross )?""",
 
             # Has the testes marker but is lacking the label
             # E.g.: testes left 10x5 mm, right 10x6 mm
             """( testes | abbrev | char_key )
-                (?P<first> ( lr | lr_delim ) cross )
-                (?P<second> ( lr | lr_delim ) cross )?""",
-        ])
+                (?P<first> side cross )
+                (?P<second> side cross )?"""])
 
         # A typical testes size notation
         self.product(self.convert, [
@@ -139,7 +141,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
             'label ( testes | abbrev | char_key ) cross',
 
             # E.g.: reproductive data: left tests 10x5 mm
-            'label ( lr | lr_delim ) ( testes | abbrev | char_key ) cross',
+            'label side ( testes | abbrev | char_key ) cross',
 
             # E.g.: reproductive data: 10x5 mm
             'label cross',
@@ -171,8 +173,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
             '( testes | state | abbrev ) cross',
 
             # E.g.: T 5 x 4
-            '(?P<ambiguous_char> char_key ) cross',
-        ])
+            '(?P<ambiguous_char> char_key ) cross'])
 
     def double(self, token):
         """Convert a single token into multiple (two) trait_builders."""
@@ -191,7 +192,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         token1 = Token(groups=groups)
         trait1.cross_value(token1)
 
-        groups = self.double_side.find_matches(token.groups['first'])
+        groups = self.two_sides.find_matches(token.groups['first'])
         token1 = Token(groups=groups)
         trait1.is_value_in_token('side', token1)
 
