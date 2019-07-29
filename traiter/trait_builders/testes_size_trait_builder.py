@@ -41,7 +41,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         self.keyword('label', 'reproductive .? ( data | state | condition )')
 
         # Gonads can be for female or male
-        self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonad ) ')
+        self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonads? ) ')
 
         # Various spellings of testes
         self.keyword('testes', 'testes testis testicles? test'.split())

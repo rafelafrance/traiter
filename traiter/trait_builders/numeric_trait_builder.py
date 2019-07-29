@@ -5,6 +5,7 @@ from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 from traiter.numeric_trait import NumericTrait
 import traiter.writers.csv_formatters.numeric_trait_csv_formatter as \
     numeric_trait_csv_formatter
+import traiter.shared_tokens as tkn
 
 LOOK_BACK_FAR = 40
 
@@ -16,6 +17,16 @@ class NumericTraitBuilder(BaseTraitBuilder):
     """Shared parser logic."""
 
     csv_formatter = numeric_trait_csv_formatter.csv_formatter
+
+    def __init__(self, args=None):
+        """Build the trait parser."""
+        super().__init__(args)
+
+        self.common_tokens()
+
+    def common_tokens(self):
+        """All numeric traits share these tokens."""
+        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
 
     @staticmethod
     def add_flags(token, trait):

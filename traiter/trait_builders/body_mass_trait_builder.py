@@ -21,8 +21,6 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
-
         # Looking for keys like: MassInGrams
         self.keyword('key_with_units', r"""
             ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """)

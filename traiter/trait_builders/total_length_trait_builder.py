@@ -38,11 +38,6 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)
-
-        # Words that indicate we don't have a total length
-        self.keyword('skip', 'horns?')
-
         # Units are in the key, like: TotalLengthInMillimeters
         self.keyword('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
@@ -82,6 +77,9 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
             # E.g.: snout-vent-length
             r'snout [\s-]* vent [\s-]* lengths? \b',
         ])
+
+        # Words that indicate we don't have a total length
+        self.keyword('skip', 'horns?')
 
         # The word length on its own. Make sure it isn't proceeded by a letter
         self.fragment('ambiguous', r'(?<! [a-z] )(?<! [a-z] \s ) lengths? ')

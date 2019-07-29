@@ -36,8 +36,6 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
-
         # Units are in the key, like: EarLengthInMillimeters
         self.keyword('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )

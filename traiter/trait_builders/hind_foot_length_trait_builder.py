@@ -19,8 +19,6 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
-
         # Units are in the key, like: HindFootLengthInMillimeters
         self.keyword(
             'key_with_units',
@@ -78,12 +76,12 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
             # Missing units like: hindFootLength 9-10
             'key range'])
 
-        self.product(
-            partial(self.shorthand_length, measurement='shorthand_hfl'), [
-                'shorthand_key shorthand',  # With a key
-                'shorthand',                # Without a key
-                # Handle a truncated shorthand notation
-                'shorthand_key triple (?! shorthand | range )'])
+        self.product(partial(
+            self.shorthand_length, measurement='shorthand_hfl'), [
+            'shorthand_key shorthand',  # With a key
+            'shorthand',                # Without a key
+            # Handle a truncated shorthand notation
+            'shorthand_key triple (?! shorthand | range )'])
 
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""

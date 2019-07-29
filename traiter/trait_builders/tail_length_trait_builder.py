@@ -33,8 +33,6 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
-
         # Looking for keys like: tailLengthInMM
         self.keyword('key_with_units', r"""
             tail \s* ( length | len ) \s* in \s*

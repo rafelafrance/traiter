@@ -1,13 +1,13 @@
 """Parse testes state notations."""
 
 from traiter.trait import Trait
-from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
+from traiter.trait_builders.gonads_trait_builder import GonadTraitBuilder
 import traiter.shared_tokens as tkn
 import traiter.writers.csv_formatters.testes_state_csv_formatter as \
     testes_state_csv_formatter
 
 
-class TestesStateTraitBuilder(BaseTraitBuilder):
+class TestesStateTraitBuilder(GonadTraitBuilder):
     """Parser logic."""
 
     csv_formatter = testes_state_csv_formatter.csv_formatter
