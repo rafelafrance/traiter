@@ -155,8 +155,7 @@ time_units = ('time_units', r'years? | months? | weeks? | days? | hours?')
 # Side keywords
 side = ('side', r""" 
     [/(\[] \s* (?P<side> [lr] \b ) \s* [)\]]? 
-    | (?P<side> left | right | [lr] \b ) """)
-
+    | (?P<side> both | left | right | [lr] \b ) """)
 
 # Dimension
 dimension = ('dimension', r' (?P<dimension> length | width ) ')

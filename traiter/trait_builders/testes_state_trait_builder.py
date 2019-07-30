@@ -1,13 +1,14 @@
 """Parse testes state notations."""
 
 from traiter.trait import Trait
-from traiter.trait_builders.gonads_trait_builder import GonadTraitBuilder
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
+import traiter.shared_repoduction_tokens as r_tkn
 import traiter.writers.csv_formatters.testes_state_csv_formatter as \
     testes_state_csv_formatter
 
 
-class TestesStateTraitBuilder(GonadTraitBuilder):
+class TestesStateTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     csv_formatter = testes_state_csv_formatter.csv_formatter
@@ -24,69 +25,53 @@ class TestesStateTraitBuilder(GonadTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        # A label, like: reproductive data
-        self.keyword('label', 'reproductive .? ( data |state | condition )')
+        # A label, like: "reproductive data"
+        self.shared_token(r_tkn.label)
 
-        # Various spellings of testes
-        self.fragment(
-            'testes', r' ( testes |  testis | testicles? | test ) \b ')
+        # Various spellings of "testes"
+        self.shared_token(r_tkn.testes)
 
-        # Fully or incompletely
-        self.keyword('fully', [
-            'fully',
-            '( in )? complete ( ly )?'])
+        # "Fully" or "incompletely"
+        self.shared_token(r_tkn.fully)
 
-        # Negation
-        self.fragment('non', r' \b ( not | non | no | semi | sub ) ')
+        # Negation: "non", "not", etc.
+        self.shared_token(r_tkn.non)
 
-        # Descended
-        self.keyword('descended', [
-            '( un )? ( des?c?end ( ed )?',
-            'desc? )'])
+        # "Descended"
+        self.shared_token(r_tkn.descended)
 
-        # Abbreviations for testes
+        # Abbreviations for "testes"
         self.keyword('abbrev', 'tes ts tnd td tns ta t'.split())
 
-        # Spellings of scrotum
-        self.fragment(
-                'scrotal',
-                r'( scrotum | scrotal | scrot | nscr | scr) \b')
+        # Spellings of "scrotum"
+        self.shared_token(r_tkn.scrotal)
 
-        # Spellings of partially
-        self.fragment('partially', [
-            'partially',
-            'part',
-            r'\b pt \b'])
+        # Spellings of "partially"
+        self.shared_token(r_tkn.partially)
 
-        # Abbreviations for testes state
+        # Abbreviations for "testes state"
         self.keyword('state_abbrev', 'ns sc'.split())
 
-        # Spellings of abdominal
-        self.keyword('abdominal', 'abdominal abdomin abdom abd'.split())
+        # Spellings of "abdominal"
+        self.shared_token(r_tkn.abdominal)
 
         # Various size words
-        self.keyword('size', [
-            'visible',
-            '( en )? large d?',
-            'small'])
+        self.shared_token(r_tkn.size)
 
-        # Spellings of gonads
-        self.keyword('gonads', ' (?P<ambiguous_key> gonads? ) ')
+        # Spellings of "gonads"
+        self.shared_token(r_tkn.gonads)
 
         # Other state words
-        self.keyword(
-            'other',
-            'cryptorchism cryptorchid monorchism monorchid inguinal'.split())
+        self.shared_token(r_tkn.other)
 
         # We will skip over testes size measurements
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
 
-        # Links ovaries and other related traits
-        self.fragment('and', ['and', '[&]'])
+        self.shared_token(r_tkn.and_)
 
         # We allow random words in some situations
-        self.fragment('word', r' [a-z]+ ')
+        self.shared_token(r_tkn.word)
 
     def build_replace_rules(self):
         """Define rules for token simplification."""

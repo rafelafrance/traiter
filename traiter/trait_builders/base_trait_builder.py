@@ -40,7 +40,7 @@ class BaseTraitBuilder(StackedRegex):
             # Add the traits after any fix up.
             for trait in trait_list:
                 trait = self.fix_problem_parses(trait, text)
-                if trait:
+                if trait:  # The parse may fail during fix up
                     trait.field = field
                     traits.append(trait)
 

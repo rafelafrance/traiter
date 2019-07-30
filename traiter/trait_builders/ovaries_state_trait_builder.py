@@ -3,6 +3,7 @@
 from traiter.trait import Trait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
+import traiter.shared_repoduction_tokens as r_tkn
 
 
 class OvariesStateTraitBuilder(BaseTraitBuilder):
@@ -20,70 +21,60 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         # Various spellings of ovary
-        self.fragment('ovary', r' ( ovary s? | ovaries | ov ) \b ')
+        self.shared_token(r_tkn.ovary)
 
         # E.g.: small sized
-        self.keyword('size', r"""
-            ( enlarged | enlarge | large | small | shrunken | shrunk 
-                | moderate | mod | minute )      
-            ( \s* size d? )?
-            """)
+        self.shared_token(r_tkn.size)
 
         # Various spellings of uterus
-        self.keyword('uterus', 'uterus uterine'.split())
+        self.shared_token(r_tkn.uterus)
 
         # Various forms of fallopian tubes
-        self.keyword('fallopian', r' fallopian ( \s* tubes? )? ')
+        self.shared_token(r_tkn.fallopian)
 
-        # Forms of maturity
-        self.keyword('mature', 'immature mature imm'.split())
+        # Forms of "maturity"
+        self.shared_token(r_tkn.mature)
 
-        # Forms of active
-        self.keyword('active', 'active inactive'.split())
+        # Forms of "active"
+        self.shared_token(r_tkn.active)
 
-        # Types of visibility
-        self.keyword('visible', 'visible invisible hidden prominent'.split())
+        # Types of "visibility"
+        self.shared_token(r_tkn.visible)
 
-        # Forms of destroyed
-        self.keyword('destroyed', 'destroy(ed)?')
+        # Forms of "destroyed"
+        self.shared_token(r_tkn.destroyed)
 
-        # Forms of developed
-        self.keyword('developed', r"""
-            (fully | incompletely | partially | part)? 
-            [.\s-]{0,2}
-            (developed | undeveloped | devel | undevel | undev)
-            """)
+        # Forms of "developed"
+        self.shared_token(r_tkn.developed)
 
         # Ovary count
-        self.keyword('count', r"""(only | all | both)? \s* [12]""")
+        self.shared_token(r_tkn.count_)
 
         # Words related to ovaries
-        self.keyword('horns', 'horns?')
-        self.keyword('covered', 'covered')
-        self.keyword('fat', 'fat')
+        self.shared_token(r_tkn.horns)
+        self.shared_token(r_tkn.covered)
+        self.shared_token(r_tkn.fat)
 
         # Spellings of luteum
-        self.keyword('lut', [
-            r' c \.? l \.\? '  # Abbreviation for corpus luteum
-        ] + 'luteum lute lut'.split())
+        self.shared_token(r_tkn.lut)
 
         # Spellings of corpus
-        self.keyword('corpus', 'corpus corpora corp cor c'.split())
+        self.shared_token(r_tkn.corpus)
 
         # Spellings of albicans
-        self.keyword('alb', 'albicans alb'.split())
+        self.shared_token(r_tkn.alb)
 
         # Side keywords
-        self.keyword('side', ' (?P<side> both | left | right | [lr] )')
+        self.shared_token(tkn.side)
 
-        # Colors associated with ovaries
-        self.keyword('color', r' ( dark | light | pale )? \s* (red | pink) ')
+        # Colors associated with gonads
+        self.shared_token(r_tkn.color)
 
         # Sign for presence or absence
-        self.fragment('sign', ' [+-] ')
+        self.shared_token(r_tkn.sign)
 
         # Links ovaries and other related traits
-        self.fragment('and', ['and', '[&]'])
+        self.shared_token(r_tkn.and_)
 
         # We will exclude testes measurements
         self.shared_token(tkn.cross)

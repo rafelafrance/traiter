@@ -7,8 +7,6 @@ import traiter.shared_tokens as tkn
 class OvariesSizeTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
-    side_pairs = {'left': 'right', 'right': 'left', '1': '2', '2': '1'}
-
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__(args)

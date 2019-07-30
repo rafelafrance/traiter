@@ -4,6 +4,7 @@ from stacked_regex.token import Token
 from traiter.numeric_trait import NumericTrait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
+import traiter.shared_repoduction_tokens as r_tkn
 import traiter.writers.csv_formatters.testes_size_csv_formatter as \
     testes_size_csv_formatter
 
@@ -38,13 +39,13 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         self.shared_token(tkn.uuid)  # UUIDs cause problems with numeric traits
 
         # A label, like: reproductive data
-        self.keyword('label', 'reproductive .? ( data | state | condition )')
+        self.shared_token(r_tkn.label)
 
         # Gonads can be for female or male
         self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonads? ) ')
 
         # Various spellings of testes
-        self.keyword('testes', 'testes testis testicles? test'.split())
+        self.shared_token(r_tkn.testes)
 
         # Note: abbrev differs from the one in the testes_state_trait
         self.keyword('abbrev', 'tes ts tnd td tns ta'.split())
@@ -52,23 +53,21 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # The abbreviation key, just: t. This can be a problem.
         self.fragment('char_key', r' \b t (?! [a-z] )')
 
-        # Various testes state words
-        self.keyword('state', [
-            r"""(not | non | no | semi | sub | un | partially | part
-                | fully | ( in)? complete(ly)? )?
-                (des?c?end ( ed)? | desc? )"""]
-            + """
-                scrotum scrotal scrot nscr scr ns sc
-                abdominal abdomin abdom abd
-                visible enlarged small
-                gonads?
-                cryptorchism cryptorchid monorchism monorchid inguinal
-            """.split())
+        # Various testes state words that are skipped
+        self.shared_token(r_tkn.non)
+        self.shared_token(r_tkn.fully)
+        self.shared_token(r_tkn.partially)
+        self.shared_token(r_tkn.descended)
+        self.shared_token(r_tkn.scrotal)
+        self.shared_token(r_tkn.abdominal)
+        self.shared_token(r_tkn.size)
+        self.shared_token(r_tkn.gonads)
+        self.shared_token(r_tkn.other)
 
         # Side: left or [r]
         self.shared_token(tkn.side)
 
-        # Number as a side: side 1 or side2
+        # Side: left or [r]
         self.shared_token(tkn.dim_side)
 
         # Dimensions: length or width
@@ -80,37 +79,39 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # Units
         self.shared_token(tkn.len_units)
 
-        # Links ovaries and other related traits
-        self.fragment('in', ' in ')
-
-        # Links ovaries and other related traits
-        self.fragment('and', ['and', '[&]'])
+        # Words that join gonad traits
+        self.shared_token(r_tkn.in_)
+        self.shared_token(r_tkn.and_)
 
         # We allow random words in some situations
-        self.fragment('word', ' [a-z]+ ')
+        self.shared_token(r_tkn.word)
 
         # Some patterns require a separator
-        self.fragment('sep', ' [;] | $ ')
+        self.shared_token(r_tkn.sep)
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
 
+        self.replace('state', [
+            """(non | partially | fully )? descended """ ]
+            + """ scrotal abdominal size gonads other """.split())
+
         # A key with units, like: gonadLengthInMM
         self.replace('key_with_units', r"""
-            ambiguous_key \s* dimension \s* in \s* (?P<units> len_units )
+            ambiguous_key dimension in (?P<units> len_units )
             """)
 
         # Male or female ambiguous, like: gonadLength1
         self.replace('ambiguous', [
 
             # E.g.: GonadWidth2
-            r' ambiguous_key \s* dim_side',
+            r' ambiguous_key dim_side',
 
             # E.g.: LeftGonadLength
-            r' side \s* ambiguous_key \s* dimension ',
+            r' side ambiguous_key dimension ',
 
             # E.g.: Gonad Length
-            r' ambiguous_key \s* dimension '])
+            r' ambiguous_key dimension '])
 
     def build_product_rules(self):
         """Define rules for output."""
