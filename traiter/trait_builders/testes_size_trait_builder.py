@@ -44,7 +44,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # Gonads can be for female or male
         self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonads? ) ')
 
-        # Various spellings of testes
+        # Spellings of testes
         self.shared_token(r_tkn.testes)
 
         # Note: abbrev differs from the one in the testes_state_trait
@@ -118,7 +118,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # These patterns contain measurements to both left & right testes
         self.product(self.double, [
 
-            # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
+            # E.g.: reproductive data: testes left 10x5 mm, right 10x6 mm
             """label ( testes | abbrev | char_key )
                 (?P<first> side cross )
                 (?P<second> side cross )?""",
@@ -138,10 +138,10 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
         # A typical testes size notation
         self.product(self.convert, [
 
-            # E.g.: reproductive data: tests 10x5 mm
+            # E.g.: reproductive data: testes 10x5 mm
             'label ( testes | abbrev | char_key ) cross',
 
-            # E.g.: reproductive data: left tests 10x5 mm
+            # E.g.: reproductive data: left testes 10x5 mm
             'label side ( testes | abbrev | char_key ) cross',
 
             # E.g.: reproductive data: 10x5 mm
