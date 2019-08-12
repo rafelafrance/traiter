@@ -2,11 +2,11 @@
 
 import re
 from functools import partial
-from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
+from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-class EarLengthTraitBuilder(NumericTraitBuilder):
+class EarLengthTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     # How far to look into the surrounding context to disambiguate the parse
@@ -14,15 +14,15 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
     look_back_near = 10
 
     # These indicate that the parse is not really for an ear length
-    is_et = re.compile(r' e \.? t ', NumericTraitBuilder.flags)
-    is_number = re.compile(' [#] ', NumericTraitBuilder.flags)
-    is_mag = re.compile(' magnemite ', NumericTraitBuilder.flags)
-    is_id = re.compile(' identifier | ident | id ', NumericTraitBuilder.flags)
+    is_et = re.compile(r' e \.? t ', BaseTraitBuilder.flags)
+    is_number = re.compile(' [#] ', BaseTraitBuilder.flags)
+    is_mag = re.compile(' magnemite ', BaseTraitBuilder.flags)
+    is_id = re.compile(' identifier | ident | id ', BaseTraitBuilder.flags)
 
     # The 'E' abbreviation gets confused with abbreviation for East sometimes.
     # Try to disambiguate the two by looking for a North near by.
     look_around = 10
-    is_east = re.compile(r' \b n ', NumericTraitBuilder.flags)
+    is_east = re.compile(r' \b n ', BaseTraitBuilder.flags)
 
     def __init__(self, args=None):
         """Build the trait parser."""

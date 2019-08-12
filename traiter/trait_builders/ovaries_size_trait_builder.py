@@ -1,7 +1,7 @@
 """Parse ovaries size notations."""
 
 from stacked_regex.token import Token
-from traiter.numeric_trait import NumericTrait
+from traiter.trait import Trait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
 import traiter.shared_repoduction_tokens as r_tkn
@@ -188,12 +188,12 @@ class OvariesSizeTraitBuilder(BaseTraitBuilder):
             return self.convert(token)
 
         # Regex second match groups will overwrite the first match groups
-        trait2 = NumericTrait(start=token.start, end=token.end)
+        trait2 = Trait(start=token.start, end=token.end)
         trait2.cross_value(token)
         trait2.is_value_in_token('side', token)
 
         # We need to re-extract the first match groups
-        trait1 = NumericTrait(start=token.start, end=token.end)
+        trait1 = Trait(start=token.start, end=token.end)
 
         groups = self.double_cross.find_matches(token.groups['first'])
         token1 = Token(groups=groups)
@@ -211,7 +211,7 @@ class OvariesSizeTraitBuilder(BaseTraitBuilder):
         if token.groups.get('ambiguous_char') \
                 and not token.groups.get('value2'):
             return None
-        trait = NumericTrait(start=token.start, end=token.end)
+        trait = Trait(start=token.start, end=token.end)
         trait.cross_value(token)
         trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
         trait.is_flag_in_token('ambiguous_key', token)
