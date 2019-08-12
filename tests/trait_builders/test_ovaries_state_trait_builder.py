@@ -143,3 +143,13 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('ovaries shrunken'),
             [Trait(value='shrunken', start=0, end=16)])
+
+    def test_parse_24(self):
+        self.assertEqual(
+            PAR.parse('inactive ovary'),
+            [Trait(value='inactive', start=0, end=14)])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('no embryos, nips small, ovary < 1 x 1 mm'),
+            [])

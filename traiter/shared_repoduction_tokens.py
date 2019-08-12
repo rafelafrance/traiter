@@ -11,7 +11,9 @@ and_ = ('and', r' ( and | [&] ) \b ')
 count_ = ('count', r"""( only | all | both )? \s* [12]""")
 
 # Colors associated with gonads
-color = ('color', r' ( dark | light | pale )? \s* ( red | pink ) ')
+color = (
+    'color',
+    r""" ( dark | light | pale )? \s* ( red | pink | black | brown) """)
 
 # "covered"
 covered = ('covered', ' covered ')
@@ -27,7 +29,7 @@ developed = ('developed', r"""
     """)
 
 # "fat"
-fat = ('fat', ' fat ')
+fat = ('fat', r' \b ( fat | fatty ) \b ')
 
 # "Fully" or "incompletely"
 fully = ('fully', ['fully', '( in )? complete ( ly )?'])
@@ -35,7 +37,7 @@ fully = ('fully', ['fully', '( in )? complete ( ly )?'])
 # Spellings of "gonads"
 gonads = ('gonads', ' (?P<ambiguous_key> gonads? ) ')
 
-# Links gonads and other related traits
+# This is used in key values like: "OvariesLengthInMM"
 in_ = ('in', r' in ')
 
 # A label, like: "reproductive data"
@@ -87,7 +89,7 @@ other = (
 # Spellings of "scrotum"
 scrotal = ('scrotal', r'( scrotum | scrotal | scrot | nscr | scr) \b')
 
-# Various spellings of "testes"
+# Spellings of "testes"
 testes = ('testes', r' ( testes |  testis | testicles? | test ) \b ')
 
 
@@ -109,8 +111,11 @@ horns = ('horns', 'horns?')
 # Spellings of luteum
 lut = ('lut', r' ( c \.? l \.\? ) | \b ( luteum | lute | lut ) \b ')
 
-# Various spellings of ovary
+# Spellings of ovary
 ovary = ('ovary', r' ( ovary s? | ovaries | ov ) \b ')
 
-# Various spellings of uterus
+# Spellings of uterus
 uterus = ('uterus', 'uterus uterine'.split())
+
+# Spellings of nipple
+nipple = ('nipple', 'nipple s? | nip s?')

@@ -64,6 +64,9 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # Spellings of albicans
         self.shared_token(r_tkn.alb)
 
+        # Spellings of nipple
+        self.shared_token(r_tkn.nipple)
+
         # Side keywords
         self.shared_token(tkn.side)
 
@@ -102,6 +105,8 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # Or:   immature
         self.replace(
             'state', 'active mature destroyed visible developed'.split())
+
+        self.replace('nips', 'nipple (size | state )')
 
         # E.g.: 6 x 4 mm
         self.replace('measurement', [
