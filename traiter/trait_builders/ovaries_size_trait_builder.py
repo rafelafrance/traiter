@@ -97,6 +97,9 @@ class OvariesSizeTraitBuilder(BaseTraitBuilder):
         # We allow random words in some situations
         self.shared_token(r_tkn.word)
 
+        # Commas are sometimes separators & other times punctuation
+        self.fragment('comma', r'[,]')
+
         # Some patterns require a separator
         self.shared_token(r_tkn.sep)
 
@@ -141,11 +144,17 @@ class OvariesSizeTraitBuilder(BaseTraitBuilder):
                 (?P<first> side cross )
                 (?P<second> side cross )?""",
 
+            # Has side before gonad key
+            # E.g.: left ovary: 4 x 2 mm
+            """(?P<first> side ovary cross )
+                (?P<second> side (ovary)? cross )?""",
+
             # Has the ovaries marker but is lacking the label
             # E.g.: ovaries left 10x5 mm, right 10x6 mm
             """ovary
-                (?P<first> side cross )
-                (?P<second> side cross )?"""])
+                (?P<first> (side)? cross )
+                (comma)?
+                (?P<second> (side)? cross )?"""])
 
         # A typical testes size notation
         self.product(self.convert, [

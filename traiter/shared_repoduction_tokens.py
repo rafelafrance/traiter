@@ -13,7 +13,7 @@ count_ = ('count', r"""( only | all | both )? \s* [12]""")
 # Colors associated with gonads
 color = (
     'color',
-    r""" ( dark | light | pale )? \s* 
+    r""" (( dark | light | pale ) \s* )?
          ( red | pink | brown | black | white ) """)
 
 # "covered"
@@ -24,9 +24,9 @@ destroyed = ('destroyed', 'destroy(ed)?')
 
 # Forms of "developed"
 developed = ('developed', r"""
-    (fully | incompletely | partially | part)?
+    (fully | incompletely | partially | part | well)?
     [.\s-]{0,2}
-    (developed | undeveloped | devel | undevel | undev)
+    (developed | undeveloped | devel | undevel | undev | indist)
     """)
 
 # "fat"
@@ -67,7 +67,7 @@ size = ('size', r"""
     """)
 
 # Types of "visibility"
-visible = ('visible', 'visible invisible hidden prominent'.split())
+visible = ('visible', 'visible invisible hidden prominent seen'.split())
 
 # We allow random words in some situations
 word = ('word', ' [a-z]+ ')

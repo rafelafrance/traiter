@@ -43,6 +43,9 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.shared_token(r_tkn.active)
 
         # Types of "visibility"
+        self.shared_token(r_tkn.non)
+
+        # Types of "visibility"
         self.shared_token(r_tkn.visible)
 
         # Forms of "destroyed"
@@ -73,6 +76,9 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
         # Side keywords
         self.shared_token(tkn.side)
+
+        # Colors associated with gonads
+        self.shared_token(tkn.cyst)
 
         # Colors associated with gonads
         self.shared_token(r_tkn.color)
@@ -108,10 +114,11 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # E.g.: active
         # Or:   immature
         self.replace(
-            'state', 'active mature destroyed visible developed'.split())
+            'state',
+            r"""(non)? ( active | mature | destroyed | visible | developed )""")
 
         # Skip nipple notation
-        self.replace('nips', 'nipple (size | state )')
+        self.replace('nips', 'nipple ( size | state )')
 
         # E.g.: 6 x 4 mm
         self.replace('measurement', [
@@ -125,10 +132,10 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         # E.g.: ovaries: R 2 c. alb, L sev c. alb
         self.product(self.double, r"""
             ovaries
-                (?P<side_a> side) (measurement | count)? (?P<value_a> (word)? 
-                luteum)
-                (?P<side_b> side) (measurement | count)? (?P<value_b> (word)? 
-                luteum)
+                (?P<side_a> side)
+                    (measurement | count)? (?P<value_a> (word)? luteum)
+                (?P<side_b> side)
+                    (measurement | count)? (?P<value_b> (word)? luteum)
             """)
 
         # Typical ovary notation
@@ -139,8 +146,8 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             """(side)? ovaries
                 (measurement)?
                 (?P<value>
-                    ( word | color | luteum | state | size){0,3}
-                    ( color | luteum | state | size ))
+                    ( word | color | luteum | state | size | and | cyst ){0,3}
+                    ( color | luteum | state | size | cyst ))
             """,
 
             # Has the maturity but is possibly missing the size
@@ -160,6 +167,9 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
             # E.g.: ovaries L +lut
             'ovaries (side)? luteum',
+
+            # E.g.: 4 bodies in L ovary
+            '(?P<value> cyst ) (side)? ovaries',
 
             # E.g.: corpus luteum visible in both ovaries
             """(?P<value> luteum (state)? )

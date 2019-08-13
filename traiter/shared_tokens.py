@@ -155,7 +155,7 @@ time_units = ('time_units', r'years? | months? | weeks? | days? | hours?')
 # Side keywords
 side = ('side', r""" 
     [/(\[] \s* (?P<side> [lr] \b ) \s* [)\]]? 
-    | (?P<side> both | left | right | [lr] \b ) """)
+    | (?P<side> both | left | right | lft | rt | [lr] \b ) """)
 
 # Dimension
 dimension = ('dimension', r' (?P<dimension> length | width ) ')
@@ -163,3 +163,10 @@ dimension = ('dimension', r' (?P<dimension> length | width ) ')
 
 # Numeric sides interfere with the number parsing so combine it with dimension
 dim_side = ('dim_side', fr""" {dimension[1]} \s* (?P<side> [12] ) \b """)
+
+
+# Cyst
+cyst = ('cyst',
+        r""" (\d+ \s+)? 
+            (cyst s? | bodies | cancerous | cancer ) 
+            ( \s+ ( on | in ))?""")

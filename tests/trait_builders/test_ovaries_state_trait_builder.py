@@ -153,3 +153,34 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('no embryos, nips small, ovary < 1 x 1 mm'),
             [])
+
+    def test_parse_26(self):
+        self.assertEqual(
+            PAR.parse('Cyst on ovary'),
+            [Trait(value='cyst on', start=0, end=13)])
+
+    def test_parse_27(self):
+        self.assertEqual(
+            PAR.parse('; 4 bodies in L ovary;'),
+            [Trait(value='4 bodies in', side='l', start=2, end=21)])
+
+    def test_parse_28(self):
+        self.assertEqual(
+            PAR.parse('Mod. fat, ovaries black'),
+            [Trait(value='black', start=10, end=23)])
+
+    def test_parse_29(self):
+        self.assertEqual(
+            PAR.parse('ovary not seen'),
+            [Trait(value='not seen', start=0, end=14)])
+
+    def test_parse_30(self):
+        self.assertEqual(
+            PAR.parse('ovaries pink, fat'),
+            [Trait(value='pink', start=0, end=12)])
+
+    def test_parse_31(self):
+        self.assertEqual(
+            PAR.parse('Left side of ovaries large and cancerous'),
+            [Trait(
+                value='large and cancerous', start=13, end=40)])
