@@ -19,6 +19,8 @@ from traiter.trait_builders.hind_foot_length_trait_builder import \
     HindFootLengthTraitBuilder
 from traiter.trait_builders.ovaries_state_trait_builder import \
     OvariesStateTraitBuilder
+from traiter.trait_builders.ovaries_size_trait_builder import \
+    OvariesSizeTraitBuilder
 
 
 TRAITS = {
@@ -31,5 +33,6 @@ TRAITS = {
     'ear_length': EarLengthTraitBuilder,
     'testes_size': TestesSizeTraitBuilder,
     'testes_state': TestesStateTraitBuilder,
+    'ovaries_size': OvariesSizeTraitBuilder,
     'ovaries_state': OvariesStateTraitBuilder,
 }
