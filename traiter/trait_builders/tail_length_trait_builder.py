@@ -2,11 +2,11 @@
 
 import re
 from functools import partial
-from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-class TailLengthTraitBuilder(BaseTraitBuilder):
+class TailLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     # How far to look into the surrounding context to disambiguate the parse
@@ -16,11 +16,11 @@ class TailLengthTraitBuilder(BaseTraitBuilder):
     # These indicate that the parse is not really for a tail length
     is_testes = re.compile(
         ' reproductive | gonad | test | scrotal | scrotum | scrot ',
-        BaseTraitBuilder.flags)
-    is_elevation = re.compile(' elevation | elev ', BaseTraitBuilder.flags)
-    is_total = re.compile(' body | nose | snout ', BaseTraitBuilder.flags)
-    is_tag = re.compile(' tag ', BaseTraitBuilder.flags)
-    is_id = re.compile(' identifier | ident | id ', BaseTraitBuilder.flags)
+        NumericTraitBuilder.flags)
+    is_elevation = re.compile(' elevation | elev ', NumericTraitBuilder.flags)
+    is_total = re.compile(' body | nose | snout ', NumericTraitBuilder.flags)
+    is_tag = re.compile(' tag ', NumericTraitBuilder.flags)
+    is_id = re.compile(' identifier | ident | id ', NumericTraitBuilder.flags)
 
     def __init__(self, args=None):
         """Build the trait parser."""

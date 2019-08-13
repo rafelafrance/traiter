@@ -4,10 +4,14 @@ from traiter.trait import Trait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 import traiter.shared_tokens as tkn
 import traiter.shared_repoduction_tokens as r_tkn
+import traiter.writers.csv_formatters.ovaries_state_csv_formatter as \
+    ovaries_state_csv_formatter
 
 
 class OvariesStateTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
+
+    csv_formatter = ovaries_state_csv_formatter.csv_formatter
 
     def __init__(self, args=None):
         """Build the trait parser."""
@@ -20,13 +24,13 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.compile_regex()
 
     def build_token_rules(self):
-        # Various spellings of ovary
+        # Spellings of ovary
         self.shared_token(r_tkn.ovary)
 
         # E.g.: small sized
         self.shared_token(r_tkn.size)
 
-        # Various spellings of uterus
+        # Spellings of uterus
         self.shared_token(r_tkn.uterus)
 
         # Various forms of fallopian tubes
@@ -106,6 +110,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.replace(
             'state', 'active mature destroyed visible developed'.split())
 
+        # Skip nipple notation
         self.replace('nips', 'nipple (size | state )')
 
         # E.g.: 6 x 4 mm

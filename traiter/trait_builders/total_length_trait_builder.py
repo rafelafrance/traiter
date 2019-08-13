@@ -2,11 +2,11 @@
 
 import re
 from functools import partial
-from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 
 
-class TotalLengthTraitBuilder(BaseTraitBuilder):
+class TotalLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     # How far to look into the surrounding context to disambiguate the parse
@@ -16,16 +16,16 @@ class TotalLengthTraitBuilder(BaseTraitBuilder):
     # These indicate that the parse is not a total length
     is_id = re.compile(
             ' identifier | ident | id | collector ',
-            BaseTraitBuilder.flags)
-    is_trap = re.compile(' trap ', BaseTraitBuilder.flags)
+            NumericTraitBuilder.flags)
+    is_trap = re.compile(' trap ', NumericTraitBuilder.flags)
     is_testes = re.compile(
             ' reproductive | gonad | test | scrotal | scrotum | scrot ',
-            BaseTraitBuilder.flags)
+            NumericTraitBuilder.flags)
 
     # The 'L' abbreviation gets confused with abbreviation for Left sometimes.
     # Try to disambiguate the two by looking for a Right near by.
     look_around = 10
-    is_left = re.compile(r' \b r \b ', BaseTraitBuilder.flags)
+    is_left = re.compile(r' \b r \b ', NumericTraitBuilder.flags)
 
     def __init__(self, args=None):
         """Build the trait parser."""

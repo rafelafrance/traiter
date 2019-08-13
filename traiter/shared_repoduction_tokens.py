@@ -13,7 +13,8 @@ count_ = ('count', r"""( only | all | both )? \s* [12]""")
 # Colors associated with gonads
 color = (
     'color',
-    r""" ( dark | light | pale )? \s* ( red | pink | black | brown) """)
+    r""" ( dark | light | pale )? \s* 
+         ( red | pink | brown | black | white ) """)
 
 # "covered"
 covered = ('covered', ' covered ')
@@ -29,7 +30,7 @@ developed = ('developed', r"""
     """)
 
 # "fat"
-fat = ('fat', r' \b ( fat | fatty ) \b ')
+fat = ('fat', ' fat ')
 
 # "Fully" or "incompletely"
 fully = ('fully', ['fully', '( in )? complete ( ly )?'])
@@ -37,7 +38,7 @@ fully = ('fully', ['fully', '( in )? complete ( ly )?'])
 # Spellings of "gonads"
 gonads = ('gonads', ' (?P<ambiguous_key> gonads? ) ')
 
-# This is used in key values like: "OvariesLengthInMM"
+# Links gonads and other related traits
 in_ = ('in', r' in ')
 
 # A label, like: "reproductive data"

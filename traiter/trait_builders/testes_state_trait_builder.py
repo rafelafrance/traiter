@@ -28,7 +28,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
         # A label, like: "reproductive data"
         self.shared_token(r_tkn.label)
 
-        # Various spellings of "testes"
+        # Spellings of "testes"
         self.shared_token(r_tkn.testes)
 
         # "Fully" or "incompletely"
