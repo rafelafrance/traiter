@@ -49,7 +49,7 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Sex
 - Testes state & size
 - Ovaries state & size (in progress)
-- Pregnancy state (planned)
+- Pregnancy state (in progress)
 - Embryo count & size (planned)
 - Nipple state (planned)
 - Lactation state (planned)

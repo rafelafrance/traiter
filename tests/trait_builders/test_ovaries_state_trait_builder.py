@@ -184,3 +184,9 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
             PAR.parse('Left side of ovaries large and cancerous'),
             [Trait(
                 value='large and cancerous', start=13, end=40)])
+
+    def test_parse_32(self):
+        self.assertEqual(
+            PAR.parse('ovaries well developed, but not pregnant apparently;'),
+            [Trait(
+                value='well developed', start=0, end=22)])
