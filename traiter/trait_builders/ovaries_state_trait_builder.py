@@ -203,3 +203,24 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             end=token.end)
 
         return [trait1, trait2]
+
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        if not data['sex'] or data['sex'][0].value != 'male':
+            return False
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'male'"
+        return True
+
+    @staticmethod
+    def adjust_record(data, trait):
+        """
+        Adjust the trait based on other fields.
+
+        If this is definitely a female then don't flag "gonads" as ambiguous.
+        """
+        if not data['sex'] or data['sex'][0].value != 'female':
+            return
+        for parse in data[trait]:
+            parse.ambiguous_key = False

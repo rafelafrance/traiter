@@ -61,3 +61,12 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
             start=token.start,
             end=token.end)
         return trait
+
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        if not data['sex'] or data['sex'][0].value != 'male':
+            return False
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'male'"
+        return True
