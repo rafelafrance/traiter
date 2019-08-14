@@ -1,6 +1,6 @@
 import unittest
-from traiter.trait import Trait
-from traiter.trait_builders.ovaries_state_trait_builder \
+from lib.trait import Trait
+from lib.trait_builders.ovaries_state_trait_builder \
     import OvariesStateTraitBuilder
 
 

@@ -5,11 +5,11 @@
 import sys
 import argparse
 import textwrap
-from traiter.all_traits import TRAITS
-from traiter.file_parser import FileParser
-from traiter.readers.csv_reader import CsvReader
-from traiter.writers.csv_writer import CsvWriter
-from traiter.writers.html_writer import HtmlWriter
+from lib.all_traits import TRAITS
+from lib.file_parser import FileParser
+from lib.readers.csv_reader import CsvReader
+from lib.writers.csv_writer import CsvWriter
+from lib.writers.html_writer import HtmlWriter
 
 
 __VERSION__ = '0.4.0'
@@ -79,7 +79,7 @@ def parse_args():
 
     arg_parser.add_argument(
         '--search-field', '-s', action='append', metavar='FIELD',
-        help=f"""A field that contains trait_builders. 
+        help=f"""A field that contains trait_builders.
             You may use this argument more than once.""")
 
     arg_parser.add_argument(

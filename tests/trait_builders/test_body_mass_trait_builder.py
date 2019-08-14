@@ -1,6 +1,6 @@
 import unittest
-from traiter.numeric_trait import NumericTrait
-from traiter.trait_builders.body_mass_trait_builder \
+from lib.numeric_trait import NumericTrait
+from lib.trait_builders.body_mass_trait_builder \
     import BodyMassTraitBuilder
 
 

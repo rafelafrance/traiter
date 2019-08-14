@@ -1,6 +1,6 @@
 import unittest
-from traiter.trait import Trait
-from traiter.trait_builders.life_stage_trait_builder \
+from lib.trait import Trait
+from lib.trait_builders.life_stage_trait_builder \
     import LifeStageTraitBuilder
 
 
