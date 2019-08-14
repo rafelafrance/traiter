@@ -1,6 +1,5 @@
 """Parse sex notations."""
 
-import re
 from traiter.trait import Trait
 from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
 
@@ -42,7 +41,7 @@ class SexTraitBuilder(BaseTraitBuilder):
         self.product(self.convert, [
 
             # E.g.: sex might be female;
-            """json_key 
+            """json_key
                 (?P<value> ( intrinsic | word ){1,2} ( quest )? )
                 separator""",
 
@@ -54,13 +53,11 @@ class SexTraitBuilder(BaseTraitBuilder):
             # Or:   male?
             '(?P<value> intrinsic ( quest )? )'])
 
-    def convert(self, token):
+    @staticmethod
+    def convert(token):
         """Convert parsed tokens into a result."""
         trait = Trait(
-            value=token.groups['value'],
+            value=token.groups['value'].lower(),
             start=token.start,
             end=token.end)
-        trait.value = re.sub(r'\s*\?$', '?', trait.value, flags=self.flags)
-        trait.value = re.sub(r'^m\w*', 'male', trait.value, flags=self.flags)
-        trait.value = re.sub(r'^f\w*', 'female', trait.value, flags=self.flags)
         return trait

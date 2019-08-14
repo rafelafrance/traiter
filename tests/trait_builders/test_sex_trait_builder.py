@@ -16,7 +16,7 @@ class TestSexTraitBuilder(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('sex=female ?'),
-            [Trait(value='female?', start=0, end=12)])
+            [Trait(value='female ?', start=0, end=12)])
 
     def test_parse_02(self):
         self.assertEqual(
@@ -26,7 +26,7 @@ class TestSexTraitBuilder(unittest.TestCase):
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('sex=F crown rump length=8 mm'),
-            [Trait(value='female', start=0, end=5)])
+            [Trait(value='f', start=0, end=5)])
 
     def test_parse_04(self):
         self.assertEqual(

@@ -1,3 +1,5 @@
+"""Format the trait for CSV output."""
+
 from operator import itemgetter
 from traiter.util import ordinal
 

@@ -2,14 +2,14 @@
 
 from stacked_regex.token import Token
 from traiter.numeric_trait import NumericTrait
-from traiter.trait_builders.base_trait_builder import BaseTraitBuilder
+from traiter.trait_builders.numeric_trait_builder import NumericTraitBuilder
 import traiter.shared_tokens as tkn
 import traiter.shared_repoduction_tokens as r_tkn
 import traiter.writers.csv_formatters.testes_size_csv_formatter as \
     testes_size_csv_formatter
 
 
-class TestesSizeTraitBuilder(BaseTraitBuilder):
+class TestesSizeTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
     csv_formatter = testes_size_csv_formatter.csv_formatter
@@ -94,7 +94,7 @@ class TestesSizeTraitBuilder(BaseTraitBuilder):
 
         self.replace('state', [
             """(non | partially | fully )? descended """]
-            + """ scrotal abdominal size gonads other """.split())
+                     + """ scrotal abdominal size gonads other """.split())
 
         # A key with units, like: gonadLengthInMM
         self.replace('key_with_units', r"""

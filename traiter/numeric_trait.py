@@ -66,6 +66,15 @@ class NumericTrait(Trait):
         except ValueError:
             return None
 
+    @staticmethod
+    def to_int(value):
+        """Convert value to an integer, handle 'no' or 'none' etc."""
+        value = re.sub(r'[^\d]', '', value) if value else ''
+        try:
+            return int(value)
+        except ValueError:
+            return 0
+
     def float_value(self, value1, value2=None):
         """Convert the value to a float before setting it."""
         value1 = self.to_float(value1)

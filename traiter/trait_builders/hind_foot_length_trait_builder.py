@@ -78,10 +78,10 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
 
         self.product(partial(
             self.shorthand_length, measurement='shorthand_hfl'), [
-            'shorthand_key shorthand',  # With a key
-            'shorthand',                # Without a key
-            # Handle a truncated shorthand notation
-            'shorthand_key triple (?! shorthand | range )'])
+                'shorthand_key shorthand',  # With a key
+                'shorthand',                # Without a key
+                # Handle a truncated shorthand notation
+                'shorthand_key triple (?! shorthand | range )'])
 
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""

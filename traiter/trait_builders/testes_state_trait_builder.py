@@ -107,7 +107,7 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
 
             # E.g.: ts inguinal
             """abbrev ( length )?
-                (?P<value> state | abdominal | non scrotal 
+                (?P<value> state | abdominal | non scrotal
                     | scrotal | other)""",
 
             # E.g.: testes 5x4 mm pt desc

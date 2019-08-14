@@ -24,6 +24,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
         self.compile_regex()
 
     def build_token_rules(self):
+        """Define the tokens."""
         # Spellings of ovary
         self.shared_token(r_tkn.ovary)
 

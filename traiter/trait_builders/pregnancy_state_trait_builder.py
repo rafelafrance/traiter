@@ -18,17 +18,17 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.keyword('pregnant', r""" 
+        self.keyword('pregnant', r"""
             pregnant pregnan preg pregnancy pregnancies """.split())
 
         self.keyword('not', r""" not non no """.split())
 
         self.keyword('joiner', r""" of """.split())
 
-        self.keyword('recent', r""" 
+        self.keyword('recent', r"""
             recently recent was previously prev """.split())
 
-        self.keyword('probably', r""" 
+        self.keyword('probably', r"""
             probably prob possibly possible 
             appears? very
             visible visibly 
@@ -49,7 +49,7 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
             """(?P<value> pregnant (not)? probably (quest)? )""",
 
             # E.g.: Probably early pregnancy
-            """(?P<value> (not)? (recent | probably)? 
+            """(?P<value> (not)? (recent | probably)?
                 (stage)? (not | joiner)? pregnant (quest)? )""",
         ])
 
@@ -57,7 +57,7 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
     def convert(token):
         """Convert parsed tokens into a result."""
         trait = Trait(
-            value=token.groups['value'],
+            value=token.groups['value'].lower(),
             start=token.start,
             end=token.end)
         return trait

@@ -32,7 +32,7 @@ class TestPregnancyStateTraitBuilder(unittest.TestCase):
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('Box ID: UAFWALR34. Recent Pregnancy.'),
-            [Trait(value='Recent Pregnancy', start=19, end=35)])
+            [Trait(value='recent pregnancy', start=19, end=35)])
 
     def test_parse_05(self):
         self.assertEqual(
@@ -47,7 +47,7 @@ class TestPregnancyStateTraitBuilder(unittest.TestCase):
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('GMU catalog.  Pregnant?'),
-            [Trait(value='Pregnant?', start=14, end=23)])
+            [Trait(value='pregnant?', start=14, end=23)])
 
     def test_parse_08(self):
         self.assertEqual(
@@ -82,7 +82,7 @@ class TestPregnancyStateTraitBuilder(unittest.TestCase):
     def test_parse_14(self):
         self.assertEqual(
             PAR.parse('No evidence of pregnancy,'),
-            [Trait(value='No evidence of pregnancy', start=0, end=24)])
+            [Trait(value='no evidence of pregnancy', start=0, end=24)])
 
     def test_parse_15(self):
         self.assertEqual(
@@ -103,4 +103,3 @@ class TestPregnancyStateTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('number 2859; female; no pregnancies'),
             [Trait(value='no pregnancies', start=21, end=35)])
-

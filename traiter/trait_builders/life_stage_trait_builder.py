@@ -100,7 +100,7 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
             # A sequence of words bracketed by a keyword and a separator
             # E.g.: LifeStage Remarks: 5-6 wks;
-            """json_key (?P<value> ( intrinsic | word | joiner ){1,5} ) 
+            """json_key (?P<value> ( intrinsic | word | joiner ){1,5} )
                 separator""",
 
             # E.g.: LifeStage = 1st month

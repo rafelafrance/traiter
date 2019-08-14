@@ -1,3 +1,5 @@
+"""Format the trait for CSV output."""
+
 from traiter.util import ordinal
 
 

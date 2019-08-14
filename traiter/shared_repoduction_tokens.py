@@ -120,3 +120,6 @@ uterus = ('uterus', 'uterus uterine'.split())
 
 # Spellings of nipple
 nipple = ('nipple', 'nipple s? | nip s?')
+
+# Spellings of embryo
+embryo = ('embryo', r'embryos? | embs? | fetuses | fetus | foeti')
