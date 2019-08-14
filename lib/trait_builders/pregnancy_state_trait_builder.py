@@ -23,7 +23,7 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
 
         self.keyword('not', r""" not non no """.split())
 
-        self.keyword('joiner', r""" of """.split())
+        self.keyword('joiner', r""" of were """.split())
 
         self.keyword('recent', r"""
             recently recent was previously prev """.split())
@@ -41,12 +41,15 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
 
         self.fragment('separator', r' [;,"] ')
 
+        # Skip arbitrary words
+        self.fragment('word', r' [a-z]\w+ ')
+
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
 
-            # E.g.: Probably early pregnancy
-            """(?P<value> pregnant (not)? probably (quest)? )""",
+            # E.g.: pregnancy visible
+            """(?P<value> pregnant (joiner)? (not)? probably (quest)? )""",
 
             # E.g.: Probably early pregnancy
             """(?P<value> (not)? (recent | probably)?

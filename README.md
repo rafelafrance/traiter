@@ -48,9 +48,9 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Life stage
 - Sex
 - Testes state & size
-- Ovaries state & size (in progress)
-- Pregnancy state (in progress)
-- Embryo count & size (planned)
+- Ovaries state & size
+- Pregnancy state
+- Embryo count & size (in progress)
 - Nipple state (planned)
 - Lactation state (planned)
 - Placental scar state, count, & location (planned)
