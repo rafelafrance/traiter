@@ -15,27 +15,10 @@ class NumericTrait(Trait):
     """Handle numeric traits values."""
 
     def __init__(self, **kwargs):
-        """Build a numeric trait.
-
-        units:           Original units in notation
-        units_inferred:  Were units found or guessed?
-
-        estimated_value: Did the reporter indicate this was an estimate
-        is_shorthand:    Flag 99-99-99-99=99 shorthand notation
-        dimension:       Length, width, etc.
-        includes:        Claw, etc. What is included changes he meaning
-        measured_from:   Crown, notch, etc.
-        """
+        """Build a numeric trait."""
+        self.units = None
+        self.units_inferred = False
         super().__init__(**kwargs)
-
-        self.units = kwargs.get('units', None)
-        self.units_inferred = kwargs.get('units_inferred', False)
-
-        self.estimated_value = kwargs.get('estimated_value', False)
-        self.is_shorthand = kwargs.get('is_shorthand', False)
-        self.dimension = kwargs.get('dimension', '')
-        self.includes = kwargs.get('includes', '')
-        self.measured_from = kwargs.get('measured_from', '')
 
     def merge_flags(self, other):
         """Capture the meaning across all parses."""
@@ -51,10 +34,13 @@ class NumericTrait(Trait):
             self.units_inferred = False
             if isinstance(units, list):
                 units = [x.lower() for x in units]
-                self.value = [convert(v, u) for v, u in zip(self.value, units)]
+                setattr(
+                    self,
+                    'value',
+                    [convert(v, u) for v, u in zip(self.value, units)])
             else:
                 units = units.lower()
-                self.value = convert(self.value, units)
+                setattr(self, 'value', convert(self.value, units))
         self.units = units
 
     @staticmethod
@@ -79,9 +65,9 @@ class NumericTrait(Trait):
         """Convert the value to a float before setting it."""
         value1 = self.to_float(value1)
         value2 = self.to_float(value2)
-        self.value = value1
+        setattr(self, 'value', value1)
         if value2:
-            self.value = [value1, value2]
+            setattr(self, 'value', [value1, value2])
 
     def fraction_value(self, token):
         """Calculate a fraction value like: 10 3/8."""
@@ -89,7 +75,7 @@ class NumericTrait(Trait):
         numerator = self.to_float(token.groups['numerator'])
         denominator = self.to_float(token.groups['denominator'])
         whole = whole if whole else 0
-        self.value = whole + numerator / denominator
+        setattr(self, 'value', whole + numerator / denominator)
 
     def compound_value(self, values, units):
         """Calculate value for compound units like: 5 lbs 4 ozs."""
@@ -98,10 +84,10 @@ class NumericTrait(Trait):
         big = convert(big, units[0])
         smalls = re.split(tkn.range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
-        self.value = [big + convert(x, units[1]) for x in smalls]
-        self.value = [round(v, 2) for v in self.value]
+        setattr(self, 'value', [big + convert(x, units[1]) for x in smalls])
+        setattr(self, 'value', [round(v, 2) for v in self.value])
         if len(self.value) == 1:
-            self.value = self.value[0]
+            setattr(self, 'value', self.value[0])
 
     def cross_value(self, token):
         """Handle a value like 5 cm x 21 mm."""

@@ -57,4 +57,3 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
             [NumericTrait(value=6, start=20, end=45),
              NumericTrait(value=4, side='right', start=20, end=45),
              NumericTrait(value=2, side='left', start=20, end=45)])
-

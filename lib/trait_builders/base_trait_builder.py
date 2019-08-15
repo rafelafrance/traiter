@@ -17,7 +17,7 @@ class BaseTraitBuilder(StackedRegex):
         self.args = args
         self.shared_token = self.from_tuple
 
-    def parse(self, text, field=''):
+    def parse(self, text, field=None):
         """Find the trait_builders in the text.
 
         We get the trait list from the StackedRegex engine & then fix them up
@@ -41,7 +41,8 @@ class BaseTraitBuilder(StackedRegex):
             for trait in trait_list:
                 trait = self.fix_problem_parses(trait, text)
                 if trait:  # The parse may fail during fix up
-                    trait.field = field
+                    if field:
+                        trait.field = field
                     traits.append(trait)
 
         return traits

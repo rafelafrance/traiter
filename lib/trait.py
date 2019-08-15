@@ -10,32 +10,9 @@ class Trait:
     """Build a parse result."""
 
     def __init__(self, **kwargs):
-        """Build a trait.
-
-        value:           Normalized value
-
-        field:           What field contained the trait
-        start:           Starting index for the trait
-        end:             Ending index for the trait
-
-        as_is:           Sometimes we take an entire cell as-is
-        ambiguous_key:   Abbreviations can be ambiguous
-        side:            Left, right, 1, 2, etc.
-
-        skipped:         If the trait is skipped, why
-        """
-        self.value = kwargs.get('value', None)
-
-        self.field = kwargs.get('field', '')
-        self.start = kwargs.get('start', 0)
-        self.end = kwargs.get('end', 0)
-
-        self.as_is = kwargs.get('as_is', False)
-        self.ambiguous_key = kwargs.get('ambiguous_key', False)
-
-        self.side = kwargs.get('side', '')
-
-        self.skipped = ''
+        """Build a trait."""
+        for key, value in kwargs.items():
+            self.__dict__[key] = value
 
     def __repr__(self):
         """Represent the result."""
@@ -44,6 +21,14 @@ class Trait:
     def __eq__(self, other):
         """Compare trait_builders for testing."""
         return self.__dict__ == other.__dict__
+
+    def __setattr__(self, name, value):
+        """Allow arbitrary attributes on a trait."""
+        self.__dict__[name] = value
+
+    def __getattr__(self, name):
+        """Handle uninitialized attributes by returning a falsy value."""
+        return ''
 
     def is_flag_in_token(self, flag, token, rename=None):
         """Set a flag if it is found in the token's groups field."""
