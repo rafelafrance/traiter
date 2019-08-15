@@ -62,7 +62,7 @@ sign = ('sign', ' [+-] ')
 # Various size words
 size = ('size', r"""
     ( enlarged | enlarge | large | small | shrunken | shrunk 
-        | moderate | mod | minute )      
+        | moderate | mod | minute )
     ( \s* size d? )?
     """)
 
@@ -122,4 +122,4 @@ uterus = ('uterus', 'uterus uterine'.split())
 nipple = ('nipple', 'nipple s? | nip s?')
 
 # Spellings of embryo
-embryo = ('embryo', r'embryos? | embs? | fetuses | fetus | foeti')
+embryo = ('embryo', r'embryos? | embryonic | embs? | fetuses | fetus | foeti')

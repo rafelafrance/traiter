@@ -2,6 +2,7 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
+import lib.shared_tokens as tkn
 import lib.shared_repoduction_tokens as r_tkn
 
 
@@ -21,16 +22,22 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
     def build_token_rules(self):
         """Define the tokens."""
         self.shared_token(r_tkn.embryo)
+        self.shared_token(r_tkn.and_)
+        self.shared_token(r_tkn.size)
+        self.shared_token(tkn.len_units)
 
         self.fragment('integer', r""" \d+ """)
 
         self.keyword('none', r""" no | none """)
 
-        # The side comes after the number like: 3L or 4Right
-        self.fragment('side_trailing', r""" ( left | right | [lr] ) \b """)
+        # The sides like: 3L or 4Right
+        self.fragment('side', r""" ( left | right | [lr] ) """)
+
+        # The sexes like: 3M or 4Females
+        self.fragment('sex', r""" ( males? | females? | [mf] ) """)
 
         # Skip arbitrary words
-        self.fragment('word', r' [a-z]\w+ ')
+        self.fragment('word', r' \w+ ')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
@@ -40,57 +47,67 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         """Define rules for output."""
         self.product(self.convert, [
             # Eg: 5 emb 2L 3R
-            """ (?P<total> count) embryo
-                (?P<count1> count ) (?P<side1> side_trailing ) 
-                (?P<count2> count ) (?P<side2> side_trailing )""",
+            """ ( (?P<total> count) (size)? )? embryo
+                (word | len_units | count ){0,3}
+                (?P<count1> count ) (?P<side1> side )
+                ((and)? (?P<count2> count ) (?P<side2> side ))?""",
 
-            # Eg: emb 2L 3R
-            """ embryo
-                (?P<count1> count ) (?P<side1> side_trailing ) 
-                (?P<count2> count ) (?P<side2> side_trailing )""",
-
-            # Eg: 2 emb 2L
-            """ (?P<total> count) embryo
-                (?P<count1> count ) (?P<side1> side_trailing ) """,
+            # Eg: 5 emb 2 males 3 females
+            """ ( (?P<total> count) (size)? )? embryo
+                (word | len_units | count ){0,3}
+                (?P<count1> count ) (?P<sex1> sex )
+                ((and)? (?P<count2> count ) (?P<sex2> sex ))?""",
 
             # Eg: 5 embryos
-            """ (?P<total> count) embryo """,
+            """ (?P<total> count) (size)? embryo """,
         ])
 
     @staticmethod
     def convert(token):
         """Convert parsed tokens into a result."""
-        traits = []
+        trait = NumericTrait(start=token.start, end=token.end)
 
-        # A total embryo count is given
+        # If a total embryo count is given
         if token.groups.get('total'):
-            total = NumericTrait(start=token.start, end=token.end)
-            total.value = total.to_int(token.groups['total'])
-            traits.append(total)
+            trait.value = trait.to_int(token.groups['total'])
 
-        # Not total embryo count add the left & right embryo counts
+        # If no total embryo count add the left & right embryo counts
         elif token.groups.get('count1'):
-            total = NumericTrait(start=token.start, end=token.end)
-            total.value = total.to_int(token.groups['count1'])
+            trait.value = trait.to_int(token.groups['count1'])
             if token.groups.get('count2'):
-                total.value += total.to_int(token.groups['count2'])
-            traits.append(total)
+                trait.value += trait.to_int(token.groups['count2'])
+
+        # If no total embryo count add the male & female embryo counts
+        elif token.groups.get('sex1'):
+            trait.value = trait.to_int(token.groups['count1'])
+            if token.groups.get('count2'):
+                trait.value += trait.to_int(token.groups['count2'])
 
         # Add embryo side count
-        if token.groups.get('count1'):
-            side1 = NumericTrait(start=token.start, end=token.end)
-            side1.side = token.groups.get('side1')
-            side1.value = side1.to_int(token.groups['count1'])
-            traits.append(side1)
+        side = token.groups.get('side1', '').lower()
+        if side:
+            side = 'left' if side.startswith('l') else 'right'
+            setattr(trait, side, trait.to_int(token.groups['count1']))
 
         # Add embryo side count
-        if token.groups.get('count2'):
-            side2 = NumericTrait(start=token.start, end=token.end)
-            side2.side = token.groups.get('side2')
-            side2.value = side2.to_int(token.groups['count2'])
-            traits.append(side2)
+        side = token.groups.get('side2', '').lower()
+        if side:
+            side = 'left' if side.startswith('l') else 'right'
+            setattr(trait, side, trait.to_int(token.groups['count2']))
 
-        return traits[0] if len(traits) == 1 else traits
+        # Add embryo sex count
+        sex = token.groups.get('sex1', '').lower()
+        if sex:
+            sex = 'male' if sex.startswith('m') else 'female'
+            setattr(trait, sex, trait.to_int(token.groups['count1']))
+
+        # Add embryo sex count
+        sex = token.groups.get('sex2', '').lower()
+        if sex:
+            sex = 'male' if sex.startswith('m') else 'female'
+            setattr(trait, sex, trait.to_int(token.groups['count2']))
+
+        return trait
 
     @staticmethod
     def should_skip(data, trait):

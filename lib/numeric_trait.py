@@ -16,8 +16,10 @@ class NumericTrait(Trait):
 
     def __init__(self, **kwargs):
         """Build a numeric trait."""
+        # Unit tests need these attributes to exist on the object
         self.units = None
         self.units_inferred = False
+
         super().__init__(**kwargs)
 
     def merge_flags(self, other):

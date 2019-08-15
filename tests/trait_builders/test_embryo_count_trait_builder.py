@@ -27,16 +27,12 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('pregnant; 4 emb 3L 1R'),
-            [NumericTrait(value=4, start=10, end=21),
-             NumericTrait(value=3, side='L', start=10, end=21),
-             NumericTrait(value=1, side='R', start=10, end=21)])
+            [NumericTrait(value=4, left=3, right=1, start=10, end=21)])
 
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('embryos 2R-1L'),
-            [NumericTrait(value=3, start=0, end=13),
-             NumericTrait(value=2, side='R', start=0, end=13),
-             NumericTrait(value=1, side='L', start=0, end=13)])
+            [NumericTrait(value=3, left=1, right=2, start=0, end=13)])
 
     def test_parse_05(self):
         self.assertEqual(
@@ -46,14 +42,35 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('138-62-18-6  12.4g  scars  emb.1R,1L; '),
-            [NumericTrait(value=2, start=27, end=36),
-             NumericTrait(value=1, side='R', start=27, end=36),
-             NumericTrait(value=1, side='L', start=27, end=36)])
+            [NumericTrait(value=2, left=1, right=1, start=27, end=36)])
 
     def test_parse_07(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('; reproductive data=embryos: 4 right , 2 left  ;'),
-            [NumericTrait(value=6, start=20, end=45),
-             NumericTrait(value=4, side='right', start=20, end=45),
-             NumericTrait(value=2, side='left', start=20, end=45)])
+            [NumericTrait(value=6, left=2, right=4, start=20, end=45)])
+
+    def test_parse_08(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=embryos: 4 right , 2 left  ;'),
+            [NumericTrait(value=6, left=2, right=4, start=20, end=45)])
+
+    def test_parse_09(self):
+        self.assertEqual(
+            PAR.parse('7 embryos, 4 male, and 3 female'),
+            [NumericTrait(value=7, male=4, female=3, start=0, end=31)])
+
+    def test_parse_10(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=5 embryos (3L, 2R);'),
+            [NumericTrait(value=5, left=3, right=2, start=18, end=35)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Vagina open.  4 small embryos.'),
+            [NumericTrait(value=4, start=32, end=47)])
+
+    def test_parse_12(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('; 4 emb. x 07 mm, 3L2R", "weight":"23.0"'),
+            [NumericTrait(value=4, left=3, right=2, start=2, end=22)])

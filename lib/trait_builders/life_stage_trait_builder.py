@@ -31,9 +31,10 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
         # These words are life stages without a keyword indicator
         self.keyword('intrinsic', [
-            r' yolk \s? sac',
-            r' young [\s-]? of [\s-]? the [\s-]? year',
-            r' young \s* adult']
+            r' yolk \s? sac ',
+            r' young [\s-]? of [\s-]? the [\s-]? year ',
+            r' adult \s* young ',
+            r' young \s* adult ']
                      + """
                 ads? adulte?s?
                 chicks?

@@ -115,8 +115,7 @@ class TestLifeStageTraitBuilder(unittest.TestCase):
     def test_parse_20(self):
         self.assertEqual(
             PAR.parse('adult young'),
-            [Trait(value='adult', start=0, end=5),
-             Trait(value='young', start=6, end=11)])
+            [Trait(value='adult young', start=0, end=11)])
 
     def test_parse_21(self):
         self.assertEqual(
