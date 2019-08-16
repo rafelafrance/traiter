@@ -70,7 +70,43 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
             [NumericTrait(value=4, start=32, end=47)])
 
     def test_parse_12(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('; 4 emb. x 07 mm, 3L2R", "weight":"23.0"'),
             [NumericTrait(value=4, left=3, right=2, start=2, end=22)])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('; 3 emb. x 06 mm.",'),
+            [NumericTrait(value=3, start=2, end=7)])
+
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse('reproductive data: 3 embryos - 14 mm, 2R/1L;'),
+            [NumericTrait(value=3, left=1, right=2, start=19, end=43)])
+
+    def test_parse_15(self):
+        self.assertEqual(
+            PAR.parse('Med. nipples, no scars or embryos, mod. fat'),
+            [NumericTrait(value=0, start=14, end=33)])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('Fetus of AF 25577 (SHEID-99).'),
+            [])
+
+    def test_parse_17(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse(', 4 fetuses on left, 1 on right'),
+            [NumericTrait(value=5, left=4, right=1, start=2, end=31)])
+
+    def test_parse_18(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('This specimen contained 4 fetuses'),
+            [NumericTrait(value=4, start=24, end=33)])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            PAR.parse('; age class=fetus'),
+            [])

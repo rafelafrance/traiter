@@ -24,7 +24,11 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         self.shared_token(r_tkn.embryo)
         self.shared_token(r_tkn.and_)
         self.shared_token(r_tkn.size)
+        self.shared_token(r_tkn.fat)
         self.shared_token(tkn.len_units)
+
+        self.keyword('conj', ' or '.split())
+        self.keyword('prep', ' on '.split())
 
         self.fragment('integer', r""" \d+ """)
 
@@ -41,11 +45,15 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
-        self.replace('count', 'integer none'.split())
+        self.replace('count', ' none word conj | integer | none ')
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
+            # Eg: 4 fetuses on left, 1 on right
+            """ (?P<count1> count ) embryo prep (?P<side1> side ) 
+                (?P<count2> count ) (embryo)? (prep)? (?P<side2> side )""",
+
             # Eg: 5 emb 2L 3R
             """ ( (?P<total> count) (size)? )? embryo
                 (word | len_units | count ){0,3}
