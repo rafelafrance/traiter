@@ -14,7 +14,7 @@ count_ = ('count', r"""( only | all | both )? \s* [12]""")
 color = (
     'color',
     r""" (( dark | light | pale ) \s* )?
-         ( red | pink | brown | black | white ) """)
+         ( red | pink | brown | black | white | pigmented ) """)
 
 # "covered"
 covered = ('covered', ' covered ')
@@ -51,7 +51,10 @@ mature = ('mature', r'( immature | mature | imm ) \b ')
 non = ('non', r' \b ( not | non | no | semi | sub ) ')
 
 # Spellings of "partially"
-partially = ('partially', ['partially', r' \b part \b', r'\b pt \b'])
+partially = (
+    'partially',
+    ['partially', r' \b part \b', r'\b pt \b']
+    + 'slightly slight '.split())
 
 # Some patterns require a separator
 sep = ('sep', ' [;] | $ ')
@@ -62,16 +65,21 @@ sign = ('sign', ' [+-] ')
 # Various size words
 size = ('size', r"""
     ( very \s+ )?
-    ( enlarged | enlarge | large | small | shrunken | shrunk 
-        | moderate | mod | minute )
+    ( enlarged | enlarge | large | small | shrunken | shrunk | swollen
+        | moderate | mod | minute | lg | sm | tiny )
     ( \s* size d? )?
     """)
 
 # Types of "visibility"
-visible = ('visible', 'visible invisible hidden prominent seen'.split())
+visible = ('visible', """
+    visible invisible hidden prominent seen conspicuous""".split())
 
 # We allow random words in some situations
 word = ('word', ' [a-z]+ ')
+
+tissue = ('tissue', ' tissue '.split())
+
+present = ('present', ' present absent '.split())
 
 
 ###############################################################################
