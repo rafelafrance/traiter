@@ -64,7 +64,7 @@ class HindFootLengthTraitBuilder(NumericTraitBuilder):
             # E.g.: hindFoot = 9/16
             'key fraction'])
 
-        # A typical body mass notation
+        # A typical hind-foot notation
         self.product(self.simple, [
 
             # E.g.: hindFootLengthInMM=9-10

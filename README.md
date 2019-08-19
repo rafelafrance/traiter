@@ -50,7 +50,7 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Testes state & size
 - Ovaries state & size
 - Pregnancy state
-- Embryo count & size (in progress)
+- Embryo count & length (in progress)
 - Nipple state (planned)
 - Lactation state (planned)
 - Placental scar state, count, & location (planned)

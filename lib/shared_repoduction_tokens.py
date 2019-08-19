@@ -61,6 +61,7 @@ sign = ('sign', ' [+-] ')
 
 # Various size words
 size = ('size', r"""
+    ( very \s+ )?
     ( enlarged | enlarge | large | small | shrunken | shrunk 
         | moderate | mod | minute )
     ( \s* size d? )?
@@ -123,4 +124,5 @@ nipple = ('nipple', 'nipple s? | nip s?')
 
 # Spellings of embryo
 embryo = ('embryo', r"""
-    embryos? | embryonic | embs? | embrs? | fetuses | fetus | foeti""")
+    embryos? | embryps? | embryonic | embs? | embrs? 
+    | fetuses | fetus | foeti""")

@@ -35,10 +35,10 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         self.keyword('none', r""" no | none """)
 
         # The sides like: 3L or 4Right
-        self.fragment('side', r""" ( left | right | [lr] ) """)
+        self.fragment('side', r""" left | right | [lr] (?! [a-z] ) """)
 
         # The sexes like: 3M or 4Females
-        self.fragment('sex', r""" ( males? | females? | [mf] ) """)
+        self.fragment('sex', r""" males? | females? | [mf] (?! [a-z] ) """)
 
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')

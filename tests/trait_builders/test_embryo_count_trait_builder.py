@@ -95,13 +95,11 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
             [])
 
     def test_parse_17(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse(', 4 fetuses on left, 1 on right'),
             [NumericTrait(value=5, left=4, right=1, start=2, end=31)])
 
     def test_parse_18(self):
-        self.maxDiff = None
         self.assertEqual(
             PAR.parse('This specimen contained 4 fetuses'),
             [NumericTrait(value=4, start=24, end=33)])
@@ -110,3 +108,14 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; age class=fetus'),
             [])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            PAR.parse("ONLY. 3 VERY LARGE FOETI(50).  REC'D FROM."),
+            [NumericTrait(value=3, start=6, end=24)])
+
+    def test_parse_21(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse("'Foeti: 2R4L=6'; Donator: Dartmouth College Museum."),
+            [NumericTrait(value=6, left=4, right=2, start=1, end=12)])
