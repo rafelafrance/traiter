@@ -2,7 +2,6 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-# import lib.shared_tokens as tkn
 import lib.shared_repoduction_tokens as r_tkn
 
 

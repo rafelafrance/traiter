@@ -2,6 +2,7 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
+import lib.shared_repoduction_tokens as r_tkn
 
 
 class LactationStateTraitBuilder(BaseTraitBuilder):
@@ -19,12 +20,31 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        self.keyword('lactating', r"""
+            lactating | lactation | lact 
+            | nursing | suckling
+            """)
+
+        self.keyword('not', ' not no non '.split())
+        self.keyword('post', r""" 
+            post | recently | recent
+            | (just \s+)? finished 
+            """)
+
+        # To handle a guessed trait
+        self.fragment('quest', '[?]')
+
+        self.shared_token(r_tkn.word)
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
+        self.replace('modifier', 'not post'.split())
 
     def build_product_rules(self):
         """Define rules for output."""
+        self.product(self.convert, [
+            """ (?P<value> (modifier)? lactating (quest)? ) """
+        ])
 
     @staticmethod
     def convert(token):
