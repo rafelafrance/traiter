@@ -17,30 +17,35 @@ class TestEarLengthTraitBuilder(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('earLengthInmm: 9'),
-            [NumericTrait(value=9, units='mm', start=0, end=16)])
+            [NumericTrait(
+                value=9, units='mm', units_inferred=False, start=0, end=16)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('L. 9", T. 4", ear 9/16"'),
-            [NumericTrait(value=14.29, units='"', start=14, end=23)])
+            [NumericTrait(
+                value=14.29, units='"', units_inferred=False,
+                start=14, end=23)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('L. 9", T. 4", HF. 2", E 1",'),
             [NumericTrait(
-                value=25.4, units='"', ambiguous_key=True, start=22, end=26)])
+                value=25.4, units='"', units_inferred=False,
+                ambiguous_key=True, start=22, end=26)])
 
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('{"measurements":"TotalLength=180 Tail=82 '
                       'HindFoot=28 Ear=18" }'),
-            [NumericTrait(value=18, units_inferred=True, start=53, end=59)])
+            [NumericTrait(
+                value=18, units=None, units_inferred=True, start=53, end=59)])
 
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('{"earLength":"13", "gonadLength":"3"}'),
             [NumericTrait(
-                value=13, units_inferred=True, start=2, end=16)])
+                value=13, units=None, units_inferred=True, start=2, end=16)])
 
     def test_parse_06(self):
         self.assertEqual(
@@ -60,43 +65,44 @@ class TestEarLengthTraitBuilder(unittest.TestCase):
     def test_parse_09(self):
         self.assertEqual(
             PAR.parse('ear from notch=17 mm;'),
-            [NumericTrait(value=17, units='mm', measured_from='notch',
-                          start=0, end=20)])
+            [NumericTrait(
+                value=17, units='mm', units_inferred=False,
+                measured_from='notch', start=0, end=20)])
 
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('earfromcrown=17mm;'),
             [NumericTrait(
-                value=17, units='mm', measured_from='crown',
-                start=0, end=17)])
+                value=17, units='mm', units_inferred=False,
+                measured_from='crown', start=0, end=17)])
 
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('{"measurements":"242-109-37-34=N/D" }'),
             [NumericTrait(
-                value=34, units='mm_shorthand', is_shorthand=True,
-                start=2, end=34)])
+                value=34, units='mm_shorthand', units_inferred=False,
+                is_shorthand=True, start=2, end=34)])
 
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('E/n-21mm'),
             [NumericTrait(
-                value=21, units='mm', ambiguous_key=True,
+                value=21, units='mm', units_inferred=False, ambiguous_key=True,
                 measured_from='n', start=0, end=8)])
 
     def test_parse_13(self):
         self.assertEqual(
             PAR.parse('E/c-21mm'),
             [NumericTrait(
-                value=21, units='mm', ambiguous_key=True,
+                value=21, units='mm', units_inferred=False, ambiguous_key=True,
                 measured_from='c', start=0, end=8)])
 
     def test_parse_14(self):
         self.assertEqual(
             PAR.parse('; ear from notch=.25 in'),
             [NumericTrait(
-                value=6.35, units='in', measured_from='notch',
-                start=2, end=23)])
+                value=6.35, units='in', units_inferred=False,
+                measured_from='notch', start=2, end=23)])
 
     def test_parse_15(self):
         self.assertEqual(
@@ -113,7 +119,7 @@ class TestEarLengthTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Hind Foot: 19 EFN: 13 Weight: 16.3'),
             [NumericTrait(
-                value=13, measured_from='n', units_inferred=True,
+                value=13, measured_from='n', units=None, units_inferred=True,
                 start=14, end=21)])
 
     def test_parse_18(self):

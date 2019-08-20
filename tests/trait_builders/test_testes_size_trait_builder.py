@@ -17,121 +17,145 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('testes = 8x5 mm'),
-            [NumericTrait(value=[8, 5], units='mm', start=0, end=15)])
+            [NumericTrait(
+                value=[8, 5], units='mm', units_inferred=False,
+                start=0, end=15)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('testes: 20mm. Sent to Berkeley 10/1/71'),
-            [NumericTrait(value=20, units='mm', start=0, end=12)])
+            [NumericTrait(
+                value=20, units='mm',  units_inferred=False, start=0, end=12)])
 
     def test_parse_03(self):
         self.assertEqual(
             PAR.parse('ear from notch=19 mm; reproductive data=testis 5mm ; '),
-            [NumericTrait(value=5, units='mm', start=22, end=50)])
+            [NumericTrait(
+                value=5, units='mm', units_inferred=False, start=22, end=50)])
 
     def test_parse_04(self):
         self.assertEqual(
             PAR.parse('adult ; reproductive data=NS; T=9x4 ; endoparasite '),
-            [NumericTrait(value=[9, 4], units_inferred=True, start=8, end=35)])
+            [NumericTrait(
+                value=[9, 4], units=None, units_inferred=True,
+                start=8, end=35)])
 
     def test_parse_05(self):
         self.assertEqual(
             PAR.parse('2.3 g; reproductive data=testes: 18x8 mm; scrotal ;'),
-            [NumericTrait(value=[18, 8], units='mm', start=7, end=40)])
+            [NumericTrait(
+                value=[18, 8], units='mm', units_inferred=False,
+                start=7, end=40)])
 
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('Plus Tissue; plus Baculum: Test 21x11'),
             [NumericTrait(
-                value=[21, 11], units_inferred=True, start=27, end=37)])
+                value=[21, 11], units=None, units_inferred=True,
+                start=27, end=37)])
 
     def test_parse_07(self):
         self.assertEqual(
             PAR.parse('; reproductive data=testes scrotal; T = 9mm in length'),
-            [NumericTrait(value=9, units='mm', start=2, end=43)])
+            [NumericTrait(
+                value=9, units='mm', units_inferred=False, start=2, end=43)])
 
     def test_parse_08(self):
         self.assertEqual(
             PAR.parse('Scrotal 9 mm x 5 mm'),
-            [NumericTrait(value=[9, 5], units='mm', start=0, end=19)])
+            [NumericTrait(value=[9, 5], units_inferred=False,
+                          units='mm', start=0, end=19)])
 
     def test_parse_09(self):
         self.assertEqual(
             PAR.parse('reproductive data=testes abdominal; T = 3 x 1.8 ;'),
             [NumericTrait(
-                value=[3, 1.8], units_inferred=True, start=0, end=47)])
+                value=[3, 1.8], units=None, units_inferred=True,
+                start=0, end=47)])
 
     def test_parse_10(self):
         self.assertEqual(
             PAR.parse('testis-20mm ; reproductive data=testis-21mm ; '),
-            [NumericTrait(value=20, units='mm', start=0, end=11),
-             NumericTrait(value=21, units='mm', start=14, end=43)])
+            [NumericTrait(
+                value=20, units='mm', units_inferred=False, start=0, end=11),
+             NumericTrait(
+                 value=21, units='mm', units_inferred=False,
+                 start=14, end=43)])
 
     def test_parse_11(self):
         self.assertEqual(
             PAR.parse('Testes x6'),
-            [NumericTrait(value=6, units_inferred=True, start=0, end=9)])
+            [NumericTrait(
+                value=6, units=None, units_inferred=True, start=0, end=9)])
 
     def test_parse_12(self):
         self.assertEqual(
             PAR.parse('testes scrotal, L testis 13x5mm'),
-            [NumericTrait(value=[13, 5], units='mm', start=18, end=31)])
+            [NumericTrait(
+                value=[13, 5], units='mm', units_inferred=False,
+                start=18, end=31)])
 
     def test_parse_13(self):
         self.maxDiff = None
         self.assertEqual(
             PAR.parse('"gonad length 1":"3.0", "gonad length 2":"2.0",'),
             [NumericTrait(
-                value=3, units_inferred=True, side='1', dimension='length',
-                ambiguous_key=True, start=1, end=21),
+                value=3, units=None, units_inferred=True, side='1',
+                dimension='length', ambiguous_key=True, start=1, end=21),
              NumericTrait(
-                value=2, units_inferred=True, side='2', dimension='length',
-                ambiguous_key=True, start=25, end=45)])
+                value=2, units=None, units_inferred=True, side='2',
+                dimension='length', ambiguous_key=True, start=25, end=45)])
 
     def test_parse_14(self):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
             [NumericTrait(
-                value=12, units='mm', ambiguous_key=True, dimension='length',
-                start=1, end=21),
+                value=12, units='mm', units_inferred=False,
+                ambiguous_key=True, dimension='length', start=1, end=21),
              NumericTrait(
-                value=5, units='mm', ambiguous_key=True, dimension='width',
-                start=25, end=43)])
+                value=5, units='mm', units_inferred=False,
+                 ambiguous_key=True, dimension='width', start=25, end=43)])
 
     def test_parse_15(self):
         self.assertEqual(
             PAR.parse('left gonad width=9.1 mm; right gonad width=9.2 mm; '
                       'right gonad length=16.1 mm; left gonad length=16.2 mm'),
             [NumericTrait(
-                value=9.1, units='mm', ambiguous_key=True, side='left',
+                value=9.1, units='mm', units_inferred=False,
+                ambiguous_key=True, side='left',
                 dimension='width', start=0, end=23),
              NumericTrait(
-                value=9.2, units='mm', ambiguous_key=True, side='right',
+                value=9.2, units='mm', units_inferred=False,
+                 ambiguous_key=True, side='right',
                 dimension='width', start=25, end=49),
              NumericTrait(
-                value=16.1, units='mm', ambiguous_key=True, side='right',
+                value=16.1, units='mm', units_inferred=False,
+                 ambiguous_key=True, side='right',
                 dimension='length', start=51, end=77),
              NumericTrait(
-                value=16.2, units='mm', ambiguous_key=True, side='left',
+                value=16.2, units='mm', units_inferred=False,
+                 ambiguous_key=True, side='left',
                 dimension='length', start=79, end=104)])
 
     def test_parse_16(self):
         self.assertEqual(
             PAR.parse('"gonadLengthInMM":"9mm w.o./epid", '),
             [NumericTrait(
-                value=9, units='mm', ambiguous_key=True, dimension='length',
-                start=1, end=22)])
+                value=9, units='mm',  units_inferred=False, ambiguous_key=True,
+                dimension='length', start=1, end=22)])
 
     def test_parse_17(self):
         self.assertEqual(
             PAR.parse('testis-7mm'),
-            [NumericTrait(value=7, units='mm', start=0, end=10)])
+            [NumericTrait(
+                value=7, units='mm',  units_inferred=False, start=0, end=10)])
 
     def test_parse_18(self):
         self.assertEqual(
             PAR.parse('reproductive data=T=10x4 ; '),
             [NumericTrait(
-                value=[10, 4], units_inferred=True, start=0, end=24)])
+                value=[10, 4], units=None, units_inferred=True,
+                start=0, end=24)])
 
     def test_parse_19(self):
         self.assertEqual(
@@ -146,8 +170,8 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('adult ; T=9x4 ; endoparasite '),
             [NumericTrait(
-                value=[9.0, 4.0], units_inferred=True, ambiguous_key=True,
-                start=8, end=13)])
+                value=[9.0, 4.0], units=None, units_inferred=True,
+                ambiguous_key=True, start=8, end=13)])
 
     def test_parse_21(self):
         self.assertEqual(
@@ -158,25 +182,28 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('TESTES 5-3.5 MM,'),
             [NumericTrait(
-                value=[5, 3.5], units='mm', start=0, end=15)])
+                value=[5, 3.5], units='mm', units_inferred=False,
+                start=0, end=15)])
 
     def test_parse_23(self):
         self.assertEqual(
             PAR.parse('reproductive data=T: R-2x4mm ; '),
             [NumericTrait(
-                value=[2, 4], units='mm', side='r', start=0, end=28)])
+                value=[2, 4], units='mm', units_inferred=False,  side='r',
+                start=0, end=28)])
 
     def test_parse_24(self):
         self.assertEqual(
             PAR.parse('reproductive data=T: L-2x4mm ; '),
             [NumericTrait(
-                value=[2, 4], units='mm', side='l', start=0, end=28)])
+                value=[2, 4], units='mm', units_inferred=False,
+                side='l', start=0, end=28)])
 
     def test_parse_25(self):
         self.assertEqual(
             PAR.parse('testes (R) 6 x 1.5 & 5 x 2 mm'),
             [NumericTrait(
-                value=[6, 1.5], units_inferred=True, side='r',
+                value=[6, 1.5], units=None, units_inferred=True, side='r',
                 start=0, end=18)])
 
     def test_parse_26(self):
@@ -188,17 +215,21 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; reproductive data=5x3 inguinal ;'),
             [NumericTrait(
-                value=[5, 3], units_inferred=True, start=2, end=23)])
+                value=[5, 3], units=None, units_inferred=True,
+                start=2, end=23)])
 
     def test_parse_28(self):
         self.assertEqual(
             PAR.parse("sex=male ; reproductive data=Testes .5' , scrotal"),
-            [NumericTrait(value=152.4, units="'", start=11, end=39)])
+            [NumericTrait(
+                value=152.4, units="'", units_inferred=False,
+                start=11, end=39)])
 
     def test_parse_29(self):
         self.assertEqual(
             PAR.parse("; reproductive data=TESTES NOT DESCENDED - 6 MM age"),
-            [NumericTrait(value=6, units="mm", start=2, end=47)])
+            [NumericTrait(
+                value=6, units="mm", units_inferred=False, start=2, end=47)])
 
     def test_parse_30(self):
         self.assertEqual(
@@ -209,39 +240,49 @@ class TestTestesSizeTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('reproductive data=Right testicle: 20x9 mm ;'),
             [NumericTrait(
-                value=[20.0, 9.0], units="mm", side='right',
-                start=0, end=41)])
+                value=[20.0, 9.0], units="mm", units_inferred=False,
+                side='right', start=0, end=41)])
 
     def test_parse_32(self):
         self.assertEqual(
             PAR.parse('; reproductive data=Testes scrotal, 32x11'),
             [NumericTrait(
-                value=[32, 11], units_inferred=True, start=2, end=41)])
+                value=[32, 11], units=None, units_inferred=True,
+                start=2, end=41)])
 
     def test_parse_33(self):
         self.assertEqual(
             PAR.parse('; reproductive data=R 20mm L x 6 mm Wne scars ;'),
-            [NumericTrait(value=20, units='mm', side='r', start=2, end=26)])
+            [NumericTrait(
+                value=20, units='mm', units_inferred=False, side='r',
+                start=2, end=26)])
 
     def test_parse_34(self):
         self.assertEqual(
             PAR.parse('; reproductive data=R 20mm L 6 mm ;'),
-            [NumericTrait(value=20, units='mm', side='r', start=2, end=33),
-             NumericTrait(value=6, units='mm', side='l', start=2, end=33)])
+            [NumericTrait(
+                value=20, units='mm', units_inferred=False, side='r',
+                start=2, end=33),
+             NumericTrait(
+                 value=6, units='mm', units_inferred=False, side='l',
+                 start=2, end=33)])
 
     def test_parse_35(self):
         self.assertEqual(
             PAR.parse('; reproductive data=(R) 20x10mm L 6x4 mm ;'),
             [NumericTrait(
-                value=[20, 10], units='mm', side='r', start=2, end=40),
+                value=[20, 10], units='mm', units_inferred=False, side='r',
+                start=2, end=40),
              NumericTrait(
-                value=[6, 4], units='mm', side='l', start=2, end=40)])
+                value=[6, 4], units='mm', units_inferred=False, side='l',
+                 start=2, end=40)])
 
     def test_parse_36(self):
         self.assertEqual(
             PAR.parse('; reproductive data=R 20x10mm ;'),
             [NumericTrait(
-                value=[20, 10], units='mm', side='r', start=2, end=29)])
+                value=[20, 10], units='mm', units_inferred=False, side='r',
+                start=2, end=29)])
 
     def test_parse_37(self):
         self.assertEqual(

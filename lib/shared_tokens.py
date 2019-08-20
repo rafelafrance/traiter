@@ -171,3 +171,7 @@ cyst = ('cyst',
         r""" (\d+ \s+)?
             (cyst s? | bodies | cancerous | cancer )
             ( \s+ ( on | in ))?""")
+
+
+# integers, no commas or signs and typically small
+integer = ('integer', r""" \d+ """)

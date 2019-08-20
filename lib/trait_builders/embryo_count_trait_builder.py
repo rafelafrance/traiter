@@ -26,11 +26,10 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         self.shared_token(r_tkn.size)
         self.shared_token(r_tkn.fat)
         self.shared_token(tkn.len_units)
+        self.shared_token(tkn.integer)
 
         self.keyword('conj', ' or '.split())
         self.keyword('prep', ' on '.split())
-
-        self.fragment('integer', r""" \d+ """)
 
         self.keyword('none', r""" no | none """)
 

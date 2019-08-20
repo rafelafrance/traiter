@@ -33,6 +33,7 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
         self.shared_token(r_tkn.present)
         self.shared_token(r_tkn.active)
         self.shared_token(r_tkn.developed)
+        self.shared_token(r_tkn.nipple)
 
         self.keyword('false', """ false """)
         self.keyword('much', """ much """)
@@ -46,11 +47,6 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
             protuberant prominent showing worn distended
             """.split())
 
-        self.keyword('nipples', r"""
-            nipples? | nipp?s? | teats? |
-                ((mammae | mammary | mammaries | mamm) 
-                    (\s+ ( glands? | tisss?ue ) )? ) """)
-
         # Separates measurements
         self.fragment('separator', r' [;"?/] ')
 
@@ -59,18 +55,20 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
-        self.replace('state', """
-            ( size | fully | partially | other | lactation 
-                | color | false | visible | and | uterus | much
-                | tissue | present | active | developed ){1,3}
-            """)
+        self.replace('state_end', """
+            ( size | fully | partially | other | lactation | color | false
+                | visible | tissue | present | active | developed | and ) """)
+        self.replace('state_mid', """ ( uterus | much ) """)
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
-            """(?P<value> (non)? state nipples)""",
-            """(?P<value> (non)? nipples state)""",
-            """(?P<value> nipples (non)? state)""",
+            """(?P<value> (non)?
+                (state_mid | state_end){0,2} state_end nipple)""",
+            """(?P<value> (non)? nipple
+                (state_mid | state_end){0,2} state_end)""",
+            """(?P<value> nipple (non)?
+                (state_mid | state_end){0,2} state_end)""",
         ])
 
     @staticmethod

@@ -68,6 +68,7 @@ class NumericTraitBuilder(BaseTraitBuilder):
         if not trait.value:
             return None
         trait.units = 'mm_shorthand'
+        trait.units_inferred = False
         trait.is_shorthand = True
         flag = measurement.split('_')[1]
         flag = f'estimated_{flag}'

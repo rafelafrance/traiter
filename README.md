@@ -51,7 +51,7 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Ovaries state & size
 - Pregnancy state
 - Embryo count & length
-- Nipple state
+- Nipple state & count
 - Lactation state
 - Placental scar state, count, & location (planned)
 

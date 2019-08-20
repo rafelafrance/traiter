@@ -17,12 +17,16 @@ class TestOvariesSizeTraitBuilder(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             PAR.parse('ovaries = 8x5 mm'),
-            [NumericTrait(value=[8, 5], units='mm', start=0, end=16)])
+            [NumericTrait(
+                value=[8, 5], units='mm', units_inferred=False,
+                start=0, end=16)])
 
     def test_parse_02(self):
         self.assertEqual(
             PAR.parse('ovary < 1 x 1 mm'),
-            [NumericTrait(value=[1, 1], units='mm', start=0, end=16)])
+            [NumericTrait(
+                value=[1, 1], units='mm', units_inferred=False,
+                start=0, end=16)])
 
     def test_parse_03(self):
         self.assertEqual(
@@ -40,20 +44,27 @@ class TestOvariesSizeTraitBuilder(unittest.TestCase):
             PAR.parse('moderate fat, scars 3R, 4L, no embryos '
                       '[right ovary listed, left ovary: 4 x 2 mm]'),
             [NumericTrait(
-                value=[4, 2], units='mm', side='left', start=60, end=80)])
+                value=[4, 2], units='mm', units_inferred=False,
+                side='left', start=60, end=80)])
 
     def test_parse_06(self):
         self.assertEqual(
             PAR.parse('Rt Ovary 2.0x3.5mm, Lft Ovary 2.1x4.0mm.'),
             [
                 NumericTrait(
-                    value=[2, 3.5], units='mm', side='rt', start=0, end=18),
+                    value=[2, 3.5], units='mm', units_inferred=False,
+                    side='rt', start=0, end=18),
                 NumericTrait(
-                    value=[2.1, 4], units='mm', side='lft', start=20, end=39)])
+                    value=[2.1, 4], units='mm', units_inferred=False,
+                    side='lft', start=20, end=39)])
 
     def test_parse_07(self):
         self.maxDiff = None
         self.assertEqual(
             PAR.parse('ovaries: 20mm X 12mm, 18mm X 9mm.'),
-            [NumericTrait(value=[20, 12], units='mm', start=0, end=32),
-             NumericTrait(value=[18, 9], units='mm', start=0, end=32)])
+            [NumericTrait(
+                value=[20, 12], units='mm', units_inferred=False,
+                start=0, end=32),
+             NumericTrait(
+                 value=[18, 9], units='mm', units_inferred=False,
+                 start=0, end=32)])

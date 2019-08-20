@@ -5,7 +5,7 @@
 active = ('active', 'active inactive'.split())
 
 # Links gonads and other related traits
-and_ = ('and', r' ( and | [&] ) \b ')
+and_ = ('and', r' ( and \b | [&] ) ')
 
 # A count
 count_ = ('count', r"""( only | all | both )? \s* [12]""")
@@ -26,7 +26,8 @@ destroyed = ('destroyed', 'destroy(ed)?')
 developed = ('developed', r"""
     (fully | incompletely | partially | part | well)?
     [.\s-]{0,2}
-    (developed | undeveloped | devel | undevel | undev | indist)
+    (developed? | undeveloped? | development | devel 
+        | undevel | undev | indist)
     """)
 
 # "fat"
@@ -128,7 +129,10 @@ ovary = ('ovary', r' ( ovary s? | ovaries | ov ) \b ')
 uterus = ('uterus', 'uterus uterine'.split())
 
 # Spellings of nipple
-nipple = ('nipple', 'nipple s? | nip s?')
+nipple = ('nipple', r"""
+    nipples? | nipp?s? | teats? |
+        ((mammae | mammary | mammaries | mamm) 
+            (\s+ ( glands? | tisss?ue ) )? ) """)
 
 # Spellings of embryo
 embryo = ('embryo', r"""

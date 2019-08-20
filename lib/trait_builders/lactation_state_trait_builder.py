@@ -12,12 +12,16 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
         super().__init__(args)
 
         self.build_token_rules()
+        self.build_replace_rules()
         self.build_product_rules()
 
         self.compile_regex()
 
     def build_token_rules(self):
         """Define the tokens."""
+
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
 
     def build_product_rules(self):
         """Define rules for output."""

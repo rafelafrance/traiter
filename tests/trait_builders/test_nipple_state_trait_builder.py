@@ -109,3 +109,8 @@ class TestSexTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; MAMMARY TISSSUE ABSENT;'),
             [Trait(value='mammary tisssue absent', start=2, end=24)])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=no nipples showing, uterus found;'),
+            [Trait(value='no nipples showing', start=20, end=38)])

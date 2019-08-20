@@ -17,9 +17,6 @@ class NumericTrait(Trait):
     def __init__(self, **kwargs):
         """Build a numeric trait."""
         # Unit tests need these attributes to exist on the object
-        self.units = None
-        self.units_inferred = False
-
         super().__init__(**kwargs)
 
     def merge_flags(self, other):
@@ -31,9 +28,9 @@ class NumericTrait(Trait):
     def convert_value(self, units):
         """Set the units and convert_value the value."""
         if not units:
-            self.units_inferred = True
+            setattr(self, 'units_inferred', True)
         else:
-            self.units_inferred = False
+            setattr(self, 'units_inferred', False)
             if isinstance(units, list):
                 units = [x.lower() for x in units]
                 setattr(
@@ -43,7 +40,7 @@ class NumericTrait(Trait):
             else:
                 units = units.lower()
                 setattr(self, 'value', convert(self.value, units))
-        self.units = units
+        setattr(self, 'units', units)
 
     @staticmethod
     def to_float(value):
@@ -81,13 +78,14 @@ class NumericTrait(Trait):
 
     def compound_value(self, values, units):
         """Calculate value for compound units like: 5 lbs 4 ozs."""
-        self.units = units
+        setattr(self, 'units', units)
         big = self.to_float(values[0])
         big = convert(big, units[0])
         smalls = re.split(tkn.range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         setattr(self, 'value', [big + convert(x, units[1]) for x in smalls])
         setattr(self, 'value', [round(v, 2) for v in self.value])
+        setattr(self, 'units_inferred', False)
         if len(self.value) == 1:
             setattr(self, 'value', self.value[0])
 
