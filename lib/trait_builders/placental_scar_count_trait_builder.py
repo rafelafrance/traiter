@@ -48,6 +48,16 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
                   (?P<count1> count ) (?P<side1> side )
                 ( (?P<count2> count ) (?P<side2> side ) )? """,
 
+            """   (?P<count1> count ) (?P<side1> side )
+                ( (?P<count2> count ) (?P<side2> side ) )?
+                plac_scar """,
+
+            """ (?P<count1> count ) plac_scar (?P<side1> side )
+                ( (?P<count2> count ) plac_scar (?P<side2> side ) )? """,
+
+            """ plac_scar (?P<side1> side ) (?P<count1> count )
+                ( plac_scar (?P<side2> side ) (?P<count2> count ) )? """,
+
             """plac_scar
                 (?P<count1> count )
                   op (?P<count2> count )
@@ -61,7 +71,9 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
                 )?
                 """,
 
-            """ plac_scar (?P<count1> count ) (?P<side1> side )? """,
+            """ plac_scar (?P<count1> count ) (?P<side1> side ) """,
+
+            """ plac_scar (?P<value> count ) """,
         ])
 
         self.product(self.convert_state, [

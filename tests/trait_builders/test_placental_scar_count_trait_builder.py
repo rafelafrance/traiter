@@ -88,3 +88,38 @@ class TestPlacentalScarCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('not breeding, two scars, 1 left, 1 right'),
             [NumericTrait(value=2, left=1, right=1, start=18, end=40)])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('placental scars 1 + 1, mam tissue'),
+            [NumericTrait(value=2, side1=1, side2=1, start=0, end=21)])
+
+    def test_parse_17(self):
+        self.assertEqual(
+            PAR.parse('2 P-SCAR R, 1 P-SCAR L'),
+            [NumericTrait(value=3, left=1, right=2, start=0, end=22)])
+
+    def test_parse_18(self):
+        self.assertEqual(
+            PAR.parse('5 scars: 2lf,3rt'),
+            [NumericTrait(value=5, left=2, right=3, start=0, end=16)])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            PAR.parse('lactating, P-SCAR-R 3, P-SCAR-L 2'),
+            [NumericTrait(value=5, left=2, right=3, start=11, end=33)])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            PAR.parse('1R,0L plac scar'),
+            [NumericTrait(value=1, left=0, right=1, start=0, end=15)])
+
+    def test_parse_21(self):
+        self.assertEqual(
+            PAR.parse('3 pac. scars:1(R)&2(L)'),
+            [NumericTrait(value=3, left=2, right=1, start=0, end=21)])
+
+    def test_parse_22(self):
+        self.assertEqual(
+            PAR.parse('plac scar-9; lactating)'),
+            [NumericTrait(value=9, start=0, end=11)])
