@@ -1,11 +1,11 @@
-"""Parse pregnancy state notations."""
+"""Parse placental scar location notations."""
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 import lib.shared_repoduction_tokens as r_tkn
 
 
-class PregnancyStateTraitBuilder(BaseTraitBuilder):
+class PlacentalScarLocationTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
     def __init__(self, args=None):
@@ -13,48 +13,22 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
         super().__init__(args)
 
         self.build_token_rules()
+        self.build_replace_rules()
         self.build_product_rules()
 
         self.compile_regex()
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.none)
 
-        self.keyword('pregnant', r"""
-            pregnant pregnan preg pregnancy pregnancies """.split())
+        self.shared_token(r_tkn.word)
 
-        self.keyword('joiner', r""" of were """.split())
-
-        self.keyword('recent', r"""
-            recently recent was previously prev """.split())
-
-        self.keyword('probably', r"""
-            probably prob possibly possible 
-            appears? very
-            visible visibly 
-            evidence evident
-            """.split())
-
-        self.keyword('stage', r' early late mid '.split())
-
-        self.fragment('quest', '[?]')
-
-        self.fragment('separator', r' [;,"] ')
-
-        # Skip arbitrary words
-        self.fragment('word', r' [a-z]\w+ ')
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
-
-            # E.g.: pregnancy visible
-            """(?P<value> pregnant (joiner)? (none)? probably (quest)? )""",
-
-            # E.g.: Probably early pregnancy
-            """(?P<value> (none)? (recent | probably)?
-                (stage)? (none | joiner)? pregnant (quest)? )""",
         ])
 
     @staticmethod

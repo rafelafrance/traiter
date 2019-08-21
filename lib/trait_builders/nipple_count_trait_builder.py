@@ -24,14 +24,12 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
         self.shared_token(r_tkn.nipple)
         self.shared_token(tkn.integer)
         self.shared_token(r_tkn.visible)
-
-        self.fragment('op', r' [+:] ')
-        self.fragment('eq', r' [=] ')
+        self.shared_token(r_tkn.none)
+        self.shared_token(r_tkn.op)
+        self.shared_token(r_tkn.eq)
 
         self.keyword('adj', r"""
             inguinal ing pectoral pec pr """.split())
-
-        self.keyword('none', r""" no | none """)
 
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
@@ -89,3 +87,12 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
         trait.value = trait.to_int(token.groups['value1'])
         trait.value += trait.to_int(token.groups.get('value2'))
         return trait
+
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        if not data['sex'] or data['sex'][0].value != 'male':
+            return False
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'male'"
+        return True

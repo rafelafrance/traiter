@@ -50,6 +50,7 @@ mature = ('mature', r'( immature | mature | imm ) \b ')
 
 # Negation: "non", "not", etc.
 non = ('non', r' \b ( not | non | no | semi | sub ) ')
+none = ('none', r' \b ( no | none | not | non ) \b ')
 
 # Spellings of "partially"
 partially = (
@@ -82,6 +83,12 @@ tissue = ('tissue', ' tissue '.split())
 
 present = ('present', ' present absent '.split())
 
+# The sides like: 3L or 4Right
+side = ('side', r""" left | right | [lr] (?! [a-z] ) """)
+
+# Some traits are presented as an equation
+op = ('op', r' [+:&] ')
+eq = ('eq', r' [=] ')
 
 ###############################################################################
 # Male specific patterns
@@ -138,3 +145,12 @@ nipple = ('nipple', r"""
 embryo = ('embryo', r"""
     embryos? | embryps? | embryonic | embs? | embrs? 
     | fetuses | fetus | foeti""")
+
+# Spellings of placental scar
+plac_scar = ('plac_scar', r"""
+    ( placental | plac | postnatal ) \s* ( scarring | scars? )
+    | p [\s-] ( scarring | scars? )
+    | ( uterus | uterine ) \s* ( scarring | scars? )
+    | ( scarring | scars? )
+    | ps | pslc | plac | plscr
+    """)

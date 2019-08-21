@@ -1,0 +1,114 @@
+"""Parse placental scar counts."""
+
+from lib.numeric_trait import NumericTrait
+from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
+import lib.shared_tokens as tkn
+import lib.shared_repoduction_tokens as r_tkn
+
+
+class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
+    """Parser logic."""
+
+    def __init__(self, args=None):
+        """Build the trait parser."""
+        super().__init__(args)
+
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
+
+        self.compile_regex()
+
+    def build_token_rules(self):
+        """Define the tokens."""
+        self.shared_token(r_tkn.plac_scar)
+        self.shared_token(tkn.integer)
+        self.shared_token(r_tkn.side)
+        self.shared_token(r_tkn.none)
+        self.shared_token(r_tkn.op)
+        self.shared_token(r_tkn.eq)
+
+        # Adjectives to placental scars
+        self.keyword('adj', r' faint '.split())
+
+        # Skip arbitrary words
+        self.fragment('word', r' \w+ ')
+
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+        self.replace('count', ' integer | none ')
+
+    def build_product_rules(self):
+        """Define rules for output."""
+        self.product(self.convert_count, [
+            """(?P<count1> count ) op (?P<count2> count )
+                ( eq (?P<value> count ) )? plac_scar """,
+
+            """plac_scar
+                  (?P<count1> count ) (?P<side1> side )
+                ( (?P<count2> count ) (?P<side2> side ) )? """,
+
+            """plac_scar
+                (?P<count1> count )
+                  op (?P<count2> count )
+                ( eq (?P<value> count ) )? """,
+
+            """ (?P<value> count ) (adj)? plac_scar (op)?
+                (
+                    (?P<count1> count ) (?P<side1> side )
+                    (op)?
+                    (?P<count2> count ) (?P<side2> side )
+                )?
+                """,
+
+            """ plac_scar (?P<count1> count ) (?P<side1> side )? """,
+        ])
+
+        self.product(self.convert_state, [
+            """ plac_scar """
+        ])
+
+    @staticmethod
+    def convert_count(token):
+        """Convert parsed tokens into a result."""
+        trait = NumericTrait(start=token.start, end=token.end)
+
+        if token.groups.get('value'):
+            trait.value = trait.to_int(token.groups['value'])
+        elif token.groups.get('count1'):
+            trait.value = trait.to_int(token.groups['count1'])
+            trait.value += trait.to_int(token.groups.get('count2', ''))
+
+        # Add scar side count
+        side = token.groups.get('side1', '').lower()
+        count = token.groups.get('count1', '').lower()
+        if side:
+            side = 'left' if side.startswith('l') else 'right'
+            setattr(trait, side, trait.to_int(count))
+        elif count:
+            setattr(trait, 'side1', trait.to_int(count))
+
+        # Add scar side count
+        side = token.groups.get('side2', '').lower()
+        count = token.groups.get('count2', '').lower()
+        if side:
+            side = 'left' if side.startswith('l') else 'right'
+            setattr(trait, side, trait.to_int(count))
+        elif count:
+            setattr(trait, 'side2', trait.to_int(count))
+
+        return trait
+
+    @staticmethod
+    def convert_state(token):
+        """Convert parsed tokens into a result."""
+        return NumericTrait(value='present', start=token.start, end=token.end)
+
+    @staticmethod
+    def should_skip(data, trait):
+        """Check if this record should be skipped because of other fields."""
+        if not data['sex'] or data['sex'][0].value != 'male':
+            return False
+        if data[trait]:
+            data[trait].skipped = "Skipped because sex is 'male'"
+        return True

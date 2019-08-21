@@ -1,4 +1,4 @@
-"""Parse testes state notations."""
+"""Parse ovaries state notations."""
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder

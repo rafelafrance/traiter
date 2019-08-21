@@ -27,14 +27,11 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         self.shared_token(r_tkn.fat)
         self.shared_token(tkn.len_units)
         self.shared_token(tkn.integer)
+        self.shared_token(r_tkn.side)
+        self.shared_token(r_tkn.none)
 
         self.keyword('conj', ' or '.split())
         self.keyword('prep', ' on '.split())
-
-        self.keyword('none', r""" no | none """)
-
-        # The sides like: 3L or 4Right
-        self.fragment('side', r""" left | right | [lr] (?! [a-z] ) """)
 
         # The sexes like: 3M or 4Females
         self.fragment('sex', r""" males? | females? | [mf] (?! [a-z] ) """)
