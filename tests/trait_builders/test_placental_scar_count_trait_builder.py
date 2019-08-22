@@ -123,3 +123,33 @@ class TestPlacentalScarCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('plac scar-9; lactating)'),
             [NumericTrait(value=9, start=0, end=11)])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            PAR.parse('VC, no embs, uterine scars'),
+            [NumericTrait(value='present', start=13, end=26)])
+
+    def test_parse_24(self):
+        self.assertEqual(
+            PAR.parse('1 lt. plac. scar, 2 rt emb: CR: 16 mm'),
+            [NumericTrait(value=3, left=1, right=2, start=0, end=22)])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('3+4= 7 placental scars'),
+            [NumericTrait(value=7, side1=3, side2=4, start=0, end=22)])
+
+    def test_parse_26(self):
+        self.assertEqual(
+            PAR.parse('; no embroys or scar'),
+            [NumericTrait(value=0, start=2, end=20)])
+
+    def test_parse_27(self):
+        self.assertEqual(
+            PAR.parse('; 3 prominent placental scars'),
+            [NumericTrait(value=3, start=2, end=29)])
+
+    def test_parse_28(self):
+        self.assertEqual(
+            PAR.parse('VO, pg., 1 embryo (discarded), CRL+28 mm'),
+            [])

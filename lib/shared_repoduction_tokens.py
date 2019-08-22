@@ -84,7 +84,7 @@ tissue = ('tissue', ' tissue '.split())
 present = ('present', ' present absent '.split())
 
 # The sides like: 3L or 4Right
-side = ('side', r""" left | right | lf | rt | [lr] (?! [a-z] ) """)
+side = ('side', r""" left | right | lf | lt | rt | [lr] (?! [a-z] ) """)
 
 # Some traits are presented as an equation
 op = ('op', r' [+:&] ')
@@ -143,7 +143,7 @@ nipple = ('nipple', r"""
 
 # Spellings of embryo
 embryo = ('embryo', r"""
-    embryos? | embryps? | embryonic | embs? | embrs? 
+    embryos? | embryps? | embroys | embryonic | embs? | embrs? 
     | fetuses | fetus | foeti""")
 
 # Spellings of placental scar

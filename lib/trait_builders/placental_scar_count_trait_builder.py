@@ -29,14 +29,18 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
         self.shared_token(r_tkn.eq)
 
         # Adjectives to placental scars
-        self.keyword('adj', r' faint '.split())
+        self.keyword('adj', r""" faint prominent recent old """.split())
+
+        # Conjunction
+        self.keyword('conj', ' or '.split())
 
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
-        self.replace('count', ' integer | none ')
+        self.replace('count', """ 
+            none word conj | integer | none """)
 
     def build_product_rules(self):
         """Define rules for output."""
@@ -46,6 +50,9 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
 
             """plac_scar
                   (?P<count1> count ) (?P<side1> side )
+                ( (?P<count2> count ) (?P<side2> side ) )? """,
+
+            """ (?P<count1> count ) (?P<side1> side ) plac_scar
                 ( (?P<count2> count ) (?P<side2> side ) )? """,
 
             """   (?P<count1> count ) (?P<side1> side )
