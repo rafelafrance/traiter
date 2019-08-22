@@ -148,9 +148,9 @@ embryo = ('embryo', r"""
 
 # Spellings of placental scar
 plac_scar = ('plac_scar', r"""
-    ( placental | plac | postnatal | pac ) [.\s]* ( scarring | scars? )
+    ( placental | plac | postnatal | pac | pl ) [.\s]* ( scarring | scars? )
     | p [\s.-] ( scarring | scars? )
     | ( uterus | uterine ) [.\s]* ( scarring | scars? )
-    | ( scarring | scars? )
+    | ( scarring | scars? ) (?! \s* on )
     | ps | pslc | plac | plscr
     """)

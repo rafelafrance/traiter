@@ -39,7 +39,7 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - We also have a situations where the same abbreviation is used for different traits. For instance `T` can indicate either a testes measurement or a tail length measurement. 
 
 ## List of traits extracted
-**Note: This list is currently biased towards Vertebrate traits.**
+**Note: This list is currently biased towards vertebrate (mostly mammals) traits.**
 - Total length (aka snout vent length, fork length, etc.)
 - Tail Length
 - Hind foot Length
@@ -53,7 +53,7 @@ We are using the stacked-regex module to do most of the parsing. This module ret
 - Embryo count & length
 - Nipple state & count
 - Lactation state
-- Placental scar state, count, & location (in progress)
+- Placental scar count
 
 ## Install
 

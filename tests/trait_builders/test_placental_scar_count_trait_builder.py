@@ -153,3 +153,51 @@ class TestPlacentalScarCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('VO, pg., 1 embryo (discarded), CRL+28 mm'),
             [])
+
+    def test_parse_29(self):
+        self.assertEqual(
+            PAR.parse('L 3 plac scars, R 2 pl. scars;'),
+            [NumericTrait(value=5, left=3, right=2, start=0, end=29)])
+
+    def test_parse_30(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=3R, 2L, placental scars;sex=female;'),
+            [NumericTrait(value=5, left=2, right=3, start=18, end=41)])
+
+    def test_parse_31(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Scars - 5 on left, 5 of right'),
+            [NumericTrait(value=10, left=5, right=5, start=18, end=47)])
+
+    def test_parse_32(self):
+        self.assertEqual(
+            PAR.parse(';reproductive data=Placental scars-2R; Embryos-1L,'),
+            [NumericTrait(value=2, right=2, start=19, end=37)])
+
+    def test_parse_33(self):
+        self.assertEqual(
+            PAR.parse('no visible placental scarring'),
+            [NumericTrait(value=0, start=0, end=29)])
+
+    def test_parse_34(self):
+        self.assertEqual(
+            PAR.parse('; 1 scar on tail ;'),
+            [])
+
+    def test_parse_35(self):
+        self.assertEqual(
+            PAR.parse(', no scars horns R 2 plac scars, L 3 plac scars,'),
+            [NumericTrait(start=2, end=10, value=0),
+             NumericTrait(start=17, end=47, value=5, right=2, left=3)])
+
+    def test_parse_36(self):
+        self.assertEqual(
+            PAR.parse(
+                'reproductive data=perf, pelvis not sep, nipples large, '
+                'horns R+L1.5wide 2+plac. scars,'),
+            [NumericTrait(value='present', start=74, end=85)])
+
+    def test_parse_37(self):
+        self.assertEqual(
+            PAR.parse('; sex=female ; reproductive data=scars  0R-4L ;'),
+            [NumericTrait(value=4, left=4, right=0, start=33, end=45)])

@@ -27,12 +27,20 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
         self.shared_token(r_tkn.none)
         self.shared_token(r_tkn.op)
         self.shared_token(r_tkn.eq)
+        self.shared_token(r_tkn.embryo)
 
         # Adjectives to placental scars
-        self.keyword('adj', r""" faint prominent recent old """.split())
+        self.keyword('adj', r"""
+            faint prominent recent old possible """.split())
 
         # Conjunction
         self.keyword('conj', ' or '.split())
+
+        # Preposition
+        self.keyword('prep', ' on of '.split())
+
+        # Visible
+        self.keyword('visible', ' visible '.split())
 
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
@@ -40,7 +48,7 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
     def build_replace_rules(self):
         """Define rules for token simplification."""
         self.replace('count', """ 
-            none word conj | integer | none """)
+            none embryo conj | none visible | integer | none """)
 
     def build_product_rules(self):
         """Define rules for output."""
@@ -49,14 +57,18 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
                 ( eq (?P<value> count ) )? plac_scar """,
 
             """plac_scar
-                  (?P<count1> count ) (?P<side1> side )
-                ( (?P<count2> count ) (?P<side2> side ) )? """,
+                  (?P<count1> count ) (prep)? (?P<side1> side )
+                ( (?P<count2> count ) (prep)? (?P<side2> side ) )? """,
 
-            """ (?P<count1> count ) (?P<side1> side ) plac_scar
-                ( (?P<count2> count ) (?P<side2> side ) )? """,
+            """ (?P<count1> count ) (prep)? (?P<side1> side ) plac_scar
+                ( (?P<count2> count ) (prep)? (?P<side2> side ) 
+                    (plac_scar)? )? """,
 
-            """   (?P<count1> count ) (?P<side1> side )
-                ( (?P<count2> count ) (?P<side2> side ) )?
+            """ (?P<side1> side ) (?P<count1> count ) plac_scar
+                ( (?P<side2> side ) (?P<count2> count ) (plac_scar)? )? """,
+
+            """   (?P<count1> count ) (prep)? (?P<side1> side )
+                ( (?P<count2> count ) (prep)? (?P<side2> side ) )?
                 plac_scar """,
 
             """ (?P<count1> count ) plac_scar (?P<side1> side )
