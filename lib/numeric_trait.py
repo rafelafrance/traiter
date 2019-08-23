@@ -22,8 +22,12 @@ class NumericTrait(Trait):
     def merge_flags(self, other):
         """Capture the meaning across all parses."""
         super().merge_flags(other)
-        self.units_inferred &= other.units_inferred
-        self.estimated_value |= other.estimated_value
+
+        setattr(self, 'units_inferred', bool(self.units_inferred))
+        self.units_inferred &= bool(other.units_inferred)
+
+        setattr(self, 'estimated_value', bool(self.estimated_value))
+        self.estimated_value |= bool(other.estimated_value)
 
     def convert_value(self, units):
         """Set the units and convert_value the value."""

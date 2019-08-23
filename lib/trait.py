@@ -45,7 +45,8 @@ class Trait:
 
     def merge_flags(self, other):
         """Capture the meaning across all parses."""
-        self.ambiguous_key &= other.ambiguous_key
+        setattr(self, 'ambiguous_key', bool(self.ambiguous_key))
+        self.ambiguous_key &= bool(other.ambiguous_key)
 
     def as_key(self):
         """Used to tell if the traits are the same trait."""

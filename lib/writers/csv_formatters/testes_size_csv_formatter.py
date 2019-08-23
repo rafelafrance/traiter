@@ -55,8 +55,11 @@ def _merge_records(records):
 
 def _merge_flags(prev, curr):
     """If one of the flags is unambiguous then they all are."""
-    prev['ambiguous_key'] |= curr['ambiguous_key']
-    prev['units_inferred'] |= curr['units_inferred']
+    prev['ambiguous_key'] = bool(prev.get('ambiguous_key'))
+    prev['ambiguous_key'] |= bool(curr['ambiguous_key'])
+
+    prev['units_inferred'] = bool(prev.get('units_inferred'))
+    prev['units_inferred'] |= bool(curr['units_inferred'])
 
 
 def _format_records(records, row):

@@ -201,3 +201,61 @@ class TestPlacentalScarCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; sex=female ; reproductive data=scars  0R-4L ;'),
             [NumericTrait(value=4, left=4, right=0, start=33, end=45)])
+
+    def test_parse_38(self):
+        self.assertEqual(
+            PAR.parse(
+                'SKULL CLEANED AT ILLINOIS STATE MUSEUM OCT 95; '
+                'SCAR ABOVE TAIL, EVIDENCE OF PAST INSECT DAMAGE;'),
+            [])
+
+    def test_parse_39(self):
+        self.assertEqual(
+            PAR.parse('ut horns: R 1 definite scar, L 2+ scars;'),
+            [NumericTrait(value=3, left=2, right=1, start=10, end=39)])
+
+    def test_parse_40(self):
+        self.assertEqual(
+            PAR.parse('DINO 14431; placental scars'),
+            [NumericTrait(value='present', start=12, end=27)])
+
+    def test_parse_41(self):
+        self.assertEqual(
+            PAR.parse(
+                '"Note in catalog: same as 135478";Scarritt '
+                'Venezuelan Exped."'),
+            [])
+
+    def test_parse_42(self):
+        self.assertEqual(
+            PAR.parse('5 ut scars, 132-62-20-15=19'),
+            [NumericTrait(value=5, start=0, end=10)])
+
+    def test_parse_43(self):
+        self.assertEqual(
+            PAR.parse('specimen number AJU 372; P-SCAR-R 5, P-SCAR-L 5'),
+            [NumericTrait(value=10, left=5, right=5, start=25, end=47)])
+
+    def test_parse_44(self):
+        self.assertEqual(
+            PAR.parse('Zion 11396; NK 36683; scars/no embs/lact'),
+            [NumericTrait(value='present', start=22, end=27)])
+
+    def test_parse_45(self):
+        self.assertEqual(
+            PAR.parse(
+                'negative for nematodes; skull labeled 14 Nov 57. PSM: '
+                'Mamm Puget Sound Museum ID 27461'),
+            [])
+
+    def test_parse_46(self):
+        self.assertEqual(
+            PAR.parse(
+                "born in lab on Sept 3 to 7 '56; placed in sep. cage 28 "
+                "Sept 56; skull labeled 23 Jan 57"),
+            [])
+
+    def test_parse_47(self):
+        self.assertEqual(
+            PAR.parse('H,K,L,L,S; UTERINE SCARS=2R'),
+            [NumericTrait(value=2, right=2, start=11, end=27)])

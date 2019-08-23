@@ -133,7 +133,7 @@ lut = ('lut', r' ( c \.? l \.\? ) | \b ( luteum | lute | lut ) \b ')
 ovary = ('ovary', r' ( ovary s? | ovaries | ov ) \b ')
 
 # Spellings of uterus
-uterus = ('uterus', 'uterus uterine'.split())
+uterus = ('uterus', 'uterus uterine ut'.split())
 
 # Spellings of nipple
 nipple = ('nipple', r"""
@@ -148,9 +148,10 @@ embryo = ('embryo', r"""
 
 # Spellings of placental scar
 plac_scar = ('plac_scar', r"""
-    ( placental | plac | postnatal | pac | pl ) [.\s]* ( scarring | scars? )
+    ( placental | plac \b | postnatal | pac \b | \b pl \b ) 
+        [.\s]* ( scarring | scars? )
     | p [\s.-] ( scarring | scars? )
-    | ( uterus | uterine ) [.\s]* ( scarring | scars? )
-    | ( scarring | scars? ) (?! \s* on )
-    | ps | pslc | plac | plscr
+    | ( uterus | uterine | \b ut \b ) [.\s]* ( scarring | scars? )
+    | ( scarring | scars? ) \b (?! \s* ( on | above | below ) )
+    | ps \b | pslc | plac \b | plscr
     """)
