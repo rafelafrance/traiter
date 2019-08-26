@@ -53,3 +53,13 @@ class TestSexTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('just finished lactating'),
             [Trait(value='just finished lactating', start=0, end=23)])
+
+    def test_parse_09(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=non-lactating, non-pregnant'),
+            [Trait(value='non-lactating', start=18, end=31)])
+
+    def test_parse_10(self):
+        self.assertEqual(
+            PAR.parse('Tail pencil; Not nursing, no embryos;'),
+            [Trait(value='not nursing', start=13, end=24)])

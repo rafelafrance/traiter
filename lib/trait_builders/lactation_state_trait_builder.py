@@ -26,7 +26,8 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
             """)
 
         self.keyword('not', ' not no non '.split())
-        self.keyword('post', r""" 
+
+        self.keyword('post', r"""
             post | recently | recent
             | (just \s+)? finished 
             """)
@@ -38,12 +39,12 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
-        self.replace('modifier', 'not post'.split())
+        self.replace('prefix', 'not post'.split())
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
-            """ (?P<value> (modifier)? lactating (quest)? ) """
+            """ (?P<value> (prefix)? lactating (quest)? ) """
         ])
 
     @staticmethod
