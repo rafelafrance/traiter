@@ -3,7 +3,7 @@
 from lib.util import ordinal, number_to_words
 
 
-feet = ('feet', r" foot s? | feet s? | ft s? | (?<= \d ) ' ")
+feet = ('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
 
 # NOTE: Double quotes as inches is handled during fix up
 # The negative look-ahead is trying to distinguish between cases like inTL

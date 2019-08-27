@@ -64,3 +64,23 @@ class TestNippleCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('6 conspicuous mammae;'),
             [NumericTrait(value=6, start=0, end=20)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse('98 mammalian jaws and jaw fragments,'),
+            [])
+
+    def test_parse_12(self):
+        self.assertEqual(
+            PAR.parse('; CR-9; mammary tissue present;'),
+            [])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('a fauna of about 800 mammal teeth'),
+            [])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('MISC. # IS 70034, NIPPLES ENLARGED'),
+            [])

@@ -23,35 +23,41 @@ class EmbryoLengthTraitBuilder(NumericTraitBuilder):
         """Define the tokens."""
         self.shared_token(r_tkn.embryo)
 
-        self.keyword('crown_rump', r""" 
-            ( crown | cr ) ( [_\s\-] | \s+ to \s+ )? rump 
-                | (?<! [a-z] ) crl (?! [a-z] ) 
-                | (?<! [a-z] ) cr  (?! [a-z] ) """)
+        self.keyword('crown_rump', r"""
+            (?<! collector [\s=:.] ) (?<! reg [\s=:.] ) (
+                ( crown | cr ) ( [_\s\-] | \s+ to \s+ )? rump
+                | (?<! [a-z] ) crl (?! [a-z] )
+                | (?<! [a-z] ) cr  (?! [a-z] )
+            )""")
 
         self.keyword('length', r' length | len ')
 
-        # Units
+        self.keyword('prep', ' of from '.split())
+        self.keyword('side', r""" left | right | lf | lt | rt | [lr] """)
+
         self.shared_token(tkn.len_units)
 
-        # Possible range of numbers like: "10 - 20" or just "10"
         self.shared_token(tkn.cross)
+        self.fragment('cross_joiner', tkn.cross_joiner)
 
-        # Separates measurements
+        self.fragment('word', r' \w+ ')
         self.fragment('separator', r' [;"?/] ')
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
+        self.replace('skip', ' prep word cross ')
+        self.replace('measurement', ' (cross_joiner)? cross ')
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
 
             # E.g.: crown-rump length=13 mm
-            """ (embryo)? crown_rump (length)? 
-                cross (?P<units> len_units )? """,
+            """ (embryo)? crown_rump (length)?
+                measurement (?P<units> len_units )? """,
 
             # E.g.: 15 mm, crown-rump length
-            """ (embryo)? cross (?P<units> len_units )? 
+            """ (embryo)? measurement (?P<units> len_units )?
                 crown_rump (length)? """,
         ])
 

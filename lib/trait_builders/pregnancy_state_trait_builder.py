@@ -22,7 +22,8 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
         self.shared_token(r_tkn.none)
 
         self.keyword('pregnant', r"""
-            pregnant pregnan preg pregnancy pregnancies """.split())
+            prega?n?ant pregnan preg pregnancy pregnancies 
+            gravid multiparous nulliparous parous """.split())
 
         self.keyword('joiner', r""" of were """.split())
 

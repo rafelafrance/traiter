@@ -12,4 +12,4 @@ def csv_formatter(trait_name, row, traits):
             records[key] = trait
 
     for i, trait in enumerate(records.values(), 1):
-        row[f'{trait_name}:{ordinal(i)}_{trait_name}_notation'] = trait.value
+        row[f'{trait_name}:{ordinal(i)}_{trait_name}'] = trait.value

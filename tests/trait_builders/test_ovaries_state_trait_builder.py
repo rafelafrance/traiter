@@ -188,5 +188,35 @@ class TestOvariesStateTraitBuilder(unittest.TestCase):
     def test_parse_32(self):
         self.assertEqual(
             PAR.parse('ovaries well developed, but not pregnant apparently;'),
-            [Trait(
-                value='well developed', start=0, end=22)])
+            [Trait(value='well developed', start=0, end=22)])
+
+    def test_parse_33(self):
+        self.assertEqual(
+            PAR.parse(
+                'ovaries pink and smooth, fat around base of '
+                'tail and oviduct'),
+            [Trait(value='pink and smooth', start=0, end=23)])
+
+    def test_parse_34(self):
+        self.assertEqual(
+            PAR.parse('Yng. 7 blastocysts and 2 ovaries preserved (where?)'),
+            [])
+
+    def test_parse_35(self):
+        self.assertEqual(
+            PAR.parse(
+                'reproductive data=imp, pelv fused, nipp tiny, nullip, '
+                'both ov w/ few sm foll;'),
+            [Trait(value='w/ few sm foll', side='both', start=54, end=76)])
+
+    def test_parse_36(self):
+        self.assertEqual(
+            PAR.parse(
+                'stomach, jaw, claw, ovaries, womb too large to preserve'),
+            [])
+
+    def test_parse_37(self):
+        self.assertEqual(
+            PAR.parse(
+                'Rov 3 cl, Lov 4 cl, both ov sm-med foll; no molt no scars;'),
+            [Trait(value='sm-med foll', side='both', start=20, end=39)])

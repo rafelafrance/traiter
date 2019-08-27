@@ -119,3 +119,14 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse("'Foeti: 2R4L=6'; Donator: Dartmouth College Museum."),
             [NumericTrait(value=6, left=4, right=2, start=1, end=12)])
+
+    def test_parse_22(self):
+        self.maxDiff = None
+        self.assertEqual(
+            PAR.parse('Fetus; Cruise #9999; Fetus of LACM 91773'),
+            [])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            PAR.parse('; reproductive data=7 near term embryos 95L, 2R)'),
+            [NumericTrait(value=97, left=95, right=2, start=32, end=47)])

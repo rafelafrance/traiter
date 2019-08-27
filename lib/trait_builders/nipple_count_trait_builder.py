@@ -31,14 +31,21 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
         self.keyword('adj', r"""
             inguinal ing pectoral pec pr """.split())
 
+        self.fragment('number', r' number | no | [#] ')
+        self.fragment('eq', r' is | eq | equals? | [=] ')
+
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
+
+        self.shared_token(r_tkn.sep)
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
         self.replace('count', ' integer | none ')
 
         self.replace('modifier', 'adj visible'.split())
+
+        self.replace('skip', ' number (eq)? integer ')
 
     def build_product_rules(self):
         """Define rules for output."""

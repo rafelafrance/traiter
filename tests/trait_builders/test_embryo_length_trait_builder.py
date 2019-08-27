@@ -81,3 +81,43 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
             [NumericTrait(
                 value=[9, 8], units='mm', units_inferred=False,
                 start=44, end=52)])
+
+    def test_parse_12(self):
+        self.assertEqual(
+            PAR.parse(
+                'reproductive data=Embryos: 2 (1 resorbing) R, 3 Left, '
+                'crown-rump length, 36 mm.'),
+            [NumericTrait(
+                value=36, units='mm', units_inferred=False,
+                start=54, end=78)])
+
+    def test_parse_13(self):
+        self.assertEqual(
+            PAR.parse('collector=CR 910025, E. E. Makela ;'),
+            [])
+
+    def test_parse_14(self):
+        self.assertEqual(
+            PAR.parse('Embryos of AF 48621. Eight embryos of AF 48621.  CR=6'),
+            [NumericTrait(
+                value=6, units=None, units_inferred=True, start=49, end=53)])
+
+    def test_parse_15(self):
+        self.assertEqual(
+            PAR.parse('snap 47: middle Cow Cr.'),
+            [])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('headwaters Kaluich Cr, ca 1500 ft'),
+            [])
+
+    def test_parse_17(self):
+        self.assertEqual(
+            PAR.parse(
+                'sex=female ; total length=158 mm; tail length=28 mm; '
+                'hind foot with claw=20 mm; ear from notch=12 mm; weight=60 g; '
+                'reproductive data=embryos 2R,3L CR=15mm left intact'),
+            [NumericTrait(
+                value=15, units='mm', units_inferred=False,
+                start=147, end=154)])

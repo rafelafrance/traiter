@@ -114,3 +114,70 @@ class TestSexTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; reproductive data=no nipples showing, uterus found;'),
             [Trait(value='no nipples showing', start=20, end=38)])
+
+    def test_parse_21(self):
+        self.assertEqual(
+            PAR.parse('nipples small, moderate fat'),
+            [Trait(value='nipples small', start=0, end=13)])
+
+    def test_parse_22(self):
+        self.assertEqual(
+            PAR.parse('uterus enlarged, large nipples'),
+            [Trait(value='large nipples', start=17, end=30)])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            PAR.parse('nipples medium'),
+            [Trait(value='nipples medium', start=0, end=14)])
+
+    def test_parse_24(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=No placental scars or embryos.  '
+                      '3 nipples prominen'),
+            [Trait(value='nipples prominen', start=52, end=68)])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=nipple dev: none, no plsc,'),
+            [Trait(value='nipple dev: none', start=18, end=34)])
+
+    def test_parse_26(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=nipple dev, 3R+0L=3 plsc ;'),
+            [Trait(value='nipple dev', start=18, end=28)])
+
+    def test_parse_27(self):
+        self.assertEqual(
+            PAR.parse(', pelvis slgt sep, nipp med+, no scars,'),
+            [Trait(value='nipp med+', start=19, end=28)])
+
+    def test_parse_28(self):
+        self.assertEqual(
+            PAR.parse('sep, nipp med, sm reddsih scar'),
+            [Trait(value='nipp med', start=5, end=13)])
+
+    def test_parse_29(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Ad. mammery glands developed '
+                      'but no nipples'),
+            [Trait(value='mammery glands developed', start=22, end=46)])
+
+    def test_parse_30(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=vulva open; no nipples apparent ;'),
+            [])
+
+    def test_parse_31(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=nipples bare ;'),
+            [Trait(value='nipples bare', start=18, end=30)])
+
+    def test_parse_32(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=nipple dev:large, 1R+2L=3embryo,'),
+            [Trait(value='nipple dev:large', start=18, end=34)])
+
+    def test_parse_33(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=nipples very bare ;'),
+            [Trait(value='nipples very bare', start=18, end=35)])

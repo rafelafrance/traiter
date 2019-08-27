@@ -63,3 +63,8 @@ class TestSexTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('Tail pencil; Not nursing, no embryos;'),
             [Trait(value='not nursing', start=13, end=24)])
+
+    def test_parse_11(self):
+        self.assertEqual(
+            PAR.parse('no. 8552; suckling'),
+            [Trait(value='suckling', start=10, end=18)])

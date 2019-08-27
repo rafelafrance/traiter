@@ -1,5 +1,6 @@
 """Parse ovaries state notations."""
 
+import re
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 import lib.shared_tokens as tkn
@@ -25,74 +26,37 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        # Spellings of ovary
         self.shared_token(r_tkn.ovary)
-
-        # E.g.: small sized
         self.shared_token(r_tkn.size)
-
-        # Spellings of uterus
         self.shared_token(r_tkn.uterus)
-
-        # Various forms of fallopian tubes
         self.shared_token(r_tkn.fallopian)
-
-        # Forms of "maturity"
         self.shared_token(r_tkn.mature)
-
-        # Forms of "active"
         self.shared_token(r_tkn.active)
-
-        # Types of "visibility"
         self.shared_token(r_tkn.non)
-
-        # Types of "visibility"
         self.shared_token(r_tkn.visible)
-
-        # Forms of "destroyed"
         self.shared_token(r_tkn.destroyed)
-
-        # Forms of "developed"
         self.shared_token(r_tkn.developed)
-
-        # Ovary count
         self.shared_token(r_tkn.count_)
-
-        # Words related to ovaries
         self.shared_token(r_tkn.horns)
         self.shared_token(r_tkn.covered)
         self.shared_token(r_tkn.fat)
-
-        # Spellings of luteum
         self.shared_token(r_tkn.lut)
-
-        # Spellings of corpus
         self.shared_token(r_tkn.corpus)
-
-        # Spellings of albicans
         self.shared_token(r_tkn.alb)
-
-        # Spellings of nipple
         self.shared_token(r_tkn.nipple)
-
-        # Side keywords
         self.shared_token(tkn.side)
-
-        # Colors associated with gonads
         self.shared_token(tkn.cyst)
-
-        # Colors associated with gonads
         self.shared_token(r_tkn.color)
-
-        # Sign for presence or absence
+        self.shared_token(r_tkn.texture)
         self.shared_token(r_tkn.sign)
-
-        # Links ovaries and other related traits
         self.shared_token(r_tkn.and_)
-
-        # We will exclude testes measurements
         self.shared_token(tkn.cross)
         self.shared_token(tkn.len_units)
+
+        # Skip words
+        self.keyword('skip', ' womb ')
+
+        self.fragment('sep', r' [;] ')
 
         # We allow random words in some situations
         self.fragment('word', r'[a-z] \w*')
@@ -147,8 +111,10 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             """(side)? ovaries
                 (measurement)?
                 (?P<value>
-                    ( word | color | luteum | state | size | and | cyst ){0,3}
-                    ( color | luteum | state | size | cyst ))
+                    ( word | color | texture | luteum | state | size | and 
+                        | cyst ){0,3}
+                    ( color | texture | luteum | state | size | cyst 
+                        | fallopian ))
             """,
 
             # Has the maturity but is possibly missing the size
@@ -161,7 +127,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             'ovaries (?P<value> coverage)',
 
             # E.g.: reproductive data=Ovary, fallopian tubes dark red
-            'ovaries (?P<value> color)',
+            'ovaries (?P<value> color | texture )',
 
             # E.g.: +corp. alb both ovaries
             '(?P<value> luteum) (side)? ovaries',
@@ -180,8 +146,11 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
     @staticmethod
     def convert(token):
         """Convert parsed token into a trait."""
+        value = token.groups['value'].lower()
+        if re.match(r'^[\s\d]+$', value):
+            return None
         trait = Trait(
-            value=token.groups['value'].lower(),
+            value=value,
             start=token.start,
             end=token.end)
         trait.is_flag_in_token('ambiguous_key', token)

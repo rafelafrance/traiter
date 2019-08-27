@@ -20,20 +20,26 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.keyword('lactating', r"""
-            lactating | lactation | lact 
-            | nursing | suckling
-            """)
+        self.fragment('lactating', r""" (
+            lactating | lactation | lactated | lactate | lact
+            | lactaing | lactacting | lactataing | lactational
+            | oelact | celact | lactati | lactacting | lactatin
+            | lactatting | lactatng
+            | nursing | suckling 
+        ) \b """)
 
-        self.keyword('not', ' not no non '.split())
+        self.fragment('not', r' \b ( not | non | no ) ')
 
-        self.keyword('post', r"""
-            post | recently | recent
-            | (just \s+)? finished 
-            """)
+        self.fragment('post', r""" \b (
+            (( just | recently ) \s+ )? finished
+            | post | recently | recent | had | pre
+        ) """)
 
         # To handle a guessed trait
         self.fragment('quest', '[?]')
+
+        # Separates measurements
+        self.fragment('separator', r' [;"/] ')
 
         self.shared_token(r_tkn.word)
 

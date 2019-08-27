@@ -103,3 +103,8 @@ class TestPregnancyStateTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('number 2859; female; no pregnancies'),
             [Trait(value='no pregnancies', start=21, end=35)])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Not gravid'),
+            [Trait(value='not gravid', start=18, end=28)])

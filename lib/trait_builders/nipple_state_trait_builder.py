@@ -47,7 +47,7 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
             """.split())
 
         # Separates measurements
-        self.fragment('separator', r' [;"?/] ')
+        self.fragment('separator', r' [;"?/,] ')
 
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
@@ -64,8 +64,10 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
         self.product(self.convert, [
             """(?P<value> (non)?
                 (state_mid | state_end){0,2} state_end nipple)""",
+
             """(?P<value> (non)? nipple
                 (state_mid | state_end){0,2} state_end)""",
+
             """(?P<value> nipple (non)?
                 (state_mid | state_end){0,2} state_end)""",
         ])

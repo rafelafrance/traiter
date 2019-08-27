@@ -36,6 +36,8 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         # The sexes like: 3M or 4Females
         self.fragment('sex', r""" males? | females? | [mf] (?! [a-z] ) """)
 
+        self.shared_token(r_tkn.sep)
+
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
 

@@ -18,6 +18,7 @@ def csv_formatter(trait_name, row, parses):
         else:
             records[key] = parse
 
+    # TODO
     low_key = '_low' if has_range else ''
     for i, (key, parse) in enumerate(records.items(), 1):
         col = f'{trait_name}_{i}01:{ordinal(i)}_{trait_name}{low_key}'
@@ -45,3 +46,24 @@ def csv_formatter(trait_name, row, parses):
         if parse.estimated_value:
             col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_estimated'
             row[col] = parse.estimated_value
+        if parse.left:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_left'
+            row[col] = parse.left
+        if parse.right:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_right'
+            row[col] = parse.right
+        if parse.male:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_male'
+            row[col] = parse.male
+        if parse.female:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_female'
+            row[col] = parse.female
+        if parse.notation:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_notation'
+            row[col] = parse.notation
+        if parse.side1:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_side1'
+            row[col] = parse.side1
+        if parse.side2:
+            col = f'{trait_name}_{i}08:{ordinal(i)}_{trait_name}_side2'
+            row[col] = parse.side2
