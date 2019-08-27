@@ -174,4 +174,4 @@ cyst = ('cyst',
 
 
 # integers, no commas or signs and typically small
-integer = ('integer', r""" \d+ """)
+integer = ('integer', r""" \d+ (?! [%\d\-] ) """)

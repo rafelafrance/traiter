@@ -259,3 +259,8 @@ class TestPlacentalScarCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('H,K,L,L,S; UTERINE SCARS=2R'),
             [NumericTrait(value=2, right=2, start=11, end=27)])
+
+    def test_parse_48(self):
+        self.assertEqual(
+            PAR.parse('no embryonic scars 360-40-125-68 1800g'),
+            [NumericTrait(value=0, start=0, end=18)])

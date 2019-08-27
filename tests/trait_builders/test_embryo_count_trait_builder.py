@@ -130,3 +130,13 @@ class TestEmbryoCountTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('; reproductive data=7 near term embryos 95L, 2R)'),
             [NumericTrait(value=97, left=95, right=2, start=32, end=47)])
+
+    def test_parse_24(self):
+        self.assertEqual(
+            PAR.parse('embryos of NK 125721, embryos NK 125726A-D'),
+            [])
+
+    def test_parse_25(self):
+        self.assertEqual(
+            PAR.parse('embryos of NK 125721, embryos NK 125726A-D'),
+            [])

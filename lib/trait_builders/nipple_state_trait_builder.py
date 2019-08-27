@@ -56,20 +56,20 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
         """Define rules for token simplification."""
         self.replace('state_end', """
             ( size | fully | partially | other | lactation | color | false
-                | visible | tissue | present | active | developed | and ) """)
-        self.replace('state_mid', """ ( uterus | much ) """)
+                | visible | tissue | present | active | developed ) """)
+        self.replace('state_mid', """ ( uterus | and ) """)
 
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.convert, [
             """(?P<value> (non)?
-                (state_mid | state_end){0,2} state_end nipple)""",
+                (state_end | much) (state_mid | state_end){0,2} nipple)""",
 
             """(?P<value> (non)? nipple
-                (state_mid | state_end){0,2} state_end)""",
+                (state_end | much) (state_mid | state_end){0,2} )""",
 
             """(?P<value> nipple (non)?
-                (state_mid | state_end){0,2} state_end)""",
+                (state_end | much) (state_mid | state_end){0,2} )""",
         ])
 
     @staticmethod

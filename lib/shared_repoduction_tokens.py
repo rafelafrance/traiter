@@ -37,8 +37,7 @@ size = ('size', r"""
 developed = (
     'developed',
     r"""
-        (fully | incompletely | partially | part | well)?
-        [.\s-]{0,2}""" +
+        ( (fully | incompletely | partially | part | well) [.\s-]{0,2} )?""" +
     fr"""(developed? | undeveloped? | development | devel 
         | dev \b ([\s:]* none | {size[1]} )? 
         | undevel | undev | indist)
@@ -136,7 +135,7 @@ nipple = ('nipple', r""" ( \b
     ) \b """)
 
 embryo = ('embryo', r"""
-    embryos? | embryps? | embroys | embryonic | embs? | embrs? 
+    embryonic | embryos? | embryps? | embroys | embs? | embrs? 
     | fetuses | fetus | foeti""")
 
 # Spellings of placental scar

@@ -21,6 +21,8 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        self.keyword('id', r' \d+-\d+ ')
+
         self.shared_token(r_tkn.nipple)
         self.shared_token(tkn.integer)
         self.shared_token(r_tkn.visible)
@@ -78,12 +80,20 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
     @staticmethod
     def convert(token):
         """Convert single value tokens into a result."""
-        if not token.groups.get('value'):
+        value = token.groups.get('value')
+
+        if not value:
             return None
+
         trait = NumericTrait(start=token.start, end=token.end)
-        trait.value = trait.to_int(token.groups['value'])
+        trait.value = trait.to_int(value)
+
+        if trait.value > 100:
+            return None
+
         if token.groups.get('notation'):
             trait.notation = token.groups['notation']
+
         return trait
 
     @staticmethod

@@ -89,6 +89,9 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
             if token.groups.get('count2'):
                 trait.value += trait.to_int(token.groups['count2'])
 
+        if trait.value > 1000:
+            return None
+
         # Add embryo side count
         side = token.groups.get('side1', '').lower()
         if side:

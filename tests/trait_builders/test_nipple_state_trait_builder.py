@@ -181,3 +181,13 @@ class TestSexTraitBuilder(unittest.TestCase):
         self.assertEqual(
             PAR.parse('reproductive data=nipples very bare ;'),
             [Trait(value='nipples very bare', start=18, end=35)])
+
+    def test_parse_34(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=2R+4L=6plsc developed mamm tissue;'),
+            [Trait(value='developed mamm tissue', start=30, end=51)])
+
+    def test_parse_35(self):
+        self.assertEqual(
+            PAR.parse('reproductive data=Lactating; clear & enlarged teats ;'),
+            [Trait(value='enlarged teats', start=37, end=51)])

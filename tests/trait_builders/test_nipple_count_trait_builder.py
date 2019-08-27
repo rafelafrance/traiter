@@ -80,7 +80,17 @@ class TestNippleCountTraitBuilder(unittest.TestCase):
             PAR.parse('a fauna of about 800 mammal teeth'),
             [])
 
-    def test_parse_13(self):
+    def test_parse_14(self):
         self.assertEqual(
             PAR.parse('MISC. # IS 70034, NIPPLES ENLARGED'),
+            [])
+
+    def test_parse_15(self):
+        self.assertEqual(
+            PAR.parse('Source: MRS. ID# 42-1111.  Mammary development,'),
+            [])
+
+    def test_parse_16(self):
+        self.assertEqual(
+            PAR.parse('CR:14 LG TEATS 98% LEAF,2%'),
             [])
