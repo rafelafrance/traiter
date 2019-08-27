@@ -51,7 +51,8 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
     def build_replace_rules(self):
         """Define rules for token simplification."""
         self.replace('count', """ 
-            none embryo (conj)? | none visible | integer | none """)
+            none embryo conj
+            | none visible | integer | none """)
 
     def build_product_rules(self):
         """Define rules for output."""
@@ -94,6 +95,8 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
                     (?P<count2> count ) (?P<side2> side )
                 )?
                 """,
+
+            """ (?P<value> count ) (embryo)? plac_scar """,
 
             """ plac_scar (eq)? (?P<count1> count ) (?P<side1> side ) """,
 
