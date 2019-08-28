@@ -68,7 +68,7 @@ def _format_records(records, row):
         row[key] = rec['side']
         key = f'testes_{i}20:{ordinal(i)}_testes_length'
         row[key] = rec['length'] if rec['length'] > 0 else ''
-        key = f'testes_{i}21:{ordinal(i)} testes width'
+        key = f'testes_{i}21:{ordinal(i)} testes_width'
         row[key] = rec['width'] if rec['width'] > 0 else ''
         if rec['ambiguous_key']:
             key = f'testes_{i}30:{ordinal(i)}_testes_ambiguous_key'
