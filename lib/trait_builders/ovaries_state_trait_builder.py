@@ -3,21 +3,22 @@
 import re
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-from lib.shared_tokens import SharedTokens
-from lib.shared_repoduction_tokens import ReproductiveTokens
+from lib.trait_builders.reproductive_trait_builder import FemaleTraitBuilder
+from lib.shared_patterns import SharedPatterns
+from lib.shared_reproductive_patterns import ReproductivePatterns
 import lib.writers.csv_formatters.ovaries_state_csv_formatter as \
     ovaries_state_csv_formatter
 
 
-class OvariesStateTraitBuilder(BaseTraitBuilder):
+class OvariesStateTraitBuilder(BaseTraitBuilder, FemaleTraitBuilder):
     """Parser logic."""
 
     csv_formatter = ovaries_state_csv_formatter.csv_formatter
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
-        r_tkn = ReproductiveTokens()
+        tkn = SharedPatterns()
+        r_tkn = ReproductivePatterns()
 
         self.copy(r_tkn['ovary'])
         self.copy(r_tkn['size'])
@@ -144,8 +145,7 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             return None
         trait = Trait(
             value=value,
-            start=token.start,
-            end=token.end)
+            start=token.start, end=token.end)
         trait.is_flag_in_token('ambiguous_key', token)
         trait.is_value_in_token('side', token)
         return trait
@@ -166,24 +166,3 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             end=token.end)
 
         return [trait1, trait2]
-
-    @staticmethod
-    def should_skip(data, trait):
-        """Check if this record should be skipped because of other fields."""
-        if not data['sex'] or data['sex'][0].value != 'male':
-            return False
-        if data[trait]:
-            data[trait].skipped = "Skipped because sex is 'male'"
-        return True
-
-    @staticmethod
-    def adjust_record(data, trait):
-        """
-        Adjust the trait based on other fields.
-
-        If this is definitely a female then don't flag "gonads" as ambiguous.
-        """
-        if not data['sex'] or data['sex'][0].value != 'female':
-            return
-        for parse in data[trait]:
-            parse.ambiguous_key = False

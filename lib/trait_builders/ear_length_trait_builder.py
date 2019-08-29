@@ -3,7 +3,7 @@
 import re
 from functools import partial
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-from lib.shared_tokens import SharedTokens
+from lib.shared_patterns import SharedPatterns
 
 
 class EarLengthTraitBuilder(NumericTraitBuilder):
@@ -26,7 +26,7 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
+        tkn = SharedPatterns()
 
         self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 

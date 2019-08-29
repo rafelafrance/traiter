@@ -1,8 +1,7 @@
 """Parse life stage notations."""
 
-from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-from lib.shared_tokens import SharedTokens
+from lib.shared_patterns import SharedPatterns
 
 
 class LifeStageTraitBuilder(BaseTraitBuilder):
@@ -10,7 +9,7 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
+        tkn = SharedPatterns()
         time_options = tkn['time_units'].pattern
 
         # JSON keys for life stage
@@ -103,10 +102,3 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
 
             # E.g.: 1st year
             '(?P<value> as_time )'])
-
-    @staticmethod
-    def convert(token):
-        """Convert parsed tokens into a result."""
-        return Trait(
-            value=token.groups['value'].lower(),
-            start=token.start, end=token.end)

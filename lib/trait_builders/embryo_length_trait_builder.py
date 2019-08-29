@@ -2,27 +2,18 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-from lib.shared_tokens import SharedTokens
-from lib.shared_repoduction_tokens import ReproductiveTokens
+from lib.trait_builders.reproductive_trait_builder import FemaleTraitBuilder
+from lib.shared_patterns import SharedPatterns
+from lib.shared_reproductive_patterns import ReproductivePatterns
 
 
-class EmbryoLengthTraitBuilder(NumericTraitBuilder):
+class EmbryoLengthTraitBuilder(NumericTraitBuilder, FemaleTraitBuilder):
     """Parser logic."""
-
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.build_token_rules()
-        self.build_replace_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
-        r_tkn = ReproductiveTokens()
+        tkn = SharedPatterns()
+        r_tkn = ReproductivePatterns()
 
         self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 
@@ -77,12 +68,3 @@ class EmbryoLengthTraitBuilder(NumericTraitBuilder):
         """Fix problematic parses."""
         # Try to disambiguate doubles quotes from inches
         return self.fix_up_inches(trait, text)
-
-    @staticmethod
-    def should_skip(data, trait):
-        """Check if this record should be skipped because of other fields."""
-        if not data['sex'] or data['sex'][0].value != 'male':
-            return False
-        if data[trait]:
-            data[trait].skipped = "Skipped because sex is 'male'"
-        return True

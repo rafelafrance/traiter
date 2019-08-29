@@ -5,7 +5,6 @@ from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 from lib.numeric_trait import NumericTrait
 import lib.writers.csv_formatters.numeric_trait_csv_formatter as \
     numeric_trait_csv_formatter
-from lib.shared_tokens import SharedTokens
 
 
 LOOK_BACK_FAR = 40

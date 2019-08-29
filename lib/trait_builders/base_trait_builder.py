@@ -1,6 +1,7 @@
 """Common logic for parsing trait notations."""
 
 from stacked_regex.stacked_regex import StackedRegex
+from lib.trait import Trait
 import lib.writers.csv_formatters.base_trait_csv_formatter as \
     base_trait_csv_formatter
 
@@ -61,6 +62,13 @@ class BaseTraitBuilder(StackedRegex):
     def fix_problem_parses(self, trait, text):
         """Fix problematic parses."""
         return trait
+
+    @staticmethod
+    def convert(token):
+        """Convert parsed tokens into a result."""
+        return Trait(
+            value=token.groups['value'].lower(),
+            start=token.start, end=token.end)
 
     @staticmethod
     def should_skip(data, trait):

@@ -4,13 +4,18 @@
 from stacked_regex.rule_builder import RuleBuilder
 
 
-class ReproductiveTokens(RuleBuilder):
+class ReproductivePatterns(RuleBuilder):
     """Build common reproductive trait tokens."""
 
     def __init__(self):
         """Build the stacked regular expressions."""
         super().__init__()
+        self.common_tokens()
+        self.male_tokens()
+        self.female_tokens()
 
+    def common_tokens(self):
+        """Setup token patterns common to both males & females."""
         self.keyword('active', 'active inactive'.split())
         self.fragment('and', r' ( and \b | [&] ) ')
         self.keyword('count', r"""( only | all | both )? \s* [12]""")
@@ -89,9 +94,8 @@ class ReproductiveTokens(RuleBuilder):
         self.fragment('op', r' [+:&] ')
         self.fragment('eq', r' [=] ')
 
-        #######################################################################
-        # Male specific patterns
-
+    def male_tokens(self):
+        """Setup token patterns specific to males."""
         self.fragment('abdominal', 'abdominal abdomin abdom abd'.split())
 
         self.fragment('descended', ['( un )? ( des?c?end ( ed )?', 'desc? )'])
@@ -107,9 +111,8 @@ class ReproductiveTokens(RuleBuilder):
         self.fragment(
             'testes', r' ( testes |  testis | testicles? | test ) \b ')
 
-        #######################################################################
-        # Female specific patterns
-
+    def female_tokens(self):
+        """Setup token patterns specific to females."""
         self.fragment('alb', r' \b ( albicans | alb ) \b ')
 
         self.fragment(

@@ -4,13 +4,17 @@ from lib.util import ordinal, number_to_words
 from stacked_regex.rule_builder import RuleBuilder
 
 
-class SharedTokens(RuleBuilder):
+class SharedPatterns(RuleBuilder):
     """Build common reproductive trait tokens."""
 
     def __init__(self):
         """Build the stacked regular expressions."""
         super().__init__()
+        self.numeric_tokens()
+        self.misc_tokens()
 
+    def numeric_tokens(self):
+        """Build numeric parsing tokens."""
         self.fragment(
             'feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
 
@@ -156,6 +160,8 @@ class SharedTokens(RuleBuilder):
             (?! [\d/:=a-z-] )
             """)
 
+    def misc_tokens(self):
+        """Setup common token patterns."""
         # UUIDs cause problems when extracting certain shorthand notations.
         self.fragment('uuid', r"""
             \b [0-9a-f]{8} - [0-9a-f]{4} - [1-5][0-9a-f]{3}

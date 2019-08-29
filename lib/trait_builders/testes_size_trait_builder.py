@@ -1,46 +1,18 @@
 """Parse testes size notations."""
 
-from stacked_regex.token import Token
-from lib.numeric_trait import NumericTrait
-from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-from lib.shared_tokens import SharedTokens
-from lib.shared_repoduction_tokens import ReproductiveTokens
+from lib.trait_builders.reproductive_trait_builder \
+    import MaleTraitBuilder, GonadSizeTraitBuilder
 import lib.writers.csv_formatters.testes_size_csv_formatter as \
     testes_size_csv_formatter
 
 
-class TestesSizeTraitBuilder(NumericTraitBuilder):
+class TestesSizeTraitBuilder(GonadSizeTraitBuilder, MaleTraitBuilder):
     """Parser logic."""
 
     csv_formatter = testes_size_csv_formatter.csv_formatter
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        self.tkn = SharedTokens()
-        self.r_tkn = ReproductiveTokens()
-
-        # Used to get compounds traits from a single parse
-        self.two_sides = self.compile(
-            name='two_sides',
-            regexp=f' (?P<two_sides> {self.tkn["side"].pattern} ) ')
-
-        # Used to get compounds traits from a single parse
-        self.double_cross = self.compile(
-            name='double_cross',
-            regexp=f' (?P<double_cross> {self.tkn["cross"].pattern} ) ')
-
-        super().__init__(args)
-
     def build_token_rules(self):
         """Define the tokens."""
-        self.copy(self.tkn['uuid'])  # UUIDs cause problems with numeric traits
-
-        # A label, like: reproductive data
-        self.copy(self.r_tkn['label'])
-
-        # Gonads can be for female or male
-        self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonads? ) ')
-
         # Spellings of testes
         self.copy(self.r_tkn['testes'])
 
@@ -50,48 +22,22 @@ class TestesSizeTraitBuilder(NumericTraitBuilder):
         # The abbreviation key, just: t. This can be a problem.
         self.fragment('char_key', r' \b t (?! [a-z] )')
 
-        # Various testes state words that are skipped
-        self.copy(self.r_tkn['non'])
-        self.copy(self.r_tkn['fully'])
-        self.copy(self.r_tkn['partially'])
         self.copy(self.r_tkn['descended'])
         self.copy(self.r_tkn['scrotal'])
         self.copy(self.r_tkn['abdominal'])
         self.copy(self.r_tkn['size'])
-        self.copy(self.r_tkn['gonads'])
         self.copy(self.r_tkn['other'])
 
-        # Side: left or [r]
-        self.copy(self.tkn['side'])
+        self.copy(self.tkn['uuid'])  # UUIDs cause problems with numeric traits
 
-        # Side: left or [r]
-        self.copy(self.tkn['dim_side'])
-
-        # Dimensions: length or width
-        self.copy(self.tkn['dimension'])
-
-        # Length by width, like: 10 x 5
-        self.copy(self.tkn['cross'])
-
-        # Units
-        self.copy(self.tkn['len_units'])
-
-        # Words that join gonad traits
-        self.copy(self.r_tkn['in'])
-        self.copy(self.r_tkn['and'])
-
-        # We allow random words in some situations
-        self.copy(self.r_tkn['word'])
-
-        # Some patterns require a separator
-        self.copy(self.r_tkn['sep'])
+        GonadSizeTraitBuilder.build_token_rules(self)
 
     def build_replace_rules(self):
         """Define rules for token simplification."""
 
         self.replace('state', [
             """(non | partially | fully )? descended """]
-                     + """ scrotal abdominal size gonads other """.split())
+                     + """ scrotal abdominal size other """.split())
 
         # A key with units, like: gonadLengthInMM
         self.replace('key_with_units', r"""
@@ -172,61 +118,3 @@ class TestesSizeTraitBuilder(NumericTraitBuilder):
 
             # E.g.: T 5 x 4
             '(?P<ambiguous_char> char_key ) cross'])
-
-    def double(self, token):
-        """Convert a single token into multiple (two) trait_builders."""
-        if not token.groups.get('second'):
-            return self.convert(token)
-
-        # Regex second match groups will overwrite the first match groups
-        trait2 = NumericTrait(start=token.start, end=token.end)
-        trait2.cross_value(token)
-        trait2.is_value_in_token('side', token)
-
-        # We need to re-extract the first match groups
-        trait1 = NumericTrait(start=token.start, end=token.end)
-
-        groups = self.double_cross.find_matches(token.groups['first'])
-        token1 = Token(groups=groups)
-        trait1.cross_value(token1)
-
-        groups = self.two_sides.find_matches(token.groups['first'])
-        token1 = Token(groups=groups)
-        trait1.is_value_in_token('side', token1)
-
-        return [trait1, trait2]
-
-    @staticmethod
-    def convert(token):
-        """Convert parsed token into a trait product."""
-        if token.groups.get('ambiguous_char') \
-                and not token.groups.get('value2'):
-            return None
-        trait = NumericTrait(start=token.start, end=token.end)
-        trait.cross_value(token)
-        trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
-        trait.is_flag_in_token('ambiguous_key', token)
-        trait.is_value_in_token('dimension', token)
-        trait.is_value_in_token('side', token)
-        return trait
-
-    @staticmethod
-    def should_skip(data, trait):
-        """Check if this record should be skipped because of other fields."""
-        if not data['sex'] or data['sex'][0].value != 'female':
-            return False
-        if data[trait]:
-            data[trait].skipped = "Skipped because sex is 'female'"
-        return True
-
-    @staticmethod
-    def adjust_record(data, trait):
-        """
-        Adjust the trait based on other fields.
-
-        If this is definitely a male then don't flag "gonads" as ambiguous.
-        """
-        if not data['sex'] or data['sex'][0].value != 'male':
-            return
-        for parse in data[trait]:
-            parse.ambiguous_key = False

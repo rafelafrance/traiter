@@ -1,6 +1,5 @@
 """Parse sex notations."""
 
-from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 
 
@@ -43,12 +42,3 @@ class SexTraitBuilder(BaseTraitBuilder):
             # E.g.: male
             # Or:   male?
             '(?P<value> intrinsic ( quest )? )'])
-
-    @staticmethod
-    def convert(token):
-        """Convert parsed tokens into a result."""
-        trait = Trait(
-            value=token.groups['value'].lower(),
-            start=token.start,
-            end=token.end)
-        return trait

@@ -3,7 +3,7 @@
 from functools import partial
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-from lib.shared_tokens import SharedTokens
+from lib.shared_patterns import SharedPatterns
 
 
 class BodyMassTraitBuilder(NumericTraitBuilder):
@@ -11,7 +11,7 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
+        tkn = SharedPatterns()
         self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams

@@ -2,17 +2,18 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-from lib.shared_tokens import SharedTokens
-from lib.shared_repoduction_tokens import ReproductiveTokens
+from lib.trait_builders.reproductive_trait_builder import FemaleTraitBuilder
+from lib.shared_patterns import SharedPatterns
+from lib.shared_reproductive_patterns import ReproductivePatterns
 
 
-class NippleCountTraitBuilder(NumericTraitBuilder):
+class NippleCountTraitBuilder(NumericTraitBuilder, FemaleTraitBuilder):
     """Parser logic."""
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
-        r_tkn = ReproductiveTokens()
+        tkn = SharedPatterns()
+        r_tkn = ReproductivePatterns()
 
         self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 
@@ -99,12 +100,3 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
         trait.value = trait.to_int(token.groups['value1'])
         trait.value += trait.to_int(token.groups.get('value2'))
         return trait
-
-    @staticmethod
-    def should_skip(data, trait):
-        """Check if this record should be skipped because of other fields."""
-        if not data['sex'] or data['sex'][0].value != 'male':
-            return False
-        if data[trait]:
-            data[trait].skipped = "Skipped because sex is 'male'"
-        return True

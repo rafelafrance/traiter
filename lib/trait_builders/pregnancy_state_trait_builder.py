@@ -1,16 +1,16 @@
 """Parse pregnancy state notations."""
 
-from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-from lib.shared_repoduction_tokens import ReproductiveTokens
+from lib.trait_builders.reproductive_trait_builder import FemaleTraitBuilder
+from lib.shared_reproductive_patterns import ReproductivePatterns
 
 
-class PregnancyStateTraitBuilder(BaseTraitBuilder):
+class PregnancyStateTraitBuilder(BaseTraitBuilder, FemaleTraitBuilder):
     """Parser logic."""
 
     def build_token_rules(self):
         """Define the tokens."""
-        r_tkn = ReproductiveTokens()
+        r_tkn = ReproductivePatterns()
 
         self.copy(r_tkn['none'])
 
@@ -50,21 +50,3 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
             """(?P<value> (none)? (recent | probably)?
                 (stage)? (none | joiner)? pregnant (quest)? )""",
         ])
-
-    @staticmethod
-    def convert(token):
-        """Convert parsed tokens into a result."""
-        trait = Trait(
-            value=token.groups['value'].lower(),
-            start=token.start,
-            end=token.end)
-        return trait
-
-    @staticmethod
-    def should_skip(data, trait):
-        """Check if this record should be skipped because of other fields."""
-        if not data['sex'] or data['sex'][0].value != 'male':
-            return False
-        if data[trait]:
-            data[trait].skipped = "Skipped because sex is 'male'"
-        return True
