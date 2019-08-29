@@ -2,7 +2,7 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-import lib.shared_tokens as tkn
+from lib.shared_tokens import SharedTokens
 
 
 class LifeStageTraitBuilder(BaseTraitBuilder):
@@ -12,7 +12,9 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
-        self.time_options = tkn.time_units[1]
+        self.tkn = SharedTokens()
+
+        self.time_options = self.tkn['time_units'].pattern
 
         self.build_token_rules()
         self.build_replace_rules()
@@ -69,10 +71,10 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         self.fragment('separator', r' [;,"?] | $ ')
 
         # For life stages with numbers as words in them
-        self.shared_token(tkn.ordinals)
+        self.copy(self.tkn['ordinals'])
 
         # Time units
-        self.shared_token(tkn.time_units)
+        self.copy(self.tkn['time_units'])
 
         # Literals
         self.fragment('after', 'after')

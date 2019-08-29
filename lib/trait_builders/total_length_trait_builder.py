@@ -3,7 +3,7 @@
 import re
 from functools import partial
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
+from lib.shared_tokens import SharedTokens
 
 
 class TotalLengthTraitBuilder(NumericTraitBuilder):
@@ -38,6 +38,8 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        tkn = SharedTokens()
+
         # Units are in the key, like: TotalLengthInMillimeters
         self.keyword('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
@@ -88,20 +90,20 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         self.fragment('key_units_req', 'measurements? body total'.split())
 
         # Units
-        self.shared_token(tkn.metric_len)
-        self.shared_token(tkn.feet)
-        self.shared_token(tkn.inches)
+        self.copy(tkn['metric_len'])
+        self.copy(tkn['feet'])
+        self.copy(tkn['inches'])
 
         # Shorthand notation
-        self.shared_token(tkn.shorthand_key)
-        self.shared_token(tkn.shorthand)
-        self.shared_token(tkn.triple)  # Truncated shorthand
+        self.copy(tkn['shorthand_key'])
+        self.copy(tkn['shorthand'])
+        self.copy(tkn['triple'])  # Truncated shorthand
 
         # Fractional numbers, like: 9/16
-        self.shared_token(tkn.fraction)
+        self.copy(tkn['fraction'])
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        self.shared_token(tkn.range_)
+        self.copy(tkn['range'])
 
         # The abbreviation key, just: t. This can be a problem.
         self.fragment('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) ')

@@ -2,8 +2,8 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class EmbryoLengthTraitBuilder(NumericTraitBuilder):
@@ -21,7 +21,10 @@ class EmbryoLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.embryo)
+        tkn = SharedTokens()
+        r_tkn = ReproductiveTokens()
+
+        self.copy(r_tkn['embryo'])
 
         self.keyword('crown_rump', r"""
             (?<! collector [\s=:.] ) (?<! reg [\s=:.] ) (
@@ -35,10 +38,10 @@ class EmbryoLengthTraitBuilder(NumericTraitBuilder):
         self.keyword('prep', ' of from '.split())
         self.keyword('side', r""" left | right | lf | lt | rt | [lr] """)
 
-        self.shared_token(tkn.len_units)
+        self.copy(tkn['len_units'])
 
-        self.shared_token(tkn.cross)
-        self.fragment('cross_joiner', tkn.cross_joiner)
+        self.copy(tkn['cross'])
+        self.fragment('cross_joiner', tkn['cross_joiner'].pattern)
 
         self.fragment('word', r' \w+ ')
         self.fragment('separator', r' [;"?/] ')

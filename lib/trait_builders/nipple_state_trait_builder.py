@@ -2,7 +2,7 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class NippleStateTraitBuilder(BaseTraitBuilder):
@@ -20,19 +20,21 @@ class NippleStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.size)
-        self.shared_token(r_tkn.fully)
-        self.shared_token(r_tkn.partially)
-        self.shared_token(r_tkn.non)
-        self.shared_token(r_tkn.color)
-        self.shared_token(r_tkn.visible)
-        self.shared_token(r_tkn.and_)
-        self.shared_token(r_tkn.uterus)
-        self.shared_token(r_tkn.tissue)
-        self.shared_token(r_tkn.present)
-        self.shared_token(r_tkn.active)
-        self.shared_token(r_tkn.developed)
-        self.shared_token(r_tkn.nipple)
+        r_tkn = ReproductiveTokens()
+
+        self.copy(r_tkn['size'])
+        self.copy(r_tkn['fully'])
+        self.copy(r_tkn['partially'])
+        self.copy(r_tkn['non'])
+        self.copy(r_tkn['color'])
+        self.copy(r_tkn['visible'])
+        self.copy(r_tkn['and'])
+        self.copy(r_tkn['uterus'])
+        self.copy(r_tkn['tissue'])
+        self.copy(r_tkn['present'])
+        self.copy(r_tkn['active'])
+        self.copy(r_tkn['developed'])
+        self.copy(r_tkn['nipple'])
 
         self.keyword('false', """ false """)
         self.keyword('much', """ much """)

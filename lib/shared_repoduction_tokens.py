@@ -1,149 +1,147 @@
-"""Shared tokens for gonads (testes & ovaries)."""
+"""Shared reproductive trait tokens (testes & ovaries)."""
 
 
-active = ('active', 'active inactive'.split())
-
-# Links gonads and other related traits
-and_ = ('and', r' ( and \b | [&] ) ')
-
-# A count
-count_ = ('count', r"""( only | all | both )? \s* [12]""")
-
-# Colors associated with gonads
-color = (
-    'color',
-    r""" (( dark | light | pale ) \s* )?
-         ( red | pink | brown | black | white | pigmented ) """)
+from stacked_regex.rule_builder import RuleBuilder
 
 
-texture = ('texture', ' smooth ')
+class ReproductiveTokens(RuleBuilder):
+    """Build common reproductive trait tokens."""
 
-# "covered"
-covered = ('covered', ' covered ')
+    def __init__(self):
+        """Build the stacked regular expressions."""
+        super().__init__()
 
-destroyed = ('destroyed', 'destroy(ed)?')
+        self.keyword('active', 'active inactive'.split())
+        self.fragment('and', r' ( and \b | [&] ) ')
+        self.keyword('count', r"""( only | all | both )? \s* [12]""")
 
+        self.keyword(
+            'color',
+            r""" (( dark | light | pale ) \s* )?
+                 ( red | pink | brown | black | white | pigmented ) """)
 
-# Various size words
-size = ('size', r"""
-    ( very \s+ )?
-    ( enlarged | enlarge | large | small | shrunken | shrunk | swollen
-        | extended | unobservable | sm-med
-        | moderate | mod \b | medium  | med \b | minute | lg \b | sm \b | tiny )
-    ( \s* size d? | [+] )?
-    """)
+        self.keyword('texture', ' smooth ')
 
-# Forms of "developed"
-developed = (
-    'developed',
-    r"""
-        ( (fully | incompletely | partially | part | well) [.\s-]{0,2} )?""" +
-    fr"""(developed? | undeveloped? | development | devel 
-        | dev \b ([\s:]* none | {size[1]} )? 
-        | undevel | undev | indist)
-    """)
+        self.keyword('covered', ' covered ')
 
-fat = ('fat', ' fat ')
+        self.keyword('destroyed', 'destroy(ed)?')
 
-# "Fully" or "incompletely"
-fully = ('fully', ['fully', '( in )? complete ( ly )?'])
+        self.fragment('size', r"""
+            ( very \s+ )?
+            ( enlarged | enlarge | large | small | shrunken | shrunk | swollen
+                | extended | unobservable | sm-med
+                | moderate | mod \b | medium  | med \b | minute | lg \b 
+                | sm \b | tiny )
+            ( \s* size d? | [+] )?
+            """)
 
-gonads = ('gonads', ' (?P<ambiguous_key> gonads? ) ')
+        self.fragment(
+            'developed',
+            r"""
+                ( (fully | incompletely | partially | part | well) 
+                    [.\s-]{0,2} )?""" +
+            fr"""(developed? | undeveloped? | development | devel 
+                | dev \b ([\s:]* none | {self['size'].pattern} )? 
+                | undevel | undev | indist)
+            """)
 
-# Links gonads and other related traits
-in_ = ('in', r' in ')
+        self.keyword('fat', ' fat ')
 
-# A label, like: "reproductive data"
-label = ('label', 'reproductive .? ( data | state | condition )')
+        self.fragment('fully', ['fully', '( in )? complete ( ly )?'])
 
-# Forms of "maturity"
-mature = ('mature', r'( immature | mature | imm ) \b ')
+        self.fragment('gonads', ' (?P<ambiguous_key> gonads? ) ')
 
-# Negation: "non", "not", etc.
-non = ('non', r' \b ( not | non | no | semi | sub ) ')
-none = ('none', r' \b ( no | none | not | non ) \b ')
+        self.fragment('in', r' in ')
 
-# Spellings of "partially"
-partially = (
-    'partially',
-    ['partially', r' \b part \b', r'\b pt \b']
-    + 'slightly slight '.split())
+        self.keyword('label', 'reproductive .? ( data | state | condition )')
 
-# Some patterns require a separator
-sep = ('sep', ' [;] | $ ')
+        self.fragment('mature', r'( immature | mature | imm ) \b ')
 
-# Sign for presence or absence
-sign = ('sign', ' [+-] ')
+        self.fragment('non', r' \b ( not | non | no | semi | sub ) ')
+        self.fragment('none', r' \b ( no | none | not | non ) \b ')
 
-# Types of "visibility"
-visible = ('visible', r""" ( very \s+ )? (
-    visible | invisible | hidden | prominent? | seen | conspicuous | bare 
-    ) """)
+        self.fragment(
+            'partially',
+            ['partially', r' \b part \b', r'\b pt \b']
+            + 'slightly slight '.split())
 
-# We allow random words in some situations
-word = ('word', ' [a-z]+ ')
+        self.fragment('sep', ' [;] | $ ')
 
-tissue = ('tissue', ' tissue '.split())
+        self.fragment('sign', ' [+-] ')
 
-present = ('present', ' present absent '.split())
+        self.keyword('visible', r""" ( very \s+ )? (
+            visible | invisible | hidden | prominent? | seen | conspicuous 
+                | bare 
+            ) """)
 
-# The sides like: 3L or 4Right
-side = ('side', r""" left | right | lf | lt | rt | [lr] (?! [a-z] ) """)
+        # We allow random words in some situations
+        self.fragment('word', ' [a-z]+ ')
 
-# Some traits are presented as an equation
-op = ('op', r' [+:&] ')
-eq = ('eq', r' [=] ')
+        self.keyword('tissue', ' tissue '.split())
 
-###############################################################################
-# Male specific patterns
+        self.keyword('present', ' present absent '.split())
 
-abdominal = ('abdominal', 'abdominal abdomin abdom abd'.split())
+        # The sides like: 3L or 4Right
+        self.fragment('side', r"""
+            left | right | lf | lt | rt | [lr] (?! [a-z] ) """)
 
-descended = ('descended', ['( un )? ( des?c?end ( ed )?', 'desc? )'])
+        # Some traits are presented as an equation
+        self.fragment('op', r' [+:&] ')
+        self.fragment('eq', r' [=] ')
 
-# Other state words
-other = (
-    'other',
-    'cryptorchism cryptorchid monorchism monorchid inguinal'.split())
+        #######################################################################
+        # Male specific patterns
 
-scrotal = ('scrotal', r'( scrotum | scrotal | scrot | nscr | scr) \b')
+        self.fragment('abdominal', 'abdominal abdomin abdom abd'.split())
 
-testes = ('testes', r' ( testes |  testis | testicles? | test ) \b ')
+        self.fragment('descended', ['( un )? ( des?c?end ( ed )?', 'desc? )'])
 
+        # Other state words
+        self.keyword(
+            'other',
+            'cryptorchism cryptorchid monorchism monorchid inguinal'.split())
 
-###############################################################################
-# Female specific patterns
+        self.fragment(
+            'scrotal', r'( scrotum | scrotal | scrot | nscr | scr) \b')
 
-alb = ('alb', r' \b ( albicans | alb ) \b ')
+        self.fragment(
+            'testes', r' ( testes |  testis | testicles? | test ) \b ')
 
-corpus = ('corpus', r' \b ( corpus | corpora | corp | cor | c ) \b ')
+        #######################################################################
+        # Female specific patterns
 
-fallopian = ('fallopian', r' ( fallopian | foll ) ( \s* tubes? )? ')
+        self.fragment('alb', r' \b ( albicans | alb ) \b ')
 
-horns = ('horns', 'horns?')
+        self.fragment(
+            'corpus', r' \b ( corpus | corpora | corp | cor | c ) \b ')
 
-lut = ('lut', r' ( c \.? l \.\? ) | \b ( luteum | lute | lut ) \b ')
+        self.fragment('fallopian', r' ( fallopian | foll ) ( \s* tubes? )? ')
 
-ovary = ('ovary', r' ( ovary s? | ovaries | ov ) \b ')
+        self.keyword('horns', 'horns?')
 
-uterus = ('uterus', 'uterus uterine ut'.split())
+        self.fragment(
+            'lut', r' ( c \.? l \.\? ) | \b ( luteum | lute | lut ) \b ')
 
-nipple = ('nipple', r""" ( \b
-    nipples? | nipp?s? | teats? |
-        ((mammae | mamm[ae]ry | mammaries | mamm) 
-            (\s+ ( glands? | tisss?ue ) )? ) 
-    ) \b """)
+        self.fragment('ovary', r' ( ovary s? | ovaries | ov ) \b ')
 
-embryo = ('embryo', r"""
-    embryonic | embryos? | embryps? | embroys | embs? | embrs? 
-    | fetuses | fetus | foeti""")
+        self.fragment('uterus', 'uterus uterine ut'.split())
 
-# Spellings of placental scar
-plac_scar = ('plac_scar', r"""
-    ( placental | plac \b | postnatal | pac \b | \b pl \b ) 
-        [.\s]* ( scarring | scars? )
-    | p [\s.-] ( scarring | scars? )
-    | ( uterus | uterine | \b ut \b ) [.\s]* ( scarring | scars? )
-    | ( scarring | scars? ) \b (?! \s* ( on | above | below ) )
-    | ps \b | pslc | plac \b | plscr
-    """)
+        self.fragment('nipple', r""" ( \b
+            nipples? | nipp?s? | teats? |
+                ((mammae | mamm[ae]ry | mammaries | mamm) 
+                    (\s+ ( glands? | tisss?ue ) )? ) 
+            ) \b """)
+
+        self.fragment('embryo', r"""
+            embryonic | embryos? | embryps? | embroys | embs? | embrs? 
+            | fetuses | fetus | foeti""")
+
+        # Spellings of placental scar
+        self.fragment('plac_scar', r"""
+            ( placental | plac \b | postnatal | pac \b | \b pl \b ) 
+                [.\s]* ( scarring | scars? )
+            | p [\s.-] ( scarring | scars? )
+            | ( uterus | uterine | \b ut \b ) [.\s]* ( scarring | scars? )
+            | ( scarring | scars? ) \b (?! \s* ( on | above | below ) )
+            | ps \b | pslc | plac \b | plscr
+            """)

@@ -3,8 +3,8 @@
 from stacked_regex.token import Token
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 import lib.writers.csv_formatters.ovaries_size_csv_formatter as \
     ovaries_size_csv_formatter
 
@@ -18,15 +18,18 @@ class OvariesSizeTraitBuilder(NumericTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
+        self.tkn = SharedTokens()
+        self.r_tkn = ReproductiveTokens()
+
         # Used to get compounds traits from a single parse
         self.two_sides = self.compile(
             name='two_sides',
-            regexp=f' (?P<two_sides> {tkn.side[1]} ) ')
+            regexp=f' (?P<two_sides> {self.tkn["side"].pattern} ) ')
 
         # Used to get compounds traits from a single parse
         self.double_cross = self.compile(
             name='double_cross',
-            regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
+            regexp=f' (?P<double_cross> {self.tkn["cross"].pattern} ) ')
 
         self.build_token_rules()
         self.build_replace_rules()
@@ -36,72 +39,72 @@ class OvariesSizeTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)
+        self.copy(self.tkn['uuid'])
 
         # A label, like: reproductive data
-        self.shared_token(r_tkn.label)
+        self.copy(self.r_tkn['label'])
 
         # Gonads can be for female or male
         self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonads? ) ')
 
         # Spellings of ovaries
-        self.shared_token(r_tkn.ovary)
+        self.copy(self.r_tkn['ovary'])
 
         # Various testes state words that are skipped
-        self.shared_token(r_tkn.non)
-        self.shared_token(r_tkn.fully)
-        self.shared_token(r_tkn.partially)
-        self.shared_token(r_tkn.other)
-        self.shared_token(r_tkn.horns)
-        self.shared_token(r_tkn.covered)
-        self.shared_token(r_tkn.fat)
-        self.shared_token(r_tkn.developed)
-        self.shared_token(r_tkn.visible)
-        self.shared_token(r_tkn.destroyed)
-        self.shared_token(r_tkn.mature)
-        self.shared_token(r_tkn.uterus)
-        self.shared_token(r_tkn.fallopian)
-        self.shared_token(r_tkn.active)
+        self.copy(self.r_tkn['non'])
+        self.copy(self.r_tkn['fully'])
+        self.copy(self.r_tkn['partially'])
+        self.copy(self.r_tkn['other'])
+        self.copy(self.r_tkn['horns'])
+        self.copy(self.r_tkn['covered'])
+        self.copy(self.r_tkn['fat'])
+        self.copy(self.r_tkn['developed'])
+        self.copy(self.r_tkn['visible'])
+        self.copy(self.r_tkn['destroyed'])
+        self.copy(self.r_tkn['mature'])
+        self.copy(self.r_tkn['uterus'])
+        self.copy(self.r_tkn['fallopian'])
+        self.copy(self.r_tkn['active'])
 
         # Spellings of luteum
-        self.shared_token(r_tkn.lut)
+        self.copy(self.r_tkn['lut'])
 
         # Spellings of corpus
-        self.shared_token(r_tkn.corpus)
+        self.copy(self.r_tkn['corpus'])
 
         # Spellings of albicans
-        self.shared_token(r_tkn.alb)
+        self.copy(self.r_tkn['alb'])
 
         # Spellings of nipple
-        self.shared_token(r_tkn.nipple)
+        self.copy(self.r_tkn['nipple'])
 
         # Side: left or [r]
-        self.shared_token(tkn.side)
+        self.copy(self.tkn['side'])
 
         # Side: left or [r]
-        self.shared_token(tkn.dim_side)
+        self.copy(self.tkn['dim_side'])
 
         # Dimensions: length or width
-        self.shared_token(tkn.dimension)
+        self.copy(self.tkn['dimension'])
 
         # Length by width, like: 10 x 5
-        self.shared_token(tkn.cross)
+        self.copy(self.tkn['cross'])
 
         # Units
-        self.shared_token(tkn.len_units)
+        self.copy(self.tkn['len_units'])
 
         # Words that join gonad traits
-        self.shared_token(r_tkn.in_)
-        self.shared_token(r_tkn.and_)
+        self.copy(self.r_tkn['in'])
+        self.copy(self.r_tkn['and'])
 
         # We allow random words in some situations
-        self.shared_token(r_tkn.word)
+        self.copy(self.r_tkn['word'])
 
         # Commas are sometimes separators & other times punctuation
         self.fragment('comma', r'[,]')
 
         # Some patterns require a separator
-        self.shared_token(r_tkn.sep)
+        self.copy(self.r_tkn['sep'])
 
     def build_replace_rules(self):
         """Define rules for token simplification."""

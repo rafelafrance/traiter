@@ -15,7 +15,6 @@ class BaseTraitBuilder(StackedRegex):
         super().__init__()
 
         self.args = args
-        self.shared_token = self.from_tuple
 
     def parse(self, text, field=None):
         """Find the trait_builders in the text.

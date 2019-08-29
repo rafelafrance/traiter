@@ -2,8 +2,8 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class NippleCountTraitBuilder(NumericTraitBuilder):
@@ -21,14 +21,17 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        tkn = SharedTokens()
+        r_tkn = ReproductiveTokens()
+
         self.keyword('id', r' \d+-\d+ ')
 
-        self.shared_token(r_tkn.nipple)
-        self.shared_token(tkn.integer)
-        self.shared_token(r_tkn.visible)
-        self.shared_token(r_tkn.none)
-        self.shared_token(r_tkn.op)
-        self.shared_token(r_tkn.eq)
+        self.copy(r_tkn['nipple'])
+        self.copy(tkn['integer'])
+        self.copy(r_tkn['visible'])
+        self.copy(r_tkn['none'])
+        self.copy(r_tkn['op'])
+        self.copy(r_tkn['eq'])
 
         self.keyword('adj', r"""
             inguinal ing pectoral pec pr """.split())
@@ -39,7 +42,7 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')
 
-        self.shared_token(r_tkn.sep)
+        self.copy(r_tkn['sep'])
 
     def build_replace_rules(self):
         """Define rules for token simplification."""

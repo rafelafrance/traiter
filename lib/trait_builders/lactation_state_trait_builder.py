@@ -2,7 +2,7 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class LactationStateTraitBuilder(BaseTraitBuilder):
@@ -20,6 +20,8 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        r_tkn = ReproductiveTokens()
+
         self.fragment('lactating', r""" (
             lactating | lactation | lactated | lactate | lact
             | lactaing | lactacting | lactataing | lactational
@@ -41,7 +43,7 @@ class LactationStateTraitBuilder(BaseTraitBuilder):
         # Separates measurements
         self.fragment('separator', r' [;"/] ')
 
-        self.shared_token(r_tkn.word)
+        self.copy(r_tkn['word'])
 
     def build_replace_rules(self):
         """Define rules for token simplification."""

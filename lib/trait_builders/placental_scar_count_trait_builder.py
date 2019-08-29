@@ -2,8 +2,8 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
@@ -21,13 +21,16 @@ class PlacentalScarCountTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.plac_scar)
-        self.shared_token(tkn.integer)
-        self.shared_token(r_tkn.side)
-        self.shared_token(r_tkn.none)
-        self.shared_token(r_tkn.op)
-        self.shared_token(r_tkn.eq)
-        self.shared_token(r_tkn.embryo)
+        tkn = SharedTokens()
+        r_tkn = ReproductiveTokens()
+
+        self.copy(r_tkn['plac_scar'])
+        self.copy(tkn['integer'])
+        self.copy(r_tkn['side'])
+        self.copy(r_tkn['none'])
+        self.copy(r_tkn['op'])
+        self.copy(r_tkn['eq'])
+        self.copy(r_tkn['embryo'])
 
         # Adjectives to placental scars
         self.keyword('adj', r"""

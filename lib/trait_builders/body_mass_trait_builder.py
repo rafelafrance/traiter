@@ -3,7 +3,7 @@
 from functools import partial
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
+from lib.shared_tokens import SharedTokens
 
 
 class BodyMassTraitBuilder(NumericTraitBuilder):
@@ -21,6 +21,8 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        tkn = SharedTokens()
+
         # Looking for keys like: MassInGrams
         self.keyword('key_with_units', r"""
             ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """)
@@ -39,18 +41,18 @@ class BodyMassTraitBuilder(NumericTraitBuilder):
         self.fragment('body', 'body')
 
         # Units
-        self.shared_token(tkn.len_units)
-        self.shared_token(tkn.metric_mass)
-        self.shared_token(tkn.pounds)
-        self.shared_token(tkn.ounces)
+        self.copy(tkn['len_units'])
+        self.copy(tkn['metric_mass'])
+        self.copy(tkn['pounds'])
+        self.copy(tkn['ounces'])
 
         # Shorthand notation
-        self.shared_token(tkn.shorthand_key)
-        self.shared_token(tkn.shorthand)
+        self.copy(tkn['shorthand_key'])
+        self.copy(tkn['shorthand'])
 
         # Possible range of numbers like: 10 - 20
         # Or just: 10
-        self.shared_token(tkn.range_)
+        self.copy(tkn['range'])
 
         # These indicate that the mass is NOT a body mass
         self.keyword('other_wt', r"""

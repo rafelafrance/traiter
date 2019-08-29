@@ -2,7 +2,7 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class PregnancyStateTraitBuilder(BaseTraitBuilder):
@@ -19,7 +19,9 @@ class PregnancyStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.none)
+        r_tkn = ReproductiveTokens()
+
+        self.copy(r_tkn['none'])
 
         self.keyword('pregnant', r"""
             prega?n?ant pregnan preg pregnancy pregnancies 

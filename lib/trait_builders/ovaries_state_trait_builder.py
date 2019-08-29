@@ -3,8 +3,8 @@
 import re
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 import lib.writers.csv_formatters.ovaries_state_csv_formatter as \
     ovaries_state_csv_formatter
 
@@ -26,32 +26,35 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.ovary)
-        self.shared_token(r_tkn.size)
-        self.shared_token(r_tkn.uterus)
-        self.shared_token(r_tkn.fallopian)
-        self.shared_token(r_tkn.mature)
-        self.shared_token(r_tkn.active)
-        self.shared_token(r_tkn.non)
-        self.shared_token(r_tkn.visible)
-        self.shared_token(r_tkn.destroyed)
-        self.shared_token(r_tkn.developed)
-        self.shared_token(r_tkn.count_)
-        self.shared_token(r_tkn.horns)
-        self.shared_token(r_tkn.covered)
-        self.shared_token(r_tkn.fat)
-        self.shared_token(r_tkn.lut)
-        self.shared_token(r_tkn.corpus)
-        self.shared_token(r_tkn.alb)
-        self.shared_token(r_tkn.nipple)
-        self.shared_token(tkn.side)
-        self.shared_token(tkn.cyst)
-        self.shared_token(r_tkn.color)
-        self.shared_token(r_tkn.texture)
-        self.shared_token(r_tkn.sign)
-        self.shared_token(r_tkn.and_)
-        self.shared_token(tkn.cross)
-        self.shared_token(tkn.len_units)
+        tkn = SharedTokens()
+        r_tkn = ReproductiveTokens()
+
+        self.copy(r_tkn['ovary'])
+        self.copy(r_tkn['size'])
+        self.copy(r_tkn['uterus'])
+        self.copy(r_tkn['fallopian'])
+        self.copy(r_tkn['mature'])
+        self.copy(r_tkn['active'])
+        self.copy(r_tkn['non'])
+        self.copy(r_tkn['visible'])
+        self.copy(r_tkn['destroyed'])
+        self.copy(r_tkn['developed'])
+        self.copy(r_tkn['count'])
+        self.copy(r_tkn['horns'])
+        self.copy(r_tkn['covered'])
+        self.copy(r_tkn['fat'])
+        self.copy(r_tkn['lut'])
+        self.copy(r_tkn['corpus'])
+        self.copy(r_tkn['alb'])
+        self.copy(r_tkn['nipple'])
+        self.copy(tkn['side'])
+        self.copy(tkn['cyst'])
+        self.copy(r_tkn['color'])
+        self.copy(r_tkn['texture'])
+        self.copy(r_tkn['sign'])
+        self.copy(r_tkn['and'])
+        self.copy(tkn['cross'])
+        self.copy(tkn['len_units'])
 
         # Skip words
         self.keyword('skip', ' womb ')

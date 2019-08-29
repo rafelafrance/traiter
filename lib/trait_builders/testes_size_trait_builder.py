@@ -3,8 +3,8 @@
 from stacked_regex.token import Token
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 import lib.writers.csv_formatters.testes_size_csv_formatter as \
     testes_size_csv_formatter
 
@@ -18,15 +18,18 @@ class TestesSizeTraitBuilder(NumericTraitBuilder):
         """Build the trait parser."""
         super().__init__(args)
 
+        self.tkn = SharedTokens()
+        self.r_tkn = ReproductiveTokens()
+
         # Used to get compounds traits from a single parse
         self.two_sides = self.compile(
             name='two_sides',
-            regexp=f' (?P<two_sides> {tkn.side[1]} ) ')
+            regexp=f' (?P<two_sides> {self.tkn["side"].pattern} ) ')
 
         # Used to get compounds traits from a single parse
         self.double_cross = self.compile(
             name='double_cross',
-            regexp=f' (?P<double_cross> {tkn.cross[1]} ) ')
+            regexp=f' (?P<double_cross> {self.tkn["cross"].pattern} ) ')
 
         self.build_token_rules()
         self.build_replace_rules()
@@ -36,16 +39,16 @@ class TestesSizeTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with numeric traits
+        self.copy(self.tkn['uuid'])  # UUIDs cause problems with numeric traits
 
         # A label, like: reproductive data
-        self.shared_token(r_tkn.label)
+        self.copy(self.r_tkn['label'])
 
         # Gonads can be for female or male
         self.fragment('ambiguous_key', r' (?P<ambiguous_key> gonads? ) ')
 
         # Spellings of testes
-        self.shared_token(r_tkn.testes)
+        self.copy(self.r_tkn['testes'])
 
         # Note: abbrev differs from the one in the testes_state_trait
         self.keyword('abbrev', 'tes ts tnd td tns ta'.split())
@@ -54,40 +57,40 @@ class TestesSizeTraitBuilder(NumericTraitBuilder):
         self.fragment('char_key', r' \b t (?! [a-z] )')
 
         # Various testes state words that are skipped
-        self.shared_token(r_tkn.non)
-        self.shared_token(r_tkn.fully)
-        self.shared_token(r_tkn.partially)
-        self.shared_token(r_tkn.descended)
-        self.shared_token(r_tkn.scrotal)
-        self.shared_token(r_tkn.abdominal)
-        self.shared_token(r_tkn.size)
-        self.shared_token(r_tkn.gonads)
-        self.shared_token(r_tkn.other)
+        self.copy(self.r_tkn['non'])
+        self.copy(self.r_tkn['fully'])
+        self.copy(self.r_tkn['partially'])
+        self.copy(self.r_tkn['descended'])
+        self.copy(self.r_tkn['scrotal'])
+        self.copy(self.r_tkn['abdominal'])
+        self.copy(self.r_tkn['size'])
+        self.copy(self.r_tkn['gonads'])
+        self.copy(self.r_tkn['other'])
 
         # Side: left or [r]
-        self.shared_token(tkn.side)
+        self.copy(self.tkn['side'])
 
         # Side: left or [r]
-        self.shared_token(tkn.dim_side)
+        self.copy(self.tkn['dim_side'])
 
         # Dimensions: length or width
-        self.shared_token(tkn.dimension)
+        self.copy(self.tkn['dimension'])
 
         # Length by width, like: 10 x 5
-        self.shared_token(tkn.cross)
+        self.copy(self.tkn['cross'])
 
         # Units
-        self.shared_token(tkn.len_units)
+        self.copy(self.tkn['len_units'])
 
         # Words that join gonad traits
-        self.shared_token(r_tkn.in_)
-        self.shared_token(r_tkn.and_)
+        self.copy(self.r_tkn['in'])
+        self.copy(self.r_tkn['and'])
 
         # We allow random words in some situations
-        self.shared_token(r_tkn.word)
+        self.copy(self.r_tkn['word'])
 
         # Some patterns require a separator
-        self.shared_token(r_tkn.sep)
+        self.copy(self.r_tkn['sep'])
 
     def build_replace_rules(self):
         """Define rules for token simplification."""

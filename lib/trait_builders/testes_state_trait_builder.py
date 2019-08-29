@@ -2,8 +2,8 @@
 
 from lib.trait import Trait
 from lib.trait_builders.base_trait_builder import BaseTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 import lib.writers.csv_formatters.testes_state_csv_formatter as \
     testes_state_csv_formatter
 
@@ -25,53 +25,56 @@ class TestesStateTraitBuilder(BaseTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        tkn = SharedTokens()
+        r_tkn = ReproductiveTokens()
+
         # A label, like: "reproductive data"
-        self.shared_token(r_tkn.label)
+        self.copy(r_tkn['label'])
 
         # Spellings of "testes"
-        self.shared_token(r_tkn.testes)
+        self.copy(r_tkn['testes'])
 
         # "Fully" or "incompletely"
-        self.shared_token(r_tkn.fully)
+        self.copy(r_tkn['fully'])
 
         # Negation: "non", "not", etc.
-        self.shared_token(r_tkn.non)
+        self.copy(r_tkn['non'])
 
         # "Descended"
-        self.shared_token(r_tkn.descended)
+        self.copy(r_tkn['descended'])
 
         # Abbreviations for "testes"
         self.keyword('abbrev', 'tes ts tnd td tns ta t'.split())
 
         # Spellings of "scrotum"
-        self.shared_token(r_tkn.scrotal)
+        self.copy(r_tkn['scrotal'])
 
         # Spellings of "partially"
-        self.shared_token(r_tkn.partially)
+        self.copy(r_tkn['partially'])
 
         # Abbreviations for "testes state"
         self.keyword('state_abbrev', 'ns sc'.split())
 
         # Spellings of "abdominal"
-        self.shared_token(r_tkn.abdominal)
+        self.copy(r_tkn['abdominal'])
 
         # Various size words
-        self.shared_token(r_tkn.size)
+        self.copy(r_tkn['size'])
 
         # Spellings of "gonads"
-        self.shared_token(r_tkn.gonads)
+        self.copy(r_tkn['gonads'])
 
         # Other state words
-        self.shared_token(r_tkn.other)
+        self.copy(r_tkn['other'])
 
         # We will skip over testes size measurements
-        self.shared_token(tkn.cross)
-        self.shared_token(tkn.len_units)
+        self.copy(tkn['cross'])
+        self.copy(tkn['len_units'])
 
-        self.shared_token(r_tkn.and_)
+        self.copy(r_tkn['and'])
 
         # We allow random words in some situations
-        self.shared_token(r_tkn.word)
+        self.copy(r_tkn['word'])
 
     def build_replace_rules(self):
         """Define rules for token simplification."""

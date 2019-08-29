@@ -3,7 +3,7 @@
 import re
 from functools import partial
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
+from lib.shared_tokens import SharedTokens
 
 
 class EarLengthTraitBuilder(NumericTraitBuilder):
@@ -36,6 +36,8 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
+        tkn = SharedTokens()
+
         # Units are in the key, like: EarLengthInMillimeters
         self.keyword('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )
@@ -64,17 +66,17 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
             ])
 
         # Units
-        self.shared_token(tkn.len_units)
+        self.copy(tkn['len_units'])
 
         # Fractional numbers, like: 9/16
-        self.shared_token(tkn.fraction)
+        self.copy(tkn['fraction'])
 
         # Shorthand notation
-        self.shared_token(tkn.shorthand_key)
-        self.shared_token(tkn.shorthand)
+        self.copy(tkn['shorthand_key'])
+        self.copy(tkn['shorthand'])
 
         # Possible ranges of numbers like: "10 - 20" or just "10"
-        self.shared_token(tkn.range_)
+        self.copy(tkn['range'])
 
         # We allow random words in some situations
         self.keyword('word', r' ( [a-z] \w* ) ')

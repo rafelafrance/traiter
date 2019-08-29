@@ -4,7 +4,7 @@ import re
 from collections import namedtuple
 from lib.trait import Trait
 from lib.convert_units import convert
-import lib.shared_tokens as tkn
+from lib.shared_tokens import SharedTokens
 
 
 ParseKey = namedtuple(
@@ -85,7 +85,8 @@ class NumericTrait(Trait):
         setattr(self, 'units', units)
         big = self.to_float(values[0])
         big = convert(big, units[0])
-        smalls = re.split(tkn.range_joiner, values[1])
+        range_joiner = SharedTokens()['range_joiner'].pattern
+        smalls = re.split(range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         setattr(self, 'value', [big + convert(x, units[1]) for x in smalls])
         setattr(self, 'value', [round(v, 2) for v in self.value])

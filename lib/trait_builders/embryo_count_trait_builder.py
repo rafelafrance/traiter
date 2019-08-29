@@ -2,8 +2,8 @@
 
 from lib.numeric_trait import NumericTrait
 from lib.trait_builders.numeric_trait_builder import NumericTraitBuilder
-import lib.shared_tokens as tkn
-import lib.shared_repoduction_tokens as r_tkn
+from lib.shared_tokens import SharedTokens
+from lib.shared_repoduction_tokens import ReproductiveTokens
 
 
 class EmbryoCountTraitBuilder(NumericTraitBuilder):
@@ -21,14 +21,17 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.shared_token(r_tkn.embryo)
-        self.shared_token(r_tkn.and_)
-        self.shared_token(r_tkn.size)
-        self.shared_token(r_tkn.fat)
-        self.shared_token(tkn.len_units)
-        self.shared_token(tkn.integer)
-        self.shared_token(r_tkn.side)
-        self.shared_token(r_tkn.none)
+        tkn = SharedTokens()
+        r_tkn = ReproductiveTokens()
+
+        self.copy(r_tkn['embryo'])
+        self.copy(r_tkn['and'])
+        self.copy(r_tkn['size'])
+        self.copy(r_tkn['fat'])
+        self.copy(tkn['len_units'])
+        self.copy(tkn['integer'])
+        self.copy(r_tkn['side'])
+        self.copy(r_tkn['none'])
 
         self.keyword('conj', ' or '.split())
         self.keyword('prep', ' on '.split())
@@ -36,7 +39,7 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         # The sexes like: 3M or 4Females
         self.fragment('sex', r""" males? | females? | [mf] (?! [a-z] ) """)
 
-        self.shared_token(r_tkn.sep)
+        self.copy(r_tkn['sep'])
 
         # Skip arbitrary words
         self.fragment('word', r' \w+ ')

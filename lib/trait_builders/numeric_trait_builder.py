@@ -5,7 +5,8 @@ from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 from lib.numeric_trait import NumericTrait
 import lib.writers.csv_formatters.numeric_trait_csv_formatter as \
     numeric_trait_csv_formatter
-import lib.shared_tokens as tkn
+from lib.shared_tokens import SharedTokens
+
 
 LOOK_BACK_FAR = 40
 
@@ -26,7 +27,8 @@ class NumericTraitBuilder(BaseTraitBuilder):
 
     def common_tokens(self):
         """All numeric traits share these tokens."""
-        self.shared_token(tkn.uuid)  # UUIDs cause problems with shorthand
+        tkn = SharedTokens()
+        self.copy(tkn['uuid'])  # UUIDs cause problems with shorthand
 
     @staticmethod
     def add_flags(token, trait):
