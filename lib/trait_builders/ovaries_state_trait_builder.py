@@ -114,9 +114,9 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
             """(side)? ovaries
                 (measurement)?
                 (?P<value>
-                    ( word | color | texture | luteum | state | size | and 
+                    ( word | color | texture | luteum | state | size | and
                         | cyst ){0,3}
-                    ( color | texture | luteum | state | size | cyst 
+                    ( color | texture | luteum | state | size | cyst
                         | fallopian ))
             """,
 

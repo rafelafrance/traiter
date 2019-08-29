@@ -14,20 +14,17 @@ ParseKey = namedtuple(
 class NumericTrait(Trait):
     """Handle numeric traits values."""
 
-    def __init__(self, **kwargs):
-        """Build a numeric trait."""
-        # Unit tests need these attributes to exist on the object
-        super().__init__(**kwargs)
-
     def merge_flags(self, other):
         """Capture the meaning across all parses."""
         super().merge_flags(other)
 
-        setattr(self, 'units_inferred', bool(self.units_inferred))
-        self.units_inferred &= bool(other.units_inferred)
+        units_inferred = bool(getattr(other, 'units_inferred'))
+        units_inferred &= bool(getattr(other, 'units_inferred'))
+        setattr(self, 'units_inferred', units_inferred)
 
-        setattr(self, 'estimated_value', bool(self.estimated_value))
-        self.estimated_value |= bool(other.estimated_value)
+        units_inferred = bool(getattr(other, 'estimated_value'))
+        units_inferred &= bool(getattr(other, 'estimated_value'))
+        setattr(self, 'estimated_value', units_inferred)
 
     def convert_value(self, units):
         """Set the units and convert_value the value."""

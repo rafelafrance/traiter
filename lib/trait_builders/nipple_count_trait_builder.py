@@ -55,7 +55,7 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
     def build_product_rules(self):
         """Define rules for output."""
         self.product(self.typed, [
-            """ (?P<notation> 
+            """ (?P<notation>
                     (?P<value1> count) modifier
                     (?P<value2> count) modifier
                 ) nipple """,
@@ -64,8 +64,8 @@ class NippleCountTraitBuilder(NumericTraitBuilder):
         self.product(self.convert, [
 
             # Eg: 1:2 = 6 mammae
-            """ nipple (op)? 
-                (?P<notation> count (modifier)? 
+            """ nipple (op)?
+                (?P<notation> count (modifier)?
                     (op)? count (modifier)?
                     ((eq) (?P<value> count))? ) """,
 

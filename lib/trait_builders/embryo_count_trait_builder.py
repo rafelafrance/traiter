@@ -52,7 +52,7 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
         """Define rules for output."""
         self.product(self.convert, [
             # Eg: 4 fetuses on left, 1 on right
-            """ (?P<count1> count ) embryo prep (?P<side1> side ) 
+            """ (?P<count1> count ) embryo prep (?P<side1> side )
                 (?P<count2> count ) (embryo)? (prep)? (?P<side2> side )""",
 
             # Eg: 5 emb 2L 3R

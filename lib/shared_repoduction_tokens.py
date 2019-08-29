@@ -38,10 +38,10 @@ class ReproductiveTokens(RuleBuilder):
         self.fragment(
             'developed',
             r"""
-                ( (fully | incompletely | partially | part | well) 
+                ( (fully | incompletely | partially | part | well)
                     [.\s-]{0,2} )?""" +
-            fr"""(developed? | undeveloped? | development | devel 
-                | dev \b ([\s:]* none | {self['size'].pattern} )? 
+            fr"""(developed? | undeveloped? | development | devel
+                | dev \b ([\s:]* none | {self['size'].pattern} )?
                 | undevel | undev | indist)
             """)
 
