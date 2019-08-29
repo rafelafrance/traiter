@@ -13,7 +13,6 @@ class TestesSizeTraitBuilder(GonadSizeTraitBuilder, MaleTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        # Spellings of testes
         self.copy(self.r_tkn['testes'])
 
         # Note: abbrev differs from the one in the testes_state_trait

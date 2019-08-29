@@ -7,19 +7,15 @@ from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 class AsIsTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        # Build the tokens
+    def build_token_rules(self):
+        """Define the tokens."""
         self.fragment('data', [
             r' \S .* \S ',  # Strip leading and trailing spaces
             r' \S '])       # Get a string with a single character
 
-        # Build rules for parsing the trait
+    def build_product_rules(self):
+        """Define rules for output."""
         self.product(self.convert, '(?P<value> data )')
-
-        self.compile_regex()
 
     @staticmethod
     def convert(token):
@@ -27,5 +23,4 @@ class AsIsTraitBuilder(BaseTraitBuilder):
         return Trait(
             value=token.groups['value'],
             as_is=True,
-            start=token.start,
-            end=token.end)
+            start=token.start, end=token.end)
