@@ -7,15 +7,6 @@ from lib.trait_builders.base_trait_builder import BaseTraitBuilder
 class SexTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.build_token_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
-
     def build_token_rules(self):
         """Define the tokens."""
         # JSON keys for sex

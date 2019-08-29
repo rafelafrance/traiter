@@ -8,18 +8,11 @@ from lib.shared_tokens import SharedTokens
 class HindFootLengthTraitBuilder(NumericTraitBuilder):
     """Parser logic."""
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.build_token_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
-
     def build_token_rules(self):
         """Define the tokens."""
         tkn = SharedTokens()
+
+        self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 
         # Units are in the key, like: HindFootLengthInMillimeters
         self.keyword(

@@ -24,19 +24,11 @@ class EarLengthTraitBuilder(NumericTraitBuilder):
     look_around = 10
     is_east = re.compile(r' \b n ', NumericTraitBuilder.flags)
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.build_token_rules()
-        self.build_replace_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
-
     def build_token_rules(self):
         """Define the tokens."""
         tkn = SharedTokens()
+
+        self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
         self.keyword('key_with_units', r"""

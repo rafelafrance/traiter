@@ -21,9 +21,10 @@ class EmbryoCountTraitBuilder(NumericTraitBuilder):
 
     def build_token_rules(self):
         """Define the tokens."""
-        tkn = SharedTokens()
         r_tkn = ReproductiveTokens()
+        tkn = SharedTokens()
 
+        self.copy(tkn['uuid'])  # UUIDs cause problems with shorthand
         self.copy(r_tkn['embryo'])
         self.copy(r_tkn['and'])
         self.copy(r_tkn['size'])

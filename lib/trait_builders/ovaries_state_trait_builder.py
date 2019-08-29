@@ -14,16 +14,6 @@ class OvariesStateTraitBuilder(BaseTraitBuilder):
 
     csv_formatter = ovaries_state_csv_formatter.csv_formatter
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.build_token_rules()
-        self.build_replace_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
-
     def build_token_rules(self):
         """Define the tokens."""
         tkn = SharedTokens()

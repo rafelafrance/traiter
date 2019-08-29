@@ -8,27 +8,16 @@ from lib.shared_tokens import SharedTokens
 class LifeStageTraitBuilder(BaseTraitBuilder):
     """Parser logic."""
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.tkn = SharedTokens()
-
-        self.time_options = self.tkn['time_units'].pattern
-
-        self.build_token_rules()
-        self.build_replace_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
-
     def build_token_rules(self):
         """Define the tokens."""
+        tkn = SharedTokens()
+        time_options = tkn['time_units'].pattern
+
         # JSON keys for life stage
         self.keyword('json_key', [
             r' life \s* stage \s* (remarks?)? ',
             r' age \s* class ',
-            r' age \s* in \s* (?P<time_units> {}) '.format(self.time_options),
+            r' age \s* in \s* (?P<time_units> {}) '.format(time_options),
             r' age '])
 
         # These words are life stages without a keyword indicator
@@ -71,10 +60,10 @@ class LifeStageTraitBuilder(BaseTraitBuilder):
         self.fragment('separator', r' [;,"?] | $ ')
 
         # For life stages with numbers as words in them
-        self.copy(self.tkn['ordinals'])
+        self.copy(tkn['ordinals'])
 
         # Time units
-        self.copy(self.tkn['time_units'])
+        self.copy(tkn['time_units'])
 
         # Literals
         self.fragment('after', 'after')

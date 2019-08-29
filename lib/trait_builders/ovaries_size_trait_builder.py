@@ -16,8 +16,6 @@ class OvariesSizeTraitBuilder(NumericTraitBuilder):
 
     def __init__(self, args=None):
         """Build the trait parser."""
-        super().__init__(args)
-
         self.tkn = SharedTokens()
         self.r_tkn = ReproductiveTokens()
 
@@ -31,15 +29,11 @@ class OvariesSizeTraitBuilder(NumericTraitBuilder):
             name='double_cross',
             regexp=f' (?P<double_cross> {self.tkn["cross"].pattern} ) ')
 
-        self.build_token_rules()
-        self.build_replace_rules()
-        self.build_product_rules()
-
-        self.compile_regex()
+        super().__init__(args)
 
     def build_token_rules(self):
         """Define the tokens."""
-        self.copy(self.tkn['uuid'])
+        self.copy(self.tkn['uuid'])  # UUIDs cause problems with numbers
 
         # A label, like: reproductive data
         self.copy(self.r_tkn['label'])

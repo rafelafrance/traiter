@@ -22,18 +22,11 @@ class TailLengthTraitBuilder(NumericTraitBuilder):
     is_tag = re.compile(' tag ', NumericTraitBuilder.flags)
     is_id = re.compile(' identifier | ident | id ', NumericTraitBuilder.flags)
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.build_token_rules()
-        self.build_replace_rules()
-        self.build_product_rules()
-        self.compile_regex()
-
     def build_token_rules(self):
         """Define the tokens."""
         tkn = SharedTokens()
+
+        self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
         self.keyword('key_with_units', r"""

@@ -40,6 +40,8 @@ class TotalLengthTraitBuilder(NumericTraitBuilder):
         """Define the tokens."""
         tkn = SharedTokens()
 
+        self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
+
         # Units are in the key, like: TotalLengthInMillimeters
         self.keyword('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*

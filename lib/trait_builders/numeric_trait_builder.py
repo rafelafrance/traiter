@@ -19,17 +19,6 @@ class NumericTraitBuilder(BaseTraitBuilder):
 
     csv_formatter = numeric_trait_csv_formatter.csv_formatter
 
-    def __init__(self, args=None):
-        """Build the trait parser."""
-        super().__init__(args)
-
-        self.common_tokens()
-
-    def common_tokens(self):
-        """All numeric traits share these tokens."""
-        tkn = SharedTokens()
-        self.copy(tkn['uuid'])  # UUIDs cause problems with shorthand
-
     @staticmethod
     def add_flags(token, trait):
         """Add common flags to the numeric trait."""

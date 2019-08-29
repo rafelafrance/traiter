@@ -24,6 +24,8 @@ class EmbryoLengthTraitBuilder(NumericTraitBuilder):
         tkn = SharedTokens()
         r_tkn = ReproductiveTokens()
 
+        self.copy(tkn['uuid'])  # UUIDs cause problems with numbers
+
         self.copy(r_tkn['embryo'])
 
         self.keyword('crown_rump', r"""

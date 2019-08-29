@@ -13,8 +13,20 @@ class BaseTraitBuilder(StackedRegex):
     def __init__(self, args=None):
         """Build the trait parser."""
         super().__init__()
-
         self.args = args
+        self.build_token_rules()
+        self.build_replace_rules()
+        self.build_product_rules()
+        self.compile_regex()
+
+    def build_token_rules(self):
+        """Define the tokens."""
+
+    def build_replace_rules(self):
+        """Define rules for token simplification."""
+
+    def build_product_rules(self):
+        """Define rules for output."""
 
     def parse(self, text, field=None):
         """Find the trait_builders in the text.
