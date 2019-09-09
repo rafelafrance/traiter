@@ -30,7 +30,7 @@ class BaseTraitBuilder(StackedRegex):
         """Define rules for output."""
 
     def parse(self, text, field=None):
-        """Find the trait_builders in the text.
+        """Find the traits in the text.
 
         We get the trait list from the StackedRegex engine & then fix them up
         afterwards.
@@ -45,7 +45,7 @@ class BaseTraitBuilder(StackedRegex):
             if not trait_list:
                 continue
 
-            # Some parses represent multiple trait_builders, fix them all up
+            # Some parses represent multiple traits, fix them all up
             if not isinstance(trait_list, list):
                 trait_list = [trait_list]
 
