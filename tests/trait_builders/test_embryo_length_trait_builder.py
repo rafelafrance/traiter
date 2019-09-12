@@ -1,6 +1,6 @@
 import unittest
-from lib.numeric_trait import NumericTrait
-from lib.trait_builders.embryo_length_trait_builder \
+from pylib.numeric_trait import NumericTrait
+from pylib.trait_builders.embryo_length_trait_builder \
     import EmbryoLengthTraitBuilder
 
 

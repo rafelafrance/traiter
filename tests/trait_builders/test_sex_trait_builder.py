@@ -1,6 +1,6 @@
 import unittest
-from lib.trait import Trait
-from lib.trait_builders.sex_trait_builder import SexTraitBuilder
+from pylib.trait import Trait
+from pylib.trait_builders.sex_trait_builder import SexTraitBuilder
 
 
 PAR = None

@@ -1,6 +1,6 @@
 import unittest
-from lib.trait import Trait
-from lib.trait_builders.nipple_state_trait_builder \
+from pylib.trait import Trait
+from pylib.trait_builders.nipple_state_trait_builder \
     import NippleStateTraitBuilder
 
 

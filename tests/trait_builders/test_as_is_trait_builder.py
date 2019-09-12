@@ -1,6 +1,6 @@
 import unittest
-from lib.trait import Trait
-from lib.trait_builders.as_is_trait_builder import AsIsTraitBuilder
+from pylib.trait import Trait
+from pylib.trait_builders.as_is_trait_builder import AsIsTraitBuilder
 
 
 PAR = None
