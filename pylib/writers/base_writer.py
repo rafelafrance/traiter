@@ -4,7 +4,7 @@ from abc import abstractmethod
 
 
 class BaseWriter:
-    """Write the lib output to a file."""
+    """Write the output to a file."""
 
     def __init__(self, args):
         """Build the writer."""

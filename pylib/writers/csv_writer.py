@@ -1,4 +1,4 @@
-"""Write the lib output to a CSV file."""
+"""Write the output to a CSV file."""
 
 import re
 import pandas as pd

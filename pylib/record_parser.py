@@ -1,4 +1,4 @@
-"""Parse all trait_builders for the input record."""
+"""Parse all traits for the input record."""
 
 from pylib.trait_builders.as_is_trait_builder import AsIsTraitBuilder
 
@@ -16,12 +16,12 @@ class ShouldSkip(Exception):
     """
     Don't parse the trait because of another condition.
 
-    For instance, don't look for testes trait_builders on females.
+    For instance, don't look for testes traits on females.
     """
 
 
 class RecordParser:
-    """Handles all of the parsed trait_builders for a record."""
+    """Handles all of the parsed traits for a record."""
 
     as_is = AsIsTraitBuilder()
 
@@ -32,7 +32,7 @@ class RecordParser:
         self.as_is_fields = as_is_fields if as_is_fields else {}
 
     def parse_record(self, record):
-        """Parse the trait_builders for record."""
+        """Parse the traits for record."""
         data = {trait: [] for trait, parser in self.parsers}
 
         for trait, parser in self.parsers:
