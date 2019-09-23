@@ -52,6 +52,7 @@ junk*
 .RData
 
 # Other code
+args/
 src/
 julia/
 traiter-gui*/

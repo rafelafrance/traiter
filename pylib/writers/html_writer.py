@@ -31,7 +31,7 @@ class HtmlWriter(BaseWriter):
     def end(self):
         """End the report."""
         env = Environment(
-            loader=FileSystemLoader('./lib/writers/templates'),
+            loader=FileSystemLoader('./pylib/writers/templates'),
             autoescape=True)
         args = {k: v for k, v in vars(self.args).items()
                 if k in ('as_is', 'extra_field', 'search_field', 'trait')}

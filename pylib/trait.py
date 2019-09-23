@@ -50,5 +50,5 @@ class Trait:
         setattr(self, 'ambiguous_key', ambiguous_key)
 
     def as_key(self):
-        """Used to tell if the traits are the same trait."""
+        """Determine if the traits are the same trait."""
         return TraitKey(value=self.value, side=self.side)
