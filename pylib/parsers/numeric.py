@@ -3,16 +3,12 @@
 import re
 from pylib.numeric_trait import NumericTrait
 from pylib.util import FLAGS
-import pylib.writers.csv_formatters.numeric as \
-    numeric_trait_csv_formatter
 
 
 LOOK_BACK_FAR = 40
 
 QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', FLAGS)
 IS_COLLECTOR = re.compile(r' collector ', FLAGS)
-
-CSV_FORMATTER = numeric_trait_csv_formatter.csv_formatter
 
 
 def add_flags(token, trait):

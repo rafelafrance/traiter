@@ -1,7 +1,7 @@
 """Parse testes state notations."""
 
-from pylib.trait import Trait
 from stacked_regex.rule import keyword, producer, replacer
+from pylib.trait import Trait
 from pylib.parsers.base import Base
 from pylib.shared_patterns import SHARED
 from pylib.shared_reproductive_patterns import REPRODUCTIVE
@@ -87,25 +87,25 @@ TESTES_STATE = Base(
 
     producers=[
         # A typical testes state notation
+        # E.g.: reproductiveData: ts 5x3 fully descended
         producer(convert, [
-            # E.g.: reproductiveData: ts 5x3 fully descended
             """label ( testes | abbrev )? ( length )?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )"""]),
 
+        # E.g.: reproductive data = nonScrotal
         producer(convert, [
-            # E.g.: reproductive data = nonScrotal
             """label ( length )?
                 (?P<value> non testes | non scrotal | scrotal )"""]),
 
+        # E.g.: ts inguinal
         producer(convert, [
-            # E.g.: ts inguinal
             """abbrev ( length )?
                 (?P<value> state | abdominal | non scrotal
                     | scrotal | other)"""]),
 
+        # E.g.: testes 5x4 mm pt desc
         producer(convert, [
-            # E.g.: testes 5x4 mm pt desc
             """testes ( length )?
                 (?P<value>
                     ( state | state_abbrev | abdominal | non scrotal
@@ -116,14 +116,14 @@ TESTES_STATE = Base(
                         | scrotal | other )
                 )"""]),
 
+        # E.g.: testes 5x4 desc
         producer(convert, [
-            # E.g.: testes 5x4 desc
             """testes ( length )?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
                     | scrotal | other )"""]),
 
+        # E.g.: no gonads
         producer(convert, [
-            # E.g.: no gonads
             """(?P<value> non ( testes | scrotal | gonads ) | scrotal )"""]),
     ],
 )

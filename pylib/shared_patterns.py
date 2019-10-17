@@ -19,7 +19,8 @@ add(fragment('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' "))
 # inTL with other words.
 add(fragment('inches', ' ( inch e? s? | in s? ) (?! [a-dgi-km-ru-z] ) '))
 
-add(fragment('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) '))
+add(fragment(
+    'metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) '))
 
 add(fragment(
     'len_units', '|'.join(
@@ -163,14 +164,14 @@ add(fragment('uuid', r"""
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 6)]
 ORDINALS += [number_to_words(x) for x in ORDINALS]
-add(fragment('ordinals', ' | '.join([x for x in ORDINALS])))
+add(fragment('ordinals', ' | '.join(ORDINALS)))
 
 # Time units
 add(fragment('time_units', r'years? | months? | weeks? | days? | hours?'))
 
 # Side keywords
 add(fragment('side', r"""
-    [/(\[] \s* (?P<side1> [lr] \b ) \s* [)\]]? 
+    [/(\[] \s* (?P<side1> [lr] \b ) \s* [)\]]?
     | (?P<side2> both | left | right | lft | rt | [lr] \b ) """))
 
 add(fragment('dimension', r' (?P<dim> length | width ) '))

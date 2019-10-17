@@ -10,7 +10,7 @@ PREGNANCY_STATE = Base(
         REPRODUCTIVE['none'],
 
         keyword('pregnant', r"""
-            prega?n?ant pregnan preg pregnancy pregnancies 
+            prega?n?ant pregnan preg pregnancy pregnancies
             gravid multiparous nulliparous parous """.split()),
 
         keyword('joiner', r""" of were """.split()),
@@ -19,9 +19,9 @@ PREGNANCY_STATE = Base(
             recently recent was previously prev """.split()),
 
         keyword('probably', r"""
-            probably prob possibly possible 
+            probably prob possibly possible
             appears? very
-            visible visibly 
+            visible visibly
             evidence evident
             """.split()),
 

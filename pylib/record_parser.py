@@ -1,6 +1,6 @@
 """Parse all traits for the input record."""
 
-from pylib.parsers.as_is import AsIs
+from pylib.parsers.as_is import AS_IS
 
 
 class TraitFound(Exception):
@@ -23,7 +23,7 @@ class ShouldSkip(Exception):
 class RecordParser:
     """Handles all of the parsed traits for a record."""
 
-    as_is = AsIs()
+    as_is = AS_IS
 
     def __init__(self, parsers, search_fields=None, as_is_fields=None):
         """Create the record container."""

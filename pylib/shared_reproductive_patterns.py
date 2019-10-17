@@ -2,7 +2,6 @@
 
 
 from stacked_regex.rule import Rule, fragment, keyword
-from pylib.shared_patterns import SHARED
 
 
 REPRODUCTIVE = {}
@@ -32,7 +31,7 @@ add(fragment('size', r"""
     ( very \s+ )?
     ( enlarged | enlarge | large | small | shrunken | shrunk | swollen
         | extended | unobservable | sm-med
-        | moderate | mod \b | medium  | med \b | minute | lg \b 
+        | moderate | mod \b | medium  | med \b | minute | lg \b
         | sm \b | tiny )
     ( \s* size d? | [+] )?
     """))
@@ -72,8 +71,8 @@ add(fragment('sep', ' [;] | $ '))
 add(fragment('sign', ' [+-] '))
 
 add(keyword('visible', r""" ( very \s+ )? (
-    visible | invisible | hidden | prominent? | seen | conspicuous 
-        | bare 
+    visible | invisible | hidden | prominent? | seen | conspicuous
+        | bare
     ) """))
 
 # We allow random words in some situations
@@ -124,17 +123,17 @@ add(fragment('uterus', 'uterus uterine ut'.split()))
 
 add(fragment('nipple', r""" ( \b
     nipples? | nipp?s? | teats? |
-        ((mammae | mamm[ae]ry | mammaries | mamm) 
-            (\s+ ( glands? | tisss?ue ) )? ) 
+        ((mammae | mamm[ae]ry | mammaries | mamm)
+            (\s+ ( glands? | tisss?ue ) )? )
     ) \b """))
 
 add(fragment('embryo', r"""
-    embryonic | embryos? | embryps? | embroys | embs? | embrs? 
+    embryonic | embryos? | embryps? | embroys | embs? | embrs?
     | fetuses | fetus | foeti"""))
 
 # Spellings of placental scar
 add(fragment('plac_scar', r"""
-    ( placental | plac \b | postnatal | pac \b | \b pl \b ) 
+    ( placental | plac \b | postnatal | pac \b | \b pl \b )
         [.\s]* ( scarring | scars? )
     | p [\s.-] ( scarring | scars? )
     | ( uterus | uterine | \b ut \b ) [.\s]* ( scarring | scars? )

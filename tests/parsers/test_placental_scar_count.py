@@ -12,7 +12,8 @@ class TestPlacentalScarCount(unittest.TestCase):
 
     def test_parse_02(self):
         self.assertEqual(
-            PLACENTAL_SCAR_COUNT.parse('vagina imperforate; 5 plac scar 3L 2R'),
+            PLACENTAL_SCAR_COUNT.parse(
+                'vagina imperforate; 5 plac scar 3L 2R'),
             [NumericTrait(value=5, left=3, right=2, start=20, end=37)])
 
     def test_parse_03(self):
@@ -118,7 +119,8 @@ class TestPlacentalScarCount(unittest.TestCase):
 
     def test_parse_23(self):
         self.assertEqual(
-            PLACENTAL_SCAR_COUNT.parse('1 lt. plac. scar, 2 rt emb: CR: 16 mm'),
+            PLACENTAL_SCAR_COUNT.parse(
+                '1 lt. plac. scar, 2 rt emb: CR: 16 mm'),
             [NumericTrait(value=3, left=1, right=2, start=0, end=22)])
 
     def test_parse_24(self):

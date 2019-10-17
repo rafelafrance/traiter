@@ -122,7 +122,8 @@ class TestTestesState(unittest.TestCase):
 
     def test_parse_22(self):
         self.assertEqual(
-            TESTES_STATE.parse('weight=75.6 g; reproductive data=Testes small'),
+            TESTES_STATE.parse(
+                'weight=75.6 g; reproductive data=Testes small'),
             [Trait(value='small', start=15, end=45)])
 
     def test_parse_23(self):

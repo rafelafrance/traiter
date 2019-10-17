@@ -22,8 +22,7 @@ class Base:
             scanners: List[Rule],
             replacers: List[Rule],
             producers: List[Rule],
-            fix_up: Callable[[Trait, str], Trait] = None
-        ) -> None:
+            fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""
         self.scanners = scanners
         self.replacers = replacers

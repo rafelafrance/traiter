@@ -41,11 +41,11 @@ def _merge_records(records):
                     and prev['width'] == curr['width']:
                 _merge_flags(prev, curr)
                 continue
-            elif prev['length'] == -1 and curr['length'] != -1:
+            if prev['length'] == -1 and curr['length'] != -1:
                 prev['length'] = curr['length']
                 _merge_flags(prev, curr)
                 continue
-            elif prev['width'] == -1 and curr['width'] != -1:
+            if prev['width'] == -1 and curr['width'] != -1:
                 _merge_flags(prev, curr)
                 prev['width'] = curr['width']
                 continue

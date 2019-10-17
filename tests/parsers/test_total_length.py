@@ -264,7 +264,8 @@ class TestTotalLength(unittest.TestCase):
 
     def test_parse_034(self):
         self.assertEqual(
-            TOTAL_LENGTH.parse('f age class: adult; standard length: 63-107mm'),
+            TOTAL_LENGTH.parse(
+                'f age class: adult; standard length: 63-107mm'),
             [NumericTrait(
                 value=[63, 107], units='mm', units_inferred=False,
                 start=20, end=45)])
@@ -707,7 +708,8 @@ class TestTotalLength(unittest.TestCase):
 
     def test_parse_101(self):
         self.assertEqual(
-            TOTAL_LENGTH.parse('VERY YOUNG. LAST SPECIMEN CATALOGUED IN 1997.'),
+            TOTAL_LENGTH.parse(
+                'VERY YOUNG. LAST SPECIMEN CATALOGUED IN 1997.'),
             [])
 
     def test_parse_102(self):

@@ -22,7 +22,7 @@ LIFE_STAGE = Base(
             r' young [\s-]? of [\s-]? the [\s-]? year ',
             r' adult \s* young ',
             r' young \s* adult ']
-                     + """
+                + """
                 ads? adulte?s?
                 chicks?
                 fledgelings? fleglings?
@@ -88,7 +88,7 @@ LIFE_STAGE = Base(
         # E.g.: LifeStage Remarks: 5-6 wks;
         producer(
             convert,
-            """ json_key (?P<value> ( intrinsic | word | joiner ){1,5} ) 
+            """ json_key (?P<value> ( intrinsic | word | joiner ){1,5} )
             separator"""),
 
         # E.g.: LifeStage = 1st month

@@ -25,8 +25,8 @@ OUTPUT_FORMATS = {
 
 def parse_traits(args):
     """Parse the input."""
-    trait_parsers = [(trait, trait_parser(args))
-                     for trait, trait_parser in TRAITS.items()
+    trait_parsers = [(trait, parser)
+                     for trait, parser in TRAITS.items()
                      if trait in args.trait]
 
     reader = INPUT_FORMATS[args.input_format](args)

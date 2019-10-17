@@ -44,7 +44,7 @@ TESTES_SIZE = Base(
     replacers=[
         replacer('state', [
             """(non | partially | fully )? descended """]
-                     + """ scrotal abdominal size other """.split()),
+                 + """ scrotal abdominal size other """.split()),
 
         # A key with units, like: gonadLengthInMM
         replacer('key_with_units', r"""
@@ -65,8 +65,8 @@ TESTES_SIZE = Base(
 
     producers=[
         # These patterns contain measurements to both left & right testes
+        # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
         producer(double, [
-            # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
             """label ( testes | abbrev | char_key )
                 (?P<first> side cross )
                 (?P<second> side cross )?"""]),

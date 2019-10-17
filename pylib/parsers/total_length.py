@@ -31,7 +31,6 @@ IS_LEFT = re.compile(r' \b r \b ', util.FLAGS)
 
 def fix_up(trait, text):
     """Fix problematic parses."""
-
     # Handle IDs
     start = max(0, trait.start - LOOK_BACK_FAR)
     if IS_ID.search(text, start, trait.start):

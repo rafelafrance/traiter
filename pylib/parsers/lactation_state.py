@@ -12,7 +12,7 @@ LACTATION_STATE = Base(
             | lactaing | lactacting | lactataing | lactational
             | oelact | celact | lactati | lactacting | lactatin
             | lactatting | lactatng
-            | nursing | suckling 
+            | nursing | suckling
         ) \b """),
 
         fragment('not', r' \b ( not | non | no ) '),
