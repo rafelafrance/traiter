@@ -1,6 +1,8 @@
 language: python
 python:
-  - "3.6"
+  - "3.7"
+cache:
+  pip: false
 install:
   - pip install -r requirements.txt
   - pip install git+https://github.com/rafelafrance/stacked_regex.git@master#egg=stackedregex
