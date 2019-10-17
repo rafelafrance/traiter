@@ -14,6 +14,5 @@ pytx==0.5.10
 pytz==2019.2
 requests==2.22.0
 six==1.12.0
--e git+https://github.com/rafelafrance/stacked_regex.git@b05d7ec1afaad0bdf3ea38d9b1347908c1a5019e#egg=stackedregex
 urllib3==1.25.6
 Werkzeug==0.16.0
