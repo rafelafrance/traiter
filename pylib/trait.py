@@ -19,7 +19,7 @@ class Trait:
         return '{}({})'.format(self.__class__.__name__, self.__dict__)
 
     def __eq__(self, other):
-        """Compare trait_builders for testing."""
+        """Compare parsers for testing."""
         return self.__dict__ == other.__dict__
 
     def __setattr__(self, name, value):

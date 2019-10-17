@@ -4,7 +4,7 @@ import re
 from collections import namedtuple
 from pylib.trait import Trait
 from pylib.convert_units import convert
-from pylib.shared_patterns import SharedPatterns
+from pylib.shared_patterns import SHARED
 
 
 ParseKey = namedtuple(
@@ -82,7 +82,7 @@ class NumericTrait(Trait):
         setattr(self, 'units', units)
         big = self.to_float(values[0])
         big = convert(big, units[0])
-        range_joiner = SharedPatterns()['range_joiner'].pattern
+        range_joiner = SHARED['range_joiner'].pattern
         smalls = re.split(range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         setattr(self, 'value', [big + convert(x, units[1]) for x in smalls])
@@ -93,11 +93,19 @@ class NumericTrait(Trait):
 
     def cross_value(self, token):
         """Handle a value like 5 cm x 21 mm."""
-        self.float_value(token.groups.get('value1'),
-                         token.groups.get('value2'))
+        value1 = token.groups.get('value1')
+
+        key = [k for k in token.groups.keys() if k.startswith('value2')]
+        value2 = token.groups[key[0]] if key else None
+
+        self.float_value(value1, value2)
+
         units = token.groups.get('units')
-        units = units if units else token.groups.get('units1')
+        key = [k for k in token.groups.keys() if k.startswith('units1')]
+        units = token.groups[key[0]] if key else units
+
         units2 = token.groups.get('units2')
+
         units = [units, units2] if units2 and units != units2 else units
         self.convert_value(units)
 

@@ -1,7 +1,9 @@
 """Misc utilities."""
 
+import re
 import inflect
 
+FLAGS = re.IGNORECASE | re.VERBOSE
 INFLECT = inflect.engine()
 
 
