@@ -1,10 +1,9 @@
 """Common logic for parsing trait notations."""
 
 from typing import List, Callable
-from stacked_regex.stacked_regex import parse
+import stacked_regex.stacked_regex as stacked
 from stacked_regex.rule import Rule
 from pylib.trait import Trait
-import pylib.writers.csv_formatters.base as base_formatter
 
 
 def fix_up_nop(trait, text):  # pylint: disable=unused-argument
@@ -12,10 +11,8 @@ def fix_up_nop(trait, text):  # pylint: disable=unused-argument
     return trait
 
 
-class Base:
+class Base(stacked.Parser):  # pylint: disable=too-few-public-methods
     """Shared lexer logic."""
-
-    csv_formatter = base_formatter.csv_formatter
 
     def __init__(
             self,
@@ -24,9 +21,7 @@ class Base:
             producers: List[Rule],
             fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""
-        self.scanners = scanners
-        self.replacers = replacers
-        self.producers = producers
+        super().__init__(scanners, replacers, producers)
         self.fix_up = fix_up if fix_up else fix_up_nop
 
     def parse(self, text, field=None):
@@ -37,7 +32,7 @@ class Base:
         """
         traits = []
 
-        tokens = parse(text, self.scanners, self.replacers, self.producers)
+        tokens = stacked.parse(text, self)
 
         for token in tokens:
 

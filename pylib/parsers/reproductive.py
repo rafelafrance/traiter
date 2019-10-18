@@ -1,7 +1,7 @@
 """Functions common to most male & female reproductive traits."""
 
 from stacked_regex.token import Token
-from stacked_regex.rule import fragment
+from stacked_regex.rule import fragment, simple_search
 from pylib.shared_patterns import SHARED
 from pylib.numeric_trait import NumericTrait
 
@@ -27,11 +27,11 @@ def double(token):
     # We need to re-extract the first match groups
     trait1 = NumericTrait(start=token.start, end=token.end)
 
-    groups = DOUBLE_CROSS.simple_search(token.groups['first'])
+    groups = simple_search(DOUBLE_CROSS, token.groups['first'])
     token1 = Token(DOUBLE_CROSS, groups=groups)
     trait1.cross_value(token1)
 
-    groups = TWO_SIDES.simple_search(token.groups['first'])
+    groups = simple_search(TWO_SIDES, token.groups['first'])
     token1 = Token(TWO_SIDES, groups=groups)
     get_side(trait1, token1)
 
