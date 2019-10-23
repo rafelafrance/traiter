@@ -14,6 +14,7 @@ def convert(token):
 
 
 AS_IS = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         fragment('data', [
             r' \S .* \S ',  # Strip leading and trailing spaces

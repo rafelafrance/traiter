@@ -19,9 +19,14 @@ class Base(stacked.Parser):  # pylint: disable=too-few-public-methods
             scanners: List[Rule],
             replacers: List[Rule],
             producers: List[Rule],
+            name: str = 'parser',
             fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""
-        super().__init__(scanners, replacers, producers)
+        super().__init__(
+            name=name,
+            scanners=scanners,
+            replacers=replacers,
+            producers=producers)
         self.fix_up = fix_up if fix_up else fix_up_nop
 
     def parse(self, text, field=None):

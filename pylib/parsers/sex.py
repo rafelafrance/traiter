@@ -5,6 +5,7 @@ from pylib.parsers.base import Base, convert
 
 
 SEX = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         # JSON keys for sex
         keyword('json_key', 'sex'),

@@ -39,6 +39,7 @@ def double(token):
 
 
 OVARIES_STATE = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         REPRODUCTIVE['ovary'],
         REPRODUCTIVE['size'],

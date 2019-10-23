@@ -8,6 +8,7 @@ from pylib.parsers.base import Base
 
 
 TESTES_SIZE = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         REPRODUCTIVE['testes'],
 

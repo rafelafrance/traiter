@@ -6,6 +6,7 @@ from pylib.shared_reproductive_patterns import REPRODUCTIVE
 
 
 NIPPLE_STATE = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         REPRODUCTIVE['size'],
         REPRODUCTIVE['fully'],

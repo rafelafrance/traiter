@@ -15,6 +15,7 @@ def fix_up(trait, text):
 
 
 HIND_FOOT_LENGTH = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         SHARED['uuid'],  # UUIDs cause problems with numbers
 

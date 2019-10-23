@@ -8,6 +8,7 @@ from pylib.shared_patterns import SHARED
 TIME_OPTIONS = SHARED['time_units'].pattern
 
 LIFE_STAGE = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         # JSON keys for life stage
         keyword('json_key', [

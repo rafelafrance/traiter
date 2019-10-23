@@ -22,6 +22,7 @@ def fix_up(trait, text):
 
 
 EMBRYO_LENGTH = Base(
+    name=__name__.split('.')[-1],
     fix_up=fix_up,
 
     scanners=[

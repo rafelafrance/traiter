@@ -17,6 +17,7 @@ def convert(token):
 
 
 TESTES_STATE = Base(
+    name=__name__.split('.')[-1],
     scanners=[
 
         # A label, like: "reproductive data"

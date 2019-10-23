@@ -58,6 +58,7 @@ def convert(token):
 
 
 EMBRYO_COUNT = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         SHARED['uuid'],  # UUIDs cause problems with shorthand
         REPRODUCTIVE['embryo'],

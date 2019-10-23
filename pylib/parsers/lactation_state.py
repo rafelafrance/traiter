@@ -6,6 +6,7 @@ from pylib.shared_reproductive_patterns import REPRODUCTIVE
 
 
 LACTATION_STATE = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         fragment('lactating', r""" (
             lactating | lactation | lactated | lactate | lact

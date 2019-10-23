@@ -45,6 +45,7 @@ def convert_state(token):
 
 
 PLACENTAL_SCAR_COUNT = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         SHARED['uuid'],  # UUIDs cause problems with numbers
         REPRODUCTIVE['plac_scar'],

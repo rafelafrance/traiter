@@ -36,6 +36,7 @@ def typed(token):
 
 
 NIPPLE_COUNT = Base(
+    name=__name__.split('.')[-1],
     scanners=[
         SHARED['uuid'],  # UUIDs cause problems with numbers
 
