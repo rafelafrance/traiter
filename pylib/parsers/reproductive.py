@@ -1,7 +1,9 @@
 """Functions common to most male & female reproductive traits."""
 
+from string import punctuation
+from copy import copy
 from stacked_regex.token import Token
-from stacked_regex.rule import fragment, simple_search
+from stacked_regex.rule import fragment
 from pylib.shared_patterns import SHARED
 from pylib.numeric_trait import NumericTrait
 
@@ -19,21 +21,44 @@ def double(token):
     if not token.groups.get('second'):
         return convert(token)
 
-    # Regex second match groups will overwrite the first match groups
-    trait2 = NumericTrait(start=token.start, end=token.end)
-    trait2.cross_value(token)
-    get_side(trait2, token)
+    value2 = [k for k in token.groups.keys() if k.startswith('value2')]
 
-    # We need to re-extract the first match groups
     trait1 = NumericTrait(start=token.start, end=token.end)
-
-    groups = simple_search(DOUBLE_CROSS, token.groups['first'])
-    token1 = Token(DOUBLE_CROSS, groups=groups)
+    token1 = Token(DOUBLE_CROSS, groups=copy(token.groups))
+    token1.groups['value1'] = token.groups['value1'][0]
+    if value2:
+        token1.groups[value2[0]] = token.groups[value2[0]][0]
     trait1.cross_value(token1)
+    trait1.is_value_in_token('side1', token, 'side')
+    if 'side' in token.groups:
+        setattr(
+            trait1, 'side', token.groups['side'][0].lower().strip(punctuation))
 
-    groups = simple_search(TWO_SIDES, token.groups['first'])
-    token1 = Token(TWO_SIDES, groups=groups)
-    get_side(trait1, token1)
+    trait2 = NumericTrait(start=token.start, end=token.end)
+    token2 = Token(DOUBLE_CROSS, groups=copy(token.groups))
+    token2.groups['value1'] = token.groups['value1'][1]
+    if value2:
+        token2.groups[value2[0]] = token.groups[value2[0]][1]
+    trait2.cross_value(token2)
+    if 'side' in token.groups:
+        setattr(
+            trait2, 'side', token.groups['side'][1].lower().strip(punctuation))
+
+    # # Regex second match groups will overwrite the first match groups
+    # trait2 = NumericTrait(start=token.start, end=token.end)
+    # trait2.cross_value(token)
+    # get_side(trait2, token)
+    #
+    # # We need to re-extract the first match groups
+    # trait1 = NumericTrait(start=token.start, end=token.end)
+    #
+    # groups = simple_search(DOUBLE_CROSS, token.groups['first'])
+    # token1 = Token(DOUBLE_CROSS, groups=groups)
+    # trait1.cross_value(token1)
+    #
+    # groups = simple_search(TWO_SIDES, token.groups['first'])
+    # token1 = Token(TWO_SIDES, groups=groups)
+    # get_side(trait1, token1)
 
     return [trait1, trait2]
 
