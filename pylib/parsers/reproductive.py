@@ -44,22 +44,6 @@ def double(token):
         setattr(
             trait2, 'side', token.groups['side'][1].lower().strip(punctuation))
 
-    # # Regex second match groups will overwrite the first match groups
-    # trait2 = NumericTrait(start=token.start, end=token.end)
-    # trait2.cross_value(token)
-    # get_side(trait2, token)
-    #
-    # # We need to re-extract the first match groups
-    # trait1 = NumericTrait(start=token.start, end=token.end)
-    #
-    # groups = simple_search(DOUBLE_CROSS, token.groups['first'])
-    # token1 = Token(DOUBLE_CROSS, groups=groups)
-    # trait1.cross_value(token1)
-    #
-    # groups = simple_search(TWO_SIDES, token.groups['first'])
-    # token1 = Token(TWO_SIDES, groups=groups)
-    # get_side(trait1, token1)
-
     return [trait1, trait2]
 
 
