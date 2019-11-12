@@ -69,7 +69,7 @@ LIFE_STAGE = Base(
     ],
 
     replacers=[
-        replacer('as_time', '( after )? (ordinals | hatching) time_units'),
+        replacer('as_time', ' after? (ordinals | hatching) time_units'),
     ],
 
     producers=[

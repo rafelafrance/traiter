@@ -37,6 +37,6 @@ LACTATION_STATE = Base(
     ],
 
     producers=[
-        producer(convert, """ (?P<value> (prefix)? lactating (quest)? ) """),
+        producer(convert, """ (?P<value> prefix? lactating quest? ) """),
     ],
 )

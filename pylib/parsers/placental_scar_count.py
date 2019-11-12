@@ -89,23 +89,23 @@ PLACENTAL_SCAR_COUNT = Base(
 
         producer(convert_count, [
             """plac_scar
-                  (?P<count1> count ) (prep)? (?P<side1> side )
-                ( (?P<count2> count ) (prep)? (?P<side2> side ) )? """]),
+                  (?P<count1> count ) prep? (?P<side1> side )
+                ( (?P<count2> count ) prep? (?P<side2> side ) )? """]),
 
         producer(convert_count, [
-            """ (?P<count1> count ) (prep)? (?P<side1> side ) plac_scar
-                ( (?P<count2> count ) (prep)? (?P<side2> side )
+            """ (?P<count1> count ) prep? (?P<side1> side ) plac_scar
+                ( (?P<count2> count ) prep? (?P<side2> side )
                     (plac_scar)? )? """]),
 
         producer(convert_count, [
             """ (?P<side1> side ) (?P<count1> count )
                     (visible | op)? plac_scar
                 ( (?P<side2> side ) (?P<count2> count )
-                    (visible)? (visible | op)? (plac_scar)? )? """]),
+                    (visible)? (visible | op)? plac_scar? )? """]),
 
         producer(convert_count, [
-            """   (?P<count1> count ) (prep)? (?P<side1> side )
-                ( (?P<count2> count ) (prep)? (?P<side2> side ) )?
+            """   (?P<count1> count ) prep? (?P<side1> side )
+                ( (?P<count2> count ) prep? (?P<side2> side ) )?
                 plac_scar """]),
 
         producer(convert_count, [
@@ -123,22 +123,22 @@ PLACENTAL_SCAR_COUNT = Base(
                 ( eq (?P<value> count ) )? """]),
 
         producer(convert_count, [
-            """ (?P<value> count ) (adj)? plac_scar (op)?
+            """ (?P<value> count ) adj? plac_scar op?
                 (
                     (?P<count1> count ) (?P<side1> side )
-                    (op)?
+                    op?
                     (?P<count2> count ) (?P<side2> side )
                 )?
                 """]),
 
         producer(convert_count, [
-            """ (?P<value> count ) (embryo)? plac_scar """]),
+            """ (?P<value> count ) embryo? plac_scar """]),
 
         producer(convert_count, [
-            """ plac_scar (eq)? (?P<count1> count ) (?P<side1> side ) """]),
+            """ plac_scar eq? (?P<count1> count ) (?P<side1> side ) """]),
 
         producer(convert_count, [
-            """ plac_scar (eq)? (?P<value> count ) """]),
+            """ plac_scar eq? (?P<value> count ) """]),
 
         producer(convert_state, """ plac_scar """),
     ],

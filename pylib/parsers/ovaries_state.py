@@ -81,15 +81,14 @@ OVARIES_STATE = Base(
         # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes
         replacer('ovaries', r"""
-            ovary ( ( ( and )? uterus ( horns )? )
-                    | ( and )? fallopian )?
+            ovary ( ( and? uterus horns? ) | and? fallopian )?
             """),
 
         # E.g.: covered in copious fat
-        replacer('coverage', ' covered (word){0,2} fat '),
+        replacer('coverage', ' covered word{0,2} fat '),
 
         # E.g.: +corpus luteum
-        replacer('luteum', ' ( sign )? ( corpus )? (alb | lut) '),
+        replacer('luteum', ' sign? corpus? (alb | lut) '),
 
         # E.g.: active
         # Or:   immature
@@ -112,9 +111,9 @@ OVARIES_STATE = Base(
         producer(double, r"""
             ovaries
                 (?P<side_a> side)
-                    (measurement | count)? (?P<value_a> (word)? luteum)
+                    (measurement | count)? (?P<value_a> word? luteum)
                 (?P<side_b> side)
-                    (measurement | count)? (?P<value_b> (word)? luteum)
+                    (measurement | count)? (?P<value_b> word? luteum)
             """),
 
         # One side may be reported
@@ -133,7 +132,7 @@ OVARIES_STATE = Base(
         # Has the maturity but is possibly missing the size
         producer(
             convert,
-            'ovaries (side)? (?P<value> (word){0,3} (size | state | luteum))'),
+            'ovaries (side)? (?P<value> word{0,3} (size | state | luteum))'),
 
         # E.g.: large ovaries
         producer(convert, '(?P<value> (size | state | count){1,3} ) ovaries'),
@@ -145,19 +144,19 @@ OVARIES_STATE = Base(
         producer(convert, 'ovaries (?P<value> color | texture )'),
 
         # E.g.: +corp. alb both ovaries
-        producer(convert, '(?P<value> luteum) (side)? ovaries'),
+        producer(convert, '(?P<value> luteum) side? ovaries'),
 
         # E.g.: ovaries L +lut
-        producer(convert, 'ovaries (side)? luteum'),
+        producer(convert, 'ovaries side? luteum'),
 
         # E.g.: 4 bodies in L ovary
-        producer(convert, '(?P<value> cyst ) (side)? ovaries'),
+        producer(convert, '(?P<value> cyst ) side? ovaries'),
 
         # E.g.: corpus luteum visible in both ovaries
         producer(
             convert,
             """(?P<value> luteum (state)? )
-                (word | len_units){0,3} (side)? ovaries
+                (word | len_units){0,3} side? ovaries
             """),
     ],
 )

@@ -90,7 +90,7 @@ BODY_MASS = Base(
         # E.g.: body mass: 5lbs, 3-4oz
         producer(
             partial(compound, units=['lbs', 'ozs']),
-            """wt_key (?P<lbs> range ) pounds ( comma )?
+            """wt_key (?P<lbs> range ) pounds comma?
                 (?P<ozs> range ) ounces""",
         ),
 
@@ -98,7 +98,7 @@ BODY_MASS = Base(
         producer(
             partial(compound, units=['lbs', 'ozs']),
             """(?P<ambiguous_key>
-                (?P<lbs> range ) pounds ( comma )?
+                (?P<lbs> range ) pounds comma?
                 (?P<ozs> range ) ounces )""",
         ),
 

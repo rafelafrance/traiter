@@ -41,11 +41,11 @@ PREGNANCY_STATE = Base(
     producers=[
         # E.g.: pregnancy visible
         producer(convert, [
-            """(?P<value> pregnant (joiner)? (none)? probably (quest)? )"""]),
+            """(?P<value> pregnant joiner? none? probably quest? )"""]),
 
         # E.g.: Probably early pregnancy
         producer(convert, [
-            """(?P<value> (none)? (recent | probably)?
-            (stage)? (none | joiner)? pregnant (quest)? )"""]),
+            """(?P<value> none? (recent | probably)?
+            stage? (none | joiner)? pregnant quest? )"""]),
     ],
 )

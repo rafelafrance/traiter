@@ -65,7 +65,7 @@ NIPPLE_COUNT = Base(
 
         replacer('modifier', 'adj visible'.split()),
 
-        replacer('skip', ' number (eq)? integer '),
+        replacer('skip', ' number eq? integer '),
     ],
 
     producers=[
@@ -79,19 +79,19 @@ NIPPLE_COUNT = Base(
         # Eg: 1:2 = 6 mammae
         producer(
             convert,
-            """ nipple (op)?
-                (?P<notation> count (modifier)?
-                    (op)? count (modifier)?
-                    ((eq) (?P<value> count))? ) """),
+            """ nipple op?
+                (?P<notation> count modifier?
+                    op? count modifier?
+                    (eq (?P<value> count))? ) """),
 
         # Eg: 1:2 = 6 mammae
         producer(
             convert,
-            """ (?P<notation> count (modifier)? (op)? count (modifier)?
-                ((eq) (?P<value> count))? ) nipple """),
+            """ (?P<notation> count modifier? op? count modifier?
+                (eq (?P<value> count))? ) nipple """),
 
         # Eg: 6 mammae
-        producer(convert, """ (?P<value> count ) (modifier)? nipple """),
+        producer(convert, """ (?P<value> count ) modifier? nipple """),
 
         # Eg: nipples 5
         producer(convert, """ nipple (?P<value> count ) """),

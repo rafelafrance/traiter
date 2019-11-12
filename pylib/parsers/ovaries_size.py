@@ -81,15 +81,15 @@ OVARY_SIZE = Base(
         # E.g.: left ovary: 4 x 2 mm
         producer(double, """
             (?P<first> side ovary cross )
-            (?P<second> side (ovary)? cross )?"""),
+            (?P<second> side ovary? cross )?"""),
 
         # Has the ovaries marker but is lacking the label
         # E.g.: ovaries left 10x5 mm, right 10x6 mm
         producer(double, """
             ovary
-            (?P<first> (side)? cross )
+            (?P<first> side? cross )
             (comma)?
-            (?P<second> (side)? cross )?"""),
+            (?P<second> side? cross )?"""),
 
         # A typical testes size notation
         # E.g.: reproductive data: ovaries 10x5 mm

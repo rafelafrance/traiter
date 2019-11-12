@@ -83,25 +83,25 @@ TESTES_STATE = Base(
             'size']),
 
         # Simplify the testes length so it can be skipped easily
-        replacer('length', 'cross ( len_units )?'),
+        replacer('length', 'cross len_units?'),
     ],
 
     producers=[
         # A typical testes state notation
         # E.g.: reproductiveData: ts 5x3 fully descended
         producer(convert, [
-            """label ( testes | abbrev )? ( length )?
+            """label ( testes | abbrev )? length?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )"""]),
 
         # E.g.: reproductive data = nonScrotal
         producer(convert, [
-            """label ( length )?
+            """label length?
                 (?P<value> non testes | non scrotal | scrotal )"""]),
 
         # E.g.: ts inguinal
         producer(convert, [
-            """abbrev ( length )?
+            """abbrev length?
                 (?P<value> state | abdominal | non scrotal
                     | scrotal | other)"""]),
 
@@ -119,7 +119,7 @@ TESTES_STATE = Base(
 
         # E.g.: testes 5x4 desc
         producer(convert, [
-            """testes ( length )?
+            """testes length?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
                     | scrotal | other )"""]),
 

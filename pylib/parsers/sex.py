@@ -32,16 +32,16 @@ SEX = Base(
         # E.g.: sex might be female;
         producer(convert, [
             """json_key
-                (?P<value> ( intrinsic | word ){1,2} ( quest )? )
+                (?P<value> ( intrinsic | word ){1,2} quest? )
                 separator"""]),
 
         # E.g.: sex=female?
         # Or:   sex=unknown
         producer(convert, [
-            'json_key (?P<value> ( intrinsic | word ) ( quest )? )']),
+            'json_key (?P<value> ( intrinsic | word ) quest? )']),
 
         # E.g.: male
         # Or:   male?
-        producer(convert, '(?P<value> intrinsic ( quest )? )'),
+        producer(convert, '(?P<value> intrinsic quest? )'),
     ],
 )

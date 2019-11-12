@@ -52,17 +52,17 @@ NIPPLE_STATE = Base(
     producers=[
         producer(
             convert,
-            """(?P<value> (non)?
+            """(?P<value> non?
                 (state_end | much) (state_mid | state_end){0,2} nipple)"""),
 
         producer(
             convert,
-            """(?P<value> (non)? nipple
+            """(?P<value> non? nipple
                 (state_end | much) (state_mid | state_end){0,2} )"""),
 
         producer(
             convert,
-            """(?P<value> nipple (non)?
+            """(?P<value> nipple non?
                 (state_end | much) (state_mid | state_end){0,2} )"""),
     ],
 )

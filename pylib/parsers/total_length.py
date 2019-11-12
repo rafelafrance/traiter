@@ -163,12 +163,12 @@ TOTAL_LENGTH = Base(
 
         # E.g.: total length 4 feet 7 inches
         producer(partial(compound, units=['ft', 'in']), [
-            'key (?P<ft> range) feet ( comma )? (?P<in> range) inches']),
+            'key (?P<ft> range) feet comma? (?P<in> range) inches']),
 
         # E.g.: length 4 ft 7 in
         producer(partial(compound, units=['ft', 'in']), [
             """(?P<ambiguous_key>
-                (?P<ft> range) feet ( comma )? (?P<in> range) inches )""",
+                (?P<ft> range) feet comma? (?P<in> range) inches )""",
         ]),
 
         # A typical total length notation
@@ -177,16 +177,16 @@ TOTAL_LENGTH = Base(
 
         # E.g.: tag 10-20-39 10 - 13 in
         producer(simple, [
-            """shorthand_key ( triple )? range
+            """shorthand_key triple? range
                 (?P<units> metric_len | feet | inches )"""]),
 
         # E.g.: tag 10-20-39 cm 10-12
         producer(simple, [
-            'shorthand_key ( triple )? (?P<units> metric_len ) range']),
+            'shorthand_key triple? (?P<units> metric_len ) range']),
 
         # E.g.: total 10/20/30 10 to 12 cm
         producer(simple, [
-            """key_units_req ( triple )? range
+            """key_units_req triple? range
                 (?P<units> metric_len | feet | inches )"""]),
 
         # E.g.: 10 to 11 inches TL
@@ -195,11 +195,11 @@ TOTAL_LENGTH = Base(
 
         # E.g.: total 10-20-40 10 to 20 inches ToL
         producer(simple, [
-            """ambiguous ( triple )? range
+            """ambiguous triple? range
                 (?P<units> metric_len | feet | inches ) key"""]),
 
         # E.g.: total 10-20-40 10 to 20 ToL
-        producer(simple, 'ambiguous ( triple )? range key'),
+        producer(simple, 'ambiguous triple? range key'),
 
         # E.g.: length 10 to 11 inches
         producer(simple, [
@@ -221,7 +221,7 @@ TOTAL_LENGTH = Base(
         producer(simple, 'key (?P<units> metric_len | feet | inches ) range'),
 
         # E.g.: total length: 10-29-39 10-11
-        producer(simple, 'key ( triple )? range'),
+        producer(simple, 'key triple? range'),
 
         # E.g.: head body length is a whopping 12.4 meters
         producer(simple, [

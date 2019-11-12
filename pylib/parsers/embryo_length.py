@@ -53,20 +53,20 @@ EMBRYO_LENGTH = Base(
 
     replacers=[
         replacer('skip', ' prep word cross '),
-        replacer('measurement', ' (cross_joiner)? cross '),
+        replacer('measurement', ' cross_joiner? cross '),
     ],
 
     producers=[
         producer(convert, [
             # E.g.: crown-rump length=13 mm
-            """ (embryo)? crown_rump (length)?
+            """ embryo? crown_rump length?
                 measurement (?P<units> len_units )? """,
         ]),
 
         producer(convert, [
             # E.g.: 15 mm, crown-rump length
-            """ (embryo)? measurement (?P<units> len_units )?
-                crown_rump (length)? """,
+            """ embryo? measurement (?P<units> len_units )?
+                crown_rump length? """,
         ]),
     ],
 )

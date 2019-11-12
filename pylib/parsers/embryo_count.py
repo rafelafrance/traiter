@@ -90,23 +90,23 @@ EMBRYO_COUNT = Base(
         # Eg: 4 fetuses on left, 1 on right
         producer(convert, [
             """ (?P<count1> count ) embryo prep (?P<side1> side )
-                (?P<count2> count ) (embryo)? (prep)? (?P<side2> side )"""]),
+                (?P<count2> count ) embryo? prep? (?P<side2> side )"""]),
 
         # Eg: 5 emb 2L 3R
         producer(convert, [
-            """ ( (?P<total> count) (size)? )? embryo
+            """ ( (?P<total> count) size? )? embryo
                 (word | len_units | count ){0,3}
                 (?P<count1> count ) (?P<side1> side )
-                ((and)? (?P<count2> count ) (?P<side2> side ))?"""]),
+                (and? (?P<count2> count ) (?P<side2> side ))?"""]),
 
         # Eg: 5 emb 2 males 3 females
         producer(convert, [
-            """ ( (?P<total> count) (size)? )? embryo
+            """ ( (?P<total> count) size? )? embryo
                 (word | len_units | count ){0,3}
                 (?P<count1> count ) (?P<sex1> sex )
-                ((and)? (?P<count2> count ) (?P<sex2> sex ))?"""]),
+                (and? (?P<count2> count ) (?P<sex2> sex ))?"""]),
 
         # Eg: 5 embryos
-        producer(convert, """ (?P<total> count) (size)? embryo """),
+        producer(convert, """ (?P<total> count) size? embryo """),
     ],
 )
