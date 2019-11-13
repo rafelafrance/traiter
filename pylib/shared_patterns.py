@@ -1,5 +1,6 @@
 """Shared token patterns."""
 
+import re
 from pylib.util import ordinal, number_to_words
 from stacked_regex.rule import Rule, fragment
 
@@ -84,6 +85,7 @@ add(fragment('cross', fr"""
         | (?P<units1c> {LEN_UNITS})
         | \b (?! {MASS_UNITS})
     )"""))
+CROSS = SHARED['cross'].pattern
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
@@ -173,6 +175,7 @@ add(fragment('time_units', r'years? | months? | weeks? | days? | hours?'))
 add(fragment('side', r"""
     [/(\[] \s* (?P<side1> [lr] \b ) \s* [)\]]?
     | (?P<side2> both | left | right | lft | rt | [lr] \b ) """))
+SIDE = SHARED['side'].pattern
 
 add(fragment('dimension', r' (?P<dim> length | width ) '))
 
@@ -189,3 +192,18 @@ add(fragment(
 
 # integers, no commas or signs and typically small
 add(fragment('integer', r""" \d+ (?! [%\d\-] ) """))
+
+# Handle 2 cross measurements, one per left/right side
+CROSS_GROUPS = re.compile(
+    r"""( estimated_value | value[12][abc]? | units[12][abc]? | side[12] ) """,
+    re.IGNORECASE | re.VERBOSE)
+CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
+CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
+SIDE_1 = CROSS_GROUPS.sub(r'\1_1', SIDE)
+SIDE_2 = CROSS_GROUPS.sub(r'\1_2', SIDE)
+SIDE_CROSS = fr"""
+    (?P<cross_1> ({SIDE_1})? \s* ({CROSS_1}) )
+    \s* ( [&,] | and )? \s*
+    (?P<cross_2> ({SIDE_2})? \s* ({CROSS_2}) )
+    """
+add(fragment('side_cross', SIDE_CROSS))

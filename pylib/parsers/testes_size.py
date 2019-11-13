@@ -31,13 +31,13 @@ TESTES_SIZE = Base(
         REPRODUCTIVE['non'],
         REPRODUCTIVE['fully'],
         REPRODUCTIVE['partially'],
+        SHARED['side_cross'],
         SHARED['side'],
         SHARED['dim_side'],
         SHARED['dimension'],
         SHARED['cross'],
         SHARED['len_units'],
         REPRODUCTIVE['in'],
-        REPRODUCTIVE['and'],
         REPRODUCTIVE['word'],
         REPRODUCTIVE['sep'],
     ],
@@ -67,34 +67,36 @@ TESTES_SIZE = Base(
     producers=[
         # These patterns contain measurements to both left & right testes
         # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
-        producer(double, [
-            """label ( testes | abbrev | char_key )
-                (?P<first> side cross )
-                (?P<second> side cross )?"""]),
+        producer(
+            double, """label ( testes | abbrev | char_key ) side_cross """),
 
         # As above but without the testes marker:
         # E.g.: reproductive data: left 10x5 mm, right 10x6 mm
-        producer(double, [
-            """label
-                (?P<first> side cross )
-                (?P<second> side cross )?"""]),
+        producer(double, """ label side_cross """),
 
         # Has the testes marker but is lacking the label
         # E.g.: testes left 10x5 mm, right 10x6 mm
-        producer(double, [
-            """( testes | abbrev | char_key )
-                (?P<first> side cross )
-                (?P<second> side cross )?"""]),
+        producer(double, """( testes | abbrev | char_key ) side_cross """),
 
         # A typical testes size notation
         # E.g.: reproductive data: tests 10x5 mm
-        producer(convert, 'label ( testes | abbrev | char_key ) cross'),
+        producer(convert, 'label ( testes | abbrev | char_key ) side_cross'),
 
         # E.g.: reproductive data: left tests 10x5 mm
         producer(convert, 'label side ( testes | abbrev | char_key ) cross'),
 
+        # E.g.: reproductive data=T: L-2x4mm
+        producer(convert, 'label ( testes | abbrev | char_key ) side cross'),
+
+        # E.g.: reproductive data: 10x5 left mm
+        producer(convert, 'label side cross'),
+
         # E.g.: reproductive data: 10x5 mm
         producer(convert, 'label cross'),
+
+        # Has the testes marker but is lacking the label
+        # E.g.: testes left 10x5 mm, right 10x6 mm
+        producer(convert, """( testes | abbrev ) cross """),
 
         # May have a few words between the label and the measurement
         # E.g.: reproductive data=testes not descended - 6 mm

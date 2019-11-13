@@ -35,6 +35,7 @@ OVARY_SIZE = Base(
         REPRODUCTIVE['non'],
         REPRODUCTIVE['fully'],
         REPRODUCTIVE['partially'],
+        SHARED['side_cross'],
         SHARED['side'],
         SHARED['dim_side'],
         SHARED['dimension'],
@@ -66,30 +67,19 @@ OVARY_SIZE = Base(
     producers=[
         # These patterns contain measurements to both left & right ovaries
         # E.g.: reproductive data: ovaries left 10x5 mm, right 10x6 mm
-        producer(double, """
-            label ovary
-            (?P<first> side cross )
-            (?P<second> side cross )?"""),
+        producer(double, """ label ovary side_cross """),
 
         # As above but without the ovaries marker:
         # E.g.: reproductive data: left 10x5 mm, right 10x6 mm
-        producer(double, """
-            label (?P<first> side cross )
-                  (?P<second> side cross )?"""),
+        producer(double, """label side_cross"""),
 
         # Has side before gonad key
         # E.g.: left ovary: 4 x 2 mm
-        producer(double, """
-            (?P<first> side ovary cross )
-            (?P<second> side ovary? cross )?"""),
+        producer(double, """ side_cross """),
 
         # Has the ovaries marker but is lacking the label
         # E.g.: ovaries left 10x5 mm, right 10x6 mm
-        producer(double, """
-            ovary
-            (?P<first> side? cross )
-            (comma)?
-            (?P<second> side? cross )?"""),
+        producer(double, """ ovary side_cross """),
 
         # A typical testes size notation
         # E.g.: reproductive data: ovaries 10x5 mm
@@ -97,6 +87,9 @@ OVARY_SIZE = Base(
 
         # E.g.: reproductive data: left ovaries 10x5 mm
         producer(convert, ' label side ovary cross '),
+
+        # E.g.: left ovaries 10x5 mm
+        producer(convert, ' side ovary cross '),
 
         # E.g.: reproductive data: 10x5 mm
         producer(convert, 'label cross'),

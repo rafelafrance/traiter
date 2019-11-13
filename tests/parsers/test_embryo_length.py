@@ -3,7 +3,7 @@ from pylib.numeric_trait import NumericTrait
 from pylib.parsers.embryo_length import EMBRYO_LENGTH
 
 
-class TestEmbryoCount(unittest.TestCase):
+class TestEmbryoLength(unittest.TestCase):
 
     def test_parse_01(self):
         self.assertEqual(
@@ -116,3 +116,55 @@ class TestEmbryoCount(unittest.TestCase):
             [NumericTrait(
                 value=15, units='mm', units_inferred=False,
                 start=147, end=154)])
+
+    def test_parse_18(self):
+        self.assertEqual(
+            EMBRYO_LENGTH.parse('OCGR pg, 4 embs, 2R, 2L, 12 mm 4 2 2'),
+            [NumericTrait(
+                value=12, units='mm', units_inferred=False,
+                start=11, end=36)])
+
+    def test_parse_19(self):
+        self.assertEqual(
+            EMBRYO_LENGTH.parse('Mammals 7 embs, 3 mm'),
+            [NumericTrait(
+                value=3, units='mm', units_inferred=False,
+                start=10, end=20)])
+
+    def test_parse_20(self):
+        self.assertEqual(
+            EMBRYO_LENGTH.parse('Mammals 3 embs, 24mm'),
+            [NumericTrait(
+                value=24, units='mm', units_inferred=False,
+                start=10, end=20)])
+
+    def test_parse_21(self):
+        self.assertEqual(
+            EMBRYO_LENGTH.parse('3 embs, 2L, 1R, 19 mm, 17 mm, 17 mm'),
+            [
+                NumericTrait(
+                    value=19, units='mm', units_inferred=False,
+                    start=2, end=35),
+                NumericTrait(
+                    value=17, units='mm', units_inferred=False,
+                    start=2, end=35),
+                NumericTrait(
+                    value=17, units='mm', units_inferred=False,
+                    start=2, end=35),
+            ])
+
+    def test_parse_22(self):
+        self.assertEqual(
+            EMBRYO_LENGTH.parse(
+                'Mammals vagina open; mammae tiny; not lactating9 embryos; '
+                'cr-10 ?'),
+            [NumericTrait(
+                value=10, units=None, units_inferred=True,
+                start=58, end=65, uncertain='?')])
+
+    def test_parse_23(self):
+        self.assertEqual(
+            EMBRYO_LENGTH.parse('4 embs: 2(R)&2(L)=9mm '),
+            [NumericTrait(
+                value=9, units='mm', units_inferred=False,
+                start=2, end=21)])

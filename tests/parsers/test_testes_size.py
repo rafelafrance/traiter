@@ -75,9 +75,9 @@ class TestTestesSize(unittest.TestCase):
                 'testis-20mm ; reproductive data=testis-21mm ; '),
             [NumericTrait(
                 value=20, units='mm', units_inferred=False, start=0, end=11),
-             NumericTrait(
-                 value=21, units='mm', units_inferred=False,
-                 start=14, end=43)])
+                NumericTrait(
+                    value=21, units='mm', units_inferred=False,
+                    start=14, end=43)])
 
     def test_parse_11(self):
         self.assertEqual(
@@ -99,9 +99,9 @@ class TestTestesSize(unittest.TestCase):
             [NumericTrait(
                 value=3, units=None, units_inferred=True, side='1',
                 dimension='length', ambiguous_key=True, start=1, end=21),
-             NumericTrait(
-                 value=2, units=None, units_inferred=True, side='2',
-                 dimension='length', ambiguous_key=True, start=25, end=45)])
+                NumericTrait(
+                    value=2, units=None, units_inferred=True, side='2',
+                    dimension='length', ambiguous_key=True, start=25, end=45)])
 
     def test_parse_14(self):
         self.assertEqual(
@@ -109,9 +109,9 @@ class TestTestesSize(unittest.TestCase):
             [NumericTrait(
                 value=12, units='mm', units_inferred=False,
                 ambiguous_key=True, dimension='length', start=1, end=21),
-             NumericTrait(
-                 value=5, units='mm', units_inferred=False,
-                 ambiguous_key=True, dimension='width', start=25, end=43)])
+                NumericTrait(
+                    value=5, units='mm', units_inferred=False,
+                    ambiguous_key=True, dimension='width', start=25, end=43)])
 
     def test_parse_15(self):
         self.assertEqual(
@@ -122,18 +122,18 @@ class TestTestesSize(unittest.TestCase):
                 value=9.1, units='mm', units_inferred=False,
                 ambiguous_key=True, side='left',
                 dimension='width', start=0, end=23),
-             NumericTrait(
-                 value=9.2, units='mm', units_inferred=False,
-                 ambiguous_key=True, side='right',
-                 dimension='width', start=25, end=49),
-             NumericTrait(
-                 value=16.1, units='mm', units_inferred=False,
-                 ambiguous_key=True, side='right',
-                 dimension='length', start=51, end=77),
-             NumericTrait(
-                 value=16.2, units='mm', units_inferred=False,
-                 ambiguous_key=True, side='left',
-                 dimension='length', start=79, end=104)])
+                NumericTrait(
+                    value=9.2, units='mm', units_inferred=False,
+                    ambiguous_key=True, side='right',
+                    dimension='width', start=25, end=49),
+                NumericTrait(
+                    value=16.1, units='mm', units_inferred=False,
+                    ambiguous_key=True, side='right',
+                    dimension='length', start=51, end=77),
+                NumericTrait(
+                    value=16.2, units='mm', units_inferred=False,
+                    ambiguous_key=True, side='left',
+                    dimension='length', start=79, end=104)])
 
     def test_parse_16(self):
         self.assertEqual(
@@ -174,7 +174,9 @@ class TestTestesSize(unittest.TestCase):
     def test_parse_21(self):
         self.assertEqual(
             TESTES_SIZE.parse('adult ; T=9 ; endoparasite '),
-            [])
+            [NumericTrait(
+                value=9, units=None, units_inferred=True, ambiguous_key=True,
+                start=8, end=11)])
 
     def test_parse_22(self):
         self.assertEqual(
@@ -201,8 +203,11 @@ class TestTestesSize(unittest.TestCase):
         self.assertEqual(
             TESTES_SIZE.parse('testes (R) 6 x 1.5 & 5 x 2 mm'),
             [NumericTrait(
-                value=[6, 1.5], units=None, units_inferred=True, side='r',
-                start=0, end=18)])
+                value=[6.0, 1.5], units='mm', units_inferred=False, side='r',
+                start=0, end=29),
+             NumericTrait(
+                value=[5.0, 2.0], units='mm', units_inferred=False, side='l',
+                start=0, end=29)])
 
     def test_parse_26(self):
         self.assertEqual(
@@ -265,9 +270,9 @@ class TestTestesSize(unittest.TestCase):
             [NumericTrait(
                 value=20, units='mm', units_inferred=False, side='r',
                 start=2, end=33),
-             NumericTrait(
-                 value=6, units='mm', units_inferred=False, side='l',
-                 start=2, end=33)])
+                NumericTrait(
+                    value=6, units='mm', units_inferred=False, side='l',
+                    start=2, end=33)])
 
     def test_parse_35(self):
         self.assertEqual(
@@ -275,9 +280,9 @@ class TestTestesSize(unittest.TestCase):
             [NumericTrait(
                 value=[20, 10], units='mm', units_inferred=False, side='r',
                 start=2, end=40),
-             NumericTrait(
-                 value=[6, 4], units='mm', units_inferred=False, side='l',
-                 start=2, end=40)])
+                NumericTrait(
+                    value=[6, 4], units='mm', units_inferred=False, side='l',
+                    start=2, end=40)])
 
     def test_parse_36(self):
         self.assertEqual(

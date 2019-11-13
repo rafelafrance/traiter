@@ -9,51 +9,65 @@ from pylib.numeric_trait import NumericTrait
 
 
 # Used to get compounds traits from a single parse
-TWO_SIDES = fragment(name='two_sides', regexp=f' {SHARED["side"].pattern} ')
-
-# Used to get compounds traits from a single parse
 DOUBLE_CROSS = fragment(
     name='double_cross', regexp=f' {SHARED["cross"].pattern} ')
+
+SIDES = {
+    'l': 'r', 'r': 'l',
+    'left': 'right', 'right': 'left',
+    'lft': 'rt', 'rt': 'lft'}
 
 
 def double(token):
     """Convert a single token into multiple (two) parsers."""
-    if not token.groups.get('second'):
-        return convert(token)
-
-    value2 = [k for k in token.groups.keys() if k.startswith('value2')]
-
     trait1 = NumericTrait(start=token.start, end=token.end)
     token1 = Token(DOUBLE_CROSS, groups=copy(token.groups))
-    token1.groups['value1'] = token.groups['value1'][0]
-    if value2:
-        token1.groups[value2[0]] = token.groups[value2[0]][0]
-    trait1.cross_value(token1)
-    trait1.is_value_in_token('side1', token, 'side')
-    if 'side' in token.groups:
-        setattr(
-            trait1, 'side', token.groups['side'][0].lower().strip(punctuation))
 
     trait2 = NumericTrait(start=token.start, end=token.end)
     token2 = Token(DOUBLE_CROSS, groups=copy(token.groups))
-    token2.groups['value1'] = token.groups['value1'][1]
-    if value2:
-        token2.groups[value2[0]] = token.groups[value2[0]][1]
-    trait2.cross_value(token2)
-    if 'side' in token.groups:
-        setattr(
-            trait2, 'side', token.groups['side'][1].lower().strip(punctuation))
+
+    values1 = trait1.all_values(
+        token1, ['value1_1', 'value2a_1', 'value2b_1', 'value2c_1'])
+    values2 = trait2.all_values(
+        token2, ['value1_2', 'value2a_2', 'value2b_2', 'value2c_2'])
+
+    units1 = trait1.first_value(
+        token1, ['units1a_1', 'units1b_1', 'units1c_1', 'units2_1'])
+    units2 = trait2.first_value(
+        token2, ['units1a_2', 'units1b_2', 'units1c_2', 'units2_2'])
+
+    side1 = trait1.first_value(token1, ['side1_1', 'side2_1'])
+    side2 = trait2.first_value(token2, ['side1_2', 'side2_2'])
+    side1 = side1.lower().strip(punctuation) if side1 else None
+    side2 = side2.lower().strip(punctuation) if side2 else None
+    side1 = SIDES.get(side2) if not side1 else side1
+    side2 = SIDES.get(side1) if not side2 else side2
+
+    trait1.float_value(*values1)
+    trait2.float_value(*values2)
+
+    if units1 and units2:
+        trait1.convert_value(units1)
+        trait2.convert_value(units2)
+    elif units1 and not units2:
+        trait1.convert_value(units1)
+        trait2.convert_value(units1)
+    elif units2 and not units1:
+        trait1.convert_value(units2)
+        trait2.convert_value(units2)
+
+    if side1:
+        setattr(trait1, 'side', side1)
+    if side2:
+        setattr(trait2, 'side', side2)
 
     return [trait1, trait2]
 
 
 def convert(token):
     """Convert parsed token into a trait product."""
-    key = [k for k in token.groups.keys() if k.startswith('value2')]
-    value2 = token.groups[key[0]] if key else None
-    if token.groups.get('ambiguous_char') and not value2:
-        return None
     trait = NumericTrait(start=token.start, end=token.end)
+
     trait.cross_value(token)
     trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
     trait.is_flag_in_token('ambiguous_key', token)

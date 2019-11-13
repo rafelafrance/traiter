@@ -30,18 +30,20 @@ class NumericTrait(Trait):
         """Set the units and convert_value the value."""
         if not units:
             setattr(self, 'units_inferred', True)
+            setattr(self, 'units', None)
         else:
             setattr(self, 'units_inferred', False)
-            if isinstance(units, list):
+            if isinstance(units, list) and isinstance(self.values, list):
                 units = [x.lower() for x in units]
                 setattr(
                     self,
                     'value',
                     [convert(v, u) for v, u in zip(self.value, units)])
             else:
+                units = units[0] if isinstance(units, list) else units
                 units = units.lower()
                 setattr(self, 'value', convert(self.value, units))
-        setattr(self, 'units', units)
+            setattr(self, 'units', units)
 
     @staticmethod
     def to_float(value):
@@ -93,21 +95,28 @@ class NumericTrait(Trait):
 
     def cross_value(self, token):
         """Handle a value like 5 cm x 21 mm."""
-        value1 = token.groups.get('value1')
+        values = self.all_values(
+            token, ['value1', 'value2a', 'value2b', 'value2c'])
+        self.float_value(*values)
 
-        key = [k for k in token.groups.keys() if k.startswith('value2')]
-        value2 = token.groups[key[0]] if key else None
-
-        self.float_value(value1, value2)
-
-        units = token.groups.get('units')
-        key = [k for k in token.groups.keys() if k.startswith('units1')]
-        units = token.groups[key[0]] if key else units
-
-        units2 = token.groups.get('units2')
-
-        units = [units, units2] if units2 and units != units2 else units
+        units = self.all_values(
+            token, ['units', 'units1a', 'units1b', 'units1c', 'units2'])
         self.convert_value(units)
+
+    @staticmethod
+    def all_values(token1, keys):
+        """Get all the values into a single list."""
+        values = []
+        for key in keys:
+            if token1.groups.get(key):
+                value = token1.groups[key]
+                values += value if isinstance(value, list) else [value]
+        return values
+
+    def first_value(self, token, keys):
+        """Rake values and return the first one if there is any."""
+        values = self.all_values(token, keys)
+        return values[0] if values else None
 
     def as_key(self):
         """Do the parses describe the same trait."""

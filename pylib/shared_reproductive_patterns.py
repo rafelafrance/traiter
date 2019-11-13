@@ -129,7 +129,7 @@ add(fragment('nipple', r""" ( \b
 
 add(fragment('embryo', r"""
     embryonic | embryos? | embryps? | embroys | embs? | embrs?
-    | fetuses | fetus | foeti"""))
+    | fetuses | fetus | foeti """))
 
 # Spellings of placental scar
 add(fragment('plac_scar', r"""
