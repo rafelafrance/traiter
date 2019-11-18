@@ -3,7 +3,7 @@
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric_trait import NumericTrait
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
 
 
@@ -38,12 +38,12 @@ def typed(token):
 NIPPLE_COUNT = Base(
     name=__name__.split('.')[-1],
     scanners=[
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
 
         keyword('id', r' \d+-\d+ '),
 
         REPRODUCTIVE['nipple'],
-        SHARED['integer'],
+        SCANNER['integer'],
         REPRODUCTIVE['visible'],
         REPRODUCTIVE['none'],
         REPRODUCTIVE['op'],

@@ -5,7 +5,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.parsers.numeric import fraction, simple
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 
 
 def fix_up(trait, text):
@@ -17,7 +17,7 @@ def fix_up(trait, text):
 HIND_FOOT_LENGTH = Base(
     name=__name__.split('.')[-1],
     scanners=[
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: HindFootLengthInMillimeters
         keyword(
@@ -32,20 +32,20 @@ HIND_FOOT_LENGTH = Base(
             'hfl | hf']),
 
         # Units
-        SHARED['len_units'],
+        SCANNER['len_units'],
 
         # Shorthand notation
-        SHARED['shorthand_key'],
-        SHARED['shorthand'],
+        SCANNER['shorthand_key'],
+        SCANNER['shorthand'],
 
         # Fractional numbers, like: 9/16
-        SHARED['fraction'],
+        SCANNER['fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        SHARED['range'],
+        SCANNER['range'],
 
         # Sometimes the last number is missing in the shorthand notation
-        SHARED['triple'],
+        SCANNER['triple'],
 
         # We allow random words in some situations
         keyword('word', r' ( [a-z] \w* ) '),

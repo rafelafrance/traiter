@@ -2,7 +2,7 @@
 
 from pylib.stacked_regex.rule import fragment, producer, replacer
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.parsers.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 
@@ -35,12 +35,12 @@ OVARY_SIZE = Base(
         REPRODUCTIVE['non'],
         REPRODUCTIVE['fully'],
         REPRODUCTIVE['partially'],
-        SHARED['side_cross'],
-        SHARED['side'],
-        SHARED['dim_side'],
-        SHARED['dimension'],
-        SHARED['cross'],
-        SHARED['len_units'],
+        SCANNER['side_cross'],
+        SCANNER['side'],
+        SCANNER['dim_side'],
+        SCANNER['dimension'],
+        SCANNER['cross'],
+        SCANNER['len_units'],
         REPRODUCTIVE['in'],
         REPRODUCTIVE['and'],
         REPRODUCTIVE['word'],

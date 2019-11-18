@@ -4,13 +4,13 @@ from string import punctuation
 from copy import copy
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import fragment
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.numeric_trait import NumericTrait
 
 
 # Used to get compounds traits from a single parse
 DOUBLE_CROSS = fragment(
-    name='double_cross', regexp=f' {SHARED["cross"].pattern} ')
+    name='double_cross', regexp=f' {SCANNER["cross"].pattern} ')
 
 SIDES = {
     'l': 'r', 'r': 'l',

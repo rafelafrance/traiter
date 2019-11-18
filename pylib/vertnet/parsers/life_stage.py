@@ -2,10 +2,10 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 
 
-TIME_OPTIONS = SHARED['time_units'].pattern
+TIME_OPTIONS = SCANNER['time_units'].pattern
 
 LIFE_STAGE = Base(
     name=__name__.split('.')[-1],
@@ -57,9 +57,9 @@ LIFE_STAGE = Base(
         fragment('separator', r' [;,"?] | $ '),
 
         # For life stages with numbers as words in them
-        SHARED['ordinals'],
+        SCANNER['ordinals'],
 
-        SHARED['time_units'],
+        SCANNER['time_units'],
 
         fragment('after', 'after'),
         fragment('hatching', 'hatching'),

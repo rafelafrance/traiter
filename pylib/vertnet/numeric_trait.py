@@ -4,7 +4,7 @@ import re
 from collections import namedtuple
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.convert_units import convert
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 
 
 ParseKey = namedtuple(
@@ -84,7 +84,7 @@ class NumericTrait(Trait):
         setattr(self, 'units', units)
         big = self.to_float(values[0])
         big = convert(big, units[0])
-        range_joiner = SHARED['range_joiner'].pattern
+        range_joiner = SCANNER['range_joiner'].pattern
         smalls = re.split(range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         setattr(self, 'value', [big + convert(x, units[1]) for x in smalls])

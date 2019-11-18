@@ -5,7 +5,7 @@ from pylib.stacked_regex.token import forget
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.numeric import fix_up_inches
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
 
 
@@ -48,7 +48,7 @@ EMBRYO_LENGTH = Base(
     fix_up=fix_up,
 
     scanners=[
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
 
         REPRODUCTIVE['embryo'],
 
@@ -63,10 +63,10 @@ EMBRYO_LENGTH = Base(
 
         keyword('prep', ' of from '.split()),
 
-        SHARED['len_units'],
+        SCANNER['len_units'],
 
-        SHARED['cross'],
-        fragment('cross_joiner', SHARED['cross_joiner'].pattern),
+        SCANNER['cross'],
+        fragment('cross_joiner', SCANNER['cross_joiner'].pattern),
         fragment('other', r' \( \s* \d+ \s* \w+ \s* \) '),
 
         keyword('count_side', r' \d+ \s? ( l[ft]? | rt? ) '),

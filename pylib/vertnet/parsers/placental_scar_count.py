@@ -3,7 +3,7 @@
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
 
 
@@ -47,9 +47,9 @@ def convert_state(token):
 PLACENTAL_SCAR_COUNT = Base(
     name=__name__.split('.')[-1],
     scanners=[
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
         REPRODUCTIVE['plac_scar'],
-        SHARED['integer'],
+        SCANNER['integer'],
         REPRODUCTIVE['side'],
         REPRODUCTIVE['none'],
         REPRODUCTIVE['op'],

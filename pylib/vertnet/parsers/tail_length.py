@@ -6,7 +6,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.parsers.numeric import simple, fraction
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 import pylib.vertnet.util as util
 
 
@@ -54,7 +54,7 @@ TAIL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     scanners=[
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
         keyword('key_with_units', r"""
@@ -74,20 +74,20 @@ TAIL_LENGTH = Base(
             'tal']),
 
         # Units
-        SHARED['len_units'],
+        SCANNER['len_units'],
 
         # Shorthand notation
-        SHARED['shorthand_key'],
-        SHARED['shorthand'],
+        SCANNER['shorthand_key'],
+        SCANNER['shorthand'],
 
         # Fractional numbers, like: 9/16
-        SHARED['fraction'],
+        SCANNER['fraction'],
 
         # Possible pairs of numbers like: "10 - 20" or just "10"
-        SHARED['range'],
+        SCANNER['range'],
 
         # Sometimes the last number is missing in the shorthand notation
-        SHARED['triple'],
+        SCANNER['triple'],
 
         # We allow random words in some situations
         keyword('word', r' ( [a-z] \w* ) '),

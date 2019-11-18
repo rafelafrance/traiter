@@ -6,7 +6,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import simple, fraction, shorthand_length
 from pylib.vertnet.parsers.numeric import numeric_fix_ups
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.util import FLAGS
 
 
@@ -60,7 +60,7 @@ EAR_LENGTH = Base(
 
     scanners=[
 
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
         keyword('key_with_units', r"""
@@ -90,17 +90,17 @@ EAR_LENGTH = Base(
         ]),
 
         # Units
-        SHARED['len_units'],
+        SCANNER['len_units'],
 
         # Fractional numbers, like: 9/16
-        SHARED['fraction'],
+        SCANNER['fraction'],
 
         # Shorthand notation
-        SHARED['shorthand_key'],
-        SHARED['shorthand'],
+        SCANNER['shorthand_key'],
+        SCANNER['shorthand'],
 
         # Possible ranges of numbers like: "10 - 20" or just "10"
-        SHARED['range'],
+        SCANNER['range'],
 
         # We allow random words in some situations
         keyword('word', r' ( [a-z] \w* ) '),

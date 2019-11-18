@@ -30,12 +30,7 @@ class Base(stacked.Parser):  # pylint: disable=too-few-public-methods
         self.fix_up = fix_up if fix_up else fix_up_nop
 
     def parse(self, text, field=None):
-        """
-        Find the traits in the text.
-
-        We get the trait list from the StackedRegex engine & then fix them up
-        afterwards.
-        """
+        """Find the traits in the text. """
         traits = []
 
         tokens = super().parse(text)

@@ -3,7 +3,7 @@
 from pylib.stacked_regex.rule import keyword, producer, replacer
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
 
 
@@ -60,8 +60,8 @@ TESTES_STATE = Base(
         REPRODUCTIVE['other'],
 
         # We will skip over testes size measurements
-        SHARED['cross'],
-        SHARED['len_units'],
+        SCANNER['cross'],
+        SCANNER['len_units'],
 
         REPRODUCTIVE['and'],
 

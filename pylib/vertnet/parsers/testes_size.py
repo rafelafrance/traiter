@@ -2,7 +2,7 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.parsers.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 
@@ -24,19 +24,19 @@ TESTES_SIZE = Base(
         REPRODUCTIVE['size'],
         REPRODUCTIVE['other'],
 
-        SHARED['uuid'],  # UUIDs cause problems with numeric traits
+        SCANNER['uuid'],  # UUIDs cause problems with numeric traits
 
         REPRODUCTIVE['label'],
         REPRODUCTIVE['ambiguous_key'],
         REPRODUCTIVE['non'],
         REPRODUCTIVE['fully'],
         REPRODUCTIVE['partially'],
-        SHARED['side_cross'],
-        SHARED['side'],
-        SHARED['dim_side'],
-        SHARED['dimension'],
-        SHARED['cross'],
-        SHARED['len_units'],
+        SCANNER['side_cross'],
+        SCANNER['side'],
+        SCANNER['dim_side'],
+        SCANNER['dimension'],
+        SCANNER['cross'],
+        SCANNER['len_units'],
         REPRODUCTIVE['in'],
         REPRODUCTIVE['word'],
         REPRODUCTIVE['sep'],

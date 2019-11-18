@@ -1,21 +1,9 @@
 """Shared plant parser logic."""
 
 import re
-from pylib.stacked_regex.rule import fragment, keyword, replacer
+from pylib.stacked_regex.rule import replacer
+from pylib.shared.patterns import add_frag, add_key, SCANNER
 import pylib.efloras.util as util
-
-
-SCANNER = {}
-
-
-def add_frag(name: str, regexp: str) -> None:
-    """Add a rule to SCANNER."""
-    SCANNER[name] = fragment(name, regexp)
-
-
-def add_key(name: str, regexp: str) -> None:
-    """Add a rule to SCANNER."""
-    SCANNER[name] = keyword(name, regexp)
 
 
 SEX = 'staminate | pistillate'
@@ -58,7 +46,7 @@ add_key('stigma', 'stigmas?')
 add_key('petal', r' petals? ')
 add_key('corolla', r' corollas? ')
 
-add_key('shape_starter', r"""
+add_key('shape_starter', """
     broadly
     deeply depressed 
     long

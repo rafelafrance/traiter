@@ -5,7 +5,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import compound, simple
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 
 
 def shorthand(token):
@@ -24,7 +24,7 @@ def shorthand(token):
 BODY_MASS = Base(
     name=__name__.split('.')[-1],
     scanners=[
-        SHARED['uuid'],  # UUIDs cause problems with numbers
+        SCANNER['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
         keyword('key_with_units', r"""
@@ -44,18 +44,18 @@ BODY_MASS = Base(
         fragment('body', 'body'),
 
         # Units
-        SHARED['len_units'],
-        SHARED['metric_mass'],
-        SHARED['pounds'],
-        SHARED['ounces'],
+        SCANNER['len_units'],
+        SCANNER['metric_mass'],
+        SCANNER['pounds'],
+        SCANNER['ounces'],
 
         # Shorthand notation
-        SHARED['shorthand_key'],
-        SHARED['shorthand'],
+        SCANNER['shorthand_key'],
+        SCANNER['shorthand'],
 
         # Possible range of numbers like: 10 - 20
         # Or just: 10
-        SHARED['range'],
+        SCANNER['range'],
 
         # These indicate that the mass is NOT a body mass
         keyword('other_wt', r"""

@@ -4,7 +4,7 @@ import re
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SHARED
+from pylib.vertnet.shared_patterns import SCANNER
 from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
 
 
@@ -59,14 +59,14 @@ OVARIES_STATE = Base(
         REPRODUCTIVE['corpus'],
         REPRODUCTIVE['alb'],
         REPRODUCTIVE['nipple'],
-        SHARED['side'],
-        SHARED['cyst'],
+        SCANNER['side'],
+        SCANNER['cyst'],
         REPRODUCTIVE['color'],
         REPRODUCTIVE['texture'],
         REPRODUCTIVE['sign'],
         REPRODUCTIVE['and'],
-        SHARED['cross'],
-        SHARED['len_units'],
+        SCANNER['cross'],
+        SCANNER['len_units'],
 
         # Skip words
         keyword('skip', ' womb '),
