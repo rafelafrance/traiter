@@ -1,0 +1,56 @@
+body, table {
+  margin: 40px;
+}
+
+h1 > span {
+  font-size: 20px;
+  float: right;
+  margin-right: 12px;
+}
+
+h2 {
+  margin-left: 40px;
+}
+
+.c1 { background: rgba(0, 255, 0, 35%); }
+.c2 { background: rgba(0, 0, 255, 35%); }
+.c3 { background: rgba(255, 0, 0, 35%); }
+.c4 { background: rgba(255, 255, 0, 35%); }
+.c5 { background: rgba(255, 0, 255, 35%); }
+.c6 { background: rgba(0, 255, 255, 35%); }
+.c7 { background: rgba(255, 128, 128, 35%); }
+.c8 { background: rgba(0, 0, 0, 35%); }
+.bold { font-weight: bold; }
+
+table {
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #999;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.pager-container {
+  margin: 40px;
+}
+
+.pager-container label {
+  margin-left: 8px;
+}
+
+.pager-container .max-page {
+  margin-right: 8px;
+}
+
+.pager {
+  min-width: 80px;
+  width: 80px;
+  text-align: center;
+  font-size: 20px;
+}
+
+.text {
+  min-width: 340px;
+}

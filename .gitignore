@@ -18,24 +18,14 @@ __pycache__
 
 # docs
 docs/old/
+admin/
 
 # data
 output/
 !output/.gitkeep
 
-data/external/
-!data/external/.gitkeep
-
-data/interim/*
-!data/interim/.gitkeep
-
-data/processed/*
-!data/processed/.gitkeep
-
-data/raw/*
-!data/raw/.gitkeep
-
-data/old/
+data/
+!data/.gitkeep
 
 # Temp files
 temp/
@@ -54,7 +44,6 @@ junk*
 # Other code
 args/
 src/
-julia/
 traiter-gui*/
 flex-bison/
 haskell/
