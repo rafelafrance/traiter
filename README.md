@@ -31,29 +31,95 @@ Values from controlled vocabularies are also extracted.
 
 ## Parsing strategy
 
-We are using the stacked-regex module to do most of the parsing. This module returns a list of putative traits. There may be ambiguity in some trait parses. To fix this we perform a postprocessing step. This is nothing more than applying heuristics on the traits and their surrounding context to resolve them. Here are a few issues that are resolved in postprocessing:
+This implementation uses a technique that I call **"Stacked Regular Expressions"**. The concept is very simple, we build tokens in one step and in the next two steps we use those tokens to reduce combinations to other tokens or productions.
 
-- Add missing units
-- Not assigning inappropriate traits like assigning ovary traits to males or testes traits to females
-- Determine if a `"` character is an abbreviation for inches or a quote character.
-- We also have a situations where the same abbreviation is used for different traits. For instance `T` can indicate either a testes measurement or a tail length measurement. 
+1. Tokenize the text.
+2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
+3. Convert sequences of tokens into the final productions.
+4. Postprocessing of the extracted information is performed by the caller.
 
-## List of traits extracted
-**Note: This list is currently biased towards vertebrate (mostly mammals) traits.**
-- Total length (aka snout vent length, fork length, etc.)
-- Tail Length
-- Hind foot Length
-- Ear Length
-- Body body mass
-- Life stage
-- Sex
-- Testes state & size
-- Ovaries state & size
-- Pregnancy state
-- Embryo count & length
-- Nipple state & count
-- Lactation state
-- Placental scar count
+Note that I am trying to extract data from patterns of text and not parse a formal language. Most importantly, I don't need to worry about recursive structures. Pattern recognition is a common technique in **Natural Language Processing, Information Extraction**.
+
+Another point to note, is that we want to parse gigabytes (or terabytes) of data in a "reasonable" amount of time. So speed may not be the primary concern but having fast turnaround is still important. The development of parsers that use this module tends to be iterative.
+
+#### 1. Tokenize the text
+This step is analogous to the method used in python's `re` module, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
+
+**All regular expressions are verbose and ignore case.**
+
+The following regular expressions will return a sequence of tokens with the name as one of (animal, color, etc.) and what the regular expression matches as the value of the token. 
+
+```python
+keyword('animal', r' dogs? | cats? ')
+keyword('color', r' brown | black | white | tan | gr [ae] y')
+keyword('age', r' adult | puppy | younger | older ')
+keyword('fur', r' fur | hair ' )
+fragment('and', r' [&] | \b and \b ')
+```
+
+`keyword` and `fragment` are methods for adding token regular expressions to the parser. The `keyword` surrounds a pattern with `\b` word-separator character class and the `fragment` method does not.
+
+Tokens are scanned in order so if two tokens would read the same sequence of characters the first one wins. This can be very useful when you have pattern conflicts.
+
+Given these rules and the following text: `The specimen is an older dog with tan and gray fur,` Will produce the following tokens:
+- {age: older}
+- {animal: dog}
+- {color: tan}
+- {and: and}
+- {color: gray}
+
+Notice that there are no tokens for any of the spaces, any of the words "The specimen is a", or the final `,` comma. We have removed the "noise". This turns out to be very helpful with simplifying the parsers. 
+
+#### 2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
+
+Use regular expressions on the tokens to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine. These are regular expressions just like any other they're just matching on the tokens instead of on raw text.
+
+```python
+replacer('graying', ' color and color ')
+```
+
+Continuing the example above the three tokens:
+- {color: tan}
+- {and: and}
+- {color: gray}
+
+Are replaced with the single token:
+- {graying: 'tan and gray'}
+
+Note that this rule will match any pair of colors linked by the word "and". Also note that the original information is preserved. So the new "graying" token also has the color list of `["tan", "gray"]`.
+ 
+#### 3. Convert sequences of tokens into the final productions
+Use regular expressions to find patterns of tokens that are then converted into traits. This is a single pass.
+
+Here is a rule for recognizing fur color.
+
+```python
+def fur_color(token):
+    # Process the token for fur color.
+
+producer(fur_color, r' ( color | mixed_color ) fur ')
+```
+
+Keeping with the example above we get the following information:
+- {fur_color: 'tan and gray fur'}
+
+ Combined token data is preserved just like it is in step 2. We will have the fur_color data but also the color list of `["tan", "gray"]`.
+
+#### The domain specific language.
+
+Token names are just regular expression group names and follow the same rules. All rules are case insensitive and use the verbose regular expression syntax.
+
+The replacers and producers (steps 2 & 3 not in step 1). Use a simple domain specific language based on regular expressions. In fact, they are just slightly modified regular expressions. The only conceptual difference is that a token in a replacer or producer regular expression can be treated as if it is a single character. So you can do things like:
+```python
+keyword('modifier', 'dark | light')
+replacer('color_phrase', ' modifier? color ')
+```
+The "modifier" token is treated as a single unit. But also note that you still have to group multiple tokens if you want to do something like:
+```python
+keyword('modifier', 'dark | light')
+replacer('color_phrase', ' modifier? ( color and )? color ')
+```
+Here "color and" is two tokens and must be grouped as you would have to group letters in a normal regular expression.
 
 ## Install
 
