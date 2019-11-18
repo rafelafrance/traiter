@@ -1,27 +1,4 @@
-"""
-Extract information for further analysis.
-
-All steps use regular expressions. Step 1 uses them on raw text like any
-other regular expression but the other two steps use them on the token
-stream. The regular expressions on the token stream look and behave just
-like normal regular expressions but they are adjusted to work on tokens &
-not text. I.e. steps 2 & 3 use a domain specific language (DSL) for the
-token-level regular expressions.
-
-This is a 3-step process:
-
-1) Replace text with tokens. We use regular expressions to create a token
-   stream from the raw text. During this process, any text that is not
-   captured by a token regex is removed from the token stream, i.e. noise
-   is removed from the text.
-
-2) Replace tokens with other tokens. Use a DSL to capture sets of tokens that
-   may be combined into a single token. This simplification step is often
-   repeated so simplifications may be built up step-wise.
-
-3) Replace tokens with the final tokens. Everything except the final tokens are
-   removed. This final stream of tokens is what the client code processes.
-"""
+"""Extract information for further analysis."""
 
 from dataclasses import dataclass, field
 from collections import deque
@@ -40,16 +17,14 @@ class Parser:
     producers: Rules = field(default_factory=list)
 
     def parse(self, text: str) -> Tokens:
-        """
-        Extract information from the text.
-
-        This is the 3-step process outlined above.
-        """
+        """Extract information from the text."""
         tokens = scan(self.scanners, text)
         again = bool(self.replacers)
         while again:
             tokens, again = replace(self.replacers, tokens, text)
-        return produce(self.producers, tokens, text)
+        if self.producers:
+            tokens = produce(self.producers, tokens, text)
+        return tokens
 
 
 def scan(rules: Rules, text: str) -> Tokens:

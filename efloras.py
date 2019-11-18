@@ -7,9 +7,9 @@ import argparse
 import textwrap
 import pylib.efloras.util as util
 import pylib.efloras.trait_groups as tg
-from pylib.writers.html_writer import html_writer
-from pylib.writers.csv_writer import csv_writer
-from pylib.readers.efloras_reader import efloras_reader
+from pylib.efloras.writers.html_writer import html_writer
+from pylib.efloras.writers.csv_writer import csv_writer
+from pylib.efloras.readers.efloras_reader import efloras_reader
 
 
 INPUT_FORMATS = {

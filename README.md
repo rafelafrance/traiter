@@ -36,17 +36,17 @@ This implementation uses a technique that I call **"Stacked Regular Expressions"
 1. Tokenize the text.
 2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
 3. Convert sequences of tokens into the final productions.
-4. Postprocessing of the extracted information is performed by the caller.
+* Postprocessing of the extracted information is performed by the caller.
+
+All steps use regular expressions. Step 1 uses them on raw text like any other regular expression but the other two steps use them on the token stream. The regular expressions on the token stream look and behave just like normal regular expressions but they are adjusted to work on tokens & not text. I.e. steps 2 & 3 use a domain specific language (DSL) for the token-level regular expressions.
 
 Note that I am trying to extract data from patterns of text and not parse a formal language. Most importantly, I don't need to worry about recursive structures. Pattern recognition is a common technique in **Natural Language Processing, Information Extraction**.
 
 Another point to note, is that we want to parse gigabytes (or terabytes) of data in a "reasonable" amount of time. So speed may not be the primary concern but having fast turnaround is still important. The development of parsers that use this module tends to be iterative.
 
 #### 1. Tokenize the text
-This step is analogous to the method used in python's `re` module, [Writing a Tokenizer](https://docs.python.org/3/library/re.html#writing-a-tokenizer). It's a text simplification step that makes looking for patterns much easier.
-
-**All regular expressions are verbose and ignore case.**
-
+Replace text with tokens. We use regular expressions to create a token stream from the raw text. During this process, any text that is not captured by a token regex is removed from the token stream, i.e. noise is removed from the text.
+   
 The following regular expressions will return a sequence of tokens with the name as one of (animal, color, etc.) and what the regular expression matches as the value of the token. 
 
 ```python
@@ -72,7 +72,7 @@ Notice that there are no tokens for any of the spaces, any of the words "The spe
 
 #### 2. (Optional) Replace sequences of tokens to simplify the token stream. Repeat this step as many times as needed.
 
-Use regular expressions on the tokens to combine groups of tokens into a single token. Repeat this step until there is nothing left to combine. These are regular expressions just like any other they're just matching on the tokens instead of on raw text.
+Replace tokens with other tokens. Use a DSL to capture sets of tokens that may be combined into a single token. This simplification step is often repeated so simplifications may be built up step-wise.
 
 ```python
 replacer('graying', ' color and color ')
@@ -89,7 +89,7 @@ Are replaced with the single token:
 Note that this rule will match any pair of colors linked by the word "and". Also note that the original information is preserved. So the new "graying" token also has the color list of `["tan", "gray"]`.
  
 #### 3. Convert sequences of tokens into the final productions
-Use regular expressions to find patterns of tokens that are then converted into traits. This is a single pass.
+Replace tokens with the final tokens. Everything except the final tokens are removed. This final stream of tokens is what the client code processes.
 
 Here is a rule for recognizing fur color.
 
@@ -128,7 +128,7 @@ You will need to have Python3 installed, as well as pip, a package manager for p
 git clone https://github.com/rafelafrance/traiter.git
 python3 -m pip install --user --requirement traiter/requirements.txt
 ```
-
+  
 ## Run
 ```
 python3 traiter.py ... TODO ...
