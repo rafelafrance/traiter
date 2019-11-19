@@ -1,6 +1,6 @@
 """Shared token patterns."""
 
-# import re
+# import regex
 import pylib.shared.patterns as patterns
 from pylib.shared.patterns import add_frag  # , add_rep
 from pylib.vertnet.util import ordinal, number_to_words
@@ -104,10 +104,10 @@ add_frag(
         ( \s+ ( on | in ))?""")
 
 # Handle 2 cross measurements, one per left/right side
-# CROSS_GROUPS = re.compile(
+# CROSS_GROUPS = regex.compile(
 #     r"""( estimated_value | value[12][abc]?
 #           | units[12][abc]? | side[12] ) """,
-#     re.IGNORECASE | re.VERBOSE)
+#     regex.IGNORECASE | regex.VERBOSE)
 # CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
 # CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
 # SIDE_1 = CROSS_GROUPS.sub(r'\1_1', SIDE)

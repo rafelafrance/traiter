@@ -1,6 +1,6 @@
 """Shared plant parser logic."""
 
-import re
+import regex
 from pylib.stacked_regex.rule import replacer
 from pylib.shared.patterns import add_frag, add_key, SCANNER
 import pylib.efloras.util as util
@@ -97,9 +97,9 @@ CROSS_JOINER = r' x | × '
 add_frag('cross_joiner', CROSS_JOINER)
 
 # Rename the groups so we can easily extract them in the parsers
-RANGE_GROUPS = re.compile(
+RANGE_GROUPS = regex.compile(
     r""" ( min | low | high | max ) """,
-    re.IGNORECASE | re.VERBOSE)
+    regex.IGNORECASE | regex.VERBOSE)
 LENGTH_RANGE = RANGE_GROUPS.sub(r'\1_length', RANGE)
 WIDTH_RANGE = RANGE_GROUPS.sub(r'\1_width', RANGE)
 
@@ -113,8 +113,8 @@ CROSS = fr"""
     """
 add_frag('cross', CROSS)
 
-CROSS_GROUPS = re.compile(
-    r""" (length | width) """, re.IGNORECASE | re.VERBOSE)
+CROSS_GROUPS = regex.compile(
+    r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
 CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
 CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
 SEX_CROSS = fr"""
@@ -145,7 +145,7 @@ add_frag('cross_dim', CROSS_DIM)
 
 def split_keywords(value):
     """Convert a keyword string into separate keywords."""
-    return re.split(fr"""
+    return regex.split(fr"""
         \s* \b (?:{CONJ} | {PREP}) \b \s* [,]? \s* | \s* [,\[\]] \s*
         """, value, flags=util.FLAGS)
 

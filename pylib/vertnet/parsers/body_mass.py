@@ -1,11 +1,10 @@
 """Parse body mass notations."""
 
-from functools import partial
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.parsers.numeric import compound, simple
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.parsers.numeric import simple
+from pylib.vertnet.shared_patterns import RULE
 
 
 def shorthand(token):
@@ -21,10 +20,19 @@ def shorthand(token):
     return trait
 
 
+def compound(token):
+    """"""
+    units = token.groups.get('units')
+    if len(units) != 2:
+        return simple(token)
+    print(token)
+    return simple(token)
+
+
 BODY_MASS = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
         keyword('key_with_units', r"""
@@ -43,19 +51,13 @@ BODY_MASS = Base(
         fragment('mass', 'mass'),
         fragment('body', 'body'),
 
-        # Units
-        SCANNER['len_units'],
-        SCANNER['metric_mass'],
-        SCANNER['pounds'],
-        SCANNER['ounces'],
-
         # Shorthand notation
-        SCANNER['shorthand_key'],
-        SCANNER['shorthand'],
+        RULE['shorthand_key'],
+        RULE['shorthand'],
 
         # Possible range of numbers like: 10 - 20
         # Or just: 10
-        SCANNER['range'],
+        RULE['range_set'],
 
         # These indicate that the mass is NOT a body mass
         keyword('other_wt', r"""
@@ -68,9 +70,7 @@ BODY_MASS = Base(
         # Separators
         fragment('semicolon', ' [;] | $ '),
         fragment('comma', ' [,] | $ '),
-    ],
 
-    replacers=[
         # Any key not preceding by "other_wt" is considered a weight key
         replacer('wt_key', r"""
             (?<! other_wt )
@@ -78,56 +78,58 @@ BODY_MASS = Base(
                 | body weight | body mass | body
                 | weight | mass | key_with_dots )
             """),
-    ],
 
-    producers=[
         # Shorthand notation like: on tag: 11-22-33-44=99g
         producer(shorthand, [
             'shorthand_key shorthand',  # With a key
             'shorthand',  # Without a key
         ]),
 
-        # E.g.: body mass: 5lbs, 3-4oz
-        producer(
-            partial(compound, units=['lbs', 'ozs']),
-            """wt_key (?P<lbs> range ) pounds comma?
-                (?P<ozs> range ) ounces""",
-        ),
+        producer(compound, ' (?P<high> range ) (?P<low> range ) '),
+        producer(simple, ' wt_key units number '),
+        producer(simple, ' wt_key range '),
 
-        # Missing a weight key: 5lbs, 3-4oz
-        producer(
-            partial(compound, units=['lbs', 'ozs']),
-            """(?P<ambiguous_key>
-                (?P<lbs> range ) pounds comma?
-                (?P<ozs> range ) ounces )""",
-        ),
-
-        # A typical body mass notation
-        # E.g.: MassInGrams=22
-        producer(simple, 'key_with_units range'),
-
-        # E.g.: body weight ozs 26 - 42
-        producer(
-            simple,
-            """wt_key (?P<units> metric_mass | pounds | ounces )
-                range (?! len_units )"""),
-
-        # E.g.: body weight 26 - 42 grams
-        producer(
-            simple, 'wt_key range (?P<units> metric_mass | pounds | ounces )'),
-
-        # E.g.: measurement 26 - 42 grams
-        producer(
-            simple,
-            'shorthand_key range (?P<units> metric_mass | pounds | ounces )'),
-
-        producer(
-            simple,
-            # E.g.: specimen: 8 to 15 grams"
-            """shorthand_key (?P<units> metric_mass | pounds | ounces )
-                range (?! len_units )"""),
-
-        # E.g.: body mass 8 to 15 grams"
-        producer(simple, 'wt_key range (?! len_units )'),
+        # # E.g.: body mass: 5lbs, 3-4oz
+        # producer(
+        #     partial(compound, units=['lbs', 'ozs']),
+        #     """wt_key (?P<lbs> range ) pounds comma?
+        #         (?P<ozs> range ) ounces""",
+        # ),
+        #
+        # # Missing a weight key: 5lbs, 3-4oz
+        # producer(
+        #     partial(compound, units=['lbs', 'ozs']),
+        #     """(?P<ambiguous_key>
+        #         (?P<lbs> range ) pounds comma?
+        #         (?P<ozs> range ) ounces )""",
+        # ),
+        #
+        # # A typical body mass notation
+        # # E.g.: MassInGrams=22
+        # producer(simple, 'key_with_units range'),
+        #
+        # # E.g.: body weight ozs 26 - 42
+        # producer(
+        #     simple,
+        #     """wt_key (?P<units> metric_mass | pounds | ounces )
+        #         range (?! len_units )"""),
+        #
+        # # E.g.: body weight 26 - 42 grams
+        # producer(
+        #     simple,'wt_key range (?P<units> metric_mass | pounds | ounces )'),
+        #
+        # # E.g.: measurement 26 - 42 grams
+        # producer(
+        #     simple,
+        #     'shorthand_key range (?P<units> metric_mass | pounds | ounces )'),
+        #
+        # producer(
+        #     simple,
+        #     # E.g.: specimen: 8 to 15 grams"
+        #     """shorthand_key (?P<units> metric_mass | pounds | ounces )
+        #         range (?! len_units )"""),
+        #
+        # # E.g.: body mass 8 to 15 grams"
+        # producer(simple, 'wt_key range (?! len_units )'),
     ],
 )

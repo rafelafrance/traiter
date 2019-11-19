@@ -2,7 +2,7 @@
 
 """Build and run a wget command."""
 
-import re
+import regex
 import os
 import sys
 import time
@@ -14,9 +14,9 @@ from lxml import html
 import pylib.efloras.util as util
 
 
-LINK = re.compile(
+LINK = regex.compile(
     r'.*florataxon\.aspx\?flora_id=1&taxon_id=(?P<taxon_id>\d+)',
-    re.VERBOSE | re.IGNORECASE)
+    regex.VERBOSE | regex.IGNORECASE)
 
 
 def efloras(family_name, taxon_id, parents):

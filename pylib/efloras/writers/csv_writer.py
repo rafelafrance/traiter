@@ -11,7 +11,7 @@ def csv_writer(args, families, df):
         # print(f"{binomial}")
         # print(f"or synonyms like '%{binomial}%'")
 
-# import re
+# import regex
 # import pandas as pd
 # # from pylib.all_traits import TRAITS
 # from pylib.writers.base_writer import BaseWriter
@@ -46,5 +46,5 @@ def csv_writer(args, families, df):
 #     def end(self):
 #         """End the report."""
 #         df = pd.DataFrame(self.rows)
-#         df.rename(columns=lambda x: re.sub(r'^.+?:\s*', '', x), inplace=True)
+#         df.rename(columns=lambda x: regex.sub(r'^.+?:\s*', '', x), inplace=True)
 #         df.to_csv(self.args.output_file, index=False)

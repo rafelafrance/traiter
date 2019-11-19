@@ -2,7 +2,8 @@
 
 from collections import deque
 from typing import Tuple
-from pylib.stacked_regex.rule import Rule, Rules, RuleType, SEP
+from pylib.stacked_regex.rule import Rules, RuleType, SEP
+from pylib.shared.util import flatten
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
 
@@ -19,12 +20,8 @@ class Parser:
 
     def __iadd__(self, rules) -> None:
         """Add rules to the parser."""
-        for rule in rules if isinstance(rules, list) else [rules]:
-            if isinstance(rule, list):
-                for one in rule:
-                    self._add_rule(one)
-            else:
-                self._add_rule(rule)
+        for rule in flatten(rules):
+            self._add_rule(rule)
 
     def _add_rule(self, rule):
         """Add the rule to the correct array."""

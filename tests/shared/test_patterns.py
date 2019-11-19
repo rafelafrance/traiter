@@ -76,6 +76,42 @@ class TestSharedPatterns(unittest.TestCase):
             Token(rule=RULE['number'], span=(6, 8), groups={'number': '56'})]
         self.assertEqual(actual, expect)
 
+    def test_range_05(self):
+        parser = Parser(RULE['range_set'])
+        actual = parser.parse('12.3mm - 45.6mm')
+        expect = [
+            Token(
+                rule=RULE['range'], span=(0, 15),
+                groups={'number': ['12.3', '45.6'], 'range': '12.3mm - 45.6mm',
+                        'metric_len': ['mm', 'mm'], 'len_units': ['mm', 'mm'],
+                        'units': ['mm', 'mm'], 'dash': '-'})]
+        self.assertEqual(actual, expect)
+
+    def test_range_06(self):
+        self.maxDiff = None
+        parser = Parser(RULE['range_set'])
+        actual = parser.parse('12.3 - 45.6mm')
+        expect = [
+            Token(
+                rule=RULE['range'], span=(0, 13),
+                groups={'number': ['12.3', '45.6'],
+                        'range': ['12.3 - 45.6', '12.3 - 45.6mm'],
+                        'metric_len': 'mm', 'len_units': 'mm', 'units': 'mm',
+                        'dash': '-'})]
+        self.assertEqual(actual, expect)
+
+    def test_range_07(self):
+        self.maxDiff = None
+        parser = Parser(RULE['range_set'])
+        actual = parser.parse('12.3mm')
+        expect = [
+            Token(
+                rule=RULE['range'], span=(0, 6),
+                groups={'number': '12.3',
+                        'range': '12.3mm',
+                        'metric_len': 'mm', 'len_units': 'mm', 'units': 'mm'})]
+        self.assertEqual(actual, expect)
+
     def test_cross_01(self):
         parser = Parser(RULE['cross_set'])
         actual = parser.parse('12x34')
@@ -123,9 +159,31 @@ class TestSharedPatterns(unittest.TestCase):
         parser = Parser(RULE['cross_set'])
         actual = parser.parse('3x1.5mm')
         expect = [Token(
-            rule=RULE['cross'], span=(0, 5),
+            rule=RULE['cross'], span=(0, 7),
             groups={'number': ['3', '1.5'], 'x': 'x',
-                    'cross': '3x1.5'})]
+                    'cross': ['3x1.5', '3x1.5mm'],
+                    'metric_len': 'mm', 'len_units': 'mm', 'units': 'mm'})]
+        self.assertEqual(actual, expect)
+
+    def test_cross_06(self):
+        parser = Parser(RULE['cross_set'])
+        actual = parser.parse('3mmx1.5mm')
+        expect = [Token(
+            rule=RULE['cross'], span=(0, 9),
+            groups={'number': ['3', '1.5'], 'x': 'x', 'cross': '3mmx1.5mm',
+                    'metric_len': ['mm', 'mm'], 'len_units': ['mm', 'mm']})]
+        self.assertEqual(actual, expect)
+
+    def test_cross_07(self):
+        self.maxDiff = None
+        parser = Parser(RULE['cross_set'])
+        actual = parser.parse('12.3mm')
+        expect = [
+            Token(
+                rule=RULE['cross'], span=(0, 6),
+                groups={'number': '12.3',
+                        'cross': '12.3mm',
+                        'metric_len': 'mm', 'len_units': 'mm', 'units': 'mm'})]
         self.assertEqual(actual, expect)
 
     def test_fraction_01(self):

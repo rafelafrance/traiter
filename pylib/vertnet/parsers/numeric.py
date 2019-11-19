@@ -1,14 +1,14 @@
 """Mix-in for parsing length notations."""
 
-import re
+import regex
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.util import FLAGS
 
 
 LOOK_BACK_FAR = 40
 
-QUOTES_VS_INCHES = re.compile(r' \d " (?! \s* \} )', FLAGS)
-IS_COLLECTOR = re.compile(r' collector ', FLAGS)
+QUOTES_VS_INCHES = regex.compile(r' \d " (?! \s* \} )', FLAGS)
+IS_COLLECTOR = regex.compile(r' collector ', FLAGS)
 
 
 def add_flags(token, trait):
@@ -25,13 +25,14 @@ def simple(token):
     """Handle a normal length notation."""
     trait = NumericTrait(start=token.start, end=token.end)
     add_flags(token, trait)
-    trait.float_value(token.groups['value1'], token.groups.get('value2'))
+    trait.float_value(token.groups['number'])
     trait.convert_value(token.groups.get('units'))
     return trait
 
 
 def compound(token, units=''):
     """Handle a pattern like: 4 lbs 9 ozs."""
+    print(token)
     trait = NumericTrait(start=token.start, end=token.end)
     add_flags(token, trait)
     values = [token.groups[units[0]], token.groups[units[1]]]

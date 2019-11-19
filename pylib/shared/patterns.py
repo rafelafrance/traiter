@@ -42,27 +42,20 @@ add_frag('to', r' to ')
 
 # NOTE: Double quotes as inches is handled elsewhere
 add_frag('inches', ' ( inch e? s? | in s? ) \b ')
-
 add_frag('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
 add_frag('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
-
-add_frag(
-    'len_units', '|'.join(
-        [RULE[x].pattern for x in ('metric_len', 'feet', 'inches')]))
+add_rep('len_units', ' metric_len feet inches'.split())
 
 add_frag('pounds', r' pounds? | lbs? ')
 add_frag('ounces', r' ounces? | ozs? ')
 add_frag('metric_mass', r"""
     ( milligram | kilogram | gram ) ( s (?! [a-z]) )?
-    | ( m \.? g | k \.? \s? g | g[mr]? )
-        ( s (?! [a-z]) )?
+    | ( m \.? g | k \.? \s? g | g[mr]? ) ( s (?! [a-z]) )?
     """)
+add_rep('mass_units', 'metric_mass pounds ounces'.split())
 
-add_frag('us_mass', '|'.join([
-    RULE[x].pattern for x in ('pounds', 'ounces')]))
-
-add_frag('mass_units', '|'.join([
-    RULE[x].pattern for x in ('metric_mass', 'pounds', 'ounces')]))
+add_rep('us_units', 'feet inches pounds ounces'.split())
+add_rep('units', 'len_units mass_units'.split())
 
 # Numbers are positive decimals
 add_frag('number', r"""
@@ -73,17 +66,57 @@ add_frag('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-add_rep('range', """  (?<! dash ) number ( dash | to ) number (?! dash ) """)
+add_rep('range', """
+    (?<! dash ) number units? ( dash | to ) number units? (?! dash )
+     | range units | number units """)
+# Rule set for parsing a range
+add_set('range_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['pounds'],
+    RULE['ounces'],
+    RULE['metric_mass'],
+    RULE['mass_units'],
+    RULE['units'],
+    RULE['number'],
+    RULE['dash'],
+    RULE['to'],
+    RULE['range'],
+])
 
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take
 # the first two numbers
 add_rep('cross', """
-    (?<! x ) number len_units? ( x | by ) number len_units ? """)
+    (?<! x ) 
+        number len_units? ( x | by ) number len_units? 
+        | cross units | number units """)
+
+# Rule set for parsing a cross
+add_set('cross_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['units'],
+    RULE['number'],
+    RULE['x'],
+    RULE['by'],
+    RULE['cross'],
+])
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-add_rep('fraction', """ (?<! slash ) number slash number (?! slash ) """)
+add_rep('fraction', """ (?<! slash ) number slash number (?! slash ) units? """)
+
+# Rule set for parsing fractions
+add_set('fraction_set', [
+    RULE['number'],
+    RULE['slash'],
+    RULE['fraction'],
+])
 
 # # UUIDs cause problems when extracting certain shorthand notations.
 add_frag('uuid', r"""
@@ -105,8 +138,3 @@ add_frag('time_units', r'years? | months? | weeks? | days? | hours?')
 
 # integers, no commas or signs and typically small
 add_frag('integer', r""" \d+ (?! [%\d\-] ) """)
-
-# Rule sets
-add_set('range_set', [RULE['number'], RULE['dash'], RULE['to'], RULE['range']])
-add_set('cross_set', [RULE['number'], RULE['x'], RULE['by'], RULE['cross']])
-add_set('fraction_set', [RULE['number'], RULE['slash'], RULE['fraction']])

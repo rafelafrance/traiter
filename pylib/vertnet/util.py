@@ -1,9 +1,9 @@
 """Misc utilities."""
 
-import re
+import regex
 import inflect
 
-FLAGS = re.IGNORECASE | re.VERBOSE
+FLAGS = regex.IGNORECASE | regex.VERBOSE
 INFLECT = inflect.engine()
 
 

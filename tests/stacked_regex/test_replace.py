@@ -1,4 +1,4 @@
-import re
+import regex
 import unittest
 from pylib.stacked_regex.rule import replacer, keyword
 from pylib.stacked_regex.token import Token
@@ -7,7 +7,7 @@ from pylib.stacked_regex.parser import replace
 
 class TestReplace(unittest.TestCase):
 
-    flags = re.VERBOSE | re.IGNORECASE
+    flags = regex.VERBOSE | regex.IGNORECASE
 
     k_zero = keyword('zero', r' zero ')
     k_one = keyword('one', r' one ')

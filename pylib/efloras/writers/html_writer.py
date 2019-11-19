@@ -1,6 +1,6 @@
 """Write output to an HTML file."""
 
-import re
+import regex
 import html
 from itertools import cycle
 from collections import namedtuple, deque
@@ -18,7 +18,7 @@ Cut = namedtuple('Cut', 'pos open len id end type')
 
 def html_writer(args, families, df):
     """Output the data frame."""
-    pattern = re.compile(r'data/raw/\w+/(.+)\.html')
+    pattern = regex.compile(r'data/raw/\w+/(.+)\.html')
     df['link'] = df['path'].str.replace(pattern, r'\1')
     df = df.fillna('')
     other_cols = [c for c in df.columns if c not in tg.TRAIT_NAMES]

@@ -1,10 +1,11 @@
 """Functions for building a numeric trait."""
 
-import re
+import regex
 from collections import namedtuple
+from pylib.shared.util import flatten, squash
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.convert_units import convert
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 
 
 ParseKey = namedtuple(
@@ -48,7 +49,7 @@ class NumericTrait(Trait):
     @staticmethod
     def to_float(value):
         """Convert the value to a float."""
-        value = re.sub(r'[^\d.]', '', value) if value else ''
+        value = regex.sub(r'[^\d.]', '', value) if value else ''
         try:
             return float(value)
         except ValueError:
@@ -57,19 +58,16 @@ class NumericTrait(Trait):
     @staticmethod
     def to_int(value):
         """Convert value to an integer, handle 'no' or 'none' etc."""
-        value = re.sub(r'[^\d]', '', value) if value else ''
+        value = regex.sub(r'[^\d]', '', value) if value else ''
         try:
             return int(value)
         except ValueError:
             return 0
 
-    def float_value(self, value1, value2=None):
+    def float_value(self, values):
         """Convert the value to a float before setting it."""
-        value1 = self.to_float(value1)
-        value2 = self.to_float(value2)
-        setattr(self, 'value', value1)
-        if value2:
-            setattr(self, 'value', [value1, value2])
+        values = [self.to_float(v) for v in flatten(values)]
+        setattr(self, 'value', squash(values))
 
     def fraction_value(self, token):
         """Calculate a fraction value like: 10 3/8."""
@@ -84,8 +82,8 @@ class NumericTrait(Trait):
         setattr(self, 'units', units)
         big = self.to_float(values[0])
         big = convert(big, units[0])
-        range_joiner = SCANNER['range_joiner'].pattern
-        smalls = re.split(range_joiner, values[1])
+        range_joiner = RULE['range_joiner'].pattern
+        smalls = regex.split(range_joiner, values[1])
         smalls = [self.to_float(x) for x in smalls]
         setattr(self, 'value', [big + convert(x, units[1]) for x in smalls])
         setattr(self, 'value', [round(v, 2) for v in self.value])

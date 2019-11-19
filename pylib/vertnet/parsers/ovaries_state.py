@@ -1,6 +1,6 @@
 """Parse ovaries state notations."""
 
-import re
+import regex
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
@@ -10,7 +10,7 @@ from pylib.vertnet.shared_reproductive_patterns import RULE
 def convert(token):
     """Convert parsed token into a trait."""
     value = token.groups['value'].lower()
-    if re.match(r'^[\s\d]+$', value):
+    if regex.match(r'^[\s\d]+$', value):
         return None
     trait = Trait(
         value=value,

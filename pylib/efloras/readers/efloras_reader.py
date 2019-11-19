@@ -1,6 +1,6 @@
 """Read pages scraped from the eFloras website."""
 
-import re
+import regex
 import sys
 from collections import defaultdict
 from lxml import html
@@ -88,8 +88,8 @@ def check_trait_groups(para, text):
     """Validate that we have all of the traits."""
     bold = para.xpath('.//b')  # Used to check the trait group parse
 
-    # We're just using the bold items as a check on the trait groups
-    bolds = [re.sub('[:.,]', '', x.text_content()) for x in bold]
+    # We'regex just using the bold items as a check on the trait groups
+    bolds = [regex.sub('[:.,]', '', x.text_content()) for x in bold]
     bolds = [x.strip().lower() for x in bolds if x]
 
     # Fewer trait groups than bold items means something is wrong

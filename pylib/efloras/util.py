@@ -1,6 +1,6 @@
 """Holds misc functions and constants."""
 
-import re
+import regex
 import csv
 from pathlib import Path
 from datetime import datetime
@@ -13,13 +13,13 @@ RAW_DIR = Path('.') / 'data' / 'raw'
 
 EFLORAS_NA_FAMILIES = RAW_DIR / 'eFlora_family_list.csv'
 
-FLAGS = re.VERBOSE | re.IGNORECASE
+FLAGS = regex.VERBOSE | regex.IGNORECASE
 
 
 def camel_to_snake(name):
     """Convert a camel case string to snake case."""
-    split = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
+    split = regex.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return regex.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
 
 
 def get_families():

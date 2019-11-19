@@ -1,6 +1,6 @@
 """Parse ear length notations."""
 
-import re
+import regex
 from functools import partial
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
@@ -15,15 +15,15 @@ LOOK_BACK_FAR = 40
 LOOK_BACK_NEAR = 10
 
 # These indicate that the parse is not really for an ear length
-IS_ET = re.compile(r' e \.? t ', FLAGS)
-IS_NUMBER = re.compile(' [#] ', FLAGS)
-IS_MAG = re.compile(' magnemite ', FLAGS)
-IS_ID = re.compile(' identifier | ident | id ', FLAGS)
+IS_ET = regex.compile(r' e \.? t ', FLAGS)
+IS_NUMBER = regex.compile(' [#] ', FLAGS)
+IS_MAG = regex.compile(' magnemite ', FLAGS)
+IS_ID = regex.compile(' identifier | ident | id ', FLAGS)
 
 # The 'E' abbreviation gets confused with abbreviation for East sometimes.
 # Try to disambiguate the two by looking for a North near by.
 LOOK_AROUND = 10
-IS_EAST = re.compile(r' \b n ', FLAGS)
+IS_EAST = regex.compile(r' \b n ', FLAGS)
 
 
 def fix_up(trait, text):

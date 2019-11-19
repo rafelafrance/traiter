@@ -1,6 +1,6 @@
 """Parse total length notations."""
 
-import re
+import regex
 from functools import partial
 from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base
@@ -15,18 +15,18 @@ LOOK_BACK_FAR = 40
 LOOK_BACK_NEAR = 10
 
 # These indicate that the parse is not a total length
-IS_ID = re.compile(
+IS_ID = regex.compile(
     ' identifier | ident | id | collector ',
     util.FLAGS)
-IS_TRAP = re.compile(' trap ', util.FLAGS)
-IS_TESTES = re.compile(
+IS_TRAP = regex.compile(' trap ', util.FLAGS)
+IS_TESTES = regex.compile(
     ' reproductive | gonad | test | scrotal | scrotum | scrot ',
     util.FLAGS)
 
 # The 'L' abbreviation gets confused with abbreviation for Left sometimes.
 # Try to disambiguate the two by looking for a Right near by.
 LOOK_AROUND = 10
-IS_LEFT = re.compile(r' \b r \b ', util.FLAGS)
+IS_LEFT = regex.compile(r' \b r \b ', util.FLAGS)
 
 
 def fix_up(trait, text):

@@ -1,6 +1,6 @@
 """Common color snippets."""
 
-import re
+import regex
 import string
 from typing import Any
 from pylib.stacked_regex.token import Token
@@ -110,7 +110,7 @@ def normalize(value: str) -> str:
 
     parts = []
     has_color = False
-    for part in re.split(rf'\s+ | {plant.DASH}', value, flags=util.FLAGS):
+    for part in regex.split(rf'\s+ | {plant.DASH}', value, flags=util.FLAGS):
         if COLORS.regex.search(part):
             parts.append(RENAME.get(part, part))
             has_color = True

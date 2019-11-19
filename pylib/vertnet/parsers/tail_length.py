@@ -1,6 +1,6 @@
 """Parse tail length notations."""
 
-import re
+import regex
 from functools import partial
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
@@ -15,13 +15,13 @@ LOOK_BACK_FAR = 40
 LOOK_BACK_NEAR = 20
 
 # These indicate that the parse is not really for a tail length
-IS_TESTES = re.compile(
+IS_TESTES = regex.compile(
     ' reproductive | gonad | test | scrotal | scrotum | scrot ',
     util.FLAGS)
-IS_ELEVATION = re.compile(' elevation | elev ', util.FLAGS)
-IS_TOTAL = re.compile(' body | nose | snout ', util.FLAGS)
-IS_TAG = re.compile(' tag ', util.FLAGS)
-IS_ID = re.compile(' identifier | ident | id ', util.FLAGS)
+IS_ELEVATION = regex.compile(' elevation | elev ', util.FLAGS)
+IS_TOTAL = regex.compile(' body | nose | snout ', util.FLAGS)
+IS_TAG = regex.compile(' tag ', util.FLAGS)
+IS_ID = regex.compile(' identifier | ident | id ', util.FLAGS)
 
 
 def fix_up(trait, text):

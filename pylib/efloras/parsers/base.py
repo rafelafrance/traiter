@@ -1,6 +1,6 @@
 """Common logic for parsing trait notations."""
 
-import re
+import regex
 from pylib.stacked_regex.parser import Parser
 
 
@@ -28,6 +28,6 @@ class Base(Parser):  # pylint: disable=too-few-public-methods
 
 def split_attrs(data):
     """Split the text blob into attributes."""
-    attrs = [x for x in re.split(r'\s*[,;:]\s*', data) if x]
-    attrs[-1] = re.sub(r'\s*\.\s*$', '', attrs[-1])
+    attrs = [x for x in regex.split(r'\s*[,;:]\s*', data) if x]
+    attrs[-1] = regex.sub(r'\s*\.\s*$', '', attrs[-1])
     return attrs
