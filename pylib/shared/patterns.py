@@ -1,26 +1,31 @@
 """Shared token patterns."""
 
-from pylib.stacked_regex.rule import fragment, keyword, replacer, InRegexp
+from pylib.stacked_regex.rule import Rules, fragment, keyword, replacer
+from pylib.stacked_regex.rule import InRegexp
 from pylib.vertnet.util import ordinal, number_to_words
 
 
-SCANNER = {}
-REPLACER = {}
+RULE = {}
 
 
 def add_frag(name: str, regexp: InRegexp) -> None:
-    """Add a rule to SCANNER."""
-    SCANNER[name] = fragment(name, regexp)
+    """Add a rule to RULE."""
+    RULE[name] = fragment(name, regexp)
 
 
 def add_key(name: str, regexp: InRegexp) -> None:
-    """Add a rule to SCANNER."""
-    SCANNER[name] = keyword(name, regexp)
+    """Add a rule to RULE."""
+    RULE[name] = keyword(name, regexp)
 
 
-def add_repl(name: str, regexp: InRegexp) -> None:
-    """Add a rule to SCANNER."""
-    REPLACER[name] = replacer(name, regexp)
+def add_rep(name: str, regexp: InRegexp) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = replacer(name, regexp)
+
+
+def add_set(name: str, rules: Rules) -> None:
+    """Add a rule set."""
+    RULE[name] = rules
 
 
 # Chars that may be a token
@@ -43,7 +48,7 @@ add_frag('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
 
 add_frag(
     'len_units', '|'.join(
-        [SCANNER[x].pattern for x in ('metric_len', 'feet', 'inches')]))
+        [RULE[x].pattern for x in ('metric_len', 'feet', 'inches')]))
 
 add_frag('pounds', r' pounds? | lbs? ')
 add_frag('ounces', r' ounces? | ozs? ')
@@ -54,10 +59,10 @@ add_frag('metric_mass', r"""
     """)
 
 add_frag('us_mass', '|'.join([
-    SCANNER[x].pattern for x in ('pounds', 'ounces')]))
+    RULE[x].pattern for x in ('pounds', 'ounces')]))
 
 add_frag('mass_units', '|'.join([
-    SCANNER[x].pattern for x in ('metric_mass', 'pounds', 'ounces')]))
+    RULE[x].pattern for x in ('metric_mass', 'pounds', 'ounces')]))
 
 # Numbers are positive decimals
 add_frag('number', r"""
@@ -68,16 +73,17 @@ add_frag('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-add_repl('range', """  (?<! dash ) number ( dash | to ) number (?! dash ) """)
+add_rep('range', """  (?<! dash ) number ( dash | to ) number (?! dash ) """)
 
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take
 # the first two numbers
-add_repl('cross', """ (?<! x ) number ( x | by ) number """)
+add_rep('cross', """
+    (?<! x ) number len_units? ( x | by ) number len_units ? """)
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-add_repl('fraction', """ (?<! slash ) number slash number (?! slash ) """)
+add_rep('fraction', """ (?<! slash ) number slash number (?! slash ) """)
 
 # # UUIDs cause problems when extracting certain shorthand notations.
 add_frag('uuid', r"""
@@ -99,3 +105,8 @@ add_frag('time_units', r'years? | months? | weeks? | days? | hours?')
 
 # integers, no commas or signs and typically small
 add_frag('integer', r""" \d+ (?! [%\d\-] ) """)
+
+# Rule sets
+add_set('range_set', [RULE['number'], RULE['dash'], RULE['to'], RULE['range']])
+add_set('cross_set', [RULE['number'], RULE['x'], RULE['by'], RULE['cross']])
+add_set('fraction_set', [RULE['number'], RULE['slash'], RULE['fraction']])

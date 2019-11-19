@@ -1,20 +1,39 @@
 """Extract information for further analysis."""
 
-from dataclasses import dataclass, field
 from collections import deque
 from typing import Tuple
-from pylib.stacked_regex.rule import Rules, SEP
+from pylib.stacked_regex.rule import Rule, Rules, RuleType, SEP
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
 
-@dataclass
 class Parser:
     """Container for the the parser arrays."""
 
-    name: str = 'parser'
-    scanners: Rules = field(default_factory=list)
-    replacers: Rules = field(default_factory=list)
-    producers: Rules = field(default_factory=list)
+    def __init__(self, rules: Rules, name: str = 'parser') -> None:
+        """Build the parser."""
+        self.name = name
+        self.scanners = []
+        self.replacers = []
+        self.producers = []
+        self.__iadd__(rules)
+
+    def __iadd__(self, rules) -> None:
+        """Add rules to the parser."""
+        for rule in rules if isinstance(rules, list) else [rules]:
+            if isinstance(rule, list):
+                for one in rule:
+                    self._add_rule(one)
+            else:
+                self._add_rule(rule)
+
+    def _add_rule(self, rule):
+        """Add the rule to the correct array."""
+        if rule.type == RuleType.SCANNER:
+            self.scanners.append(rule)
+        elif rule.type == RuleType.REPLACER:
+            self.replacers.append(rule)
+        elif rule.type == RuleType.PRODUCER:
+            self.producers.append(rule)
 
     def parse(self, text: str) -> Tokens:
         """Extract information from the text."""
@@ -22,6 +41,9 @@ class Parser:
         again = bool(self.replacers)
         while again:
             tokens, again = replace(self.replacers, tokens, text)
+        # for token in tokens:
+        #     print(token)
+        # print()
         if self.producers:
             tokens = produce(self.producers, tokens, text)
         return tokens

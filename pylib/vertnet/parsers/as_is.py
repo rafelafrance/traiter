@@ -15,13 +15,10 @@ def convert(token):
 
 AS_IS = Base(
     name=__name__.split('.')[-1],
-    scanners=[
+    rules=[
         fragment('data', [
             r' \S .* \S ',  # Strip leading and trailing spaces
-            r' \S '])       # Get a string with a single character
-        ],
-    replacers=[],
-    producers=[
-        producer(convert, '(?P<value> data )')
+            r' \S ']),      # Get a string with a single character
+        producer(convert, '(?P<value> data )'),
     ],
 )

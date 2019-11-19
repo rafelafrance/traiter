@@ -2,25 +2,25 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 NIPPLE_STATE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        REPRODUCTIVE['size'],
-        REPRODUCTIVE['fully'],
-        REPRODUCTIVE['partially'],
-        REPRODUCTIVE['non'],
-        REPRODUCTIVE['color'],
-        REPRODUCTIVE['visible'],
-        REPRODUCTIVE['and'],
-        REPRODUCTIVE['uterus'],
-        REPRODUCTIVE['tissue'],
-        REPRODUCTIVE['present'],
-        REPRODUCTIVE['active'],
-        REPRODUCTIVE['developed'],
-        REPRODUCTIVE['nipple'],
+    rules=[
+        RULE['size'],
+        RULE['fully'],
+        RULE['partially'],
+        RULE['non'],
+        RULE['color'],
+        RULE['visible'],
+        RULE['and'],
+        RULE['uterus'],
+        RULE['tissue'],
+        RULE['present'],
+        RULE['active'],
+        RULE['developed'],
+        RULE['nipple'],
 
         keyword('false', """ false """),
         keyword('much', """ much """),
@@ -39,17 +39,13 @@ NIPPLE_STATE = Base(
 
         # Skip arbitrary words
         fragment('word', r' \w+ '),
-    ],
 
-    replacers=[
         replacer('state_end', """
             ( size | fully | partially | other | lactation | color | false
                 | visible | tissue | present | active | developed ) """),
 
         replacer('state_mid', """ ( uterus | and ) """),
-    ],
 
-    producers=[
         producer(
             convert,
             """(?P<value> non?

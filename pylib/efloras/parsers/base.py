@@ -1,10 +1,10 @@
 """Common logic for parsing trait notations."""
 
 import re
-import pylib.stacked_regex.stacked_regex as stacked
+from pylib.stacked_regex.parser import Parser
 
 
-class Base(stacked.Parser):  # pylint: disable=too-few-public-methods
+class Base(Parser):  # pylint: disable=too-few-public-methods
     """Shared lexer logic."""
 
     def parse(self, text):

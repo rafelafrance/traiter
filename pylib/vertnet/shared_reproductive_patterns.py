@@ -1,20 +1,10 @@
 """Shared reproductive trait tokens (testes & ovaries)."""
 
-
-from pylib.stacked_regex.rule import fragment, keyword, InRegexp
-
-
-REPRODUCTIVE = {}
+import pylib.vertnet.shared_patterns as patterns
+from pylib.shared.patterns import add_frag, add_key
 
 
-def add_frag(name: str, regexp: InRegexp) -> None:
-    """Add a rule to REPRODUCTIVE."""
-    REPRODUCTIVE[name] = fragment(name, regexp)
-
-
-def add_key(name: str, regexp: InRegexp) -> None:
-    """Add a rule to REPRODUCTIVE."""
-    REPRODUCTIVE[name] = keyword(name, regexp)
+RULE = patterns.RULE
 
 
 add_key('active', 'active inactive'.split())
@@ -47,7 +37,7 @@ add_frag(
         ( (fully | incompletely | partially | part | well)
             [.\s-]{0,2} )?""" +
     fr"""(developed? | undeveloped? | development | devel
-        | dev \b ([\s:]* none | {REPRODUCTIVE['size'].pattern} )?
+        | dev \b ([\s:]* none | {RULE['size'].pattern} )?
         | undevel | undev | indist)
     """)
 
@@ -88,8 +78,8 @@ add_key('tissue', ' tissue '.split())
 add_key('present', ' present absent '.split())
 
 # The sides like: 3L or 4Right
-add_frag('side', r"""
-    left | right | lf | lt | rt | [lr] (?! [a-z] ) """)
+# add_frag('side', r"""
+#     left | right | lf | lt | rt | [lr] (?! [a-z] ) """)
 
 # Some traits are presented as an equation
 add_frag('op', r' [+:&] ')

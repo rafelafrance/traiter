@@ -1,7 +1,7 @@
 import unittest
 from pylib.stacked_regex.rule import fragment
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.stacked_regex import scan
+from pylib.stacked_regex.parser import scan
 
 
 class TestScan(unittest.TestCase):

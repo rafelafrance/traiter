@@ -1,6 +1,7 @@
 """Rules for parsing and rule builders."""
 
 import regex
+from enum import Enum
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Pattern, Union
 
@@ -15,6 +16,14 @@ Action = Callable[['Token'], Any]
 InRegexp = Union[str, List[str]]
 
 
+class RuleType(Enum):
+    """Put the rule into this array in the parser."""
+
+    SCANNER = 1
+    REPLACER = 2
+    PRODUCER = 3
+
+
 @dataclass
 class Rule:
     """Create a rule."""
@@ -22,6 +31,7 @@ class Rule:
     name: str
     regex: Pattern
     pattern: str
+    type: RuleType
     action: Action = None
 
 
@@ -55,14 +65,24 @@ def fragment(name: str, regexp: InRegexp, action: Action = None) -> Rule:
     """Build a regular expression with a named group."""
     pattern = build(regexp)
     regexp = regex.compile(f'(?P<{name}> {pattern} )', FLAGS)
-    return Rule(name=name, regex=regexp, pattern=pattern, action=action)
+    return Rule(
+        name=name,
+        type=RuleType.SCANNER,
+        regex=regexp,
+        pattern=pattern,
+        action=action)
 
 
 def keyword(name: str, regexp: InRegexp, action: Action = None) -> Rule:
     r"""Wrap a regular expression in \b character class."""
     pattern = build(regexp)
     regexp = regex.compile(fr'\b (?P<{name}> {pattern} ) \b', FLAGS)
-    return Rule(name=name, regex=regexp, pattern=pattern, action=action)
+    return Rule(
+        name=name,
+        type=RuleType.SCANNER,
+        regex=regexp,
+        pattern=pattern,
+        action=action)
 
 
 def replacer(name: str, regexp: InRegexp, action: Action = None) -> Rule:
@@ -70,7 +90,12 @@ def replacer(name: str, regexp: InRegexp, action: Action = None) -> Rule:
     pattern = build(regexp)
     regexp = tokenize_regex(pattern)
     regexp = regex.compile(fr' \b (?P<{name}> {regexp} ) ', FLAGS)
-    return Rule(name=name, regex=regexp, pattern=pattern, action=action)
+    return Rule(
+        name=name,
+        type=RuleType.REPLACER,
+        regex=regexp,
+        pattern=pattern,
+        action=action)
 
 
 def producer(action: Action, regexp: InRegexp, name: str = 'producer') -> Rule:
@@ -78,4 +103,9 @@ def producer(action: Action, regexp: InRegexp, name: str = 'producer') -> Rule:
     pattern = build(regexp)
     regexp = tokenize_regex(pattern)
     regexp = regex.compile(fr' \b (?: {regexp} ) ', flags=FLAGS)
-    return Rule(name=name, action=action, regex=regexp, pattern=pattern)
+    return Rule(
+        name=name,
+        type=RuleType.PRODUCER,
+        action=action,
+        regex=regexp,
+        pattern=pattern)

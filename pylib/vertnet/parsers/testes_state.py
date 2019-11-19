@@ -3,8 +3,7 @@
 from pylib.stacked_regex.rule import keyword, producer, replacer
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SCANNER
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert(token):
@@ -18,58 +17,54 @@ def convert(token):
 
 TESTES_STATE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-
+    rules=[
         # A label, like: "reproductive data"
-        REPRODUCTIVE['label'],
+        RULE['label'],
 
         # Spellings of "testes"
-        REPRODUCTIVE['testes'],
+        RULE['testes'],
 
         # "Fully" or "incompletely"
-        REPRODUCTIVE['fully'],
+        RULE['fully'],
 
         # Negation: "non", "not", etc.
-        REPRODUCTIVE['non'],
+        RULE['non'],
 
         # "Descended"
-        REPRODUCTIVE['descended'],
+        RULE['descended'],
 
         # Abbreviations for "testes"
         keyword('abbrev', 'tes ts tnd td tns ta t'.split()),
 
         # Spellings of "scrotum"
-        REPRODUCTIVE['scrotal'],
+        RULE['scrotal'],
 
         # Spellings of "partially"
-        REPRODUCTIVE['partially'],
+        RULE['partially'],
 
         # Abbreviations for "testes state"
         keyword('state_abbrev', 'ns sc'.split()),
 
         # Spellings of "abdominal"
-        REPRODUCTIVE['abdominal'],
+        RULE['abdominal'],
 
         # Various size words
-        REPRODUCTIVE['size'],
+        RULE['size'],
 
         # Spellings of "gonads"
-        REPRODUCTIVE['gonads'],
+        RULE['gonads'],
 
         # Other state words
-        REPRODUCTIVE['other'],
+        RULE['other'],
 
         # We will skip over testes size measurements
-        SCANNER['cross'],
-        SCANNER['len_units'],
+        RULE['cross_set'],
 
-        REPRODUCTIVE['and'],
+        RULE['and'],
 
         # We allow random words in some situations
-        REPRODUCTIVE['word'],
-    ],
+        RULE['word'],
 
-    replacers=[
         replacer('state', [
             'non fully descended',
             'abdominal non descended',
@@ -84,9 +79,7 @@ TESTES_STATE = Base(
 
         # Simplify the testes length so it can be skipped easily
         replacer('length', 'cross len_units?'),
-    ],
 
-    producers=[
         # A typical testes state notation
         # E.g.: reproductiveData: ts 5x3 fully descended
         producer(convert, [

@@ -1,8 +1,8 @@
 """Common logic for parsing trait notations."""
 
-from typing import List, Callable
-import pylib.stacked_regex.stacked_regex as stacked
-from pylib.stacked_regex.rule import Rule
+from typing import Callable
+from pylib.stacked_regex.parser import Parser
+from pylib.stacked_regex.rule import Rules
 from pylib.vertnet.trait import Trait
 
 
@@ -11,22 +11,15 @@ def fix_up_nop(trait, text):  # pylint: disable=unused-argument
     return trait
 
 
-class Base(stacked.Parser):  # pylint: disable=too-few-public-methods
+class Base(Parser):  # pylint: disable=too-few-public-methods
     """Shared lexer logic."""
 
     def __init__(
-            self,
-            scanners: List[Rule],
-            replacers: List[Rule],
-            producers: List[Rule],
+            self,  rules: Rules,
             name: str = 'parser',
             fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""
-        super().__init__(
-            name=name,
-            scanners=scanners,
-            replacers=replacers,
-            producers=producers)
+        super().__init__(name=name, rules=rules)
         self.fix_up = fix_up if fix_up else fix_up_nop
 
     def parse(self, text, field=None):

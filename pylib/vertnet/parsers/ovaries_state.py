@@ -4,8 +4,7 @@ import re
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SCANNER
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert(token):
@@ -40,44 +39,43 @@ def double(token):
 
 OVARIES_STATE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        REPRODUCTIVE['ovary'],
-        REPRODUCTIVE['size'],
-        REPRODUCTIVE['uterus'],
-        REPRODUCTIVE['fallopian'],
-        REPRODUCTIVE['mature'],
-        REPRODUCTIVE['active'],
-        REPRODUCTIVE['non'],
-        REPRODUCTIVE['visible'],
-        REPRODUCTIVE['destroyed'],
-        REPRODUCTIVE['developed'],
-        REPRODUCTIVE['count'],
-        REPRODUCTIVE['horns'],
-        REPRODUCTIVE['covered'],
-        REPRODUCTIVE['fat'],
-        REPRODUCTIVE['lut'],
-        REPRODUCTIVE['corpus'],
-        REPRODUCTIVE['alb'],
-        REPRODUCTIVE['nipple'],
-        SCANNER['side'],
-        SCANNER['cyst'],
-        REPRODUCTIVE['color'],
-        REPRODUCTIVE['texture'],
-        REPRODUCTIVE['sign'],
-        REPRODUCTIVE['and'],
-        SCANNER['cross'],
-        SCANNER['len_units'],
+    rules=[
+        RULE['ovary'],
+        RULE['size'],
+        RULE['uterus'],
+        RULE['fallopian'],
+        RULE['mature'],
+        RULE['active'],
+        RULE['non'],
+        RULE['visible'],
+        RULE['destroyed'],
+        RULE['developed'],
+        RULE['count'],
+        RULE['horns'],
+        RULE['covered'],
+        RULE['fat'],
+        RULE['lut'],
+        RULE['corpus'],
+        RULE['alb'],
+        RULE['nipple'],
+        RULE['side'],
+        RULE['cyst'],
+        RULE['color'],
+        RULE['texture'],
+        RULE['sign'],
+        RULE['and'],
+        RULE['len_units'],
 
         # Skip words
         keyword('skip', ' womb '),
 
         fragment('sep', r' [;] '),
 
+        RULE['cross_set'],
+
         # We allow random words in some situations
         fragment('word', r'[a-z] \w*'),
-    ],
 
-    replacers=[
         # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes
         replacer('ovaries', r"""
@@ -93,7 +91,7 @@ OVARIES_STATE = Base(
         # E.g.: active
         # Or:   immature
         replacer('state', """
-            (non)? ( active | mature | destroyed | visible | developed )"""),
+            non? ( active | mature | destroyed | visible | developed )"""),
 
         # Skip nipple notation
         replacer('nips', 'nipple ( size | state )'),
@@ -103,9 +101,7 @@ OVARIES_STATE = Base(
             'cross len_units',
             'len_units cross',
             'cross']),
-    ],
 
-    producers=[
         # Get left and right side measurements
         # E.g.: ovaries: R 2 c. alb, L sev c. alb
         producer(double, r"""
@@ -120,8 +116,8 @@ OVARIES_STATE = Base(
         # E.g.: left ovary=3x1.5mm, pale pink in color
         producer(
             convert,
-            """(side)? ovaries
-                (measurement)?
+            """side? ovaries
+                measurement?
                 (?P<value>
                     ( word | color | texture | luteum | state | size | and
                         | cyst ){0,3}
@@ -129,10 +125,16 @@ OVARIES_STATE = Base(
                         | fallopian ))
             """),
 
+        producer(convert, """side ovaries cross? size (?P<value>
+                    ( word | color | texture | luteum | state | size | and
+                        | cyst ){0,3}
+                    ( color | texture | luteum | state | size | cyst
+                        | fallopian ))"""),
+
         # Has the maturity but is possibly missing the size
         producer(
             convert,
-            'ovaries (side)? (?P<value> word{0,3} (size | state | luteum))'),
+            'ovaries side? (?P<value> word{0,3} (size | state | luteum))'),
 
         # E.g.: large ovaries
         producer(convert, '(?P<value> (size | state | count){1,3} ) ovaries'),
@@ -158,5 +160,5 @@ OVARIES_STATE = Base(
             """(?P<value> luteum (state)? )
                 (word | len_units){0,3} side? ovaries
             """),
-    ],
+        ],
 )

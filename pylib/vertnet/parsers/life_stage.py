@@ -2,14 +2,14 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 
 
-TIME_OPTIONS = SCANNER['time_units'].pattern
+TIME_OPTIONS = RULE['time_units'].pattern
 
 LIFE_STAGE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
+    rules=[
         # JSON keys for life stage
         keyword('json_key', [
             r' life \s* stage \s* (remarks?)? ',
@@ -26,24 +26,17 @@ LIFE_STAGE = Base(
                 + """
                 ads? adulte?s?
                 chicks?
-                fledgelings? fleglings?
-                fry
+                fledgelings? fleglings? fry
                 hatched hatchlings?
-                imagos?
-                imms? immatures?
+                imagos? imms? immatures?
                 jeunes? juvs? juveniles? juvéniles?
-                larvae? larvals? larves?
-                leptocephales? leptocephalus
+                larvae? larvals? larves? leptocephales? leptocephalus
                 matures? metamorphs?
-                neonates?
-                nestlings?
-                nulliparous
+                neonates? nestlings? nulliparous
                 premetamorphs?
                 sub-adults? subads? subadulte?s?
-                tadpoles?
-                têtard
-                yearlings?
-                yg ygs young
+                tadpoles? têtard
+                yearlings? yg ygs young
             """.split()),
 
         # This indicates that the following words are NOT a life stage
@@ -57,22 +50,18 @@ LIFE_STAGE = Base(
         fragment('separator', r' [;,"?] | $ '),
 
         # For life stages with numbers as words in them
-        SCANNER['ordinals'],
+        RULE['ordinals'],
 
-        SCANNER['time_units'],
+        RULE['time_units'],
 
         fragment('after', 'after'),
         fragment('hatching', 'hatching'),
 
         # Match any word
         fragment('word', r' \b \w [\w?./-]* (?! [./-] ) '),
-    ],
 
-    replacers=[
         replacer('as_time', ' after? (ordinals | hatching) time_units'),
-    ],
 
-    producers=[
         # E.g.: life stage juvenile/yearling
         producer(
             convert,
@@ -90,7 +79,7 @@ LIFE_STAGE = Base(
         producer(
             convert,
             """ json_key (?P<value> ( intrinsic | word | joiner ){1,5} )
-            separator"""),
+            separator """),
 
         # E.g.: LifeStage = 1st month
         producer(convert, 'json_key (?P<value> as_time )'),

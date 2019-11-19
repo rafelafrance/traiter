@@ -1,5 +1,5 @@
 import unittest
-from pylib.stacked_regex.stacked_regex import scan
+from pylib.stacked_regex.parser import scan
 from pylib.stacked_regex.token import Token
 from pylib.efloras.shared_plant import SCANNER
 

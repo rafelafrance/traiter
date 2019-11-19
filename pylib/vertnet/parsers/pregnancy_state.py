@@ -2,13 +2,13 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 PREGNANCY_STATE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        REPRODUCTIVE['none'],
+    rules=[
+        RULE['none'],
 
         keyword('pregnant', r"""
             prega?n?ant pregnan preg pregnancy pregnancies
@@ -34,11 +34,7 @@ PREGNANCY_STATE = Base(
 
         # Skip arbitrary words
         fragment('word', r' [a-z]\w+ '),
-    ],
 
-    replacers=[],
-
-    producers=[
         # E.g.: pregnancy visible
         producer(convert, [
             """(?P<value> pregnant joiner? none? probably quest? )"""]),

@@ -2,7 +2,7 @@ import re
 import unittest
 from pylib.stacked_regex.rule import replacer, keyword
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.stacked_regex import replace
+from pylib.stacked_regex.parser import replace
 
 
 class TestReplace(unittest.TestCase):
