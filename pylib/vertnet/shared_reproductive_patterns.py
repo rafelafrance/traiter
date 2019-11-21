@@ -95,7 +95,7 @@ add_key(
     'cryptorchism cryptorchid monorchism monorchid inguinal'.split())
 
 add_frag(
-    'scrotal', r'( scrotum | scrotal | scrot | nscr | scr) \b')
+    'scrotal', r'( nonscrotal | scrotum | scrotal | scrot | nscr | scr) \b')
 
 add_frag(
     'testes', r' ( testes |  testis | testicles? | test ) \b ')
