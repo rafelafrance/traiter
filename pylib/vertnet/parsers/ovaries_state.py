@@ -23,14 +23,14 @@ def convert(token):
 def double(token):
     """Convert a single token into two traits."""
     trait1 = Trait(
-        value=token.groups['value_a'].lower(),
-        side=token.groups['side_a'].lower(),
+        value=token.groups['value'][0].lower(),
+        side=token.groups['side'][0].lower(),
         start=token.start,
         end=token.end)
 
     trait2 = Trait(
-        value=token.groups['value_b'].lower(),
-        side=token.groups['side_b'].lower(),
+        value=token.groups['value'][1].lower(),
+        side=token.groups['side'][1].lower(),
         start=token.start,
         end=token.end)
 
@@ -43,43 +43,45 @@ OVARIES_STATE = Base(
         RULE['ovary'],
         RULE['size'],
         RULE['mature'],
+        RULE['corpus'],
         RULE['covered'],
         RULE['fat'],
-        # RULE['uterus'],
-        # RULE['fallopian'],
-        # RULE['active'],
-        # RULE['non'],
-        # RULE['visible'],
-        # RULE['destroyed'],
-        # RULE['developed'],
-        # RULE['count'],
-        # RULE['horns'],
+        RULE['uterus'],
+        RULE['fallopian'],
+        RULE['active'],
+        RULE['non'],
+        RULE['visible'],
+        RULE['destroyed'],
+        RULE['developed'],
+        RULE['horns'],
         RULE['lut'],
-        RULE['corpus'],
         RULE['alb'],
-        # RULE['nipple'],
+        RULE['nipple'],
         RULE['side'],
-        # RULE['cyst'],
-        # RULE['color'],
-        # RULE['texture'],
+        RULE['cyst'],
+        RULE['color'],
+        RULE['texture'],
         RULE['sign'],
-        # RULE['and'],
+        RULE['and'],
+        RULE['number'],
+        RULE['embryo'],
+
+        keyword('other', """ sev somewhat few """.split()),
 
         # Skip words
-        # keyword('skip', ' womb '),
+        keyword('skip', ' womb nullip '.split()),
 
-        # fragment('sep', r' [;] '),
-
-        # RULE['cross_set'],
+        fragment('comma', r' [,] '),
+        fragment('sep', r' [;\(] '),
 
         # We allow random words in some situations
         fragment('word', r'[a-z] \w*'),
 
         # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes
-        # replacer('ovaries', r"""
-        #     ovary ( ( and? uterus horns? ) | and? fallopian )?
-        #     """),
+        replacer('ovaries', r"""
+            ovary ( ( and? uterus horns? ) | and? fallopian )?
+            """),
 
         # E.g.: covered in copious fat
         replacer('coverage', ' covered word{0,2} fat '),
@@ -87,77 +89,30 @@ OVARIES_STATE = Base(
         # E.g.: +corpus luteum
         replacer('luteum', ' sign? corpus? (alb | lut) '),
 
-        # E.g.: active
-        # Or:   immature
-        # replacer('state', """
-        #     non? ( active | mature | destroyed | visible | developed )"""),
+        replacer('value_words', """
+            size mature coverage luteum color corpus other active destroyed alb
+            visible developed cyst texture fallopian luteum """.split()),
 
-        # Skip nipple notation
-        # replacer('nips', 'nipple ( size | state )'),
+        replacer('values', """
+            ( value_words ( and | comma ) | non )? 
+            value_words """),
 
-        # E.g.: 6 x 4 mm
-        # replacer('measurement', [r.name for r in RULE['cross_set']]),
+        producer(convert, """
+            side? ovaries side? ( word | number | comma ){0,5} 
+            (?P<value> values+ ) """),
 
-        producer(convert, """ 
-            ovary word{0,3} 
-            (?P<value> (size | mature | coverage | luteum)+ ) """),
+        producer(convert, """
+            (?P<value> values+ ) ( word | number | comma ){0,5}
+               ( (?<! comma ) side )? (?<! comma ) ovaries """),
 
         # Get left and right side measurements
         # E.g.: ovaries: R 2 c. alb, L sev c. alb
-        # producer(double, r"""
-        #     ovaries
-        #         (?P<side_a> side)
-        #             (count)? (?P<value_a> word? luteum)
-        #         (?P<side_b> side)
-        #             (count)? (?P<value_b> word? luteum)
-        #     """),
+        producer(double, r"""
+            ovaries
+                (?P<side> side) number? (?P<value> word? values+ )
+                ( and | comma )?
+                (?P<side> side) number? (?P<value> word? values+ )
+            """),
 
-        # One side may be reported
-        # E.g.: left ovary=3x1.5mm, pale pink in color
-        # producer(
-        #     convert,
-        #     """side? ovaries
-        #         (?P<value>
-        #             ( word | color | texture | luteum | state | size | and
-        #                 | cyst ){0,3}
-        #             ( color | texture | luteum | state | size | cyst
-        #                 | fallopian ))
-        #     """),
-
-        # producer(convert, """side ovaries cross? size (?P<value>
-        #             ( word | color | texture | luteum | state | size | and
-        #                 | cyst ){0,3}
-        #             ( color | texture | luteum | state | size | cyst
-        #                 | fallopian ))"""),
-
-        # Has the maturity but is possibly missing the size
-        # producer(
-        #     convert,
-        #     'ovaries side? (?P<value> word{0,3} (size | state | luteum))'),
-
-        # E.g.: large ovaries
-        # producer(convert, '(?P<value> (size | state | count){1,3} ) ovaries'),
-
-        # E.g.: ovaries and uterine horns covered with copious fat
-        # producer(convert, 'ovaries (?P<value> coverage)'),
-
-        # E.g.: reproductive data=Ovary, fallopian tubes dark red
-        # producer(convert, 'ovaries (?P<value> color | texture )'),
-
-        # E.g.: +corp. alb both ovaries
-        producer(convert, '(?P<value> luteum) side? ovary'),
-
-        # E.g.: ovaries L +lut
-        # producer(convert, 'ovaries side? luteum'),
-
-        # E.g.: 4 bodies in L ovary
-        # producer(convert, '(?P<value> cyst ) side? ovaries'),
-
-        # E.g.: corpus luteum visible in both ovaries
-        # producer(
-        #     convert,
-        #     """(?P<value> luteum (state)? )
-        #         (word | len_units){0,3} side? ovaries
-        #     """),
         ],
-)
+    )

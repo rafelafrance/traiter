@@ -103,7 +103,7 @@ add_frag(
 add_frag('alb', r' \b ( albicans | alb ) \b ')
 
 add_frag(
-    'corpus', r' \b ( corpus | corpora | corp | cor | c ) \b ')
+    'corpus', r' \b ( c\.l\. | ( corpus | corpora | corp | cor | c | cl ) \b )')
 
 add_frag('fallopian', r' ( fallopian | foll ) ( \s* tubes? )? ')
 

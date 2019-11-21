@@ -37,7 +37,11 @@ class TestOvariesState(unittest.TestCase):
                 'reproductive data=L ov 2 lg foll + 2 c.l.; '
                 'R ov 3 c.l.; L horn 4 dark scars, 3 lt; '
                 'R horn 6 dark, 6 lt; +corp. alb both ovaries;'),
-            [Trait(value='+corp. alb', side='both', start=104, end=127)])
+            [
+                Trait(value='lg foll', side='l', start=18, end=32),
+                Trait(value='c.l.', side='r', start=43, end=54),
+                Trait(value='+corp. alb', side='both', start=104, end=127),
+            ])
 
     def test_parse_06(self):
         self.assertEqual(
@@ -54,7 +58,7 @@ class TestOvariesState(unittest.TestCase):
         self.assertEqual(
             OVARIES_STATE.parse(
                 'reproductive data=Ovary, fallopian tubes dark red.'),
-            [Trait(value='dark red', start=18, end=49)])
+            [Trait(value='fallopian tubes dark red', start=18, end=49)])
 
     def test_parse_09(self):
         self.assertEqual(
@@ -119,7 +123,7 @@ class TestOvariesState(unittest.TestCase):
     def test_parse_20(self):
         self.assertEqual(
             OVARIES_STATE.parse('ovaries: both w/sev c. alb;'),
-            [Trait(value='w/sev c. alb', side='both', start=0, end=26)])
+            [Trait(value='sev c. alb', side='both', start=0, end=26)])
 
     def test_parse_21(self):
         self.assertEqual(
@@ -132,7 +136,7 @@ class TestOvariesState(unittest.TestCase):
         self.assertEqual(
             OVARIES_STATE.parse(
                 'reproductive data=only 1 fully developed ovary ;'),
-            [Trait(value='only 1 fully developed', start=18, end=46)])
+            [Trait(value='fully developed', start=25, end=46)])
 
     def test_parse_23(self):
         self.assertEqual(
@@ -204,7 +208,7 @@ class TestOvariesState(unittest.TestCase):
             OVARIES_STATE.parse(
                 'reproductive data=imp, pelv fused, nipp tiny, nullip, '
                 'both ov w/ few sm foll;'),
-            [Trait(value='w/ few sm foll', side='both', start=54, end=76)])
+            [Trait(value='few sm foll', side='both', start=54, end=76)])
 
     def test_parse_36(self):
         self.assertEqual(
