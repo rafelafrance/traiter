@@ -58,7 +58,7 @@ LIFE_STAGE = Base(
         fragment('hatching', 'hatching'),
 
         # Match any word
-        fragment('word', r' \b \w [\w?./-]* (?! [./-] ) '),
+        fragment('word', r' \b \w [\w?.-]* (?! [./-] ) '),
 
         replacer('as_time', ' after? (ordinals | hatching) time_units'),
 

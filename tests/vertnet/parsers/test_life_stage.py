@@ -13,7 +13,7 @@ class TestLifeStage(unittest.TestCase):
     def test_parse_02(self):
         self.assertEqual(
             LIFE_STAGE.parse('age=u ad.'),
-            [Trait(value='u ad', start=0, end=8)])
+            [Trait(value='u ad.', start=0, end=9)])
 
     def test_parse_03(self):
         self.assertEqual(
