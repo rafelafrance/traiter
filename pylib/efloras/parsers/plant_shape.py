@@ -120,14 +120,14 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = plant.SCANNER['shape_starter'].regex.sub('', value)
-    value = plant.SCANNER['location'].regex.sub('', value)
+    value = plant.SCANNER['shape_starter'].regexp.sub('', value)
+    value = plant.SCANNER['location'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
-    value = ORBICULAR.regex.sub('orbicular', value)
-    value = POLYGONAL.regex.sub('polygonal', value)
+    value = ORBICULAR.regexp.sub('orbicular', value)
+    value = POLYGONAL.regexp.sub('polygonal', value)
     value = value.strip()
     value = RENAME.get(value, value)
-    value = value if SHAPE.regex.search(value) else ''
+    value = value if SHAPE.regexp.search(value) else ''
     return value
 
 

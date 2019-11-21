@@ -88,7 +88,7 @@ def check_trait_groups(para, text):
     """Validate that we have all of the traits."""
     bold = para.xpath('.//b')  # Used to check the trait group parse
 
-    # We'regex just using the bold items as a check on the trait groups
+    # We are just using the bold items as a check on the trait groups
     bolds = [regex.sub('[:.,]', '', x.text_content()) for x in bold]
     bolds = [x.strip().lower() for x in bolds if x]
 

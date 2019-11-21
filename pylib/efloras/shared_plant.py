@@ -2,7 +2,7 @@
 
 import regex
 from pylib.stacked_regex.rule import replacer
-from pylib.shared.patterns import add_frag, add_key, SCANNER
+from pylib.shared.patterns import add_frag, add_key, RULE
 import pylib.efloras.util as util
 
 
@@ -35,7 +35,7 @@ add_key(
     'petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
 add_key('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
 add_key('hairs', 'hairs?')
-add_key('flower', fr'({SCANNER["sex"].regex.pattern} \s+ )? flowers?')
+add_key('flower', fr'({RULE["sex"].regex.pattern} \s+ )? flowers?')
 add_key('hypanthium', 'hypan-?thi(um|a)')
 add_key('sepal', 'sepals?')
 add_key('calyx', 'calyx | calyces')

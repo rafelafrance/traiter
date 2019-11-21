@@ -67,8 +67,9 @@ add_frag('number', r"""
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
 add_rep('range', """
-    (?<! dash ) number units? ( dash | to ) number units? (?! dash )
-     | range units | number units """)
+    (?<! dash ) 
+    ( number units? ( dash | to ) number units? | number units ) 
+    (?! dash ) """)
 # Rule set for parsing a range
 add_set('range_set', [
     RULE['inches'],
@@ -91,8 +92,8 @@ add_set('range_set', [
 # the first two numbers
 add_rep('cross', """
     (?<! x ) 
-        number len_units? ( x | by ) number len_units? 
-        | cross units | number units """)
+        ( number len_units? ( x | by ) number len_units? 
+        | number len_units ) """)
 
 # Rule set for parsing a cross
 add_set('cross_set', [
@@ -100,7 +101,6 @@ add_set('cross_set', [
     RULE['feet'],
     RULE['metric_len'],
     RULE['len_units'],
-    RULE['units'],
     RULE['number'],
     RULE['x'],
     RULE['by'],
@@ -113,6 +113,15 @@ add_rep('fraction', """ (?<! slash ) number slash number (?! slash ) units? """)
 
 # Rule set for parsing fractions
 add_set('fraction_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['pounds'],
+    RULE['ounces'],
+    RULE['metric_mass'],
+    RULE['mass_units'],
+    RULE['units'],
     RULE['number'],
     RULE['slash'],
     RULE['fraction'],

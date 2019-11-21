@@ -1,8 +1,10 @@
 """Extract information for further analysis."""
 
+import regex
 from collections import deque
 from typing import Tuple
-from pylib.stacked_regex.rule import Rules, RuleType, SEP
+from pylib.stacked_regex.rule import build, Rules, RuleDict, RuleType
+from pylib.stacked_regex.rule import SEP, FLAGS
 from pylib.shared.util import flatten
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
@@ -12,38 +14,43 @@ class Parser:
 
     def __init__(self, rules: Rules, name: str = 'parser') -> None:
         """Build the parser."""
-        self.name = name
-        self.scanners = []
-        self.replacers = []
-        self.producers = []
+        self.name: str = name
+        self.rules: RuleDict = {}
+        self._built = False
+        self._scanners: Rules = []
+        self._producers: Rules = []
         self.__iadd__(rules)
 
-    def __iadd__(self, rules) -> None:
+    def __iadd__(self, rule_list) -> None:
         """Add rules to the parser."""
-        for rule in flatten(rules):
-            self._add_rule(rule)
-
-    def _add_rule(self, rule):
-        """Add the rule to the correct array."""
-        if rule.type == RuleType.SCANNER:
-            self.scanners.append(rule)
-        elif rule.type == RuleType.REPLACER:
-            self.replacers.append(rule)
-        elif rule.type == RuleType.PRODUCER:
-            self.producers.append(rule)
+        self._built = False
+        for rule in flatten(rule_list):
+            self.rules[rule.name] = rule
 
     def parse(self, text: str) -> Tokens:
         """Extract information from the text."""
-        tokens = scan(self.scanners, text)
-        again = bool(self.replacers)
-        while again:
-            tokens, again = replace(self.replacers, tokens, text)
-        # for token in tokens:
-        #     print(token)
-        # print()
-        if self.producers:
-            tokens = produce(self.producers, tokens, text)
+        if not self._built:
+            self._build()
+
+        tokens = scan(self._scanners, text)
+
+        if self._producers:
+            tokens = produce(self._producers, tokens, text)
+
         return tokens
+
+    def _build(self) -> None:
+        """Build the regular expressions."""
+        self._built = True
+        self._scanners = [r for r in self.rules.values()
+                          if r.type == RuleType.SCANNER]
+
+        rules = [r for r in self.rules.values() if r.type != RuleType.SCANNER]
+        for rule in rules:
+            pattern = build(rule.name, rule.pattern, self.rules)
+            rule.regexp = regex.compile(pattern, FLAGS)
+            if rule.type == RuleType.PRODUCER:
+                self._producers.append(rule)
 
 
 def scan(rules: Rules, text: str) -> Tokens:
@@ -58,32 +65,6 @@ def scan(rules: Rules, text: str) -> Tokens:
         tokens.append(token)
         matches = remove_passed_over(matches, token)
     return tokens
-
-
-def replace(rules: Rules, tokens: Tokens, text: str) -> Tuple[Tokens, bool]:
-    """Replace token combinations with another token."""
-    replaced = []
-    token_text = SEP.join([t.name for t in tokens]) + SEP
-    matches = get_matches(rules, token_text)
-    again = bool(matches)
-
-    prev_idx = 0
-    while matches:
-        match = matches.popleft()
-        token, first_idx, last_idx = merge_tokens(
-            match, tokens, text, token_text)
-        if token.action:
-            token.action(token)
-        if prev_idx != first_idx:
-            replaced += tokens[prev_idx:first_idx]
-        replaced.append(token)
-        prev_idx = last_idx
-        matches = remove_passed_over(matches, match)
-
-    if prev_idx != len(tokens):
-        replaced += tokens[prev_idx:]
-
-    return replaced, again
 
 
 def produce(rules: Rules, tokens: Tokens, text: str) -> Tokens:
@@ -110,9 +91,9 @@ def remove_passed_over(matches: deque, match: Token) -> deque:
 
 def get_matches(rules: Rules, text: str) -> deque:
     """Get all of the text matches for the rules sorted by position."""
-    matches = [(r, r.regex.finditer(text)) for r in rules]
+    matches = [(r, r.regexp.finditer(text)) for r in rules]
     matches = [Token(match[0], match=m) for match in matches for m in match[1]]
-    matches = sorted(matches, key=lambda m: m.span[0])
+    matches = sorted(matches, key=lambda m: (m.span[0], -m.span[1]))
     return deque(matches)
 
 
@@ -141,10 +122,40 @@ def merge_tokens(match: Token, tokens: Tokens, text: str, token_text: str) \
             append_group(groups, key, value)
 
     # Add groups from current token with real (not tokenized) text
-    for key in match.groups:
-        idx1 = token_text[:match.match.start(key)].count(SEP)
-        idx2 = token_text[:match.match.end(key)].count(SEP) - 1
-        append_group(groups, key, text[tokens[idx1].start:tokens[idx2].end])
+    for key in match.match.capturesdict():
+        for i, value in enumerate(match.match.captures(key)):
+            start = match.match.starts(key)[i]
+            end = match.match.ends(key)[i]
+            idx1 = token_text[:start].count(SEP)
+            idx2 = token_text[:end].count(SEP) - 1
+            append_group(groups, key, text[tokens[idx1].start:tokens[idx2].end])
 
     token = Token(match.rule, span=span, groups=groups)
     return token, first_idx, last_idx
+
+
+# def replace(rules: Rules, tokens: Tokens, text: str) \
+#         -> Tuple[Tokens, bool]:
+#     """Replace token combinations with another token."""
+#     replaced = []
+#     token_text = SEP.join([t.name for t in tokens]) + SEP
+#     matches = get_matches(rules, token_text)
+#     again = bool(matches)
+#
+#     prev_idx = 0
+#     while matches:
+#         match = matches.popleft()
+#         token, first_idx, last_idx = merge_tokens(
+#             match, tokens, text, token_text)
+#         if token.action:
+#             token.action(token)
+#         if prev_idx != first_idx:
+#             replaced += tokens[prev_idx:first_idx]
+#         replaced.append(token)
+#         prev_idx = last_idx
+#         matches = remove_passed_over(matches, match)
+#
+#     if prev_idx != len(tokens):
+#         replaced += tokens[prev_idx:]
+#
+#     return replaced, again

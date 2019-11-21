@@ -105,16 +105,16 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = plant.SCANNER['shape_starter'].regex.sub('', value)
+    value = plant.SCANNER['shape_starter'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
 
     parts = []
     has_color = False
     for part in regex.split(rf'\s+ | {plant.DASH}', value, flags=util.FLAGS):
-        if COLORS.regex.search(part):
+        if COLORS.regexp.search(part):
             parts.append(RENAME.get(part, part))
             has_color = True
-        elif COLOR_SUFFIX.regex.search(part):
+        elif COLOR_SUFFIX.regexp.search(part):
             parts.append(RENAME.get(part, part))
     if not has_color:
         parts = []
