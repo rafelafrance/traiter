@@ -38,7 +38,7 @@ class TestBodyMass(unittest.TestCase):
             [NumericTrait(
                 value=[995.06, 1034.75],
                 ambiguous_key=True,
-                units=['lbs', 'ozs'],
+                units=['lbs', 'oz'],
                 units_inferred=False,
                 start=0, end=19)])
 
@@ -217,7 +217,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             BODY_MASS.parse('2 lbs. 3.1 oz '),
             [NumericTrait(value=995.06, ambiguous_key=True,
-                          units=['lbs', 'ozs'], units_inferred=False,
+                          units=['lbs', 'oz'], units_inferred=False,
                           start=0, end=13)])
 
     def test_parse_29(self):
@@ -287,6 +287,7 @@ class TestBodyMass(unittest.TestCase):
                 start=21, end=34)])
 
     def test_parse_38(self):
+        self.maxDiff = None
         self.assertEqual(
             BODY_MASS.parse('; weight=22 oz; Verbatim weight=1lb 6oz;'),
             [
@@ -294,7 +295,7 @@ class TestBodyMass(unittest.TestCase):
                     value=623.69, units='oz', units_inferred=False,
                     start=2, end=14),
                 NumericTrait(
-                    value=623.69, units=['lbs', 'ozs'], units_inferred=False,
+                    value=623.69, units=['lb', 'oz'], units_inferred=False,
                     start=25, end=39)])
 
     def test_parse_39(self):
@@ -335,7 +336,7 @@ class TestBodyMass(unittest.TestCase):
         self.assertEqual(
             BODY_MASS.parse('Weight=22 lbs., 7 oz.; Length=41 in. T.L.'),
             [NumericTrait(
-                value=10177.48, units=['lbs', 'ozs'], units_inferred=False,
+                value=10177.48, units=['lbs', 'oz'], units_inferred=False,
                 start=0, end=20)])
 
     def test_parse_45(self):

@@ -16,3 +16,8 @@ def flatten(nested):
 def squash(values):
     """Squash a list to a single value is its length is one."""
     return values if len(values) > 1 else values[0]
+
+
+def as_list(values):
+    """Convert values to a list."""
+    return values if isinstance(values, (list, tuple, set)) else [values]

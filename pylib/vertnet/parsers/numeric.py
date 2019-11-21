@@ -15,10 +15,10 @@ def add_flags(token, trait):
     """Add common flags to the numeric trait."""
     trait.is_flag_in_token('ambiguous_key', token)
     trait.is_flag_in_token('estimated_value', token)
-    # trait.is_value_in_token('measured_from')
     trait.is_value_in_token('measured_from1', token, rename='measured_from')
     trait.is_value_in_token('measured_from2', token, rename='measured_from')
     trait.is_value_in_token('includes', token)
+    trait.is_flag_missing('key', token, rename='ambiguous_key')
 
 
 def simple(token):
@@ -32,7 +32,6 @@ def simple(token):
 
 def compound(token, units=''):
     """Handle a pattern like: 4 lbs 9 ozs."""
-    print(token)
     trait = NumericTrait(start=token.start, end=token.end)
     add_flags(token, trait)
     values = [token.groups[units[0]], token.groups[units[1]]]

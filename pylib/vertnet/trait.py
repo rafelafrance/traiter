@@ -36,6 +36,12 @@ class Trait:
             flag = rename if rename else flag
             setattr(self, flag, True)
 
+    def is_flag_missing(self, flag, token, rename=None):
+        """Set a flag if it is found in the token's groups field."""
+        if not token.groups.get(flag):
+            flag = rename if rename else flag
+            setattr(self, flag, True)
+
     def is_value_in_token(self, flag, token, rename=None):
         """Set a flag if it is found in the token's groups field."""
         value = token.groups.get(flag)

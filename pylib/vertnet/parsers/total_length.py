@@ -6,7 +6,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, fraction, compound
 from pylib.vertnet.parsers.numeric import shorthand_length, simple
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 import pylib.vertnet.util as util
 
 
@@ -63,9 +63,9 @@ def fix_up(trait, text):
 TOTAL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
-    scanners=[
+    rules=[
 
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: TotalLengthInMillimeters
         keyword('key_with_units', r"""
@@ -117,20 +117,20 @@ TOTAL_LENGTH = Base(
         fragment('key_units_req', 'measurements? body total'.split()),
 
         # Units
-        SCANNER['metric_len'],
-        SCANNER['feet'],
-        SCANNER['inches'],
+        RULE['metric_len'],
+        RULE['feet'],
+        RULE['inches'],
 
         # Shorthand notation
-        SCANNER['shorthand_key'],
-        SCANNER['shorthand'],
-        SCANNER['triple'],  # Truncated shorthand
+        RULE['shorthand_key'],
+        RULE['shorthand'],
+        RULE['triple'],  # Truncated shorthand
 
         # Fractional numbers, like: 9/16
-        SCANNER['fraction'],
+        RULE['fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        SCANNER['range'],
+        RULE['range'],
 
         # The abbreviation key, just: t. This can be a problem.
         fragment('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
@@ -141,11 +141,7 @@ TOTAL_LENGTH = Base(
         # Some patterns require a separator
         fragment('semicolon', r' [;] | $ '),
         fragment('comma', r' [,] | $ '),
-    ],
 
-    replacers=[],
-
-    producers=[
         # Handle fractional values like: total length 9/16"
         # E.g.: total = 9/16 inches
         producer(fraction, [
