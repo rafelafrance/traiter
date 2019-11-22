@@ -70,7 +70,7 @@ class NumericTrait(Trait):
         setattr(self, 'value', squash(values))
 
     def fraction_value(self, token):
-        """Calculate a fraction value like: 10 3/8."""
+        """Calculate a fraction value like: 6 3/8."""
         whole = self.to_float(token.groups.get('whole'))
         numerator = self.to_float(token.groups['numerator'])
         denominator = self.to_float(token.groups['denominator'])

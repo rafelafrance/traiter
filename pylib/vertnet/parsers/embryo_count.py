@@ -3,8 +3,7 @@
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric_trait import NumericTrait
-from pylib.vertnet.shared_patterns import SCANNER
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert(token):
@@ -59,16 +58,16 @@ def convert(token):
 
 EMBRYO_COUNT = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with shorthand
-        REPRODUCTIVE['embryo'],
-        REPRODUCTIVE['and'],
-        REPRODUCTIVE['size'],
-        REPRODUCTIVE['fat'],
-        SCANNER['len_units'],
-        SCANNER['integer'],
-        REPRODUCTIVE['side'],
-        REPRODUCTIVE['none'],
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with shorthand
+        RULE['embryo'],
+        RULE['and'],
+        RULE['size'],
+        RULE['fat'],
+        RULE['len_units'],
+        RULE['integer'],
+        RULE['side'],
+        RULE['none'],
 
         keyword('conj', ' or '),
         keyword('prep', ' on '),
@@ -76,17 +75,13 @@ EMBRYO_COUNT = Base(
         # The sexes like: 3M or 4Females
         fragment('sex', r""" males? | females? | [mf] (?! [a-z] ) """),
 
-        REPRODUCTIVE['sep'],
+        RULE['sep'],
 
         # Skip arbitrary words
         fragment('word', r' \w+ '),
-    ],
 
-    replacers=[
         replacer('count', ' none word conj | integer | none '),
-    ],
 
-    producers=[
         # Eg: 4 fetuses on left, 1 on right
         producer(convert, [
             """ (?P<count1> count ) embryo prep (?P<side1> side )

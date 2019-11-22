@@ -120,8 +120,8 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = plant.SCANNER['shape_starter'].regexp.sub('', value)
-    value = plant.SCANNER['location'].regexp.sub('', value)
+    value = plant.RULE['shape_starter'].regexp.sub('', value)
+    value = plant.RULE['location'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
     value = ORBICULAR.regexp.sub('orbicular', value)
     value = POLYGONAL.regexp.sub('polygonal', value)
@@ -135,32 +135,31 @@ def parser(plant_part):
     """Build a parser for the flower part."""
     return Base(
         name=f'{plant_part}_shape',
-        scanners=[
-            plant.SCANNER[plant_part],
-            plant.SCANNER['plant_part'],
-            plant.SCANNER['location'],
+        rules=[
+            plant.RULE[plant_part],
+            plant.RULE['plant_part'],
+            plant.RULE['location'],
             SHAPE,
-            plant.SCANNER['shape_starter'],
+            plant.RULE['shape_starter'],
             SHAPE_PREFIX,
-            plant.SCANNER['conj'],
-            plant.SCANNER['prep'],
-            plant.SCANNER['word'],
-            ],
-        replacers=[
+            plant.RULE['conj'],
+            plant.RULE['prep'],
+            plant.RULE['word'],
+            plant.RULE['punct'],
+
             plant.part_phrase(plant_part),
+
             replacer('shape_phrase', """
                 ( plant_shape | shape_starter | shape_prefix | location )*
                 plant_shape
                 """),
-            replacer('noise', ' word | shape_starter noise '),
-            ],
-        producers=[
+
             producer(convert, f"""
                 {plant_part}_phrase
-                ( noise | conj | prep )*
+                ( word | conj | prep )*
                 (?P<value>
                     ( shape_phrase | shape_starter | shape_prefix
-                        | conj | prep | noise
+                        | conj | prep | word
                     )*
                     shape_phrase ((shape_starter | conj | prep)* location)?
                 )

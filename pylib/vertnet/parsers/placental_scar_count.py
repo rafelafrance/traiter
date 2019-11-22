@@ -3,8 +3,7 @@
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SCANNER
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert_count(token):
@@ -46,15 +45,15 @@ def convert_state(token):
 
 PLACENTAL_SCAR_COUNT = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
-        REPRODUCTIVE['plac_scar'],
-        SCANNER['integer'],
-        REPRODUCTIVE['side'],
-        REPRODUCTIVE['none'],
-        REPRODUCTIVE['op'],
-        REPRODUCTIVE['eq'],
-        REPRODUCTIVE['embryo'],
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with numbers
+        RULE['plac_scar'],
+        RULE['integer'],
+        RULE['side'],
+        RULE['none'],
+        RULE['op'],
+        RULE['eq'],
+        RULE['embryo'],
 
         # Adjectives to placental scars
         keyword('adj', r"""
@@ -74,15 +73,11 @@ PLACENTAL_SCAR_COUNT = Base(
 
         # Trait separator
         fragment('sep', r' [;/] '),
-    ],
 
-    replacers=[
         replacer('count', """
             none embryo conj
             | none visible | integer | none """),
-    ],
 
-    producers=[
         producer(convert_count, [
             """(?P<count1> count ) op (?P<count2> count )
                 ( eq (?P<value> count ) )? plac_scar """]),

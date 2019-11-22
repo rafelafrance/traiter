@@ -5,7 +5,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.parsers.numeric import fraction, simple
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 
 
 def fix_up(trait, text):
@@ -16,8 +16,8 @@ def fix_up(trait, text):
 
 HIND_FOOT_LENGTH = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: HindFootLengthInMillimeters
         keyword(
@@ -32,20 +32,20 @@ HIND_FOOT_LENGTH = Base(
             'hfl | hf']),
 
         # Units
-        SCANNER['len_units'],
+        RULE['len_units'],
 
         # Shorthand notation
-        SCANNER['shorthand_key'],
-        SCANNER['shorthand'],
+        RULE['shorthand_key'],
+        RULE['shorthand'],
 
         # Fractional numbers, like: 9/16
-        SCANNER['fraction'],
+        RULE['fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        SCANNER['range'],
+        RULE['range'],
 
         # Sometimes the last number is missing in the shorthand notation
-        SCANNER['triple'],
+        RULE['triple'],
 
         # We allow random words in some situations
         keyword('word', r' ( [a-z] \w* ) '),
@@ -53,12 +53,6 @@ HIND_FOOT_LENGTH = Base(
         # Some patterns require a separator
         fragment('sep', r' [;,] | $ '),
 
-    ],
-
-    replacers=[
-    ],
-
-    producers=[
         # Handle fractional values like: hindFoot 9/16"
         producer(fraction, [
 

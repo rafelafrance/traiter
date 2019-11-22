@@ -105,7 +105,7 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = plant.SCANNER['shape_starter'].regexp.sub('', value)
+    value = plant.RULE['shape_starter'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
 
     parts = []
@@ -128,21 +128,19 @@ def parser(plant_part):
     """Build a parser for the flower part."""
     return Base(
         name=f'{plant_part}_color',
-        scanners=[
-            plant.SCANNER[plant_part],
-            plant.SCANNER['plant_part'],
+        rules=[
+            plant.RULE[plant_part],
+            plant.RULE['plant_part'],
             COLORS,
             COLOR_PREFIX,
             COLOR_SUFFIX,
-            ],
-        replacers=[
+
             replacer('color_phrase', """
                 color_prefix*
                 flower_color
                 color_suffix*
                 """),
-            ],
-        producers=[
+
             producer(convert, f"""
                 (?P<part> {plant_part} ) (?P<value> color_phrase+ ) """),
             ],

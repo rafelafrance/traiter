@@ -3,8 +3,7 @@
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric_trait import NumericTrait
-from pylib.vertnet.shared_patterns import SCANNER
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert(token):
@@ -37,17 +36,17 @@ def typed(token):
 
 NIPPLE_COUNT = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
         keyword('id', r' \d+-\d+ '),
 
-        REPRODUCTIVE['nipple'],
-        SCANNER['integer'],
-        REPRODUCTIVE['visible'],
-        REPRODUCTIVE['none'],
-        REPRODUCTIVE['op'],
-        REPRODUCTIVE['eq'],
+        RULE['nipple'],
+        RULE['integer'],
+        RULE['visible'],
+        RULE['none'],
+        RULE['op'],
+        RULE['eq'],
 
         keyword('adj', r""" inguinal ing pectoral pec pr """.split()),
 
@@ -57,18 +56,14 @@ NIPPLE_COUNT = Base(
         # Skip arbitrary words
         fragment('word', r' \w+ '),
 
-        REPRODUCTIVE['sep'],
-    ],
+        RULE['sep'],
 
-    replacers=[
         replacer('count', ' integer | none '),
 
         replacer('modifier', 'adj visible'.split()),
 
         replacer('skip', ' number eq? integer '),
-    ],
 
-    producers=[
         producer(
             typed,
             """ (?P<notation>

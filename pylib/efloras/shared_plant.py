@@ -27,15 +27,14 @@ add_key('plant_part', r"""
     | ovar(y|ies) | ovules?
     | racemes?
     | sepals? | stamens? | stigmas? | stipules? | styles?
-    )
-    """)
+    )""")
 
 add_key('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
 add_key(
     'petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
 add_key('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
 add_key('hairs', 'hairs?')
-add_key('flower', fr'({RULE["sex"].regex.pattern} \s+ )? flowers?')
+add_key('flower', fr'({RULE["sex"].regexp.pattern} \s+ )? flowers?')
 add_key('hypanthium', 'hypan-?thi(um|a)')
 add_key('sepal', 'sepals?')
 add_key('calyx', 'calyx | calyces')

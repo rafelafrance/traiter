@@ -5,8 +5,7 @@ from pylib.stacked_regex.token import forget
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.numeric import fix_up_inches
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_patterns import SCANNER
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
+from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert(token):
@@ -46,11 +45,10 @@ def fix_up(trait, text):
 EMBRYO_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
-
-        REPRODUCTIVE['embryo'],
+        RULE['embryo'],
 
         keyword('crown_rump', r"""
             (?<! collector [\s=:.] ) (?<! reg [\s=:.] ) (
@@ -63,29 +61,25 @@ EMBRYO_LENGTH = Base(
 
         keyword('prep', ' of from '.split()),
 
-        SCANNER['len_units'],
+        RULE['len_units'],
 
-        SCANNER['cross'],
-        fragment('cross_joiner', SCANNER['cross_joiner'].pattern),
+        RULE['cross'],
+        fragment('cross_joiner', RULE['cross_joiner'].pattern),
         fragment('other', r' \( \s* \d+ \s* \w+ \s* \) '),
 
         keyword('count_side', r' \d+ \s? ( l[ft]? | rt? ) '),
-        REPRODUCTIVE['side'],
+        RULE['side'],
         fragment('word', r' \w+ '),
         fragment('quest', '[?]'),
         fragment('separator', r' [;"/] '),
-    ],
 
-    replacers=[
         replacer(
             'count',
             """measurement side measurement side | count_side count_side """,
             action=forget),
         replacer('skip', ' prep word cross | other '),
         replacer('measurement', ' cross_joiner? cross '),
-    ],
 
-    producers=[
         producer(convert, [
             # E.g.: crown-rump length=13 mm
             """ embryo? crown_rump length?

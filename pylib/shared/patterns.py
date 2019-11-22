@@ -42,7 +42,7 @@ add_frag('by', r' by ')
 add_frag('to', r' to ')
 
 # NOTE: Double quotes as inches is handled elsewhere
-add_frag('inches', ' ( inch e? s? | in s? ) \b ')
+add_frag('inches', r' ( inch e? s? | in s? ) \b ')
 add_frag('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
 add_frag('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
 add_rep('len_units', ' metric_len feet inches'.split())
@@ -127,7 +127,11 @@ add_set('cross_set', [
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-add_rep('fraction', """ (?<! slash ) number slash number (?! slash ) units? """)
+add_rep('fraction', """
+    (?P<whole> number )? 
+    (?<! slash ) 
+    (?P<numerator> number) slash (?P<denominator> number) 
+    (?! slash ) units? """)
 # Rule set for parsing fractions
 add_set('fraction_set', [
     RULE['inches'],

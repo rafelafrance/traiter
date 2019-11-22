@@ -1,16 +1,15 @@
 """Parse testes size notations."""
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.parsers.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 
 
 TESTES_SIZE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        REPRODUCTIVE['testes'],
+    rules=[
+        RULE['testes'],
 
         # Note: abbrev differs from the one in the testes_state_trait
         keyword('abbrev', 'tes ts tnd td tns ta'.split()),
@@ -18,31 +17,29 @@ TESTES_SIZE = Base(
         # The abbreviation key, just: t. This can be a problem.
         fragment('char_key', r' \b t (?! [a-z] )'),
 
-        REPRODUCTIVE['descended'],
-        REPRODUCTIVE['scrotal'],
-        REPRODUCTIVE['abdominal'],
-        REPRODUCTIVE['size'],
-        REPRODUCTIVE['other'],
+        RULE['descended'],
+        RULE['scrotal'],
+        RULE['abdominal'],
+        RULE['size'],
+        RULE['other'],
 
-        SCANNER['uuid'],  # UUIDs cause problems with numeric traits
+        RULE['uuid'],  # UUIDs cause problems with numeric traits
 
-        REPRODUCTIVE['label'],
-        REPRODUCTIVE['ambiguous_key'],
-        REPRODUCTIVE['non'],
-        REPRODUCTIVE['fully'],
-        REPRODUCTIVE['partially'],
-        SCANNER['side_cross'],
-        SCANNER['side'],
-        SCANNER['dim_side'],
-        SCANNER['dimension'],
-        SCANNER['cross'],
-        SCANNER['len_units'],
-        REPRODUCTIVE['in'],
-        REPRODUCTIVE['word'],
-        REPRODUCTIVE['sep'],
-    ],
+        RULE['label'],
+        RULE['ambiguous_key'],
+        RULE['non'],
+        RULE['fully'],
+        RULE['partially'],
+        RULE['side_cross'],
+        RULE['side'],
+        RULE['dim_side'],
+        RULE['dimension'],
+        RULE['cross'],
+        RULE['len_units'],
+        RULE['in'],
+        RULE['word'],
+        RULE['sep'],
 
-    replacers=[
         replacer('state', [
             """(non | partially | fully )? descended """]
                  + """ scrotal abdominal size other """.split()),
@@ -62,9 +59,7 @@ TESTES_SIZE = Base(
 
             # E.g.: Gonad Length
             r' ambiguous_key dimension ']),
-    ],
 
-    producers=[
         # These patterns contain measurements to both left & right testes
         # E.g.: reproductive data: tests left 10x5 mm, right 10x6 mm
         producer(

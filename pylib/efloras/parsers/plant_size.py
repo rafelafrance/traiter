@@ -54,17 +54,17 @@ def leaf_parser(plant_part):
     """Build a parser for the plant part."""
     return Base(
         name=f'{plant_part}_size',
-        scanners=[
-            plant.SCANNER[plant_part],
-            plant.SCANNER['plant_part'],
-            plant.SCANNER['sex_cross'],
-            plant.SCANNER['sex'],
-            plant.SCANNER['cross_dim'],
-            plant.SCANNER['dim'],
-            plant.SCANNER['location'],
-            ],
-        replacers=[plant.part_phrase(plant_part)],
-        producers=[
+        rules=[
+            plant.RULE[plant_part],
+            plant.RULE['plant_part'],
+            plant.RULE['sex_cross'],
+            plant.RULE['sex'],
+            plant.RULE['cross_dim'],
+            plant.RULE['dim'],
+            plant.RULE['location'],
+
+            plant.part_phrase(plant_part),
+
             producer(sex_convert, f"""
                 {plant_part}_phrase dim* sex_cross """),
             producer(convert, f"""
@@ -79,16 +79,14 @@ def flower_parser(plant_part):
     """Build a parser for the plant part."""
     return Base(
         name=f'{plant_part}_size',
-        scanners=[
-            plant.SCANNER[plant_part],
-            plant.SCANNER['plant_part'],
-            plant.SCANNER['sex_cross'],
-            plant.SCANNER['sex'],
-            plant.SCANNER['cross_dim'],
-            plant.SCANNER['dim'],
-            ],
-        replacers=[],
-        producers=[
+        rules=[
+            plant.RULE[plant_part],
+            plant.RULE['plant_part'],
+            plant.RULE['sex_cross'],
+            plant.RULE['sex'],
+            plant.RULE['cross_dim'],
+            plant.RULE['dim'],
+
             producer(sex_convert, f"""
                 (?P<part> {plant_part} ) dim* sex_cross """),
             producer(convert, f"""

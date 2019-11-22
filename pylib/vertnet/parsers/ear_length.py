@@ -6,7 +6,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import simple, fraction, shorthand_length
 from pylib.vertnet.parsers.numeric import numeric_fix_ups
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 from pylib.vertnet.util import FLAGS
 
 
@@ -57,10 +57,9 @@ def fix_up(trait, text):
 EAR_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
+    rules=[
 
-    scanners=[
-
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
         keyword('key_with_units', r"""
@@ -70,7 +69,7 @@ EAR_LENGTH = Base(
         # Abbreviation containing the measured from notation, like: e/n or e/c
         fragment('char_measured_from', r"""
             (?<! [a-z] ) (?<! [a-z] \s )
-            (?P<ambiguous_key> e ) /? (?P<measured_from1> n | c )
+            (?P<ambiguous_key> e ) /? (?P<measured_from1> n | c ) [-]?
             (?! \.? [a-z] )
             """),
 
@@ -86,61 +85,36 @@ EAR_LENGTH = Base(
             r' ear \s* from \s* (?P<measured_from1> notch | crown )',
             r' ear \s* ( length | len )',
             r' ear (?! \s* tag )',
-            r' ef (?P<measured_from2> n | c )',
+            r' ef (?P<measured_from2> n | c ) [-]?',
         ]),
 
-        # Units
-        SCANNER['len_units'],
-
         # Fractional numbers, like: 9/16
-        SCANNER['fraction'],
+        RULE['fraction_set'],
 
         # Shorthand notation
-        SCANNER['shorthand_key'],
-        SCANNER['shorthand'],
+        RULE['shorthand_key'],
+        RULE['shorthand'],
 
         # Possible ranges of numbers like: "10 - 20" or just "10"
-        SCANNER['range'],
+        RULE['range_set'],
 
         # We allow random words in some situations
         keyword('word', r' ( [a-z] \w* ) '),
 
         # Some patterns require a separator
-        fragment('sep', r' [;,] | $ '),
-    ],
+        fragment('sep', r' [;,] '),
 
-    replacers=[
         # Consider any of the following as just a key
-        replacer('key', [
-            'keyword',
-            'char_key',
-            'char_measured_from',
-        ]),
-    ],
+        replacer('key', 'keyword char_key char_measured_from'.split()),
 
-    producers=[
         # Handle fractional values like: ear 9/16"
-        producer(fraction, [
+        producer(fraction, 'key fraction (?P<units> len_units )?'),
 
-            # E.g.: ear = 9/16 in
-            'key fraction (?P<units> len_units )',
+        # E.g.: earLengthInMM 9-10
+        producer(simple, '(?P<key> key_with_units ) range'),
 
-            # Without units, like: ear = 9/16
-            'key fraction',
-        ]),
-
-        # A typical ear length notation
-        producer(simple, [
-
-            # E.g.: earLengthInMM 9-10
-            'key_with_units range',
-
-            # E.g.: ear 9-10 mm
-            'key range (?P<units> len_units )',
-
-            # Missing units like: ear: 9-10
-            'key range',
-        ]),
+        # E.g.: ear 9-10 mm
+        producer(simple, 'key range (?P<units> len_units )?'),
 
         # Shorthand notation like: on tag: 11-22-33-44=99g
         producer(

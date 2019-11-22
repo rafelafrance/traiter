@@ -29,18 +29,16 @@ def parser(plant_part):
     """Build a parser for the flower part."""
     return Base(
         name=f'{plant_part}_count',
-        scanners=[
-            plant.SCANNER[plant_part],
-            plant.SCANNER['plant_part'],
-            plant.SCANNER['count_upper'],
-            plant.SCANNER['range'],
-            plant.SCANNER['units'],
-            plant.SCANNER['cross_joiner'],
+        rules=[
+            plant.RULE[plant_part],
+            plant.RULE['plant_part'],
+            plant.RULE['count_upper'],
+            plant.RULE['range'],
+            plant.RULE['units'],
+            plant.RULE['cross_joiner'],
             keyword('skip', r""" locular [/] """.split()),
-            plant.SCANNER['word'],
-            ],
-        replacers=[],
-        producers=[
+            plant.RULE['word'],
+
             producer(convert, f"""
                 (?P<part> {plant_part} ) (word | skip)*
                 ( count_upper | range )

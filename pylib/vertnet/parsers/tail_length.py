@@ -6,7 +6,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.parsers.numeric import simple, fraction
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 import pylib.vertnet.util as util
 
 
@@ -53,8 +53,8 @@ def fix_up(trait, text):
 TAIL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
-    scanners=[
-        SCANNER['uuid'],  # UUIDs cause problems with numbers
+    rules=[
+        RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
         keyword('key_with_units', r"""
@@ -74,34 +74,30 @@ TAIL_LENGTH = Base(
             'tal']),
 
         # Units
-        SCANNER['len_units'],
+        RULE['len_units'],
 
         # Shorthand notation
-        SCANNER['shorthand_key'],
-        SCANNER['shorthand'],
+        RULE['shorthand_key'],
+        RULE['shorthand'],
 
         # Fractional numbers, like: 9/16
-        SCANNER['fraction'],
+        RULE['fraction'],
 
         # Possible pairs of numbers like: "10 - 20" or just "10"
-        SCANNER['range'],
+        RULE['range'],
 
         # Sometimes the last number is missing in the shorthand notation
-        SCANNER['triple'],
+        RULE['triple'],
 
         # We allow random words in some situations
         keyword('word', r' ( [a-z] \w* ) '),
 
         # Some patterns require a separator
         fragment('sep', r' [;,] | $ '),
-    ],
 
-    replacers=[
         # Consider all of these tokens a key
         replacer('key', 'keyword char_key'.split()),
-    ],
 
-    producers=[
         # Handle fractional values like: tailLength 9/16"
         producer(fraction, [
 

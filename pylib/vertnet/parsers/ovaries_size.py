@@ -1,53 +1,50 @@
 """Parse ovaries size notations."""
 
 from pylib.stacked_regex.rule import fragment, producer, replacer
-from pylib.vertnet.shared_reproductive_patterns import REPRODUCTIVE
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.parsers.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 
 
 OVARY_SIZE = Base(
     name=__name__.split('.')[-1],
-    scanners=[
-        REPRODUCTIVE['ovary'],
-        REPRODUCTIVE['other'],
-        REPRODUCTIVE['horns'],
-        REPRODUCTIVE['covered'],
-        REPRODUCTIVE['fat'],
-        REPRODUCTIVE['developed'],
-        REPRODUCTIVE['visible'],
-        REPRODUCTIVE['destroyed'],
-        REPRODUCTIVE['mature'],
-        REPRODUCTIVE['uterus'],
-        REPRODUCTIVE['fallopian'],
-        REPRODUCTIVE['active'],
-        REPRODUCTIVE['lut'],
-        REPRODUCTIVE['corpus'],
-        REPRODUCTIVE['alb'],
-        REPRODUCTIVE['nipple'],
+    rules=[
+        RULE['ovary'],
+        RULE['other'],
+        RULE['horns'],
+        RULE['covered'],
+        RULE['fat'],
+        RULE['developed'],
+        RULE['visible'],
+        RULE['destroyed'],
+        RULE['mature'],
+        RULE['uterus'],
+        RULE['fallopian'],
+        RULE['active'],
+        RULE['lut'],
+        RULE['corpus'],
+        RULE['alb'],
+        RULE['nipple'],
 
         # Commas are sometimes separators & other times punctuation
         fragment('comma', r'[,]'),
 
-        REPRODUCTIVE['label'],
-        REPRODUCTIVE['ambiguous_key'],
-        REPRODUCTIVE['non'],
-        REPRODUCTIVE['fully'],
-        REPRODUCTIVE['partially'],
-        SCANNER['side_cross'],
-        SCANNER['side'],
-        SCANNER['dim_side'],
-        SCANNER['dimension'],
-        SCANNER['cross'],
-        SCANNER['len_units'],
-        REPRODUCTIVE['in'],
-        REPRODUCTIVE['and'],
-        REPRODUCTIVE['word'],
-        REPRODUCTIVE['sep'],
-    ],
+        RULE['label'],
+        RULE['ambiguous_key'],
+        RULE['non'],
+        RULE['fully'],
+        RULE['partially'],
+        RULE['side_cross'],
+        RULE['side'],
+        RULE['dim_side'],
+        RULE['dimension'],
+        RULE['cross'],
+        RULE['len_units'],
+        RULE['in'],
+        RULE['and'],
+        RULE['word'],
+        RULE['sep'],
 
-    replacers=[
         # A key with units, like: gonadLengthInMM
         replacer('key_with_units', r"""
             ambiguous_key dimension in (?P<units> len_units )
@@ -62,9 +59,7 @@ OVARY_SIZE = Base(
             ambiguous_key dim_side
             | side ambiguous_key dimension
             | ambiguous_key dimension """),
-    ],
 
-    producers=[
         # These patterns contain measurements to both left & right ovaries
         # E.g.: reproductive data: ovaries left 10x5 mm, right 10x6 mm
         producer(double, """ label ovary side_cross """),

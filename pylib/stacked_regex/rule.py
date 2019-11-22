@@ -48,7 +48,11 @@ class Rule:
 def build(name: str, pattern: str, rules: RuleDict) -> str:
     """Build regular expressions for token matches."""
     def rep(match):
-        sub = rules[match.group('word')]
+        word = match.group('word')
+        sub = rules.get(word)
+        if not sub:
+            print(f"Could not find rule for {word}")
+            return
         if sub.type == RuleType.SCANNER:
             return fr'(?: \b {sub.name}{SEP} )'
         return sub.regexp.pattern
