@@ -52,9 +52,9 @@ add_key('shape_starter', """
 add_frag('location', r""" \b ( terminal | lateral | basal | cauline ) """)
 add_key('dim', """ width wide length long radius diameter diam? """.split())
 
-add_frag('punct', r' [,;:/] ')
+add_frag('punct', r' [,;:/] ', capture=False)
 
-add_key('word', r' [a-z] \w* ')
+add_key('word', r' [a-z] \w* ', capture=False)
 
 
 # ############################################################################

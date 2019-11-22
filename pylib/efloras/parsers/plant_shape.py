@@ -10,13 +10,13 @@ from pylib.efloras.trait import Trait
 from pylib.efloras.shared_patterns import RULE
 
 
-SHAPE = fragment('plant_shape', r"""
+SHAPE = keyword('plant_shape', r"""
     (\d-)?angular (\d-)?angulate acicular actinomorphic acuminate acute
     apiculate aristate attenuate auriculate
     bilabiate bilateral bilaterally bowl-?shaped
     calceolate campanulate caudate circular convex cordate coronate
-    crateriform cruciform cuneate cup-?shaped cupulate cyanthiform cylindric
-    cymbiform
+    crateriform cruciform cuneate cup-?shaped cupulate cyanthiform
+    cylindric(al)? cymbiform
     deltate deltoid dentate depressed digitate
     elliptic elongate emarginate ensate ensiform
     falcate fenestrate filiform flabellate flabelliorm funnelform
@@ -34,10 +34,11 @@ SHAPE = fragment('plant_shape', r"""
     perforate petiolate pinnate(?!ly) pinnatifid pinnatipartite pinnatisect
     plicate polygonal
     radially rectangular regular reniform retuse rhombic rhomboid rhomboidal
-    rosettes? rotate rotund round rounded roundish
-    saccate sagittate salverform saucer-?like saucer-?shaped septagonal sinuate
-    spatulate spear-?shaped spheric stellate subobtuse suborbicular 
-    suborbiculate subulate symmetric
+    rosettes? rotate rotund round(ed|ish)
+    saccate sagittate salverform saucer-?like saucer-?shaped semiterete
+    septagonal sinuate spatulate spear-?shaped spheric stellate
+    subcylindric(al)? subobtuse suborbicula(r|te) subpeltate subreniform
+    subterete subulate symmetric
     terete triangular trullate truncate tubular turbinate
     undulate unifoliate urceolate
     zygomorphic zygomorphous
@@ -143,25 +144,30 @@ def parser(plant_part):
             SHAPE,
             RULE['shape_starter'],
             SHAPE_PREFIX,
-            # RULE['conj'],
-            # RULE['prep'],
-            # RULE['word'],
-            # RULE['punct'],
+            RULE['conj'],
+            RULE['prep'],
+            RULE['word'],
+            RULE['punct'],
 
             util.part_phrase(plant_part),
 
             replacer('shape_phrase', """
-                ( plant_shape | shape_starter | shape_prefix | location )*
-                plant_shape
+                ( ( plant_shape | shape_starter | shape_prefix | location )
+                    ( punct | conj | prep ){0,2} )*
+                (plant_shape | location)
                 """),
 
             producer(convert, f"""
-                {plant_part}_phrase
-                """),
-
+                    {plant_part}_phrase
+                    ( shape_starter? ( word | conj | punct ))*
+                    ( word | conj | prep | punct )*
+                    (?P<value>
+                        shape_phrase
+                    )
+                    """),
             # producer(convert, f"""
             #     {plant_part}_phrase
-            #     ( word | conj | prep )*
+            #     ( word | conj | prep | punct | shape_starter )*
             #     (?P<value>
             #         ( shape_phrase | shape_starter | shape_prefix
             #             | conj | prep | word
@@ -169,7 +175,8 @@ def parser(plant_part):
             #         shape_phrase ((shape_starter | conj | prep)* location)?
             #     )
             #     """),
-            ],
+
+        ],
         )
 
 

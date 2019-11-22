@@ -15,9 +15,6 @@ FLAGS = regex.VERBOSE | regex.IGNORECASE
 WORD = regex.compile(r"""
     (?<! \(\?P< ) (?<! \(\? ) (?<! [\\] )
     \b (?P<word> [a-z]\w* ) \b """, regex.VERBOSE | regex.IGNORECASE)
-# Find all tokens in the regex. Anything that is not a group name
-# or a regexp metacharacter
-
 
 Rules = List['Rule']
 RuleDict = Dict[str, 'Rule']
@@ -49,6 +46,8 @@ class Rule:
         """Build regular expressions for token matches."""
         def rep(match):
             word = match.group('word')
+            if word not in rules:
+                print(f'Error: "{word}" is not defined.')
             sub = rules.get(word)
 
             if not sub:
