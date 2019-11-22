@@ -78,7 +78,7 @@ BODY_MASS = Base(
         keyword('word', r' ( [a-z] \w* ) '),
 
         # Separators
-        fragment('semicolon', ' [;] | $ '),
+        RULE['semicolon'],
         RULE['comma'],
 
         # Any key not preceding by "other_wt" is considered a weight key

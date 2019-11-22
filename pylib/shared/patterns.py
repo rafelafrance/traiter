@@ -35,6 +35,7 @@ add_frag('close', r' [)\]] ')
 add_frag('x', r' [x×] ')
 add_frag('quest', r' [?] ')
 add_frag('comma', r' [,] ')
+add_frag('semicolon', r' [;] ')
 
 # Small words
 add_frag('by', r' by ')
@@ -59,7 +60,7 @@ add_rep('units', 'len_units mass_units'.split())
 
 # Numbers are positive decimals
 add_frag('number', r"""
-    (?P<estimated_value> \[ )? 
+    (?P<estimated_value> \[ )?
     ( ( \d{1,3} ( , \d{3} ){1,3} | \d+ ) ( \. \d+ )?
         | (?<= [^\d] ) \. \d+ | ^ \. \d+ )
     \]?
@@ -69,8 +70,8 @@ add_frag('number', r"""
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
 add_rep('range', """
-    (?<! dash ) 
-    ( number units? (( dash | to ) number units?)? ) 
+    (?<! dash )
+    ( number units? (( dash | to ) number units?)? )
     (?! dash ) """)
 # Rule set for parsing a range
 add_set('range_set', [
@@ -109,8 +110,8 @@ add_set('compound_wt_set', [
 # length x width. We Allow a triple like "12 x 34 x 56" but we ony take
 # the first two numbers
 add_rep('cross', """
-    (?<! x ) 
-        ( number len_units? ( x | by ) number len_units? 
+    (?<! x )
+        ( number len_units? ( x | by ) number len_units?
         | number len_units ) """)
 # Rule set for parsing a cross
 add_set('cross_set', [
