@@ -1,10 +1,9 @@
 """Extract information for further analysis."""
 
-import regex
 from collections import deque
 from typing import Tuple
-from pylib.stacked_regex.rule import build, Rules, RuleDict, RuleType
-from pylib.stacked_regex.rule import SEP, FLAGS
+from pylib.stacked_regex.rule import Rules, RuleDict, RuleType
+from pylib.stacked_regex.rule import SEP
 from pylib.shared.util import flatten
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
@@ -51,8 +50,7 @@ class Parser:
 
         rules = [r for r in self.rules.values() if r.type != RuleType.SCANNER]
         for rule in rules:
-            pattern = build(rule.name, rule.pattern, self.rules)
-            rule.regexp = regex.compile(pattern, FLAGS)
+            rule.compile(self.rules)
             if rule.type == RuleType.PRODUCER:
                 self._producers.append(rule)
 

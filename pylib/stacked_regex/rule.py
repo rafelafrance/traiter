@@ -43,21 +43,32 @@ class Rule:
     type: RuleType
     action: Action = None
     regexp: Pattern = None
+    capture: bool = True
 
+    def build(self, rules: RuleDict) -> str:
+        """Build regular expressions for token matches."""
+        def rep(match):
+            word = match.group('word')
+            sub = rules.get(word)
 
-def build(name: str, pattern: str, rules: RuleDict) -> str:
-    """Build regular expressions for token matches."""
-    def rep(match):
-        word = match.group('word')
-        sub = rules.get(word)
-        if not sub:
-            print(f"Could not find rule for {word}")
-            return
-        if sub.type == RuleType.SCANNER:
-            return fr'(?: \b {sub.name}{SEP} )'
-        return sub.regexp.pattern
-    regexp = WORD.sub(rep, pattern)
-    return fr'(?P<{name}> {regexp} )'
+            if not sub:
+                print(f"Could not find rule for {word}")
+                return
+
+            if sub.type == RuleType.SCANNER:
+                return fr'(?: \b {sub.name}{SEP} )'
+
+            return sub.regexp.pattern
+
+        regexp = WORD.sub(rep, self.pattern)
+
+        if self.capture:
+            return fr'(?P<{self.name}> {regexp} )'
+        return fr'(?: {regexp} )'
+
+    def compile(self, rules: RuleDict):
+        pattern = self.build(rules)
+        self.regexp = regex.compile(pattern, FLAGS)
 
 
 def join(regexp: InRegexp) -> str:
@@ -67,10 +78,15 @@ def join(regexp: InRegexp) -> str:
     return ' '.join(regexp.split())
 
 
-def fragment(name: str, regexp: InRegexp, action: Action = None) -> Rule:
+def fragment(
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True) -> Rule:
     """Build a regular expression with a named group."""
     pattern = join(regexp)
-    regexp = regex.compile(f'(?P<{name}> {pattern} )', FLAGS)
+    regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
+    regexp = regex.compile(regexp, FLAGS)
     return Rule(
         name=name,
         pattern=pattern,
@@ -79,10 +95,15 @@ def fragment(name: str, regexp: InRegexp, action: Action = None) -> Rule:
         regexp=regexp)
 
 
-def keyword(name: str, regexp: InRegexp, action: Action = None) -> Rule:
+def keyword(
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True) -> Rule:
     r"""Wrap a regular expression in \b character class."""
     pattern = join(regexp)
-    regexp = regex.compile(fr'\b (?P<{name}> {pattern} ) \b', FLAGS)
+    regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
+    regexp = regex.compile(fr'\b {regexp} \b', FLAGS)
     return Rule(
         name=name,
         pattern=pattern,
@@ -91,16 +112,25 @@ def keyword(name: str, regexp: InRegexp, action: Action = None) -> Rule:
         regexp=regexp)
 
 
-def replacer(name: str, regexp: InRegexp, action: Action = None) -> Rule:
+def replacer(
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True) -> Rule:
     """Build a replacer regular expression."""
     return Rule(
         name=name,
         pattern=join(regexp),
         type=RuleType.REPLACER,
-        action=action)
+        action=action,
+        capture=capture)
 
 
-def producer(action: Action, regexp: InRegexp, name: str = None) -> Rule:
+def producer(
+        action: Action,
+        regexp: InRegexp,
+        name: str = None,
+        capture: bool = True) -> Rule:
     """Build a product regular expression."""
     if not name:
         frame = inspect.stack()[1]
@@ -112,4 +142,5 @@ def producer(action: Action, regexp: InRegexp, name: str = None) -> Rule:
         name=name,
         pattern=join(regexp),
         type=RuleType.PRODUCER,
-        action=action)
+        action=action,
+        capture=capture)

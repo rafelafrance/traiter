@@ -1,8 +1,7 @@
 """Shared token patterns."""
 
-# import regex
 import pylib.shared.patterns as patterns
-from pylib.shared.patterns import add_frag  # , add_rep
+from pylib.shared.patterns import add_frag, add_rep, add_set
 from pylib.vertnet.util import ordinal, number_to_words
 
 
@@ -77,12 +76,12 @@ add_frag('uuid', r"""
         - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """)
 
 # Some numeric values are reported as ordinals or words
-ORDINALS = [ordinal(x) for x in range(1, 6)]
+ORDINALS = [ordinal(x) for x in range(1, 9)]
 ORDINALS += [number_to_words(x) for x in ORDINALS]
-add_frag('ordinals', ' | '.join(ORDINALS))
+add_frag('ordinals', ORDINALS)
 
 # Time units
-add_frag('time_units', r'years? | months? | weeks? | days? | hours?')
+add_frag('time_units', ' years? months? weeks? days? hours? '.split())
 
 # Side keywords
 add_frag('side', r"""
@@ -97,11 +96,99 @@ add_frag(
     'dim_side',
     fr""" {RULE['dimension'].pattern} \s* (?P<side> [12] ) \b """)
 
-add_frag(
-    'cyst',
-    r""" (\d+ \s+)?
-        (cyst s? | bodies | cancerous | cancer )
-        ( \s+ ( on | in ))?""")
+add_frag('cyst', r"""
+    (\d+ \s+)? (cyst s? | bodies | cancerous | cancer ) ( \s+ ( on | in ))?""")
+
+# Numbers are positive decimals and estimated values are enclosed in brackets
+add_frag('number', r"""
+    (?P<estimated_value> \[ )?
+    ( ( \d{1,3} ( , \d{3} ){1,3} | \d+ ) ( \. \d+ )?
+        | (?<= [^\d] ) \. \d+ | ^ \. \d+ )
+    \]?
+    """)
+
+# A number or a range of numbers like "12 to 34" or "12.3-45.6"
+# Note we want to exclude dates and to not pick up partial dates
+# So: no part of "2014-12-11" would be in a range
+add_rep('range', """
+    (?<! dash )
+    ( number units? (( dash | to ) number units?)? )
+    (?! dash ) """, capture=False)
+# Rule set for parsing a range
+add_set('range_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['pounds'],
+    RULE['ounces'],
+    RULE['metric_mass'],
+    RULE['mass_units'],
+    RULE['units'],
+    RULE['number'],
+    RULE['dash'],
+    RULE['to'],
+    RULE['range'],
+])
+
+# A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
+add_rep('compound_wt', """
+    (?P<lbs> number ) pounds comma?
+    (?P<ozs> number ) ( ( dash | to ) (?P<ozs> number ) )? ounces
+    """, capture=False)
+# Rule set for parsing a compound_wt
+add_set('compound_wt_set', [
+    RULE['pounds'],
+    RULE['ounces'],
+    RULE['number'],
+    RULE['dash'],
+    RULE['comma'],
+    RULE['to'],
+    RULE['compound_wt'],
+])
+
+# A number times another number like: "12 x 34" this is typically
+# length x width. We Allow a triple like "12 x 34 x 56" but we ony take
+# the first two numbers
+add_rep('cross', """
+    (?<! x )
+        ( number len_units? ( x | by ) number len_units?
+        | number len_units ) """, capture=False)
+# Rule set for parsing a cross
+add_set('cross_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['number'],
+    RULE['x'],
+    RULE['by'],
+    RULE['cross'],
+])
+
+# For fractions like "1 2/3" or "1/2".
+# We don't allow dates like "1/2/34".
+add_rep('fraction', """
+    (?P<whole> number )? 
+    (?<! slash ) 
+    (?P<numerator> number) slash (?P<denominator> number) 
+    (?! slash ) units? """, capture=False)
+# Rule set for parsing fractions
+add_set('fraction_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['pounds'],
+    RULE['ounces'],
+    RULE['metric_mass'],
+    RULE['mass_units'],
+    RULE['units'],
+    RULE['number'],
+    RULE['slash'],
+    RULE['fraction'],
+])
+
 
 # Handle 2 cross measurements, one per left/right side
 # CROSS_GROUPS = regex.compile(

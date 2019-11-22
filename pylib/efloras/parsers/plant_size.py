@@ -6,7 +6,7 @@ from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import producer
 from pylib.efloras.trait import Trait
 from pylib.efloras.parsers.base import Base
-import pylib.efloras.shared_plant as plant
+import pylib.efloras.shared_patterns as plant
 
 
 def convert(token: Token) -> Any:

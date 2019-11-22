@@ -8,7 +8,7 @@ from pylib.stacked_regex.rule import keyword, replacer, producer
 from pylib.efloras.trait import Trait
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
-import pylib.efloras.shared_plant as plant
+from pylib.efloras.shared_patterns import RULE
 
 
 COLORS = keyword('flower_color', r"""
@@ -94,7 +94,7 @@ def convert(token: Token) -> Any:
     if 'sex' in token.groups:
         trait.sex = token.groups['sex'].lower()
 
-    values = plant.split_keywords(trait.raw_value)
+    values = util.split_keywords(trait.raw_value)
 
     values = [normalize(v) for v in values]
     values = list(dict.fromkeys(values))
@@ -105,12 +105,13 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = plant.RULE['shape_starter'].regexp.sub('', value)
+    value = RULE['shape_starter'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
 
     parts = []
     has_color = False
-    for part in regex.split(rf'\s+ | {plant.DASH}', value, flags=util.FLAGS):
+    for part in regex.split(
+            rf'\s+ | {RULE["dash"].pattern}', value, flags=util.FLAGS):
         if COLORS.regexp.search(part):
             parts.append(RENAME.get(part, part))
             has_color = True
@@ -129,8 +130,8 @@ def parser(plant_part):
     return Base(
         name=f'{plant_part}_color',
         rules=[
-            plant.RULE[plant_part],
-            plant.RULE['plant_part'],
+            RULE[plant_part],
+            RULE['plant_part'],
             COLORS,
             COLOR_PREFIX,
             COLOR_SUFFIX,

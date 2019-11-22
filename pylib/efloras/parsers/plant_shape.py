@@ -4,9 +4,10 @@ import string
 from typing import Any
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import fragment, keyword, replacer, producer
+import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 from pylib.efloras.trait import Trait
-import pylib.efloras.shared_plant as plant
+from pylib.efloras.shared_patterns import RULE
 
 
 SHAPE = fragment('plant_shape', r"""
@@ -35,8 +36,8 @@ SHAPE = fragment('plant_shape', r"""
     radially rectangular regular reniform retuse rhombic rhomboid rhomboidal
     rosettes? rotate rotund round rounded roundish
     saccate sagittate salverform saucer-?like saucer-?shaped septagonal sinuate
-    spatulate spear-?shaped spheric stellate subobtuse suborbiculate subulate
-    symmetric
+    spatulate spear-?shaped spheric stellate subobtuse suborbicular 
+    suborbiculate subulate symmetric
     terete triangular trullate truncate tubular turbinate
     undulate unifoliate urceolate
     zygomorphic zygomorphous
@@ -109,7 +110,7 @@ def convert(token: Token) -> Any:
     if 'sex' in token.groups:
         trait.sex = token.groups['sex'].lower()
 
-    values = plant.split_keywords(trait.raw_value)
+    values = util.split_keywords(trait.raw_value)
 
     values = [normalize(v) for v in values]
     values = list(dict.fromkeys(values))
@@ -120,8 +121,8 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = plant.RULE['shape_starter'].regexp.sub('', value)
-    value = plant.RULE['location'].regexp.sub('', value)
+    value = RULE['shape_starter'].regexp.sub('', value)
+    value = RULE['location'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
     value = ORBICULAR.regexp.sub('orbicular', value)
     value = POLYGONAL.regexp.sub('polygonal', value)
@@ -136,18 +137,18 @@ def parser(plant_part):
     return Base(
         name=f'{plant_part}_shape',
         rules=[
-            plant.RULE[plant_part],
-            plant.RULE['plant_part'],
-            plant.RULE['location'],
+            RULE[plant_part],
+            RULE['plant_part'],
+            RULE['location'],
             SHAPE,
-            plant.RULE['shape_starter'],
+            RULE['shape_starter'],
             SHAPE_PREFIX,
-            plant.RULE['conj'],
-            plant.RULE['prep'],
-            plant.RULE['word'],
-            plant.RULE['punct'],
+            # RULE['conj'],
+            # RULE['prep'],
+            # RULE['word'],
+            # RULE['punct'],
 
-            plant.part_phrase(plant_part),
+            util.part_phrase(plant_part),
 
             replacer('shape_phrase', """
                 ( plant_shape | shape_starter | shape_prefix | location )*
@@ -156,14 +157,18 @@ def parser(plant_part):
 
             producer(convert, f"""
                 {plant_part}_phrase
-                ( word | conj | prep )*
-                (?P<value>
-                    ( shape_phrase | shape_starter | shape_prefix
-                        | conj | prep | word
-                    )*
-                    shape_phrase ((shape_starter | conj | prep)* location)?
-                )
                 """),
+
+            # producer(convert, f"""
+            #     {plant_part}_phrase
+            #     ( word | conj | prep )*
+            #     (?P<value>
+            #         ( shape_phrase | shape_starter | shape_prefix
+            #             | conj | prep | word
+            #         )*
+            #         shape_phrase ((shape_starter | conj | prep)* location)?
+            #     )
+            #     """),
             ],
         )
 

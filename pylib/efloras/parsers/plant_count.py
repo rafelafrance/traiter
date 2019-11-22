@@ -5,7 +5,7 @@ from pylib.stacked_regex.rule import producer, keyword
 from pylib.stacked_regex.token import Token
 from pylib.efloras.parsers.base import Base
 from pylib.efloras.trait import Trait
-import pylib.efloras.shared_plant as plant
+from pylib.efloras.shared_patterns import RULE
 
 
 def convert(token: Token) -> Any:
@@ -30,14 +30,12 @@ def parser(plant_part):
     return Base(
         name=f'{plant_part}_count',
         rules=[
-            plant.RULE[plant_part],
-            plant.RULE['plant_part'],
-            plant.RULE['count_upper'],
-            plant.RULE['range'],
-            plant.RULE['units'],
-            plant.RULE['cross_joiner'],
+            RULE[plant_part],
+            RULE['plant_part'],
+            RULE['count_upper_set'],
+            RULE['range_set'],
             keyword('skip', r""" locular [/] """.split()),
-            plant.RULE['word'],
+            RULE['word'],
 
             producer(convert, f"""
                 (?P<part> {plant_part} ) (word | skip)*
