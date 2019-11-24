@@ -33,9 +33,9 @@ class Parser:
 
         tokens = scan(self._scanners, text)
 
-        # for token in tokens:
-        #     print(token)
-        # print()
+        for token in tokens:
+            print(token)
+        print()
 
         if self._producers:
             tokens = produce(self._producers, tokens, text)
@@ -126,38 +126,37 @@ def merge_tokens(match: Token, tokens: Tokens, text: str, token_text: str) \
     # Add groups from current token with real (not tokenized) text
     for key in match.match.capturesdict():
         for i, value in enumerate(match.match.captures(key)):
-            start = match.match.starts(key)[i]
-            end = match.match.ends(key)[i]
-            idx1 = token_text[:start].count(SEP)
-            idx2 = token_text[:end].count(SEP) - 1
-            append_group(groups, key, text[tokens[idx1].start:tokens[idx2].end])
+            idx1 = token_text[:match.match.starts(key)[i]].count(SEP)
+            idx2 = token_text[:match.match.ends(key)[i]].count(SEP) - 1
+            append_group(
+                groups, key, text[tokens[idx1].start:tokens[idx2].end])
 
     token = Token(match.rule, span=span, groups=groups)
     return token, first_idx, last_idx
 
 
-# def replace(rules: Rules, tokens: Tokens, text: str) \
-#         -> Tuple[Tokens, bool]:
-#     """Replace token combinations with another token."""
-#     replaced = []
-#     token_text = SEP.join([t.name for t in tokens]) + SEP
-#     matches = get_matches(rules, token_text)
-#     again = bool(matches)
-#
-#     prev_idx = 0
-#     while matches:
-#         match = matches.popleft()
-#         token, first_idx, last_idx = merge_tokens(
-#             match, tokens, text, token_text)
-#         if token.action:
-#             token.action(token)
-#         if prev_idx != first_idx:
-#             replaced += tokens[prev_idx:first_idx]
-#         replaced.append(token)
-#         prev_idx = last_idx
-#         matches = remove_passed_over(matches, match)
-#
-#     if prev_idx != len(tokens):
-#         replaced += tokens[prev_idx:]
-#
-#     return replaced, again
+def replace(rules: Rules, tokens: Tokens, text: str) \
+        -> Tuple[Tokens, bool]:
+    """Replace token combinations with another token."""
+    replaced = []
+    token_text = SEP.join([t.name for t in tokens]) + SEP
+    matches = get_matches(rules, token_text)
+    again = bool(matches)
+
+    prev_idx = 0
+    while matches:
+        match = matches.popleft()
+        token, first_idx, last_idx = merge_tokens(
+            match, tokens, text, token_text)
+        if token.action:
+            token.action(token)
+        if prev_idx != first_idx:
+            replaced += tokens[prev_idx:first_idx]
+        replaced.append(token)
+        prev_idx = last_idx
+        matches = remove_passed_over(matches, match)
+
+    if prev_idx != len(tokens):
+        replaced += tokens[prev_idx:]
+
+    return replaced, again

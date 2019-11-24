@@ -3,10 +3,11 @@
 import copy
 from typing import Any
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import producer
+from pylib.stacked_regex.rule import producer, replacer
+import pylib.efloras.util as util
 from pylib.efloras.trait import Trait
 from pylib.efloras.parsers.base import Base
-import pylib.efloras.shared_patterns as plant
+from pylib.efloras.shared_patterns import RULE
 
 
 def convert(token: Token) -> Any:
@@ -25,7 +26,7 @@ def convert(token: Token) -> Any:
     if 'dimension' in token.groups:
         trait.dimension = token.groups['dimension']
 
-    valid = plant.set_size_values(trait, token)
+    valid = set_size_values(trait, token)
     return trait if valid else None
 
 
@@ -37,6 +38,7 @@ def sex_convert(token: Token) -> Any:
         span=(token.start, token.end))
     new = {k[:-2]: v for k, v in token.groups.items() if k.endswith('_1')}
     token1.groups.update(new)
+
     trait1 = convert(token1)
 
     token2 = Token(
@@ -50,58 +52,72 @@ def sex_convert(token: Token) -> Any:
     return [trait1, trait2]
 
 
-def leaf_parser(plant_part):
+def set_size_values(trait, token):
+    """Update the size measurements with normalized values."""
+    units, multiplier = {}, {}
+
+    units['length'] = token.groups.get('units_length', '').lower()
+    units['width'] = token.groups.get('units_width', '').lower()
+
+    # No units means it's not a measurement
+    if not (units['length'] or units['width']):
+        return False
+
+    if not units['length']:
+        multiplier['width'] = 10.0 if units['width'] == 'cm' else 1.0
+        multiplier['length'] = multiplier['width']
+    elif not units['width']:
+        multiplier['length'] = 10.0 if units['length'] == 'cm' else 1.0
+        multiplier['width'] = multiplier['length']
+    else:
+        multiplier['length'] = 10.0 if units['length'] == 'cm' else 1.0
+        multiplier['width'] = 10.0 if units['width'] == 'cm' else 1.0
+
+    for dimension in ['length', 'width']:
+        for value in ['min', 'low', 'high', 'max']:
+            key = f'{value}_{dimension}'
+            if key in token.groups:
+                setattr(trait, key,
+                        float(token.groups[key]) * multiplier[dimension])
+    return True
+
+
+def parser(plant_part):
     """Build a parser for the plant part."""
     return Base(
         name=f'{plant_part}_size',
         rules=[
-            plant.RULE[plant_part],
-            plant.RULE['plant_part'],
-            plant.RULE['sex_cross'],
-            plant.RULE['sex'],
-            plant.RULE['cross_dim'],
-            plant.RULE['dim'],
-            plant.RULE['location'],
+            RULE[plant_part],
+            RULE['plant_part'],
+            RULE['cross_set'],
+            RULE['cross_upper_set'],
+            RULE['sex_cross_set'],
+            RULE['dim'],
+            RULE['location'],
 
-            plant.part_phrase(plant_part),
+            replacer(
+                'noise', """
+                (?: word | number | dash | punct | up_to | dim | slash
+                    | conj )*? """,
+                capture=False),
+
+            util.part_phrase(plant_part),
 
             producer(sex_convert, f"""
-                {plant_part}_phrase dim* sex_cross """),
+                {plant_part}_phrase noise sex_cross """),
+
             producer(convert, f"""
-                {plant_part}_phrase sex* cross_dim """),
-            producer(convert, f"""
-                {plant_part}_phrase dim* cross_dim sex? """),
+                {plant_part}_phrase noise (?: open? sex close? )? noise
+                    (?: cross_upper | cross ) (?P<dimension> dim )? """),
             ],
         )
 
 
-def flower_parser(plant_part):
-    """Build a parser for the plant part."""
-    return Base(
-        name=f'{plant_part}_size',
-        rules=[
-            plant.RULE[plant_part],
-            plant.RULE['plant_part'],
-            plant.RULE['sex_cross'],
-            plant.RULE['sex'],
-            plant.RULE['cross_dim'],
-            plant.RULE['dim'],
-
-            producer(sex_convert, f"""
-                (?P<part> {plant_part} ) dim* sex_cross """),
-            producer(convert, f"""
-                (?P<part> {plant_part} ) dim*
-                    cross_dim (?P<dimension> dim )?  sex? """),
-            ],
-        )
-
-
-LEAF_SIZE = leaf_parser('leaf')
-PETIOLE_SIZE = leaf_parser('petiole')
-SEPAL_SIZE = leaf_parser('sepal')
-PETAL_SIZE = leaf_parser('petal')
-CALYX_SIZE = leaf_parser('calyx')
-COROLLA_SIZE = leaf_parser('corolla')
-
-FLOWER_SIZE = flower_parser('flower')
-HYPANTHIUM_SIZE = flower_parser('hypanthium')
+LEAF_SIZE = parser('leaf')
+PETIOLE_SIZE = parser('petiole')
+SEPAL_SIZE = parser('sepal')
+PETAL_SIZE = parser('petal')
+CALYX_SIZE = parser('calyx')
+COROLLA_SIZE = parser('corolla')
+FLOWER_SIZE = parser('flower')
+HYPANTHIUM_SIZE = parser('hypanthium')

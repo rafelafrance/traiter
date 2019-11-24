@@ -1,8 +1,8 @@
 """Common color snippets."""
 
-import regex
 import string
 from typing import Any
+import regex
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import keyword, replacer, producer
 from pylib.efloras.trait import Trait
@@ -15,7 +15,7 @@ COLORS = keyword('flower_color', r"""
     black(ish)? blue(ish)? brown brownish
     cream cream-yellow creamy
     crimson
-    glaucous-pink gold golden golden-yellow gray gray-green green greenish 
+    glaucous-pink gold golden golden-yellow gray gray-green green greenish
     grey grey-green
     ivory ivory-white
     lavendar lavender lemon lilac
@@ -23,7 +23,7 @@ COLORS = keyword('flower_color', r"""
     olive olive-green orange orange-pink
     pink pink-purple pink-violet pinkish purple purpleish purplish
     red red-brown reddish rose rose-coloured
-    salmon salmon-pink scarlet silvery? stramineous straw-colored 
+    salmon salmon-pink scarlet silvery? stramineous straw-colored
     sulphur-yellow
     tan
     violet violetish

@@ -1,9 +1,9 @@
 """Holds misc functions and constants."""
 
-import regex
 import csv
 from pathlib import Path
 from datetime import datetime
+import regex
 from pylib.stacked_regex.rule import replacer
 from pylib.efloras.shared_patterns import RULE
 
@@ -82,51 +82,21 @@ def print_families(families):
 def split_keywords(value):
     """Convert a keyword string into separate keywords."""
     return regex.split(fr"""
-        \s* \b (?: {RULE['conj'].pattern} | {RULE['prep'].pattern} ) 
-            \b \s* [,]? \s* 
+        \s* \b (?: {RULE['conj'].pattern} | {RULE['prep'].pattern} )
+            \b \s* [,]? \s*
         | \s* [,\[\]] \s*
         """, value, flags=FLAGS)
 
 
-def set_size_values(trait, token):
-    """Update the size measurements with normalized values."""
-    units, multiplier = {}, {}
-
-    if token.groups.get('high_length_upper'):
-        token.groups['high_length'] = token.groups['high_length_upper']
-
-    if token.groups.get('units_length_upper'):
-        token.groups['units_length'] = token.groups['units_length_upper']
-
-    units['length'] = token.groups.get('units_length', '').lower()
-    units['width'] = token.groups.get('units_width', '').lower()
-
-    # No units means it's not a measurement
-    if not (units['length'] or units['width']):
-        return False
-
-    if not units['length']:
-        multiplier['width'] = 10.0 if units['width'] == 'cm' else 1.0
-        multiplier['length'] = multiplier['width']
-    elif not units['width']:
-        multiplier['length'] = 10.0 if units['length'] == 'cm' else 1.0
-        multiplier['width'] = multiplier['length']
-    else:
-        multiplier['length'] = 10.0 if units['length'] == 'cm' else 1.0
-        multiplier['width'] = 10.0 if units['width'] == 'cm' else 1.0
-
-    for dimension in ['length', 'width']:
-        for value in ['min', 'low', 'high', 'max']:
-            key = f'{value}_{dimension}'
-            if key in token.groups:
-                setattr(trait, key,
-                        float(token.groups[key]) * multiplier[dimension])
-    return True
-
-
 def part_phrase(leaf_part):
     """Build a replacer rule for the leaf part."""
-    return replacer(f'{leaf_part}_phrase', f"""
-        ( location ( word | punct )* )?
-        (?P<part> {leaf_part} )
-        """)
+    return [
+        RULE[leaf_part],
+        RULE['location'],
+        RULE['word'],
+        RULE['punct'],
+        replacer(f'{leaf_part}_phrase', f"""
+            ( location ( word | punct )* )?
+            (?P<part> {leaf_part} )
+            """),
+        ]

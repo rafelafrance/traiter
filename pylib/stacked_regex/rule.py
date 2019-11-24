@@ -1,10 +1,10 @@
 """Rules for parsing and rule builders."""
 
-import regex
 from enum import Enum
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Pattern, Union
 import inspect
+import regex
 
 
 SEP = ';'
@@ -50,10 +50,6 @@ class Rule:
                 print(f'Error: "{word}" is not defined.')
             sub = rules.get(word)
 
-            if not sub:
-                print(f"Could not find rule for {word}")
-                return
-
             if sub.type == RuleType.SCANNER:
                 return fr'(?: \b {sub.name}{SEP} )'
 
@@ -66,6 +62,7 @@ class Rule:
         return fr'(?: {regexp} )'
 
     def compile(self, rules: RuleDict):
+        """Build and compile a rule."""
         pattern = self.build(rules)
         self.regexp = regex.compile(pattern, FLAGS)
 
@@ -129,7 +126,7 @@ def producer(
         action: Action,
         regexp: InRegexp,
         name: str = None,
-        capture: bool = True) -> Rule:
+        capture: bool = False) -> Rule:
     """Build a product regular expression."""
     if not name:
         frame = inspect.stack()[1]

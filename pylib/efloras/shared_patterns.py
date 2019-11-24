@@ -11,12 +11,12 @@ add_key('prep', ' to with '.split(), capture=False)
 
 add_key('plant_part', r"""
     (?<! to \s )
-    ( androeci(a|um) | anthers? 
+    ( androeci(a|um) | anthers?
     | blades?
-    | caly(ces|x) | carpels? | corollas? 
+    | caly(ces|x) | carpels? | corollas?
     | flowers?
     | gynoeci(a|um)
-    | hairs? | hypan-?thi(a|um) 
+    | hairs? | hypan-?thi(a|um)
     | leaf | leaflet | leaves | lobes?
     | petals? | petioles? | petiolules? | pistils? | peduncles?
     | ovar(y|ies) | ovules?
@@ -41,7 +41,7 @@ add_key('corolla', r' corollas? ')
 
 add_key('shape_starter', """
     broadly
-    deeply depressed 
+    deeply depressed
     long
     mostly
     narrowly nearly
@@ -72,6 +72,7 @@ add_rep('range', r"""
     (?P<low> number )
     (?: dash (?P<high> number ) )?
     (?: open dash (?P<max> number ) close )?
+    (?! dash | slash )
     """, capture=False)
 
 add_set('range_set', [
@@ -91,9 +92,9 @@ RANGE_GROUPS = regex.compile(
 LENGTH_RANGE = RANGE_GROUPS.sub(r'\1_length', RULE['range'].pattern)
 WIDTH_RANGE = RANGE_GROUPS.sub(r'\1_width', RULE['range'].pattern)
 
-add_rep('cross', fr"""
-    (?: {LENGTH_RANGE} (?P<units_length> units )? )
-    (?: x {WIDTH_RANGE} (?P<units_width> units )? )?
+add_rep('cross', f"""
+    {LENGTH_RANGE} (?P<units_length> units )?
+    ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """, capture=False)
 add_set('cross_set', [
     RULE['units'],
@@ -105,22 +106,33 @@ add_set('cross_set', [
     RULE['x'],
     RULE['cross']])
 
-# CROSS_GROUPS = regex.compile(
-#     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
-# CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
-# CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
-# SEX_CROSS = fr"""
-#     (?P<cross_1> {CROSS_1} \s* (open)? (?P<sex_1>{SEX} ) (close)? )
-#     \s* ( {CONJ} | {PREP} )? \s*
-#     (?P<cross_2> {CROSS_2} \s* (open)? (?P<sex_2>{SEX} ) (close)? )
-#     """
-# add_frag('sex_cross', SEX_CROSS)
+CROSS_GROUPS = regex.compile(
+    r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
+CROSS_1 = CROSS_GROUPS.sub(r'\1_1', RULE['cross'].pattern)
+CROSS_2 = CROSS_GROUPS.sub(r'\1_2', RULE['cross'].pattern)
+add_rep('sex_cross', f"""
+    {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
+    ( conj | prep )?
+    {CROSS_2} (open)? (?P<sex_2> sex )? (close)?
+    """, capture=False)
+add_set('sex_cross_set', [
+    RULE['units'],
+    RULE['number'],
+    RULE['dash'],
+    RULE['slash'],
+    RULE['open'],
+    RULE['close'],
+    RULE['conj'],
+    RULE['prep'],
+    RULE['x'],
+    RULE['sex'],
+    RULE['sex_cross']])
 
 # Like "to 10 cm"
 add_rep(
     'cross_upper',
-    fr""" up_to (?P<high_length_upper> number )
-        (?P<units_length_upper> units ) """, capture=False)
+    fr""" up_to (?P<high_length> number )
+        (?P<units_length> units ) """, capture=False)
 add_set('cross_upper_set', [
     RULE['up_to'],
     RULE['units'],
