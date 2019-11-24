@@ -107,15 +107,14 @@ class TestSharedPatterns(unittest.TestCase):
 
     def test_cross_01(self):
         actual = self.cross_parser.parse('(12-)23-34')
-        # expect = [Token(
-        #     self.cross_product, span=(0, 10),
-        #     groups={
-        #         'number': ['12', '23', '34'],
-        #       'min_length': '12', 'low_length': '23', 'high_length': '34'})]
-        self.assertEqual(actual, [])
+        expect = [Token(
+            self.cross_product, span=(0, 10),
+            groups={
+                'number': ['12', '23', '34'],
+                'min_length': '12', 'low_length': '23', 'high_length': '34'})]
+        self.assertEqual(actual, expect)
 
     def test_cross_02(self):
-        self.maxDiff = None
         actual = self.cross_parser.parse('(12-)23-34 × 45-56')
         expect = [Token(
             self.cross_product, span=(0, 18),
@@ -131,5 +130,5 @@ class TestSharedPatterns(unittest.TestCase):
             self.upper_product, span=(0, 8),
             groups={
                 'number': '10', 'units': 'cm',
-                'high_length_upper': '10', 'units_length_upper': 'cm'})]
+                'high_length': '10', 'units_length': 'cm'})]
         self.assertEqual(actual, expect)

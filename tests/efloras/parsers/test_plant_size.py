@@ -1,3 +1,5 @@
+"""Test plant size trait parsers."""
+
 import unittest
 from pylib.efloras.trait import Trait
 from pylib.efloras.parsers.plant_size import LEAF_SIZE, PETIOLE_SIZE
@@ -6,6 +8,7 @@ from pylib.efloras.parsers.plant_size import FLOWER_SIZE, HYPANTHIUM_SIZE
 
 
 class TestPlantSize(unittest.TestCase):
+    """Test plant size trait parsers."""
 
     def test_parse_01(self):
         """It parses a cross measurement."""
@@ -165,7 +168,6 @@ class TestPlantSize(unittest.TestCase):
                    low_width=50, high_width=90)])
 
     def test_parse_23(self):
-        self.maxDiff = None
         self.assertEqual(
             PETAL_SIZE.parse('petals (1–)3–10(–12) mm (pistillate) '
                              'or 5–8(–10) mm (staminate)'),
@@ -175,7 +177,6 @@ class TestPlantSize(unittest.TestCase):
                    low_length=5, high_length=8, max_length=10)])
 
     def test_parse_24(self):
-        self.maxDiff = None
         self.assertEqual(
             LEAF_SIZE.parse('blade hastate to 5-angular, palmately '
                             '3–5-lobed, 3–8(–15) × 2–6(–8) cm,'),

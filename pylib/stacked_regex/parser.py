@@ -33,9 +33,9 @@ class Parser:
 
         tokens = scan(self._scanners, text)
 
-        for token in tokens:
-            print(token)
-        print()
+        # for token in tokens:
+        #     print(token)
+        # print()
 
         if self._producers:
             tokens = produce(self._producers, tokens, text)
