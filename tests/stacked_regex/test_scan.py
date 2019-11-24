@@ -1,3 +1,5 @@
+"""Test the parser's scan function."""
+
 import unittest
 from pylib.stacked_regex.rule import fragment
 from pylib.stacked_regex.token import Token
@@ -5,6 +7,7 @@ from pylib.stacked_regex.parser import scan
 
 
 class TestScan(unittest.TestCase):
+    """Test the parser's scan function."""
 
     r_dog = fragment('dog', ' doggie dog '.split())
     r_cat = fragment('cat', ' bearcat cat '.split())

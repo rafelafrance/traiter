@@ -1,3 +1,5 @@
+"""Test the plant color trait parser."""
+
 import unittest
 from pylib.efloras.trait import Trait
 from pylib.efloras.parsers.plant_color import HYPANTHIUM_COLOR, COROLLA_COLOR
@@ -5,8 +7,10 @@ from pylib.efloras.parsers.plant_color import PETAL_COLOR, SEPAL_COLOR
 
 
 class TestPlantColor(unittest.TestCase):
+    """Test the plant color trait parser."""
 
     def test_parse_01(self):
+        """It parses a compound color notation."""
         self.assertEqual(
             HYPANTHIUM_COLOR.parse(
                 'hypanthium green or greenish yellow, '
@@ -17,12 +21,14 @@ class TestPlantColor(unittest.TestCase):
                              'purple-spotted, rarely purple-spotted')])
 
     def test_parse_02(self):
+        """It handles color for a corolla notation."""
         self.assertEqual(
             COROLLA_COLOR.parse('corolla yellow to orange-yellow,'),
             [Trait(start=0, end=31, value=['yellow', 'orange-yellow'],
                    part='corolla', raw_value='yellow to orange-yellow')])
 
     def test_parse_03(self):
+        """It normalizes color notations."""
         self.assertEqual(
             PETAL_COLOR.parse(
                 'petals 5, connate 1/2-2/3 length, white, cream, '
@@ -33,6 +39,7 @@ class TestPlantColor(unittest.TestCase):
                              '[orange to yellow')])
 
     def test_parse_04(self):
+        """It handles colors with trailing punctuation."""
         self.assertEqual(
             SEPAL_COLOR.parse('sepals erect, green- or red-tipped'),
             [Trait(start=0, end=34, part='sepals',
@@ -40,6 +47,7 @@ class TestPlantColor(unittest.TestCase):
                    raw_value='green- or red-tipped')])
 
     def test_parse_05(self):
+        """It handles pattern notations within colors."""
         self.assertEqual(
             PETAL_COLOR.parse(
                 'petals 5, distinct, white to cream, obovate to '
@@ -56,7 +64,7 @@ class TestPlantColor(unittest.TestCase):
                        'or white longitudinal stripes'))])
 
     def test_parse_06(self):
-        self.maxDiff = None
+        """It handles some odd pattern notations like 'throated'."""
         self.assertEqual(
             PETAL_COLOR.parse(
                 'petals 5, distinct, white to cream, greenish white, '

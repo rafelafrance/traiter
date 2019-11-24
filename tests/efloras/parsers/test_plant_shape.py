@@ -1,30 +1,38 @@
+"""Test plant shape trait notations."""
+
 import unittest
 from pylib.efloras.trait import Trait
 from pylib.efloras.parsers.plant_shape import LEAF_SHAPE, PETIOLE_SHAPE
 from pylib.efloras.parsers.plant_shape import HYPANTHIUM_SHAPE, SEPAL_SHAPE
 
 
+# pylint: disable=too-many-public-methods
 class TestPlantShape(unittest.TestCase):
+    """Test plant shape trait notations."""
 
     def test_parse_01(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('leaf suborbiculate'),
             [Trait(start=0, end=18, part='leaf', value=['orbicular'],
                    raw_value='suborbiculate')])
 
     def test_parse_02(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('leaf ovate-suborbicular'),
             [Trait(start=0, end=23, part='leaf', value=['ovate-orbicular'],
                    raw_value='ovate-suborbicular')])
 
     def test_parse_03(self):
+        """TODO."""
         self.assertEqual(
             PETIOLE_SHAPE.parse('petiolule 3–12 mm, narrowly oblanceolate,'),
             [Trait(start=0, end=40, part='petiolule', value=['oblanceolate'],
                    raw_value='narrowly oblanceolate')])
 
     def test_parse_04(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'Leaves ; blade ovate or orbiculate to '
@@ -35,6 +43,7 @@ class TestPlantShape(unittest.TestCase):
                              'suborbiculate or reniform')])
 
     def test_parse_05(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'Leaves: blade ovate or elongate-ovate to '
@@ -46,12 +55,14 @@ class TestPlantShape(unittest.TestCase):
                              'lanceolate-ovate or ovate-triangular')])
 
     def test_parse_06(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('Leaves: blade broadly to shallowly triangular'),
             [Trait(start=8, end=45, part='blade', value=['triangular'],
                    raw_value='broadly to shallowly triangular')])
 
     def test_parse_07(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 '; blade sometimes white-mottled abaxially, suborbiculate to '
@@ -62,11 +73,13 @@ class TestPlantShape(unittest.TestCase):
                              'broadly ovate, depressed-ovate, or reniform')])
 
     def test_parse_08(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('blade deeply pedately 3-lobed'),
             [])
 
     def test_parse_09(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'blade <sometimes white-spotted at vein junctions>, '
@@ -78,11 +91,13 @@ class TestPlantShape(unittest.TestCase):
                              'or reniform')])
 
     def test_parse_10(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('Leaf blades 2–7 cm wide, lobe apex rounded'),
             [])
 
     def test_parse_11(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('Leaf blades mostly orbiculate, '
                              'deeply to shallowly lobed,'),
@@ -90,6 +105,7 @@ class TestPlantShape(unittest.TestCase):
                    raw_value='mostly orbiculate')])
 
     def test_parse_12(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'Leaves: petiole 1–3(–4.5) cm; blade pentagonal-angulate to '
@@ -100,6 +116,7 @@ class TestPlantShape(unittest.TestCase):
                              'reniform-angulate or shallowly 5-angulate')])
 
     def test_parse_13(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'blade lanceolate to narrowly or broadly lanceolate '
@@ -110,6 +127,7 @@ class TestPlantShape(unittest.TestCase):
                              'or elliptic-lanceolate')])
 
     def test_parse_14(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'blade broadly ovate to rounded-cordate, subreniform, '
@@ -121,6 +139,7 @@ class TestPlantShape(unittest.TestCase):
                              'or deltate')])
 
     def test_parse_15(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'blade orbic-ulate to pentagonal,'),
@@ -129,6 +148,7 @@ class TestPlantShape(unittest.TestCase):
                    raw_value='orbic-ulate to pentagonal')])
 
     def test_parse_16(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'blade pen-tagonal'),
@@ -136,6 +156,7 @@ class TestPlantShape(unittest.TestCase):
                    value=['polygonal'], raw_value='pen-tagonal')])
 
     def test_parse_17(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'Leaves usually in basal rosettes, sometimes cauline, '
@@ -146,28 +167,32 @@ class TestPlantShape(unittest.TestCase):
                    raw_value='basal rosettes, sometimes cauline')])
 
     def test_parse_18(self):
+        """TODO."""
         self.assertEqual(
             HYPANTHIUM_SHAPE.parse('hypanthium cupulate'),
-            [Trait(start=0, end=19,  part='hypanthium',
+            [Trait(start=0, end=19, part='hypanthium',
                    value=['cup-shaped'], raw_value='cupulate')])
 
     def test_parse_19(self):
+        """TODO."""
         self.assertEqual(
             HYPANTHIUM_SHAPE.parse(
                 'hypanthium cupulate to shallowly campanulate;'),
-            [Trait(start=0, end=44,  part='hypanthium',
+            [Trait(start=0, end=44, part='hypanthium',
                    value=['cup-shaped', 'campanulate'],
                    raw_value='cupulate to shallowly campanulate')])
 
     def test_parse_20(self):
+        """TODO."""
         self.assertEqual(
             HYPANTHIUM_SHAPE.parse(
                 'hypanthium subcylindric to narrowly funnelform;'),
-            [Trait(start=0, end=46,  part='hypanthium',
+            [Trait(start=0, end=46, part='hypanthium',
                    value=['cylindrical', 'funnelform'],
                    raw_value='subcylindric to narrowly funnelform')])
 
     def test_parse_21(self):
+        """TODO."""
         self.assertEqual(
             HYPANTHIUM_SHAPE.parse(
                 'hypanthium narrowly campanulate to cylindric '
@@ -178,18 +203,20 @@ class TestPlantShape(unittest.TestCase):
                 raw_value='narrowly campanulate to cylindric [obtriangular')])
 
     def test_parse_22(self):
+        """TODO."""
         self.assertEqual(
             SEPAL_SHAPE.parse('sepals linear-subulate, 3–5 mm; '),
-            [Trait(start=0, end=22,  part='sepals',
+            [Trait(start=0, end=22, part='sepals',
                    value=['linear-subulate'],
                    raw_value='linear-subulate')])
 
     def test_parse_23(self):
+        """TODO."""
         self.assertEqual(
             SEPAL_SHAPE.parse('sepals cylindrical, peltate, semiterete, '
                               'subcylindrical, subpeltate, subterete, '
                               'subulate, terete'),
-            [Trait(start=0, end=96,  part='sepals',
+            [Trait(start=0, end=96, part='sepals',
                    value=['cylindrical', 'peltate', 'semiterete',
                           'subpeltate', 'subterete',
                           'subulate', 'terete'],
@@ -198,12 +225,14 @@ class TestPlantShape(unittest.TestCase):
                              'subulate, terete')])
 
     def test_parse_24(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'blade unlobed or palmately, pedately, or pinnately lobed'),
             [])
 
     def test_parse_25(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse(
                 'Pistillate flowers: ovary usually 1-locular, ovoid to '
@@ -211,9 +240,10 @@ class TestPlantShape(unittest.TestCase):
             [])
 
     def test_parse_26(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SHAPE.parse('Leaves in basal rosette and cauline'),
-            [Trait(start=0, end=35,  part='leaves',
+            [Trait(start=0, end=35, part='leaves',
                    location=['basal', 'cauline'],
                    value=['rosette'],
                    raw_value='basal rosette and cauline')])

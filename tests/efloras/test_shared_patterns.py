@@ -62,6 +62,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_range_02(self):
+        """It parses a simple range."""
         actual = self.range_parser.parse('123-45')
         expect = [Token(
             self.range_product, span=(0, 6),
@@ -69,6 +70,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_range_03(self):
+        """It parses the all numbers of a range."""
         actual = self.range_parser.parse('(12-)23-34(-45)')
         expect = [Token(
             self.range_product, span=(0, 15),
@@ -79,6 +81,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_range_04(self):
+        """It handles a missing minimum."""
         actual = self.range_parser.parse('23-34(-45)')
         expect = [Token(
             self.range_product, span=(0, 10),
@@ -88,6 +91,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_range_05(self):
+        """It handles a missing maximum."""
         actual = self.range_parser.parse('(12-)23-34')
         expect = [Token(
             self.range_product, span=(0, 10),
@@ -97,6 +101,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_range_06(self):
+        """It does not pick up units in a range."""
         actual = self.range_parser.parse('blade 1.5–5(–7) cm')
         expect = [Token(
             self.range_product, span=(6, 15),
@@ -106,6 +111,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_cross_01(self):
+        """It handles a range as a cross."""
         actual = self.cross_parser.parse('(12-)23-34')
         expect = [Token(
             self.cross_product, span=(0, 10),
@@ -115,6 +121,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_cross_02(self):
+        """It handles a full cross."""
         actual = self.cross_parser.parse('(12-)23-34 × 45-56')
         expect = [Token(
             self.cross_product, span=(0, 18),
@@ -125,6 +132,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_upper_only_01(self):
+        """It handles an upper only cross notation."""
         actual = self.upper_parser.parse('to 10 cm')
         expect = [Token(
             self.upper_product, span=(0, 8),

@@ -1,9 +1,12 @@
-import regexfive
+"""Test the build function for the rules object."""
+
 import unittest
+import regex
 from pylib.stacked_regex.rule import replacer, keyword
 
 
 class TestReplace(unittest.TestCase):
+    """Test the build function for the rules object."""
 
     flags = regex.VERBOSE | regex.IGNORECASE
 
@@ -27,7 +30,7 @@ class TestReplace(unittest.TestCase):
     def test_build_02(self):
         """It builds a token expression from scanner and replacer tokens."""
         actual = self.r_four.build(self.rules)
-        expect = (r'(?P<four> (?: \b two; ) ' 
+        expect = (r'(?P<four> (?: \b two; ) '
                   r'(?P<three> (?: \b zero; ) (?: \b one; ) ) )')
         self.assertEqual(actual, expect)
 

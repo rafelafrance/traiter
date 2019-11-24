@@ -7,6 +7,7 @@ from pylib.efloras.parsers.plant_size import PETAL_SIZE, SEPAL_SIZE
 from pylib.efloras.parsers.plant_size import FLOWER_SIZE, HYPANTHIUM_SIZE
 
 
+# pylint: disable=too-many-public-methods
 class TestPlantSize(unittest.TestCase):
     """Test plant size trait parsers."""
 
@@ -106,6 +107,7 @@ class TestPlantSize(unittest.TestCase):
                    low_length=2, high_length=5)])
 
     def test_parse_14(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('terminal leaflet 3–5 cm, blade '
                             'narrowly lanceolate, petiolule 3–12 mm,'),
@@ -113,28 +115,33 @@ class TestPlantSize(unittest.TestCase):
                    low_length=30, high_length=50)])
 
     def test_parse_15(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('shallowly 3–5(–7)-lobed, '
                             '5–25 × (8–)10–25(–30) cm,'),
             [])
 
     def test_parse_16(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('(3–)5-lobed, 6–20(–30) × 6–25 cm,'),
             [])
 
     def test_parse_17(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('blade deeply pedately 3-lobed, 2–6 cm wide'),
             [Trait(start=0, end=42, part='blade', dimension='wide',
                    low_length=20, high_length=60)])
 
     def test_parse_18(self):
+        """TODO."""
         self.assertEqual(
             PETIOLE_SIZE.parse('petiole to 11 cm;'),
             [Trait(start=0, end=16, part='petiole', high_length=110)])
 
     def test_parse_19(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('blade ovate to depressed-ovate or flabellate, '
                             '5-17(-20) × (3-)6-16 mm'),
@@ -143,6 +150,7 @@ class TestPlantSize(unittest.TestCase):
                    min_width=3, low_width=6, high_width=16)])
 
     def test_parse_20(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('blade ovate to depressed-ovate, round, '
                             'or flabellate, 2.5-15 × 2-10(-20) mm,'),
@@ -151,6 +159,7 @@ class TestPlantSize(unittest.TestCase):
                    low_width=2, high_width=10, max_width=20)])
 
     def test_parse_21(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('blade broadly cordate to broadly ovate, ± as '
                             'long as wide, 1.2-6.5(-8.5) × 1.4-7(-8.2) cm'),
@@ -159,6 +168,7 @@ class TestPlantSize(unittest.TestCase):
                    low_width=14, high_width=70, max_width=82)])
 
     def test_parse_22(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('blade pentagonal-angulate to reniform-angulate '
                             'or shallowly 5-angulate, sinuses 1/4–1/3 to '
@@ -168,6 +178,7 @@ class TestPlantSize(unittest.TestCase):
                    low_width=50, high_width=90)])
 
     def test_parse_23(self):
+        """TODO."""
         self.assertEqual(
             PETAL_SIZE.parse('petals (1–)3–10(–12) mm (pistillate) '
                              'or 5–8(–10) mm (staminate)'),
@@ -177,6 +188,7 @@ class TestPlantSize(unittest.TestCase):
                    low_length=5, high_length=8, max_length=10)])
 
     def test_parse_24(self):
+        """TODO."""
         self.assertEqual(
             LEAF_SIZE.parse('blade hastate to 5-angular, palmately '
                             '3–5-lobed, 3–8(–15) × 2–6(–8) cm,'),
@@ -185,36 +197,39 @@ class TestPlantSize(unittest.TestCase):
                    low_width=20, high_width=60, max_width=80)])
 
     def test_parse_25(self):
-        self.maxDiff = None
+        """It gets sepal measurements with a sex notation."""
         self.assertEqual(
             SEPAL_SIZE.parse('sepals (pistillate) linear, 6–7 mm;'),
             [Trait(start=0, end=34, part='sepals', sex='pistillate',
                    low_length=6, high_length=7)])
 
     def test_parse_26(self):
-        self.maxDiff = None
+        """It skips over lobe notations."""
         self.assertEqual(
-            LEAF_SIZE.parse('blade suborbiculate to depressed-ovate, '
-                            'palmately 5-lobed, sinuses 1/2–2/3 to petiole, '
-                            '3–7 × 4–10 cm, usually broader than long '),
+            LEAF_SIZE.parse(
+                'blade suborbiculate to depressed-ovate, palmately 5-lobed, '
+                'sinuses 1/2–2/3 to petiole, 3–7 × 4–10 cm, usually broader '
+                'than long '),
             [Trait(start=0, end=100, part='blade',
                    low_length=30, high_length=70,
                    low_width=40, high_width=100)])
 
     def test_parse_27(self):
-        self.maxDiff = None
+        """It allows spaces in measurements."""
         self.assertEqual(
             PETIOLE_SIZE.parse('Leaves: petiole 1.5-7.5 (-12) cm'),
             [Trait(start=8, end=32, part='petiole',
                    low_length=15, high_length=75, max_length=120)])
 
     def test_parse_28(self):
+        """It handles a diameter as a dimension."""
         self.assertEqual(
             FLOWER_SIZE.parse('Flowers 5–10 cm diam.; hypanthium 4–8 mm,'),
             [Trait(start=0, end=20, dimension='diam', part='flowers',
                    low_length=50, high_length=100)])
 
     def test_parse_29(self):
+        """It handles ranges for hypanthium notations."""
         self.assertEqual(
             HYPANTHIUM_SIZE.parse('hypanthium cupulate, 5–8 mm;'),
             [Trait(start=0, end=27, part='hypanthium',
