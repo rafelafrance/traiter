@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring,missing-class-docstring
+# pylint: disable=missing-function-docstring,too-many-public-methods
 import unittest
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.testes_size import TESTES_SIZE

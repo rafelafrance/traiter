@@ -4,13 +4,13 @@ from string import punctuation
 from copy import copy
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import fragment
-from pylib.vertnet.shared_patterns import SCANNER
+from pylib.vertnet.shared_patterns import RULE
 from pylib.vertnet.numeric_trait import NumericTrait
 
 
 # Used to get compounds traits from a single parse
 DOUBLE_CROSS = fragment(
-    name='double_cross', regexp=f' {SCANNER["cross"].pattern} ')
+    name='double_cross', regexp=f' {RULE["cross"].pattern} ')
 
 SIDES = {
     'l': 'r', 'r': 'l',
@@ -43,8 +43,8 @@ def double(token):
     side1 = SIDES.get(side2) if not side1 else side1
     side2 = SIDES.get(side1) if not side2 else side2
 
-    trait1.float_value(*values1)
-    trait2.float_value(*values2)
+    trait1.float_value(*values1)  # pylint: disable=no-value-for-parameter
+    trait2.float_value(*values2)  # pylint: disable=no-value-for-parameter
 
     if units1 and units2:
         trait1.convert_value(units1)

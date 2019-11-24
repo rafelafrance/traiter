@@ -15,7 +15,7 @@ from pylib.vertnet.parsers.placental_scar_count import PLACENTAL_SCAR_COUNT
 from pylib.vertnet.parsers.pregnancy_state import PREGNANCY_STATE
 from pylib.vertnet.parsers.sex import SEX
 from pylib.vertnet.parsers.tail_length import TAIL_LENGTH
-from pylib.vertnet.parsers import TESTES_SIZE
+from pylib.vertnet.parsers.testes_size import TESTES_SIZE
 from pylib.vertnet.parsers.testes_state import TESTES_STATE
 from pylib.vertnet.parsers.total_length import TOTAL_LENGTH
 

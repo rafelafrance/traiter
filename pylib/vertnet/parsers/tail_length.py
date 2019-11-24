@@ -1,7 +1,7 @@
 """Parse tail length notations."""
 
-import regex
 from functools import partial
+import regex
 from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length

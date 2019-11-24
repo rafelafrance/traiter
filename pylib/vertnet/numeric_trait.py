@@ -1,7 +1,7 @@
 """Functions for building a numeric trait."""
 
-import regex
 from collections import namedtuple
+import regex
 from pylib.shared.util import flatten, squash
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.convert_units import convert
@@ -95,7 +95,7 @@ class NumericTrait(Trait):
         """Handle a value like 5 cm x 21 mm."""
         values = self.all_values(
             token, ['value1', 'value2a', 'value2b', 'value2c'])
-        self.float_value(*values)
+        self.float_value(*values)  # pylint: disable=no-value-for-parameter
 
         units = self.all_values(
             token, ['units', 'units1a', 'units1b', 'units1c', 'units2'])

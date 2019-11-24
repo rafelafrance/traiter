@@ -2,6 +2,7 @@
 
 from typing import Callable
 from pylib.stacked_regex.parser import Parser
+from pylib.stacked_regex.token import Tokens
 from pylib.stacked_regex.rule import Rules
 from pylib.vertnet.trait import Trait
 
@@ -15,15 +16,16 @@ class Base(Parser):  # pylint: disable=too-few-public-methods
     """Shared lexer logic."""
 
     def __init__(
-            self,  rules: Rules,
+            self, rules: Rules,
             name: str = 'parser',
             fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""
         super().__init__(name=name, rules=rules)
         self.fix_up = fix_up if fix_up else fix_up_nop
 
-    def parse(self, text, field=None):
-        """Find the traits in the text. """
+    # pylint: disable=arguments-differ
+    def parse(self, text: str, field: str = None) -> Tokens:
+        """Find the traits in the text."""
         traits = []
 
         tokens = super().parse(text)

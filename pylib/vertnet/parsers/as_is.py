@@ -1,11 +1,12 @@
 """Just grab the notations as they are."""
 
+from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import fragment, producer
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 
 
-def convert(token):
+def convert(token: Token) -> Trait:
     """Convert parsed token into a trait product."""
     return Trait(
         value=token.groups['value'],

@@ -1,4 +1,4 @@
-"""Misc. utilities"""
+"""Misc. utilities."""
 
 
 def flatten(nested):

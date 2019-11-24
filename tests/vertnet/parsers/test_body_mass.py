@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring,missing-class-docstring
+# pylint: disable=missing-function-docstring,too-many-public-methods
 import unittest
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.body_mass import BODY_MASS
@@ -287,7 +289,6 @@ class TestBodyMass(unittest.TestCase):
                 start=21, end=34)])
 
     def test_parse_38(self):
-        self.maxDiff = None
         self.assertEqual(
             BODY_MASS.parse('; weight=22 oz; Verbatim weight=1lb 6oz;'),
             [

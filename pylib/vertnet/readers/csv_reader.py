@@ -1,7 +1,7 @@
 """Read the lib input from a CSV file."""
 
 import csv
-from pylib.vertnet.readers import BaseReader
+from pylib.vertnet.readers.base_reader import BaseReader
 
 
 class CsvReader(BaseReader):

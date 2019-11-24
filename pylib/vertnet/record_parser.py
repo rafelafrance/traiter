@@ -20,7 +20,7 @@ class ShouldSkip(Exception):
     """
 
 
-class RecordParser:
+class RecordParser:  # pylint: disable=too-few-public-methods
     """Handles all of the parsed traits for a record."""
 
     as_is = AS_IS

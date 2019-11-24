@@ -169,9 +169,9 @@ add_set('cross_set', [
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
 add_rep('fraction', """
-    (?P<whole> number )? 
-    (?<! slash ) 
-    (?P<numerator> number) slash (?P<denominator> number) 
+    (?P<whole> number )?
+    (?<! slash )
+    (?P<numerator> number) slash (?P<denominator> number)
     (?! slash ) units? """, capture=False)
 # Rule set for parsing fractions
 add_set('fraction_set', [
