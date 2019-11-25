@@ -1,6 +1,6 @@
 """Parse ovaries size notations."""
 
-from pylib.stacked_regex.rule import fragment, producer, replacer
+from pylib.stacked_regex.rule import fragment, producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.parsers.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
@@ -46,16 +46,16 @@ OVARY_SIZE = Base(
         RULE['sep'],
 
         # A key with units, like: gonadLengthInMM
-        replacer('key_with_units', r"""
+        grouper('key_with_units', r"""
             ambiguous_key dimension in (?P<units> len_units )
             """),
 
         # E.g.: active
         # Or:   immature
-        replacer('state', 'active mature destroyed visible developed'.split()),
+        grouper('state', 'active mature destroyed visible developed'.split()),
 
         # Male or female ambiguous, like: gonadLength1
-        replacer('ambiguous', """
+        grouper('ambiguous', """
             ambiguous_key dim_side
             | side ambiguous_key dimension
             | ambiguous_key dimension """),

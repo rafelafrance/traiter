@@ -3,7 +3,7 @@
 import string
 from typing import Any
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import fragment, keyword, replacer, producer
+from pylib.stacked_regex.rule import fragment, keyword, grouper, producer
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 from pylib.efloras.trait import Trait
@@ -151,7 +151,7 @@ def parser(plant_part):
 
             util.part_phrase(plant_part),
 
-            replacer('shape_phrase', """
+            grouper('shape_phrase', """
                 ( ( plant_shape | shape_starter | shape_prefix | location )
                     ( punct | conj | prep ){0,2} )*
                 (plant_shape | location)

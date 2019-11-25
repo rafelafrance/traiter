@@ -1,6 +1,6 @@
 """Parse lactation state notations."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -58,11 +58,11 @@ NIPPLE_COUNT = Base(
 
         RULE['sep'],
 
-        replacer('count', ' integer | none '),
+        grouper('count', ' integer | none '),
 
-        replacer('modifier', 'adj visible'.split()),
+        grouper('modifier', 'adj visible'.split()),
 
-        replacer('skip', ' number eq? integer '),
+        grouper('skip', ' number eq? integer '),
 
         producer(
             typed,

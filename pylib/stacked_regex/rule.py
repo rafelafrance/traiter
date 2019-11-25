@@ -27,8 +27,9 @@ class RuleType(Enum):
     """What type of a rule are we dealing with."""
 
     SCANNER = 1
-    REPLACER = 2
-    PRODUCER = 3
+    GROUPER = 2
+    REPLACER = 3
+    PRODUCER = 4
 
 
 @dataclass
@@ -108,12 +109,26 @@ def keyword(
         regexp=regexp)
 
 
+def grouper(
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True) -> Rule:
+    """Build a grouper regular expression."""
+    return Rule(
+        name=name,
+        pattern=join(regexp),
+        type=RuleType.GROUPER,
+        action=action,
+        capture=capture)
+
+
 def replacer(
         name: str,
         regexp: InRegexp,
         action: Action = None,
         capture: bool = True) -> Rule:
-    """Build a replacer regular expression."""
+    """Build a grouper regular expression."""
     return Rule(
         name=name,
         pattern=join(regexp),

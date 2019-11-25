@@ -1,6 +1,6 @@
 """Parse embryo counts."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -80,7 +80,7 @@ EMBRYO_COUNT = Base(
         # Skip arbitrary words
         fragment('word', r' \w+ '),
 
-        replacer('count', ' none word conj | integer | none '),
+        grouper('count', ' none word conj | integer | none '),
 
         # Eg: 4 fetuses on left, 1 on right
         producer(convert, [

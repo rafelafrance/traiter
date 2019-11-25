@@ -2,7 +2,7 @@
 
 from functools import partial
 import regex
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.parsers.numeric import simple, fraction
@@ -96,7 +96,7 @@ TAIL_LENGTH = Base(
         fragment('sep', r' [;,] | $ '),
 
         # Consider all of these tokens a key
-        replacer('key', 'keyword char_key'.split()),
+        grouper('key', 'keyword char_key'.split()),
 
         # Handle fractional values like: tailLength 9/16"
         producer(fraction, [

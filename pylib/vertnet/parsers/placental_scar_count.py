@@ -1,6 +1,6 @@
 """Parse placental scar counts."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -74,7 +74,7 @@ PLACENTAL_SCAR_COUNT = Base(
         # Trait separator
         fragment('sep', r' [;/] '),
 
-        replacer('count', """
+        grouper('count', """
             none embryo conj
             | none visible | integer | none """),
 

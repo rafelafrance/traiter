@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 from datetime import datetime
 import regex
-from pylib.stacked_regex.rule import replacer
+from pylib.stacked_regex.rule import grouper
 from pylib.efloras.shared_patterns import RULE
 
 
@@ -89,13 +89,13 @@ def split_keywords(value):
 
 
 def part_phrase(leaf_part):
-    """Build a replacer rule for the leaf part."""
+    """Build a grouper rule for the leaf part."""
     return [
         RULE[leaf_part],
         RULE['location'],
         RULE['word'],
         RULE['punct'],
-        replacer(f'{leaf_part}_phrase', f"""
+        grouper(f'{leaf_part}_phrase', f"""
             ( location ( word | punct )* )?
             (?P<part> {leaf_part} )
             """),

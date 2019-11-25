@@ -1,6 +1,6 @@
 """Parse testes size notations."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.parsers.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
@@ -40,17 +40,17 @@ TESTES_SIZE = Base(
         RULE['word'],
         RULE['sep'],
 
-        replacer('state', [
+        grouper('state', [
             """(non | partially | fully )? descended """]
                  + """ scrotal abdominal size other """.split()),
 
         # A key with units, like: gonadLengthInMM
-        replacer('key_with_units', r"""
+        grouper('key_with_units', r"""
             ambiguous_key dimension in (?P<units> len_units )
             """),
 
         # Male or female ambiguous, like: gonadLength1
-        replacer('ambiguous', [
+        grouper('ambiguous', [
             # E.g.: GonadWidth2
             r' ambiguous_key dim_side',
 

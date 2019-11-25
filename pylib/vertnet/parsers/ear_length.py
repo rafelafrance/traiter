@@ -2,7 +2,7 @@
 
 from functools import partial
 import regex
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.parsers.numeric import simple, fraction, shorthand_length
 from pylib.vertnet.parsers.numeric import numeric_fix_ups
@@ -105,7 +105,7 @@ EAR_LENGTH = Base(
         fragment('sep', r' [;,] '),
 
         # Consider any of the following as just a key
-        replacer('key', 'keyword char_key char_measured_from'.split()),
+        grouper('key', 'keyword char_key char_measured_from'.split()),
 
         # Handle fractional values like: ear 9/16"
         producer(fraction, 'key fraction (?P<units> len_units )?'),

@@ -4,7 +4,7 @@ import string
 from typing import Any
 import regex
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import keyword, replacer, producer
+from pylib.stacked_regex.rule import keyword, grouper, producer
 from pylib.efloras.trait import Trait
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
@@ -136,7 +136,7 @@ def parser(plant_part):
             COLOR_PREFIX,
             COLOR_SUFFIX,
 
-            replacer('color_phrase', """
+            grouper('color_phrase', """
                 color_prefix*
                 flower_color
                 color_suffix*

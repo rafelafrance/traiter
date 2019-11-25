@@ -1,6 +1,6 @@
 """Parse life stage notations."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_patterns import RULE
 
@@ -60,7 +60,7 @@ LIFE_STAGE = Base(
         # Match any word
         fragment('word', r' \b \w [\w?.-]* (?! [./-] ) '),
 
-        replacer('as_time', ' after? (ordinals | hatching) time_units'),
+        grouper('as_time', ' after? (ordinals | hatching) time_units'),
 
         # E.g.: life stage juvenile/yearling
         producer(

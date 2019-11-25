@@ -1,6 +1,6 @@
 """Parse lactation state notations."""
 
-from pylib.stacked_regex.rule import fragment, producer, replacer
+from pylib.stacked_regex.rule import fragment, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
@@ -31,7 +31,7 @@ LACTATION_STATE = Base(
 
         RULE['word'],
 
-        replacer('prefix', 'not post'.split()),
+        grouper('prefix', 'not post'.split()),
 
         producer(convert, """ (?P<value> prefix? lactating quest? ) """),
     ],

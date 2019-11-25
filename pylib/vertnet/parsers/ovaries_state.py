@@ -1,7 +1,7 @@
 """Parse ovaries state notations."""
 
 import regex
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -79,21 +79,21 @@ OVARIES_STATE = Base(
 
         # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes
-        replacer('ovaries', r"""
+        grouper('ovaries', r"""
             ovary ( ( and? uterus horns? ) | and? fallopian )?
             """),
 
         # E.g.: covered in copious fat
-        replacer('coverage', ' covered word{0,2} fat '),
+        grouper('coverage', ' covered word{0,2} fat '),
 
         # E.g.: +corpus luteum
-        replacer('luteum', ' sign? corpus? (alb | lut) '),
+        grouper('luteum', ' sign? corpus? (alb | lut) '),
 
-        replacer('value_words', """
+        grouper('value_words', """
             size mature coverage luteum color corpus other active destroyed alb
             visible developed cyst texture fallopian luteum """.split()),
 
-        replacer('values', """
+        grouper('values', """
             ( value_words ( and | comma ) | non )? 
             value_words """),
 

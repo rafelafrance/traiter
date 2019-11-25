@@ -1,6 +1,6 @@
 """Parse embryo lengths."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.stacked_regex.token import forget
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.numeric import fix_up_inches
@@ -73,12 +73,12 @@ EMBRYO_LENGTH = Base(
         fragment('quest', '[?]'),
         fragment('separator', r' [;"/] '),
 
-        replacer(
+        grouper(
             'count',
             """measurement side measurement side | count_side count_side """,
             action=forget),
-        replacer('skip', ' prep word cross | other '),
-        replacer('measurement', ' cross_joiner? cross '),
+        grouper('skip', ' prep word cross | other '),
+        grouper('measurement', ' cross_joiner? cross '),
 
         producer(convert, [
             # E.g.: crown-rump length=13 mm

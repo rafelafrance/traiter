@@ -1,6 +1,6 @@
 """Parse testes state notations."""
 
-from pylib.stacked_regex.rule import keyword, producer, replacer
+from pylib.stacked_regex.rule import keyword, producer, grouper
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -65,7 +65,7 @@ TESTES_STATE = Base(
         # We allow random words in some situations
         RULE['word'],
 
-        replacer('state', [
+        grouper('state', [
             'non fully descended',
             'abdominal non descended',
             'abdominal descended',
@@ -78,7 +78,7 @@ TESTES_STATE = Base(
             'size']),
 
         # Simplify the testes length so it can be skipped easily
-        replacer('length', 'cross len_units?'),
+        grouper('length', 'cross len_units?'),
 
         # A typical testes state notation
         # E.g.: reproductiveData: ts 5x3 fully descended

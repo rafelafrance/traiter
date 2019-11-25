@@ -1,6 +1,6 @@
 """Parse nipple state notations."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
@@ -40,11 +40,11 @@ NIPPLE_STATE = Base(
         # Skip arbitrary words
         fragment('word', r' \w+ '),
 
-        replacer('state_end', """
+        grouper('state_end', """
             ( size | fully | partially | other | lactation | color | false
                 | visible | tissue | present | active | developed ) """),
 
-        replacer('state_mid', """ ( uterus | and ) """),
+        grouper('state_mid', """ ( uterus | and ) """),
 
         producer(
             convert,

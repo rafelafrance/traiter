@@ -17,6 +17,7 @@ class Parser:
         self.rules: RuleDict = {}
         self._built = False
         self._scanners: Rules = []
+        self._replacers: Rules = []
         self._producers: Rules = []
         self.__iadd__(rules)
 
@@ -32,6 +33,10 @@ class Parser:
             self._build()
 
         tokens = scan(self._scanners, text)
+
+        again = bool(self._replacers)
+        while again:
+            tokens, again = replace(self._replacers, tokens, text)
 
         # for token in tokens:
         #     print(token)
@@ -53,6 +58,8 @@ class Parser:
             rule.compile(self.rules)
             if rule.type == RuleType.PRODUCER:
                 self._producers.append(rule)
+            elif rule.type == RuleType.REPLACER:
+                self._replacers.append(rule)
 
 
 def scan(rules: Rules, text: str) -> Tokens:

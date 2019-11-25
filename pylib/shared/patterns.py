@@ -1,6 +1,6 @@
 """Shared token patterns."""
 
-from pylib.stacked_regex.rule import Rules, fragment, keyword, replacer
+from pylib.stacked_regex.rule import Rules, fragment, keyword, grouper
 from pylib.stacked_regex.rule import InRegexp
 from pylib.vertnet.util import ordinal, number_to_words
 
@@ -19,7 +19,7 @@ def add_key(name: str, regexp: InRegexp, capture=True) -> None:
 
 def add_rep(name: str, regexp: InRegexp, capture=True) -> None:
     """Add a rule to RULE."""
-    RULE[name] = replacer(name, regexp, capture=capture)
+    RULE[name] = grouper(name, regexp, capture=capture)
 
 
 def add_set(name: str, rules: Rules) -> None:

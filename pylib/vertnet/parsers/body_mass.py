@@ -1,7 +1,7 @@
 """Parse body mass notations."""
 
 from pylib.shared.util import as_list, squash
-from pylib.stacked_regex.rule import fragment, keyword, producer, replacer
+from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.convert_units import convert
 from pylib.vertnet.numeric_trait import NumericTrait
 from pylib.vertnet.parsers.base import Base
@@ -82,14 +82,14 @@ BODY_MASS = Base(
         RULE['comma'],
 
         # Any key not preceding by "other_wt" is considered a weight key
-        replacer('wt_key', r"""
+        grouper('wt_key', r"""
             (?<! other_wt )
             ( key_leader weight | key_leader mass
                 | body weight | body mass | body
                 | weight | mass | key_with_dots )
             """),
 
-        replacer('key', ' shorthand_key wt_key '.split()),
+        grouper('key', ' shorthand_key wt_key '.split()),
 
         producer(compound, ' key? compound_wt '),
 

@@ -3,7 +3,7 @@
 import copy
 from typing import Any
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import producer, replacer
+from pylib.stacked_regex.rule import producer, grouper
 import pylib.efloras.util as util
 from pylib.efloras.trait import Trait
 from pylib.efloras.parsers.base import Base
@@ -95,7 +95,7 @@ def parser(plant_part):
             RULE['dim'],
             RULE['location'],
 
-            replacer(
+            grouper(
                 'noise', """
                 (?: word | number | dash | punct | up_to | dim | slash
                     | conj )*? """,
