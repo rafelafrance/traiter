@@ -3,8 +3,8 @@
 from functools import partial
 from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.parsers.numeric import fix_up_inches, shorthand_length
-from pylib.vertnet.parsers.numeric import fraction, simple
+from pylib.vertnet.numeric import fix_up_inches, shorthand_length
+from pylib.vertnet.numeric import fraction, simple
 from pylib.vertnet.shared_patterns import RULE
 
 

@@ -5,7 +5,7 @@ from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.convert_units import convert
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.parsers.numeric import as_value, add_flags, simple
+from pylib.vertnet.numeric import as_value, add_flags, simple
 from pylib.vertnet.shared_patterns import RULE
 
 
