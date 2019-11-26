@@ -63,7 +63,6 @@ EMBRYO_LENGTH = Base(
                 | (?<! [a-z] ) cr  (?! [a-z] )
             )"""),
 
-        # keyword('length', r' length | len '),
 
         RULE['cross_set'],
 
@@ -80,7 +79,6 @@ EMBRYO_LENGTH = Base(
 
         grouper('count', """number side number side """),
         grouper('skip', ' prep word cross | other | side '),
-        # grouper('measurement', ' ( x | by )? cross '),
 
         producer(convert_many, """
             embryo count? value{2,} (?! skip ) quest? """),
@@ -89,26 +87,5 @@ EMBRYO_LENGTH = Base(
         producer(convert, """ embryo noise? value (?! skip ) quest? """),
         producer(isolate, """
             embryo count? (?P<real> value) len_units quest? """),
-
-        # producer(convert, [
-        #     # E.g.: 15 mm, crown-rump length
-        #     """ embryo? measurement quest? (?P<units> len_units )?
-        #         crown_rump length? """,
-        # ]),
-        # producer(convert_many, [
-        #     # E.g.: 15 mm, crown-rump length
-        #     """ embryo count measurement{2,} (?! skip ) quest? """,
-        # ]),
-        #
-        # producer(convert, [
-        #     # E.g.: 15 mm, crown-rump length
-        #     """ embryo count measurement (?! skip ) quest? """,
-        # ]),
-        #
-        # producer(convert, [
-        #     # E.g.: 15 mm, crown-rump length
-        #     """ embryo word{0,3} measurement (?! skip ) quest? """,
-        # ]),
-
     ],
 )

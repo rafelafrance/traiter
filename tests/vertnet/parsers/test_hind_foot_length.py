@@ -18,7 +18,7 @@ class TestHindFootLength(unittest.TestCase):
         self.assertEqual(
             HIND_FOOT_LENGTH.parse('"hindfootLengthInMM":"36"'),
             [Trait(
-                value=36, units='mm', units_inferred=False, start=1, end=24)])
+                value=36, units='MM', units_inferred=False, start=1, end=24)])
 
     def test_parse_03(self):
         self.assertEqual(
@@ -81,7 +81,7 @@ class TestHindFootLength(unittest.TestCase):
         self.assertEqual(
             HIND_FOOT_LENGTH.parse('"footLengthInMillimeters"="31",'),
             [Trait(
-                value=31, units='millimeters', units_inferred=False,
+                value=31, units='Millimeters', units_inferred=False,
                 start=1, end=29)])
 
     def test_parse_13(self):

@@ -1,7 +1,7 @@
 """Parse hind foot length notations."""
 
 from functools import partial
-from pylib.stacked_regex.rule import fragment, keyword, producer
+from pylib.stacked_regex.rule import fragment, keyword, grouper, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import fraction, simple
@@ -31,33 +31,32 @@ HIND_FOOT_LENGTH = Base(
             r'hind \s* foot ( \s* ( length | len ) )?',
             'hfl | hf']),
 
-        # Units
-        RULE['len_units'],
-
         # Shorthand notation
         RULE['shorthand_key'],
         RULE['shorthand'],
 
         # Fractional numbers, like: 9/16
-        RULE['fraction'],
+        RULE['fraction_set'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        RULE['range'],
+        RULE['range_set'],
 
         # Sometimes the last number is missing in the shorthand notation
         RULE['triple'],
 
         # We allow random words in some situations
-        keyword('word', r' ( [a-z] \w* ) '),
+        keyword('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
-        fragment('sep', r' [;,] | $ '),
+        fragment('sep', r' [;,] | $ ', capture=False),
+
+        grouper('noise', ' word dash '.split()),
 
         # Handle fractional values like: hindFoot 9/16"
         producer(fraction, [
 
             # E.g.: hindFoot = 9/16 inches
-            'key fraction (?P<units> len_units )',
+            'key fraction units',
 
             # E.g.: hindFoot = 9/16
             'key fraction']),
@@ -69,10 +68,13 @@ HIND_FOOT_LENGTH = Base(
             'key_with_units range',
 
             # E.g.: hindFootLength=9-10 mm
-            'key range (?P<units> len_units )',
+            'key noise? range units ',
 
             # Missing units like: hindFootLength 9-10
-            'key range']),
+            'key noise? range',
+
+            'key dash number units',
+        ]),
 
         producer(partial(
             shorthand_length, measurement='shorthand_hfl'), [
