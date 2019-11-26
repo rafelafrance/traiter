@@ -2,12 +2,12 @@
 
 from functools import partial
 import regex
+from pylib.shared.util import FLAGS
 from pylib.stacked_regex.rule import fragment, keyword, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 from pylib.vertnet.numeric import shorthand_length, simple
 from pylib.vertnet.shared_patterns import RULE
-import pylib.vertnet.util as util
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -15,18 +15,15 @@ LOOK_BACK_FAR = 40
 LOOK_BACK_NEAR = 10
 
 # These indicate that the parse is not a total length
-IS_ID = regex.compile(
-    ' identifier | ident | id | collector ',
-    util.FLAGS)
-IS_TRAP = regex.compile(' trap ', util.FLAGS)
+IS_ID = regex.compile(' identifier | ident | id | collector ', FLAGS)
+IS_TRAP = regex.compile(' trap ', FLAGS)
 IS_TESTES = regex.compile(
-    ' reproductive | gonad | test | scrotal | scrotum | scrot ',
-    util.FLAGS)
+    ' reproductive | gonad | test | scrotal | scrotum | scrot ', FLAGS)
 
 # The 'L' abbreviation gets confused with abbreviation for Left sometimes.
 # Try to disambiguate the two by looking for a Right near by.
 LOOK_AROUND = 10
-IS_LEFT = regex.compile(r' \b r \b ', util.FLAGS)
+IS_LEFT = regex.compile(r' \b r \b ', FLAGS)
 
 
 def fix_up(trait, text):

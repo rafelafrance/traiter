@@ -1,11 +1,10 @@
 """Parse embryo lengths."""
 
-from pylib.stacked_regex.rule import fragment, producer, grouper
 from pylib.shared.util import as_list, to_float
+from pylib.stacked_regex.rule import fragment, producer, grouper
 from pylib.vertnet.trait import Trait
 import pylib.vertnet.convert_units as convert_units
-from pylib.vertnet.numeric import simple, add_flags
-from pylib.vertnet.numeric import fix_up_inches
+from pylib.vertnet.numeric import simple, add_flags, fix_up_inches
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
 

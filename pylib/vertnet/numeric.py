@@ -1,9 +1,8 @@
 """Utilities for parsing numeric traits."""
 
 import regex
-from pylib.shared.util import to_float, squash, as_list
+from pylib.shared.util import FLAGS, to_float, squash, as_list
 from pylib.vertnet.trait import Trait
-from pylib.vertnet.util import FLAGS
 from pylib.vertnet.convert_units import convert
 
 
@@ -13,15 +12,20 @@ QUOTES_VS_INCHES = regex.compile(r' \d " (?! \s* \} )', FLAGS)
 IS_COLLECTOR = regex.compile(r' collector ', FLAGS)
 
 
-def as_value(token, trait, value='number', units='units'):
+def as_value(token, trait, value_field='number', unit_field='units'):
     """Convert token values and units to trait fields."""
-    trait.units = token.groups.get(units)
+    units = as_list(token.groups.get(unit_field, []))
+    trait.units = squash(units) if units else None
     values = []
-    for val in as_list(token.groups.get(value, [])):
+    for i, val in enumerate(as_list(token.groups.get(value_field, []))):
         val = to_float(val)
         if val is None:
             return False
-        values.append(convert(val, trait.units))
+        if i < len(units):
+            unit = units[i]
+        else:
+            unit = units[-1] if units else None
+        values.append(convert(val, unit))
     trait.value = squash(values)
     trait.units_inferred = not bool(trait.units)
     return True
@@ -35,7 +39,6 @@ def add_flags(token, trait):
     trait.is_value_in_token('measured_from2', token, rename='measured_from')
     trait.is_value_in_token('includes', token)
     trait.is_flag_in_token('quest', token, rename='uncertain')
-    # trait.is_flag_missing('key', token, rename='ambiguous_key')
 
 
 def simple(token, value='number', units='units'):

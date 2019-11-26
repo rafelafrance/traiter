@@ -1,40 +1,33 @@
 """Parse placental scar counts."""
 
+from pylib.shared.util import as_list, to_int
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
+SUB = {'l': 'left', 'r': 'right', 'm': 'male', 'f': 'female'}
+
+
 def convert_count(token):
     """Convert parsed tokens into a result."""
+    print(token.groups)
+    value = token.groups.get('value')
+
+    if not value:
+        return None
+
     trait = Trait(start=token.start, end=token.end)
+    trait.value = to_int(value)
 
-    if token.groups.get('value'):
-        trait.value = trait.to_int(token.groups['value'])
-    elif token.groups.get('count1'):
-        trait.value = trait.to_int(token.groups['count1'])
-        trait.value += trait.to_int(token.groups.get('count2', ''))
+    if trait.value > 100:
+        return None
 
-    # Add scar side count
-    side = token.groups.get('side1', '').lower()
-    count = token.groups.get('count1', '').lower()
-    if side:
-        side = 'left' if side.startswith('l') else 'right'
-        setattr(trait, side, trait.to_int(count))
-    elif count:
-        setattr(trait, 'side1', trait.to_int(count))
+    if token.groups.get('side'):
+        trait.notation = token.groups['notation']
 
-    # Add scar side count
-    side = token.groups.get('side2', '').lower()
-    count = token.groups.get('count2', '').lower()
-    if side:
-        side = 'left' if side.startswith('l') else 'right'
-        setattr(trait, side, trait.to_int(count))
-    elif count:
-        setattr(trait, 'side2', trait.to_int(count))
-
-    return trait
+    return trait if all(x < 1000 for x in as_list(trait.value)) else None
 
 
 def convert_state(token):

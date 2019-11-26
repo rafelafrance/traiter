@@ -1,7 +1,7 @@
 """Shared plant parser logic."""
 
 import regex
-from pylib.shared.patterns import add_frag, add_key, add_rep, add_set, RULE
+from pylib.shared.patterns import add_frag, add_key, add_group, add_set, RULE
 
 
 add_key('sex', 'staminate pistillate'.split())
@@ -63,7 +63,7 @@ add_frag('number', r' \d+ ( \. \d* )? ')
 
 
 # Numeric ranges like: (10–)15–20(–25)
-add_rep('range', r"""
+add_group('range', r"""
     (?<! slash | dash | number )
     (?: open (?P<min> number ) dash close )?
     (?P<low> number )
@@ -89,7 +89,7 @@ RANGE_GROUPS = regex.compile(
 LENGTH_RANGE = RANGE_GROUPS.sub(r'\1_length', RULE['range'].pattern)
 WIDTH_RANGE = RANGE_GROUPS.sub(r'\1_width', RULE['range'].pattern)
 
-add_rep('cross', f"""
+add_group('cross', f"""
     {LENGTH_RANGE} (?P<units_length> units )?
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """, capture=False)
@@ -107,7 +107,7 @@ CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
 CROSS_1 = CROSS_GROUPS.sub(r'\1_1', RULE['cross'].pattern)
 CROSS_2 = CROSS_GROUPS.sub(r'\1_2', RULE['cross'].pattern)
-add_rep('sex_cross', f"""
+add_group('sex_cross', f"""
     {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
     ( conj | prep )?
     {CROSS_2} (open)? (?P<sex_2> sex )? (close)?
@@ -126,7 +126,7 @@ add_set('sex_cross_set', [
     RULE['sex_cross']])
 
 # Like "to 10 cm"
-add_rep(
+add_group(
     'cross_upper',
     fr""" up_to (?P<high_length> number )
         (?P<units_length> units ) """, capture=False)
@@ -137,12 +137,8 @@ add_set('cross_upper_set', [
     RULE['cross_upper']])
 
 # Like "to 10"
-add_rep('count_upper', fr""" up_to (?P<high> number ) """, capture=False)
+add_group('count_upper', fr""" up_to (?P<high> number ) """, capture=False)
 add_set('count_upper_set', [
     RULE['up_to'],
     RULE['number'],
     RULE['count_upper']])
-
-# CROSS_DIM = fr"""
-#     ( {CROSS_UPPER} | {CROSS} ) ( \s+ (?P<dimension> {DIM}) \b )? """
-# add_frag('cross_dim', CROSS_DIM)

@@ -2,12 +2,12 @@
 
 from functools import partial
 import regex
+from pylib.shared.util import FLAGS
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
 from pylib.vertnet.shared_patterns import RULE
-import pylib.vertnet.util as util
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -17,11 +17,11 @@ LOOK_BACK_NEAR = 20
 # These indicate that the parse is not really for a tail length
 IS_TESTES = regex.compile(
     ' reproductive | gonad | test | scrotal | scrotum | scrot ',
-    util.FLAGS)
-IS_ELEVATION = regex.compile(' elevation | elev ', util.FLAGS)
-IS_TOTAL = regex.compile(' body | nose | snout ', util.FLAGS)
-IS_TAG = regex.compile(' tag ', util.FLAGS)
-IS_ID = regex.compile(' identifier | ident | id ', util.FLAGS)
+    FLAGS)
+IS_ELEVATION = regex.compile(' elevation | elev ', FLAGS)
+IS_TOTAL = regex.compile(' body | nose | snout ', FLAGS)
+IS_TAG = regex.compile(' tag ', FLAGS)
+IS_ID = regex.compile(' identifier | ident | id ', FLAGS)
 
 
 def fix_up(trait, text):

@@ -2,7 +2,7 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
-from pylib.vertnet.parsers.reproductive import double, convert
+from pylib.vertnet.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 
 

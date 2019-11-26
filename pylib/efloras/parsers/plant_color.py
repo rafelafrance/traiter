@@ -3,6 +3,7 @@
 import string
 from typing import Any
 import regex
+from pylib.shared.util import FLAGS
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import keyword, grouper, producer
 from pylib.efloras.trait import Trait
@@ -111,7 +112,7 @@ def normalize(value: str) -> str:
     parts = []
     has_color = False
     for part in regex.split(
-            rf'\s+ | {RULE["dash"].pattern}', value, flags=util.FLAGS):
+            rf'\s+ | {RULE["dash"].pattern}', value, flags=FLAGS):
         if COLORS.regexp.search(part):
             parts.append(RENAME.get(part, part))
             has_color = True

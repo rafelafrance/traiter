@@ -1,6 +1,7 @@
 """Parse lactation state notations."""
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
+from pylib.shared.util import to_int
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -14,7 +15,7 @@ def convert(token):
         return None
 
     trait = Trait(start=token.start, end=token.end)
-    trait.value = trait.to_int(value)
+    trait.value = to_int(value)
 
     if trait.value > 100:
         return None
@@ -29,8 +30,8 @@ def typed(token):
     """Convert single value tokens into a result."""
     trait = Trait(start=token.start, end=token.end)
     trait.notation = token.groups['notation']
-    trait.value = trait.to_int(token.groups['value1'])
-    trait.value += trait.to_int(token.groups.get('value2'))
+    trait.value = to_int(token.groups['value1'])
+    trait.value += to_int(token.groups.get('value2'))
     return trait
 
 

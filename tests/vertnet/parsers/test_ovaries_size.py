@@ -57,8 +57,8 @@ class TestOvariesSize(unittest.TestCase):
         self.assertEqual(
             OVARY_SIZE.parse('ovaries: 20mm X 12mm, 18mm X 9mm.'),
             [Trait(
-                value=[20, 12], units='mm', units_inferred=False,
+                value=[20, 12], units=['mm', 'mm'], units_inferred=False,
                 start=0, end=32),
              Trait(
-                 value=[18, 9], units='mm', units_inferred=False,
+                 value=[18, 9], units=['mm', 'mm'], units_inferred=False,
                  start=0, end=32)])

@@ -4,6 +4,7 @@ import csv
 from pathlib import Path
 from datetime import datetime
 import regex
+from pylib.shared.util import FLAGS
 from pylib.stacked_regex.rule import grouper
 from pylib.efloras.shared_patterns import RULE
 
@@ -14,8 +15,6 @@ __VERSION__ = '0.1.0'
 RAW_DIR = Path('.') / 'data' / 'raw'
 
 EFLORAS_NA_FAMILIES = RAW_DIR / 'eFlora_family_list.csv'
-
-FLAGS = regex.VERBOSE | regex.IGNORECASE
 
 
 def camel_to_snake(name):

@@ -1,6 +1,8 @@
 """Misc. utilities."""
 import regex
 
+FLAGS = regex.VERBOSE | regex.IGNORECASE
+
 
 def flatten(nested):
     """Flatten an arbitrarily nested list."""

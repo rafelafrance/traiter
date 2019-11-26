@@ -1,7 +1,7 @@
 """Parse embryo counts."""
 
-from pylib.stacked_regex.rule import fragment, producer, grouper
 from pylib.shared.util import as_list, to_int
+from pylib.stacked_regex.rule import fragment, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -27,10 +27,7 @@ def convert(token):
             sub = SUB.get(sub[0].lower(), sub)
             setattr(trait, sub, to_int(count))
 
-    if trait.value > 1000:
-        return None
-
-    return trait
+    return trait if all(x < 1000 for x in as_list(trait.value)) else None
 
 
 EMBRYO_COUNT = Base(

@@ -1,8 +1,8 @@
 """Parse ovaries size notations."""
 
-from pylib.stacked_regex.rule import fragment, producer, grouper
+from pylib.stacked_regex.rule import producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
-from pylib.vertnet.parsers.reproductive import double, convert
+from pylib.vertnet.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 
 
@@ -25,21 +25,17 @@ OVARY_SIZE = Base(
         RULE['corpus'],
         RULE['alb'],
         RULE['nipple'],
-
-        # Commas are sometimes separators & other times punctuation
-        fragment('comma', r'[,]'),
-
+        RULE['comma'],
         RULE['label'],
         RULE['ambiguous_key'],
         RULE['non'],
         RULE['fully'],
         RULE['partially'],
-        RULE['side_cross'],
+        RULE['side_cross_set'],
         RULE['side'],
         RULE['dim_side'],
         RULE['dimension'],
-        RULE['cross'],
-        RULE['len_units'],
+        RULE['cross_set'],
         RULE['in'],
         RULE['and'],
         RULE['word'],
@@ -109,9 +105,9 @@ OVARY_SIZE = Base(
 
         # Anchored by ovaries but with only one word in between
         # E.g.: ovaries scrotal 9mm
-        producer(convert, 'ovary ( state | word ) cross'),
+        producer(convert, 'side? ovary ( state | word ) cross'),
 
         # E.g.: Ovaries 5 x 3
-        producer(convert, 'ovary cross'),
+        producer(convert, 'side? ovary cross'),
     ],
 )

@@ -1,7 +1,7 @@
 """Shared token patterns."""
 
 import pylib.shared.patterns as patterns
-from pylib.shared.patterns import add_frag, add_rep, add_set
+from pylib.shared.patterns import add_frag, add_group, add_set
 from pylib.vertnet.util import ordinal, number_to_words
 
 
@@ -110,7 +110,7 @@ add_frag('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-add_rep('range', """
+add_group('range', """
     (?<! dash )
     ( number units? (( dash | to ) number units?)? )
     (?! dash ) """, capture=False)
@@ -132,7 +132,7 @@ add_set('range_set', [
 ])
 
 # A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
-add_rep('compound_wt', """
+add_group('compound_wt', """
     (?P<lbs> number ) pounds comma?
     (?P<ozs> number ) ( ( dash | to ) (?P<ozs> number ) )? ounces
     """, capture=False)
@@ -150,7 +150,7 @@ add_set('compound_wt_set', [
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we only take
 # the first two numbers
-add_rep('cross', """
+add_group('cross', """
     (?<! x )
         ( number len_units? ( x | by ) number len_units?
         | number len_units ) """, capture=False)
@@ -166,9 +166,37 @@ add_set('cross_set', [
     RULE['cross'],
 ])
 
+# Handle 2 cross measurements, one per left/right side
+add_group('joiner', ' ampersand comma and '.split())
+
+add_group('side_cross', f"""
+    (?P<side_1> side )? 
+        (?P<value_1> number ) (?P<units_1> len_units )? 
+            ( x | by ) (?P<value_1> number ) (?P<units_1> len_units )? 
+    joiner?
+    (?P<side_2> side )? 
+        (?P<value_2> number ) (?P<units_2> len_units )? 
+            ( x | by ) (?P<value_2> number ) (?P<units_2> len_units )? 
+    """, capture=False)
+add_set('side_cross_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['number'],
+    RULE['x'],
+    RULE['ampersand'],
+    RULE['comma'],
+    RULE['and'],
+    RULE['by'],
+    RULE['joiner'],
+    RULE['side'],
+    RULE['side_cross'],
+])
+
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-add_rep('fraction', """
+add_group('fraction', """
     (?P<whole> number )?
     (?<! slash )
     (?P<numerator> number) slash (?P<denominator> number)
@@ -188,20 +216,3 @@ add_set('fraction_set', [
     RULE['slash'],
     RULE['fraction'],
 ])
-
-
-# Handle 2 cross measurements, one per left/right side
-# CROSS_GROUPS = regex.compile(
-#     r"""( estimated_value | value[12][abc]?
-#           | units[12][abc]? | side[12] ) """,
-#     regex.IGNORECASE | regex.VERBOSE)
-# CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
-# CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
-# SIDE_1 = CROSS_GROUPS.sub(r'\1_1', SIDE)
-# SIDE_2 = CROSS_GROUPS.sub(r'\1_2', SIDE)
-# SIDE_CROSS = fr"""
-#     (?P<cross_1> ({SIDE_1})? \s* ({CROSS_1}) )
-#     \s* ( [&,] | and )? \s*
-#     (?P<cross_2> ({SIDE_2})? \s* ({CROSS_2}) )
-#     """
-# add_frag('side_cross', SIDE_CROSS)

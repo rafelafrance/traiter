@@ -1,6 +1,7 @@
 """The trait groups and what is being parsed for each."""
 
 import regex
+from pylib.shared.util import FLAGS
 from pylib.efloras.parsers.plant_size import LEAF_SIZE, PETIOLE_SIZE, SEPAL_SIZE
 from pylib.efloras.parsers.plant_size import PETAL_SIZE, CALYX_SIZE, FLOWER_SIZE
 from pylib.efloras.parsers.plant_size import HYPANTHIUM_SIZE, COROLLA_SIZE
@@ -12,8 +13,6 @@ from pylib.efloras.parsers.plant_color import FLOWER_COLOR, HYPANTHIUM_COLOR
 from pylib.efloras.parsers.plant_color import SEPAL_COLOR, PETAL_COLOR
 from pylib.efloras.parsers.plant_color import CAYLX_COLOR, COROLLA_COLOR
 from pylib.efloras.parsers.plant_count import SEPAL_COUNT
-
-FLAGS = regex.VERBOSE | regex.IGNORECASE
 
 TRAIT_GROUPS = {
     '2n': [],

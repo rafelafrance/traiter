@@ -5,16 +5,16 @@ from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Pattern, Union
 import inspect
 import regex
+from pylib.shared.util import FLAGS
 
 
 SEP = ';'
-FLAGS = regex.VERBOSE | regex.IGNORECASE
 
 # Find tokens in the regex. Look for words that are not part of a group
 # name or a metacharacter. So, "word" not "<word>". Neither "(?P" nor "\b".
 WORD = regex.compile(r"""
     (?<! \(\?P< ) (?<! \(\? ) (?<! [\\] )
-    \b (?P<word> [a-z]\w* ) \b """, regex.VERBOSE | regex.IGNORECASE)
+    \b (?P<word> [a-z]\w* ) \b """, FLAGS)
 
 Rules = List['Rule']
 RuleDict = Dict[str, 'Rule']

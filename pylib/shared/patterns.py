@@ -17,7 +17,7 @@ def add_key(name: str, regexp: InRegexp, capture=True) -> None:
     RULE[name] = keyword(name, regexp, capture=capture)
 
 
-def add_rep(name: str, regexp: InRegexp, capture=True) -> None:
+def add_group(name: str, regexp: InRegexp, capture=True) -> None:
     """Add a rule to RULE."""
     RULE[name] = grouper(name, regexp, capture=capture)
 
@@ -36,11 +36,13 @@ add_frag('x', r' [x×] ', capture=False)
 add_frag('quest', r' [?] ')
 add_frag('comma', r' [,] ', capture=False)
 add_frag('semicolon', r' [;] ', capture=False)
+add_frag('ampersand', r' [&] ', capture=False)
 
 # Small words
 add_frag('by', r' by ', capture=False)
 add_frag('to', r' to ', capture=False)
 add_frag('up_to', r' ( up \s+ )? to ', capture=False)
+add_key('and', r' and ', capture=False)
 add_key('conj', ' or and '.split(), capture=False)
 add_key('prep', ' to with on '.split(), capture=False)
 
@@ -48,7 +50,7 @@ add_key('prep', ' to with on '.split(), capture=False)
 add_frag('inches', r' ( inch e? s? | in s? ) \b ')
 add_frag('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
 add_frag('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
-add_rep('len_units', ' metric_len feet inches'.split())
+add_group('len_units', ' metric_len feet inches'.split())
 
 add_frag('pounds', r' pounds? | lbs? ')
 add_frag('ounces', r' ounces? | ozs? ')
@@ -56,10 +58,10 @@ add_frag('metric_mass', r"""
     ( milligram | kilogram | gram ) ( s (?! [a-z]) )?
     | ( m \.? g | k \.? \s? g | g[mr]? ) ( s (?! [a-z]) )?
     """)
-add_rep('mass_units', 'metric_mass pounds ounces'.split())
+add_group('mass_units', 'metric_mass pounds ounces'.split())
 
-add_rep('us_units', 'feet inches pounds ounces'.split())
-add_rep('units', 'len_units mass_units'.split())
+add_group('us_units', 'feet inches pounds ounces'.split())
+add_group('units', 'len_units mass_units'.split())
 
 
 # # UUIDs cause problems when extracting certain shorthand notations.
@@ -69,13 +71,7 @@ add_frag('uuid', r"""
 
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 6)]
-ORDINALS += [number_to_words(x) for x in ORDINALS]
-add_frag('ordinals', ' | '.join(ORDINALS))
-
-# Some numeric values are reported as ordinals or words
-ORDINALS = [ordinal(x) for x in range(1, 6)]
-ORDINALS += [number_to_words(x) for x in ORDINALS]
-add_frag('ordinals', ' | '.join(ORDINALS))
+add_frag('ordinals', [number_to_words(x) for x in ORDINALS])
 
 # Time units
 add_frag('time_units', r'years? | months? | weeks? | days? | hours?')

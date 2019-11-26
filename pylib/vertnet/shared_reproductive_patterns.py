@@ -77,10 +77,6 @@ add_key('tissue', ' tissue '.split())
 
 add_key('present', ' present absent '.split())
 
-# The sides like: 3L or 4Right
-# add_frag('side', r"""
-#     left | right | lf | lt | rt | [lr] (?! [a-z] ) """)
-
 # Some traits are presented as an equation
 add_frag('op', r' [+:&] ')
 add_frag('eq', r' [=] ')
@@ -135,7 +131,6 @@ add_frag('plac_scar', r"""
     | ( scarring | scars? ) \b (?! \s* ( on | above | below ) )
     | ps \b | pslc | plac \b | plscr
     """)
-
 
 # Gonads can be for female or male
 add_frag('ambiguous_key', r' gonads? ')
