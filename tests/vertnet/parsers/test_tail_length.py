@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring
 # pylint: disable=missing-function-docstring,too-many-public-methods
 import unittest
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.tail_length import TAIL_LENGTH
 
 
@@ -10,52 +10,52 @@ class TestTailLength(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             TAIL_LENGTH.parse('tailLengthInmm: 102'),
-            [NumericTrait(
+            [Trait(
                 value=102, units='mm', units_inferred=False, start=0, end=19)])
 
     def test_parse_02(self):
         self.assertEqual(
             TAIL_LENGTH.parse('tail length=95 mm;'),
-            [NumericTrait(
+            [Trait(
                 value=95, units='mm', units_inferred=False, start=0, end=17)])
 
     def test_parse_03(self):
         self.assertEqual(
             TAIL_LENGTH.parse('tail length=95;'),
-            [NumericTrait(
+            [Trait(
                 value=95, units=None, units_inferred=True, start=0, end=14)])
 
     def test_parse_04(self):
         self.assertEqual(
             TAIL_LENGTH.parse(', "tail":"92", '),
-            [NumericTrait(
+            [Trait(
                 value=92, units=None, units_inferred=True, start=3, end=12)])
 
     def test_parse_05(self):
         self.assertEqual(
             TAIL_LENGTH.parse('"tailLengthInMillimeters"="104",'),
-            [NumericTrait(
+            [Trait(
                 value=104, units='millimeters', units_inferred=False,
                 start=1, end=30)])
 
     def test_parse_06(self):
         self.assertEqual(
             TAIL_LENGTH.parse('measurements:213-91-32-23'),
-            [NumericTrait(
+            [Trait(
                 value=91, units='mm_shorthand', units_inferred=False,
                 is_shorthand=True, start=0, end=25)])
 
     def test_parse_07(self):
         self.assertEqual(
             TAIL_LENGTH.parse('213-91-32-23'),
-            [NumericTrait(
+            [Trait(
                 value=91, units='mm_shorthand', units_inferred=False,
                 is_shorthand=True, start=0, end=12)])
 
     def test_parse_08(self):
         self.assertEqual(
             TAIL_LENGTH.parse('taillength=95;'),
-            [NumericTrait(
+            [Trait(
                 value=95, units=None, units_inferred=True, start=0, end=13)])
 
     def test_parse_09(self):
@@ -107,7 +107,7 @@ class TestTailLength(unittest.TestCase):
             TAIL_LENGTH.parse(
                 '95 on skull; [total: 773.5mm tail: 280.0 foot: 65.0 '
                 'pina: 41.0; 24 June 1986]'),
-            [NumericTrait(
+            [Trait(
                 value=85344, units='foot', units_inferred=False,
                 start=29, end=45)])
 

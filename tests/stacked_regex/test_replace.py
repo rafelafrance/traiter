@@ -1,5 +1,5 @@
-# pylint: disable=missing-module-docstring,missing-class-docstring
-# pylint: disable=missing-function-docstring,too-many-public-methods
+"""Test the replacer function in the parser module."""
+
 import unittest
 import regex
 from pylib.stacked_regex.rule import replacer, keyword
@@ -8,6 +8,7 @@ from pylib.stacked_regex.parser import replace
 
 
 class TestReplace(unittest.TestCase):
+    """Test the replacer function in the parser module."""
 
     flags = regex.VERBOSE | regex.IGNORECASE
 

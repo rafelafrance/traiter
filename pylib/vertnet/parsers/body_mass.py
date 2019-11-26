@@ -1,38 +1,34 @@
 """Parse body mass notations."""
 
-from pylib.shared.util import as_list, squash
+from pylib.shared.util import as_list, squash, to_float
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.convert_units import convert
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.parsers.numeric import simple
+from pylib.vertnet.parsers.numeric import as_value, add_flags, simple
 from pylib.vertnet.shared_patterns import RULE
 
 
 def shorthand(token):
     """Convert a shorthand value like 11-22-33-44:55g."""
-    # Handling shorthand notation for weights is different from lengths
-    trait = NumericTrait(start=token.start, end=token.end)
-    trait.float_value(token.groups.get('shorthand_wt'))
-    if not trait.value:
-        return None
-    trait.convert_value(token.groups.get('shorthand_wt_units'))
+    trait = Trait(start=token.start, end=token.end)
+    flag = as_value(token, trait, 'shorthand_wt', 'shorthand_wt_units')
     trait.is_flag_in_token('estimated_wt', token, rename='estimated_value')
     trait.is_shorthand = True
-    return trait
+    return trait if flag else None
 
 
 def compound(token):
     """Convert a compound weight like: 2 lbs. 3.1 - 4.5 oz."""
-    trait = NumericTrait(start=token.start, end=token.end)
+    trait = Trait(start=token.start, end=token.end)
     setattr(trait, 'units', [token.groups['pounds'], token.groups['ounces']])
     setattr(trait, 'units_inferred', False)
     trait.is_flag_missing('key', token, rename='ambiguous_key')
-    lbs = convert(trait.to_float(token.groups['lbs']), 'lbs')
-    ozs = [convert(trait.to_float(oz), 'ozs')
-           for oz in as_list(token.groups['ozs'])]
+    lbs = convert(to_float(token.groups['lbs']), 'lbs')
+    ozs = [convert(to_float(oz), 'ozs') for oz in as_list(token.groups['ozs'])]
     value = [round(lbs + oz, 2) for oz in ozs]
     setattr(trait, 'value', squash(value))
+    add_flags(token, trait)
     return trait
 
 

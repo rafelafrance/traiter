@@ -1,14 +1,14 @@
 """Parse placental scar counts."""
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
 def convert_count(token):
     """Convert parsed tokens into a result."""
-    trait = NumericTrait(start=token.start, end=token.end)
+    trait = Trait(start=token.start, end=token.end)
 
     if token.groups.get('value'):
         trait.value = trait.to_int(token.groups['value'])
@@ -39,7 +39,7 @@ def convert_count(token):
 
 def convert_state(token):
     """Convert parsed tokens into a result."""
-    trait = NumericTrait(value='present', start=token.start, end=token.end)
+    trait = Trait(value='present', start=token.start, end=token.end)
     return trait
 
 

@@ -33,7 +33,7 @@ add_frag('dash', r' (?: – | - ) ', capture=False)
 add_frag('open', r' [(\[] ', capture=False)
 add_frag('close', r' [)\]] ', capture=False)
 add_frag('x', r' [x×] ', capture=False)
-add_frag('quest', r' [?] ', capture=False)
+add_frag('quest', r' [?] ')
 add_frag('comma', r' [,] ', capture=False)
 add_frag('semicolon', r' [;] ', capture=False)
 
@@ -41,6 +41,8 @@ add_frag('semicolon', r' [;] ', capture=False)
 add_frag('by', r' by ', capture=False)
 add_frag('to', r' to ', capture=False)
 add_frag('up_to', r' ( up \s+ )? to ', capture=False)
+add_key('conj', ' or and '.split(), capture=False)
+add_key('prep', ' to with on '.split(), capture=False)
 
 # NOTE: Double quotes as inches is handled elsewhere
 add_frag('inches', r' ( inch e? s? | in s? ) \b ')

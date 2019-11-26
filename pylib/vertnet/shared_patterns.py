@@ -85,9 +85,9 @@ add_frag('time_units', ' years? months? weeks? days? hours? '.split())
 
 # Side keywords
 add_frag('side', r"""
-    [/(\[] \s* (?P<side1> [lr] \b ) \s* [)\]]?
-    | (?P<side2> both | left | right | lft | rt | [lr] \b ) """)
-SIDE = RULE['side'].pattern
+    (?<! [a-z] ) [lr] (?! [a-z] )
+    | both | left | right | lft | rt """)
+# SIDE = RULE['side'].pattern
 
 add_frag('dimension', r' (?P<dim> length | width ) ')
 
@@ -148,7 +148,7 @@ add_set('compound_wt_set', [
 ])
 
 # A number times another number like: "12 x 34" this is typically
-# length x width. We Allow a triple like "12 x 34 x 56" but we ony take
+# length x width. We Allow a triple like "12 x 34 x 56" but we only take
 # the first two numbers
 add_rep('cross', """
     (?<! x )

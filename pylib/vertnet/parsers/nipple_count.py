@@ -2,7 +2,7 @@
 
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
 
@@ -13,7 +13,7 @@ def convert(token):
     if not value:
         return None
 
-    trait = NumericTrait(start=token.start, end=token.end)
+    trait = Trait(start=token.start, end=token.end)
     trait.value = trait.to_int(value)
 
     if trait.value > 100:
@@ -27,7 +27,7 @@ def convert(token):
 
 def typed(token):
     """Convert single value tokens into a result."""
-    trait = NumericTrait(start=token.start, end=token.end)
+    trait = Trait(start=token.start, end=token.end)
     trait.notation = token.groups['notation']
     trait.value = trait.to_int(token.groups['value1'])
     trait.value += trait.to_int(token.groups.get('value2'))

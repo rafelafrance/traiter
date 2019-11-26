@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring
 # pylint: disable=missing-function-docstring,too-many-public-methods
 import unittest
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.nipple_count import NIPPLE_COUNT
 
 
@@ -10,17 +10,17 @@ class TestNippleCount(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('6 mammae, nipples prominent, ovaries 5 mm'),
-            [NumericTrait(value=6, start=0, end=8)])
+            [Trait(value=6, start=0, end=8)])
 
     def test_parse_02(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('1:2 = 6 mammae'),
-            [NumericTrait(value=6, notation='1:2 = 6', start=0, end=14)])
+            [Trait(value=6, notation='1:2 = 6', start=0, end=14)])
 
     def test_parse_03(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('6 inguinal mammae visible but small;'),
-            [NumericTrait(value=6, start=0, end=17)])
+            [Trait(value=6, start=0, end=17)])
 
     def test_parse_04(self):
         self.assertEqual(
@@ -30,33 +30,33 @@ class TestNippleCount(unittest.TestCase):
     def test_parse_05(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('0 : 2 = 4 mammae'),
-            [NumericTrait(value=4, notation='0 : 2 = 4', start=0, end=16)])
+            [Trait(value=4, notation='0 : 2 = 4', start=0, end=16)])
 
     def test_parse_06(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('mammae: 1 + 2 = 6'),
-            [NumericTrait(value=6, notation='1 + 2 = 6', start=0, end=17)])
+            [Trait(value=6, notation='1 + 2 = 6', start=0, end=17)])
 
     def test_parse_07(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('3 pec, 3 ing mammae'),
-            [NumericTrait(value=6, notation='3 pec, 3 ing', start=0, end=19)])
+            [Trait(value=6, notation='3 pec, 3 ing', start=0, end=19)])
 
     def test_parse_08(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('(mammae: 1 pr + 2 pr = 6)'),
-            [NumericTrait(
+            [Trait(
                 value=6, notation='1 pr + 2 pr = 6', start=1, end=24)])
 
     def test_parse_09(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('4 teats exposed, mammary glands developed,'),
-            [NumericTrait(value=4, start=0, end=7)])
+            [Trait(value=4, start=0, end=7)])
 
     def test_parse_10(self):
         self.assertEqual(
             NIPPLE_COUNT.parse('6 conspicuous mammae;'),
-            [NumericTrait(value=6, start=0, end=20)])
+            [Trait(value=6, start=0, end=20)])
 
     def test_parse_11(self):
         self.assertEqual(

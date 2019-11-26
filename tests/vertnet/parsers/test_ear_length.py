@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring
 # pylint: disable=missing-function-docstring,too-many-public-methods
 import unittest
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.ear_length import EAR_LENGTH
 
 
@@ -10,20 +10,20 @@ class TestEarLength(unittest.TestCase):
     def test_parse_01(self):
         self.assertEqual(
             EAR_LENGTH.parse('earLengthInmm: 9'),
-            [NumericTrait(
+            [Trait(
                 value=9, units='mm', units_inferred=False, start=0, end=16)])
 
     def test_parse_02(self):
         self.assertEqual(
             EAR_LENGTH.parse('L. 9", T. 4", ear 9/16"'),
-            [NumericTrait(
+            [Trait(
                 value=14.29, units='"', units_inferred=False,
                 start=14, end=23)])
 
     def test_parse_03(self):
         self.assertEqual(
             EAR_LENGTH.parse('L. 9", T. 4", HF. 2", E 1",'),
-            [NumericTrait(
+            [Trait(
                 value=25.4, units='"', units_inferred=False,
                 ambiguous_key=True, start=22, end=26)])
 
@@ -32,13 +32,13 @@ class TestEarLength(unittest.TestCase):
             EAR_LENGTH.parse(
                 '{"measurements":"TotalLength=180 Tail=82 '
                 'HindFoot=28 Ear=18" }'),
-            [NumericTrait(
+            [Trait(
                 value=18, units=None, units_inferred=True, start=53, end=59)])
 
     def test_parse_05(self):
         self.assertEqual(
             EAR_LENGTH.parse('{"earLength":"13", "gonadLength":"3"}'),
-            [NumericTrait(
+            [Trait(
                 value=13, units=None, units_inferred=True, start=2, end=16)])
 
     def test_parse_06(self):
@@ -60,42 +60,42 @@ class TestEarLength(unittest.TestCase):
     def test_parse_09(self):
         self.assertEqual(
             EAR_LENGTH.parse('ear from notch=17 mm;'),
-            [NumericTrait(
+            [Trait(
                 value=17, units='mm', units_inferred=False,
                 measured_from='notch', start=0, end=20)])
 
     def test_parse_10(self):
         self.assertEqual(
             EAR_LENGTH.parse('earfromcrown=17mm;'),
-            [NumericTrait(
+            [Trait(
                 value=17, units='mm', units_inferred=False,
                 measured_from='crown', start=0, end=17)])
 
     def test_parse_11(self):
         self.assertEqual(
             EAR_LENGTH.parse('{"measurements":"242-109-37-34=N/D" }'),
-            [NumericTrait(
+            [Trait(
                 value=34, units='mm_shorthand', units_inferred=False,
                 is_shorthand=True, start=2, end=34)])
 
     def test_parse_12(self):
         self.assertEqual(
             EAR_LENGTH.parse('E/n-21mm'),
-            [NumericTrait(
+            [Trait(
                 value=21, units='mm', units_inferred=False, ambiguous_key=True,
                 measured_from='n', start=0, end=8)])
 
     def test_parse_13(self):
         self.assertEqual(
             EAR_LENGTH.parse('E/c-21mm'),
-            [NumericTrait(
+            [Trait(
                 value=21, units='mm', units_inferred=False, ambiguous_key=True,
                 measured_from='c', start=0, end=8)])
 
     def test_parse_14(self):
         self.assertEqual(
             EAR_LENGTH.parse('; ear from notch=.25 in'),
-            [NumericTrait(
+            [Trait(
                 value=6.35, units='in', units_inferred=False,
                 measured_from='notch', start=2, end=23)])
 
@@ -113,7 +113,7 @@ class TestEarLength(unittest.TestCase):
     def test_parse_17(self):
         self.assertEqual(
             EAR_LENGTH.parse('Hind Foot: 19 EFN: 13 Weight: 16.3'),
-            [NumericTrait(
+            [Trait(
                 value=13, measured_from='n', units=None, units_inferred=True,
                 start=14, end=21)])
 

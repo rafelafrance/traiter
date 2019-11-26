@@ -6,9 +6,6 @@ from pylib.shared.patterns import add_frag, add_key, add_rep, add_set, RULE
 
 add_key('sex', 'staminate pistillate'.split())
 
-add_key('conj', ' or and '.split(), capture=False)
-add_key('prep', ' to with '.split(), capture=False)
-
 add_key('plant_part', r"""
     (?<! to \s )
     ( androeci(a|um) | anthers?

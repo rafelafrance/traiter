@@ -5,7 +5,7 @@ from copy import copy
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import fragment
 from pylib.vertnet.shared_patterns import RULE
-from pylib.vertnet.numeric_trait import NumericTrait
+from pylib.vertnet.trait import Trait
 
 
 # Used to get compounds traits from a single parse
@@ -20,10 +20,10 @@ SIDES = {
 
 def double(token):
     """Convert a single token into multiple (two) parsers."""
-    trait1 = NumericTrait(start=token.start, end=token.end)
+    trait1 = Trait(start=token.start, end=token.end)
     token1 = Token(DOUBLE_CROSS, groups=copy(token.groups))
 
-    trait2 = NumericTrait(start=token.start, end=token.end)
+    trait2 = Trait(start=token.start, end=token.end)
     token2 = Token(DOUBLE_CROSS, groups=copy(token.groups))
 
     values1 = trait1.all_values(
@@ -66,7 +66,7 @@ def double(token):
 
 def convert(token):
     """Convert parsed token into a trait product."""
-    trait = NumericTrait(start=token.start, end=token.end)
+    trait = Trait(start=token.start, end=token.end)
 
     trait.cross_value(token)
     trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
