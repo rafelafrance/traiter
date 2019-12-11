@@ -60,8 +60,9 @@ class TestTestesSize(unittest.TestCase):
     def test_parse_08(self):
         self.assertEqual(
             TESTES_SIZE.parse('Scrotal 9 mm x 5 mm'),
-            [Trait(value=[9, 5], units_inferred=False,
-                          units='mm', start=0, end=19)])
+            [Trait(
+                value=[9, 5], units_inferred=False, units=['mm', 'mm'],
+                start=0, end=19)])
 
     def test_parse_09(self):
         self.assertEqual(
@@ -77,9 +78,9 @@ class TestTestesSize(unittest.TestCase):
                 'testis-20mm ; reproductive data=testis-21mm ; '),
             [Trait(
                 value=20, units='mm', units_inferred=False, start=0, end=11),
-                Trait(
-                    value=21, units='mm', units_inferred=False,
-                    start=14, end=43)])
+             Trait(
+                 value=21, units='mm', units_inferred=False,
+                 start=14, end=43)])
 
     def test_parse_11(self):
         self.assertEqual(
@@ -101,19 +102,19 @@ class TestTestesSize(unittest.TestCase):
             [Trait(
                 value=3, units=None, units_inferred=True, side='1',
                 dimension='length', ambiguous_key=True, start=1, end=21),
-                Trait(
-                    value=2, units=None, units_inferred=True, side='2',
-                    dimension='length', ambiguous_key=True, start=25, end=45)])
+             Trait(
+                 value=2, units=None, units_inferred=True, side='2',
+                 dimension='length', ambiguous_key=True, start=25, end=45)])
 
     def test_parse_14(self):
         self.assertEqual(
             TESTES_SIZE.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
             [Trait(
-                value=12, units='mm', units_inferred=False,
+                value=12, units='MM', units_inferred=False,
                 ambiguous_key=True, dimension='length', start=1, end=21),
-                Trait(
-                    value=5, units='mm', units_inferred=False,
-                    ambiguous_key=True, dimension='width', start=25, end=43)])
+             Trait(
+                 value=5, units='MM', units_inferred=False,
+                 ambiguous_key=True, dimension='width', start=25, end=43)])
 
     def test_parse_15(self):
         self.assertEqual(
@@ -124,25 +125,25 @@ class TestTestesSize(unittest.TestCase):
                 value=9.1, units='mm', units_inferred=False,
                 ambiguous_key=True, side='left',
                 dimension='width', start=0, end=23),
-                Trait(
-                    value=9.2, units='mm', units_inferred=False,
-                    ambiguous_key=True, side='right',
-                    dimension='width', start=25, end=49),
-                Trait(
-                    value=16.1, units='mm', units_inferred=False,
-                    ambiguous_key=True, side='right',
-                    dimension='length', start=51, end=77),
-                Trait(
-                    value=16.2, units='mm', units_inferred=False,
-                    ambiguous_key=True, side='left',
-                    dimension='length', start=79, end=104)])
+             Trait(
+                 value=9.2, units='mm', units_inferred=False,
+                 ambiguous_key=True, side='right',
+                 dimension='width', start=25, end=49),
+             Trait(
+                 value=16.1, units='mm', units_inferred=False,
+                 ambiguous_key=True, side='right',
+                 dimension='length', start=51, end=77),
+             Trait(
+                 value=16.2, units='mm', units_inferred=False,
+                 ambiguous_key=True, side='left',
+                 dimension='length', start=79, end=104)])
 
     def test_parse_16(self):
         self.assertEqual(
             TESTES_SIZE.parse('"gonadLengthInMM":"9mm w.o./epid", '),
             [Trait(
-                value=9, units='mm', units_inferred=False, ambiguous_key=True,
-                dimension='length', start=1, end=22)])
+                value=9, units=['MM', 'mm'], units_inferred=False,
+                ambiguous_key=True, dimension='length', start=1, end=22)])
 
     def test_parse_17(self):
         self.assertEqual(
@@ -184,7 +185,7 @@ class TestTestesSize(unittest.TestCase):
         self.assertEqual(
             TESTES_SIZE.parse('TESTES 5-3.5 MM,'),
             [Trait(
-                value=[5, 3.5], units='mm', units_inferred=False,
+                value=[5, 3.5], units='MM', units_inferred=False,
                 start=0, end=15)])
 
     def test_parse_23(self):
@@ -208,8 +209,8 @@ class TestTestesSize(unittest.TestCase):
                 value=[6.0, 1.5], units='mm', units_inferred=False, side='r',
                 start=0, end=29),
              Trait(
-                value=[5.0, 2.0], units='mm', units_inferred=False, side='l',
-                start=0, end=29)])
+                 value=[5.0, 2.0], units='mm', units_inferred=False, side='l',
+                 start=0, end=29)])
 
     def test_parse_26(self):
         self.assertEqual(
@@ -236,7 +237,7 @@ class TestTestesSize(unittest.TestCase):
             TESTES_SIZE.parse(
                 "; reproductive data=TESTES NOT DESCENDED - 6 MM age"),
             [Trait(
-                value=6, units="mm", units_inferred=False, start=2, end=47)])
+                value=6, units="MM", units_inferred=False, start=2, end=47)])
 
     def test_parse_30(self):
         self.assertEqual(
@@ -272,9 +273,9 @@ class TestTestesSize(unittest.TestCase):
             [Trait(
                 value=20, units='mm', units_inferred=False, side='r',
                 start=2, end=33),
-                Trait(
-                    value=6, units='mm', units_inferred=False, side='l',
-                    start=2, end=33)])
+             Trait(
+                 value=6, units='mm', units_inferred=False, side='l',
+                 start=2, end=33)])
 
     def test_parse_35(self):
         self.assertEqual(
@@ -282,9 +283,9 @@ class TestTestesSize(unittest.TestCase):
             [Trait(
                 value=[20, 10], units='mm', units_inferred=False, side='r',
                 start=2, end=40),
-                Trait(
-                    value=[6, 4], units='mm', units_inferred=False, side='l',
-                    start=2, end=40)])
+             Trait(
+                 value=[6, 4], units='mm', units_inferred=False, side='l',
+                 start=2, end=40)])
 
     def test_parse_36(self):
         self.assertEqual(

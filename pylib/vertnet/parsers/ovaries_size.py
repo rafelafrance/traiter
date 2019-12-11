@@ -1,6 +1,6 @@
 """Parse ovaries size notations."""
 
-from pylib.stacked_regex.rule import producer, grouper
+from pylib.stacked_regex.rule import keyword, producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
@@ -9,6 +9,13 @@ from pylib.vertnet.parsers.base import Base
 OVARY_SIZE = Base(
     name=__name__.split('.')[-1],
     rules=[
+        # A key with units, like: gonadLengthInMM
+        keyword('key_with_units', r"""
+            (?P<ambiguous_key> gonad ) \s*
+                (?P<dim> length | len | width ) \s* in \s*
+                (?P<len_units> millimeters | mm )
+            """),
+
         RULE['ovary'],
         RULE['other'],
         RULE['horns'],
@@ -41,10 +48,7 @@ OVARY_SIZE = Base(
         RULE['word'],
         RULE['sep'],
 
-        # A key with units, like: gonadLengthInMM
-        grouper('key_with_units', r"""
-            ambiguous_key dimension in (?P<units> len_units )
-            """),
+        grouper('value', ' cross | number len_units? '),
 
         # E.g.: active
         # Or:   immature
@@ -74,40 +78,40 @@ OVARY_SIZE = Base(
 
         # A typical testes size notation
         # E.g.: reproductive data: ovaries 10x5 mm
-        producer(convert, ' label ovary cross '),
+        producer(convert, ' label ovary value '),
 
         # E.g.: reproductive data: left ovaries 10x5 mm
-        producer(convert, ' label side ovary cross '),
+        producer(convert, ' label side ovary value '),
 
         # E.g.: left ovaries 10x5 mm
-        producer(convert, ' side ovary cross '),
+        producer(convert, ' side ovary value '),
 
         # E.g.: reproductive data: 10x5 mm
-        producer(convert, 'label cross'),
+        producer(convert, 'label value'),
 
         # May have a few words between the label and the measurement
         producer(convert, """
             label ( ovary | state | word | sep ){0,3}
-            ( ovary | state ) cross"""),
+            ( ovary | state ) value"""),
 
         # Handles: gonadLengthInMM 4x3
         # And:     gonadLength 4x3
-        producer(convert, '( key_with_units | ambiguous ) cross'),
+        producer(convert, '( ambiguous | key_with_units ) value'),
 
         # E.g.: gonadLengthInMM 6 x 8
         producer(convert, """
             ( key_with_units | ambiguous )
             ( ovary | state | word | sep ){0,3}
-            ( ovary | state ) cross"""),
+            ( ovary | state ) value"""),
 
         # Anchored by ovaries but with words between
-        producer(convert, 'ovary ( state | word | sep ){0,3} state cross'),
+        producer(convert, 'ovary ( state | word | sep ){0,3} state value'),
 
         # Anchored by ovaries but with only one word in between
         # E.g.: ovaries scrotal 9mm
-        producer(convert, 'side? ovary ( state | word ) cross'),
+        producer(convert, 'side? ovary ( state | word ) value'),
 
         # E.g.: Ovaries 5 x 3
-        producer(convert, 'side? ovary cross'),
+        producer(convert, 'side? ovary value'),
     ],
 )

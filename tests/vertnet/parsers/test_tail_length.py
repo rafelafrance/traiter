@@ -35,7 +35,7 @@ class TestTailLength(unittest.TestCase):
         self.assertEqual(
             TAIL_LENGTH.parse('"tailLengthInMillimeters"="104",'),
             [Trait(
-                value=104, units='millimeters', units_inferred=False,
+                value=104, units='Millimeters', units_inferred=False,
                 start=1, end=30)])
 
     def test_parse_06(self):

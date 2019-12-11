@@ -86,7 +86,7 @@ add_frag('time_units', ' years? months? weeks? days? hours? '.split())
 # Side keywords
 add_frag('side', r"""
     (?<! [a-z] ) [lr] (?! [a-z] )
-    | both | left | right | lft | rt """)
+    | both | left | right | lft? | lt | rt """)
 # SIDE = RULE['side'].pattern
 
 add_frag('dimension', r' (?P<dim> length | width ) ')
@@ -170,13 +170,13 @@ add_set('cross_set', [
 add_group('joiner', ' ampersand comma and '.split())
 
 add_group('side_cross', f"""
-    (?P<side_1> side )? 
-        (?P<value_1> number ) (?P<units_1> len_units )? 
-            ( x | by ) (?P<value_1> number ) (?P<units_1> len_units )? 
+    (?P<side_1> side )?
+        (?P<value_1> number ) (?P<units_1> len_units )?
+            ( x | by ) (?P<value_1> number ) (?P<units_1> len_units )?
     joiner?
-    (?P<side_2> side )? 
-        (?P<value_2> number ) (?P<units_2> len_units )? 
-            ( x | by ) (?P<value_2> number ) (?P<units_2> len_units )? 
+    (?P<side_2> side )?
+        (?P<value_2> number ) (?P<units_2> len_units )?
+            ( x | by ) (?P<value_2> number ) (?P<units_2> len_units )?
     """, capture=False)
 add_set('side_cross_set', [
     RULE['inches'],

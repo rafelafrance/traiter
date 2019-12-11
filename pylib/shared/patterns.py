@@ -44,10 +44,10 @@ add_frag('to', r' to ', capture=False)
 add_frag('up_to', r' ( up \s+ )? to ', capture=False)
 add_key('and', r' and ', capture=False)
 add_key('conj', ' or and '.split(), capture=False)
-add_key('prep', ' to with on '.split(), capture=False)
+add_key('prep', ' to with on of '.split(), capture=False)
 
 # NOTE: Double quotes as inches is handled elsewhere
-add_frag('inches', r' ( inch e? s? | in s? ) \b ')
+add_frag('inches', r' ( inch e? s? | \b in s? ) \b ')
 add_frag('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
 add_frag('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
 add_group('len_units', ' metric_len feet inches'.split())

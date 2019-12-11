@@ -12,20 +12,22 @@ SUB = {'l': 'left', 'r': 'right', 'm': 'male', 'f': 'female'}
 
 def convert_count(token):
     """Convert parsed tokens into a result."""
-    print(token.groups)
-    value = token.groups.get('value')
-
-    if not value:
-        return None
-
     trait = Trait(start=token.start, end=token.end)
-    trait.value = to_int(value)
 
-    if trait.value > 100:
-        return None
+    trait.value = to_int(token.groups.get('value'))
+    count1 = to_int(token.groups.get('count1'))
+    count2 = to_int(token.groups.get('count2'))
+    side1 = SUB.get(token.groups.get('side1', ' ').lower()[0], 'side1')
+    side2 = SUB.get(token.groups.get('side2', ' ').lower()[0], 'side2')
 
-    if token.groups.get('side'):
-        trait.notation = token.groups['notation']
+    if not trait.value:
+        trait.value = count1 + count2
+
+    if count1 or side1 != 'side1':
+        setattr(trait, side1, count1)
+
+    if count2 or side2 != 'side2':
+        setattr(trait, side2, count2)
 
     return trait if all(x < 1000 for x in as_list(trait.value)) else None
 
@@ -47,22 +49,18 @@ PLACENTAL_SCAR_COUNT = Base(
         RULE['op'],
         RULE['eq'],
         RULE['embryo'],
+        RULE['conj'],
+        RULE['prep'],
 
         # Adjectives to placental scars
         keyword('adj', r"""
             faint prominent recent old possible """.split()),
 
-        # Conjunction
-        keyword('conj', ' or '.split()),
-
-        # Preposition
-        keyword('prep', ' on of '.split()),
-
         # Visible
         keyword('visible', ' visible definite '.split()),
 
         # Skip arbitrary words
-        fragment('word', r' \w+ '),
+        RULE['word'],
 
         # Trait separator
         fragment('sep', r' [;/] '),

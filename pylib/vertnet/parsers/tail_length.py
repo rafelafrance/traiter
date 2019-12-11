@@ -81,19 +81,19 @@ TAIL_LENGTH = Base(
         RULE['shorthand'],
 
         # Fractional numbers, like: 9/16
-        RULE['fraction'],
+        RULE['fraction_set'],
 
         # Possible pairs of numbers like: "10 - 20" or just "10"
-        RULE['range'],
+        RULE['range_set'],
 
         # Sometimes the last number is missing in the shorthand notation
         RULE['triple'],
 
         # We allow random words in some situations
-        keyword('word', r' ( [a-z] \w* ) '),
+        keyword('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
-        fragment('sep', r' [;,] | $ '),
+        fragment('sep', r' [;,] | $ ', capture=False),
 
         # Consider all of these tokens a key
         grouper('key', 'keyword char_key'.split()),
