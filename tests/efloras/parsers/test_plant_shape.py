@@ -1,7 +1,7 @@
 """Test plant shape trait notations."""
 
 import unittest
-from pylib.efloras.trait import Trait
+from pylib.shared.trait import Trait
 from pylib.efloras.parsers.plant_shape import LEAF_SHAPE, PETIOLE_SHAPE
 from pylib.efloras.parsers.plant_shape import HYPANTHIUM_SHAPE, SEPAL_SHAPE
 

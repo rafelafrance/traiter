@@ -4,7 +4,7 @@ import unittest
 import regex
 from pylib.stacked_regex.rule import replacer, keyword
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.parser import replace
+from pylib.stacked_regex.parser import Parser
 
 
 class TestReplace(unittest.TestCase):
@@ -15,16 +15,17 @@ class TestReplace(unittest.TestCase):
     k_zero = keyword('zero', r' zero ')
     k_one = keyword('one', r' one ')
     k_two = keyword('two', r' two ')
-    rules = {r.name: r for r in [k_zero, k_one, k_two]}
+    rules = [k_zero, k_one, k_two]
 
     def test_replace_01(self):
         """It replaces a token."""
+        r_replace = replacer('replace', 'one')
+        parser = Parser(self.rules + [r_replace])
+        parser.build()
         text = 'ONE'
         t_one = Token(self.k_one, span=(0, 3), groups={'one': 'ONE'})
-        r_replace = replacer('replace', r' one ')
-        r_replace.compile(self.rules)
         self.assertEqual(
-            replace([r_replace], [t_one], text),
+            parser.replace([t_one], text),
             ([Token(r_replace, span=(0, 3),
                     groups={'replace': 'ONE', 'one': 'ONE'})],
              True))
@@ -35,9 +36,10 @@ class TestReplace(unittest.TestCase):
         t_one = Token(self.k_one, span=(0, 3), groups={'one': 'ONE'})
         t_two = Token(self.k_two, span=(4, 7), groups={'two': 'TWO'})
         r_replace = replacer('replace', r' one two ')
-        r_replace.compile(self.rules)
+        parser = Parser(self.rules + [r_replace])
+        parser.build()
         self.assertEqual(
-            replace([r_replace], [t_one, t_two], text),
+            parser.replace([t_one, t_two], text),
             ([Token(
                 r_replace, span=(0, 7),
                 groups={'one': 'ONE', 'two': 'TWO', 'replace': 'ONE TWO'})],
@@ -51,9 +53,10 @@ class TestReplace(unittest.TestCase):
         t_two = Token(self.k_two, span=(9, 12), groups={'two': 'TWO'})
         t_zero2 = Token(self.k_zero, span=(13, 17), groups={'zero': 'ZERO'})
         r_replace = replacer('replace', r' one two ')
-        r_replace.compile(self.rules)
+        parser = Parser(self.rules + [r_replace])
+        parser.build()
         self.assertEqual(
-            replace([r_replace], [t_zero1, t_one, t_two, t_zero2], text),
+            parser.replace([t_zero1, t_one, t_two, t_zero2], text),
             ([
                 Token(t_zero1, span=(0, 4), groups={'zero': 'ZERO'}),
                 Token(
@@ -69,9 +72,10 @@ class TestReplace(unittest.TestCase):
         t_zero = Token(self.k_zero, span=(4, 8), groups={'zero': 'ZERO'})
         t_two = Token(self.k_two, span=(9, 12), groups={'two': 'TWO'})
         r_replace = replacer('replace', r' one two ')
-        r_replace.compile(self.rules)
+        parser = Parser(self.rules + [r_replace])
+        parser.build()
         self.assertEqual(
-            replace([r_replace], [t_one, t_zero, t_two], text),
+            parser.replace([t_one, t_zero, t_two], text),
             ([
                 Token(t_one, span=(0, 3), groups={'one': 'ONE'}),
                 Token(t_zero, span=(4, 8), groups={'zero': 'ZERO'}),

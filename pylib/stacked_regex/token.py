@@ -62,8 +62,3 @@ class Token:
     def action(self) -> Action:
         """Return the rule name."""
         return self.rule.action
-
-
-def forget(token):
-    """Forget all of the capture groups."""
-    token.groups = {}

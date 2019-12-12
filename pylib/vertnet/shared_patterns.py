@@ -187,10 +187,10 @@ SET.add_set('compound_wt_set', [
 # A number times another number like: "12 x 34" this is typically
 # length x width. We Allow a triple like "12 x 34 x 56" but we only take
 # the first two numbers
-SET.add_group('cross', """
-    (?<! x )
+CROSS = """ (?<! x )
         ( number len_units? ( x | by ) number len_units?
-        | number len_units ) """, capture=False)
+        | number len_units ) """
+SET.add_group('cross', CROSS, capture=False)
 # Rule set for parsing a cross
 SET.add_set('cross_set', [
     RULE['inches'],

@@ -1,7 +1,7 @@
 """Test the plant color trait parser."""
 
 import unittest
-from pylib.efloras.trait import Trait
+from pylib.shared.trait import Trait
 from pylib.efloras.parsers.plant_color import HYPANTHIUM_COLOR, COROLLA_COLOR
 from pylib.efloras.parsers.plant_color import PETAL_COLOR, SEPAL_COLOR
 

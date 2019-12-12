@@ -6,7 +6,7 @@ from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import fragment, keyword, grouper, producer
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
-from pylib.efloras.trait import Trait
+from pylib.shared.trait import Trait
 from pylib.efloras.shared_patterns import RULE
 
 

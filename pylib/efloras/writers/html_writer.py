@@ -1,10 +1,10 @@
 """Write output to an HTML file."""
 
-import regex
 import html
 from itertools import cycle
 from collections import namedtuple, deque
 from datetime import datetime
+import regex
 from jinja2 import Environment, FileSystemLoader
 import pylib.efloras.trait_groups as tg
 

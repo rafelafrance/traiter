@@ -1,7 +1,7 @@
 """Test shared patterns for plant parsers."""
 
 import unittest
-from pylib.stacked_regex.parser import Parser, scan
+from pylib.stacked_regex.parser import Parser
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import producer
 from pylib.efloras.shared_patterns import RULE
@@ -15,42 +15,44 @@ def nop(token):
 class TestSharedPatterns(unittest.TestCase):
     """Test shared patterns for plant parsers."""
 
+    number_product = producer(nop, 'number', 'number_product', capture=False)
     range_product = producer(nop, 'range', 'range_product', capture=False)
     cross_product = producer(nop, 'cross', 'cross_product', capture=False)
     upper_product = producer(
         nop, 'cross_upper', 'upper_product', capture=False)
 
+    number_parser = Parser([RULE['number'], number_product])
     range_parser = Parser([RULE['range_set'], range_product])
     cross_parser = Parser([RULE['cross_set'], cross_product])
     upper_parser = Parser([RULE['cross_upper_set'], upper_product])
 
     def test_number_01(self):
         """It handles integers."""
-        actual = scan([RULE['number']], '123')
+        actual = self.number_parser.parse('123')
         expect = [Token(
-            RULE['number'], span=(0, 3), groups={'number': '123'})]
+            self.number_product, span=(0, 3), groups={'number': '123'})]
         self.assertEqual(actual, expect)
 
     def test_number_02(self):
         """It handles decimal points."""
-        actual = scan([RULE['number']], '12.3')
+        actual = self.number_parser.parse('12.3')
         expect = [Token(
-            RULE['number'], span=(0, 4), groups={'number': '12.3'})]
+            self.number_product, span=(0, 4), groups={'number': '12.3'})]
         self.assertEqual(actual, expect)
 
     def test_number_03(self):
         """It parses a partial cross."""
-        actual = scan([RULE['number']], '   12.3 x')
+        actual = self.number_parser.parse('   12.3 x')
         expect = [Token(
-            RULE['number'], span=(3, 7), groups={'number': '12.3'})]
+            self.number_product, span=(3, 7), groups={'number': '12.3'})]
         self.assertEqual(actual, expect)
 
     def test_number_04(self):
         """It keeps numbers separate."""
-        actual = scan([RULE['number']], '12.3 4')
+        actual = self.number_parser.parse('12.3 4')
         expect = [
-            Token(RULE['number'], span=(0, 4), groups={'number': '12.3'}),
-            Token(RULE['number'], span=(5, 6), groups={'number': '4'})]
+            Token(self.number_product, span=(0, 4), groups={'number': '12.3'}),
+            Token(self.number_product, span=(5, 6), groups={'number': '4'})]
         self.assertEqual(actual, expect)
 
     def test_range_01(self):

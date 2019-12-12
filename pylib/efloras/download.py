@@ -2,7 +2,6 @@
 
 """Build and run a wget command."""
 
-import regex
 import os
 import sys
 import time
@@ -10,6 +9,7 @@ import random
 import argparse
 import textwrap
 import urllib.request
+import regex
 from lxml import html
 import pylib.efloras.util as util
 

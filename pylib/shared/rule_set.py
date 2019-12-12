@@ -22,11 +22,11 @@ class RuleSet:
 
     def add_group(self, name: str, regexp: InRegexp, capture=True) -> None:
         """Add a grouper rule."""
-        self.rules[name] = grouper(name, regexp, capture=capture)
+        self.rules[name] = [grouper(name, regexp, capture=capture)]
 
     def add_prod(self, name: str, regexp: InRegexp, capture=True) -> None:
         """Add a producer rule."""
-        self.rules[name] = producer(name, regexp, capture=capture)
+        self.rules[name] = [producer(name, regexp, capture=capture)]
 
     def add_set(self, name: str, rules: Rules) -> None:
         """Add a rule set."""

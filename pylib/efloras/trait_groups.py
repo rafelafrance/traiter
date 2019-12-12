@@ -2,8 +2,9 @@
 
 import regex
 from pylib.shared.util import FLAGS
-from pylib.efloras.parsers.plant_size import LEAF_SIZE, PETIOLE_SIZE, SEPAL_SIZE
-from pylib.efloras.parsers.plant_size import PETAL_SIZE, CALYX_SIZE, FLOWER_SIZE
+from pylib.efloras.parsers.plant_size import LEAF_SIZE, PETIOLE_SIZE
+from pylib.efloras.parsers.plant_size import PETAL_SIZE, CALYX_SIZE
+from pylib.efloras.parsers.plant_size import SEPAL_SIZE, FLOWER_SIZE
 from pylib.efloras.parsers.plant_size import HYPANTHIUM_SIZE, COROLLA_SIZE
 from pylib.efloras.parsers.plant_shape import LEAF_SHAPE, PETIOLE_SHAPE
 from pylib.efloras.parsers.plant_shape import PETAL_SHAPE, CAYLX_SHAPE
@@ -154,9 +155,8 @@ TRAIT_GROUPS = {
     'x': [],
     }
 
-TRAIT_GROUP_NAMES = [
-    x for x in sorted(
-        TRAIT_GROUPS.keys(), key=lambda t: (len(t), t), reverse=True)]
+TRAIT_GROUP_NAMES = sorted(
+    TRAIT_GROUPS.keys(), key=lambda t: (len(t), t), reverse=True)
 
 TRAIT_GROUPS_RE = ' | '.join(
     r' \s+ '.join(x.split()) for x in TRAIT_GROUP_NAMES)
@@ -167,4 +167,4 @@ TRAIT_GROUPS_RE = regex.compile(
         """,
     flags=FLAGS)
 
-TRAIT_NAMES = sorted(set([t.name for g in TRAIT_GROUPS.values() for t in g]))
+TRAIT_NAMES = sorted({t.name for g in TRAIT_GROUPS.values() for t in g})

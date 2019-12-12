@@ -1,8 +1,8 @@
 """Read pages scraped from the eFloras website."""
 
-import regex
 import sys
 from collections import defaultdict
+import regex
 from lxml import html
 import pandas as pd
 import pylib.efloras.util as util
@@ -84,7 +84,7 @@ def find_trait_groups_paragraph(page):
     return None, None
 
 
-def check_trait_groups(para, text):
+def check_trait_groups(para, text):  # pylint: disable=unused-argument
     """Validate that we have all of the traits."""
     bold = para.xpath('.//b')  # Used to check the trait group parse
 

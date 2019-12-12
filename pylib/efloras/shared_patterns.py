@@ -9,7 +9,8 @@ SET = RuleSet(patterns.SET)
 RULE = SET.rules
 
 
-SET.add_key('sex', 'staminate pistillate'.split())
+SEX = 'staminate pistillate'.split()
+SET.add_key('sex', SEX)
 
 SET.add_key('plant_part', r"""
     (?<! to \s )
@@ -30,7 +31,7 @@ SET.add_key('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
 SET.add_key('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
 SET.add_key('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
 SET.add_key('hairs', 'hairs?')
-SET.add_key('flower', fr'({RULE["sex"].regexp.pattern} \s+ )? flowers?')
+SET.add_key('flower', fr'({SEX} \s+ )? flowers?')
 SET.add_key('hypanthium', 'hypan-?thi(um|a)')
 SET.add_key('sepal', 'sepals?')
 SET.add_key('calyx', 'calyx | calyces')
@@ -69,15 +70,15 @@ SET.add_frag('number', r' \d+ ( \. \d* )? ')
 
 
 # Numeric ranges like: (10–)15–20(–25)
-SET.add_group('range', r"""
+RANGE = r"""
     (?<! slash | dash | number )
     (?: open (?P<min> number ) dash close )?
     (?P<low> number )
     (?: dash (?P<high> number ) )?
     (?: open dash (?P<max> number ) close )?
     (?! dash | slash )
-    """, capture=False)
-
+    """
+SET.add_group('range', RANGE, capture=False)
 SET.add_set('range_set', [
     RULE['units'],
     RULE['number'],
@@ -92,13 +93,14 @@ SET.add_set('range_set', [
 RANGE_GROUPS = regex.compile(
     r""" ( min | low | high | max ) """,
     regex.IGNORECASE | regex.VERBOSE)
-LENGTH_RANGE = RANGE_GROUPS.sub(r'\1_length', RULE['range'].pattern)
-WIDTH_RANGE = RANGE_GROUPS.sub(r'\1_width', RULE['range'].pattern)
+LENGTH_RANGE = RANGE_GROUPS.sub(r'\1_length', RANGE)
+WIDTH_RANGE = RANGE_GROUPS.sub(r'\1_width', RANGE)
 
-SET.add_group('cross', f"""
+CROSS = f"""
     {LENGTH_RANGE} (?P<units_length> units )?
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
-    """, capture=False)
+    """
+SET.add_group('cross', CROSS, capture=False)
 SET.add_set('cross_set', [
     RULE['units'],
     RULE['number'],
@@ -111,8 +113,8 @@ SET.add_set('cross_set', [
 
 CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
-CROSS_1 = CROSS_GROUPS.sub(r'\1_1', RULE['cross'].pattern)
-CROSS_2 = CROSS_GROUPS.sub(r'\1_2', RULE['cross'].pattern)
+CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
+CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
 SET.add_group('sex_cross', f"""
     {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
     ( conj | prep )?

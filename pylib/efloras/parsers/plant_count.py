@@ -4,7 +4,7 @@ from typing import Any
 from pylib.stacked_regex.rule import producer, keyword
 from pylib.stacked_regex.token import Token
 from pylib.efloras.parsers.base import Base
-from pylib.efloras.trait import Trait
+from pylib.shared.trait import Trait
 from pylib.efloras.shared_patterns import RULE
 
 

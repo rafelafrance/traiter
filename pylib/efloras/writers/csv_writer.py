@@ -1,7 +1,7 @@
 """Write the output to a CSV file."""
 
 
-def csv_writer(args, families, df):
+def csv_writer(args, families, df):  # pylint: disable=unused-argument
     """Output the data frame."""
     rows = [x.to_dict() for i, x in df.iterrows()]
     binomials = [r['taxon'] for r in rows if len(r['taxon'].split()) == 2]
@@ -46,5 +46,6 @@ def csv_writer(args, families, df):
 #     def end(self):
 #         """End the report."""
 #         df = pd.DataFrame(self.rows)
-#         df.rename(columns=lambda x: regex.sub(r'^.+?:\s*', '', x), inplace=True)
+#         df.rename(columns=lambda x: regex.sub(r'^.+?:\s*', '', x),
+#               inplace=True)
 #         df.to_csv(self.args.output_file, index=False)

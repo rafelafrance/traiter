@@ -1,34 +1,14 @@
 """Build a trait parse result."""
 
 from collections import namedtuple
+import pylib.shared.trait as trait
 
 
 TraitKey = namedtuple('TraitKey', 'value side')
 
 
-class Trait:
+class Trait(trait.Trait):
     """Build a parse result."""
-
-    def __init__(self, **kwargs):
-        """Build a trait."""
-        for key, value in kwargs.items():
-            self.__dict__[key] = value
-
-    def __repr__(self):
-        """Represent the result."""
-        return '{}({})'.format(self.__class__.__name__, self.__dict__)
-
-    def __eq__(self, other):
-        """Compare parsers for testing."""
-        return self.__dict__ == other.__dict__
-
-    def __setattr__(self, name, value):
-        """Allow arbitrary attributes on a trait."""
-        self.__dict__[name] = value
-
-    def __getattr__(self, name):
-        """Handle uninitialized attributes by returning a falsy value."""
-        return ''
 
     def is_flag_in_token(self, flag, token, rename=None):
         """Set a flag if it is found in the token's groups field."""

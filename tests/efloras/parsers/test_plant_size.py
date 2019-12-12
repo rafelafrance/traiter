@@ -1,7 +1,7 @@
 """Test plant size trait parsers."""
 
 import unittest
-from pylib.efloras.trait import Trait
+from pylib.shared.trait import Trait
 from pylib.efloras.parsers.plant_size import LEAF_SIZE, PETIOLE_SIZE
 from pylib.efloras.parsers.plant_size import PETAL_SIZE, SEPAL_SIZE
 from pylib.efloras.parsers.plant_size import FLOWER_SIZE, HYPANTHIUM_SIZE
