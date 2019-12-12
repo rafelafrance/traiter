@@ -1,10 +1,31 @@
 """Shared reproductive trait tokens (testes & ovaries)."""
 
 import pylib.vertnet.shared_patterns as patterns
-from pylib.shared.patterns import add_frag, add_key
+from pylib.stacked_regex.rule import Rules, fragment, keyword, grouper
+from pylib.stacked_regex.rule import InRegexp
 
 
-RULE = patterns.RULE
+RULE = dict(patterns.RULE)
+
+
+def add_frag(name: str, regexp: InRegexp, capture=True) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = fragment(name, regexp, capture=capture)
+
+
+def add_key(name: str, regexp: InRegexp, capture=True) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = keyword(name, regexp, capture=capture)
+
+
+def add_group(name: str, regexp: InRegexp, capture=True) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = grouper(name, regexp, capture=capture)
+
+
+def add_set(name: str, rules: Rules) -> None:
+    """Add a rule set."""
+    RULE[name] = rules
 
 
 add_key('active', 'active inactive'.split())

@@ -62,11 +62,9 @@ EMBRYO_LENGTH = Base(
                 | (?<! [a-z] ) cr  (?! [a-z] )
             )"""),
 
-
-        RULE['cross_set'],
-
         fragment('other', r' \( \s* \d+ \s* \w+ \s* \) '),
 
+        RULE['cross_set'],
         RULE['side'],
         RULE['prep'],
         RULE['word'],

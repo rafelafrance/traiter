@@ -49,12 +49,17 @@ def simple(token, value='number', units='units'):
     return trait if flag else None
 
 
-def compound(token, units=''):
-    """Handle a pattern like: 4 lbs 9 ozs."""
+def compound(token):
+    """Handle a pattern like: 4 ft 9 in."""
     trait = Trait(start=token.start, end=token.end)
+    trait.units = [token.groups['feet'], token.groups['inches']]
+    trait.units_inferred = False
+    trait.is_flag_missing('key', token, rename='ambiguous_key')
+    fts = convert(to_float(token.groups['ft']), 'ft')
+    ins = [convert(to_float(i), 'in') for i in as_list(token.groups['in'])]
+    value = [round(fts + i, 2) for i in ins]
+    trait.value = squash(value)
     add_flags(token, trait)
-    values = [token.groups[units[0]], token.groups[units[1]]]
-    trait.compound_value(values, units)
     return trait
 
 
@@ -62,6 +67,7 @@ def fraction(token):
     """Handle fractional values like 10 3/8 inches."""
     trait = Trait(start=token.start, end=token.end)
     trait.units = token.groups.get('units')
+    trait.units_inferred = not bool(trait.units)
     whole = to_float(token.groups.get('whole', '0'))
     numerator = to_float(token.groups['numerator'])
     denominator = to_float(token.groups['denominator'])

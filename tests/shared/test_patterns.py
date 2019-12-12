@@ -84,5 +84,5 @@ class TestSharedPatterns(unittest.TestCase):
         actual = parser.parse('ddf2d94a-0a49-11ea-a133-000000000004')
         expect = [Token(
             RULE['uuid'], span=(0, 36),
-            groups={'uuid': 'ddf2d94a-0a49-11ea-a133-000000000004'})]
+            groups={})]
         self.assertEqual(actual, expect)

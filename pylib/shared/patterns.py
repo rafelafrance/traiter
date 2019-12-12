@@ -37,6 +37,7 @@ add_frag('quest', r' [?] ')
 add_frag('comma', r' [,] ', capture=False)
 add_frag('semicolon', r' [;] ', capture=False)
 add_frag('ampersand', r' [&] ', capture=False)
+add_frag('eq', r' [=] ', capture=False)
 
 # Small words
 add_frag('by', r' by ', capture=False)
@@ -47,9 +48,12 @@ add_key('conj', ' or and '.split(), capture=False)
 add_key('prep', ' to with on of '.split(), capture=False)
 
 # NOTE: Double quotes as inches is handled elsewhere
-add_frag('inches', r' ( inch e? s? | \b in s? ) \b ')
-add_frag('feet', r" foot s? | feet s? | ft s? (?! [,\w]) | (?<= \d ) ' ")
-add_frag('metric_len', r' ( milli | centi )? meters? | ( [cm] [\s.]? m ) ')
+add_frag('inches', r"""
+    (?<! [a-z] ) ( inch e? s? | in s? (?! [a-ru-z] ) ) """)
+add_frag('feet', r"""
+    (?<! [a-z] ) ( foot s? | feet s? | ft s? (?! [,\w]) ) | (?<= \d ) ' """)
+add_frag('metric_len', r"""
+    ( milli | centi )? meters? | ( [cm] [\s.]? m ) (?! [a-ru-z] ) """)
 add_group('len_units', ' metric_len feet inches'.split())
 
 add_frag('pounds', r' pounds? | lbs? ')
@@ -62,7 +66,6 @@ add_group('mass_units', 'metric_mass pounds ounces'.split())
 
 add_group('us_units', 'feet inches pounds ounces'.split())
 add_group('units', 'len_units mass_units'.split())
-
 
 # # UUIDs cause problems when extracting certain shorthand notations.
 add_frag('uuid', r"""

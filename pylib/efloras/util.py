@@ -93,9 +93,10 @@ def part_phrase(leaf_part):
         RULE[leaf_part],
         RULE['location'],
         RULE['word'],
+        RULE['prep'],
         RULE['punct'],
         grouper(f'{leaf_part}_phrase', f"""
-            ( location ( word | punct )* )?
+            ( location ( word | punct | prep )* )?
             (?P<part> {leaf_part} )
             """),
         ]

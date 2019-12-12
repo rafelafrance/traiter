@@ -1,11 +1,33 @@
 """Shared token patterns."""
 
 import pylib.shared.patterns as patterns
-from pylib.shared.patterns import add_frag, add_group, add_set
+from pylib.stacked_regex.rule import Rules, fragment, keyword, grouper
+from pylib.stacked_regex.rule import InRegexp
 from pylib.vertnet.util import ordinal, number_to_words
 
 
-RULE = patterns.RULE
+RULE = dict(patterns.RULE)
+
+
+def add_frag(name: str, regexp: InRegexp, capture=True) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = fragment(name, regexp, capture=capture)
+
+
+def add_key(name: str, regexp: InRegexp, capture=True) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = keyword(name, regexp, capture=capture)
+
+
+def add_group(name: str, regexp: InRegexp, capture=True) -> None:
+    """Add a rule to RULE."""
+    RULE[name] = grouper(name, regexp, capture=capture)
+
+
+def add_set(name: str, rules: Rules) -> None:
+    """Add a rule set."""
+    RULE[name] = rules
+
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.
@@ -25,9 +47,14 @@ RULE = patterns.RULE
 #   E.g.: 11-[22]-33-[44]:99g
 
 add_frag('shorthand_key', r"""
-    on \s* tag | specimens? | catalog
+    (on \s* tag | specimens? (?! \s* [a-z] )
+        | catalog (?! [a-z] )) (?! \s* [#] )
     | ( measurement s? | meas ) [:.,]{0,2} ( \s* length \s* )?
-        ( \s* [({\[})]? [a-z]{1,2} [)}\]]? \.? )?
+        (
+            \s* [({\[})]?
+                (t [o.]? l [._]? (?! [a-z.] )
+                | [a-z]{1,2}) [)}\]]? \.?
+        )?
     | tag \s+ \d+ \s* =? ( male | female)? \s* ,
     | measurements? | mesurements? | measurementsnt
     """)
@@ -69,11 +96,6 @@ add_frag('triple', fr"""
     (?P<shorthand_hfl> (?P<estimated_hfl> \[ )? {SH_VAL} \]? )
     (?! [\d/:=a-z-] )
     """)
-
-# UUIDs cause problems when extracting certain shorthand notations.
-add_frag('uuid', r"""
-    \b [0-9a-f]{8} - [0-9a-f]{4} - [1-5][0-9a-f]{3}
-        - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """)
 
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 9)]
@@ -129,6 +151,42 @@ add_set('range_set', [
     RULE['dash'],
     RULE['to'],
     RULE['range'],
+])
+
+# A number or a range of numbers like "12 to 34" or "12.3-45.6"
+# Note we want to exclude dates and to not pick up partial dates
+# So: no part of "2014-12-11" would be in a range
+add_group('len_range', """
+    (?<! dash )
+    ( number (?P<units> len_units )?
+    (( dash | to ) number (?P<units> len_units )? )? )
+    (?! dash ) """, capture=False)
+# Rule set for parsing a range
+add_set('len_range_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['number'],
+    RULE['dash'],
+    RULE['to'],
+    RULE['len_range'],
+])
+
+# A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
+add_group('compound_len', """
+    (?P<ft> number ) feet comma?
+    (?P<in> number ) ( ( dash | to ) (?P<in> number ) )? inches
+    """, capture=False)
+# Rule set for parsing a compound_wt
+add_set('compound_len_set', [
+    RULE['feet'],
+    RULE['inches'],
+    RULE['number'],
+    RULE['dash'],
+    RULE['comma'],
+    RULE['to'],
+    RULE['compound_len'],
 ])
 
 # A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
@@ -215,4 +273,22 @@ add_set('fraction_set', [
     RULE['number'],
     RULE['slash'],
     RULE['fraction'],
+])
+
+# For fractions like "1 2/3" or "1/2".
+# We don't allow dates like "1/2/34".
+add_group('len_fraction', """
+    (?P<whole> number )?
+    (?<! slash )
+    (?P<numerator> number) slash (?P<denominator> number)
+    (?! slash ) (?P<units> len_units)? """, capture=False)
+# Rule set for parsing fractions
+add_set('len_fraction_set', [
+    RULE['inches'],
+    RULE['feet'],
+    RULE['metric_len'],
+    RULE['len_units'],
+    RULE['number'],
+    RULE['slash'],
+    RULE['len_fraction'],
 ])
