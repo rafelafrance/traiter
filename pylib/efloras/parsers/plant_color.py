@@ -96,9 +96,7 @@ def convert(token: Token) -> Any:
         trait.sex = token.groups['sex'].lower()
 
     values = util.split_keywords(trait.raw_value)
-
-    values = [normalize(v) for v in values]
-    values = list(dict.fromkeys(values))
+    values = dict.fromkeys(normalize(v) for v in values)
     trait.value = [v for v in values if v]
 
     return trait if trait.value else None

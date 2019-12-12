@@ -1,37 +1,17 @@
 """Shared plant parser logic."""
 
 import regex
-from pylib.stacked_regex.rule import Rules, fragment, keyword, grouper
-from pylib.stacked_regex.rule import InRegexp
 import pylib.shared.patterns as patterns
+from pylib.shared.rule_set import RuleSet
 
 
-RULE = dict(patterns.RULE)
+SET = RuleSet(patterns.SET)
+RULE = SET.rules
 
 
-def add_frag(name: str, regexp: InRegexp, capture=True) -> None:
-    """Add a rule to RULE."""
-    RULE[name] = fragment(name, regexp, capture=capture)
+SET.add_key('sex', 'staminate pistillate'.split())
 
-
-def add_key(name: str, regexp: InRegexp, capture=True) -> None:
-    """Add a rule to RULE."""
-    RULE[name] = keyword(name, regexp, capture=capture)
-
-
-def add_group(name: str, regexp: InRegexp, capture=True) -> None:
-    """Add a rule to RULE."""
-    RULE[name] = grouper(name, regexp, capture=capture)
-
-
-def add_set(name: str, rules: Rules) -> None:
-    """Add a rule set."""
-    RULE[name] = rules
-
-
-add_key('sex', 'staminate pistillate'.split())
-
-add_key('plant_part', r"""
+SET.add_key('plant_part', r"""
     (?<! to \s )
     ( androeci(a|um) | anthers?
     | blades?
@@ -46,22 +26,22 @@ add_key('plant_part', r"""
     | sepals? | stamens? | stigmas? | stipules? | styles?
     )""")
 
-add_key('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
-add_key('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
-add_key('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
-add_key('hairs', 'hairs?')
-add_key('flower', fr'({RULE["sex"].regexp.pattern} \s+ )? flowers?')
-add_key('hypanthium', 'hypan-?thi(um|a)')
-add_key('sepal', 'sepals?')
-add_key('calyx', 'calyx | calyces')
-add_key('stamen', 'stamens?')
-add_key('anther', 'anthers?')
-add_key('style', 'styles?')
-add_key('stigma', 'stigmas?')
-add_key('petal', r' petals? ')
-add_key('corolla', r' corollas? ')
+SET.add_key('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
+SET.add_key('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
+SET.add_key('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
+SET.add_key('hairs', 'hairs?')
+SET.add_key('flower', fr'({RULE["sex"].regexp.pattern} \s+ )? flowers?')
+SET.add_key('hypanthium', 'hypan-?thi(um|a)')
+SET.add_key('sepal', 'sepals?')
+SET.add_key('calyx', 'calyx | calyces')
+SET.add_key('stamen', 'stamens?')
+SET.add_key('anther', 'anthers?')
+SET.add_key('style', 'styles?')
+SET.add_key('stigma', 'stigmas?')
+SET.add_key('petal', r' petals? ')
+SET.add_key('corolla', r' corollas? ')
 
-add_key('shape_starter', """
+SET.add_key('shape_starter', """
     broadly
     deeply depressed
     long
@@ -71,24 +51,25 @@ add_key('shape_starter', """
     shallowly sometimes
     """.split())
 
-add_frag('location', r""" \b ( terminal | lateral | basal | cauline ) """)
-add_key('dim', """ width wide length long radius diameter diam? """.split())
+SET.add_frag('location', r""" \b ( terminal | lateral | basal | cauline ) """)
+SET.add_key('dim', """
+    width wide length long radius diameter diam? """.split())
 
-add_frag('punct', r' [,;:/] ', capture=False)
+SET.add_frag('punct', r' [,;:/] ', capture=False)
 
-add_key('word', r' [a-z] \w* ', capture=False)
+SET.add_key('word', r' [a-z] \w* ', capture=False)
 
 
 # ############################################################################
 # Numeric patterns
 
-add_key('units', ' cm mm '.split())
+SET.add_key('units', ' cm mm '.split())
 
-add_frag('number', r' \d+ ( \. \d* )? ')
+SET.add_frag('number', r' \d+ ( \. \d* )? ')
 
 
 # Numeric ranges like: (10–)15–20(–25)
-add_group('range', r"""
+SET.add_group('range', r"""
     (?<! slash | dash | number )
     (?: open (?P<min> number ) dash close )?
     (?P<low> number )
@@ -97,7 +78,7 @@ add_group('range', r"""
     (?! dash | slash )
     """, capture=False)
 
-add_set('range_set', [
+SET.add_set('range_set', [
     RULE['units'],
     RULE['number'],
     RULE['dash'],
@@ -114,11 +95,11 @@ RANGE_GROUPS = regex.compile(
 LENGTH_RANGE = RANGE_GROUPS.sub(r'\1_length', RULE['range'].pattern)
 WIDTH_RANGE = RANGE_GROUPS.sub(r'\1_width', RULE['range'].pattern)
 
-add_group('cross', f"""
+SET.add_group('cross', f"""
     {LENGTH_RANGE} (?P<units_length> units )?
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """, capture=False)
-add_set('cross_set', [
+SET.add_set('cross_set', [
     RULE['units'],
     RULE['number'],
     RULE['dash'],
@@ -132,12 +113,12 @@ CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
 CROSS_1 = CROSS_GROUPS.sub(r'\1_1', RULE['cross'].pattern)
 CROSS_2 = CROSS_GROUPS.sub(r'\1_2', RULE['cross'].pattern)
-add_group('sex_cross', f"""
+SET.add_group('sex_cross', f"""
     {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
     ( conj | prep )?
     {CROSS_2} (open)? (?P<sex_2> sex )? (close)?
     """, capture=False)
-add_set('sex_cross_set', [
+SET.add_set('sex_cross_set', [
     RULE['units'],
     RULE['number'],
     RULE['dash'],
@@ -151,19 +132,19 @@ add_set('sex_cross_set', [
     RULE['sex_cross']])
 
 # Like "to 10 cm"
-add_group(
+SET.add_group(
     'cross_upper',
     fr""" up_to (?P<high_length> number )
         (?P<units_length> units ) """, capture=False)
-add_set('cross_upper_set', [
+SET.add_set('cross_upper_set', [
     RULE['up_to'],
     RULE['units'],
     RULE['number'],
     RULE['cross_upper']])
 
 # Like "to 10"
-add_group('count_upper', fr""" up_to (?P<high> number ) """, capture=False)
-add_set('count_upper_set', [
+SET.add_group('count_upper', fr""" up_to (?P<high> number ) """, capture=False)
+SET.add_set('count_upper_set', [
     RULE['up_to'],
     RULE['number'],
     RULE['count_upper']])
