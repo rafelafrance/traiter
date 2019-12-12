@@ -86,14 +86,9 @@ def convert(token: Token) -> Any:
         start=token.start, end=token.end,
         raw_value=token.groups['value'])
 
-    if 'location' in token.groups:
-        trait.location = token.groups['location'].lower()
-
-    if 'part' in token.groups:
-        trait.part = token.groups['part'].lower()
-
-    if 'sex' in token.groups:
-        trait.sex = token.groups['sex'].lower()
+    for capture in ['location', 'part', 'sex']:
+        if capture in token.groups:
+            setattr(trait, capture, token.groups[capture].lower())
 
     values = util.split_keywords(trait.raw_value)
     values = dict.fromkeys(normalize(v) for v in values)
@@ -136,10 +131,7 @@ def parser(plant_part):
             COLOR_SUFFIX,
 
             grouper('color_phrase', """
-                color_prefix*
-                flower_color
-                color_suffix*
-                """),
+                color_prefix* flower_color color_suffix* """),
 
             producer(convert, f"""
                 (?P<part> {plant_part} ) (?P<value> color_phrase+ ) """),

@@ -29,11 +29,11 @@ SET.add_key('prep', ' to with on of '.split(), capture=False)
 
 # NOTE: Double quotes as inches is handled elsewhere
 SET.add_frag('inches', r"""
-    (?<! [a-z] ) ( inch e? s? | in s? (?! [a-ru-z] ) ) """)
+    (?<! [a-z] ) ( inch e? s? | in s? (?! [a-ru-wyz] ) ) """)
 SET.add_frag('feet', r"""
     (?<! [a-z] ) ( foot s? | feet s? | ft s? (?! [,\w]) ) | (?<= \d ) ' """)
 SET.add_frag('metric_len', r"""
-    ( milli | centi )? meters? | ( [cm] [\s.]? m ) (?! [a-ru-z] ) """)
+    ( milli | centi )? meters? | ( [cm] [\s.]? m ) (?! [a-ru-wyz] ) """)
 SET.add_group('len_units', ' metric_len feet inches'.split())
 
 SET.add_frag('pounds', r' pounds? | lbs? ')

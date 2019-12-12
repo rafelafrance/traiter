@@ -19,9 +19,9 @@ class Parser:
         self._scanners: Rules = []
         self._replacers: Rules = []
         self._producers: Rules = []
-        self.__iadd__(rules)
+        self.__add__(rules)
 
-    def __iadd__(self, rule_list) -> None:
+    def __add__(self, rule_list) -> None:
         """Add rules to the parser."""
         self._built = False
         for rule in flatten(rule_list):
