@@ -1,6 +1,6 @@
 """Parse life stage notations."""
 
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_patterns import RULE
 
@@ -11,19 +11,19 @@ LIFE_STAGE = Base(
     name=__name__.split('.')[-1],
     rules=[
         # JSON keys for life stage
-        vocab('json_key', [
+        term('json_key', [
             r' life \s* stage \s* (remarks?)? ',
             r' age \s* class ',
             r' age \s* in \s* (?P<time_units> {}) '.format(TIME_OPTIONS),
             r' age ']),
 
         # These words are life stages without a keyword indicator
-        vocab('intrinsic', [
+        term('intrinsic', [
             r' yolk \s? sac ',
             r' young [\s-]? of [\s-]? the [\s-]? year ',
             r' adult \s* young ',
             r' young \s* adult ']
-              + """
+             + """
                 ads? adulte?s?
                 chicks?
                 fledgelings? fleglings? fry
@@ -40,25 +40,25 @@ LIFE_STAGE = Base(
             """.split()),
 
         # This indicates that the following words are NOT a life stage
-        vocab('skip', r' determin \w* '),
+        term('skip', r' determin \w* '),
 
         # Compound words separated by dashes or slashes
         # E.g. adult/juvenile or over-winter
-        frag('joiner', r' \s* [/-] \s* '),
+        part('joiner', r' \s* [/-] \s* '),
 
         # Use this to find the end of a life stage pattern
-        frag('separator', r' [;,"?] | $ '),
+        part('separator', r' [;,"?] | $ '),
 
         # For life stages with numbers as words in them
         RULE['ordinals'],
 
         RULE['time_units'],
 
-        frag('after', 'after'),
-        frag('hatching', 'hatching'),
+        part('after', 'after'),
+        part('hatching', 'hatching'),
 
         # Match any word
-        frag('word', r' \b \w [\w?.-]* (?! [./-] ) '),
+        part('word', r' \b \w [\w?.-]* (?! [./-] ) '),
 
         grouper('as_time', ' after? (ordinals | hatching) time_units'),
 

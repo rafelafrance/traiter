@@ -4,13 +4,13 @@ from string import punctuation
 from copy import copy
 from pylib.vertnet.numeric import as_value
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import frag
+from pylib.stacked_regex.rule import part
 from pylib.vertnet.shared_patterns import CROSS
 from pylib.vertnet.trait import Trait
 
 
 # Used to get compounds traits from a single parse
-DOUBLE_CROSS = frag(
+DOUBLE_CROSS = part(
     name='double_cross', regexp=f' {CROSS} ')
 
 SIDES = {

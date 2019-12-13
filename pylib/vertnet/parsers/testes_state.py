@@ -1,6 +1,6 @@
 """Parse testes state notations."""
 
-from pylib.stacked_regex.rule import vocab, producer, grouper
+from pylib.stacked_regex.rule import term, producer, grouper
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -34,7 +34,7 @@ TESTES_STATE = Base(
         RULE['descended'],
 
         # Abbreviations for "testes"
-        vocab('abbrev', 'tes ts tnd td tns ta t'.split()),
+        term('abbrev', 'tes ts tnd td tns ta t'.split()),
 
         # Spellings of "scrotum"
         RULE['scrotal'],
@@ -43,7 +43,7 @@ TESTES_STATE = Base(
         RULE['partially'],
 
         # Abbreviations for "testes state"
-        vocab('state_abbrev', 'ns sc'.split()),
+        term('state_abbrev', 'ns sc'.split()),
 
         # Spellings of "abdominal"
         RULE['abdominal'],
@@ -58,7 +58,7 @@ TESTES_STATE = Base(
         RULE['other'],
 
         # We will skip over testes size measurements
-        RULE['cross_set'],
+        RULE['cross'],
 
         RULE['and'],
 

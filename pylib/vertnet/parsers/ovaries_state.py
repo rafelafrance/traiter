@@ -1,7 +1,7 @@
 """Parse ovaries state notations."""
 
 import regex
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -66,16 +66,16 @@ OVARIES_STATE = Base(
         RULE['number'],
         RULE['embryo'],
 
-        vocab('other', """ sev somewhat few """.split()),
+        term('other', """ sev somewhat few """.split()),
 
         # Skip words
-        vocab('skip', ' womb nullip '.split()),
+        term('skip', ' womb nullip '.split()),
 
-        frag('comma', r' [,] '),
-        frag('sep', r' [;\(] '),
+        part('comma', r' [,] '),
+        part('sep', r' [;\(] '),
 
         # We allow random words in some situations
-        frag('word', r'[a-z] \w*'),
+        part('word', r'[a-z] \w*'),
 
         # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes

@@ -1,6 +1,6 @@
 """Parse nipple state notations."""
 
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
@@ -22,23 +22,23 @@ NIPPLE_STATE = Base(
         RULE['developed'],
         RULE['nipple'],
 
-        vocab('false', """ false """),
-        vocab('much', """ much """),
+        term('false', """ false """),
+        term('much', """ much """),
 
-        vocab('lactation', r"""
+        term('lactation', r"""
             (indicate \s+)?
             (( previous | post | prior ) [\s-] )
             (lactation | lactating | lac )"""),
 
-        vocab('other', """
+        term('other', """
             protuberant prominent showing worn distended
             """.split()),
 
         # Separates measurements
-        frag('separator', r' [;"?/,] '),
+        part('separator', r' [;"?/,] '),
 
         # Skip arbitrary words
-        frag('word', r' \w+ '),
+        part('word', r' \w+ '),
 
         grouper('state_end', """
             ( size | fully | partially | other | lactation | color | false

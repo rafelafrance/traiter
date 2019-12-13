@@ -2,7 +2,7 @@
 
 import unittest
 import regex
-from pylib.stacked_regex.rule import grouper, vocab
+from pylib.stacked_regex.rule import grouper, term
 
 
 class TestReplace(unittest.TestCase):
@@ -10,9 +10,9 @@ class TestReplace(unittest.TestCase):
 
     flags = regex.VERBOSE | regex.IGNORECASE
 
-    r_zero = vocab('zero', r' zero ')
-    r_one = vocab('one', r' one ')
-    r_two = vocab('two', r' two ')
+    r_zero = term('zero', r' zero ')
+    r_one = term('one', r' one ')
+    r_two = term('two', r' two ')
     r_three = grouper('three', r' zero one ')
     r_four = grouper('four', r' two three ')
     r_five = grouper('five', r' three four ')

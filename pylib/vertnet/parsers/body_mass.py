@@ -1,7 +1,7 @@
 """Parse body mass notations."""
 
 from pylib.shared.util import as_list, squash, to_float
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.shared.convert_units import convert
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
@@ -38,21 +38,21 @@ BODY_MASS = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
-        vocab('key_with_units', r"""
+        term('key_with_units', r"""
         ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """),
 
         # These words indicate a body mass follows
-        frag('key_leader', 'full observed total'.split()),
+        part('key_leader', 'full observed total'.split()),
 
         # Words for weight
-        frag('weight', 'weights? weigh(ed|ing|s)?'.split()),
+        part('weight', 'weights? weigh(ed|ing|s)?'.split()),
 
         # Keys like: w.t.
-        frag('key_with_dots', r' \b w \.? \s? t s? \.? '),
+        part('key_with_dots', r' \b w \.? \s? t s? \.? '),
 
         # Common prefixes that indicate a body mass
-        frag('mass', 'mass'),
-        frag('body', 'body'),
+        part('mass', 'mass'),
+        part('body', 'body'),
 
         # Shorthand notation
         RULE['shorthand_key'],
@@ -60,18 +60,18 @@ BODY_MASS = Base(
 
         # Possible range of numbers like: 10 - 20
         # Or just: 10
-        RULE['range_set'],
+        RULE['range'],
 
         # compound weight like 2 lbs. 3.1 - 4.5 oz
-        RULE['compound_wt_set'],
+        RULE['compound_wt'],
 
         # These indicate that the mass is NOT a body mass
-        vocab('other_wt', r"""
+        term('other_wt', r"""
             femur baculum bacu bac spleen thymus kidney
             testes testis ovaries epididymis epid """.split()),
 
         # We allow random words in some situations
-        vocab('word', r' ( [a-z] \w* ) '),
+        term('word', r' ( [a-z] \w* ) '),
 
         # Separators
         RULE['semicolon'],

@@ -86,9 +86,9 @@ def parser(plant_part):
         rules=[
             RULE[plant_part],
             RULE['plant_part'],
-            RULE['cross_set'],
-            RULE['cross_upper_set'],
-            RULE['sex_cross_set'],
+            RULE['cross'],
+            RULE['cross_upper'],
+            RULE['sex_cross'],
             RULE['dim'],
             RULE['location'],
 

@@ -1,6 +1,6 @@
-"""Rules for parsing and rule builders."""
+"""RuleList for parsing and rule builders."""
 
-from enum import Enum
+from enum import IntEnum
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Pattern, Union
 import inspect
@@ -23,7 +23,7 @@ Action = Callable[['Token'], Any]
 InRegexp = Union[str, List[str]]
 
 
-class RuleType(Enum):
+class RuleType(IntEnum):
     """What type of a rule are we dealing with."""
 
     SCANNER = 1
@@ -75,7 +75,7 @@ def join(regexp: InRegexp) -> str:
     return ' '.join(regexp.split())
 
 
-def frag(
+def part(
         name: str,
         regexp: InRegexp,
         action: Action = None,
@@ -92,12 +92,12 @@ def frag(
         regexp=regexp)
 
 
-def vocab(
+def term(
         name: str,
         regexp: InRegexp,
         action: Action = None,
         capture: bool = True) -> Rule:
-    r"""Wrap a regular expression in \b character class."""
+    r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
     regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
     regexp = regex.compile(fr'\b {regexp} \b', FLAGS)

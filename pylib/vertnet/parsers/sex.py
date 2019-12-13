@@ -1,6 +1,6 @@
 """Parse sex notations."""
 
-from pylib.stacked_regex.rule import frag, vocab, producer
+from pylib.stacked_regex.rule import part, term, producer
 from pylib.vertnet.shared_patterns import RULE
 from pylib.vertnet.parsers.base import Base, convert
 
@@ -9,22 +9,22 @@ SEX = Base(
     name=__name__.split('.')[-1],
     rules=[
         # JSON keys for sex
-        vocab('json_key', 'sex'),
+        term('json_key', 'sex'),
 
         # The sexes
-        vocab('intrinsic', 'females? males?'.split()),
+        term('intrinsic', 'females? males?'.split()),
 
         # To handle a guessed sex
         RULE['quest'],
 
         # These are words that indicate that "sex" is not a key
-        vocab('skip', 'and is was'.split()),
+        term('skip', 'and is was'.split()),
 
         # Allow arbitrary words in some cases
-        frag('word', r' \b [a-z] [^;,"=:\s]* '),
+        part('word', r' \b [a-z] [^;,"=:\s]* '),
 
         # Some patterns need a terminator
-        frag('separator', ' [;,"] | $ '),
+        part('separator', ' [;,"] | $ '),
 
         # E.g.: sex might be female;
         producer(convert, [

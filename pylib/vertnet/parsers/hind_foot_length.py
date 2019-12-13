@@ -1,7 +1,7 @@
 """Parse hind foot length notations."""
 
 from functools import partial
-from pylib.stacked_regex.rule import frag, vocab, grouper, producer
+from pylib.stacked_regex.rule import part, term, grouper, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import fraction, simple
@@ -20,13 +20,13 @@ HIND_FOOT_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: HindFootLengthInMillimeters
-        vocab(
+        term(
             'key_with_units',
             r"""( hind \s* )? foot \s* ( length | len ) \s* in \s*
                     (?P<units> millimeters | mm )"""),
 
         # Standard keywords that indicate a hind foot length follows
-        vocab('key', [
+        term('key', [
             r'hind \s* foot \s* with \s* (?P<includes> claw )',
             r'hind \s* foot ( \s* ( length | len ) )?',
             'hfl | hf']),
@@ -36,19 +36,19 @@ HIND_FOOT_LENGTH = Base(
         RULE['shorthand'],
 
         # Fractional numbers, like: 9/16
-        RULE['fraction_set'],
+        RULE['fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        RULE['range_set'],
+        RULE['range'],
 
         # Sometimes the last number is missing in the shorthand notation
         RULE['triple'],
 
         # We allow random words in some situations
-        vocab('word', r' ( [a-z] \w* ) ', capture=False),
+        term('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
-        frag('sep', r' [;,] | $ ', capture=False),
+        part('sep', r' [;,] | $ ', capture=False),
 
         grouper('noise', ' word dash '.split()),
 

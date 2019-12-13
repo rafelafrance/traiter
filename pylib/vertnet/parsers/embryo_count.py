@@ -1,7 +1,7 @@
 """Parse embryo counts."""
 
 from pylib.shared.util import as_list, to_int
-from pylib.stacked_regex.rule import frag, producer, grouper
+from pylib.stacked_regex.rule import part, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -44,7 +44,7 @@ EMBRYO_COUNT = Base(
         RULE['prep'],
 
         # The sexes like: 3M or 4Females
-        frag('sex', r"""
+        part('sex', r"""
             males? | females? | (?<! [a-z] ) [mf] (?! [a-z] ) """),
 
         RULE['sep'],

@@ -3,7 +3,7 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import frag, vocab, grouper, producer
+from pylib.stacked_regex.rule import part, term, grouper, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 import pylib.vertnet.numeric as numeric
@@ -80,13 +80,13 @@ TOTAL_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: TotalLengthInMillimeters
-        vocab('key_with_units', r"""
+        term('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
             ( length | len )? \s* in \s* (?P<units> millimeters | mm )
             """),
 
         # Various total length keys
-        frag('len_key', r"""
+        part('len_key', r"""
             t \s* [o.]? \s* l [._]? (?! [a-z] )
             | total  [\s-]* length [\s-]* in
             | ( total | max | standard ) [\s-]* lengths? \b
@@ -100,14 +100,14 @@ TOTAL_LENGTH = Base(
             """),
 
         # Words that indicate we don't have a total length
-        vocab('skip', ' horns? tag '.split()),
+        term('skip', ' horns? tag '.split()),
 
         # The word length on its own. Make sure it isn't proceeded by a letter
-        frag('ambiguous', r"""
+        part('ambiguous', r"""
             (?<! [a-z] \s* ) (?P<ambiguous_key> lengths? ) """),
 
         # # We don't know if this is a length until we see the units
-        frag('key_units_req', 'measurements? body total'.split()),
+        part('key_units_req', 'measurements? body total'.split()),
 
         # # Shorthand notation
         RULE['shorthand_key'],
@@ -115,24 +115,23 @@ TOTAL_LENGTH = Base(
         RULE['triple'],  # Truncated shorthand
 
         # Fractional numbers, like: 9/16
-        RULE['len_fraction_set'],
+        RULE['len_fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        RULE['len_range_set'],
+        RULE['len_range'],
 
         # compound length like 2 ft 3.1 - 4.5 in
-        RULE['compound_len_set'],
+        RULE['compound_len'],
 
         # The abbreviation key, just: t. This can be a problem.
-        frag('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
+        part('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
 
         # We allow random words in some situations
-        # keyword('word', r' [a-z] \w* '),
         RULE['eq'],
 
         # # Some patterns require a separator
-        frag('semicolon', r' [;] | $ '),
-        frag('comma', r' [,] | $ '),
+        part('semicolon', r' [;] | $ '),
+        part('comma', r' [,] | $ '),
 
         grouper('key', """
             ( key_with_units | len_key | shorthand_key | ambiguous

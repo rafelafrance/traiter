@@ -79,7 +79,7 @@ def print_families(families):
 
 
 def split_keywords(value):
-    """Convert a keyword string into separate keywords."""
+    """Convert a vocabulary string into separate words."""
     return regex.split(fr"""
         \s* \b (?: {RULE['conj'].pattern} | {RULE['prep'].pattern} )
             \b \s* [,]? \s*

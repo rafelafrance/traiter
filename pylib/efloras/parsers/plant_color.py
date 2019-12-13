@@ -5,14 +5,14 @@ from typing import Any
 import regex
 from pylib.shared.util import FLAGS
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import vocab, grouper, producer
+from pylib.stacked_regex.rule import term, grouper, producer
 from pylib.shared.trait import Trait
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 from pylib.efloras.shared_patterns import RULE
 
 
-COLORS = vocab('flower_color', r"""
+COLORS = term('flower_color', r"""
     black(ish)? blue(ish)? brown brownish
     cream cream-yellow creamy
     crimson
@@ -32,12 +32,12 @@ COLORS = vocab('flower_color', r"""
     yellow yellowish
     """.split())
 
-COLOR_PREFIX = vocab('color_prefix', r"""
+COLOR_PREFIX = term('color_prefix', r"""
     bright(er)? | dark(er)? | deep(er)? | slightly | light(er)? | pale(r)?
     | usually (\s+ not)? | rarely | pale | sometimes | often
     """)
 
-COLOR_SUFFIX = vocab('color_suffix', r"""
+COLOR_SUFFIX = term('color_suffix', r"""
     spotted spots? stripe(s|d)? vein(s|ed)? tip(s|ped)? mottled
     tinge(s|d)? longitudinal throated lined """.split())
 

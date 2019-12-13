@@ -2,7 +2,7 @@
 
 import unittest
 import regex
-from pylib.stacked_regex.rule import replacer, vocab
+from pylib.stacked_regex.rule import replacer, term
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.parser import Parser
 
@@ -12,9 +12,9 @@ class TestReplace(unittest.TestCase):
 
     flags = regex.VERBOSE | regex.IGNORECASE
 
-    k_zero = vocab('zero', r' zero ')
-    k_one = vocab('one', r' one ')
-    k_two = vocab('two', r' two ')
+    k_zero = term('zero', r' zero ')
+    k_one = term('one', r' one ')
+    k_two = term('two', r' two ')
     rules = [k_zero, k_one, k_two]
 
     def test_replace_01(self):

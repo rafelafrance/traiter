@@ -1,6 +1,6 @@
 """Parse pregnancy state notations."""
 
-from pylib.stacked_regex.rule import frag, vocab, producer
+from pylib.stacked_regex.rule import part, term, producer
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
@@ -10,30 +10,30 @@ PREGNANCY_STATE = Base(
     rules=[
         RULE['none'],
 
-        vocab('pregnant', r"""
+        term('pregnant', r"""
             prega?n?ant pregnan preg pregnancy pregnancies
             gravid multiparous nulliparous parous """.split()),
 
-        vocab('joiner', r""" of were """.split()),
+        term('joiner', r""" of were """.split()),
 
-        vocab('recent', r"""
+        term('recent', r"""
             recently recent was previously prev """.split()),
 
-        vocab('probably', r"""
+        term('probably', r"""
             probably prob possibly possible
             appears? very
             visible visibly
             evidence evident
             """.split()),
 
-        vocab('stage', r' early late mid '.split()),
+        term('stage', r' early late mid '.split()),
 
-        frag('quest', '[?]'),
+        part('quest', '[?]'),
 
-        frag('separator', r' [;,"] '),
+        part('separator', r' [;,"] '),
 
         # Skip arbitrary words
-        frag('word', r' [a-z]\w+ '),
+        part('word', r' [a-z]\w+ '),
 
         # E.g.: pregnancy visible
         producer(convert, [

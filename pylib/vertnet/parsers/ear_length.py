@@ -3,7 +3,7 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import simple, fraction, shorthand_length
 from pylib.vertnet.numeric import numeric_fix_ups
@@ -62,26 +62,26 @@ EAR_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
-        vocab('key_with_units', r"""
+        term('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )
             """),
 
         # Abbreviation containing the measured from notation, like: e/n or e/c
-        fragment('char_measured_from', r"""
+        part('char_measured_from', r"""
             (?<! [a-z] ) (?<! [a-z] \s )
             (?P<ambiguous_key> e ) /? (?P<measured_from1> n | c ) [-]?
             (?! \.? [a-z] )
             """),
 
         # The abbreviation key, just: e. This can be a problem.
-        fragment('char_key', r"""
+        part('char_key', r"""
             (?<! \w ) (?<! \w \s )
             (?P<ambiguous_key> e )
             (?! \.? \s? [a-z\(] )
             """),
 
         # Standard keywords that indicate an ear length follows
-        vocab('keyword', [
+        term('keyword', [
             r' ear \s* from \s* (?P<measured_from1> notch | crown )',
             r' ear \s* ( length | len )',
             r' ear (?! \s* tag )',
@@ -89,20 +89,20 @@ EAR_LENGTH = Base(
         ]),
 
         # Fractional numbers, like: 9/16
-        RULE['fraction_set'],
+        RULE['fraction'],
 
         # Shorthand notation
         RULE['shorthand_key'],
         RULE['shorthand'],
 
         # Possible ranges of numbers like: "10 - 20" or just "10"
-        RULE['range_set'],
+        RULE['range'],
 
         # We allow random words in some situations
-        vocab('word', r' ( [a-z] \w* ) '),
+        term('word', r' ( [a-z] \w* ) '),
 
         # Some patterns require a separator
-        fragment('sep', r' [;,] '),
+        part('sep', r' [;,] '),
 
         # Consider any of the following as just a key
         grouper('key', 'keyword char_key char_measured_from'.split()),

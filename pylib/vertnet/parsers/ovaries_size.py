@@ -1,6 +1,6 @@
 """Parse ovaries size notations."""
 
-from pylib.stacked_regex.rule import vocab, producer, grouper
+from pylib.stacked_regex.rule import term, producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
@@ -10,7 +10,7 @@ OVARY_SIZE = Base(
     name=__name__.split('.')[-1],
     rules=[
         # A key with units, like: gonadLengthInMM
-        vocab('key_with_units', r"""
+        term('key_with_units', r"""
             (?P<ambiguous_key> gonad ) \s*
                 (?P<dim> length | len | width ) \s* in \s*
                 (?P<len_units> millimeters | mm )
@@ -38,11 +38,11 @@ OVARY_SIZE = Base(
         RULE['non'],
         RULE['fully'],
         RULE['partially'],
-        RULE['side_cross_set'],
+        RULE['side_cross'],
         RULE['side'],
         RULE['dim_side'],
         RULE['dimension'],
-        RULE['cross_set'],
+        RULE['cross'],
         RULE['in'],
         RULE['and'],
         RULE['word'],

@@ -2,17 +2,17 @@
 
 import regex
 import pylib.shared.patterns as patterns
-from pylib.shared.rule_set import RuleSet
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 
 
-SET = RuleSet(patterns.SET)
-RULE = SET.rules
+CAT = RuleCatalog(patterns.CAT)
+RULE = CAT.rules
 
 
 SEX = 'staminate pistillate'.split()
-SET.add_key('sex', SEX)
+CAT.term('sex', SEX)
 
-SET.add_key('plant_part', r"""
+CAT.term('plant_part', r"""
     (?<! to \s )
     ( androeci(a|um) | anthers?
     | blades?
@@ -27,22 +27,22 @@ SET.add_key('plant_part', r"""
     | sepals? | stamens? | stigmas? | stipules? | styles?
     )""")
 
-SET.add_key('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
-SET.add_key('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
-SET.add_key('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
-SET.add_key('hairs', 'hairs?')
-SET.add_key('flower', fr'({SEX} \s+ )? flowers?')
-SET.add_key('hypanthium', 'hypan-?thi(um|a)')
-SET.add_key('sepal', 'sepals?')
-SET.add_key('calyx', 'calyx | calyces')
-SET.add_key('stamen', 'stamens?')
-SET.add_key('anther', 'anthers?')
-SET.add_key('style', 'styles?')
-SET.add_key('stigma', 'stigmas?')
-SET.add_key('petal', r' petals? ')
-SET.add_key('corolla', r' corollas? ')
+CAT.term('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
+CAT.term('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
+CAT.term('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
+CAT.term('hairs', 'hairs?')
+CAT.term('flower', fr'({SEX} \s+ )? flowers?')
+CAT.term('hypanthium', 'hypan-?thi(um|a)')
+CAT.term('sepal', 'sepals?')
+CAT.term('calyx', 'calyx | calyces')
+CAT.term('stamen', 'stamens?')
+CAT.term('anther', 'anthers?')
+CAT.term('style', 'styles?')
+CAT.term('stigma', 'stigmas?')
+CAT.term('petal', r' petals? ')
+CAT.term('corolla', r' corollas? ')
 
-SET.add_key('shape_starter', """
+CAT.term('shape_starter', """
     broadly
     deeply depressed
     long
@@ -52,21 +52,21 @@ SET.add_key('shape_starter', """
     shallowly sometimes
     """.split())
 
-SET.add_frag('location', r""" \b ( terminal | lateral | basal | cauline ) """)
-SET.add_key('dim', """
+CAT.part('location', r""" \b ( terminal | lateral | basal | cauline ) """)
+CAT.term('dim', """
     width wide length long radius diameter diam? """.split())
 
-SET.add_frag('punct', r' [,;:/] ', capture=False)
+CAT.part('punct', r' [,;:/] ', capture=False)
 
-SET.add_key('word', r' [a-z] \w* ', capture=False)
+CAT.term('word', r' [a-z] \w* ', capture=False)
 
 
 # ############################################################################
 # Numeric patterns
 
-SET.add_key('units', ' cm mm '.split())
+CAT.term('units', ' cm mm '.split())
 
-SET.add_frag('number', r' \d+ ( \. \d* )? ')
+CAT.part('number', r' \d+ ( \. \d* )? ')
 
 
 # Numeric ranges like: (10–)15–20(–25)
@@ -78,15 +78,8 @@ RANGE = r"""
     (?: open dash (?P<max> number ) close )?
     (?! dash | slash )
     """
-SET.add_group('range', RANGE, capture=False)
-SET.add_set('range_set', [
-    RULE['units'],
-    RULE['number'],
-    RULE['dash'],
-    RULE['slash'],
-    RULE['open'],
-    RULE['close'],
-    RULE['range']])
+CAT.grouper('range', RANGE, capture=False)
+
 
 # Cross measurements like: 3–5(–8) × 4–11(–13)
 # Rename the groups so we can easily extract them in the parsers
@@ -100,53 +93,25 @@ CROSS = f"""
     {LENGTH_RANGE} (?P<units_length> units )?
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """
-SET.add_group('cross', CROSS, capture=False)
-SET.add_set('cross_set', [
-    RULE['units'],
-    RULE['number'],
-    RULE['dash'],
-    RULE['slash'],
-    RULE['open'],
-    RULE['close'],
-    RULE['x'],
-    RULE['cross']])
+CAT.grouper('cross', CROSS, capture=False)
+
 
 CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
 CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
 CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
-SET.add_group('sex_cross', f"""
+CAT.grouper('sex_cross', f"""
     {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
     ( conj | prep )?
     {CROSS_2} (open)? (?P<sex_2> sex )? (close)?
     """, capture=False)
-SET.add_set('sex_cross_set', [
-    RULE['units'],
-    RULE['number'],
-    RULE['dash'],
-    RULE['slash'],
-    RULE['open'],
-    RULE['close'],
-    RULE['conj'],
-    RULE['prep'],
-    RULE['x'],
-    RULE['sex'],
-    RULE['sex_cross']])
 
 # Like "to 10 cm"
-SET.add_group(
+CAT.grouper(
     'cross_upper',
     fr""" up_to (?P<high_length> number )
         (?P<units_length> units ) """, capture=False)
-SET.add_set('cross_upper_set', [
-    RULE['up_to'],
-    RULE['units'],
-    RULE['number'],
-    RULE['cross_upper']])
+
 
 # Like "to 10"
-SET.add_group('count_upper', fr""" up_to (?P<high> number ) """, capture=False)
-SET.add_set('count_upper_set', [
-    RULE['up_to'],
-    RULE['number'],
-    RULE['count_upper']])
+CAT.grouper('count_upper', fr""" up_to (?P<high> number ) """, capture=False)

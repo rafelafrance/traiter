@@ -22,9 +22,9 @@ class TestSharedPatterns(unittest.TestCase):
         nop, 'cross_upper', 'upper_product', capture=False)
 
     number_parser = Parser([RULE['number'], number_product])
-    range_parser = Parser([RULE['range_set'], range_product])
-    cross_parser = Parser([RULE['cross_set'], cross_product])
-    upper_parser = Parser([RULE['cross_upper_set'], upper_product])
+    range_parser = Parser([RULE['range'], range_product])
+    cross_parser = Parser([RULE['cross'], cross_product])
+    upper_parser = Parser([RULE['cross_upper'], upper_product])
 
     def test_number_01(self):
         """It handles integers."""

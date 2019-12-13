@@ -1,7 +1,7 @@
 """Parse placental scar counts."""
 
 from pylib.shared.util import as_list, to_int
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.shared_reproductive_patterns import RULE
@@ -53,17 +53,17 @@ PLACENTAL_SCAR_COUNT = Base(
         RULE['prep'],
 
         # Adjectives to placental scars
-        vocab('adj', r"""
+        term('adj', r"""
             faint prominent recent old possible """.split()),
 
         # Visible
-        vocab('visible', ' visible definite '.split()),
+        term('visible', ' visible definite '.split()),
 
         # Skip arbitrary words
         RULE['word'],
 
         # Trait separator
-        frag('sep', r' [;/] '),
+        part('sep', r' [;/] '),
 
         grouper('count', """
             none embryo conj

@@ -18,7 +18,7 @@ class TestSharedPatterns(unittest.TestCase):
     fraction_product = producer(nop, 'fraction')
 
     def test_cross_03(self):
-        parser = Parser([RULE['cross_set'], self.cross_product])
+        parser = Parser([RULE['cross'], self.cross_product])
         actual = parser.parse('9 12.3 x 45.6 8')
         expect = [
             Token(
@@ -27,7 +27,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_cross_04(self):
-        parser = Parser([RULE['cross_set'], self.cross_product])
+        parser = Parser([RULE['cross'], self.cross_product])
         actual = parser.parse('12x34x56')
         expect = [
             Token(
@@ -36,7 +36,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_cross_05(self):
-        parser = Parser([RULE['cross_set'], self.cross_product])
+        parser = Parser([RULE['cross'], self.cross_product])
         actual = parser.parse('3x1.5mm')
         expect = [Token(
             rule=self.cross_product, span=(0, 7),
@@ -45,7 +45,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_cross_06(self):
-        parser = Parser([RULE['cross_set'], self.cross_product])
+        parser = Parser([RULE['cross'], self.cross_product])
         actual = parser.parse('3mmx1.5mm')
         expect = [Token(
             rule=self.cross_product, span=(0, 9),
@@ -55,7 +55,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_cross_07(self):
-        parser = Parser([RULE['cross_set'], self.cross_product])
+        parser = Parser([RULE['cross'], self.cross_product])
         actual = parser.parse('12.3mm')
         expect = [
             Token(
@@ -65,7 +65,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_fraction_01(self):
-        parser = Parser([RULE['fraction_set'], self.fraction_product])
+        parser = Parser([RULE['fraction'], self.fraction_product])
         actual = parser.parse('12/34')
         expect = [Token(
             rule=self.fraction_product, span=(0, 5),
@@ -74,7 +74,7 @@ class TestSharedPatterns(unittest.TestCase):
         self.assertEqual(actual, expect)
 
     def test_fraction_02(self):
-        parser = Parser([RULE['fraction_set'], self.fraction_product])
+        parser = Parser([RULE['fraction'], self.fraction_product])
         actual = parser.parse('12/34/56')
         expect = []
         self.assertEqual(actual, expect)

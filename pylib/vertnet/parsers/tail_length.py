@@ -3,7 +3,7 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import frag, vocab, producer, grouper
+from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
@@ -57,17 +57,17 @@ TAIL_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
-        vocab('key_with_units', r"""
+        term('key_with_units', r"""
             tail \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """),
 
         # The abbreviation key, just: t. This can be a problem.
-        frag('char_key', r"""
+        part('char_key', r"""
             \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
             """),
 
         # Standard keywords that indicate a tail length follows
-        vocab('keyword', [
+        term('keyword', [
             r' tail \s* length ',
             r' tail \s* len ',
             'tail',
@@ -81,19 +81,19 @@ TAIL_LENGTH = Base(
         RULE['shorthand'],
 
         # Fractional numbers, like: 9/16
-        RULE['fraction_set'],
+        RULE['fraction'],
 
         # Possible pairs of numbers like: "10 - 20" or just "10"
-        RULE['range_set'],
+        RULE['range'],
 
         # Sometimes the last number is missing in the shorthand notation
         RULE['triple'],
 
         # We allow random words in some situations
-        vocab('word', r' ( [a-z] \w* ) ', capture=False),
+        term('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
-        frag('sep', r' [;,] | $ ', capture=False),
+        part('sep', r' [;,] | $ ', capture=False),
 
         # Consider all of these tokens a key
         grouper('key', 'keyword char_key'.split()),
