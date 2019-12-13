@@ -3,7 +3,7 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import fragment, keyword, grouper, producer
+from pylib.stacked_regex.rule import frag, vocab, grouper, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 import pylib.vertnet.numeric as numeric
@@ -80,13 +80,13 @@ TOTAL_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: TotalLengthInMillimeters
-        keyword('key_with_units', r"""
+        vocab('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
             ( length | len )? \s* in \s* (?P<units> millimeters | mm )
             """),
 
         # Various total length keys
-        fragment('len_key', r"""
+        frag('len_key', r"""
             t \s* [o.]? \s* l [._]? (?! [a-z] )
             | total  [\s-]* length [\s-]* in
             | ( total | max | standard ) [\s-]* lengths? \b
@@ -100,14 +100,14 @@ TOTAL_LENGTH = Base(
             """),
 
         # Words that indicate we don't have a total length
-        keyword('skip', ' horns? tag '.split()),
+        vocab('skip', ' horns? tag '.split()),
 
         # The word length on its own. Make sure it isn't proceeded by a letter
-        fragment('ambiguous', r"""
+        frag('ambiguous', r"""
             (?<! [a-z] \s* ) (?P<ambiguous_key> lengths? ) """),
 
         # # We don't know if this is a length until we see the units
-        fragment('key_units_req', 'measurements? body total'.split()),
+        frag('key_units_req', 'measurements? body total'.split()),
 
         # # Shorthand notation
         RULE['shorthand_key'],
@@ -124,15 +124,15 @@ TOTAL_LENGTH = Base(
         RULE['compound_len_set'],
 
         # The abbreviation key, just: t. This can be a problem.
-        fragment('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
+        frag('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
 
         # We allow random words in some situations
         # keyword('word', r' [a-z] \w* '),
         RULE['eq'],
 
         # # Some patterns require a separator
-        fragment('semicolon', r' [;] | $ '),
-        fragment('comma', r' [,] | $ '),
+        frag('semicolon', r' [;] | $ '),
+        frag('comma', r' [,] | $ '),
 
         grouper('key', """
             ( key_with_units | len_key | shorthand_key | ambiguous

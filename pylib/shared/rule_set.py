@@ -1,7 +1,7 @@
 """Build sets of rules."""
 
 from pylib.stacked_regex.rule import Rules
-from pylib.stacked_regex.rule import fragment, keyword, grouper, producer
+from pylib.stacked_regex.rule import frag, vocab, grouper, producer
 from pylib.stacked_regex.rule import InRegexp
 
 
@@ -14,11 +14,11 @@ class RuleSet:
 
     def add_frag(self, name: str, regexp: InRegexp, capture=True) -> None:
         """Add a fragment rule."""
-        self.rules[name] = fragment(name, regexp, capture=capture)
+        self.rules[name] = frag(name, regexp, capture=capture)
 
     def add_key(self, name: str, regexp: InRegexp, capture=True) -> None:
         """Add a keyword rule."""
-        self.rules[name] = keyword(name, regexp, capture=capture)
+        self.rules[name] = vocab(name, regexp, capture=capture)
 
     def add_group(self, name: str, regexp: InRegexp, capture=True) -> None:
         """Add a grouper rule."""

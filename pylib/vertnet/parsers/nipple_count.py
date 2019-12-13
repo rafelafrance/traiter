@@ -1,6 +1,6 @@
 """Parse lactation state notations."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
+from pylib.stacked_regex.rule import frag, vocab, producer, grouper
 from pylib.shared.util import to_int
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
@@ -40,7 +40,7 @@ NIPPLE_COUNT = Base(
     rules=[
         RULE['uuid'],  # UUIDs cause problems with numbers
 
-        keyword('id', r' \d+-\d+ '),
+        vocab('id', r' \d+-\d+ '),
 
         RULE['nipple'],
         RULE['integer'],
@@ -49,13 +49,13 @@ NIPPLE_COUNT = Base(
         RULE['op'],
         RULE['eq'],
 
-        keyword('adj', r""" inguinal ing pectoral pec pr """.split()),
+        vocab('adj', r""" inguinal ing pectoral pec pr """.split()),
 
-        fragment('number', r' number | no | [#] '),
-        fragment('eq', r' is | eq | equals? | [=] '),
+        frag('number', r' number | no | [#] '),
+        frag('eq', r' is | eq | equals? | [=] '),
 
         # Skip arbitrary words
-        fragment('word', r' \w+ '),
+        frag('word', r' \w+ '),
 
         RULE['sep'],
 

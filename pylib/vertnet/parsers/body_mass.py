@@ -1,7 +1,7 @@
 """Parse body mass notations."""
 
 from pylib.shared.util import as_list, squash, to_float
-from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
+from pylib.stacked_regex.rule import frag, vocab, producer, grouper
 from pylib.shared.convert_units import convert
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
@@ -38,21 +38,21 @@ BODY_MASS = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
-        keyword('key_with_units', r"""
+        vocab('key_with_units', r"""
         ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """),
 
         # These words indicate a body mass follows
-        fragment('key_leader', 'full observed total'.split()),
+        frag('key_leader', 'full observed total'.split()),
 
         # Words for weight
-        fragment('weight', 'weights? weigh(ed|ing|s)?'.split()),
+        frag('weight', 'weights? weigh(ed|ing|s)?'.split()),
 
         # Keys like: w.t.
-        fragment('key_with_dots', r' \b w \.? \s? t s? \.? '),
+        frag('key_with_dots', r' \b w \.? \s? t s? \.? '),
 
         # Common prefixes that indicate a body mass
-        fragment('mass', 'mass'),
-        fragment('body', 'body'),
+        frag('mass', 'mass'),
+        frag('body', 'body'),
 
         # Shorthand notation
         RULE['shorthand_key'],
@@ -66,12 +66,12 @@ BODY_MASS = Base(
         RULE['compound_wt_set'],
 
         # These indicate that the mass is NOT a body mass
-        keyword('other_wt', r"""
+        vocab('other_wt', r"""
             femur baculum bacu bac spleen thymus kidney
             testes testis ovaries epididymis epid """.split()),
 
         # We allow random words in some situations
-        keyword('word', r' ( [a-z] \w* ) '),
+        vocab('word', r' ( [a-z] \w* ) '),
 
         # Separators
         RULE['semicolon'],

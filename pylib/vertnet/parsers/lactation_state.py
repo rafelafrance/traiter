@@ -1,6 +1,6 @@
 """Parse lactation state notations."""
 
-from pylib.stacked_regex.rule import fragment, producer, grouper
+from pylib.stacked_regex.rule import frag, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
 from pylib.vertnet.shared_reproductive_patterns import RULE
 
@@ -8,7 +8,7 @@ from pylib.vertnet.shared_reproductive_patterns import RULE
 LACTATION_STATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        fragment('lactating', r""" (
+        frag('lactating', r""" (
             lactating | lactation | lactated | lactate | lact
             | lactaing | lactacting | lactataing | lactational
             | oelact | celact | lactati | lactacting | lactatin
@@ -16,9 +16,9 @@ LACTATION_STATE = Base(
             | nursing | suckling
             ) \b """),
 
-        fragment('not', r' \b ( not | non | no ) '),
+        frag('not', r' \b ( not | non | no ) '),
 
-        fragment('post', r""" \b (
+        frag('post', r""" \b (
             (( just | recently ) \s+ )? finished
             | post | recently | recent | had | pre
             ) """),
@@ -27,7 +27,7 @@ LACTATION_STATE = Base(
         RULE['quest'],
 
         # Separates measurements
-        fragment('separator', r' [;"/] '),
+        frag('separator', r' [;"/] '),
 
         RULE['word'],
 

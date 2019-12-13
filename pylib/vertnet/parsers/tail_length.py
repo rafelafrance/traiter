@@ -3,7 +3,7 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
+from pylib.stacked_regex.rule import frag, vocab, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
@@ -57,17 +57,17 @@ TAIL_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
-        keyword('key_with_units', r"""
+        vocab('key_with_units', r"""
             tail \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """),
 
         # The abbreviation key, just: t. This can be a problem.
-        fragment('char_key', r"""
+        frag('char_key', r"""
             \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
             """),
 
         # Standard keywords that indicate a tail length follows
-        keyword('keyword', [
+        vocab('keyword', [
             r' tail \s* length ',
             r' tail \s* len ',
             'tail',
@@ -90,10 +90,10 @@ TAIL_LENGTH = Base(
         RULE['triple'],
 
         # We allow random words in some situations
-        keyword('word', r' ( [a-z] \w* ) ', capture=False),
+        vocab('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
-        fragment('sep', r' [;,] | $ ', capture=False),
+        frag('sep', r' [;,] | $ ', capture=False),
 
         # Consider all of these tokens a key
         grouper('key', 'keyword char_key'.split()),

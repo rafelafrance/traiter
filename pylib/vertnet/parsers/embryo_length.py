@@ -1,7 +1,7 @@
 """Parse embryo lengths."""
 
 from pylib.shared.util import as_list, to_float
-from pylib.stacked_regex.rule import fragment, producer, grouper
+from pylib.stacked_regex.rule import frag, producer, grouper
 from pylib.vertnet.trait import Trait
 import pylib.shared.convert_units as convert_units
 from pylib.vertnet.numeric import simple, add_flags, fix_up_inches
@@ -55,21 +55,21 @@ EMBRYO_LENGTH = Base(
 
         RULE['embryo'],
 
-        fragment('key', r"""
+        frag('key', r"""
             (?<! collector [\s=:.] ) (?<! reg [\s=:.] ) (
                 ( crown | cr ) ( [_\s\-] | \s+ to \s+ )? rump
                 | (?<! [a-z] ) crl (?! [a-z] )
                 | (?<! [a-z] ) cr  (?! [a-z] )
             )"""),
 
-        fragment('other', r' \( \s* \d+ \s* \w+ \s* \) '),
+        frag('other', r' \( \s* \d+ \s* \w+ \s* \) '),
 
         RULE['cross_set'],
         RULE['side'],
         RULE['prep'],
         RULE['word'],
         RULE['quest'],
-        fragment('separator', r' [;"/.] '),
+        frag('separator', r' [;"/.] '),
 
         grouper('noise', ' word x '.split()),
         grouper('value', ' cross | number len_units? '),

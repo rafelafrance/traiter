@@ -1,7 +1,7 @@
 """Parse the trait."""
 
 from typing import Any
-from pylib.stacked_regex.rule import producer, keyword
+from pylib.stacked_regex.rule import producer, vocab
 from pylib.stacked_regex.token import Token
 from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
@@ -34,7 +34,7 @@ def parser(plant_part):
             RULE['plant_part'],
             RULE['count_upper_set'],
             RULE['range_set'],
-            keyword('skip', r""" locular [/] """.split()),
+            vocab('skip', r""" locular [/] """.split()),
             RULE['word'],
 
             producer(convert, f"""

@@ -1,6 +1,6 @@
 """Parse testes size notations."""
 
-from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
+from pylib.stacked_regex.rule import frag, vocab, producer, grouper
 from pylib.vertnet.shared_reproductive_patterns import RULE
 from pylib.vertnet.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
@@ -12,13 +12,13 @@ TESTES_SIZE = Base(
         RULE['testes'],
 
         # Note: abbrev differs from the one in the testes_state_trait
-        keyword('abbrev', 'tes ts tnd td tns ta'.split()),
+        vocab('abbrev', 'tes ts tnd td tns ta'.split()),
 
         # The abbreviation key, just: t. This can be a problem.
-        fragment('char_key', r' \b t (?! [a-z] )'),
+        frag('char_key', r' \b t (?! [a-z] )'),
 
         # A key with units, like: gonadLengthInMM
-        keyword('key_with_units', r"""
+        vocab('key_with_units', r"""
             (?P<ambiguous_key> gonad ) \s*
                 (?P<dim> length | len | width ) \s* in \s*
                 (?P<len_units> millimeters | mm )

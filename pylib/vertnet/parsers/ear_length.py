@@ -3,7 +3,7 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
+from pylib.stacked_regex.rule import frag, vocab, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import simple, fraction, shorthand_length
 from pylib.vertnet.numeric import numeric_fix_ups
@@ -62,7 +62,7 @@ EAR_LENGTH = Base(
         RULE['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
-        keyword('key_with_units', r"""
+        vocab('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s* (?P<units> millimeters | mm )
             """),
 
@@ -81,7 +81,7 @@ EAR_LENGTH = Base(
             """),
 
         # Standard keywords that indicate an ear length follows
-        keyword('keyword', [
+        vocab('keyword', [
             r' ear \s* from \s* (?P<measured_from1> notch | crown )',
             r' ear \s* ( length | len )',
             r' ear (?! \s* tag )',
@@ -99,7 +99,7 @@ EAR_LENGTH = Base(
         RULE['range_set'],
 
         # We allow random words in some situations
-        keyword('word', r' ( [a-z] \w* ) '),
+        vocab('word', r' ( [a-z] \w* ) '),
 
         # Some patterns require a separator
         fragment('sep', r' [;,] '),

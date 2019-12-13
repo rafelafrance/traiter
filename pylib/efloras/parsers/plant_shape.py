@@ -3,14 +3,14 @@
 import string
 from typing import Any
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import fragment, keyword, grouper, producer
+from pylib.stacked_regex.rule import frag, vocab, grouper, producer
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
 from pylib.efloras.shared_patterns import RULE
 
 
-SHAPE = keyword('plant_shape', r"""
+SHAPE = vocab('plant_shape', r"""
     (\d-)?angular (\d-)?angulate acicular actinomorphic acuminate acute
     apiculate aristate attenuate auriculate
     bilabiate bilateral bilaterally bowl-?shaped
@@ -81,19 +81,19 @@ RENAME = {
     'zygomorphous': 'bilaterally symmetric',
     }
 
-ORBICULAR = keyword('leaf_orbicular', r"""
+ORBICULAR = vocab('leaf_orbicular', r"""
     circular | orbic-?ulate | rotund | round(ed|ish)? | suborbicular
     | suborbiculate
     """)
 
-POLYGONAL = fragment('leaf_polygonal', fr"""
+POLYGONAL = frag('leaf_polygonal', fr"""
     ( ( orbicular | angulate ) -? )?
     ( \b (\d-)? angular | \b (\d-)? angulate
         | pen-?tagonal | pentangular | septagonal )
     ( -? ( orbicular | (\d-)? angulate ) )?
     """)
 
-SHAPE_PREFIX = fragment('shape_prefix', ' semi | sub | elongate ')
+SHAPE_PREFIX = frag('shape_prefix', ' semi | sub | elongate ')
 
 
 def convert(token: Token) -> Any:

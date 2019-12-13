@@ -70,12 +70,12 @@ class Rule:
 
 def join(regexp: InRegexp) -> str:
     """Build a single regexp from multiple strings."""
-    if isinstance(regexp, list):
+    if isinstance(regexp, (list, tuple, set)):
         regexp = ' | '.join(regexp)
     return ' '.join(regexp.split())
 
 
-def fragment(
+def frag(
         name: str,
         regexp: InRegexp,
         action: Action = None,
@@ -92,7 +92,7 @@ def fragment(
         regexp=regexp)
 
 
-def keyword(
+def vocab(
         name: str,
         regexp: InRegexp,
         action: Action = None,
