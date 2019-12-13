@@ -2,10 +2,12 @@
 
 import copy
 from typing import Any
+from pylib.shared.util import to_float
+from pylib.shared.trait import Trait
+from pylib.shared.convert_units import convert as convert_units
 from pylib.stacked_regex.token import Token
 from pylib.stacked_regex.rule import producer, grouper
 import pylib.efloras.util as util
-from pylib.shared.trait import Trait
 from pylib.efloras.parsers.base import Base
 from pylib.efloras.shared_patterns import RULE
 
@@ -14,17 +16,7 @@ def convert(token: Token) -> Any:
     """Convert parsed token into a trait."""
     trait = Trait(start=token.start, end=token.end)
 
-    if 'location' in token.groups:
-        trait.location = token.groups['location'].lower()
-
-    if 'part' in token.groups:
-        trait.part = token.groups['part'].lower()
-
-    if 'sex' in token.groups:
-        trait.sex = token.groups['sex'].lower()
-
-    if 'dimension' in token.groups:
-        trait.dimension = token.groups['dimension']
+    trait.transfer(token, ['location', 'part', 'sex', 'dimension'])
 
     valid = set_size_values(trait, token)
     return trait if valid else None
@@ -32,53 +24,58 @@ def convert(token: Token) -> Any:
 
 def sex_convert(token: Token) -> Any:
     """Convert two crosses assigned to the sexes."""
-    token1 = Token(
-        rule=token.rule,
-        groups=copy.copy(token.groups),
-        span=(token.start, token.end))
-    new = {k[:-2]: v for k, v in token.groups.items() if k.endswith('_1')}
-    token1.groups.update(new)
-
+    token1 = remove_suffix(token, '_1')
     trait1 = convert(token1)
 
-    token2 = Token(
-        rule=token.rule,
-        groups=copy.copy(token.groups),
-        span=(token.start, token.end))
-    new = {k[:-2]: v for k, v in token.groups.items() if k.endswith('_2')}
-    token2.groups.update(new)
+    token2 = remove_suffix(token, '_2')
     trait2 = convert(token2)
 
     return [trait1, trait2]
 
 
-def set_size_values(trait, token):
-    """Update the size measurements with normalized values."""
-    units, multiplier = {}, {}
+def remove_suffix(token, suffix):
+    """
+    Convert multi-part token to single-part token by stripping group suffixes.
 
-    units['length'] = token.groups.get('units_length', '').lower()
-    units['width'] = token.groups.get('units_width', '').lower()
+    Some forms capture multiple values at the same time differentiated by
+    suffixes like: length_1, units_1, length_2. This "lowers" one of the parts
+    by copying the values from length_1 and units_1 to length and units. This
+    allows us to reuse conversion code designed for group names w/o suffixes.
+    """
+    new_token = Token(
+        rule=token.rule,
+        groups=copy.copy(token.groups),
+        span=(token.start, token.end))
+    new = {k[:-2]: v for k, v in token.groups.items() if k.endswith(suffix)}
+    new_token.groups.update(new)
+    return new_token
+
+
+def set_size_values(trait, token):
+    """
+    Update the size measurements with normalized values.
+
+    There are typically several measurements (minimum, low, high, & maximum)
+    for each dimension (length & width). We normalize to millimeters.
+    """
+    length = token.groups.get('units_length', '')
+    width = token.groups.get('units_width', '')
 
     # No units means it's not a measurement
-    if not (units['length'] or units['width']):
+    if not (length or width):
         return False
 
-    if not units['length']:
-        multiplier['width'] = 10.0 if units['width'] == 'cm' else 1.0
-        multiplier['length'] = multiplier['width']
-    elif not units['width']:
-        multiplier['length'] = 10.0 if units['length'] == 'cm' else 1.0
-        multiplier['width'] = multiplier['length']
-    else:
-        multiplier['length'] = 10.0 if units['length'] == 'cm' else 1.0
-        multiplier['width'] = 10.0 if units['width'] == 'cm' else 1.0
+    units = {
+        'length': length if length else width,
+        'width': width if width else length}
 
-    for dimension in ['length', 'width']:
-        for value in ['min', 'low', 'high', 'max']:
-            key = f'{value}_{dimension}'
+    for dim in ('length', 'width'):
+        for value in ('min', 'low', 'high', 'max'):
+            key = f'{value}_{dim}'
             if key in token.groups:
-                setattr(trait, key,
-                        float(token.groups[key]) * multiplier[dimension])
+                norm = convert_units(to_float(token.groups[key]), units[dim])
+                setattr(trait, key, norm)
+
     return True
 
 

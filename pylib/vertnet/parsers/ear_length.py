@@ -33,21 +33,21 @@ def fix_up(trait, text):
 
         # "E.T." is not an ear length measurement
         start = max(0, trait.start - LOOK_BACK_NEAR)
-        if IS_ET.search(text, start, trait.start) \
-                or IS_NUMBER.search(text, start, trait.start):
+        if (IS_ET.search(text, start, trait.start)
+                or IS_NUMBER.search(text, start, trait.start)):
             return None
 
         # Magnemite confounds the abbreviation
         start = max(0, trait.start - LOOK_BACK_FAR)
-        if IS_MAG.search(text, start, trait.start) \
-                or IS_ID.search(text, start, trait.start):
+        if (IS_MAG.search(text, start, trait.start)
+                or IS_ID.search(text, start, trait.start)):
             return None
 
         # Make sure it's not actually an abbreviation for "East"
         start = max(0, trait.start - LOOK_AROUND)
         end = min(len(text), trait.end + LOOK_AROUND)
-        if IS_EAST.search(text, start, trait.start) \
-                or IS_EAST.search(text, trait.end, end):
+        if (IS_EAST.search(text, start, trait.start)
+                or IS_EAST.search(text, trait.end, end)):
             return None
 
     # Try to disambiguate doubles quotes from inches

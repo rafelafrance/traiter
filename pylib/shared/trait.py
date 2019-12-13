@@ -1,6 +1,9 @@
 """Build a trait parse result."""
 
 
+from pylib.shared.util import as_list, squash
+
+
 class Trait:
     """Build a parse result."""
 
@@ -24,3 +27,10 @@ class Trait:
     def __getattr__(self, name):
         """Handle uninitialized attributes by returning a falsy value."""
         return ''
+
+    def transfer(self, token, names):
+        """Move fields from a token to the trait if they exist in the token."""
+        for name in names:
+            if name in token.groups:
+                values = [v.lower() for v in as_list(token.groups[name])]
+                setattr(self, name, squash(values))

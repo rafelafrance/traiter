@@ -15,8 +15,8 @@ def convert(token):
     trait = Trait(
         value=value,
         start=token.start, end=token.end)
-    trait.is_flag_in_token('ambiguous_key', token)
-    trait.is_value_in_token('side', token)
+    trait.is_flag_in_token(token, 'ambiguous_key')
+    trait.is_value_in_token(token, 'side')
     return trait
 
 

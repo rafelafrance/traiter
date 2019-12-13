@@ -30,8 +30,8 @@ def merge_records(records):
     for curr in records:
         prev = merged[-1]
         if prev['side'] == curr['side']:
-            if prev['length'] == curr['length'] \
-                    and prev['width'] == curr['width']:
+            if (prev['length'] == curr['length']
+                    and prev['width'] == curr['width']):
                 _merge_flags(prev, curr)
                 continue
             if prev['length'] == -1 and curr['length'] != -1:

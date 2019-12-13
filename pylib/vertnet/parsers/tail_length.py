@@ -36,9 +36,9 @@ def fix_up(trait, text):
 
         # Make sure this isn't a testes measurement
         start = max(0, trait.start - LOOK_BACK_FAR)
-        if IS_TESTES.search(text, start, trait.start) \
-                or IS_ELEVATION.search(text, start, trait.start) \
-                or IS_ID.search(text, start, trait.start):
+        if (IS_TESTES.search(text, start, trait.start)
+                or IS_ELEVATION.search(text, start, trait.start)
+                or IS_ID.search(text, start, trait.start)):
             return None
 
         # Make sure this isn't a tag

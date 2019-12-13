@@ -1,8 +1,7 @@
 """Common logic for parsing trait notations."""
 
-from typing import Callable
+from typing import Callable, List
 from pylib.stacked_regex.parser import Parser
-from pylib.stacked_regex.token import Tokens
 from pylib.stacked_regex.rule import Rules
 from pylib.vertnet.trait import Trait
 
@@ -24,7 +23,7 @@ class Base(Parser):  # pylint: disable=too-few-public-methods
         self.fix_up = fix_up if fix_up else fix_up_nop
 
     # pylint: disable=arguments-differ
-    def parse(self, text: str, field: str = None) -> Tokens:
+    def parse(self, text: str, field: str = None) -> List[Trait]:
         """Find the traits in the text."""
         traits = []
 

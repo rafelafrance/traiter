@@ -1,9 +1,10 @@
 """Utilities for parsing numeric traits."""
 
+from fractions import Fraction
 import regex
-from pylib.shared.util import FLAGS, to_float, squash, as_list
+from pylib.shared.util import FLAGS, to_int, to_float, squash, as_list
 from pylib.vertnet.trait import Trait
-from pylib.vertnet.convert_units import convert
+from pylib.shared.convert_units import convert
 
 
 LOOK_BACK_FAR = 40
@@ -33,12 +34,12 @@ def as_value(token, trait, value_field='number', unit_field='units'):
 
 def add_flags(token, trait):
     """Add common flags to the numeric trait."""
-    trait.is_flag_in_token('ambiguous_key', token)
-    trait.is_flag_in_token('estimated_value', token)
-    trait.is_value_in_token('measured_from1', token, rename='measured_from')
-    trait.is_value_in_token('measured_from2', token, rename='measured_from')
-    trait.is_value_in_token('includes', token)
-    trait.is_flag_in_token('quest', token, rename='uncertain')
+    trait.is_flag_in_token(token, 'ambiguous_key')
+    trait.is_flag_in_token(token, 'estimated_value')
+    trait.is_value_in_token(token, 'measured_from1', rename='measured_from')
+    trait.is_value_in_token(token, 'measured_from2', rename='measured_from')
+    trait.is_value_in_token(token, 'includes')
+    trait.is_flag_in_token(token, 'quest', rename='uncertain')
 
 
 def simple(token, value='number', units='units'):
@@ -54,7 +55,7 @@ def compound(token):
     trait = Trait(start=token.start, end=token.end)
     trait.units = [token.groups['feet'], token.groups['inches']]
     trait.units_inferred = False
-    trait.is_flag_missing('key', token, rename='ambiguous_key')
+    trait.is_flag_missing(token, 'key', rename='ambiguous_key')
     fts = convert(to_float(token.groups['ft']), 'ft')
     ins = [convert(to_float(i), 'in') for i in as_list(token.groups['in'])]
     value = [round(fts + i, 2) for i in ins]
@@ -69,9 +70,9 @@ def fraction(token):
     trait.units = token.groups.get('units')
     trait.units_inferred = not bool(trait.units)
     whole = to_float(token.groups.get('whole', '0'))
-    numerator = to_float(token.groups['numerator'])
-    denominator = to_float(token.groups['denominator'])
-    trait.value = whole + numerator / denominator
+    numerator = to_int(token.groups['numerator'])
+    denominator = to_int(token.groups['denominator'])
+    trait.value = whole + Fraction(numerator, denominator)
     if trait.units:
         trait.value = convert(trait.value, trait.units)
     add_flags(token, trait)
@@ -89,7 +90,7 @@ def shorthand_length(token, measurement=''):
     trait.is_shorthand = True
     flag = measurement.split('_')[1]
     flag = f'estimated_{flag}'
-    trait.is_flag_in_token(flag, token, rename='estimated_value')
+    trait.is_flag_in_token(token, flag, rename='estimated_value')
     return trait
 
 

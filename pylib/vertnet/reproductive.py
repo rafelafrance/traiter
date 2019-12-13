@@ -61,11 +61,11 @@ def convert(token):
     trait = Trait(start=token.start, end=token.end)
     flag = as_value(token, trait, unit_field='len_units')
 
-    trait.is_flag_in_token('ambiguous_char', token, rename='ambiguous_key')
-    trait.is_flag_in_token('ambiguous_key', token)
-    trait.is_value_in_token('dimension', token)
-    trait.is_value_in_token('dim', token, rename='dimension')
-    trait.is_value_in_token('side', token)
+    trait.is_flag_in_token(token, 'ambiguous_char', rename='ambiguous_key')
+    trait.is_flag_in_token(token, 'ambiguous_key')
+    trait.is_value_in_token(token, 'dimension')
+    trait.is_value_in_token(token, 'dim', rename='dimension')
+    trait.is_value_in_token(token, 'side')
     return trait if flag else None
 
 

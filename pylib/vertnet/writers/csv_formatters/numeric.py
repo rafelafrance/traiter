@@ -14,7 +14,7 @@ def csv_formatter(trait_name, row, parses):
         key = parse.as_key()
         has_range |= bool(key.high)
         if key in records:
-            records[key].merge_flags(parse)
+            records[key].merge_ambiguous_key(parse)
         else:
             records[key] = parse
 

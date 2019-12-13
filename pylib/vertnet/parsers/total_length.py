@@ -47,22 +47,30 @@ def fix_up(trait, text):
         return None
 
     # Problem parses often happen with an ambiguous key
-    if trait.ambiguous_key:
-
-        # Testes measurement may involve an "L"
-        start = max(0, trait.start - LOOK_AROUND)
-        end = min(len(text), trait.end + LOOK_AROUND)
-        if IS_TESTES.search(text, start, trait.start):
-            return None
-
-        # Make sure the "L" isn't for "left"
-        if IS_LEFT.search(text, start, trait.start):
-            return None
-        if IS_LEFT.search(text, trait.end, end):
-            return None
+    if ambiguous_key_problem(trait, text):
+        return None
 
     # Try to disambiguate doubles quotes from inches
     return fix_up_inches(trait, text)
+
+
+def ambiguous_key_problem(trait, text):
+    """Fix problems occurring with ambiguous keys."""
+    if trait.ambiguous_key:
+        start = max(0, trait.start - LOOK_AROUND)
+        end = min(len(text), trait.end + LOOK_AROUND)
+
+        # Testes measurement may involve an "L"
+        if IS_TESTES.search(text, start, trait.start):
+            return True
+
+        # Make sure the "L" isn't for "left"
+        if IS_LEFT.search(text, start, trait.start):
+            return True
+        if IS_LEFT.search(text, trait.end, end):
+            return True
+
+    return False
 
 
 TOTAL_LENGTH = Base(
@@ -158,61 +166,8 @@ TOTAL_LENGTH = Base(
             (?P<ambiguous_key> ambiguous) len_fraction
                 (?P<units> len_units )"""),
 
-        # A typical total length notation
-        # E.g.: total length in mm 10 - 13
-        # producer(simple, '( key_with_units | shorthand_key ) range'),
-
-        # E.g.: tag 10-20-39 10 - 13 in
-        # producer(simple, [
-        #     """shorthand_key triple? range
-        #         (?P<units> len_units )"""]),
-
-        # E.g.: tag 10-20-39 cm 10-12
-        # producer(simple, [
-        #     'shorthand_key triple? (?P<units> metric_len ) range']),
-
-        # E.g.: total 10/20/30 10 to 12 cm
-        # producer(simple, [
-        #     """key_units_req triple? range
-        #         (?P<units> len_units )"""]),
-
-        # E.g.: total 10-20-40 10 to 20 inches ToL
-        # producer(simple, [
-        #     """ambiguous triple? range
-        #         (?P<units> len_units ) key"""]),
-
-        # E.g.: total 10-20-40 10 to 20 ToL
-        # producer(simple, 'ambiguous triple? range key'),
-
-        # E.g.: length 10 to 11 inches
-        # producer(simple, [
-        #     """(?P<ambiguous_key> ambiguous) range
-        #         (?P<units> len_units )"""]),
-
-        # E.g.: length feet 10 to 11
-        # producer(simple, [
-        #     """(?P<ambiguous_key> ambiguous)
-        #         (?P<units> len_units ) range"""]),
-
-        # E.g.: length 10 to 11
-        # producer(simple, '(?P<ambiguous_key> ambiguous) range'),
-
-        # E.g.: SVL 10-11 cm
-        # producer(simple, 'key range (?P<units> len_units )'),
-
-        # E.g.: forkLen cm 10-11
-        # producer(simple, 'key (?P<units> len_units ) range'),
-
         # E.g.: total length: 10-29-39 10-11
         producer(simple, '( key | key_units_req ) triple? len_range'),
-
-        # E.g.: head body length is a whopping 12.4 meters
-        # producer(simple, [
-        #     """key ( word | semicolon | comma ){1,3} range
-        #         (?P<units> len_units )"""]),
-
-        # E.g.: SVL is 10-12
-        # producer(simple, 'key ( word | semicolon | comma ){1,3} range'),
 
         # E.g.: L 12.4 cm
         producer(simple, """

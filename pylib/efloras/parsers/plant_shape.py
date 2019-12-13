@@ -102,19 +102,12 @@ def convert(token: Token) -> Any:
         start=token.start, end=token.end,
         raw_value=token.groups['value'])
 
-    if 'location' in token.groups:
-        trait.location = token.groups['location']
-
-    if 'part' in token.groups:
-        trait.part = token.groups['part'].lower()
-
-    if 'sex' in token.groups:
-        trait.sex = token.groups['sex'].lower()
+    trait.transfer(token, ['location', 'part', 'sex'])
 
     values = util.split_keywords(trait.raw_value)
 
     values = [normalize(v) for v in values]
-    values = list(dict.fromkeys(values))
+    values = list(dict.fromkeys(values))  # set() does not preserve order
     trait.value = [v for v in values if v]
 
     return trait if trait.value else None
@@ -165,19 +158,7 @@ def parser(plant_part):
                         shape_phrase
                     )
                     """),
-            # producer(convert, f"""
-            #     {plant_part}_phrase
-            #     ( word | conj | prep | punct | shape_starter )*
-            #     (?P<value>
-            #         ( shape_phrase | shape_starter | shape_prefix
-            #             | conj | prep | word
-            #         )*
-            #         shape_phrase ((shape_starter | conj | prep)* location)?
-            #     )
-            #     """),
-
-        ],
-        )
+            ])
 
 
 LEAF_SHAPE = parser('leaf')

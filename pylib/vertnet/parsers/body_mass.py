@@ -2,7 +2,7 @@
 
 from pylib.shared.util import as_list, squash, to_float
 from pylib.stacked_regex.rule import fragment, keyword, producer, grouper
-from pylib.vertnet.convert_units import convert
+from pylib.shared.convert_units import convert
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import as_value, add_flags, simple
@@ -13,7 +13,7 @@ def shorthand(token):
     """Convert a shorthand value like 11-22-33-44:55g."""
     trait = Trait(start=token.start, end=token.end)
     flag = as_value(token, trait, 'shorthand_wt', 'shorthand_wt_units')
-    trait.is_flag_in_token('estimated_wt', token, rename='estimated_value')
+    trait.is_flag_in_token(token, 'estimated_wt', rename='estimated_value')
     trait.is_shorthand = True
     return trait if flag else None
 
@@ -23,7 +23,7 @@ def compound(token):
     trait = Trait(start=token.start, end=token.end)
     setattr(trait, 'units', [token.groups['pounds'], token.groups['ounces']])
     setattr(trait, 'units_inferred', False)
-    trait.is_flag_missing('key', token, rename='ambiguous_key')
+    trait.is_flag_missing(token, 'key', rename='ambiguous_key')
     lbs = convert(to_float(token.groups['lbs']), 'lbs')
     ozs = [convert(to_float(oz), 'ozs') for oz in as_list(token.groups['ozs'])]
     value = [round(lbs + oz, 2) for oz in ozs]
