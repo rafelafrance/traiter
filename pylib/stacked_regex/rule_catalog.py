@@ -35,11 +35,7 @@ class RuleCatalog:
 
     def __init__(self, other: 'RuleCatalog' = None) -> None:
         """Create the rule set."""
-        self.when = 0
-        self.rules = {}
-        if other:
-            self.rules = dict(other.rules)
-            self.sort = other.when - 1
+        self.rules = dict(other.rules) if other else {}
 
     def __getitem__(self, name) -> Rule:
         """Emulate dict access of the rules."""

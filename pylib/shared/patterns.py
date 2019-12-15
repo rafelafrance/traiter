@@ -1,6 +1,6 @@
 """Shared token patterns."""
 
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.rule_catalog import RuleCatalog, FIRST, LAST
 from pylib.vertnet.util import ordinal, number_to_words
 
 CATALOG = RuleCatalog()
@@ -13,8 +13,8 @@ CATALOG.part('open', r' [(\[] ', capture=False)
 CATALOG.part('close', r' [)\]] ', capture=False)
 CATALOG.part('x', r' [x×] ', capture=False)
 CATALOG.part('quest', r' [?] ')
-CATALOG.part('comma', r' [,] ', capture=False)
-CATALOG.part('semicolon', r' [;] ', capture=False)
+CATALOG.part('comma', r' [,] ', capture=False, when=LAST)
+CATALOG.part('semicolon', r' [;] ', capture=False, when=LAST)
 CATALOG.part('ampersand', r' [&] ', capture=False)
 CATALOG.part('eq', r' [=] ', capture=False)
 
@@ -38,8 +38,8 @@ CATALOG.grouper('len_units', ' metric_len feet inches'.split())
 CATALOG.part('pounds', r' pounds? | lbs? ')
 CATALOG.part('ounces', r' ounces? | ozs? ')
 METRIC_MASS = r"""
-    ( milligram | kilogram | gram ) ( s (?! [a-z]) )?
-    | ( m \.? g | k \.? \s? g | g[mr]? ) ( s (?! [a-z]) )?
+    milligrams? | kilograms? | grams?
+    | (?<! [a-z] )( m \.? g s? | k \.? \s? g a? | g[mr]? s? )(?! [a-z] )
     """
 CATALOG.part('metric_mass', METRIC_MASS)
 CATALOG.grouper('mass_units', 'metric_mass pounds ounces'.split())
@@ -50,7 +50,7 @@ CATALOG.grouper('units', 'len_units mass_units'.split())
 # # UUIDs cause problems when extracting certain shorthand notations.
 CATALOG.part('uuid', r"""
     \b [0-9a-f]{8} - [0-9a-f]{4} - [1-5][0-9a-f]{3}
-        - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """, capture=False)
+        - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """, capture=False, when=FIRST)
 
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 6)]

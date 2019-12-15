@@ -1,12 +1,15 @@
 """Parse body mass notations."""
 
 from pylib.shared.util import as_list, squash, to_float
-from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.shared.convert_units import convert
+from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.numeric import as_value, add_flags, simple
-from pylib.vertnet.shared_patterns import CATALOG
+from pylib.vertnet.numeric import as_value, add_flags, simple_mass
+import pylib.vertnet.shared_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 def shorthand(token):
@@ -38,65 +41,57 @@ BODY_MASS = Base(
         CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
-        term('key_with_units', r"""
-        ( weight | mass) [\s-]* in [\s-]* (?P<units> grams | g | lbs ) """),
+        CATALOG.term('key_with_units', r"""
+            ( weight | mass) [\s-]* in [\s-]*
+            (?P<mass_units> grams | g | lbs )"""),
 
         # These words indicate a body mass follows
-        part('key_leader', 'full observed total'.split()),
+        CATALOG.part('key_leader', 'full observed total'.split()),
 
         # Words for weight
-        part('weight', 'weights? weigh(ed|ing|s)?'.split()),
+        CATALOG.part('weight', 'weights? weigh(ed|ing|s)?'.split()),
 
         # Keys like: w.t.
-        part('key_with_dots', r' \b w \.? \s? t s? \.? '),
+        CATALOG.part('key_with_dots', r' \b w \.? \s? t s? \.? '),
 
         # Common prefixes that indicate a body mass
-        part('mass', 'mass'),
-        part('body', 'body'),
+        CATALOG.part('mass', 'mass'),
+        CATALOG.part('body', 'body'),
 
-        # Shorthand notation
-        CATALOG['shorthand_key'],
-        CATALOG['shorthand'],
-
-        # Possible range of numbers like: 10 - 20
-        # Or just: 10
-        CATALOG['range'],
-
-        # compound weight like 2 lbs. 3.1 - 4.5 oz
-        CATALOG['compound_wt'],
 
         # These indicate that the mass is NOT a body mass
-        term('other_wt', r"""
+        CATALOG.term('other_wt', r"""
             femur baculum bacu bac spleen thymus kidney
             testes testis ovaries epididymis epid """.split()),
 
-        # We allow random words in some situations
-        term('word', r' ( [a-z] \w* ) '),
-
         # Separators
+        CATALOG['word'],
         CATALOG['semicolon'],
         CATALOG['comma'],
 
         # Any key not preceding by "other_wt" is considered a weight key
-        grouper('wt_key', r"""
+        CATALOG.grouper('wt_key', r"""
             (?<! other_wt )
             ( key_leader weight | key_leader mass
                 | body weight | body mass | body
                 | weight | mass | key_with_dots )
             """),
 
-        grouper('key', ' shorthand_key wt_key '.split()),
+        CATALOG.grouper('key', ' shorthand_key wt_key '.split()),
 
-        producer(compound, ' key? compound_wt '),
+        CATALOG.producer(compound, ' key? compound_wt '),
 
         # Shorthand notation like: on tag: 11-22-33-44=99g
-        producer(shorthand, [
+        CATALOG.producer(shorthand, [
             'key shorthand',  # With a key
             'shorthand',     # Without a key
         ]),
 
-        producer(simple, ' key units number (?! units ) '),
-        producer(simple, ' key range '),
-        producer(simple, ' (?P<key> key_with_units ) range '),
+        CATALOG.producer(
+            simple_mass, ' key mass_units number (?! len_units ) '),
+        CATALOG.producer(
+            simple_mass, ' key mass_range '),
+        CATALOG.producer(
+            simple_mass, ' (?P<key> key_with_units ) mass_range '),
         ],
     )

@@ -25,7 +25,8 @@ class Parser:
         """Add rules to the parser."""
         self._built = False
         for rule in sorted(flatten(rule_list)):
-            self.rules[rule.name] = rule
+            if rule.name not in self.rules:
+                self.rules[rule.name] = rule
 
     def parse(self, text: str) -> Tokens:
         """Extract information from the text."""
@@ -50,10 +51,11 @@ class Parser:
     def build(self) -> None:
         """Build the regular expressions."""
         self._built = True
-        self.scanners = [r for r in self.rules.values()
+        self.scanners = [r for r in sorted(self.rules.values())
                          if r.type == RuleType.SCANNER]
 
-        rules = [r for r in self.rules.values() if r.type != RuleType.SCANNER]
+        rules = [r for r in sorted(self.rules.values())
+                 if r.type != RuleType.SCANNER]
         for rule in rules:
             rule.compile(self.rules)
             if rule.type == RuleType.PRODUCER:

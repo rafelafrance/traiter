@@ -43,11 +43,21 @@ def add_flags(token, trait):
 
 
 def simple(token, value='number', units='units'):
-    """Handle a normal length notation."""
+    """Handle a normal measurement notation."""
     trait = Trait(start=token.start, end=token.end)
     flag = as_value(token, trait, value, units)
     add_flags(token, trait)
     return trait if flag else None
+
+
+def simple_len(token, value='number', units='len_units'):
+    """Handle a normal mass notation."""
+    return simple(token, value, units)
+
+
+def simple_mass(token, value='number', units='mass_units'):
+    """Handle a normal mass notation."""
+    return simple(token, value, units)
 
 
 def compound(token):

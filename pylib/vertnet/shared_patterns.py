@@ -1,11 +1,14 @@
 """Shared token patterns."""
 
 import pylib.shared.patterns as patterns
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
 from pylib.vertnet.util import ordinal, number_to_words
+
 
 CATALOG = RuleCatalog(patterns.CATALOG)
 
+
+CATALOG.term('word', r' ( [a-z] \w* ) ', when=LAST),
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.
@@ -114,6 +117,14 @@ CATALOG.part('number', r"""
 CATALOG.grouper('range', """
     (?<! dash )
     ( number units? (( dash | to ) number units?)? )
+    (?! dash ) """, capture=False)
+
+# A number or a range of numbers like "12 to 34" or "12.3-45.6"
+# Note we want to exclude dates and to not pick up partial dates
+# So: no part of "2014-12-11" would be in a range
+CATALOG.grouper('mass_range', """
+    (?<! dash )
+    ( number mass_units? (( dash | to ) number mass_units?)? )
     (?! dash ) """, capture=False)
 
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
