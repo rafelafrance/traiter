@@ -1,44 +1,44 @@
 """Parse sex notations."""
 
-from pylib.stacked_regex.rule import part, term, producer
-from pylib.vertnet.shared_patterns import CATALOG
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base, convert
+import pylib.vertnet.shared_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 SEX = Base(
     name=__name__.split('.')[-1],
     rules=[
         # JSON keys for sex
-        term('json_key', 'sex'),
+        CATALOG.term('json_key', 'sex'),
 
         # The sexes
-        term('intrinsic', 'females? males?'.split()),
-
-        # To handle a guessed sex
-        CATALOG['quest'],
+        CATALOG.term('intrinsic', 'females? males?'.split()),
 
         # These are words that indicate that "sex" is not a key
-        term('skip', 'and is was'.split()),
+        CATALOG.term('skip', 'and is was'.split()),
 
         # Allow arbitrary words in some cases
-        part('word', r' \b [a-z] [^;,"=:\s]* '),
+        CATALOG.part('word', r' \b [a-z] [^;,"=:\s]* '),
 
         # Some patterns need a terminator
-        part('separator', ' [;,"] | $ '),
+        CATALOG.part('separator', ' [;,"] | $ '),
 
         # E.g.: sex might be female;
-        producer(convert, [
+        CATALOG.producer(convert, [
             """json_key
                 (?P<value> ( intrinsic | word ){1,2} quest? )
                 separator"""]),
 
         # E.g.: sex=female?
         # Or:   sex=unknown
-        producer(convert, [
+        CATALOG.producer(convert, [
             'json_key (?P<value> ( intrinsic | word ) quest? )']),
 
         # E.g.: male
         # Or:   male?
-        producer(convert, '(?P<value> intrinsic quest? )'),
+        CATALOG.producer(convert, '(?P<value> intrinsic quest? )'),
     ],
 )

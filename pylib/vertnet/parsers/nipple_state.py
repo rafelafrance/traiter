@@ -1,62 +1,51 @@
 """Parse nipple state notations."""
 
-from pylib.stacked_regex.rule import part, term, producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_reproductive_patterns import RULE
+import pylib.vertnet.shared_reproductive_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 NIPPLE_STATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        RULE['size'],
-        RULE['fully'],
-        RULE['partially'],
-        RULE['non'],
-        RULE['color'],
-        RULE['visible'],
-        RULE['and'],
-        RULE['uterus'],
-        RULE['tissue'],
-        RULE['present'],
-        RULE['active'],
-        RULE['developed'],
-        RULE['nipple'],
+        CATALOG.term('false', """ false """),
+        CATALOG.term('much', """ much """),
 
-        term('false', """ false """),
-        term('much', """ much """),
-
-        term('lactation', r"""
+        CATALOG.term('lactation', r"""
             (indicate \s+)?
             (( previous | post | prior ) [\s-] )
             (lactation | lactating | lac )"""),
 
-        term('other', """
+        CATALOG.term('other', """
             protuberant prominent showing worn distended
             """.split()),
 
         # Separates measurements
-        part('separator', r' [;"?/,] '),
+        CATALOG.part('separator', r' [;"?/,] '),
 
         # Skip arbitrary words
-        part('word', r' \w+ '),
+        CATALOG['word'],
 
-        grouper('state_end', """
+        CATALOG.grouper('state_end', """
             ( size | fully | partially | other | lactation | color | false
                 | visible | tissue | present | active | developed ) """),
 
-        grouper('state_mid', """ ( uterus | and ) """),
+        CATALOG.grouper('state_mid', """ ( uterus | and ) """),
 
-        producer(
+        CATALOG.producer(
             convert,
             """(?P<value> non?
                 (state_end | much) (state_mid | state_end){0,2} nipple)"""),
 
-        producer(
+        CATALOG.producer(
             convert,
             """(?P<value> non? nipple
                 (state_end | much) (state_mid | state_end){0,2} )"""),
 
-        producer(
+        CATALOG.producer(
             convert,
             """(?P<value> nipple non?
                 (state_end | much) (state_mid | state_end){0,2} )"""),

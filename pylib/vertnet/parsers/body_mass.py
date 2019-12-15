@@ -2,7 +2,7 @@
 
 from pylib.shared.util import as_list, squash, to_float
 from pylib.shared.convert_units import convert
-from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import as_value, add_flags, simple_mass

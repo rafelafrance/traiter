@@ -3,11 +3,14 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import part, term, grouper, producer
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 import pylib.vertnet.numeric as numeric
-from pylib.vertnet.shared_patterns import CATALOG
+import pylib.vertnet.shared_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -80,13 +83,13 @@ TOTAL_LENGTH = Base(
         CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: TotalLengthInMillimeters
-        term('key_with_units', r"""
+        CATALOG.term('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
             ( length | len )? \s* in \s* (?P<units> millimeters | mm )
             """),
 
         # Various total length keys
-        part('len_key', r"""
+        CATALOG.part('len_key', r"""
             t \s* [o.]? \s* l [._]? (?! [a-z] )
             | total  [\s-]* length [\s-]* in
             | ( total | max | standard ) [\s-]* lengths? \b
@@ -100,85 +103,69 @@ TOTAL_LENGTH = Base(
             """),
 
         # Words that indicate we don't have a total length
-        term('skip', ' horns? tag '.split()),
+        CATALOG.term('skip', ' horns? tag '.split()),
 
         # The word length on its own. Make sure it isn't proceeded by a letter
-        part('ambiguous', r"""
+        CATALOG.part('ambiguous', r"""
             (?<! [a-z] \s* ) (?P<ambiguous_key> lengths? ) """),
 
         # # We don't know if this is a length until we see the units
-        part('key_units_req', 'measurements? body total'.split()),
-
-        # # Shorthand notation
-        CATALOG['shorthand_key'],
-        CATALOG['shorthand'],
-        CATALOG['triple'],  # Truncated shorthand
-
-        # Fractional numbers, like: 9/16
-        CATALOG['len_fraction'],
-
-        # Possible range of numbers like: "10 - 20" or just "10"
-        CATALOG['len_range'],
-
-        # compound length like 2 ft 3.1 - 4.5 in
-        CATALOG['compound_len'],
+        CATALOG.part('key_units_req', 'measurements? body total'.split()),
 
         # The abbreviation key, just: t. This can be a problem.
-        part('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
+        CATALOG.part('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
 
-        # We allow random words in some situations
-        CATALOG['eq'],
+        # Some patterns require a separator
+        CATALOG['semicolon'],
+        CATALOG['comma'],
 
-        # # Some patterns require a separator
-        part('semicolon', r' [;] | $ '),
-        part('comma', r' [,] | $ '),
-
-        grouper('key', """
+        CATALOG.grouper('key', """
             ( key_with_units | len_key | shorthand_key | ambiguous
                 | char_key )
             ( eq | dash )? """),
 
-        grouper('value', """ len_range | number (?P<units> len_units )? """),
-        grouper('value_units', """\
+        CATALOG.grouper('value', """
+            len_range | number (?P<units> len_units )? """),
+        CATALOG.grouper('value_units', """
             len_range | number (?P<units> len_units ) """),
 
         # E.g.: 10 to 11 inches TL
-        producer(simple, 'value (?P<units> len_units ) key'),
-        producer(simple, """ key value key? """),
-        producer(simple, """ key (?P<units> len_units ) value """),
-        producer(simple, """ key_units_req value_units """),
+        CATALOG.producer(simple, 'value (?P<units> len_units ) key'),
+        CATALOG.producer(simple, """ key value key? """),
+        CATALOG.producer(simple, """ key (?P<units> len_units ) value """),
+        CATALOG.producer(simple, """ key_units_req value_units """),
 
         # E.g.: total length 4 feet 7 inches
-        producer(compound, ' key? compound_len '),
+        CATALOG.producer(compound, ' key? compound_len '),
 
         # Handle fractional values like: total length 9/16"
         # E.g.: total = 9/16 inches
-        producer(fraction, [
+        CATALOG.producer(fraction, [
             'key_units_req len_fraction (?P<units> len_units )']),
 
         # E.g.: svl 9/16 inches
-        producer(fraction, [
+        CATALOG.producer(fraction, [
             'key len_fraction (?P<units> len_units )']),
 
         # E.g.: len 9/16 in
-        producer(fraction, """
+        CATALOG.producer(fraction, """
             (?P<ambiguous_key> ambiguous) len_fraction
                 (?P<units> len_units )"""),
 
         # E.g.: total length: 10-29-39 10-11
-        producer(simple, '( key | key_units_req ) triple? len_range'),
+        CATALOG.producer(simple, '( key | key_units_req ) triple? len_range'),
 
         # E.g.: L 12.4 cm
-        producer(simple, """
+        CATALOG.producer(simple, """
             char_key value (?P<units> len_units )? """),
 
-        producer(
+        CATALOG.producer(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 '( key | key_units_req ) shorthand',  # With a key
                 'shorthand']),                        # Without a key
 
         # Handle a truncated shorthand notation
-        producer(
+        CATALOG.producer(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 'key shorthand',  # With a key
                 'shorthand',      # Without a key

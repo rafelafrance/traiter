@@ -1,10 +1,13 @@
 """Parse lactation state notations."""
 
-from pylib.stacked_regex.rule import part, term, producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.shared.util import to_int
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
-from pylib.vertnet.shared_reproductive_patterns import RULE
+import pylib.vertnet.shared_reproductive_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 def convert(token):
@@ -38,34 +41,33 @@ def typed(token):
 NIPPLE_COUNT = Base(
     name=__name__.split('.')[-1],
     rules=[
-        RULE['uuid'],  # UUIDs cause problems with numbers
+        # CATALOG['uuid'],  # UUIDs cause problems with numbers
 
-        term('id', r' \d+-\d+ '),
+        CATALOG.term('id', r' \d+-\d+ '),
 
-        RULE['nipple'],
-        RULE['integer'],
-        RULE['visible'],
-        RULE['none'],
-        RULE['op'],
-        RULE['eq'],
+        # CATALOG['nipple'],
+        # CATALOG['integer'],
+        # CATALOG['visible'],
+        # CATALOG['none'],
+        # CATALOG['op'],
+        # CATALOG['eq'],
 
-        term('adj', r""" inguinal ing pectoral pec pr """.split()),
+        CATALOG.term('adj', r""" inguinal ing pectoral pec pr """.split()),
 
-        part('number', r' number | no | [#] '),
-        part('eq', r' is | eq | equals? | [=] '),
+        CATALOG.part('number', r' number | no | [#] '),
+        CATALOG.part('eq', r' is | eq | equals? | [=] '),
 
         # Skip arbitrary words
-        part('word', r' \w+ '),
+        CATALOG['word'],
+        CATALOG['sep'],
 
-        RULE['sep'],
+        CATALOG.grouper('count', ' integer | none '),
 
-        grouper('count', ' integer | none '),
+        CATALOG.grouper('modifier', 'adj visible'.split()),
 
-        grouper('modifier', 'adj visible'.split()),
+        CATALOG.grouper('skip', ' number eq? integer '),
 
-        grouper('skip', ' number eq? integer '),
-
-        producer(
+        CATALOG.producer(
             typed,
             """ (?P<notation>
                     (?P<value1> count) modifier
@@ -73,7 +75,7 @@ NIPPLE_COUNT = Base(
                 ) nipple """),
 
         # Eg: 1:2 = 6 mammae
-        producer(
+        CATALOG.producer(
             convert,
             """ nipple op?
                 (?P<notation> count modifier?
@@ -81,15 +83,15 @@ NIPPLE_COUNT = Base(
                     (eq (?P<value> count))? ) """),
 
         # Eg: 1:2 = 6 mammae
-        producer(
+        CATALOG.producer(
             convert,
             """ (?P<notation> count modifier? op? count modifier?
                 (eq (?P<value> count))? ) nipple """),
 
         # Eg: 6 mammae
-        producer(convert, """ (?P<value> count ) modifier? nipple """),
+        CATALOG.producer(convert, """ (?P<value> count ) modifier? nipple """),
 
         # Eg: nipples 5
-        producer(convert, """ nipple (?P<value> count ) """),
+        CATALOG.producer(convert, """ nipple (?P<value> count ) """),
     ],
 )

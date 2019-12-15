@@ -15,7 +15,7 @@ class Base(Parser):  # pylint: disable=too-few-public-methods
     """Shared lexer logic."""
 
     def __init__(
-            self, rules: Rules,
+            self, rules: List[Rules],
             name: str = 'parser',
             fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""

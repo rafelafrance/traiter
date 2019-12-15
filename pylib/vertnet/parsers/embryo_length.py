@@ -1,12 +1,15 @@
 """Parse embryo lengths."""
 
 from pylib.shared.util import as_list, to_float
-from pylib.stacked_regex.rule import part, producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.trait import Trait
 import pylib.shared.convert_units as convert_units
 from pylib.vertnet.numeric import simple, add_flags, fix_up_inches
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_reproductive_patterns import RULE
+import pylib.vertnet.shared_reproductive_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 def convert(token):
@@ -51,38 +54,30 @@ EMBRYO_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     rules=[
-        RULE['uuid'],  # UUIDs cause problems with numbers
-
-        RULE['embryo'],
-
-        part('key', r"""
+        CATALOG.part('key', r"""
             (?<! collector [\s=:.] ) (?<! reg [\s=:.] ) (
                 ( crown | cr ) ( [_\s\-] | \s+ to \s+ )? rump
                 | (?<! [a-z] ) crl (?! [a-z] )
                 | (?<! [a-z] ) cr  (?! [a-z] )
             )"""),
 
-        part('other', r' \( \s* \d+ \s* \w+ \s* \) '),
+        CATALOG.part('other', r' \( \s* \d+ \s* \w+ \s* \) '),
 
-        RULE['cross'],
-        RULE['side'],
-        RULE['prep'],
-        RULE['word'],
-        RULE['quest'],
-        part('separator', r' [;"/.] '),
+        CATALOG.part('separator', r' [;"/.] '),
 
-        grouper('noise', ' word x '.split()),
-        grouper('value', ' cross | number len_units? '),
+        CATALOG.grouper('noise', ' word x '.split()),
+        CATALOG.grouper('value', ' cross | number len_units? '),
 
-        grouper('count', """number side number side """),
-        grouper('skip', ' prep word cross | other | side '),
+        CATALOG.grouper('count', """number side number side """),
+        CATALOG.grouper('skip', ' prep word cross | other | side '),
 
-        producer(convert_many, """
+        CATALOG.producer(convert_many, """
             embryo count? value{2,} (?! skip ) quest? """),
-        producer(convert, """ embryo? key noise? value quest? """),
-        producer(convert, """ embryo? noise? value key quest? """),
-        producer(convert, """ embryo noise? value (?! skip ) quest? """),
-        producer(isolate, """
+        CATALOG.producer(convert, """ embryo? key noise? value quest? """),
+        CATALOG.producer(convert, """ embryo? noise? value key quest? """),
+        CATALOG.producer(
+            convert, """ embryo noise? value (?! skip ) quest? """),
+        CATALOG.producer(isolate, """
             embryo count? (?P<real> value) len_units quest? """),
     ],
 )

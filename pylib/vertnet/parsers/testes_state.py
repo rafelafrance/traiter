@@ -1,9 +1,12 @@
 """Parse testes state notations."""
 
-from pylib.stacked_regex.rule import term, producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
-from pylib.vertnet.shared_reproductive_patterns import RULE
+import pylib.vertnet.shared_reproductive_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 def convert(token):
@@ -18,54 +21,15 @@ def convert(token):
 TESTES_STATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        # A label, like: "reproductive data"
-        RULE['label'],
-
-        # Spellings of "testes"
-        RULE['testes'],
-
-        # "Fully" or "incompletely"
-        RULE['fully'],
-
-        # Negation: "non", "not", etc.
-        RULE['non'],
-
-        # "Descended"
-        RULE['descended'],
-
         # Abbreviations for "testes"
-        term('abbrev', 'tes ts tnd td tns ta t'.split()),
-
-        # Spellings of "scrotum"
-        RULE['scrotal'],
-
-        # Spellings of "partially"
-        RULE['partially'],
+        CATALOG.term('abbrev', 'tes ts tnd td tns ta t'.split()),
 
         # Abbreviations for "testes state"
-        term('state_abbrev', 'ns sc'.split()),
+        CATALOG.term('state_abbrev', 'ns sc'.split()),
 
-        # Spellings of "abdominal"
-        RULE['abdominal'],
+        CATALOG['word'],
 
-        # Various size words
-        RULE['size'],
-
-        # Spellings of "gonads"
-        RULE['gonads'],
-
-        # Other state words
-        RULE['other'],
-
-        # We will skip over testes size measurements
-        RULE['cross'],
-
-        RULE['and'],
-
-        # We allow random words in some situations
-        RULE['word'],
-
-        grouper('state', [
+        CATALOG.grouper('state', [
             'non fully descended',
             'abdominal non descended',
             'abdominal descended',
@@ -78,28 +42,28 @@ TESTES_STATE = Base(
             'size']),
 
         # Simplify the testes length so it can be skipped easily
-        grouper('length', 'cross len_units?'),
+        CATALOG.grouper('length', 'cross len_units?'),
 
         # A typical testes state notation
         # E.g.: reproductiveData: ts 5x3 fully descended
-        producer(convert, [
+        CATALOG.producer(convert, [
             """label ( testes | abbrev )? length?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )"""]),
 
         # E.g.: reproductive data = nonScrotal
-        producer(convert, [
+        CATALOG.producer(convert, [
             """label length?
                 (?P<value> non testes | non scrotal | scrotal )"""]),
 
         # E.g.: ts inguinal
-        producer(convert, [
+        CATALOG.producer(convert, [
             """abbrev length?
                 (?P<value> state | abdominal | non scrotal
                     | scrotal | other)"""]),
 
         # E.g.: testes 5x4 mm pt desc
-        producer(convert, [
+        CATALOG.producer(convert, [
             """testes ( length )?
                 (?P<value>
                     ( state | state_abbrev | abdominal | non scrotal
@@ -111,13 +75,13 @@ TESTES_STATE = Base(
                 )"""]),
 
         # E.g.: testes 5x4 desc
-        producer(convert, [
+        CATALOG.producer(convert, [
             """testes length?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
                     | scrotal | other )"""]),
 
         # E.g.: no gonads
-        producer(convert, [
+        CATALOG.producer(convert, [
             """(?P<value> non ( testes | scrotal | gonads ) | scrotal )"""]),
     ],
 )

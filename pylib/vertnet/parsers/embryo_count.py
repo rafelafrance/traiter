@@ -1,10 +1,13 @@
 """Parse embryo counts."""
 
 from pylib.shared.util import as_list, to_int
-from pylib.stacked_regex.rule import part, producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
-from pylib.vertnet.shared_reproductive_patterns import RULE
+import pylib.vertnet.shared_reproductive_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 SUB = {'l': 'left', 'r': 'right', 'm': 'male', 'f': 'female'}
@@ -33,28 +36,13 @@ def convert(token):
 EMBRYO_COUNT = Base(
     name=__name__.split('.')[-1],
     rules=[
-        RULE['uuid'],  # UUIDs cause problems with shorthand
-        RULE['embryo'],
-        RULE['size'],
-        RULE['fat'],
-        RULE['integer'],
-        RULE['side'],
-        RULE['none'],
-        RULE['conj'],
-        RULE['prep'],
-
         # The sexes like: 3M or 4Females
-        part('sex', r"""
+        CATALOG.part('sex', r"""
             males? | females? | (?<! [a-z] ) [mf] (?! [a-z] ) """),
 
-        RULE['sep'],
+        CATALOG.grouper('count', ' none word conj | integer | none '),
 
-        # Skip arbitrary words
-        RULE['word'],
-
-        grouper('count', ' none word conj | integer | none '),
-
-        producer(convert, """
+        CATALOG.producer(convert, """
             ( (?P<total> count) word? )?
             embryo ((integer (?! side) ) | word)*
             (?P<subcount> count) (?P<sub> side | sex)
@@ -62,11 +50,11 @@ EMBRYO_COUNT = Base(
             """),
 
         # Eg: 4 fetuses on left, 1 on right
-        producer(convert, [
+        CATALOG.producer(convert, [
             """ (?P<subcount> count ) embryo prep? (?P<sub> side )
                 (?P<subcount> count ) embryo? prep? (?P<sub> side )"""]),
 
-        producer(convert, """
+        CATALOG.producer(convert, """
             (?P<total> count) (size | word)? embryo """),
     ],
 )

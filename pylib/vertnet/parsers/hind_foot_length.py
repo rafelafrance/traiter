@@ -1,11 +1,14 @@
 """Parse hind foot length notations."""
 
 from functools import partial
-from pylib.stacked_regex.rule import part, term, grouper, producer
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import fraction, simple
-from pylib.vertnet.shared_patterns import CATALOG
+import pylib.vertnet.shared_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 def fix_up(trait, text):
@@ -20,40 +23,40 @@ HIND_FOOT_LENGTH = Base(
         CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: HindFootLengthInMillimeters
-        term(
+        CATALOG.term(
             'key_with_units',
             r"""( hind \s* )? foot \s* ( length | len ) \s* in \s*
                     (?P<units> millimeters | mm )"""),
 
         # Standard keywords that indicate a hind foot length follows
-        term('key', [
+        CATALOG.term('key', [
             r'hind \s* foot \s* with \s* (?P<includes> claw )',
             r'hind \s* foot ( \s* ( length | len ) )?',
             'hfl | hf']),
 
         # Shorthand notation
-        CATALOG['shorthand_key'],
-        CATALOG['shorthand'],
+        # CATALOG['shorthand_key'],
+        # CATALOG['shorthand'],
 
         # Fractional numbers, like: 9/16
-        CATALOG['fraction'],
+        # CATALOG['fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        CATALOG['range'],
+        # CATALOG['range'],
 
         # Sometimes the last number is missing in the shorthand notation
-        CATALOG['triple'],
+        # CATALOG['triple'],
 
         # We allow random words in some situations
-        term('word', r' ( [a-z] \w* ) ', capture=False),
+        # term('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
-        part('sep', r' [;,] | $ ', capture=False),
+        CATALOG.part('sep', r' [;,] | $ ', capture=False),
 
-        grouper('noise', ' word dash '.split()),
+        CATALOG.grouper('noise', ' word dash '.split()),
 
         # Handle fractional values like: hindFoot 9/16"
-        producer(fraction, [
+        CATALOG.producer(fraction, [
 
             # E.g.: hindFoot = 9/16 inches
             'key fraction units',
@@ -62,7 +65,7 @@ HIND_FOOT_LENGTH = Base(
             'key fraction']),
 
         # A typical hind-foot notation
-        producer(simple, [
+        CATALOG.producer(simple, [
 
             # E.g.: hindFootLengthInMM=9-10
             'key_with_units range',
@@ -76,7 +79,7 @@ HIND_FOOT_LENGTH = Base(
             'key dash number units',
         ]),
 
-        producer(partial(
+        CATALOG.producer(partial(
             shorthand_length, measurement='shorthand_hfl'), [
                 'shorthand_key shorthand',  # With a key
                 'shorthand',                # Without a key

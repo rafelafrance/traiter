@@ -3,11 +3,14 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import part, term, producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
-from pylib.vertnet.shared_patterns import CATALOG
+import pylib.vertnet.shared_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -57,49 +60,30 @@ TAIL_LENGTH = Base(
         CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
-        term('key_with_units', r"""
+        CATALOG.term('key_with_units', r"""
             tail \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """),
 
         # The abbreviation key, just: t. This can be a problem.
-        part('char_key', r"""
+        CATALOG.part('char_key', r"""
             \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
             """),
 
         # Standard keywords that indicate a tail length follows
-        term('keyword', [
+        CATALOG.term('keyword', [
             r' tail \s* length ',
             r' tail \s* len ',
             'tail',
             'tal']),
 
-        # Units
-        CATALOG['len_units'],
-
-        # Shorthand notation
-        CATALOG['shorthand_key'],
-        CATALOG['shorthand'],
-
-        # Fractional numbers, like: 9/16
-        CATALOG['fraction'],
-
-        # Possible pairs of numbers like: "10 - 20" or just "10"
-        CATALOG['range'],
-
-        # Sometimes the last number is missing in the shorthand notation
-        CATALOG['triple'],
-
-        # We allow random words in some situations
-        term('word', r' ( [a-z] \w* ) ', capture=False),
-
         # Some patterns require a separator
-        part('sep', r' [;,] | $ ', capture=False),
+        CATALOG.part('sep', r' [;,] | $ ', capture=False),
 
         # Consider all of these tokens a key
-        grouper('key', 'keyword char_key'.split()),
+        CATALOG.grouper('key', 'keyword char_key'.split()),
 
         # Handle fractional values like: tailLength 9/16"
-        producer(fraction, [
+        CATALOG.producer(fraction, [
 
             # E.g.: tail = 9/16 in
             'key fraction (?P<units> len_units )',
@@ -108,7 +92,7 @@ TAIL_LENGTH = Base(
             'key fraction']),
 
         # A typical tail length notation
-        producer(simple, [
+        CATALOG.producer(simple, [
 
             # E.g.: tailLengthInMM=9-10
             'key_with_units range',
@@ -120,7 +104,7 @@ TAIL_LENGTH = Base(
             'key range',
         ]),
 
-        producer(
+        CATALOG.producer(
             partial(shorthand_length, measurement='shorthand_tal'), [
                 'shorthand_key shorthand',  # With a key
                 'shorthand',  # Without a key

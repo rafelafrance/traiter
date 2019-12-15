@@ -8,7 +8,7 @@ from pylib.vertnet.util import ordinal, number_to_words
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 
-CATALOG.term('word', r' ( [a-z] \w* ) ', when=LAST),
+CATALOG.term('word', r' ( [a-z] \w* ) ', capture=False, when=LAST),
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.

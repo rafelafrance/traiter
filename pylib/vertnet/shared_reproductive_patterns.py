@@ -67,11 +67,11 @@ CATALOG.part('sign', ' [+-] ')
 
 CATALOG.term('visible', r""" ( very \s+ )? (
     visible | invisible | hidden | prominent? | seen | conspicuous
-        | bare
+        | bare | faint | definite
     ) """)
 
 # We allow random words in some situations
-CATALOG.part('word', ' [a-z]+ ', when=LAST)
+CATALOG.part('word', ' [a-z]+ ', capture=False, when=LAST)
 
 CATALOG.term('tissue', ' tissue '.split())
 

@@ -1,47 +1,43 @@
 """Parse pregnancy state notations."""
 
-from pylib.stacked_regex.rule import part, term, producer
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_reproductive_patterns import RULE
+import pylib.vertnet.shared_reproductive_patterns as patterns
+
+
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 PREGNANCY_STATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        RULE['none'],
-
-        term('pregnant', r"""
+        CATALOG.term('pregnant', r"""
             prega?n?ant pregnan preg pregnancy pregnancies
             gravid multiparous nulliparous parous """.split()),
 
-        term('joiner', r""" of were """.split()),
+        CATALOG.term('joiner', r""" of were """.split()),
 
-        term('recent', r"""
+        CATALOG.term('recent', r"""
             recently recent was previously prev """.split()),
 
-        term('probably', r"""
+        CATALOG.term('probably', r"""
             probably prob possibly possible
             appears? very
             visible visibly
             evidence evident
             """.split()),
 
-        term('stage', r' early late mid '.split()),
+        CATALOG.term('stage', r' early late mid '.split()),
 
-        part('quest', '[?]'),
-
-        part('separator', r' [;,"] '),
-
-        # Skip arbitrary words
-        part('word', r' [a-z]\w+ '),
+        CATALOG.part('separator', r' [;,"] '),
 
         # E.g.: pregnancy visible
-        producer(convert, [
+        CATALOG.producer(convert, [
             """(?P<value> pregnant joiner? none? probably quest? )"""]),
 
         # E.g.: Probably early pregnancy
-        producer(convert, [
+        CATALOG.producer(convert, [
             """(?P<value> none? (recent | probably)?
             stage? (none | joiner)? pregnant quest? )"""]),
-    ],
+        ],
 )
