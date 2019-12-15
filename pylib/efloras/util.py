@@ -5,8 +5,7 @@ from pathlib import Path
 from datetime import datetime
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule import grouper
-from pylib.efloras.shared_patterns import RULE
+from pylib.efloras.shared_patterns import CATALOG
 
 
 __VERSION__ = '0.1.0'
@@ -81,22 +80,15 @@ def print_families(families):
 def split_keywords(value):
     """Convert a vocabulary string into separate words."""
     return regex.split(fr"""
-        \s* \b (?: {RULE['conj'].pattern} | {RULE['prep'].pattern} )
+        \s* \b (?: {CATALOG['conj'].pattern} | {CATALOG['prep'].pattern} )
             \b \s* [,]? \s*
         | \s* [,\[\]] \s*
         """, value, flags=FLAGS)
 
 
-def part_phrase(leaf_part):
+def part_phrase(catalog, leaf_part):
     """Build a grouper rule for the leaf part."""
-    return [
-        RULE[leaf_part],
-        RULE['location'],
-        RULE['word'],
-        RULE['prep'],
-        RULE['punct'],
-        grouper(f'{leaf_part}_phrase', f"""
+    return catalog.grouper(f'{leaf_part}_phrase', f"""
             ( location ( word | punct | prep )* )?
             (?P<part> {leaf_part} )
             """),
-        ]

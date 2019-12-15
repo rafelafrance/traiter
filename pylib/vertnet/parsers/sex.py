@@ -1,7 +1,7 @@
 """Parse sex notations."""
 
 from pylib.stacked_regex.rule import part, term, producer
-from pylib.vertnet.shared_patterns import RULE
+from pylib.vertnet.shared_patterns import CATALOG
 from pylib.vertnet.parsers.base import Base, convert
 
 
@@ -15,7 +15,7 @@ SEX = Base(
         term('intrinsic', 'females? males?'.split()),
 
         # To handle a guessed sex
-        RULE['quest'],
+        CATALOG['quest'],
 
         # These are words that indicate that "sex" is not a key
         term('skip', 'and is was'.split()),

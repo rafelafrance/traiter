@@ -4,8 +4,7 @@ import pylib.shared.patterns as patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.util import ordinal, number_to_words
 
-CAT = RuleCatalog(patterns.CAT)
-RULE = CAT.rules
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
 # This is a common notation: "11-22-33-44:99g".
@@ -25,7 +24,7 @@ RULE = CAT.rules
 # Ambiguous measurements are enclosed in brackets.
 #   E.g.: 11-[22]-33-[44]:99g
 
-CAT.part('shorthand_key', r"""
+CATALOG.part('shorthand_key', r"""
     (on \s* tag | specimens? (?! \s* [a-z] )
         | catalog (?! [a-z] )) (?! \s* [#] )
     | ( measurement s? | meas ) [:.,]{0,2} ( \s* length \s* )?
@@ -39,13 +38,13 @@ CAT.part('shorthand_key', r"""
     """)
 
 # A possibly unknown value
-CAT.part('sh_num', r""" \d+ ( \. \d+ )? | (?<= [^\d] ) \. \d+ """)
-SH_NUM = RULE['sh_num'].pattern
+SH_NUM = r""" \d+ ( \. \d+ )? | (?<= [^\d] ) \. \d+ """
+CATALOG.part('sh_num', SH_NUM)
 
-CAT.part('sh_val', f' ( {SH_NUM} | [?x]{{1,2}} | n/?d ) ')
-SH_VAL = RULE['sh_val'].pattern
+SH_VAL = f' ( {SH_NUM} | [?x]{{1,2}} | n/?d ) '
+CATALOG.part('sh_val', SH_VAL)
 
-CAT.part('shorthand', fr"""
+CATALOG.part('shorthand', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {SH_VAL} \]? )
     (?P<shorthand_sep> [:/-] )
@@ -59,14 +58,14 @@ CAT.part('shorthand', fr"""
         (?P<estimated_wt> \[? \s* )
         (?P<shorthand_wt> {SH_VAL} ) \s*
         \]?
-        (?P<shorthand_wt_units> {RULE['metric_mass'].pattern} )?
+        (?P<shorthand_wt_units> {patterns.METRIC_MASS} )?
         \s*? \]?
     )?
     (?! [\d/:=a-z-] )
     """)
 
 # Sometimes the last number is missing. Be careful to not pick up dates.
-CAT.part('triple', fr"""
+CATALOG.part('triple', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {SH_VAL} \]? )
     (?P<shorthand_sep> [:/-] )
@@ -79,29 +78,30 @@ CAT.part('triple', fr"""
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 9)]
 ORDINALS += [number_to_words(x) for x in ORDINALS]
-CAT.part('ordinals', ORDINALS)
+CATALOG.part('ordinals', ORDINALS)
 
 # Time units
-CAT.part('time_units', ' years? months? weeks? days? hours? '.split())
+CATALOG.part('time_units', ' years? months? weeks? days? hours? '.split())
 
 # Side keywords
-CAT.part('side', r"""
+CATALOG.part('side', r"""
     (?<! [a-z] ) [lr] (?! [a-z] )
     | both | left | right | lft? | lt | rt """)
 # SIDE = RULE['side'].pattern
 
-CAT.part('dimension', r' (?P<dim> length | width ) ')
+DIMENSION = r' (?P<dim> length | width ) '
+CATALOG.part('dimension', DIMENSION)
 
 # Numeric sides interfere with number parsing so combine \w dimension
-CAT.part(
+CATALOG.part(
     'dim_side',
-    fr""" {RULE['dimension'].pattern} \s* (?P<side> [12] ) \b """)
+    fr""" {DIMENSION} \s* (?P<side> [12] ) \b """)
 
-CAT.part('cyst', r"""
+CATALOG.part('cyst', r"""
     (\d+ \s+)? (cyst s? | bodies | cancerous | cancer ) ( \s+ ( on | in ))?""")
 
 # Numbers are positive decimals and estimated values are enclosed in brackets
-CAT.part('number', r"""
+CATALOG.part('number', r"""
     (?P<estimated_value> \[ )?
     ( ( \d{1,3} ( , \d{3} ){1,3} | \d+ ) ( \. \d+ )?
         | (?<= [^\d] ) \. \d+ | ^ \. \d+ )
@@ -111,7 +111,7 @@ CAT.part('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-CAT.grouper('range', """
+CATALOG.grouper('range', """
     (?<! dash )
     ( number units? (( dash | to ) number units?)? )
     (?! dash ) """, capture=False)
@@ -119,20 +119,20 @@ CAT.grouper('range', """
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-CAT.grouper('len_range', """
+CATALOG.grouper('len_range', """
     (?<! dash )
     ( number (?P<units> len_units )?
     (( dash | to ) number (?P<units> len_units )? )? )
     (?! dash ) """, capture=False)
 
 # A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
-CAT.grouper('compound_len', """
+CATALOG.grouper('compound_len', """
     (?P<ft> number ) feet comma?
     (?P<in> number ) ( ( dash | to ) (?P<in> number ) )? inches
     """, capture=False)
 
 # A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
-CAT.grouper('compound_wt', """
+CATALOG.grouper('compound_wt', """
     (?P<lbs> number ) pounds comma?
     (?P<ozs> number ) ( ( dash | to ) (?P<ozs> number ) )? ounces
     """, capture=False)
@@ -143,13 +143,13 @@ CAT.grouper('compound_wt', """
 CROSS = """ (?<! x )
         ( number len_units? ( x | by ) number len_units?
         | number len_units ) """
-CAT.grouper('cross', CROSS, capture=False)
+CATALOG.grouper('cross', CROSS, capture=False)
 
 
 # Handle 2 cross measurements, one per left/right side
-CAT.grouper('joiner', ' ampersand comma and '.split())
+CATALOG.grouper('joiner', ' ampersand comma and '.split())
 
-CAT.grouper('side_cross', f"""
+CATALOG.grouper('side_cross', f"""
     (?P<side_1> side )?
         (?P<value_1> number ) (?P<units_1> len_units )?
             ( x | by ) (?P<value_1> number ) (?P<units_1> len_units )?
@@ -161,7 +161,7 @@ CAT.grouper('side_cross', f"""
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-CAT.grouper('fraction', """
+CATALOG.grouper('fraction', """
     (?P<whole> number )?
     (?<! slash )
     (?P<numerator> number) slash (?P<denominator> number)
@@ -169,7 +169,7 @@ CAT.grouper('fraction', """
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-CAT.grouper('len_fraction', """
+CATALOG.grouper('len_fraction', """
     (?P<whole> number )?
     (?<! slash )
     (?P<numerator> number) slash (?P<denominator> number)

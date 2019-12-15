@@ -1,11 +1,11 @@
 """Parse the trait."""
 
 from typing import Any
-from pylib.stacked_regex.rule import producer, term
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.stacked_regex.token import Token
 from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
-from pylib.efloras.shared_patterns import RULE
+import pylib.efloras.shared_patterns as patterns
 
 
 def convert(token: Token) -> Any:
@@ -27,17 +27,15 @@ def convert(token: Token) -> Any:
 
 def parser(plant_part):
     """Build a parser for the flower part."""
+    catalog = RuleCatalog(patterns.CATALOG)
     return Base(
         name=f'{plant_part}_count',
         rules=[
-            RULE[plant_part],
-            RULE['plant_part'],
-            RULE['count_upper'],
-            RULE['range'],
-            term('skip', r""" locular [/] """.split()),
-            RULE['word'],
+            catalog[plant_part],
+            catalog['plant_part'],
+            catalog.term('skip', r""" locular [/] """.split()),
 
-            producer(convert, f"""
+            catalog.producer(convert, f"""
                 (?P<part> {plant_part} ) (word | skip)*
                 ( count_upper | range )
                 (?! units | cross_joiner | skip )

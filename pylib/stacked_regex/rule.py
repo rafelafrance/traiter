@@ -3,12 +3,12 @@
 from enum import IntEnum
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Pattern, Union
-import inspect
 import regex
 from pylib.shared.util import FLAGS
 
 
 SEP = ';'
+PRODUCER = 0
 
 # Find tokens in the regex. Look for words that are not part of a group
 # name or a metacharacter. So, "word" not "<word>". Neither "(?P" nor "\b".
@@ -21,6 +21,11 @@ RuleDict = Dict[str, 'Rule']
 Groups = Dict[str, Union[str, List[str]]]
 Action = Callable[['Token'], Any]
 InRegexp = Union[str, List[str]]
+
+
+FIRST = -9999
+SECOND = -9990
+LAST = 9999
 
 
 class RuleType(IntEnum):
@@ -36,12 +41,17 @@ class RuleType(IntEnum):
 class Rule:
     """Create a rule."""
 
-    name: str
-    pattern: str
-    type: RuleType
-    action: Action = None
-    regexp: Pattern = None
-    capture: bool = True
+    name: str               # Unique within a catalog but not across catalogs
+    pattern: str            # The regex before it is manipulated
+    type: RuleType          # The RuleType
+    action: Action = None   # What to do when there is a match
+    regexp: Pattern = None  # The compiled regexp
+    capture: bool = True    # Will the rule create an outer capture group?
+    when: int = 0           # When should the rule be triggered: FIRST? LAST?
+
+    def __lt__(self, other: 'Rule'):
+        """Custom sort order."""
+        return (self.type, self.when) < (other.type, other.when)
 
     def build(self, rules: RuleDict) -> str:
         """Build regular expressions for token matches."""
@@ -79,7 +89,8 @@ def part(
         name: str,
         regexp: InRegexp,
         action: Action = None,
-        capture: bool = True) -> Rule:
+        capture: bool = True,
+        when: int = 0) -> Rule:
     """Build a regular expression with a named group."""
     pattern = join(regexp)
     regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
@@ -89,14 +100,16 @@ def part(
         pattern=pattern,
         type=RuleType.SCANNER,
         action=action,
-        regexp=regexp)
+        regexp=regexp,
+        when=when)
 
 
 def term(
         name: str,
         regexp: InRegexp,
         action: Action = None,
-        capture: bool = True) -> Rule:
+        capture: bool = True,
+        when: int = 0) -> Rule:
     r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
     regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
@@ -106,52 +119,58 @@ def term(
         pattern=pattern,
         type=RuleType.SCANNER,
         action=action,
-        regexp=regexp)
+        regexp=regexp,
+        when=when)
 
 
 def grouper(
         name: str,
         regexp: InRegexp,
         action: Action = None,
-        capture: bool = True) -> Rule:
+        capture: bool = True,
+        when: int = 0) -> Rule:
     """Build a grouper regular expression."""
     return Rule(
         name=name,
         pattern=join(regexp),
         type=RuleType.GROUPER,
         action=action,
-        capture=capture)
+        capture=capture,
+        when=when)
 
 
 def replacer(
         name: str,
         regexp: InRegexp,
         action: Action = None,
-        capture: bool = True) -> Rule:
+        capture: bool = True,
+        when: int = 0) -> Rule:
     """Build a grouper regular expression."""
     return Rule(
         name=name,
         pattern=join(regexp),
         type=RuleType.REPLACER,
         action=action,
-        capture=capture)
+        capture=capture,
+        when=when)
 
 
 def producer(
         action: Action,
         regexp: InRegexp,
         name: str = None,
-        capture: bool = False) -> Rule:
+        capture: bool = False,
+        when: int = 0) -> Rule:
     """Build a product regular expression."""
+    global PRODUCER  # pylint: disable=global-statement
+    PRODUCER += 1
     if not name:
-        frame = inspect.stack()[1]
-        name = inspect.getmodule(frame[0]).__name__.replace('.', '_')
-        line_no = frame.lineno
-        name = f'{name}_{line_no}'
+        name = f'producer_{PRODUCER}'
 
     return Rule(
         name=name,
         pattern=join(regexp),
         type=RuleType.PRODUCER,
         action=action,
-        capture=capture)
+        capture=capture,
+        when=when)

@@ -6,10 +6,10 @@ from pylib.shared.util import to_float
 from pylib.shared.trait import Trait
 from pylib.shared.convert_units import convert as convert_units
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import producer, grouper
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
-from pylib.efloras.shared_patterns import RULE
+from pylib.efloras.shared_patterns import CATALOG
 
 
 def convert(token: Token) -> Any:
@@ -81,29 +81,25 @@ def set_size_values(trait, token):
 
 def parser(plant_part):
     """Build a parser for the plant part."""
+    catalog = RuleCatalog(CATALOG)
     return Base(
         name=f'{plant_part}_size',
         rules=[
-            RULE[plant_part],
-            RULE['plant_part'],
-            RULE['cross'],
-            RULE['cross_upper'],
-            RULE['sex_cross'],
-            RULE['dim'],
-            RULE['location'],
+            catalog[plant_part],
+            catalog['plant_part'],
 
-            grouper(
+            catalog.grouper(
                 'noise', """
                 (?: word | number | dash | punct | up_to | dim | slash
                     | conj )*? """,
                 capture=False),
 
-            util.part_phrase(plant_part),
+            util.part_phrase(catalog, plant_part),
 
-            producer(sex_convert, f"""
+            catalog.producer(sex_convert, f"""
                 {plant_part}_phrase noise sex_cross """),
 
-            producer(convert, f"""
+            catalog.producer(convert, f"""
                 {plant_part}_phrase noise (?: open? sex close? )? noise
                     (?: cross_upper | cross ) (?P<dimension> dim )? """),
             ],

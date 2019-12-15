@@ -5,14 +5,16 @@ from typing import Any
 import regex
 from pylib.shared.util import FLAGS
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import term, grouper, producer
+from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.shared.trait import Trait
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
-from pylib.efloras.shared_patterns import RULE
+import pylib.efloras.shared_patterns as patterns
 
 
-COLORS = term('flower_color', r"""
+CATALOG = RuleCatalog(patterns.CATALOG)
+
+CATALOG.term('color', r"""
     black(ish)? blue(ish)? brown brownish
     cream cream-yellow creamy
     crimson
@@ -32,12 +34,12 @@ COLORS = term('flower_color', r"""
     yellow yellowish
     """.split())
 
-COLOR_PREFIX = term('color_prefix', r"""
+CATALOG.term('color_prefix', r"""
     bright(er)? | dark(er)? | deep(er)? | slightly | light(er)? | pale(r)?
     | usually (\s+ not)? | rarely | pale | sometimes | often
     """)
 
-COLOR_SUFFIX = term('color_suffix', r"""
+CATALOG.term('color_suffix', r"""
     spotted spots? stripe(s|d)? vein(s|ed)? tip(s|ped)? mottled
     tinge(s|d)? longitudinal throated lined """.split())
 
@@ -99,17 +101,17 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = RULE['shape_starter'].regexp.sub('', value)
+    value = CATALOG['shape_starter'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
 
     parts = []
     has_color = False
     for part in regex.split(
-            rf'\s+ | {RULE["dash"].pattern}', value, flags=FLAGS):
-        if COLORS.regexp.search(part):
+            rf'\s+ | {CATALOG["dash"].pattern}', value, flags=FLAGS):
+        if CATALOG['color'].regexp.search(part):
             parts.append(RENAME.get(part, part))
             has_color = True
-        elif COLOR_SUFFIX.regexp.search(part):
+        elif CATALOG['color_suffix'].regexp.search(part):
             parts.append(RENAME.get(part, part))
     if not has_color:
         parts = []
@@ -121,19 +123,17 @@ def normalize(value: str) -> str:
 
 def parser(plant_part):
     """Build a parser for the flower part."""
+    catalog = RuleCatalog(CATALOG)
     return Base(
         name=f'{plant_part}_color',
         rules=[
-            RULE[plant_part],
-            RULE['plant_part'],
-            COLORS,
-            COLOR_PREFIX,
-            COLOR_SUFFIX,
+            catalog[plant_part],
+            catalog['plant_part'],
 
-            grouper('color_phrase', """
-                color_prefix* flower_color color_suffix* """),
+            catalog.grouper('color_phrase', """
+                color_prefix* color color_suffix* """),
 
-            producer(convert, f"""
+            catalog.producer(convert, f"""
                 (?P<part> {plant_part} ) (?P<value> color_phrase+ ) """),
             ],
         )

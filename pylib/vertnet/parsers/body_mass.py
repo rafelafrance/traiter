@@ -6,7 +6,7 @@ from pylib.shared.convert_units import convert
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import as_value, add_flags, simple
-from pylib.vertnet.shared_patterns import RULE
+from pylib.vertnet.shared_patterns import CATALOG
 
 
 def shorthand(token):
@@ -35,7 +35,7 @@ def compound(token):
 BODY_MASS = Base(
     name=__name__.split('.')[-1],
     rules=[
-        RULE['uuid'],  # UUIDs cause problems with numbers
+        CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
         term('key_with_units', r"""
@@ -55,15 +55,15 @@ BODY_MASS = Base(
         part('body', 'body'),
 
         # Shorthand notation
-        RULE['shorthand_key'],
-        RULE['shorthand'],
+        CATALOG['shorthand_key'],
+        CATALOG['shorthand'],
 
         # Possible range of numbers like: 10 - 20
         # Or just: 10
-        RULE['range'],
+        CATALOG['range'],
 
         # compound weight like 2 lbs. 3.1 - 4.5 oz
-        RULE['compound_wt'],
+        CATALOG['compound_wt'],
 
         # These indicate that the mass is NOT a body mass
         term('other_wt', r"""
@@ -74,8 +74,8 @@ BODY_MASS = Base(
         term('word', r' ( [a-z] \w* ) '),
 
         # Separators
-        RULE['semicolon'],
-        RULE['comma'],
+        CATALOG['semicolon'],
+        CATALOG['comma'],
 
         # Any key not preceding by "other_wt" is considered a weight key
         grouper('wt_key', r"""

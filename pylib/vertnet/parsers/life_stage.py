@@ -2,10 +2,10 @@
 
 from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base, convert
-from pylib.vertnet.shared_patterns import RULE
+from pylib.vertnet.shared_patterns import CATALOG
 
 
-TIME_OPTIONS = RULE['time_units'].pattern
+TIME_OPTIONS = CATALOG['time_units'].pattern
 
 LIFE_STAGE = Base(
     name=__name__.split('.')[-1],
@@ -50,9 +50,9 @@ LIFE_STAGE = Base(
         part('separator', r' [;,"?] | $ '),
 
         # For life stages with numbers as words in them
-        RULE['ordinals'],
+        CATALOG['ordinals'],
 
-        RULE['time_units'],
+        CATALOG['time_units'],
 
         part('after', 'after'),
         part('hatching', 'hatching'),

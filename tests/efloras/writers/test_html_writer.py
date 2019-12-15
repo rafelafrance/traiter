@@ -5,7 +5,7 @@ import unittest
 from pylib.efloras.writers.html_writer import Cut, insert_markup
 
 
-class TestAsIsTraitBuilder(unittest.TestCase):
+class TestHtmlWriter(unittest.TestCase):
     """Test the tricky parts in the module."""
 
     @staticmethod

@@ -2,17 +2,16 @@
 
 import regex
 import pylib.shared.patterns as patterns
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
 
 
-CAT = RuleCatalog(patterns.CAT)
-RULE = CAT.rules
+CATALOG = RuleCatalog(patterns.CATALOG)
 
 
-SEX = 'staminate pistillate'.split()
-CAT.term('sex', SEX)
+SEX = r'staminate | pistillate'
+CATALOG.term('sex', SEX)
 
-CAT.term('plant_part', r"""
+CATALOG.term('plant_part', r"""
     (?<! to \s )
     ( androeci(a|um) | anthers?
     | blades?
@@ -27,46 +26,46 @@ CAT.term('plant_part', r"""
     | sepals? | stamens? | stigmas? | stipules? | styles?
     )""")
 
-CAT.term('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
-CAT.term('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
-CAT.term('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
-CAT.term('hairs', 'hairs?')
-CAT.term('flower', fr'({SEX} \s+ )? flowers?')
-CAT.term('hypanthium', 'hypan-?thi(um|a)')
-CAT.term('sepal', 'sepals?')
-CAT.term('calyx', 'calyx | calyces')
-CAT.term('stamen', 'stamens?')
-CAT.term('anther', 'anthers?')
-CAT.term('style', 'styles?')
-CAT.term('stigma', 'stigmas?')
-CAT.term('petal', r' petals? ')
-CAT.term('corolla', r' corollas? ')
+CATALOG.term('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
+CATALOG.term('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
+CATALOG.term('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
+CATALOG.term('hairs', 'hairs?')
+CATALOG.term('flower', fr'({SEX} \s+ )? flowers?')
+CATALOG.term('hypanthium', 'hypan-?thi(um|a)')
+CATALOG.term('sepal', 'sepals?')
+CATALOG.term('calyx', 'calyx | calyces')
+CATALOG.term('stamen', 'stamens?')
+CATALOG.term('anther', 'anthers?')
+CATALOG.term('style', 'styles?')
+CATALOG.term('stigma', 'stigmas?')
+CATALOG.term('petal', r' petals? ')
+CATALOG.term('corolla', r' corollas? ')
 
-CAT.term('shape_starter', """
+CATALOG.term('shape_starter', r"""
     broadly
-    deeply depressed
-    long
-    mostly
-    narrowly nearly
-    partly
-    shallowly sometimes
-    """.split())
+    | deeply | depressed
+    | long
+    | mostly
+    | narrowly | nearly
+    | partly
+    | shallowly | sometimes
+    """)
 
-CAT.part('location', r""" \b ( terminal | lateral | basal | cauline ) """)
-CAT.term('dim', """
+CATALOG.part('location', r""" \b ( terminal | lateral | basal | cauline ) """)
+CATALOG.term('dim', """
     width wide length long radius diameter diam? """.split())
 
-CAT.part('punct', r' [,;:/] ', capture=False)
+CATALOG.part('punct', r' [,;:/] ', capture=False, when=LAST)
 
-CAT.term('word', r' [a-z] \w* ', capture=False)
+CATALOG.term('word', r' [a-z] \w* ', capture=False, when=LAST)
 
 
 # ############################################################################
 # Numeric patterns
 
-CAT.term('units', ' cm mm '.split())
+CATALOG.term('units', ' cm mm '.split())
 
-CAT.part('number', r' \d+ ( \. \d* )? ')
+CATALOG.part('number', r' \d+ ( \. \d* )? ')
 
 
 # Numeric ranges like: (10–)15–20(–25)
@@ -78,7 +77,7 @@ RANGE = r"""
     (?: open dash (?P<max> number ) close )?
     (?! dash | slash )
     """
-CAT.grouper('range', RANGE, capture=False)
+CATALOG.grouper('range', RANGE, capture=False)
 
 
 # Cross measurements like: 3–5(–8) × 4–11(–13)
@@ -93,25 +92,26 @@ CROSS = f"""
     {LENGTH_RANGE} (?P<units_length> units )?
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """
-CAT.grouper('cross', CROSS, capture=False)
+CATALOG.grouper('cross', CROSS, capture=False)
 
 
 CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
 CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
 CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
-CAT.grouper('sex_cross', f"""
+CATALOG.grouper('sex_cross', f"""
     {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
     ( conj | prep )?
     {CROSS_2} (open)? (?P<sex_2> sex )? (close)?
     """, capture=False)
 
-# Like "to 10 cm"
-CAT.grouper(
+# Like: "to 10 cm"
+CATALOG.grouper(
     'cross_upper',
     fr""" up_to (?P<high_length> number )
         (?P<units_length> units ) """, capture=False)
 
 
-# Like "to 10"
-CAT.grouper('count_upper', fr""" up_to (?P<high> number ) """, capture=False)
+# Like: "to 10"
+CATALOG.grouper(
+    'count_upper', fr""" up_to (?P<high> number ) """, capture=False)

@@ -24,9 +24,8 @@ class Parser:
     def __add__(self, rule_list: Rules) -> None:
         """Add rules to the parser."""
         self._built = False
-        for rule in flatten(rule_list):
-            if rule.name not in self.rules:
-                self.rules[rule.name] = rule
+        for rule in sorted(flatten(rule_list)):
+            self.rules[rule.name] = rule
 
     def parse(self, text: str) -> Tokens:
         """Extract information from the text."""

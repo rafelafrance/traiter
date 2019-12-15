@@ -7,7 +7,7 @@ from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
-from pylib.vertnet.shared_patterns import RULE
+from pylib.vertnet.shared_patterns import CATALOG
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -54,7 +54,7 @@ TAIL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     rules=[
-        RULE['uuid'],  # UUIDs cause problems with numbers
+        CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
         term('key_with_units', r"""
@@ -74,20 +74,20 @@ TAIL_LENGTH = Base(
             'tal']),
 
         # Units
-        RULE['len_units'],
+        CATALOG['len_units'],
 
         # Shorthand notation
-        RULE['shorthand_key'],
-        RULE['shorthand'],
+        CATALOG['shorthand_key'],
+        CATALOG['shorthand'],
 
         # Fractional numbers, like: 9/16
-        RULE['fraction'],
+        CATALOG['fraction'],
 
         # Possible pairs of numbers like: "10 - 20" or just "10"
-        RULE['range'],
+        CATALOG['range'],
 
         # Sometimes the last number is missing in the shorthand notation
-        RULE['triple'],
+        CATALOG['triple'],
 
         # We allow random words in some situations
         term('word', r' ( [a-z] \w* ) ', capture=False),

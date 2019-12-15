@@ -2,9 +2,14 @@
 
 from itertools import groupby
 from pylib.shared.util import flatten
-from pylib.stacked_regex.rule import Action, Rule, Rules, WORD
+import pylib.stacked_regex.rule as re_rule
+from pylib.stacked_regex.rule import Action, Rule, Rules
 from pylib.stacked_regex.rule import part, term, grouper, producer, replacer
 from pylib.stacked_regex.rule import InRegexp
+
+FIRST = re_rule.FIRST
+SECOND = re_rule.SECOND
+LAST = re_rule.LAST
 
 
 class RuleCatalog:
@@ -25,43 +30,60 @@ class RuleCatalog:
 
     It is primarily used with shared patterns. We have catalogs of 100s of
     shared patterns and we only want to pull in (and search thru) the ones that
-    are needed for a particular trait.
+    are needed for a particular product.
     """
 
     def __init__(self, other: 'RuleCatalog' = None) -> None:
         """Create the rule set."""
-        self.rules = dict(other.rules) if other else {}
+        self.when = 0
+        self.rules = {}
+        if other:
+            self.rules = dict(other.rules)
+            self.sort = other.when - 1
 
-    def part(self, name: str, regexp: InRegexp, capture=True) -> None:
+    def __getitem__(self, name) -> Rule:
+        """Emulate dict access of the rules."""
+        rule = self.rules[name]
+        if isinstance(rule, list):
+            return [r for r in rule if r.name == name][0]
+        return rule
+
+    def part(self, name: str, regexp: InRegexp,
+             capture: bool = True, when: int = 0) -> Rules:
         """Add a partial term rule."""
-        self.rules[name] = part(name, regexp, capture=capture)
+        self.rules[name] = part(name, regexp, capture=capture, when=when)
+        return self.rules[name]
 
-    def term(self, name: str, regexp: InRegexp, capture=True) -> None:
+    def term(self, name: str, regexp: InRegexp,
+             capture: bool = True, when: int = 0) -> Rules:
         """Add a vocabulary term."""
-        self.rules[name] = term(name, regexp, capture=capture)
+        self.rules[name] = term(name, regexp, capture=capture, when=when)
+        return self.rules[name]
 
-    def grouper(self, name: str, regexp: InRegexp, capture=True) -> None:
+    def grouper(self, name: str, regexp: InRegexp,
+                capture: bool = True, when: int = 0) -> Rules:
         """Add a grouper rule."""
-        rule = grouper(name, regexp, capture=capture)
+        rule = grouper(name, regexp, capture=capture, when=when)
         self.rules[name] = self._get_sub_patterns(rule)
+        return self.rules[name]
 
-    def replacer(self, name: str, regexp: InRegexp, capture=True) -> None:
+    def replacer(self, name: str, regexp: InRegexp,
+                 capture: bool = True, when: int = 0) -> Rules:
         """Add a replacer rule."""
-        rule = replacer(name, regexp, capture=capture)
+        rule = replacer(name, regexp, capture=capture, when=when)
         self.rules[name] = self._get_sub_patterns(rule)
+        return self.rules[name]
 
-    def producer(self, action: Action, regexp: InRegexp, capture=True) -> None:
+    def producer(self, action: Action, regexp: InRegexp, name=None,
+                 capture: bool = True, when: int = 0) -> Rules:
         """Add a producer rule."""
-        rule = producer(action, regexp, capture=capture)
+        rule = producer(action, regexp, name=name, capture=capture, when=when)
         self.rules[rule.name] = self._get_sub_patterns(rule)
+        return self.rules[rule.name]
 
     def _get_sub_patterns(self, rule: Rule) -> Rules:
-        rules = [self.rules[w] for w in WORD.findall(rule.pattern)]
-        rules.append(rule)
+        rules = [self.rules[w] for w in re_rule.WORD.findall(rule.pattern)]
         rules = flatten(rules)
-        rules = sorted(rules, key=lambda r: r.type)
+        rules = sorted(rules)
+        rules.append(rule)
         return [list(g)[0] for _, g in groupby(rules, key=lambda r: r.name)]
-
-    def add_set(self, name: str, rules: Rules) -> None:
-        """Add a rule set."""
-        self.rules[name] = rules

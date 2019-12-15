@@ -7,7 +7,7 @@ from pylib.stacked_regex.rule import part, term, producer, grouper
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import simple, fraction, shorthand_length
 from pylib.vertnet.numeric import numeric_fix_ups
-from pylib.vertnet.shared_patterns import RULE
+from pylib.vertnet.shared_patterns import CATALOG
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -59,7 +59,7 @@ EAR_LENGTH = Base(
     fix_up=fix_up,
     rules=[
 
-        RULE['uuid'],  # UUIDs cause problems with numbers
+        CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
         term('key_with_units', r"""
@@ -89,14 +89,14 @@ EAR_LENGTH = Base(
         ]),
 
         # Fractional numbers, like: 9/16
-        RULE['fraction'],
+        CATALOG['fraction'],
 
         # Shorthand notation
-        RULE['shorthand_key'],
-        RULE['shorthand'],
+        CATALOG['shorthand_key'],
+        CATALOG['shorthand'],
 
         # Possible ranges of numbers like: "10 - 20" or just "10"
-        RULE['range'],
+        CATALOG['range'],
 
         # We allow random words in some situations
         term('word', r' ( [a-z] \w* ) '),

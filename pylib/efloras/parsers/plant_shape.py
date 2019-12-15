@@ -3,14 +3,17 @@
 import string
 from typing import Any
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule import part, term, grouper, producer
+from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.parser import Parser
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
-from pylib.efloras.shared_patterns import RULE
+import pylib.efloras.shared_patterns as patterns
 
 
-SHAPE = term('plant_shape', r"""
+CATALOG = RuleCatalog(patterns.CATALOG)
+
+CATALOG.term('plant_shape', r"""
     (\d-)?angular (\d-)?angulate acicular actinomorphic acuminate acute
     apiculate aristate attenuate auriculate
     bilabiate bilateral bilaterally bowl-?shaped
@@ -43,6 +46,21 @@ SHAPE = term('plant_shape', r"""
     undulate unifoliate urceolate
     zygomorphic zygomorphous
     """.split())
+
+CATALOG.part('shape_prefix', ' semi | sub | elongate ')
+
+CATALOG.term('leaf_orbicular', r"""
+    circular | orbic-?ulate | rotund | round(ed|ish)? | suborbicular
+    | suborbiculate
+    """)
+
+CATALOG.part('leaf_polygonal', fr"""
+    ( ( orbicular | angulate ) -? )?
+    ( \b (\d-)? angular | \b (\d-)? angulate
+        | pen-?tagonal | pentangular | septagonal )
+    ( -? ( orbicular | (\d-)? angulate ) )?
+    """)
+
 
 RENAME = {
     'actinomorphic': 'radially symmetric',
@@ -81,20 +99,6 @@ RENAME = {
     'zygomorphous': 'bilaterally symmetric',
     }
 
-ORBICULAR = term('leaf_orbicular', r"""
-    circular | orbic-?ulate | rotund | round(ed|ish)? | suborbicular
-    | suborbiculate
-    """)
-
-POLYGONAL = part('leaf_polygonal', fr"""
-    ( ( orbicular | angulate ) -? )?
-    ( \b (\d-)? angular | \b (\d-)? angulate
-        | pen-?tagonal | pentangular | septagonal )
-    ( -? ( orbicular | (\d-)? angulate ) )?
-    """)
-
-SHAPE_PREFIX = part('shape_prefix', ' semi | sub | elongate ')
-
 
 def convert(token: Token) -> Any:
     """Convert parsed token into a trait."""
@@ -115,48 +119,40 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = RULE['shape_starter'].regexp.sub('', value)
-    value = RULE['location'].regexp.sub('', value)
+    value = CATALOG['shape_starter'].regexp.sub('', value)
+    value = CATALOG['location'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
-    value = ORBICULAR.regexp.sub('orbicular', value)
-    value = POLYGONAL.regexp.sub('polygonal', value)
+    value = CATALOG['leaf_orbicular'].regexp.sub('orbicular', value)
+    value = CATALOG['leaf_polygonal'].regexp.sub('polygonal', value)
     value = value.strip()
     value = RENAME.get(value, value)
-    value = value if SHAPE.regexp.search(value) else ''
+    value = value if CATALOG['plant_shape'].regexp.search(value) else ''
     return value
 
 
-def parser(plant_part):
+def parser(plant_part: str) -> Parser:
     """Build a parser for the flower part."""
+    catalog = RuleCatalog(CATALOG)
     return Base(
         name=f'{plant_part}_shape',
         rules=[
-            RULE[plant_part],
-            RULE['plant_part'],
-            RULE['location'],
-            SHAPE,
-            RULE['shape_starter'],
-            SHAPE_PREFIX,
-            RULE['conj'],
-            RULE['prep'],
-            RULE['word'],
-            RULE['punct'],
+            catalog[plant_part],
+            catalog['plant_part'],
 
-            util.part_phrase(plant_part),
+            util.part_phrase(catalog, plant_part),
 
-            grouper('shape_phrase', """
+            catalog.grouper('shape_phrase', """
                 ( ( plant_shape | shape_starter | shape_prefix | location )
-                    ( punct | conj | prep ){0,2} )*
-                (plant_shape | location)
+                  ( punct | conj | prep ){0,2}
+                )*
+                ( plant_shape | location )
                 """),
 
-            producer(convert, f"""
+            catalog.producer(convert, f"""
                     {plant_part}_phrase
                     ( shape_starter? ( word | conj | punct ))*
                     ( word | conj | prep | punct )*
-                    (?P<value>
-                        shape_phrase
-                    )
+                    (?P<value> shape_phrase )
                     """),
             ])
 

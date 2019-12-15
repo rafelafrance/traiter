@@ -7,7 +7,7 @@ from pylib.stacked_regex.rule import part, term, grouper, producer
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 import pylib.vertnet.numeric as numeric
-from pylib.vertnet.shared_patterns import RULE
+from pylib.vertnet.shared_patterns import CATALOG
 
 
 # How far to look into the surrounding context to disambiguate the parse
@@ -77,7 +77,7 @@ TOTAL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     rules=[
-        RULE['uuid'],  # UUIDs cause problems with numbers
+        CATALOG['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: TotalLengthInMillimeters
         term('key_with_units', r"""
@@ -110,24 +110,24 @@ TOTAL_LENGTH = Base(
         part('key_units_req', 'measurements? body total'.split()),
 
         # # Shorthand notation
-        RULE['shorthand_key'],
-        RULE['shorthand'],
-        RULE['triple'],  # Truncated shorthand
+        CATALOG['shorthand_key'],
+        CATALOG['shorthand'],
+        CATALOG['triple'],  # Truncated shorthand
 
         # Fractional numbers, like: 9/16
-        RULE['len_fraction'],
+        CATALOG['len_fraction'],
 
         # Possible range of numbers like: "10 - 20" or just "10"
-        RULE['len_range'],
+        CATALOG['len_range'],
 
         # compound length like 2 ft 3.1 - 4.5 in
-        RULE['compound_len'],
+        CATALOG['compound_len'],
 
         # The abbreviation key, just: t. This can be a problem.
         part('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
 
         # We allow random words in some situations
-        RULE['eq'],
+        CATALOG['eq'],
 
         # # Some patterns require a separator
         part('semicolon', r' [;] | $ '),
