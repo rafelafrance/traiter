@@ -5,14 +5,12 @@
 import sys
 import argparse
 import textwrap
+from pylib.shared.util import __VERSION__
 from pylib.vertnet.all_traits import TRAITS
-from pylib.vertnet.file_parser import FileParser
+from pylib.shared.file_parser import FileParser
 from pylib.vertnet.readers.csv_reader import CsvReader
 from pylib.vertnet.writers.csv_writer import CsvWriter
 from pylib.vertnet.writers.html_writer import HtmlWriter
-
-
-__VERSION__ = '0.4.0'
 
 
 INPUT_FORMATS = {
@@ -65,8 +63,7 @@ def parse_args():
 
     arg_parser.add_argument(
         '--input-file', '-i', type=argparse.FileType('r'), default=sys.stdin,
-        help="""The input file containing the parsers.
-            Defaults to stdin.""")
+        help="""The input file containing the raw data. Defaults to stdin.""")
 
     arg_parser.add_argument(
         '--output-file', '-o', type=argparse.FileType('w'), default=sys.stdout,
@@ -79,7 +76,7 @@ def parse_args():
 
     arg_parser.add_argument(
         '--search-field', '-s', action='append', metavar='FIELD',
-        help=f"""A field that contains parsers.
+        help=f"""A field that contains the data to parse.
             You may use this argument more than once.""")
 
     arg_parser.add_argument(

@@ -5,7 +5,7 @@ This object holds entire file accumulators while parsing and it returns a per
 row record parser.
 """
 
-from pylib.vertnet.record_parser import RecordParser
+from .record_parser import RecordParser
 
 
 class FileParser:

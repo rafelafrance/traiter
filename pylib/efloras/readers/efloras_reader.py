@@ -39,7 +39,7 @@ def parse_efloras_page(args, path, family):
 
     para, text = find_trait_groups_paragraph(page)
     if para is not None:
-        check_trait_groups(para, text)
+        check_trait_groups(para)
         row['text'] = text
         row = {**row, **parse_trait_groups(args, text)}
     return row
@@ -84,7 +84,7 @@ def find_trait_groups_paragraph(page):
     return None, None
 
 
-def check_trait_groups(para, text):  # pylint: disable=unused-argument
+def check_trait_groups(para):  # , text):
     """Validate that we have all of the traits."""
     bold = para.xpath('.//b')  # Used to check the trait group parse
 

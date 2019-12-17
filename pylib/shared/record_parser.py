@@ -7,7 +7,7 @@ class TraitFound(Exception):
     """
     Stop looking for parses because we found one.
 
-    If one field has a trait notation (or multiple) the don't look for the
+    If one field has a trait notation (or multiple) then don't look for the
     trait in other fields.
     """
 

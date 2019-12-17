@@ -8,9 +8,6 @@ from pylib.shared.util import FLAGS
 from pylib.efloras.shared_patterns import CATALOG
 
 
-__VERSION__ = '0.1.0'
-
-
 RAW_DIR = Path('.') / 'data' / 'raw'
 
 EFLORAS_NA_FAMILIES = RAW_DIR / 'eFlora_family_list.csv'

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-"""Parse extracted web pages."""
+"""Parse extracted efloras web pages."""
 
 import sys
 import argparse
 import textwrap
+from pylib.shared.util import __VERSION__
 import pylib.efloras.util as util
 import pylib.efloras.trait_groups as tg
 from pylib.efloras.writers.html_writer import html_writer
@@ -20,7 +21,7 @@ OUTPUT_FORMATS = {
     'html': html_writer}
 
 
-def main(args, families):
+def parse_traits(args, families):
     """Perform actions based on the arguments."""
     if args.list_families:
         util.print_families(families)
@@ -46,7 +47,7 @@ def parse_args(families):
 
     arg_parser.add_argument(
         '--version', '-V', action='version',
-        version='%(prog)s v{}'.format(util.__VERSION__))
+        version='%(prog)s v{}'.format(__VERSION__))
 
     arg_parser.add_argument(
         '--family', '-f', action='append',
@@ -91,4 +92,4 @@ def parse_args(families):
 if __name__ == '__main__':
     FAMILIES = {k: v for k, v in util.get_families().items() if v['count']}
     ARGS = parse_args(FAMILIES)
-    main(ARGS, FAMILIES)
+    parse_traits(ARGS, FAMILIES)
