@@ -4,8 +4,14 @@ import regex
 
 __VERSION__ = '0.5.0'
 
-
 FLAGS = regex.VERBOSE | regex.IGNORECASE
+
+BATCH_SIZE = 1_000_000  # How many records to work with at a time
+
+
+def shorten(text):
+    """Collapse whitespace in a string."""
+    return ' '.join(text.split())
 
 
 def flatten(nested):

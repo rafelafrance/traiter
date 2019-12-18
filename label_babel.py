@@ -7,7 +7,7 @@ import sys
 import argparse
 import textwrap
 from pylib.shared.util import __VERSION__
-from pylib.shared.readers import csv_reader
+from pylib.shared.importers import csv_reader
 
 """
 Date, taxon names, collector, collector number
@@ -61,7 +61,7 @@ def parse_args():
     arg_parser.add_argument(
         '--input-format', '-I', default='csv',
         choices=INPUT_FORMATS.keys(),
-        help="""The data input format. The default is "efloras".""")
+        help="""The data input format. The default is "csv".""")
 
     arg_parser.add_argument(
         '--output-file', '-o', type=argparse.FileType('w'), default=sys.stdout,

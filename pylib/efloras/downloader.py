@@ -11,7 +11,8 @@ import textwrap
 import urllib.request
 import regex
 from lxml import html
-import pylib.efloras.util as util
+from pylib.shared.util import __VERSION__
+from . import util
 
 
 LINK = regex.compile(
@@ -54,7 +55,7 @@ def parse_args():
 
     arg_parser.add_argument(
         '--version', '-V', action='version',
-        version='%(prog)s v{}'.format(util.__VERSION__))
+        version='%(prog)s v{}'.format(__VERSION__))
 
     arg_parser.add_argument(
         '--family', '-f', action='append',
