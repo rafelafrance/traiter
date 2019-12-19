@@ -2,8 +2,7 @@
 
 from collections import deque
 from typing import Tuple
-from pylib.stacked_regex.rule import Rules, RuleDict, RuleType
-from pylib.stacked_regex.rule import SEP
+from pylib.stacked_regex.rule import Rules, RuleDict, RuleType, SIZE
 from pylib.shared.util import flatten
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
@@ -79,12 +78,12 @@ class Parser:
     def produce(self, tokens: Tokens, text: str) -> Tokens:
         """Produce final tokens for consumption by the client code."""
         results = []
-        token_text = SEP.join([t.name for t in tokens]) + SEP
+        token_text = ''.join([t.rule.token for t in tokens])
         matches = self.get_matches(self.producers, token_text)
 
         while matches:
             match = matches.popleft()
-            token, _, _ = self.merge_tokens(match, tokens, text, token_text)
+            token, _, _ = self.merge_tokens(match, tokens, text)
             results.append(token)
             matches = self.remove_passed_over(matches, match)
 
@@ -119,12 +118,12 @@ class Parser:
         values = old + new
         groups[key] = values[0] if len(values) == 1 else values
 
-    def merge_tokens(self, match: Token, tokens: Tokens, text: str,
-                     token_text: str) -> Tuple[Token, int, int]:
+    def merge_tokens(self, match: Token, tokens: Tokens, text: str
+                     ) -> Tuple[Token, int, int]:
         """Merge all matched tokens into one token."""
         # Get tokens in match
-        first_idx = token_text[:match.start].count(SEP)
-        last_idx = token_text[:match.end].count(SEP)
+        first_idx = match.start // SIZE
+        last_idx = match.end // SIZE
         span = (tokens[first_idx].start, tokens[last_idx - 1].end)
 
         # Merge all subgroups from sub-tokens into current token
@@ -136,19 +135,18 @@ class Parser:
         # Add groups from current token with real (not tokenized) text
         for key in match.match.capturesdict():
             for i, value in enumerate(match.match.captures(key)):
-                idx1 = token_text[:match.match.starts(key)[i]].count(SEP)
-                idx2 = token_text[:match.match.ends(key)[i]].count(SEP) - 1
+                idx1 = match.match.starts(key)[i] // SIZE
+                idx2 = match.match.ends(key)[i] // SIZE - 1
                 self.append_group(
                     groups, key, text[tokens[idx1].start:tokens[idx2].end])
 
         token = Token(match.rule, span=span, groups=groups)
         return token, first_idx, last_idx
 
-    def replace(self, tokens: Tokens, text: str) \
-            -> Tuple[Tokens, bool]:
+    def replace(self, tokens: Tokens, text: str) -> Tuple[Tokens, bool]:
         """Replace token combinations with another token."""
         replaced = []
-        token_text = SEP.join([t.name for t in tokens]) + SEP
+        token_text = ''.join([t.rule.token for t in tokens])
         matches = self.get_matches(self.replacers, token_text)
         again = bool(matches)
 
@@ -156,7 +154,7 @@ class Parser:
         while matches:
             match = matches.popleft()
             token, first_idx, last_idx = self.merge_tokens(
-                match, tokens, text, token_text)
+                match, tokens, text)
             if token.action:
                 token.action(token)
             if prev_idx != first_idx:

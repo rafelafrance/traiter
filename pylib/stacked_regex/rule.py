@@ -8,7 +8,8 @@ from pylib.shared.util import FLAGS
 
 
 SEP = ';'
-PRODUCER = 0
+TOKEN = 0
+SIZE = 5
 
 # Find tokens in the regex. Look for words that are not part of a group
 # name or a metacharacter. So, "word" not "<word>". Neither "(?P" nor "\b".
@@ -43,7 +44,8 @@ class Rule:
 
     name: str               # Unique within a catalog but not across catalogs
     pattern: str            # The regex before it is manipulated
-    type: RuleType          # The RuleType
+    type: RuleType
+    token: str              # The token
     action: Action = None   # What to do when there is a match
     regexp: Pattern = None  # The compiled regexp
     capture: bool = True    # Will the rule create an outer capture group?
@@ -52,6 +54,12 @@ class Rule:
     def __lt__(self, other: 'Rule'):
         """Custom sort order."""
         return (self.type, self.when) < (other.type, other.when)
+
+    def __eq__(self, other):
+        """Compare everything except the token."""
+        me = tuple(v for k, v in self.__dict__.items() if k != 'token')
+        you = tuple(v for k, v in other.__dict__.items() if k != 'token')
+        return me == you
 
     def build(self, rules: RuleDict) -> str:
         """Build regular expressions for token matches."""
@@ -62,7 +70,7 @@ class Rule:
             sub = rules.get(word)
 
             if sub.type == RuleType.SCANNER:
-                return fr'(?: \b {sub.name}{SEP} )'
+                return fr'(?: {sub.token} )'
 
             return sub.regexp.pattern
 
@@ -76,6 +84,13 @@ class Rule:
         """Build and compile a rule."""
         pattern = self.build(rules)
         self.regexp = regex.compile(pattern, FLAGS)
+
+
+def next_token() -> str:
+    """Get the next token."""
+    global TOKEN  # pylint: disable=global-statement
+    TOKEN += 1
+    return f'{TOKEN:04x}{SEP}'
 
 
 def join(regexp: InRegexp) -> str:
@@ -99,6 +114,7 @@ def part(
         name=name,
         pattern=pattern,
         type=RuleType.SCANNER,
+        token=next_token(),
         action=action,
         regexp=regexp,
         when=when)
@@ -118,6 +134,7 @@ def term(
         name=name,
         pattern=pattern,
         type=RuleType.SCANNER,
+        token=next_token(),
         action=action,
         regexp=regexp,
         when=when)
@@ -134,6 +151,7 @@ def grouper(
         name=name,
         pattern=join(regexp),
         type=RuleType.GROUPER,
+        token=next_token(),
         action=action,
         capture=capture,
         when=when)
@@ -150,6 +168,7 @@ def replacer(
         name=name,
         pattern=join(regexp),
         type=RuleType.REPLACER,
+        token=next_token(),
         action=action,
         capture=capture,
         when=when)
@@ -162,15 +181,14 @@ def producer(
         capture: bool = False,
         when: int = 0) -> Rule:
     """Build a product regular expression."""
-    global PRODUCER  # pylint: disable=global-statement
-    PRODUCER += 1
-    if not name:
-        name = f'producer_{PRODUCER}'
+    token = next_token()
+    name = name if name else f'producer_{TOKEN}'
 
     return Rule(
         name=name,
         pattern=join(regexp),
         type=RuleType.PRODUCER,
+        token=token,
         action=action,
         capture=capture,
         when=when)
