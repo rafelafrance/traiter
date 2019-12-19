@@ -47,7 +47,6 @@ DATE = Base(
 
         CATALOG.producer(convert, """
             label? (?P<value> numeric_date ) """),
-
     ],
 
 )
