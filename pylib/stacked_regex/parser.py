@@ -66,44 +66,55 @@ class Parser:
         """Scan a string & return tokens."""
         tokens = []
         matches = self.get_matches(self.scanners, text)
+        matches = self.sort_matches(matches)
 
         while matches:
             token = matches.popleft()
             if token.action:
                 token.action(token)
             tokens.append(token)
-            matches = self.remove_passed_over(matches, token)
         return tokens
 
     def produce(self, tokens: Tokens, text: str) -> Tokens:
         """Produce final tokens for consumption by the client code."""
         results = []
         token_text = ''.join([t.rule.token for t in tokens])
-        matches = self.get_matches(self.producers, token_text)
+        matches = self.match_tokens(self.producers, token_text)
 
         while matches:
             match = matches.popleft()
             token, _, _ = self.merge_tokens(match, tokens, text)
             results.append(token)
-            matches = self.remove_passed_over(matches, match)
 
         return results
 
     @staticmethod
-    def remove_passed_over(matches: deque, match: Token) -> deque:
-        """Remove matches that have been skipped over by the current match."""
-        while matches and matches[0].span[0] < match.span[1]:
-            matches.popleft()
+    def get_matches(rules: Rules, text: str) -> Tokens:
+        """Get all of the text matches for the rules sorted by position."""
+        pairs = [(r, r.regexp.finditer(text)) for r in rules]
+        return [Token(match[0], match=m) for match in pairs for m in match[1]]
+
+    def sort_matches(self, tokens: Tokens) -> deque:
+        """Sort the matches by starting span and then by longest."""
+        matches = deque(sorted(tokens, key=lambda m: (m.span[0], -m.span[1])))
+        matches = self.remove_overlapping(matches)
         return matches
 
+    def match_tokens(self, rules: Rules, text: str) -> deque:
+        """Get all of the token matches for the rules sorted by position."""
+        matches = self.get_matches(rules, text)
+        matches = [t for t in matches if t.valid_match()]
+        return self.sort_matches(matches)
+
     @staticmethod
-    def get_matches(rules: Rules, text: str) -> deque:
-        """Get all of the text matches for the rules sorted by position."""
-        matches = [(r, r.regexp.finditer(text)) for r in rules]
-        matches = [Token(match[0], match=m)
-                   for match in matches for m in match[1]]
-        matches = sorted(matches, key=lambda m: (m.span[0], -m.span[1]))
-        return deque(matches)
+    def remove_overlapping(matches: deque) -> deque:
+        """Remove matches that overlap a previous match."""
+        cleaned = deque()
+        while matches:
+            cleaned.append(matches.popleft())
+            while matches and matches[0].span[0] < cleaned[-1].span[1]:
+                matches.popleft()
+        return cleaned
 
     @staticmethod
     def append_group(groups: Groups, key: str, value: str) -> None:
@@ -147,7 +158,7 @@ class Parser:
         """Replace token combinations with another token."""
         replaced = []
         token_text = ''.join([t.rule.token for t in tokens])
-        matches = self.get_matches(self.replacers, token_text)
+        matches = self.match_tokens(self.replacers, token_text)
         again = bool(matches)
 
         prev_idx = 0
@@ -161,7 +172,6 @@ class Parser:
                 replaced += tokens[prev_idx:first_idx]
             replaced.append(token)
             prev_idx = last_idx
-            matches = self.remove_passed_over(matches, match)
 
         if prev_idx != len(tokens):
             replaced += tokens[prev_idx:]

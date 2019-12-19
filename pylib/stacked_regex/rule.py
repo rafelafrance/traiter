@@ -9,7 +9,7 @@ from pylib.shared.util import FLAGS
 
 SEP = ';'
 TOKEN = 0
-SIZE = 5
+SIZE = 4
 
 # Find tokens in the regex. Look for words that are not part of a group
 # name or a metacharacter. So, "word" not "<word>". Neither "(?P" nor "\b".
@@ -90,7 +90,7 @@ def next_token() -> str:
     """Get the next token."""
     global TOKEN  # pylint: disable=global-statement
     TOKEN += 1
-    return f'{TOKEN:04x}{SEP}'
+    return f'{TOKEN:04x}'
 
 
 def join(regexp: InRegexp) -> str:
@@ -182,7 +182,7 @@ def producer(
         when: int = 0) -> Rule:
     """Build a product regular expression."""
     token = next_token()
-    name = name if name else f'producer_{TOKEN}'
+    name = name if name else f'producer_{token}'
 
     return Rule(
         name=name,

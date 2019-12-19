@@ -1,7 +1,7 @@
 """A class to hold an individual token."""
 
 from typing import Dict, List, Match, Tuple
-from pylib.stacked_regex.rule import Rule, Action, Groups
+from pylib.stacked_regex.rule import Rule, Action, Groups, SIZE
 
 
 Tokens = List['Token']
@@ -62,3 +62,7 @@ class Token:
     def action(self) -> Action:
         """Return the rule name."""
         return self.rule.action
+
+    def valid_match(self) -> bool:
+        """Make sure a token match is valid."""
+        return self.span[0] % SIZE == 0
