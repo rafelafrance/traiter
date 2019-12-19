@@ -70,7 +70,8 @@ class RuleCatalog:
         self.rules[name] = self._get_sub_patterns(rule)
         return self.rules[name]
 
-    def producer(self, action: Action, regexp: InRegexp, name=None,
+    # pylint: disable=too-many-arguments
+    def producer(self, action: Action, regexp: InRegexp, name: str = None,
                  capture: bool = True, when: int = 0) -> Rules:
         """Add a producer rule."""
         rule = producer(action, regexp, name=name, capture=capture, when=when)

@@ -18,8 +18,7 @@ def parse_args():
         allow_abbrev=True,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         fromfile_prefix_chars='@',
-        description=shorten("""
-        """))
+        description=shorten("""Import raw data for extracting traits."""))
 
     arg_parser.add_argument(
         '--version', '-V', action='version',

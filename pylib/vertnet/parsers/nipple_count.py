@@ -41,16 +41,7 @@ def typed(token):
 NIPPLE_COUNT = Base(
     name=__name__.split('.')[-1],
     rules=[
-        # CATALOG['uuid'],  # UUIDs cause problems with numbers
-
         CATALOG.term('id', r' \d+-\d+ '),
-
-        # CATALOG['nipple'],
-        # CATALOG['integer'],
-        # CATALOG['visible'],
-        # CATALOG['none'],
-        # CATALOG['op'],
-        # CATALOG['eq'],
 
         CATALOG.term('adj', r""" inguinal ing pectoral pec pr """.split()),
 

@@ -59,5 +59,15 @@ CATALOG.part('ordinals', [number_to_words(x) for x in ORDINALS])
 # Time units
 CATALOG.part('time_units', r'years? | months? | weeks? | days? | hours?')
 
-# integers, no commas or signs and typically small
+# Integers, no commas or signs and typically small
 CATALOG.part('integer', r""" \d+ (?! [%\d\-] ) """)
+
+# Date
+CATALOG.part('month_name', """
+    (?<! [a-z])
+    (?P<month> 
+        jan | feb | mar | apr | jun | jul | aug | sept? | oct | nov | dec
+        | january | february | march | april | may | june | july | august
+        | september | october | november | december )
+    (?! [a-z] )
+    """, capture=False)
