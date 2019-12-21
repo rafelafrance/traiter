@@ -31,6 +31,7 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_grouper_01(self):
         """It adds a grouper rule and a sub-rule."""
+        self.maxDiff = None
         cat = RuleCatalog()
         cat.term(self.t1.name, self.t1.pattern)
         cat.grouper(self.g1.name, self.g1.pattern)
@@ -72,7 +73,6 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_grouper_04(self):
         """It adds sub-rules recursively and handles basal patterns."""
-        self.maxDiff = None
         cat = RuleCatalog()
         cat.part(self.p1.name, self.p1.pattern)
         cat.term(self.t1.name, self.t1.pattern)

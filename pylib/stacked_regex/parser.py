@@ -1,7 +1,7 @@
 """Extract information for further analysis."""
 
 from collections import deque
-from typing import Tuple
+from typing import List, Tuple
 from pylib.stacked_regex.rule import Rules, RuleDict, RuleType, SIZE
 from pylib.shared.util import flatten
 from pylib.stacked_regex.token import Token, Tokens, Groups
@@ -10,7 +10,7 @@ from pylib.stacked_regex.token import Token, Tokens, Groups
 class Parser:
     """Container for the the parser arrays."""
 
-    def __init__(self, rules: Rules, name: str = 'parser') -> None:
+    def __init__(self, rules: List[Rules], name: str = 'parser') -> None:
         """Build the parser."""
         self.name: str = name
         self.rules: RuleDict = {}
@@ -20,7 +20,7 @@ class Parser:
         self.producers: Rules = []
         self.__add__(rules)
 
-    def __add__(self, rule_list: Rules) -> None:
+    def __add__(self, rule_list: List[Rules]) -> None:
         """Add rules to the parser."""
         self._built = False
         for rule in sorted(flatten(rule_list)):

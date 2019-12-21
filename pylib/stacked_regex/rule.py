@@ -39,7 +39,7 @@ class RuleType(IntEnum):
 
 
 @dataclass
-class Rule:
+class Rule:  # pylint: disable=too-many-instance-attributes
     """Create a rule."""
 
     name: str               # Unique within a catalog but not across catalogs
@@ -56,17 +56,18 @@ class Rule:
         return (self.type, self.when) < (other.type, other.when)
 
     def __eq__(self, other):
-        """Compare everything except the token."""
-        me = tuple(v for k, v in self.__dict__.items() if k != 'token')
-        you = tuple(v for k, v in other.__dict__.items() if k != 'token')
-        return me == you
+        """Compare tokens for tests."""
+        fields = ('name', 'pattern', 'type', 'action', 'capture', 'when')
+        you = tuple(v for k, v in other.__dict__.items() if k in fields)
+        me_ = tuple(v for k, v in self.__dict__.items() if k in fields)
+        return me_ == you
 
     def build(self, rules: RuleDict) -> str:
         """Build regular expressions for token matches."""
         def rep(match):
             word = match.group('word')
             if word not in rules:
-                print(f'Error: "{word}" is not defined.')
+                print(f'Error: In "{self.name}", {word}" is not defined.')
             sub = rules.get(word)
 
             if sub.type == RuleType.SCANNER:

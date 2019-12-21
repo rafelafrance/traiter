@@ -1,8 +1,9 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring
 # pylint: disable=missing-function-docstring,too-many-public-methods
+
 from datetime import date
-from dateutil.relativedelta import relativedelta
 import unittest
+from dateutil.relativedelta import relativedelta
 from pylib.shared.trait import Trait
 from pylib.label_babel.parsers.label_date import DATE
 
