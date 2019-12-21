@@ -17,6 +17,7 @@ CATALOG.part('comma', r' [,] ', capture=False, when=LAST)
 CATALOG.part('semicolon', r' [;] ', capture=False, when=LAST)
 CATALOG.part('ampersand', r' [&] ', capture=False)
 CATALOG.part('eq', r' [=] ', capture=False)
+CATALOG.part('eol', r' [\n\r\l] ', capture=False)
 
 # Small words
 CATALOG.part('by', r' by ', capture=False)

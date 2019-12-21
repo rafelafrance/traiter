@@ -52,4 +52,3 @@ class Trait:
         if value := token.groups.get(flag):
             flag = rename if rename else flag
             setattr(self, flag, value.lower())
-

@@ -30,7 +30,7 @@ TESTES_SIZE = Base(
 
         CATALOG.grouper('state', [
             """(non | partially | fully )? descended """]
-                + """ scrotal abdominal size other """.split()),
+                        + """ scrotal abdominal size other """.split()),
 
         # Male or female ambiguous, like: gonadLength1
         CATALOG.grouper('ambiguous', """

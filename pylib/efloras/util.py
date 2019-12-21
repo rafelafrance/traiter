@@ -88,4 +88,4 @@ def part_phrase(catalog, leaf_part):
     return catalog.grouper(f'{leaf_part}_phrase', f"""
             ( location ( word | punct | prep )* )?
             (?P<part> {leaf_part} )
-            """),
+            """)

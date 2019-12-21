@@ -24,4 +24,23 @@ class TestAdminUnit(unittest.TestCase):
         """It handles a confusing county notation."""
         self.assertEqual(
             ADMIN_UNIT.parse('Flora of ARKANSAS County: MISSISSIPPI'),
-            [Trait(us_county='MISSISSIPPI', start=9, end=37)])
+            [Trait(us_county='Mississippi', us_state='Arkansas',
+                   start=9, end=37)])
+
+    def test_parse_04(self):
+        """It handles line breaks."""
+        self.assertEqual(
+            ADMIN_UNIT.parse('COUNTY:\n\nLee E.L.Nielsen'),
+            [])
+
+    def test_parse_05(self):
+        """It handles a trailing county abbreviation."""
+        self.assertEqual(
+            ADMIN_UNIT.parse('Alleghany Co,'),
+            [Trait(us_county='Alleghany', start=0, end=12)])
+
+    def test_parse_06(self):
+        """It normalizes state abbreviations."""
+        self.assertEqual(
+            ADMIN_UNIT.parse('Desha Co., Ark.'),
+            [Trait(us_county='Desha',  us_state='Arkansas', start=0, end=14)])

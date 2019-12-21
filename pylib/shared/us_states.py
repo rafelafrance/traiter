@@ -2,6 +2,7 @@
 
 # pylint: disable=too-many-lines
 
+import re
 from pylib.shared import patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 
@@ -31,11 +32,11 @@ CATALOG.term('AR_abbrev', r""" A\.?R\.? | Ark\.? """)
 CATALOG.term('Arkansas', r' Arkansas ')
 CATALOG.grouper('AR', ' AR_abbrev | Arkansas ')
 
-CATALOG.term('CA_abbrev', r""" C\.?A\.? | C\.?F\.?| Calif\.? | Cal\.? """)
+CATALOG.term('CA_abbrev', r""" C\.?A\.? | C\.?F\.? | Calif\.? | Cal\.? """)
 CATALOG.term('California', r' California ')
 CATALOG.grouper('CA', ' CA_abbrev | California ')
 
-CATALOG.term('CO_abbrev', r""" C\.?O\.? | C\.?L\.?| Colo\.? | Col\.? """)
+CATALOG.term('CO_abbrev', r""" C\.?O\.? | C\.?L\.? | Colo\.? | Col\.? """)
 CATALOG.term('Colorado', r' Colorado ')
 CATALOG.grouper('CO', ' CO_abbrev | Colorado ')
 
@@ -43,7 +44,7 @@ CATALOG.term('CT_abbrev', r""" C\.?T\.? | Conn\.? """)
 CATALOG.term('Connecticut', r' Connecticut ')
 CATALOG.grouper('CT', ' CT_abbrev | Connecticut ')
 
-CATALOG.term('DE_abbrev', r""" D\.?E\.? | D\.?L\.?| Del\.? """)
+CATALOG.term('DE_abbrev', r""" D\.?E\.? | D\.?L\.? | Del\.? """)
 CATALOG.term('Delaware', r' Delaware ')
 CATALOG.grouper('DE', ' DE_abbrev | Delaware ')
 
@@ -59,7 +60,7 @@ CATALOG.term('HI_abbrev', r""" H\.?I\.? | H\.?A\.? """)
 CATALOG.term('Hawaii', r' Hawaii ')
 CATALOG.grouper('HI', ' HI_abbrev | Hawaii ')
 
-CATALOG.term('ID_abbrev', r""" I\.?D\.? | Idaho | Ida\.? """)
+CATALOG.term('ID_abbrev', r""" I\.?D\.? | Ida\.? """)
 CATALOG.term('Idaho', r' Idaho ')
 CATALOG.grouper('ID', ' ID_abbrev | Idaho ')
 
@@ -75,7 +76,7 @@ CATALOG.term('IA_abbrev', r""" I\.?A\.? | Ioa\.? """)
 CATALOG.term('Iowa', r' Iowa ')
 CATALOG.grouper('IA', ' IA_abbrev | Iowa ')
 
-CATALOG.term('KS_abbrev', r""" K\.?S\.? | K\.?A\.?| Kans\.? | Kan\.? """)
+CATALOG.term('KS_abbrev', r""" K\.?S\.? | K\.?A\.? | Kans\.? | Kan\.? """)
 CATALOG.term('Kansas', r' Kansas ')
 CATALOG.grouper('KS', ' KS_abbrev | Kansas ')
 
@@ -99,7 +100,7 @@ CATALOG.term('MA_abbrev', r""" M\.?A\.? | Mass\.? """)
 CATALOG.term('Massachusetts', r' Massachusetts ')
 CATALOG.grouper('MA', ' MA_abbrev | Massachusetts ')
 
-CATALOG.term('MI_abbrev', r""" M\.?I\.? | M\.?C\.?| Mich\.? """)
+CATALOG.term('MI_abbrev', r""" M\.?I\.? | M\.?C\.? | Mich\.? """)
 CATALOG.term('Michigan', r' Michigan ')
 CATALOG.grouper('MI', ' MI_abbrev | Michigan ')
 
@@ -119,7 +120,7 @@ CATALOG.term('MT_abbrev', r""" M\.?T\.? | Mont\.? """)
 CATALOG.term('Montana', r' Montana ')
 CATALOG.grouper('MT', ' MT_abbrev | Montana ')
 
-CATALOG.term('NE_abbrev', r""" N\.?E\.? | N\.?B\.?| Nebr\.? | Neb\.? """)
+CATALOG.term('NE_abbrev', r""" N\.?E\.? | N\.?B\.? | Nebr\.? | Neb\.? """)
 CATALOG.term('Nebraska', r' Nebraska ')
 CATALOG.grouper('NE', ' NE_abbrev | Nebraska ')
 
@@ -199,7 +200,7 @@ CATALOG.term('VA_abbrev', r"""  V\.?A\.? | Virg\.? """)
 CATALOG.term('Virginia', r' Virginia ')
 CATALOG.grouper('VA', ' VA_abbrev | Virginia ')
 
-CATALOG.term('WA_abbrev', r""" W\.?A\.? | W\.?N\.?| Wash\.? | Wn\.? """)
+CATALOG.term('WA_abbrev', r""" W\.?A\.? | W\.?N\.?| Wash\.? """)
 CATALOG.term('Washington', r' Washington ')
 CATALOG.grouper('WA', ' WA_abbrev | Washington ')
 
@@ -207,7 +208,7 @@ CATALOG.term('WV_abbrev', r""" W\.?V\.? | W\.? \s? Va\.? | W\.? \s? Virg\.? """)
 CATALOG.term('West_Virginia', r' West \s? Virginia ')
 CATALOG.grouper('WV', ' WV_abbrev | West_Virginia ')
 
-CATALOG.term('WI_abbrev', r""" W\.?I\.? | W\.?S\.?| Wis\.? | Wisc\.? """)
+CATALOG.term('WI_abbrev', r""" W\.?I\.? | W\.?S\.? | Wis\.? | Wisc\.? """)
 CATALOG.term('Wisconsin', r' Wisconsin ')
 CATALOG.grouper('WI', ' WI_abbrev | Wisconsin ')
 
@@ -239,3 +240,74 @@ CATALOG.grouper('us_state', """
     AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS
     MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI
     WY AS GU MP PR VI UM """.split())
+
+
+NORMALIZE_US_STATE = {
+    'al': 'Alabama', 'ala': 'Alabama',
+    'ak': 'Alaska', 'alas': 'Alaska',
+    'az': 'Arizona', 'ariz': 'Arizona',
+    'ar': 'Arkansas', 'ark': 'Arkansas',
+    'ca': 'California', 'cf': 'California', 'calif': 'California',
+    'cal': 'California',
+    'co': 'Colorado', 'cl': 'Colorado', 'colo': 'Colorado', 'col': 'Colorado',
+    'ct': 'Connecticut', 'conn': 'Connecticut',
+    'de': 'Delaware', 'dl': 'Delaware', 'del': 'Delaware',
+    'fl': 'Florida', 'fla': 'Florida', 'flor': 'Florida',
+    'ga': 'Georgia', 'geo': 'Georgia',
+    'hi': 'Hawaii', 'ha': 'Hawaii',
+    'id': 'Idaho', 'Ida': 'Idaho',
+    'il': 'Illinois', 'ill': 'Illinois', 'ills': 'Illinois',
+    'in': 'Indiana', 'ind': 'Indiana',
+    'ia': 'Iowa', 'Ioa': 'Iowa',
+    'ks': 'Kansas', 'ka': 'Kansas', 'kans': 'Kansas', 'kan': 'Kansas',
+    'ky': 'Kentucky', 'ken': 'Kentucky', 'kent': 'Kentucky',
+    'la': 'Louisiana',
+    'me': 'Maine',
+    'md': 'Maryland', 'mar': 'Maryland', 'mary': 'Maryland',
+    'ma': 'Massachusetts', 'mass': 'Massachusetts',
+    'mi': 'Michigan', 'mc': 'Michigan', 'mich': 'Michigan',
+    'mn': 'Minnesota', 'minn': 'Minnesota',
+    'ms': 'Mississippi', 'miss': 'Mississippi',
+    'mo': 'Missouri',
+    'mt': 'Montana', 'mont': 'Montana',
+    'ne': 'Nebraska', 'nb': 'Nebraska', 'nebr': 'Nebraska', 'neb': 'Nebraska',
+    'nv': 'Nevada', 'nev': 'Nevada',
+    'nh': 'New Hampshire',
+    'nj': 'New Jersey', 'njersey': 'New Jersey',
+    'nm': 'New Mexico', 'nmex': 'New Mexico', 'newm': 'New Mexico',
+    'ny': 'New York', 'nyork': 'New York',
+    'nc': 'North Carolina', 'ncar': 'North Carolina',
+    'nd': 'North Dakota', 'ndak': 'North Dakota', 'nodak': 'North Dakota',
+    'oh': 'Ohio',
+    'ok': 'Oklahoma', 'okla': 'Oklahoma',
+    'or': 'Oregon', 'oreg': 'Oregon', 'ore': 'Oregon',
+    'ri': 'Rhode Island', 'pp': 'Rhode Island', 'risl': 'Rhode Island',
+    'sc': 'South Carolina', 'scar': 'South Carolina',
+    'sd': 'South_Dakota', 'sdak': 'South_Dakota', 'sodak': 'South_Dakota',
+    'tn': 'Tennessee', 'tenn': 'Tennessee',
+    'tx': 'Texas', 'tex': 'Texas',
+    'ut': 'Utah',
+    'vt': 'Vermont',
+    'va': 'Virginia', 'virg': 'Virginia',
+    'wa': 'Washington', 'wn': 'Washington', 'wash': 'Washington',
+    'wv': 'West Virginia', 'wva': 'West Virginia', 'wvirg': 'West Virginia',
+    'wi': 'Wisconsin', 'ws': 'Wisconsin', 'wis': 'Wisconsin',
+    'wisc': 'Wisconsin',
+    'wy': 'Wyoming', 'wyo': 'Wyoming',
+    'dc': 'Washington D.C.', 'washdc': 'Washington D.C.',
+    'districtofcolumbia': 'Washington D.C.',
+    'as': 'American Samoa', 'asm': 'American Samoa',
+    'gu': 'Guam', 'gum': 'Guam',
+    'mp': 'Northern Mariana Islands', 'mnp': 'Northern Mariana Islands',
+    'cm': 'Northern Mariana Islands', 'cnmi': 'Northern Mariana Islands',
+    'pr': 'Puerto Rico', 'pri': 'Puerto Rico',
+    'vi': 'U.S. Virgin Islands', 'vir':'U.S. Virgin Islands',
+    'usvi': 'U.S. Virgin Islands',
+    'um': 'United States Minor Outlying Islands',
+}
+
+
+def normalize_state(state: str) -> str:
+    """Convert state abbreviations to the state name."""
+    norm = re.sub(r'[^a-z]+', '', state.lower())
+    return NORMALIZE_US_STATE.get(norm, state.title())
