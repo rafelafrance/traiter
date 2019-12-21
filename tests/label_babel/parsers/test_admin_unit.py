@@ -43,4 +43,4 @@ class TestAdminUnit(unittest.TestCase):
         """It normalizes state abbreviations."""
         self.assertEqual(
             ADMIN_UNIT.parse('Desha Co., Ark.'),
-            [Trait(us_county='Desha',  us_state='Arkansas', start=0, end=14)])
+            [Trait(us_county='Desha', us_state='Arkansas', start=0, end=14)])

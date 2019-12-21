@@ -31,7 +31,6 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_grouper_01(self):
         """It adds a grouper rule and a sub-rule."""
-        self.maxDiff = None
         cat = RuleCatalog()
         cat.term(self.t1.name, self.t1.pattern)
         cat.grouper(self.g1.name, self.g1.pattern)
@@ -89,6 +88,6 @@ class TestRuleCatalog(unittest.TestCase):
             self.g2.name: [self.t1, self.t2, self.g2],
             self.g3.name: [self.t1, self.t2, self.g1, self.g2, self.g3],
             self.g4.name: [
-                self.p1, self.t1, self.t2, self.g1, self.g2,  self.g4],
+                self.p1, self.t1, self.t2, self.g1, self.g2, self.g4],
             }
         self.assertEqual(cat.rules, expect)
