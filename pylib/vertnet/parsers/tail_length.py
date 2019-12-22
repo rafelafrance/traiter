@@ -9,9 +9,7 @@ from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
 import pylib.vertnet.shared_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 # How far to look into the surrounding context to disambiguate the parse
 LOOK_BACK_FAR = 40

@@ -8,7 +8,6 @@ from pylib.stacked_regex.rule import part
 from pylib.vertnet.shared_patterns import CROSS
 from pylib.vertnet.trait import Trait
 
-
 # Used to get compounds traits from a single parse
 DOUBLE_CROSS = part(
     name='double_cross', regexp=f' {CROSS} ')
@@ -67,7 +66,6 @@ def convert(token):
     trait.is_value_in_token(token, 'dim', rename='dimension')
     trait.is_value_in_token(token, 'side')
     return trait if flag else None
-
 
 # class FemaleTraitBuilder:
 #     """Functions common to female trait builders."""

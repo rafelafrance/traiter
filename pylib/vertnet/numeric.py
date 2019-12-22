@@ -6,7 +6,6 @@ from pylib.shared.util import FLAGS, to_int, to_float, squash, as_list
 from pylib.vertnet.trait import Trait
 from pylib.shared.convert_units import convert
 
-
 LOOK_BACK_FAR = 40
 
 QUOTES_VS_INCHES = regex.compile(r' \d " (?! \s* \} )', FLAGS)

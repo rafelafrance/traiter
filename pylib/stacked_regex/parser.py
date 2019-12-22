@@ -1,16 +1,19 @@
 """Extract information for further analysis."""
 
 from collections import deque
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from pylib.stacked_regex.rule import Rules, RuleDict, RuleType, SIZE
 from pylib.shared.util import flatten
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
 
+RulesInput = Union[Rules, List[Rules]]
+
+
 class Parser:
     """Container for the the parser arrays."""
 
-    def __init__(self, rules: List[Rules], name: str = 'parser') -> None:
+    def __init__(self, rules: RulesInput, name: str = 'parser') -> None:
         """Build the parser."""
         self.name: str = name
         self.rules: RuleDict = {}

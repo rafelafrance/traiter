@@ -8,7 +8,6 @@ from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import as_value, add_flags, simple_mass
 import pylib.vertnet.shared_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 
@@ -58,7 +57,6 @@ BODY_MASS = Base(
         CATALOG.part('mass', 'mass'),
         CATALOG.part('body', 'body'),
 
-
         # These indicate that the mass is NOT a body mass
         CATALOG.term('other_wt', r"""
             femur baculum bacu bac spleen thymus kidney
@@ -84,7 +82,7 @@ BODY_MASS = Base(
         # Shorthand notation like: on tag: 11-22-33-44=99g
         CATALOG.producer(shorthand, [
             'key shorthand',  # With a key
-            'shorthand',     # Without a key
+            'shorthand',  # Without a key
         ]),
 
         CATALOG.producer(
@@ -93,5 +91,5 @@ BODY_MASS = Base(
             simple_mass, ' key mass_range '),
         CATALOG.producer(
             simple_mass, ' (?P<key> key_with_units ) mass_range '),
-        ],
-    )
+    ],
+)

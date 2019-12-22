@@ -7,7 +7,6 @@ import regex
 from pylib.shared.util import FLAGS
 from pylib.efloras.shared_patterns import CATALOG
 
-
 RAW_DIR = Path('.') / 'data' / 'raw'
 
 EFLORAS_NA_FAMILIES = RAW_DIR / 'eFlora_family_list.csv'
@@ -47,7 +46,7 @@ def get_families():
                 'created': times['created'],
                 'modified': times['modified'],
                 'count': times['count'],
-                }
+            }
 
     return families
 

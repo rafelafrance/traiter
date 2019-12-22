@@ -5,7 +5,6 @@ from pylib.vertnet.util import ordinal, number_to_words
 
 CATALOG = RuleCatalog()
 
-
 # Chars that may be a token
 CATALOG.part('slash', r' [/] ', capture=False)
 CATALOG.part('dash', r' (?: – | - ) ', capture=False)

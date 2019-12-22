@@ -58,11 +58,11 @@ class TestReplace(unittest.TestCase):
         self.assertEqual(
             parser.replace([t_zero1, t_one, t_two, t_zero2], text),
             ([
-                Token(t_zero1, span=(0, 4), groups={'zero': 'ZERO'}),
+                Token(t_zero1.rule, span=(0, 4), groups={'zero': 'ZERO'}),
                 Token(
                     r_replace, span=(5, 12),
                     groups={'one': 'ONE', 'two': 'TWO', 'replace': 'ONE TWO'}),
-                Token(t_zero2, span=(13, 17), groups={'zero': 'ZERO'})],
+                Token(t_zero2.rule, span=(13, 17), groups={'zero': 'ZERO'})],
              True))
 
     def test_replace_04(self):
@@ -76,8 +76,10 @@ class TestReplace(unittest.TestCase):
         parser.build()
         self.assertEqual(
             parser.replace([t_one, t_zero, t_two], text),
-            ([
-                Token(t_one, span=(0, 3), groups={'one': 'ONE'}),
-                Token(t_zero, span=(4, 8), groups={'zero': 'ZERO'}),
-                Token(t_two, span=(9, 12), groups={'two': 'TWO'})],
-             False))
+            (
+                [
+                    Token(t_one.rule, span=(0, 3), groups={'one': 'ONE'}),
+                    Token(t_zero.rule, span=(4, 8), groups={'zero': 'ZERO'}),
+                    Token(t_two.rule, span=(9, 12), groups={'two': 'TWO'}),
+                ],
+                False))

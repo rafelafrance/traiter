@@ -4,9 +4,7 @@ import regex
 import pylib.shared.patterns as patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 SEX = r'staminate | pistillate'
 CATALOG.term('sex', SEX)
@@ -59,14 +57,12 @@ CATALOG.part('punct', r' [,;:/] ', capture=False, when=LAST)
 
 CATALOG.term('word', r' [a-z] \w* ', capture=False, when=LAST)
 
-
 # ############################################################################
 # Numeric patterns
 
 CATALOG.term('units', ' cm mm '.split())
 
 CATALOG.part('number', r' \d+ ( \. \d* )? ')
-
 
 # Numeric ranges like: (10–)15–20(–25)
 RANGE = r"""
@@ -78,7 +74,6 @@ RANGE = r"""
     (?! dash | slash )
     """
 CATALOG.grouper('range', RANGE, capture=False)
-
 
 # Cross measurements like: 3–5(–8) × 4–11(–13)
 # Rename the groups so we can easily extract them in the parsers
@@ -93,7 +88,6 @@ CROSS = f"""
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """
 CATALOG.grouper('cross', CROSS, capture=False)
-
 
 CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
@@ -110,7 +104,6 @@ CATALOG.grouper(
     'cross_upper',
     fr""" up_to (?P<high_length> number )
         (?P<units_length> units ) """, capture=False)
-
 
 # Like: "to 10"
 CATALOG.grouper(

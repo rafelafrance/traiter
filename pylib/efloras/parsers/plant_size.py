@@ -102,8 +102,8 @@ def parser(plant_part):
             catalog.producer(convert, f"""
                 {plant_part}_phrase noise (?: open? sex close? )? noise
                     (?: cross_upper | cross ) (?P<dimension> dim )? """),
-            ],
-        )
+        ],
+    )
 
 
 LEAF_SIZE = parser('leaf')

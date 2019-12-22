@@ -7,7 +7,6 @@ from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import fraction, simple
 import pylib.vertnet.shared_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 
@@ -33,22 +32,6 @@ HIND_FOOT_LENGTH = Base(
             r'hind \s* foot \s* with \s* (?P<includes> claw )',
             r'hind \s* foot ( \s* ( length | len ) )?',
             'hfl | hf']),
-
-        # Shorthand notation
-        # CATALOG['shorthand_key'],
-        # CATALOG['shorthand'],
-
-        # Fractional numbers, like: 9/16
-        # CATALOG['fraction'],
-
-        # Possible range of numbers like: "10 - 20" or just "10"
-        # CATALOG['range'],
-
-        # Sometimes the last number is missing in the shorthand notation
-        # CATALOG['triple'],
-
-        # We allow random words in some situations
-        # term('word', r' ( [a-z] \w* ) ', capture=False),
 
         # Some patterns require a separator
         CATALOG.part('sep', r' [;,] | $ ', capture=False),

@@ -5,7 +5,6 @@ from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 

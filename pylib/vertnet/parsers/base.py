@@ -1,8 +1,7 @@
 """Common logic for parsing trait notations."""
 
 from typing import Callable, List
-from pylib.stacked_regex.parser import Parser
-from pylib.stacked_regex.rule import Rules
+from pylib.stacked_regex.parser import Parser, RulesInput
 from pylib.vertnet.trait import Trait
 
 
@@ -15,7 +14,7 @@ class Base(Parser):  # pylint: disable=too-few-public-methods
     """Shared lexer logic."""
 
     def __init__(
-            self, rules: List[Rules],
+            self, rules: RulesInput,
             name: str = 'parser',
             fix_up: Callable[[Trait, str], Trait] = None) -> None:
         """Build the trait parser."""

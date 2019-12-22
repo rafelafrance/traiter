@@ -3,7 +3,6 @@
 from typing import Dict, List, Match, Tuple
 from pylib.stacked_regex.rule import Rule, Action, Groups, SIZE
 
-
 Tokens = List['Token']
 
 

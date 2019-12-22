@@ -14,7 +14,6 @@ from lxml import html
 from pylib.shared.util import __VERSION__
 from . import util
 
-
 LINK = regex.compile(
     r'.*florataxon\.aspx\?flora_id=1&taxon_id=(?P<taxon_id>\d+)',
     regex.VERBOSE | regex.IGNORECASE)

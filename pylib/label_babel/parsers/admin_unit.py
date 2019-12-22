@@ -6,7 +6,6 @@ from pylib.shared import us_counties
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.label_babel.parsers.base import Base
 
-
 CATALOG = RuleCatalog(us_counties.CATALOG)
 
 

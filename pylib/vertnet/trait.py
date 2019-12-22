@@ -3,7 +3,6 @@
 from collections import namedtuple
 import pylib.shared.trait as trait
 
-
 TraitKey = namedtuple('TraitKey', 'value side')
 
 

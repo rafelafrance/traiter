@@ -6,15 +6,12 @@ import re
 from pylib.shared import patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 CATALOG.term('USA', r"""
     U\.?S\.?A\.? | U\.?S\.?
     | United \s? States \s? of \s? America | United \s? States
     | U\.? \s? of \s? A\.?""")
-
 
 CATALOG.term('AL_abbrev', r""" A\.?L\.? | Ala\.? """)
 CATALOG.term('Alabama', r' Alabama ')
@@ -235,12 +232,10 @@ CATALOG.term('VI', r"""
 CATALOG.term('UM', r"""
     U\.?M\.? | United \s? States \s? Minor \s? Outlying \s? Islands """)
 
-
 CATALOG.grouper('us_state', """
     AL AK AZ AR CA CO CT DE DC FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS
     MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI
     WY AS GU MP PR VI UM """.split())
-
 
 NORMALIZE_US_STATE = {
     'al': 'Alabama', 'ala': 'Alabama',
@@ -301,7 +296,7 @@ NORMALIZE_US_STATE = {
     'mp': 'Northern Mariana Islands', 'mnp': 'Northern Mariana Islands',
     'cm': 'Northern Mariana Islands', 'cnmi': 'Northern Mariana Islands',
     'pr': 'Puerto Rico', 'pri': 'Puerto Rico',
-    'vi': 'U.S. Virgin Islands', 'vir':'U.S. Virgin Islands',
+    'vi': 'U.S. Virgin Islands', 'vir': 'U.S. Virgin Islands',
     'usvi': 'U.S. Virgin Islands',
     'um': 'United States Minor Outlying Islands',
 }

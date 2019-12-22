@@ -4,9 +4,7 @@ from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.vertnet.parsers.base import Base, convert
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 PREGNANCY_STATE = Base(
     name=__name__.split('.')[-1],
@@ -39,5 +37,5 @@ PREGNANCY_STATE = Base(
         CATALOG.producer(convert, [
             """(?P<value> none? (recent | probably)?
             stage? (none | joiner)? pregnant quest? )"""]),
-        ],
+    ],
 )

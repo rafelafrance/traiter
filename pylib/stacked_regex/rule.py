@@ -6,7 +6,6 @@ from typing import Any, Callable, Dict, List, Pattern, Union
 import regex
 from pylib.shared.util import FLAGS
 
-
 SEP = ';'
 TOKEN = 0
 SIZE = 4
@@ -22,7 +21,6 @@ RuleDict = Dict[str, 'Rule']
 Groups = Dict[str, Union[str, List[str]]]
 Action = Callable[['Token'], Any]
 InRegexp = Union[str, List[str]]
-
 
 FIRST = -9999
 SECOND = -9990
@@ -42,14 +40,14 @@ class RuleType(IntEnum):
 class Rule:  # pylint: disable=too-many-instance-attributes
     """Create a rule."""
 
-    name: str               # Unique within a catalog but not across catalogs
-    pattern: str            # The regex before it is manipulated
+    name: str  # Unique within a catalog but not across catalogs
+    pattern: str  # The regex before it is manipulated
     type: RuleType
-    token: str              # The token
-    action: Action = None   # What to do when there is a match
+    token: str  # The token
+    action: Action = None  # What to do when there is a match
     regexp: Pattern = None  # The compiled regexp
-    capture: bool = True    # Will the rule create an outer capture group?
-    when: int = 0           # When should the rule be triggered: FIRST? LAST?
+    capture: bool = True  # Will the rule create an outer capture group?
+    when: int = 0  # When should the rule be triggered: FIRST? LAST?
 
     def __lt__(self, other: 'Rule'):
         """Custom sort order."""
@@ -64,6 +62,7 @@ class Rule:  # pylint: disable=too-many-instance-attributes
 
     def build(self, rules: RuleDict) -> str:
         """Build regular expressions for token matches."""
+
         def rep(match):
             word = match.group('word')
             if word not in rules:

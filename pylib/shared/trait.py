@@ -1,6 +1,5 @@
 """Build a trait parse result."""
 
-
 from pylib.shared.util import as_list, squash
 
 

@@ -8,7 +8,6 @@ import pandas as pd
 import pylib.efloras.util as util
 import pylib.efloras.trait_groups as tg
 
-
 TAXA = {}
 
 
@@ -70,7 +69,7 @@ def get_taxon(page):
 
 def find_trait_groups_paragraph(page):
     """Scan the page for the traits paragraph."""
-    treatment_id = 'panelTaxonTreatment'    # HTML ID of the plant treatment
+    treatment_id = 'panelTaxonTreatment'  # HTML ID of the plant treatment
 
     # Find the general area on the page with the trait groups
     paras = page.xpath(f'//*[@id="{treatment_id}"]//p')
@@ -114,7 +113,7 @@ def parse_trait_groups(args, text):
     slices = [(m.start(), m.end()) for m in tg.TRAIT_GROUPS_RE.finditer(text)]
     slices.append((-1, -1))
     for i, (start, end) in enumerate(slices[:-1]):
-        after, _ = slices[i+1]
+        after, _ = slices[i + 1]
         trait_group = text[start:end].lower()
         group_data = text[start:after]
         parser_group = [g for g in tg.TRAIT_GROUPS.get(trait_group)

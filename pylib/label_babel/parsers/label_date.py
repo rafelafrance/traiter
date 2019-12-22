@@ -8,9 +8,7 @@ from pylib.shared import patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.label_babel.parsers.base import Base
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 DIGITS = r'(?<! \d ) ( [12]\d{3} | \d{1,2} ) (?! \d )'
 SEP = r' [/\s-]+ '
@@ -30,7 +28,7 @@ def convert(token):
 DATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        CATALOG['uuid'],    # Get rid of these before they're a problem
+        CATALOG['uuid'],  # Get rid of these before they're a problem
 
         CATALOG.term('label', ' date '.split()),
 

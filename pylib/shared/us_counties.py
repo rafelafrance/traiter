@@ -5,9 +5,7 @@
 from pylib.shared import us_states
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 
-
 CATALOG = RuleCatalog(us_states.CATALOG)
-
 
 CATALOG.term('AL_co_names', r"""
     Autauga | Baldwin | Barbour | Bibb | Blount | Bullock | Butler | Calhoun
@@ -684,7 +682,6 @@ CATALOG.term('WY_co_names', r"""
     | Niobrara | Park | Platte | Sheridan | Sublette | Sweetwater | Teton
     | Uinta | Washakie | Weston """)
 CATALOG.grouper('WY_co', """ WY_co_names """)
-
 
 CATALOG.grouper('us_county', """
     AL_co AK_co AZ_co AR_co CA_co CO_co CT_co DE_co DC_co FL_co GA_co HI_co

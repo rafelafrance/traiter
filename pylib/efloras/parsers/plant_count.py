@@ -40,8 +40,8 @@ def parser(plant_part):
                 ( count_upper | range )
                 (?! units | cross_joiner | skip )
                 """),
-            ],
-        )
+        ],
+    )
 
 
 SEPAL_COUNT = parser('sepal')

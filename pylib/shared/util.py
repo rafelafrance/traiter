@@ -1,7 +1,6 @@
 """Misc. utilities."""
 import regex
 
-
 __VERSION__ = '0.5.0'
 
 FLAGS = regex.VERBOSE | regex.IGNORECASE

@@ -10,7 +10,6 @@ from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
 import pylib.efloras.shared_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 CATALOG.term('plant_shape', r"""
@@ -61,7 +60,6 @@ CATALOG.part('leaf_polygonal', fr"""
     ( -? ( orbicular | (\d-)? angulate ) )?
     """)
 
-
 RENAME = {
     'actinomorphic': 'radially symmetric',
     'angular-orbiculate': 'polygonal',
@@ -97,7 +95,7 @@ RENAME = {
     'subreniform': 'reniform',
     'zygomorphic': 'bilaterally symmetric',
     'zygomorphous': 'bilaterally symmetric',
-    }
+}
 
 
 def convert(token: Token) -> Any:
@@ -154,7 +152,7 @@ def parser(plant_part: str) -> Parser:
                     ( word | conj | prep | punct )*
                     (?P<value> shape_phrase )
                     """),
-            ])
+        ])
 
 
 LEAF_SHAPE = parser('leaf')

@@ -5,9 +5,7 @@ from pylib.vertnet.reproductive import double, convert
 from pylib.vertnet.parsers.base import Base
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 OVARY_SIZE = Base(
     name=__name__.split('.')[-1],

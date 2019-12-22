@@ -3,9 +3,7 @@
 import pylib.vertnet.shared_patterns as patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 CATALOG.term('active', 'active inactive'.split())
 CATALOG.part('and', r' ( and \b | [&] ) ')

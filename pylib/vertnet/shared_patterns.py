@@ -4,9 +4,7 @@ import pylib.shared.patterns as patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
 from pylib.vertnet.util import ordinal, number_to_words
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 _ = CATALOG.term('word', r' ( [a-z] \w* ) ', capture=False, when=LAST)
 
@@ -155,7 +153,6 @@ CROSS = """ (?<! x )
         ( number len_units? ( x | by ) number len_units?
         | number len_units ) """
 CATALOG.grouper('cross', CROSS, capture=False)
-
 
 # Handle 2 cross measurements, one per left/right side
 CATALOG.grouper('joiner', ' ampersand comma and '.split())

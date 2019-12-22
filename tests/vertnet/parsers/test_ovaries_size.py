@@ -56,12 +56,13 @@ class TestOvariesSize(unittest.TestCase):
     def test_parse_07(self):
         self.assertEqual(
             OVARY_SIZE.parse('ovaries: 20mm X 12mm, 18mm X 9mm.'),
-            [Trait(
-                value=[20, 12], units=['mm', 'mm'], units_inferred=False,
-                start=0, end=32),
-             Trait(
-                 value=[18, 9], units=['mm', 'mm'], units_inferred=False,
-                 start=0, end=32)])
+            [
+                Trait(
+                    value=[20, 12], units=['mm', 'mm'], units_inferred=False,
+                    start=0, end=32),
+                Trait(
+                    value=[18, 9], units=['mm', 'mm'], units_inferred=False,
+                    start=0, end=32)])
 
     def test_parse_08(self):
         self.assertEqual(
@@ -74,19 +75,21 @@ class TestOvariesSize(unittest.TestCase):
         self.assertEqual(
             OVARY_SIZE.parse(
                 '"gonad length 1":"3.0", "gonad length 2":"2.0",'),
-            [Trait(
-                value=3, units=None, units_inferred=True, side='1',
-                dimension='length', ambiguous_key=True, start=1, end=21),
-             Trait(
-                 value=2, units=None, units_inferred=True, side='2',
-                 dimension='length', ambiguous_key=True, start=25, end=45)])
+            [
+                Trait(
+                    value=3, units=None, units_inferred=True, side='1',
+                    dimension='length', ambiguous_key=True, start=1, end=21),
+                Trait(
+                    value=2, units=None, units_inferred=True, side='2',
+                    dimension='length', ambiguous_key=True, start=25, end=45)])
 
     def test_parse_10(self):
         self.assertEqual(
             OVARY_SIZE.parse('"gonadLengthInMM":"12", "gonadWidthInMM":"5",'),
-            [Trait(
-                value=12, units='MM', units_inferred=False,
-                ambiguous_key=True, dimension='length', start=1, end=21),
-             Trait(
-                 value=5, units='MM', units_inferred=False,
-                 ambiguous_key=True, dimension='width', start=25, end=43)])
+            [
+                Trait(
+                    value=12, units='MM', units_inferred=False,
+                    ambiguous_key=True, dimension='length', start=1, end=21),
+                Trait(
+                    value=5, units='MM', units_inferred=False,
+                    ambiguous_key=True, dimension='width', start=25, end=43)])

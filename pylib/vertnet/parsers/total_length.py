@@ -9,9 +9,7 @@ from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 import pylib.vertnet.numeric as numeric
 import pylib.vertnet.shared_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
-
 
 # How far to look into the surrounding context to disambiguate the parse
 LOOK_BACK_FAR = 40
@@ -162,13 +160,13 @@ TOTAL_LENGTH = Base(
         CATALOG.producer(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 '( key | key_units_req ) shorthand',  # With a key
-                'shorthand']),                        # Without a key
+                'shorthand']),  # Without a key
 
         # Handle a truncated shorthand notation
         CATALOG.producer(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 'key shorthand',  # With a key
-                'shorthand',      # Without a key
+                'shorthand',  # Without a key
                 """ ( key | key_units_req ) triple
                     (?! shorthand | len_range )"""
             ]),

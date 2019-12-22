@@ -134,8 +134,7 @@ class TestEmbryoLength(unittest.TestCase):
                     start=11, end=36),
                 Trait(
                     value=2, units='mm', units_inferred=True,
-                    start=11, end=36),
-                ])
+                    start=11, end=36)])
 
     def test_parse_19(self):
         self.assertEqual(
@@ -163,8 +162,7 @@ class TestEmbryoLength(unittest.TestCase):
                     start=2, end=35),
                 Trait(
                     value=17, units='mm', units_inferred=False,
-                    start=2, end=35),
-            ])
+                    start=2, end=35)])
 
     def test_parse_22(self):
         self.assertEqual(

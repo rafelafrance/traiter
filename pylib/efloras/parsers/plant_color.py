@@ -11,7 +11,6 @@ import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 import pylib.efloras.shared_patterns as patterns
 
-
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 CATALOG.term('color', r"""
@@ -79,7 +78,7 @@ RENAME = {
     'violetish': 'purple',
     'whitish': 'white',
     'yellowish': 'yellow',
-    }
+}
 
 
 def convert(token: Token) -> Any:
@@ -135,8 +134,8 @@ def parser(plant_part):
 
             catalog.producer(convert, f"""
                 (?P<part> {plant_part} ) (?P<value> color_phrase+ ) """),
-            ],
-        )
+        ],
+    )
 
 
 FLOWER_COLOR = parser('flower')
