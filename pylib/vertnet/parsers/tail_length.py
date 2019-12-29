@@ -90,7 +90,7 @@ TAIL_LENGTH = Base(
         CATALOG.producer(simple, [
             'key_with_units len_range',  # E.g.: tailLengthInMM=9-10
             'key len_range (?P<units> len_units )',  # E.g.: tailLength=9-10 mm
-            'key len_range',            # Missing units like: tailLength 9-10
+            'key len_range',             # Missing units like: tailLength 9-10
         ]),
 
         CATALOG.producer(

@@ -27,7 +27,10 @@ class Parser:
         """Add rules to the parser."""
         self._built = False
         for rule in sorted(flatten(rule_list)):
-            if rule.name not in self.rules:
+            if rule.name in self.rules:
+                if rule != self.rules[rule.name]:
+                    raise ValueError(f'Redefining "{rule.name}"')
+            else:
                 self.rules[rule.name] = rule
 
     def parse(self, text: str) -> Tokens:
