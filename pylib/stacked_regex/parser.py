@@ -2,8 +2,8 @@
 
 from collections import deque
 from typing import List, Tuple, Union
-from pylib.stacked_regex.rule import Rules, RuleDict, RuleType, SIZE
 from pylib.shared.util import flatten
+from pylib.stacked_regex.rule import Rules, RuleDict, RuleType, SIZE
 from pylib.stacked_regex.token import Token, Tokens, Groups
 
 

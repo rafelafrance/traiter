@@ -19,4 +19,4 @@ def read(args):
                 db.RAW_TABLE,
                 cxn,
                 if_exists='replace',
-                index_label=db.RAW_TABLE)
+                index_label=db.RAW_ID)

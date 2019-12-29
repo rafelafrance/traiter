@@ -1,6 +1,6 @@
 """Parse administrative unit notations."""
 
-from pylib.vertnet.trait import Trait
+from pylib.shared.trait import Trait
 from pylib.shared import us_states
 from pylib.shared import us_counties
 from pylib.stacked_regex.rule_catalog import RuleCatalog
