@@ -98,7 +98,8 @@ EAR_LENGTH = Base(
         CATALOG.grouper('key', 'keyword char_key char_measured_from'.split()),
 
         # Handle fractional values like: ear 9/16"
-        CATALOG.producer(fraction, 'key fraction (?P<units> len_units )?'),
+        CATALOG.producer(
+            fraction, 'key len_fraction (?P<units> len_units )?'),
 
         # E.g.: earLengthInMM 9-10
         CATALOG.producer(simple_len, '(?P<key> key_with_units ) len_range'),

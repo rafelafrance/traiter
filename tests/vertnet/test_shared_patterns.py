@@ -13,10 +13,10 @@ def nop(token):
 
 
 class TestSharedPatterns(unittest.TestCase):
-    cross_product = CATALOG.producer(nop, 'cross', capture=False,
-                                     name='cross_product')
-    fraction_product = CATALOG.producer(nop, 'fraction', capture=False,
-                                        name='fraction_product')
+    cross_product = CATALOG.producer(
+        nop, 'cross', capture=False, name='cross_product')
+    fraction_product = CATALOG.producer(
+        nop, 'len_fraction', capture=False, name='fraction_product')
     cross_parser = Parser(cross_product)
     fraction_parser = Parser(fraction_product)
 

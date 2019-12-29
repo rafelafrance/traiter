@@ -1,4 +1,5 @@
 """Misc. utilities."""
+
 import regex
 
 __VERSION__ = '0.5.0'
@@ -18,7 +19,7 @@ def flatten(nested):
     flat = []
     nested = nested if isinstance(nested, (list, tuple, set)) else [nested]
     for item in nested:
-        if isinstance(item, (list, tuple, set)):
+        if hasattr(item, '__iter__'):
             flat.extend(flatten(item))
         else:
             flat.append(item)

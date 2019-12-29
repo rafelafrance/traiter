@@ -82,24 +82,15 @@ TAIL_LENGTH = Base(
 
         # Handle fractional values like: tailLength 9/16"
         CATALOG.producer(fraction, [
-
             # E.g.: tail = 9/16 in
-            'key fraction (?P<units> len_units )',
+            'key len_fraction (?P<units> len_units )',
+            'key len_fraction', # Without units, like: tail = 9/16
+            ]),
 
-            # Without units, like: tail = 9/16
-            'key fraction']),
-
-        # A typical tail length notation
         CATALOG.producer(simple, [
-
-            # E.g.: tailLengthInMM=9-10
-            'key_with_units range',
-
-            # E.g.: tailLength=9-10 mm
-            'key range (?P<units> len_units )',
-
-            # Missing units like: tailLength 9-10
-            'key range',
+            'key_with_units len_range',  # E.g.: tailLengthInMM=9-10
+            'key len_range (?P<units> len_units )',  # E.g.: tailLength=9-10 mm
+            'key len_range',            # Missing units like: tailLength 9-10
         ]),
 
         CATALOG.producer(
@@ -107,6 +98,6 @@ TAIL_LENGTH = Base(
                 'shorthand_key shorthand',  # With a key
                 'shorthand',  # Without a key
                 # Handle a truncated shorthand notation
-                'shorthand_key triple (?! shorthand | range )']),
+                'shorthand_key triple (?! shorthand | len_range )']),
     ],
 )

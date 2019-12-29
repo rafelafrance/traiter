@@ -40,33 +40,24 @@ HIND_FOOT_LENGTH = Base(
 
         # Handle fractional values like: hindFoot 9/16"
         CATALOG.producer(fraction, [
-
-            # E.g.: hindFoot = 9/16 inches
-            'key fraction units',
-
-            # E.g.: hindFoot = 9/16
-            'key fraction']),
+            'key len_fraction units',   # E.g.: hindFoot = 9/16 inches
+            'key len_fraction',         # E.g.: hindFoot = 9/16
+            ]),
 
         # A typical hind-foot notation
         CATALOG.producer(simple, [
-
-            # E.g.: hindFootLengthInMM=9-10
-            'key_with_units range',
-
-            # E.g.: hindFootLength=9-10 mm
-            'key noise? range units ',
-
-            # Missing units like: hindFootLength 9-10
-            'key noise? range',
-
+            'key_with_units len_range',     # E.g.: hindFootLengthInMM=9-10
+            'key noise? len_range units ',  # E.g.: hindFootLength=9-10 mm
+            'key noise? len_range', # Missing units like: hindFootLength 9-10
             'key dash number units',
         ]),
 
         CATALOG.producer(partial(
-            shorthand_length, measurement='shorthand_hfl'), [
+            shorthand_length,
+            measurement='shorthand_hfl'), [
                 'shorthand_key shorthand',  # With a key
                 'shorthand',                # Without a key
                 # Handle a truncated shorthand notation
-                'shorthand_key triple (?! shorthand | range )']),
+                'shorthand_key triple (?! shorthand | len_range )']),
     ],
 )

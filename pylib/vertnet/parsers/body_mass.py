@@ -81,8 +81,8 @@ BODY_MASS = Base(
 
         # Shorthand notation like: on tag: 11-22-33-44=99g
         CATALOG.producer(shorthand, [
-            'key shorthand',  # With a key
-            'shorthand',  # Without a key
+            'key shorthand',    # With a key
+            'shorthand',        # Without a key
         ]),
 
         CATALOG.producer(

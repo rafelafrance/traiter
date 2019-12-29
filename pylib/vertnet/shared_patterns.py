@@ -112,10 +112,10 @@ CATALOG.part('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-CATALOG.grouper('range', """
-    (?<! dash )
-    ( number units? (( dash | to ) number units?)? )
-    (?! dash ) """, capture=False)
+# CATALOG.grouper('range', """
+#     (?<! dash )
+#     ( number units? (( dash | to ) number units?)? )
+#     (?! dash ) """, capture=False)
 
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
@@ -166,14 +166,6 @@ CATALOG.grouper('side_cross', f"""
         (?P<value_2> number ) (?P<units_2> len_units )?
             ( x | by ) (?P<value_2> number ) (?P<units_2> len_units )?
     """, capture=False)
-
-# For fractions like "1 2/3" or "1/2".
-# We don't allow dates like "1/2/34".
-CATALOG.grouper('fraction', """
-    (?P<whole> number )?
-    (?<! slash )
-    (?P<numerator> number) slash (?P<denominator> number)
-    (?! slash ) units? """, capture=False)
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
