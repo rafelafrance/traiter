@@ -37,42 +37,63 @@ class RuleCatalog:
         """Create the rule set."""
         self.rules = dict(other.rules) if other else {}
 
-    def __getitem__(self, name) -> Rule:
+    def __getitem__(self, name: str) -> Rule:
         """Emulate dict access of the rules."""
         rule = self.rules[name]
         if isinstance(rule, list):
             return [r for r in rule if r.name == name][0]
         return rule
 
-    def part(self, name: str, regexp: InRegexp,
-             capture: bool = True, when: int = 0) -> Rules:
+    def part(
+            self,
+            name: str,
+            regexp: InRegexp,
+            capture: bool = True,
+            when: int = 0) -> Rules:
         """Add a partial term rule."""
         self.rules[name] = part(name, regexp, capture=capture, when=when)
         return self.rules[name]
 
-    def term(self, name: str, regexp: InRegexp,
-             capture: bool = True, when: int = 0) -> Rules:
+    def term(
+            self,
+            name: str,
+            regexp: InRegexp,
+            capture: bool = True,
+            when: int = 0) -> Rules:
         """Add a vocabulary term."""
         self.rules[name] = term(name, regexp, capture=capture, when=when)
         return self.rules[name]
 
-    def grouper(self, name: str, regexp: InRegexp,
-                capture: bool = True, when: int = 0) -> Rules:
+    def grouper(
+            self,
+            name: str,
+            regexp: InRegexp,
+            capture: bool = True,
+            when: int = 0) -> Rules:
         """Add a grouper rule."""
         rule = grouper(name, regexp, capture=capture, when=when)
         self.rules[name] = self._get_sub_patterns(rule)
         return self.rules[name]
 
-    def replacer(self, name: str, regexp: InRegexp,
-                 capture: bool = True, when: int = 0) -> Rules:
+    def replacer(
+            self,
+            name: str,
+            regexp: InRegexp,
+            capture: bool = True,
+            when: int = 0) -> Rules:
         """Add a replacer rule."""
         rule = replacer(name, regexp, capture=capture, when=when)
         self.rules[name] = self._get_sub_patterns(rule)
         return self.rules[name]
 
     # pylint: disable=too-many-arguments
-    def producer(self, action: Action, regexp: InRegexp, name: str = None,
-                 capture: bool = True, when: int = 0) -> Rules:
+    def producer(
+            self,
+            action: Action,
+            regexp: InRegexp,
+            name: str = None,
+            capture: bool = True,
+            when: int = 0) -> Rules:
         """Add a producer rule."""
         rule = producer(action, regexp, name=name, capture=capture, when=when)
         self.rules[rule.name] = self._get_sub_patterns(rule)

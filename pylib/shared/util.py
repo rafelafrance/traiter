@@ -1,5 +1,6 @@
 """Misc. utilities."""
 
+from pathlib import Path
 import regex
 
 __VERSION__ = '0.5.0'
@@ -7,6 +8,8 @@ __VERSION__ = '0.5.0'
 FLAGS = regex.VERBOSE | regex.IGNORECASE
 
 BATCH_SIZE = 1_000_000  # How many records to work with at a time
+
+DATA_DIR = Path('.') / 'data'
 
 
 def shorten(text):

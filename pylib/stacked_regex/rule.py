@@ -162,7 +162,7 @@ def replacer(
         action: Action = None,
         capture: bool = True,
         when: int = 0) -> Rule:
-    """Build a grouper regular expression."""
+    """Build a replacer regular expression."""
     return Rule(
         name=name,
         pattern=join(regexp),

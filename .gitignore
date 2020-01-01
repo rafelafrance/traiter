@@ -26,6 +26,7 @@ output/
 
 data/
 !data/.gitkeep
+!data/*.csv
 
 # Temp files
 temp/

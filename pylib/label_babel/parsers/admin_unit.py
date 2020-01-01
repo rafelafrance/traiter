@@ -26,7 +26,7 @@ ADMIN_UNIT = Base(
     name=__name__.split('.')[-1],
     rules=[
         CATALOG['eol'],
-        CATALOG.term('county', """ co county """.split(), capture=False),
-        CATALOG.producer(convert, ' us_state? county us_county '),
-        CATALOG.producer(convert, ' us_county county us_state? '),
+        CATALOG.term('label', """ co county """.split(), capture=False),
+        CATALOG.producer(convert, ' us_state? label us_county '),
+        CATALOG.producer(convert, ' us_county label us_state? '),
     ])
