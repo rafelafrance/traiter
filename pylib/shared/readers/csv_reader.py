@@ -16,7 +16,4 @@ def read(args):
 
         with db.connect(args.db) as cxn:
             df.loc[:, args.column].to_sql(
-                db.RAW_TABLE,
-                cxn,
-                if_exists='replace',
-                index_label=db.RAW_ID)
+                db.RAW_TABLE, cxn, if_exists='replace', index=False)

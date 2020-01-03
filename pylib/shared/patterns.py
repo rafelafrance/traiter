@@ -65,9 +65,10 @@ CATALOG.part('integer', r""" \d+ (?! [%\d\-] ) """)
 # Date
 CATALOG.part('month_name', """
     (?<! [a-z])
-    (?P<month> 
-        jan | feb | mar | apr | jun | jul | aug | sept? | oct | nov | dec
-        | january | february | march | april | may | june | july | august
-        | september | october | november | december )
+    (?P<month>
+        january | february | march | april | may | june | july | august
+        | september | october | november | december
+        | jan | feb | mar | apr | jun | jul | aug | sept? | oct | nov | dec
+    )
     (?! [a-z] )
     """, capture=False)

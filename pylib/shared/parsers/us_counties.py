@@ -3,7 +3,7 @@
 from collections import defaultdict
 import pandas as pd
 from pylib.shared import util
-from pylib.shared import us_states
+from pylib.shared.parsers import us_states
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 
 COUNTY_CSV = util.DATA_DIR / 'US_counties.csv'

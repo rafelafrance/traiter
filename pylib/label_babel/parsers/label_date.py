@@ -19,7 +19,7 @@ def convert(token):
     trait = Trait(start=token.start, end=token.end)
     trait.value = parse(token.groups['value']).date()
     if trait.value > date.today():
-        trait.value += relativedelta(years=-100)
+        trait.value -= relativedelta(years=100)
         trait.century_adjust = True
     trait.value = trait.value.isoformat()[:10]
     return trait

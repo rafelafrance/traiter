@@ -1,8 +1,7 @@
 """Parse administrative unit notations."""
 
 from pylib.shared.trait import Trait
-from pylib.shared import us_states
-from pylib.shared import us_counties
+from pylib.shared.parsers import us_counties, us_states
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.label_babel.parsers.base import Base
 
@@ -27,6 +26,7 @@ ADMIN_UNIT = Base(
     rules=[
         CATALOG['eol'],
         CATALOG.term('label', """ co county """.split(), capture=False),
+
         CATALOG.producer(convert, ' us_state? label us_county '),
         CATALOG.producer(convert, ' us_county label us_state? '),
     ])

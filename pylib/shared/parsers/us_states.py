@@ -11,6 +11,7 @@ STATES = {}
 NORMALIZE_US_STATE = {}
 
 CATALOG = RuleCatalog(patterns.CATALOG)
+
 CATALOG.term('USA', r"""
     U\.?S\.?A\.? | U\.?S\.?
     | United \s? States \s? of \s? America | United \s? States
@@ -36,7 +37,7 @@ def build_state(state, postal, abbrev_blob):
     abbrev_key = f'{postal}_abbrev'
     state_key = state.replace(' ', '_')
 
-    CATALOG.term(abbrev_key, ' | '.join(abbrevs))
+    CATALOG.term(abbrev_key, abbrevs)
     CATALOG.term(state_key, state)
     CATALOG.grouper(postal, f'{abbrev_key} | {state_key}')
 

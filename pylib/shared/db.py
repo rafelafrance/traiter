@@ -6,7 +6,7 @@ RAW_TABLE = 'raw'
 RAW_ID = 'raw_id'
 
 
-def connect(path: str = None) -> sqlite3.Connection:
+def connect(path: str) -> sqlite3.Connection:
     """Connect to an SQLite database."""
     cxn = sqlite3.connect(path)
 

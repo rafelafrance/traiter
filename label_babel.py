@@ -7,13 +7,11 @@ import sys
 import argparse
 import textwrap
 from pylib.shared.util import __VERSION__
-from pylib.shared.importers import csv_reader
+from pylib.shared.readers import csv_reader
 
-"""
-Date, taxon names, collector, collector number
-admin units: like state, county, country
-scientificName for the binomial and genus and species separately
-"""
+# Date, taxon names, collector, collector number
+# admin units: like state, county, country
+# scientificName for the binomial and genus and species separately
 
 INPUT_FORMATS = {
     'csv': csv_reader}
