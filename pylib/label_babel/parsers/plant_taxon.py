@@ -14,8 +14,8 @@ def convert(token):
 
 CATALOG = RuleCatalog(patterns.CATALOG)
 CATALOG.part('word', r' \S+ ', capture=False, when=LAST)
-itis_taxa.build_rule(CATALOG, 'plant', 'genus')
-itis_taxa.build_rule(CATALOG, 'plant', 'family')
+itis_taxa.build_families(CATALOG)
+itis_taxa.build_genera(CATALOG)
 
 
 PLANT_TAXON = Base(
