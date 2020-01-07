@@ -56,8 +56,14 @@ class TestLabelDate(unittest.TestCase):
             DATE.parse('Date 8-14-77'),
             [Trait(value='1977-08-14', start=0, end=12)])
 
-    def test_parse_09(self):
+    def test_parse_08(self):
         """It handles no spaces between the date parts."""
         self.assertEqual(
             DATE.parse('11may04'),
             [Trait(value='2004-05-11', start=0, end=7)])
+
+    def test_parse_09(self):
+        """It handles no spaces between the date parts."""
+        self.assertEqual(
+            DATE.parse('Collected by D, M, MOORE — Date AUG-_11,1968'),
+            [Trait(value='1968-08-11', start=27, end=44)])

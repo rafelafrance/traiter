@@ -1,9 +1,11 @@
 """Parse date notations."""
 
 from datetime import date
-from dateutil.parser import parse
+from dateutil import parser
 from dateutil.relativedelta import relativedelta
+import regex
 from pylib.vertnet.trait import Trait
+from pylib.shared import util
 from pylib.shared import patterns
 from pylib.stacked_regex.rule_catalog import RuleCatalog
 from pylib.label_babel.parsers.base import Base
@@ -17,10 +19,19 @@ SEP = r' [/\s-]+ '
 def convert(token):
     """Normalize a parsed date"""
     trait = Trait(start=token.start, end=token.end)
-    trait.value = parse(token.groups['value']).date()
+
+    value = regex.sub(
+        r'[^a-z\d]+', '-', token.groups['value'], flags=util.FLAGS)
+
+    try:
+        trait.value = parser.parse(value).date()
+    except parser.ParserError:
+        return None
+
     if trait.value > date.today():
         trait.value -= relativedelta(years=100)
         trait.century_adjust = True
+
     trait.value = trait.value.isoformat()[:10]
     return trait
 
