@@ -36,9 +36,10 @@ def convert(token):
     return trait
 
 
-DATE = Base(
+LABEL_DATE = Base(
     name=__name__.split('.')[-1],
     rules=[
+        CATALOG['eol'],
         CATALOG['uuid'],  # Get rid of these before they're a problem
 
         CATALOG.term('label', ' date '.split()),

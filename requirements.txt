@@ -1,5 +1,6 @@
 inflect==4.0.0
 Jinja2==2.10.3
+lxml==4.4.2
 MarkupSafe==1.1.1
 numpy==1.18.0
 pandas==0.25.3

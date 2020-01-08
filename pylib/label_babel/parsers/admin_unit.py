@@ -22,11 +22,17 @@ def convert(token):
 
 
 ADMIN_UNIT = Base(
-    name=__name__.split('.')[-1],
+    name='us_county',
     rules=[
         CATALOG['eol'],
-        CATALOG.term('label', """ co county """.split(), capture=False),
+        CATALOG.term('co_label', r""" co | coun[tc]y """, capture=False),
+        CATALOG.term('st_label', r"""
+            ( plants | flora ) \s* of """, capture=False),
 
-        CATALOG.producer(convert, ' us_state? label us_county '),
-        CATALOG.producer(convert, ' us_county label us_state? '),
+        CATALOG.producer(convert, ' us_state? eol? co_label us_county '),
+        CATALOG.producer(convert, ' us_county co_label us_state? '),
+        CATALOG.producer(convert, ' us_county us_state '),
+        CATALOG.producer(convert, """
+            st_label us_state eol? co_label us_county """),
+        CATALOG.producer(convert, ' st_label us_state '),
     ])

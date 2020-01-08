@@ -25,7 +25,7 @@ class TestAdminUnit(unittest.TestCase):
         self.assertEqual(
             ADMIN_UNIT.parse('Flora of ARKANSAS County: MISSISSIPPI'),
             [Trait(us_county='Mississippi', us_state='Arkansas',
-                   start=9, end=37)])
+                   start=0, end=37)])
 
     def test_parse_04(self):
         """It handles line breaks."""
@@ -44,3 +44,64 @@ class TestAdminUnit(unittest.TestCase):
         self.assertEqual(
             ADMIN_UNIT.parse('Desha Co., Ark.'),
             [Trait(us_county='Desha', us_state='Arkansas', start=0, end=14)])
+
+    def test_parse_07(self):
+        """It works with noisy text."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""
+                Cornus drummondii C. A. Mey.
+                Hempstead County
+                Grandview Prairie; on CR 35, 10 air miles S/SE of Nashville; in
+            """),
+            [Trait(us_county='Hempstead', start=62, end=78)])
+
+    def test_parse_08(self):
+        """It picks up common OCR errors."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""Caldwell Councy"""),
+            [Trait(us_county='Caldwell', start=0, end=15)])
+
+    def test_parse_09(self):
+        """It gets a state notation."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""PLANTS OF ARKANSAS"""),
+            [Trait(us_state='Arkansas', start=0, end=18)])
+
+    def test_parse_10(self):
+        """It gets a multi word state notation."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""PLANTS OF NORTH CAROLINA"""),
+            [Trait(us_state='North Carolina', start=0, end=24)])
+
+    def test_parse_11(self):
+        """It gets a state notation separated from the county."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""
+                APPALACHIAN STATE UNIVERSITY HERBARIUM
+                PLANTS OF NORTH CAROLINA
+                STONE MOUNTAIN STATE PARK
+                WILKES COUNTY
+                """),
+            [Trait(us_state='North Carolina', start=72, end=96),
+             Trait(us_county='Wilkes', start=155, end=168)])
+
+    def test_parse_12(self):
+        """It parses multiword counties and states."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""Cape May, New Jersey"""),
+            [Trait(us_state='New Jersey', us_county='Cape May',
+                   start=0, end=20)])
+
+    def test_parse_13(self):
+        """It find the correct parses."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("""Cape May, New Jersey"""),
+            [Trait(us_state='New Jersey', us_county='Cape May',
+                   start=0, end=20)])
+
+    def test_parse_14(self):
+        """It normalizes the state."""
+        self.assertEqual(
+            ADMIN_UNIT.parse("St. Francis Co., AR TON RUE SE SE Survey #500"),
+            [Trait(us_state='Arkansas', us_county='St. Francis',
+                   start=0, end=19)])

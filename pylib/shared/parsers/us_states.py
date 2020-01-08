@@ -1,6 +1,6 @@
 """Patterns for US states."""
 
-import re
+import regex
 import pandas as pd
 from pylib.shared import util
 from pylib.shared import patterns
@@ -8,6 +8,7 @@ from pylib.stacked_regex.rule_catalog import RuleCatalog
 
 STATE_CSV = util.DATA_DIR / 'US_states.csv'
 STATES = {}
+STATE_NAMES = []
 NORMALIZE_US_STATE = {}
 
 CATALOG = RuleCatalog(patterns.CATALOG)
@@ -20,7 +21,7 @@ CATALOG.term('USA', r"""
 
 def normalize_key(state: str) -> str:
     """Convert state abbreviations into a consistent key."""
-    return re.sub(r'[^a-z]+', '', state.lower())
+    return regex.sub(r'[^a-z]+', '', state.lower())
 
 
 def normalize_state(state: str) -> str:
@@ -30,18 +31,22 @@ def normalize_state(state: str) -> str:
 
 def build_state(state, postal, abbrev_blob):
     """Build patterns for a single state."""
-    abbrevs = [fr'{postal[0]}\.?{postal[1]}\.?']
+    abbrevs = [fr'(?-i:{postal[0]}\.?{postal[1]}\.?)']
     abbrevs += [a.replace('.', r'\.?').replace(' ', r'\s?')
                 for a in abbrev_blob.split(',') if a]
 
     abbrev_key = f'{postal}_abbrev'
     state_key = state.replace(' ', '_')
+    state_value = state.replace(' ', r'\s?')
+
+    STATE_NAMES.append(state_value)
 
     CATALOG.term(abbrev_key, abbrevs)
-    CATALOG.term(state_key, state)
+    CATALOG.term(state_key, state_value)
     CATALOG.grouper(postal, f'{abbrev_key} | {state_key}')
 
     for key in abbrevs:
+        key = regex.sub(r'^\(\?-i:|\)$', '', key.lower())
         key = normalize_key(key)
         NORMALIZE_US_STATE[key] = state
 
@@ -57,3 +62,4 @@ def build_states():
 
 
 build_states()
+STATE_NAMES = CATALOG.term('state_names', STATE_NAMES)
