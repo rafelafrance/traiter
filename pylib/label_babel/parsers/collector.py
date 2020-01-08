@@ -13,6 +13,8 @@ from pylib.label_babel.parsers.base import Base
 
 CATALOG = RuleCatalog(name_parts.CATALOG)
 
+MIN_LEN = 5     # Minimum collector name length
+
 
 def convert(token):
     """Build a collector trait"""
@@ -21,6 +23,9 @@ def convert(token):
     traits = []
 
     for name, suffix in zip_longest(names, names[1:], fillvalue=''):
+        if len(name) < MIN_LEN:
+            continue
+
         trait = Trait(start=token.start, end=token.end)
         trait.col_name = name
 
@@ -77,14 +82,17 @@ COLLECTOR = Base(
             ( name_part | initial ){2,} 
             ( name_part | part | initial )* """, capture=False),
 
+        # With a label
         CATALOG.producer(convert, """
             (?<= ^ | eol )
             (?<! other_label comma? name_part? ) (?<! part | col_no )
                 noise? col_label noise?
                 (?P<col_name> collector 
                     ( ( conj | comma ) collector )* ( comma name_part )? )
+                noise?
                 ( no_label? col_no )? """),
 
+        # Without a label
         CATALOG.producer(convert, """
             (?<= ^ | eol )
             (?<! other_label noise? name_part? )  (?<! part | col_no )

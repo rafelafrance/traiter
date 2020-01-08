@@ -34,5 +34,5 @@ ADMIN_UNIT = Base(
         CATALOG.producer(convert, ' us_county us_state '),
         CATALOG.producer(convert, """
             st_label us_state eol? co_label us_county """),
-        CATALOG.producer(convert, ' st_label us_state '),
+        CATALOG.producer(convert, ' st_label eol? us_state '),
     ])

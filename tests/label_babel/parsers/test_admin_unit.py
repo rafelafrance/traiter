@@ -1,6 +1,7 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring
 # pylint: disable=missing-function-docstring,too-many-public-methods
 
+import textwrap
 import unittest
 from pylib.shared.trait import Trait
 from pylib.label_babel.parsers.admin_unit import ADMIN_UNIT
@@ -48,12 +49,12 @@ class TestAdminUnit(unittest.TestCase):
     def test_parse_07(self):
         """It works with noisy text."""
         self.assertEqual(
-            ADMIN_UNIT.parse("""
+            ADMIN_UNIT.parse(textwrap.dedent("""
                 Cornus drummondii C. A. Mey.
                 Hempstead County
                 Grandview Prairie; on CR 35, 10 air miles S/SE of Nashville; in
-            """),
-            [Trait(us_county='Hempstead', start=62, end=78)])
+            """)),
+            [Trait(us_county='Hempstead', start=30, end=46)])
 
     def test_parse_08(self):
         """It picks up common OCR errors."""
@@ -76,14 +77,14 @@ class TestAdminUnit(unittest.TestCase):
     def test_parse_11(self):
         """It gets a state notation separated from the county."""
         self.assertEqual(
-            ADMIN_UNIT.parse("""
+            ADMIN_UNIT.parse(textwrap.dedent("""
                 APPALACHIAN STATE UNIVERSITY HERBARIUM
                 PLANTS OF NORTH CAROLINA
                 STONE MOUNTAIN STATE PARK
                 WILKES COUNTY
-                """),
-            [Trait(us_state='North Carolina', start=72, end=96),
-             Trait(us_county='Wilkes', start=155, end=168)])
+                """)),
+            [Trait(us_state='North Carolina', start=40, end=64),
+             Trait(us_county='Wilkes', start=91, end=104)])
 
     def test_parse_12(self):
         """It parses multiword counties and states."""
@@ -105,3 +106,12 @@ class TestAdminUnit(unittest.TestCase):
             ADMIN_UNIT.parse("St. Francis Co., AR TON RUE SE SE Survey #500"),
             [Trait(us_state='Arkansas', us_county='St. Francis',
                    start=0, end=19)])
+
+    def test_parse_15(self):
+        """It handles a eol between the state label and state."""
+        self.assertEqual(
+            ADMIN_UNIT.parse(textwrap.dedent("""
+                PLANTS OF
+                North Carolina
+                """)),
+            [Trait(us_state='North Carolina', start=1, end=25)])
