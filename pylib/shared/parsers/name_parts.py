@@ -7,6 +7,8 @@ from pylib.stacked_regex.rule_catalog import RuleCatalog
 
 NAME_CSV = util.DATA_DIR / 'name_parts.csv'
 
+SUFFIXES = 'filho ii iii jr sr'.split()
+
 CATALOG = RuleCatalog(patterns.CATALOG)
 
 
@@ -17,3 +19,6 @@ def build_name_parts():
 
 
 build_name_parts()
+
+CATALOG.term('suffix', SUFFIXES)
+CATALOG.term('initial', r'[[:alpha:]]')

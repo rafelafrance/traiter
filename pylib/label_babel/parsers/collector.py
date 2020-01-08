@@ -3,6 +3,7 @@ Find collector notations on herbarium specimen labels.
 """
 
 import regex
+from itertools import zip_longest
 from pylib.shared import util
 from pylib.shared.trait import Trait
 from pylib.shared.parsers.us_states import STATE_NAMES
@@ -18,12 +19,19 @@ def convert(token):
     names = regex.split(r'\s*(?:and|,)\s*', token.groups.get('col_name'))
 
     traits = []
-    for i, name in enumerate(names):
+
+    for name, suffix in zip_longest(names, names[1:], fillvalue=''):
         trait = Trait(start=token.start, end=token.end)
         trait.col_name = name
-        if token.groups.get('col_no') and i == 0:
-            trait.col_no = token.groups['col_no']
-        traits.append(trait)
+
+        if suffix.lower() in name_parts.SUFFIXES:
+            trait.col_name = f'{name} {suffix}'
+
+        if name.lower() not in name_parts.SUFFIXES:
+            traits.append(trait)
+
+    if token.groups.get('col_no'):
+        traits[0].col_no = token.groups['col_no']
 
     return util.squash(traits)
 
@@ -32,6 +40,7 @@ COLLECTOR = Base(
     name='collector',
     rules=[
         CATALOG['eol'],
+        CATALOG['month_name'],
         STATE_NAMES,
 
         CATALOG.term('col_label', r"""
@@ -59,20 +68,29 @@ COLLECTOR = Base(
             writer
             """.split(), capture=False),
 
+        CATALOG.part('noise', r" [_`‘|\[\]]+ "),
+        CATALOG.term('header_key', r' herbarium '.split()),
+
         CATALOG.term('col_no', r""" [[:alpha:][:digit:]]+ """, when=LAST),
 
         CATALOG.grouper('collector', """
-            name_part{2,} ( name_part | part )* """, capture=False),
+            ( name_part | initial ){2,} 
+            ( name_part | part | initial )* """, capture=False),
 
         CATALOG.producer(convert, """
-            (?<! other_label comma? name_part? )
-                col_label? under?
-                (?P<col_name> collector ( ( conj | comma ) collector )* )
+            (?<= ^ | eol )
+            (?<! other_label comma? name_part? ) (?<! part | col_no )
+                noise? col_label noise?
+                (?P<col_name> collector 
+                    ( ( conj | comma ) collector )* ( comma name_part )? )
                 ( no_label? col_no )? """),
 
         CATALOG.producer(convert, """
-            (?<= eol | ^ ) (?<! other_label comma? name_part? )
-            col_label? under?
-            (?P<col_name> name_part )
-            ( no_label? col_no )? (?= eol | $ ) """),
+            (?<= ^ | eol )
+            (?<! other_label noise? name_part? )  (?<! part | col_no )
+            noise? col_label? noise?
+            (?P<col_name> name_part+ ( ( conj | comma ) collector )* )
+            ( no_label? col_no )?
+            (?! header_key )
+            (?= month_name | col_no | eol | $ ) """),
        ])
