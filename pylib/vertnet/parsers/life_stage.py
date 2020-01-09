@@ -24,7 +24,7 @@ LIFE_STAGE = Base(
             r' young [\s-]? of [\s-]? the [\s-]? year ',
             r' adult \s* young ',
             r' young \s* adult ']
-                     + """
+                   + """
                 ads? adulte?s?
                 chicks?
                 fledgelings? fleglings? fry

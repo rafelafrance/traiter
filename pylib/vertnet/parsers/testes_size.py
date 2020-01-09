@@ -26,9 +26,9 @@ TESTES_SIZE = Base(
         VOCAB.grouper('value', """
             cross | number len_units? (?! mass_units ) """),
 
-        VOCAB.grouper('state', [
-            """(non | partially | fully )? descended """]
-                        + """ scrotal abdominal size other """.split()),
+        VOCAB.grouper(
+            'state', ["""(non | partially | fully )? descended """]
+            + """ scrotal abdominal size other """.split()),
 
         # Male or female ambiguous, like: gonadLength1
         VOCAB.grouper('ambiguous', """

@@ -14,14 +14,14 @@ def nop(token):
 class TestSharedPatterns(unittest.TestCase):
     """Test shared patterns for plant parsers."""
 
-    number_product = VOCAB.producer(nop, 'number', capture=False,
-                                      name='number_product')
-    range_product = VOCAB.producer(nop, 'range', capture=False,
-                                     name='range_product')
-    cross_product = VOCAB.producer(nop, 'cross', capture=False,
-                                     name='cross_product')
-    upper_product = VOCAB.producer(nop, 'cross_upper', capture=False,
-                                     name='upper_product')
+    number_product = VOCAB.producer(
+        nop, 'number', capture=False, name='number_product')
+    range_product = VOCAB.producer(
+        nop, 'range', capture=False, name='range_product')
+    cross_product = VOCAB.producer(
+        nop, 'cross', capture=False, name='cross_product')
+    upper_product = VOCAB.producer(
+        nop, 'cross_upper', capture=False, name='upper_product')
 
     number_parser = Parser(number_product)
     range_parser = Parser(range_product)
