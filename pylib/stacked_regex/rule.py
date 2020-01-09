@@ -62,7 +62,7 @@ class Rule:  # pylint: disable=too-many-instance-attributes
     def build(self, rules: RuleDict) -> str:
         """Build regular expressions for token matches."""
 
-        def rep(match):
+        def _rep(match):
             word = match.group('word')
             if word not in rules:
                 print(f'Error: In "{self.name}", {word}" is not defined.')
@@ -73,7 +73,7 @@ class Rule:  # pylint: disable=too-many-instance-attributes
 
             return sub.regexp.pattern
 
-        regexp = WORD.sub(rep, self.pattern)
+        regexp = WORD.sub(_rep, self.pattern)
 
         if self.capture:
             return fr'(?P<{self.name}> {regexp} )'

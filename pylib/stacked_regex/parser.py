@@ -101,8 +101,9 @@ class Parser:
         return [Token(match[0], match=m) for match in pairs for m in match[1]]
 
     def sort_matches(self, tokens: Tokens) -> deque:
-        """Sort the matches by starting span and then by longest."""
-        matches = deque(sorted(tokens, key=lambda m: (m.span[0], -m.span[1])))
+        """Sort the matches by starting span and when and then by longest."""
+        matches = deque(sorted(
+            tokens, key=lambda m: (m.span[0], m.rule.when, -m.span[1])))
         matches = self.remove_overlapping(matches)
         return matches
 
