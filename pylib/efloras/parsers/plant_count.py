@@ -1,7 +1,7 @@
 """Parse the trait."""
 
 from typing import Any
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.stacked_regex.token import Token
 from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
@@ -27,7 +27,7 @@ def convert(token: Token) -> Any:
 
 def parser(plant_part):
     """Build a parser for the flower part."""
-    catalog = RuleCatalog(patterns.CATALOG)
+    catalog = Vocabulary(patterns.VOCAB)
     return Base(
         name=f'{plant_part}_count',
         rules=[

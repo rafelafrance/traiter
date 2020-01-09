@@ -3,13 +3,13 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import simple_len, fraction, shorthand_length
 from pylib.vertnet.numeric import numeric_fix_ups
 import pylib.vertnet.shared_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 # How far to look into the surrounding context to disambiguate the parse
 LOOK_BACK_FAR = 40
@@ -60,30 +60,30 @@ EAR_LENGTH = Base(
     fix_up=fix_up,
     rules=[
 
-        CATALOG['uuid'],  # UUIDs cause problems with numbers
+        VOCAB['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: EarLengthInMillimeters
-        CATALOG.term('key_with_units', r"""
+        VOCAB.term('key_with_units', r"""
             ear \s* ( length | len ) \s* in \s*
             (?P<len_units> millimeters | mm )
             """),
 
         # Abbreviation containing the measured from notation, like: e/n or e/c
-        CATALOG.part('char_measured_from', r"""
+        VOCAB.part('char_measured_from', r"""
             (?<! [a-z] ) (?<! [a-z] \s )
             (?P<ambiguous_key> e ) /? (?P<measured_from1> n | c ) [-]?
             (?! \.? [a-z] )
             """),
 
         # The abbreviation key, just: e. This can be a problem.
-        CATALOG.part('char_key', r"""
+        VOCAB.part('char_key', r"""
             (?<! \w ) (?<! \w \s )
             (?P<ambiguous_key> e )
             (?! \.? \s? [a-z\(] )
             """),
 
         # Standard keywords that indicate an ear length follows
-        CATALOG.term('keyword', [
+        VOCAB.term('keyword', [
             r' ear \s* from \s* (?P<measured_from1> notch | crown )',
             r' ear \s* ( length | len )',
             r' ear (?! \s* tag )',
@@ -91,24 +91,24 @@ EAR_LENGTH = Base(
         ]),
 
         # Some patterns require a separator
-        CATALOG['word'],
-        CATALOG.part('sep', r' [;,] '),
+        VOCAB['word'],
+        VOCAB.part('sep', r' [;,] '),
 
         # Consider any of the following as just a key
-        CATALOG.grouper('key', 'keyword char_key char_measured_from'.split()),
+        VOCAB.grouper('key', 'keyword char_key char_measured_from'.split()),
 
         # Handle fractional values like: ear 9/16"
-        CATALOG.producer(
+        VOCAB.producer(
             fraction, 'key len_fraction (?P<units> len_units )?'),
 
         # E.g.: earLengthInMM 9-10
-        CATALOG.producer(simple_len, '(?P<key> key_with_units ) len_range'),
+        VOCAB.producer(simple_len, '(?P<key> key_with_units ) len_range'),
 
         # E.g.: ear 9-10 mm
-        CATALOG.producer(simple_len, 'key len_range (?P<units> len_units )?'),
+        VOCAB.producer(simple_len, 'key len_range (?P<units> len_units )?'),
 
         # Shorthand notation like: on tag: 11-22-33-44=99g
-        CATALOG.producer(
+        VOCAB.producer(
             partial(shorthand_length, measurement='shorthand_el'), [
                 'shorthand_key shorthand',  # With a key
                 'shorthand',  # Without a key

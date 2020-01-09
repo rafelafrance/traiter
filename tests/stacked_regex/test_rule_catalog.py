@@ -1,7 +1,7 @@
 """Test the rule catalog object."""
 
 import unittest
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.stacked_regex.rule import term, part, grouper
 
 
@@ -17,21 +17,21 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_part_01(self):
         """It adds a part rule."""
-        cat = RuleCatalog()
+        cat = Vocabulary()
         cat.part(self.p1.name, self.p1.pattern)
         expect = {self.p1.name: self.p1}
         self.assertEqual(cat.rules, expect)
 
     def test_term_01(self):
         """It adds a term rule."""
-        cat = RuleCatalog()
+        cat = Vocabulary()
         cat.term(self.t1.name, self.t1.pattern)
         expect = {self.t1.name: self.t1}
         self.assertEqual(cat.rules, expect)
 
     def test_grouper_01(self):
         """It adds a grouper rule and a sub-rule."""
-        cat = RuleCatalog()
+        cat = Vocabulary()
         cat.term(self.t1.name, self.t1.pattern)
         cat.grouper(self.g1.name, self.g1.pattern)
         expect = {
@@ -42,7 +42,7 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_grouper_02(self):
         """It adds a grouper rule and two sub-rules."""
-        cat = RuleCatalog()
+        cat = Vocabulary()
         cat.term(self.t1.name, self.t1.pattern)
         cat.term(self.t2.name, self.t2.pattern)
         cat.grouper(self.g2.name, self.g2.pattern)
@@ -55,7 +55,7 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_grouper_03(self):
         """It adds sub-rules recursively."""
-        cat = RuleCatalog()
+        cat = Vocabulary()
         cat.term(self.t1.name, self.t1.pattern)
         cat.term(self.t2.name, self.t2.pattern)
         cat.grouper(self.g1.name, self.g1.pattern)
@@ -72,7 +72,7 @@ class TestRuleCatalog(unittest.TestCase):
 
     def test_grouper_04(self):
         """It adds sub-rules recursively and handles basal patterns."""
-        cat = RuleCatalog()
+        cat = Vocabulary()
         cat.part(self.p1.name, self.p1.pattern)
         cat.term(self.t1.name, self.t1.pattern)
         cat.term(self.t2.name, self.t2.pattern)

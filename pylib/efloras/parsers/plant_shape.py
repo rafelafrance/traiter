@@ -3,16 +3,16 @@
 import string
 from typing import Any
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.stacked_regex.parser import Parser
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 from pylib.shared.trait import Trait
 import pylib.efloras.shared_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
-CATALOG.term('plant_shape', r"""
+VOCAB.term('plant_shape', r"""
     (\d-)?angular (\d-)?angulate acicular actinomorphic acuminate acute
     apiculate aristate attenuate auriculate
     bilabiate bilateral bilaterally bowl-?shaped
@@ -46,14 +46,14 @@ CATALOG.term('plant_shape', r"""
     zygomorphic zygomorphous
     """.split())
 
-CATALOG.part('shape_prefix', ' semi | sub | elongate ')
+VOCAB.part('shape_prefix', ' semi | sub | elongate ')
 
-CATALOG.term('leaf_orbicular', r"""
+VOCAB.term('leaf_orbicular', r"""
     circular | orbic-?ulate | rotund | round(ed|ish)? | suborbicular
     | suborbiculate
     """)
 
-CATALOG.part('leaf_polygonal', fr"""
+VOCAB.part('leaf_polygonal', fr"""
     ( ( orbicular | angulate ) -? )?
     ( \b (\d-)? angular | \b (\d-)? angulate
         | pen-?tagonal | pentangular | septagonal )
@@ -117,20 +117,20 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = CATALOG['shape_starter'].regexp.sub('', value)
-    value = CATALOG['location'].regexp.sub('', value)
+    value = VOCAB['shape_starter'].regexp.sub('', value)
+    value = VOCAB['location'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
-    value = CATALOG['leaf_orbicular'].regexp.sub('orbicular', value)
-    value = CATALOG['leaf_polygonal'].regexp.sub('polygonal', value)
+    value = VOCAB['leaf_orbicular'].regexp.sub('orbicular', value)
+    value = VOCAB['leaf_polygonal'].regexp.sub('polygonal', value)
     value = value.strip()
     value = RENAME.get(value, value)
-    value = value if CATALOG['plant_shape'].regexp.search(value) else ''
+    value = value if VOCAB['plant_shape'].regexp.search(value) else ''
     return value
 
 
 def parser(plant_part: str) -> Parser:
     """Build a parser for the flower part."""
-    catalog = RuleCatalog(CATALOG)
+    catalog = Vocabulary(VOCAB)
     return Base(
         name=f'{plant_part}_shape',
         rules=[

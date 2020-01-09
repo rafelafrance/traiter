@@ -4,16 +4,16 @@ import regex
 import pandas as pd
 from pylib.shared import util
 from pylib.shared import patterns
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 
 STATE_CSV = util.DATA_DIR / 'US_states.csv'
 STATES = {}
 STATE_NAMES = []
 NORMALIZE_US_STATE = {}
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
-CATALOG.term('USA', r"""
+VOCAB.term('USA', r"""
     U\.?S\.?A\.? | U\.?S\.?
     | United \s? States \s? of \s? America | United \s? States
     | U\.? \s? of \s? A\.?""")
@@ -41,9 +41,9 @@ def build_state(state, postal, abbrev_blob):
 
     STATE_NAMES.append(state_value)
 
-    CATALOG.term(abbrev_key, abbrevs)
-    CATALOG.term(state_key, state_value)
-    CATALOG.grouper(postal, f'{abbrev_key} | {state_key}')
+    VOCAB.term(abbrev_key, abbrevs)
+    VOCAB.term(state_key, state_value)
+    VOCAB.grouper(postal, f'{abbrev_key} | {state_key}')
 
     for key in abbrevs:
         key = regex.sub(r'^\(\?-i:|\)$', '', key.lower())
@@ -58,8 +58,8 @@ def build_states():
         build_state(row['state'], row['postal'], row['abbrev'])
         STATES[row['state']] = row['postal']
 
-    CATALOG.grouper('us_state', list(STATES.values()))
+    VOCAB.grouper('us_state', list(STATES.values()))
 
 
 build_states()
-STATE_NAMES = CATALOG.term('state_names', STATE_NAMES)
+STATE_NAMES = VOCAB.term('state_names', STATE_NAMES)

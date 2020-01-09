@@ -4,11 +4,11 @@ from collections import defaultdict
 import pandas as pd
 from pylib.shared import util
 from pylib.shared.parsers import us_states
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 
 COUNTY_CSV = util.DATA_DIR / 'US_counties.csv'
 
-CATALOG = RuleCatalog(us_states.CATALOG)
+VOCAB = Vocabulary(us_states.VOCAB)
 
 
 def build_counties():
@@ -32,15 +32,15 @@ def build_counties():
             continue
 
         co_names = f'{abbrev}_co_names'
-        CATALOG.term(co_names, names)
+        VOCAB.term(co_names, names)
 
         state_co = f'{abbrev}_co'
         names = [n.replace(' ', '_')
                  for n in counties[abbrev] if n in us_states.STATES]
-        CATALOG.grouper(state_co, [co_names] + names)
+        VOCAB.grouper(state_co, [co_names] + names)
 
         us_county.append(state_co)
-    CATALOG.grouper('us_county', us_county)
+    VOCAB.grouper('us_county', us_county)
 
 
 build_counties()

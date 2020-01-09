@@ -3,13 +3,13 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, fraction, compound
 import pylib.vertnet.numeric as numeric
 import pylib.vertnet.shared_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 # How far to look into the surrounding context to disambiguate the parse
 LOOK_BACK_FAR = 40
@@ -78,16 +78,16 @@ TOTAL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     rules=[
-        CATALOG['uuid'],  # UUIDs cause problems with numbers
+        VOCAB['uuid'],  # UUIDs cause problems with numbers
 
         # Units are in the key, like: TotalLengthInMillimeters
-        CATALOG.term('key_with_units', r"""
+        VOCAB.term('key_with_units', r"""
             ( total | snout \s* vent | head \s* body | fork ) \s*
             ( length | len )? \s* in \s* (?P<units> millimeters | mm )
             """),
 
         # Various total length keys
-        CATALOG.part('len_key', r"""
+        VOCAB.part('len_key', r"""
             t \s* [o.]? \s* l [._]? (?! [a-z] )
             | total  [\s-]* length [\s-]* in
             | ( total | max | standard ) [\s-]* lengths? \b
@@ -101,69 +101,69 @@ TOTAL_LENGTH = Base(
             """),
 
         # Words that indicate we don't have a total length
-        CATALOG.term('skip', ' horns? tag '.split()),
+        VOCAB.term('skip', ' horns? tag '.split()),
 
         # The word length on its own. Make sure it isn't proceeded by a letter
-        CATALOG.part('ambiguous', r"""
+        VOCAB.part('ambiguous', r"""
             (?<! [a-z] \s* ) (?P<ambiguous_key> lengths? ) """),
 
         # # We don't know if this is a length until we see the units
-        CATALOG.part('key_units_req', 'measurements? body total'.split()),
+        VOCAB.part('key_units_req', 'measurements? body total'.split()),
 
         # The abbreviation key, just: t. This can be a problem.
-        CATALOG.part('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
+        VOCAB.part('char_key', r' \b (?P<ambiguous_key> l ) (?= [:=-] ) '),
 
         # Some patterns require a separator
-        CATALOG['semicolon'],
-        CATALOG['comma'],
+        VOCAB['semicolon'],
+        VOCAB['comma'],
 
-        CATALOG.grouper('key', """
+        VOCAB.grouper('key', """
             ( key_with_units | len_key | shorthand_key | ambiguous
                 | char_key )
             ( eq | dash )? """),
 
-        CATALOG.grouper('value', """
+        VOCAB.grouper('value', """
             len_range | number (?P<units> len_units )? """),
-        CATALOG.grouper('value_units', """
+        VOCAB.grouper('value_units', """
             len_range | number (?P<units> len_units ) """),
 
         # E.g.: 10 to 11 inches TL
-        CATALOG.producer(simple, 'value (?P<units> len_units ) key'),
-        CATALOG.producer(simple, """ key value key? """),
-        CATALOG.producer(simple, """ key (?P<units> len_units ) value """),
-        CATALOG.producer(simple, """ key_units_req value_units """),
+        VOCAB.producer(simple, 'value (?P<units> len_units ) key'),
+        VOCAB.producer(simple, """ key value key? """),
+        VOCAB.producer(simple, """ key (?P<units> len_units ) value """),
+        VOCAB.producer(simple, """ key_units_req value_units """),
 
         # E.g.: total length 4 feet 7 inches
-        CATALOG.producer(compound, ' key? compound_len '),
+        VOCAB.producer(compound, ' key? compound_len '),
 
         # Handle fractional values like: total length 9/16"
         # E.g.: total = 9/16 inches
-        CATALOG.producer(fraction, [
+        VOCAB.producer(fraction, [
             'key_units_req len_fraction (?P<units> len_units )']),
 
         # E.g.: svl 9/16 inches
-        CATALOG.producer(fraction, [
+        VOCAB.producer(fraction, [
             'key len_fraction (?P<units> len_units )']),
 
         # E.g.: len 9/16 in
-        CATALOG.producer(fraction, """
+        VOCAB.producer(fraction, """
             (?P<ambiguous_key> ambiguous) len_fraction
                 (?P<units> len_units )"""),
 
         # E.g.: total length: 10-29-39 10-11
-        CATALOG.producer(simple, '( key | key_units_req ) triple? len_range'),
+        VOCAB.producer(simple, '( key | key_units_req ) triple? len_range'),
 
         # E.g.: L 12.4 cm
-        CATALOG.producer(simple, """
+        VOCAB.producer(simple, """
             char_key value (?P<units> len_units )? """),
 
-        CATALOG.producer(
+        VOCAB.producer(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 '( key | key_units_req ) shorthand',  # With a key
                 'shorthand']),  # Without a key
 
         # Handle a truncated shorthand notation
-        CATALOG.producer(
+        VOCAB.producer(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 'key shorthand',  # With a key
                 'shorthand',  # Without a key

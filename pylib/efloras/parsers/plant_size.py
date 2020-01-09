@@ -6,10 +6,10 @@ from pylib.shared.util import to_float
 from pylib.shared.trait import Trait
 from pylib.shared.convert_units import convert as convert_units
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
-from pylib.efloras.shared_patterns import CATALOG
+from pylib.efloras.shared_patterns import VOCAB
 
 
 def convert(token: Token) -> Any:
@@ -81,7 +81,7 @@ def set_size_values(trait, token):
 
 def parser(plant_part):
     """Build a parser for the plant part."""
-    catalog = RuleCatalog(CATALOG)
+    catalog = Vocabulary(VOCAB)
     return Base(
         name=f'{plant_part}_size',
         rules=[

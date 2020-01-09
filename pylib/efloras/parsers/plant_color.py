@@ -5,15 +5,15 @@ from typing import Any
 import regex
 from pylib.shared.util import FLAGS
 from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.shared.trait import Trait
 import pylib.efloras.util as util
 from pylib.efloras.parsers.base import Base
 import pylib.efloras.shared_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
-CATALOG.term('color', r"""
+VOCAB.term('color', r"""
     black(ish)? blue(ish)? brown brownish
     cream cream-yellow creamy
     crimson
@@ -33,12 +33,12 @@ CATALOG.term('color', r"""
     yellow yellowish
     """.split())
 
-CATALOG.term('color_prefix', r"""
+VOCAB.term('color_prefix', r"""
     bright(er)? | dark(er)? | deep(er)? | slightly | light(er)? | pale(r)?
     | usually (\s+ not)? | rarely | pale | sometimes | often
     """)
 
-CATALOG.term('color_suffix', r"""
+VOCAB.term('color_suffix', r"""
     spotted spots? stripe(s|d)? vein(s|ed)? tip(s|ped)? mottled
     tinge(s|d)? longitudinal throated lined """.split())
 
@@ -100,17 +100,17 @@ def convert(token: Token) -> Any:
 
 def normalize(value: str) -> str:
     """Normalize the shape value."""
-    value = CATALOG['shape_starter'].regexp.sub('', value)
+    value = VOCAB['shape_starter'].regexp.sub('', value)
     value = value.strip(string.punctuation).lower()
 
     parts = []
     has_color = False
     for part in regex.split(
-            rf'\s+ | {CATALOG["dash"].pattern}', value, flags=FLAGS):
-        if CATALOG['color'].regexp.search(part):
+            rf'\s+ | {VOCAB["dash"].pattern}', value, flags=FLAGS):
+        if VOCAB['color'].regexp.search(part):
             parts.append(RENAME.get(part, part))
             has_color = True
-        elif CATALOG['color_suffix'].regexp.search(part):
+        elif VOCAB['color_suffix'].regexp.search(part):
             parts.append(RENAME.get(part, part))
     if not has_color:
         parts = []
@@ -122,7 +122,7 @@ def normalize(value: str) -> str:
 
 def parser(plant_part):
     """Build a parser for the flower part."""
-    catalog = RuleCatalog(CATALOG)
+    catalog = Vocabulary(VOCAB)
     return Base(
         name=f'{plant_part}_color',
         rules=[

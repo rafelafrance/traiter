@@ -1,12 +1,12 @@
 """Parse placental scar counts."""
 
 from pylib.shared.util import as_list, to_int
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 SUB = {'l': 'left', 'r': 'right', 'm': 'male', 'f': 'female'}
 
@@ -43,57 +43,57 @@ PLACENTAL_SCAR_COUNT = Base(
     name=__name__.split('.')[-1],
     rules=[
         # Adjectives to placental scars
-        CATALOG.term('adj', r"""
+        VOCAB.term('adj', r"""
             faint prominent recent old possible """.split()),
 
         # Skip arbitrary words
-        CATALOG['word'],
-        CATALOG.part('sep', r' [;/] '),
+        VOCAB['word'],
+        VOCAB.part('sep', r' [;/] '),
 
-        CATALOG.grouper('count', """
+        VOCAB.grouper('count', """
             none embryo conj
             | none visible | integer | none """),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """(?P<count1> count ) op (?P<count2> count )
                 ( eq (?P<value> count ) )? plac_scar """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """plac_scar
                   (?P<count1> count ) prep? (?P<side1> side )
                 ( (?P<count2> count ) prep? (?P<side2> side ) )? """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ (?P<count1> count ) prep? (?P<side1> side ) plac_scar
                 ( (?P<count2> count ) prep? (?P<side2> side )
                     (plac_scar)? )? """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ (?P<side1> side ) (?P<count1> count )
                     (visible | op)? plac_scar
                 ( (?P<side2> side ) (?P<count2> count )
                     (visible)? (visible | op)? plac_scar? )? """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """   (?P<count1> count ) prep? (?P<side1> side )
                 ( (?P<count2> count ) prep? (?P<side2> side ) )?
                 plac_scar """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ (?P<count1> count ) plac_scar (?P<side1> side )
                 ( (?P<count2> count ) plac_scar (?P<side2> side ) )? """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ plac_scar (?P<side1> side ) (?P<count1> count )
                 ( plac_scar (?P<side2> side ) (?P<count2> count ) )? """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """plac_scar
                 (?P<count1> count )
                   op (?P<count2> count )
                 ( eq (?P<value> count ) )? """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ (?P<value> count ) adj? plac_scar op?
                 (
                     (?P<count1> count ) (?P<side1> side )
@@ -102,15 +102,15 @@ PLACENTAL_SCAR_COUNT = Base(
                 )?
                 """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ (?P<value> count ) embryo? plac_scar """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ plac_scar eq? (?P<count1> count ) (?P<side1> side ) """]),
 
-        CATALOG.producer(convert_count, [
+        VOCAB.producer(convert_count, [
             """ plac_scar eq? (?P<value> count ) """]),
 
-        CATALOG.producer(convert_state, """ plac_scar """),
+        VOCAB.producer(convert_state, """ plac_scar """),
     ],
 )

@@ -2,14 +2,14 @@
 
 import regex
 import pylib.shared.patterns as patterns
-from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LAST
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 SEX = r'staminate | pistillate'
-CATALOG.term('sex', SEX)
+VOCAB.term('sex', SEX)
 
-CATALOG.term('plant_part', r"""
+VOCAB.term('plant_part', r"""
     (?<! to \s )
     ( androeci(a|um) | anthers?
     | blades?
@@ -24,22 +24,22 @@ CATALOG.term('plant_part', r"""
     | sepals? | stamens? | stigmas? | stipules? | styles?
     )""")
 
-CATALOG.term('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
-CATALOG.term('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
-CATALOG.term('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
-CATALOG.term('hairs', 'hairs?')
-CATALOG.term('flower', fr'({SEX} \s+ )? flowers?')
-CATALOG.term('hypanthium', 'hypan-?thi(um|a)')
-CATALOG.term('sepal', 'sepals?')
-CATALOG.term('calyx', 'calyx | calyces')
-CATALOG.term('stamen', 'stamens?')
-CATALOG.term('anther', 'anthers?')
-CATALOG.term('style', 'styles?')
-CATALOG.term('stigma', 'stigmas?')
-CATALOG.term('petal', r' petals? ')
-CATALOG.term('corolla', r' corollas? ')
+VOCAB.term('leaf', r""" leaf (\s* blades?)? | leaflet | leaves | blades? """)
+VOCAB.term('petiole', r""" (?<! to \s ) (petioles? | petiolules?)""")
+VOCAB.term('lobes', r' ( leaf \s* )? (un)?lobe[sd]? ')
+VOCAB.term('hairs', 'hairs?')
+VOCAB.term('flower', fr'({SEX} \s+ )? flowers?')
+VOCAB.term('hypanthium', 'hypan-?thi(um|a)')
+VOCAB.term('sepal', 'sepals?')
+VOCAB.term('calyx', 'calyx | calyces')
+VOCAB.term('stamen', 'stamens?')
+VOCAB.term('anther', 'anthers?')
+VOCAB.term('style', 'styles?')
+VOCAB.term('stigma', 'stigmas?')
+VOCAB.term('petal', r' petals? ')
+VOCAB.term('corolla', r' corollas? ')
 
-CATALOG.term('shape_starter', r"""
+VOCAB.term('shape_starter', r"""
     broadly
     | deeply | depressed
     | long
@@ -49,20 +49,20 @@ CATALOG.term('shape_starter', r"""
     | shallowly | sometimes
     """)
 
-CATALOG.part('location', r""" \b ( terminal | lateral | basal | cauline ) """)
-CATALOG.term('dim', """
+VOCAB.part('location', r""" \b ( terminal | lateral | basal | cauline ) """)
+VOCAB.term('dim', """
     width wide length long radius diameter diam? """.split())
 
-CATALOG.part('punct', r' [,;:/] ', capture=False, when=LAST)
+VOCAB.part('punct', r' [,;:/] ', capture=False, when=LAST)
 
-CATALOG.term('word', r' [a-z] \w* ', capture=False, when=LAST)
+VOCAB.term('word', r' [a-z] \w* ', capture=False, when=LAST)
 
 # ############################################################################
 # Numeric patterns
 
-CATALOG.term('units', ' cm mm '.split())
+VOCAB.term('units', ' cm mm '.split())
 
-CATALOG.part('number', r' \d+ ( \. \d* )? ')
+VOCAB.part('number', r' \d+ ( \. \d* )? ')
 
 # Numeric ranges like: (10–)15–20(–25)
 RANGE = r"""
@@ -73,7 +73,7 @@ RANGE = r"""
     (?: open dash (?P<max> number ) close )?
     (?! dash | slash )
     """
-CATALOG.grouper('range', RANGE, capture=False)
+VOCAB.grouper('range', RANGE, capture=False)
 
 # Cross measurements like: 3–5(–8) × 4–11(–13)
 # Rename the groups so we can easily extract them in the parsers
@@ -87,24 +87,24 @@ CROSS = f"""
     {LENGTH_RANGE} (?P<units_length> units )?
     ( x {WIDTH_RANGE} (?P<units_width> units )? )?
     """
-CATALOG.grouper('cross', CROSS, capture=False)
+VOCAB.grouper('cross', CROSS, capture=False)
 
 CROSS_GROUPS = regex.compile(
     r""" (length | width) """, regex.IGNORECASE | regex.VERBOSE)
 CROSS_1 = CROSS_GROUPS.sub(r'\1_1', CROSS)
 CROSS_2 = CROSS_GROUPS.sub(r'\1_2', CROSS)
-CATALOG.grouper('sex_cross', f"""
+VOCAB.grouper('sex_cross', f"""
     {CROSS_1} (open)? (?P<sex_1> sex )? (close)?
     ( conj | prep )?
     {CROSS_2} (open)? (?P<sex_2> sex )? (close)?
     """, capture=False)
 
 # Like: "to 10 cm"
-CATALOG.grouper(
+VOCAB.grouper(
     'cross_upper',
     fr""" up_to (?P<high_length> number )
         (?P<units_length> units ) """, capture=False)
 
 # Like: "to 10"
-CATALOG.grouper(
+VOCAB.grouper(
     'count_upper', fr""" up_to (?P<high> number ) """, capture=False)

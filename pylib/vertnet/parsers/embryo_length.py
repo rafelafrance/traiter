@@ -1,14 +1,14 @@
 """Parse embryo lengths."""
 
 from pylib.shared.util import as_list, to_float
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.trait import Trait
 import pylib.shared.convert_units as convert_units
 from pylib.vertnet.numeric import simple, add_flags, fix_up_inches
 from pylib.vertnet.parsers.base import Base
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 
 def convert(token):
@@ -53,30 +53,30 @@ EMBRYO_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     rules=[
-        CATALOG.part('key', r"""
+        VOCAB.part('key', r"""
             (?<! collector [\s=:.] ) (?<! reg [\s=:.] ) (
                 ( crown | cr ) ( [_\s\-] | \s+ to \s+ )? rump
                 | (?<! [a-z] ) crl (?! [a-z] )
                 | (?<! [a-z] ) cr  (?! [a-z] )
             )"""),
 
-        CATALOG.part('other', r' \( \s* \d+ \s* \w+ \s* \) '),
+        VOCAB.part('other', r' \( \s* \d+ \s* \w+ \s* \) '),
 
-        CATALOG.part('separator', r' [;"/.] '),
+        VOCAB.part('separator', r' [;"/.] '),
 
-        CATALOG.grouper('noise', ' word x '.split()),
-        CATALOG.grouper('value', ' cross | number len_units? '),
+        VOCAB.grouper('noise', ' word x '.split()),
+        VOCAB.grouper('value', ' cross | number len_units? '),
 
-        CATALOG.grouper('count', """number side number side """),
-        CATALOG.grouper('skip', ' prep word cross | other | side '),
+        VOCAB.grouper('count', """number side number side """),
+        VOCAB.grouper('skip', ' prep word cross | other | side '),
 
-        CATALOG.producer(convert_many, """
+        VOCAB.producer(convert_many, """
             embryo count? value{2,} (?! skip ) quest? """),
-        CATALOG.producer(convert, """ embryo? key noise? value quest? """),
-        CATALOG.producer(convert, """ embryo? noise? value key quest? """),
-        CATALOG.producer(
+        VOCAB.producer(convert, """ embryo? key noise? value quest? """),
+        VOCAB.producer(convert, """ embryo? noise? value key quest? """),
+        VOCAB.producer(
             convert, """ embryo noise? value (?! skip ) quest? """),
-        CATALOG.producer(isolate, """
+        VOCAB.producer(isolate, """
             embryo count? (?P<real> value) len_units quest? """),
     ],
 )

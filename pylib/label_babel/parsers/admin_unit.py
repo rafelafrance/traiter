@@ -2,10 +2,10 @@
 
 from pylib.shared.trait import Trait
 from pylib.shared.parsers import us_counties, us_states
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.label_babel.parsers.base import Base
 
-CATALOG = RuleCatalog(us_counties.CATALOG)
+VOCAB = Vocabulary(us_counties.VOCAB)
 
 
 def convert(token):
@@ -24,15 +24,15 @@ def convert(token):
 ADMIN_UNIT = Base(
     name='us_county',
     rules=[
-        CATALOG['eol'],
-        CATALOG.term('co_label', r""" co | coun[tc]y """, capture=False),
-        CATALOG.term('st_label', r"""
+        VOCAB['eol'],
+        VOCAB.term('co_label', r""" co | coun[tc]y """, capture=False),
+        VOCAB.term('st_label', r"""
             ( plants | flora ) \s* of """, capture=False),
 
-        CATALOG.producer(convert, ' us_state? eol? co_label us_county '),
-        CATALOG.producer(convert, ' us_county co_label us_state? '),
-        CATALOG.producer(convert, ' us_county us_state '),
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, ' us_state? eol? co_label us_county '),
+        VOCAB.producer(convert, ' us_county co_label us_state? '),
+        VOCAB.producer(convert, ' us_county us_state '),
+        VOCAB.producer(convert, """
             st_label us_state eol? co_label us_county """),
-        CATALOG.producer(convert, ' st_label eol? us_state '),
+        VOCAB.producer(convert, ' st_label eol? us_state '),
     ])

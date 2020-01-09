@@ -1,12 +1,12 @@
 """Parse ovaries state notations."""
 
 import regex
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 
 def convert(token):
@@ -42,45 +42,45 @@ def double(token):
 OVARIES_STATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        CATALOG.term('other', """ sev somewhat few """.split()),
+        VOCAB.term('other', """ sev somewhat few """.split()),
 
         # Skip words
-        CATALOG.term('skip', ' womb nullip '.split()),
+        VOCAB.term('skip', ' womb nullip '.split()),
 
-        # CATALOG['comma'],
-        CATALOG.part('sep', r' [;\(] '),
+        # VOCAB['comma'],
+        VOCAB.part('sep', r' [;\(] '),
 
         # E.g.: ovaries and uterine horns
         # Or:   ovaries and fallopian tubes
-        CATALOG.grouper('ovaries', r"""
+        VOCAB.grouper('ovaries', r"""
             ovary ( ( and? uterus horns? ) | and? fallopian )?
             """),
 
         # E.g.: covered in copious fat
-        CATALOG.grouper('coverage', ' covered word{0,2} fat '),
+        VOCAB.grouper('coverage', ' covered word{0,2} fat '),
 
         # E.g.: +corpus luteum
-        CATALOG.grouper('luteum', ' sign? corpus? (alb | lut) '),
+        VOCAB.grouper('luteum', ' sign? corpus? (alb | lut) '),
 
-        CATALOG.grouper('value_words', """
+        VOCAB.grouper('value_words', """
             size mature coverage luteum color corpus other active destroyed alb
             visible developed cyst texture fallopian luteum """.split()),
 
-        CATALOG.grouper('values', """
+        VOCAB.grouper('values', """
             ( value_words ( and | comma ) | non )? 
             value_words """),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             side? ovaries side? ( word | number | comma ){0,5} 
             (?P<value> values+ ) """),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             (?P<value> values+ ) ( word | number | comma ){0,5}
                ( (?<! comma ) side )? (?<! comma ) ovaries """),
 
         # Get left and right side measurements
         # E.g.: ovaries: R 2 c. alb, L sev c. alb
-        CATALOG.producer(double, r"""
+        VOCAB.producer(double, r"""
             ovaries
                 (?P<side> side) number? (?P<value> word? values+ )
                 ( and | comma )?

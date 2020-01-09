@@ -1,12 +1,12 @@
 """Shared token patterns."""
 
 import pylib.shared.patterns as patterns
-from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LAST
 from pylib.vertnet.util import ordinal, number_to_words
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
-_ = CATALOG.term('word', r' ( [a-z] \w* ) ', capture=False, when=LAST)
+_ = VOCAB.term('word', r' ( [a-z] \w* ) ', capture=False, when=LAST)
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.
@@ -25,7 +25,7 @@ _ = CATALOG.term('word', r' ( [a-z] \w* ) ', capture=False, when=LAST)
 # Ambiguous measurements are enclosed in brackets.
 #   E.g.: 11-[22]-33-[44]:99g
 
-CATALOG.part('shorthand_key', r"""
+VOCAB.part('shorthand_key', r"""
     (on \s* tag | specimens? (?! \s* [a-z] )
         | catalog (?! [a-z] )) (?! \s* [#] )
     | ( measurement s? | meas ) [:.,]{0,2} ( \s* length \s* )?
@@ -40,12 +40,12 @@ CATALOG.part('shorthand_key', r"""
 
 # A possibly unknown value
 SH_NUM = r""" \d+ ( \. \d+ )? | (?<= [^\d] ) \. \d+ """
-CATALOG.part('sh_num', SH_NUM)
+VOCAB.part('sh_num', SH_NUM)
 
 SH_VAL = f' ( {SH_NUM} | [?x]{{1,2}} | n/?d ) '
-CATALOG.part('sh_val', SH_VAL)
+VOCAB.part('sh_val', SH_VAL)
 
-CATALOG.part('shorthand', fr"""
+VOCAB.part('shorthand', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {SH_VAL} \]? )
     (?P<shorthand_sep> [:/-] )
@@ -66,7 +66,7 @@ CATALOG.part('shorthand', fr"""
     """)
 
 # Sometimes the last number is missing. Be careful to not pick up dates.
-CATALOG.part('triple', fr"""
+VOCAB.part('triple', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {SH_VAL} \]? )
     (?P<shorthand_sep> [:/-] )
@@ -79,30 +79,30 @@ CATALOG.part('triple', fr"""
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 9)]
 ORDINALS += [number_to_words(x) for x in ORDINALS]
-CATALOG.part('ordinals', ORDINALS)
+VOCAB.part('ordinals', ORDINALS)
 
 # Time units
-CATALOG.part('time_units', ' years? months? weeks? days? hours? '.split())
+VOCAB.part('time_units', ' years? months? weeks? days? hours? '.split())
 
 # Side keywords
-CATALOG.part('side', r"""
+VOCAB.part('side', r"""
     (?<! [a-z] ) [lr] (?! [a-z] )
     | both | left | right | lft? | lt | rt """)
 # SIDE = RULE['side'].pattern
 
 DIMENSION = r' (?P<dim> length | width ) '
-CATALOG.part('dimension', DIMENSION)
+VOCAB.part('dimension', DIMENSION)
 
 # Numeric sides interfere with number parsing so combine \w dimension
-CATALOG.part(
+VOCAB.part(
     'dim_side',
     fr""" {DIMENSION} \s* (?P<side> [12] ) \b """)
 
-CATALOG.part('cyst', r"""
+VOCAB.part('cyst', r"""
     (\d+ \s+)? (cyst s? | bodies | cancerous | cancer ) ( \s+ ( on | in ))?""")
 
 # Numbers are positive decimals and estimated values are enclosed in brackets
-CATALOG.part('number', r"""
+VOCAB.part('number', r"""
     (?P<estimated_value> \[ )?
     ( ( \d{1,3} ( , \d{3} ){1,3} | \d+ ) ( \. \d+ )?
         | (?<= [^\d] ) \. \d+ | ^ \. \d+ )
@@ -112,7 +112,7 @@ CATALOG.part('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-# CATALOG.grouper('range', """
+# VOCAB.grouper('range', """
 #     (?<! dash )
 #     ( number units? (( dash | to ) number units?)? )
 #     (?! dash ) """, capture=False)
@@ -120,7 +120,7 @@ CATALOG.part('number', r"""
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-CATALOG.grouper('mass_range', """
+VOCAB.grouper('mass_range', """
     (?<! dash )
     ( number mass_units? (( dash | to ) number mass_units?)? )
     (?! dash ) """, capture=False)
@@ -128,20 +128,20 @@ CATALOG.grouper('mass_range', """
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates
 # So: no part of "2014-12-11" would be in a range
-CATALOG.grouper('len_range', """
+VOCAB.grouper('len_range', """
     (?<! dash )
     ( number (?P<units> len_units )?
     (( dash | to ) number (?P<units> len_units )? )? )
     (?! dash ) """, capture=False)
 
 # A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
-CATALOG.grouper('compound_len', """
+VOCAB.grouper('compound_len', """
     (?P<ft> number ) feet comma?
     (?P<in> number ) ( ( dash | to ) (?P<in> number ) )? inches
     """, capture=False)
 
 # A rule for parsing a compound weight like 2 lbs. 3.1 - 4.5 oz
-CATALOG.grouper('compound_wt', """
+VOCAB.grouper('compound_wt', """
     (?P<lbs> number ) pounds comma?
     (?P<ozs> number ) ( ( dash | to ) (?P<ozs> number ) )? ounces
     """, capture=False)
@@ -152,12 +152,12 @@ CATALOG.grouper('compound_wt', """
 CROSS = """ (?<! x )
         ( number len_units? ( x | by ) number len_units?
         | number len_units ) """
-CATALOG.grouper('cross', CROSS, capture=False)
+VOCAB.grouper('cross', CROSS, capture=False)
 
 # Handle 2 cross measurements, one per left/right side
-CATALOG.grouper('joiner', ' ampersand comma and '.split())
+VOCAB.grouper('joiner', ' ampersand comma and '.split())
 
-CATALOG.grouper('side_cross', f"""
+VOCAB.grouper('side_cross', f"""
     (?P<side_1> side )?
         (?P<value_1> number ) (?P<units_1> len_units )?
             ( x | by ) (?P<value_1> number ) (?P<units_1> len_units )?
@@ -169,7 +169,7 @@ CATALOG.grouper('side_cross', f"""
 
 # For fractions like "1 2/3" or "1/2".
 # We don't allow dates like "1/2/34".
-CATALOG.grouper('len_fraction', """
+VOCAB.grouper('len_fraction', """
     (?P<whole> number )?
     (?<! slash )
     (?P<numerator> number) slash (?P<denominator> number)

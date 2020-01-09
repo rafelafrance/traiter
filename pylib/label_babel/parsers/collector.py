@@ -6,10 +6,10 @@ from pylib.shared import util
 from pylib.shared.trait import Trait
 from pylib.shared.parsers.us_states import STATE_NAMES
 from pylib.shared.parsers import name_parts
-from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LAST
 from pylib.label_babel.parsers.base import Base
 
-CATALOG = RuleCatalog(name_parts.CATALOG)
+VOCAB = Vocabulary(name_parts.VOCAB)
 
 MIN_LEN = 5     # Minimum collector name length
 
@@ -43,20 +43,20 @@ def convert(token):
 COLLECTOR = Base(
     name='collector',
     rules=[
-        CATALOG['eol'],
-        CATALOG['month_name'],
+        VOCAB['eol'],
+        VOCAB['month_name'],
         STATE_NAMES,
 
-        CATALOG.term('col_label', r"""
+        VOCAB.term('col_label', r"""
             ( collect(or|ed) | coll | col ) ( \s* by )? 
             """, capture=False),
 
-        CATALOG.term(
+        VOCAB.term(
             'no_label', r""" number no num """.split(), capture=False),
 
-        CATALOG.term('part', r""" [[:alpha:]]+ """, when=LAST, capture=False),
+        VOCAB.term('part', r""" [[:alpha:]]+ """, when=LAST, capture=False),
 
-        CATALOG.term('other_label', r"""
+        VOCAB.term('other_label', r"""
             art artist ass assist assistant auth authors?
             cartographer conservator contributor corator curator curatorial
             det determiner dir director
@@ -72,17 +72,17 @@ COLLECTOR = Base(
             writer
             """.split(), capture=False),
 
-        CATALOG.part('noise', r" [_`‘|\[\]]+ "),
-        CATALOG.term('header_key', r' herbarium '.split()),
+        VOCAB.part('noise', r" [_`‘|\[\]]+ "),
+        VOCAB.term('header_key', r' herbarium '.split()),
 
-        CATALOG.term('col_no', r""" [[:alpha:][:digit:]]+ """, when=LAST),
+        VOCAB.term('col_no', r""" [[:alpha:][:digit:]]+ """, when=LAST),
 
-        CATALOG.grouper('collector', """
+        VOCAB.grouper('collector', """
             ( name_part | initial ){2,} 
             ( name_part | part | initial )* """, capture=False),
 
         # With a label
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             (?<= ^ | eol )
             (?<! other_label comma? name_part? ) (?<! part | col_no )
                 noise? col_label noise?
@@ -94,7 +94,7 @@ COLLECTOR = Base(
                 """),
 
         # Without a label
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             (?<= ^ | eol )
             (?<! other_label noise? name_part? )  (?<! part | col_no )
             noise? col_label? noise?

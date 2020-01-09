@@ -3,13 +3,13 @@
 from functools import partial
 import regex
 from pylib.shared.util import FLAGS
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import fix_up_inches, shorthand_length
 from pylib.vertnet.numeric import simple, fraction
 import pylib.vertnet.shared_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 # How far to look into the surrounding context to disambiguate the parse
 LOOK_BACK_FAR = 40
@@ -55,45 +55,45 @@ TAIL_LENGTH = Base(
     name=__name__.split('.')[-1],
     fix_up=fix_up,
     rules=[
-        CATALOG['uuid'],  # UUIDs cause problems with numbers
+        VOCAB['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: tailLengthInMM
-        CATALOG.term('key_with_units', r"""
+        VOCAB.term('key_with_units', r"""
             tail \s* ( length | len ) \s* in \s*
             (?P<units> millimeters | mm ) """),
 
         # The abbreviation key, just: t. This can be a problem.
-        CATALOG.part('char_key', r"""
+        VOCAB.part('char_key', r"""
             \b (?P<ambiguous_key> t ) (?! [a-z] ) (?! _ \D )
             """),
 
         # Standard keywords that indicate a tail length follows
-        CATALOG.term('keyword', [
+        VOCAB.term('keyword', [
             r' tail \s* length ',
             r' tail \s* len ',
             'tail',
             'tal']),
 
         # Some patterns require a separator
-        CATALOG.part('sep', r' [;,] | $ ', capture=False),
+        VOCAB.part('sep', r' [;,] | $ ', capture=False),
 
         # Consider all of these tokens a key
-        CATALOG.grouper('key', 'keyword char_key'.split()),
+        VOCAB.grouper('key', 'keyword char_key'.split()),
 
         # Handle fractional values like: tailLength 9/16"
-        CATALOG.producer(fraction, [
+        VOCAB.producer(fraction, [
             # E.g.: tail = 9/16 in
             'key len_fraction (?P<units> len_units )',
             'key len_fraction', # Without units, like: tail = 9/16
             ]),
 
-        CATALOG.producer(simple, [
+        VOCAB.producer(simple, [
             'key_with_units len_range',  # E.g.: tailLengthInMM=9-10
             'key len_range (?P<units> len_units )',  # E.g.: tailLength=9-10 mm
             'key len_range',             # Missing units like: tailLength 9-10
         ]),
 
-        CATALOG.producer(
+        VOCAB.producer(
             partial(shorthand_length, measurement='shorthand_tal'), [
                 'shorthand_key shorthand',  # With a key
                 'shorthand',  # Without a key

@@ -12,7 +12,7 @@ SECOND = re_rule.SECOND
 LAST = re_rule.LAST
 
 
-class RuleCatalog:
+class Vocabulary:
     """
     Build a catalog of shared rules and what sub-patterns they need.
 
@@ -33,7 +33,7 @@ class RuleCatalog:
     are needed for a particular product.
     """
 
-    def __init__(self, other: 'RuleCatalog' = None) -> None:
+    def __init__(self, other: 'Vocabulary' = None) -> None:
         """Create the rule set."""
         self.rules = dict(other.rules) if other else {}
 

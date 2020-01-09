@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime
 import regex
 from pylib.shared.util import FLAGS
-from pylib.efloras.shared_patterns import CATALOG
+from pylib.efloras.shared_patterns import VOCAB
 
 RAW_DIR = Path('.') / 'data' / 'raw'
 
@@ -76,7 +76,7 @@ def print_families(families):
 def split_keywords(value):
     """Convert a vocabulary string into separate words."""
     return regex.split(fr"""
-        \s* \b (?: {CATALOG['conj'].pattern} | {CATALOG['prep'].pattern} )
+        \s* \b (?: {VOCAB['conj'].pattern} | {VOCAB['prep'].pattern} )
             \b \s* [,]? \s*
         | \s* [,\[\]] \s*
         """, value, flags=FLAGS)

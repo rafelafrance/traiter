@@ -1,12 +1,12 @@
 """Parse lactation state notations."""
 
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.shared.util import to_int
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 
 def convert(token):
@@ -40,24 +40,24 @@ def typed(token):
 NIPPLE_COUNT = Base(
     name=__name__.split('.')[-1],
     rules=[
-        CATALOG.term('id', r' \d+-\d+ '),
+        VOCAB.term('id', r' \d+-\d+ '),
 
-        CATALOG.term('adj', r""" inguinal ing pectoral pec pr """.split()),
+        VOCAB.term('adj', r""" inguinal ing pectoral pec pr """.split()),
 
-        CATALOG.part('number', r' number | no | [#] '),
-        CATALOG.part('eq', r' is | eq | equals? | [=] '),
+        VOCAB.part('number', r' number | no | [#] '),
+        VOCAB.part('eq', r' is | eq | equals? | [=] '),
 
         # Skip arbitrary words
-        CATALOG['word'],
-        CATALOG['sep'],
+        VOCAB['word'],
+        VOCAB['sep'],
 
-        CATALOG.grouper('count', ' integer | none '),
+        VOCAB.grouper('count', ' integer | none '),
 
-        CATALOG.grouper('modifier', 'adj visible'.split()),
+        VOCAB.grouper('modifier', 'adj visible'.split()),
 
-        CATALOG.grouper('skip', ' number eq? integer '),
+        VOCAB.grouper('skip', ' number eq? integer '),
 
-        CATALOG.producer(
+        VOCAB.producer(
             typed,
             """ (?P<notation>
                     (?P<value1> count) modifier
@@ -65,7 +65,7 @@ NIPPLE_COUNT = Base(
                 ) nipple """),
 
         # Eg: 1:2 = 6 mammae
-        CATALOG.producer(
+        VOCAB.producer(
             convert,
             """ nipple op?
                 (?P<notation> count modifier?
@@ -73,15 +73,15 @@ NIPPLE_COUNT = Base(
                     (eq (?P<value> count))? ) """),
 
         # Eg: 1:2 = 6 mammae
-        CATALOG.producer(
+        VOCAB.producer(
             convert,
             """ (?P<notation> count modifier? op? count modifier?
                 (eq (?P<value> count))? ) nipple """),
 
         # Eg: 6 mammae
-        CATALOG.producer(convert, """ (?P<value> count ) modifier? nipple """),
+        VOCAB.producer(convert, """ (?P<value> count ) modifier? nipple """),
 
         # Eg: nipples 5
-        CATALOG.producer(convert, """ nipple (?P<value> count ) """),
+        VOCAB.producer(convert, """ nipple (?P<value> count ) """),
     ],
 )

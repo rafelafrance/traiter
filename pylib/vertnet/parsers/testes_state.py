@@ -1,11 +1,11 @@
 """Parse testes state notations."""
 
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 
 def convert(token):
@@ -21,14 +21,14 @@ TESTES_STATE = Base(
     name=__name__.split('.')[-1],
     rules=[
         # Abbreviations for "testes"
-        CATALOG.term('abbrev', 'tes ts tnd td tns ta t'.split()),
+        VOCAB.term('abbrev', 'tes ts tnd td tns ta t'.split()),
 
         # Abbreviations for "testes state"
-        CATALOG.term('state_abbrev', 'ns sc'.split()),
+        VOCAB.term('state_abbrev', 'ns sc'.split()),
 
-        CATALOG['word'],
+        VOCAB['word'],
 
-        CATALOG.grouper('state', [
+        VOCAB.grouper('state', [
             'non fully descended',
             'abdominal non descended',
             'abdominal descended',
@@ -41,28 +41,28 @@ TESTES_STATE = Base(
             'size']),
 
         # Simplify the testes length so it can be skipped easily
-        CATALOG.grouper('length', 'cross len_units?'),
+        VOCAB.grouper('length', 'cross len_units?'),
 
         # A typical testes state notation
         # E.g.: reproductiveData: ts 5x3 fully descended
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """label ( testes | abbrev )? length?
                 (?P<value> state | state_abbrev | abdominal | scrotal
                     | non scrotal | other | non testes )"""]),
 
         # E.g.: reproductive data = nonScrotal
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """label length?
                 (?P<value> non testes | non scrotal | scrotal )"""]),
 
         # E.g.: ts inguinal
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """abbrev length?
                 (?P<value> state | abdominal | non scrotal
                     | scrotal | other)"""]),
 
         # E.g.: testes 5x4 mm pt desc
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """testes ( length )?
                 (?P<value>
                     ( state | state_abbrev | abdominal | non scrotal
@@ -74,13 +74,13 @@ TESTES_STATE = Base(
                 )"""]),
 
         # E.g.: testes 5x4 desc
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """testes length?
                 (?P<value> state | state_abbrev | abdominal | non scrotal
                     | scrotal | other )"""]),
 
         # E.g.: no gonads
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """(?P<value> non ( testes | scrotal | gonads ) | scrotal )"""]),
     ],
 )

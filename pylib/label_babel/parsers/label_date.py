@@ -7,10 +7,10 @@ import regex
 from pylib.vertnet.trait import Trait
 from pylib.shared import util
 from pylib.shared import patterns
-from pylib.stacked_regex.rule_catalog import RuleCatalog, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LAST
 from pylib.label_babel.parsers.base import Base
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 
 def convert(token):
@@ -47,35 +47,35 @@ def short_date(token):
 LABEL_DATE = Base(
     name=__name__.split('.')[-1],
     rules=[
-        CATALOG['eol'],
-        CATALOG['uuid'],  # Get rid of these before they're a problem
+        VOCAB['eol'],
+        VOCAB['uuid'],  # Get rid of these before they're a problem
 
-        CATALOG.term('label', ' date '.split()),
+        VOCAB.term('label', ' date '.split()),
 
-        CATALOG.part(
+        VOCAB.part(
             'digits', r'(?<! \d ) ( [12]\d{3} | \d{1,2} ) (?! \d )',
             capture=True),
 
-        CATALOG.part('sep', r' [/_-]+ ', capture=True),
+        VOCAB.part('sep', r' [/_-]+ ', capture=True),
 
-        CATALOG.part('noise', r""" \w+ """, when=LAST, capture=True),
+        VOCAB.part('noise', r""" \w+ """, when=LAST, capture=True),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             label? (?P<value> digits sep? month_name sep? digits ) """),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             label? (?P<value> month_name sep? digits sep? digits ) """),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             label? (?P<value> digits sep digits sep digits ) """),
 
-        CATALOG.producer(short_date, f"""
+        VOCAB.producer(short_date, f"""
             label? (?P<value> digits sep digits ) """),
 
-        CATALOG.producer(short_date, f"""
+        VOCAB.producer(short_date, f"""
             label? (?P<value> month_name sep? digits ) """),
 
-        CATALOG.producer(short_date, f"""
+        VOCAB.producer(short_date, f"""
             label? (?P<value> digits sep? month_name ) """),
 
     ])

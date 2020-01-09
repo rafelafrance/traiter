@@ -2,13 +2,13 @@
 
 from pylib.shared.util import as_list, squash, to_float
 from pylib.shared.convert_units import convert
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.trait import Trait
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.numeric import as_value, add_flags, simple_mass
 import pylib.vertnet.shared_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 
 def shorthand(token):
@@ -37,59 +37,59 @@ def compound(token):
 BODY_MASS = Base(
     name=__name__.split('.')[-1],
     rules=[
-        CATALOG['uuid'],  # UUIDs cause problems with numbers
+        VOCAB['uuid'],  # UUIDs cause problems with numbers
 
         # Looking for keys like: MassInGrams
-        CATALOG.term('key_with_units', r"""
+        VOCAB.term('key_with_units', r"""
             ( weight | mass) [\s-]* in [\s-]*
             (?P<mass_units> grams | g | lbs )"""),
 
         # These words indicate a body mass follows
-        CATALOG.part('key_leader', 'full observed total'.split()),
+        VOCAB.part('key_leader', 'full observed total'.split()),
 
         # Words for weight
-        CATALOG.part('weight', 'weights? weigh(ed|ing|s)?'.split()),
+        VOCAB.part('weight', 'weights? weigh(ed|ing|s)?'.split()),
 
         # Keys like: w.t.
-        CATALOG.part('key_with_dots', r' \b w \.? \s? t s? \.? '),
+        VOCAB.part('key_with_dots', r' \b w \.? \s? t s? \.? '),
 
         # Common prefixes that indicate a body mass
-        CATALOG.part('mass', 'mass'),
-        CATALOG.part('body', 'body'),
+        VOCAB.part('mass', 'mass'),
+        VOCAB.part('body', 'body'),
 
         # These indicate that the mass is NOT a body mass
-        CATALOG.term('other_wt', r"""
+        VOCAB.term('other_wt', r"""
             femur baculum bacu bac spleen thymus kidney
             testes testis ovaries epididymis epid """.split()),
 
         # Separators
-        CATALOG['word'],
-        CATALOG['semicolon'],
-        CATALOG['comma'],
+        VOCAB['word'],
+        VOCAB['semicolon'],
+        VOCAB['comma'],
 
         # Any key not preceding by "other_wt" is considered a weight key
-        CATALOG.grouper('wt_key', r"""
+        VOCAB.grouper('wt_key', r"""
             (?<! other_wt )
             ( key_leader weight | key_leader mass
                 | body weight | body mass | body
                 | weight | mass | key_with_dots )
             """),
 
-        CATALOG.grouper('key', ' shorthand_key wt_key '.split()),
+        VOCAB.grouper('key', ' shorthand_key wt_key '.split()),
 
-        CATALOG.producer(compound, ' key? compound_wt '),
+        VOCAB.producer(compound, ' key? compound_wt '),
 
         # Shorthand notation like: on tag: 11-22-33-44=99g
-        CATALOG.producer(shorthand, [
+        VOCAB.producer(shorthand, [
             'key shorthand',    # With a key
             'shorthand',        # Without a key
         ]),
 
-        CATALOG.producer(
+        VOCAB.producer(
             simple_mass, ' key mass_units number (?! len_units ) '),
-        CATALOG.producer(
+        VOCAB.producer(
             simple_mass, ' key mass_range '),
-        CATALOG.producer(
+        VOCAB.producer(
             simple_mass, ' (?P<key> key_with_units ) mass_range '),
     ],
 )

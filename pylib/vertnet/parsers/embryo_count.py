@@ -1,12 +1,12 @@
 """Parse embryo counts."""
 
 from pylib.shared.util import as_list, to_int
-from pylib.stacked_regex.rule_catalog import RuleCatalog
+from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.vertnet.parsers.base import Base
 from pylib.vertnet.trait import Trait
 import pylib.vertnet.shared_reproductive_patterns as patterns
 
-CATALOG = RuleCatalog(patterns.CATALOG)
+VOCAB = Vocabulary(patterns.VOCAB)
 
 SUB = {'l': 'left', 'r': 'right', 'm': 'male', 'f': 'female'}
 
@@ -35,12 +35,12 @@ EMBRYO_COUNT = Base(
     name=__name__.split('.')[-1],
     rules=[
         # The sexes like: 3M or 4Females
-        CATALOG.part('sex', r"""
+        VOCAB.part('sex', r"""
             males? | females? | (?<! [a-z] ) [mf] (?! [a-z] ) """),
 
-        CATALOG.grouper('count', ' none word conj | integer | none '),
+        VOCAB.grouper('count', ' none word conj | integer | none '),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             ( (?P<total> count) word? )?
             embryo ((integer (?! side) ) | word)*
             (?P<subcount> count) (?P<sub> side | sex)
@@ -48,11 +48,11 @@ EMBRYO_COUNT = Base(
             """),
 
         # Eg: 4 fetuses on left, 1 on right
-        CATALOG.producer(convert, [
+        VOCAB.producer(convert, [
             """ (?P<subcount> count ) embryo prep? (?P<sub> side )
                 (?P<subcount> count ) embryo? prep? (?P<sub> side )"""]),
 
-        CATALOG.producer(convert, """
+        VOCAB.producer(convert, """
             (?P<total> count) (size | word)? embryo """),
     ],
 )
