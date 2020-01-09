@@ -1,6 +1,4 @@
-"""
-Find collector notations on herbarium specimen labels.
-"""
+"""Find collector notations on herbarium specimen labels."""
 
 import regex
 from itertools import zip_longest
@@ -23,6 +21,7 @@ def convert(token):
     traits = []
 
     for name, suffix in zip_longest(names, names[1:], fillvalue=''):
+        name = regex.sub(r'\.{3,}.*', '', name)
         if len(name) < MIN_LEN:
             continue
 
@@ -35,8 +34,8 @@ def convert(token):
         if name.lower() not in name_parts.SUFFIXES:
             traits.append(trait)
 
-    if token.groups.get('col_no'):
-        traits[0].col_no = token.groups['col_no']
+    if token.groups.get('collector_no'):
+        traits[0].col_no = token.groups['collector_no']
 
     return util.squash(traits)
 
@@ -90,7 +89,9 @@ COLLECTOR = Base(
                 (?P<col_name> collector 
                     ( ( conj | comma ) collector )* ( comma name_part )? )
                 noise?
-                ( no_label? col_no )? """),
+            ( eol* ( (no_label? comma? (?P<collector_no> col_no )
+                | no_label comma? (?P<collector_no>( part | col_no )+ ) ) ) )?
+                """),
 
         # Without a label
         CATALOG.producer(convert, """
@@ -98,7 +99,8 @@ COLLECTOR = Base(
             (?<! other_label noise? name_part? )  (?<! part | col_no )
             noise? col_label? noise?
             (?P<col_name> name_part+ ( ( conj | comma ) collector )* )
-            ( no_label? col_no )?
+            ( eol* ( (no_label? comma? (?P<collector_no> col_no )
+                | no_label comma? (?P<collector_no>( part | col_no )+ ) ) ) )?
             (?! header_key )
             (?= month_name | col_no | eol | $ ) """),
        ])

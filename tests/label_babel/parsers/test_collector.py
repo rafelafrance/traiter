@@ -121,10 +121,28 @@ class TestLabelDate(unittest.TestCase):
             COLLECTOR.parse('Coll. E. E. Dale, Jr. No. 6061'),
             [Trait(col_name='E. E. Dale Jr', col_no='6061', start=0, end=30)])
 
-    # TODO: We need to fix this
-    def off_test_parse_12(self):
-        """It parses name suffixes."""
+    def test_parse_12(self):
+        """It removes noise."""
         self.assertEqual(
             COLLECTOR.parse(
                 """Collected by ....... Marie. HACKS.......ccccee No."""),
-            [Trait(col_name='Marie. HACKS', start=0, end=40)])
+            [Trait(col_name='Marie. HACKS', start=0, end=46)])
+
+    def test_parse_13(self):
+        """It parses multi-part collector numbers."""
+        self.assertEqual(
+            COLLECTOR.parse('Coll. Stephen W. Bailey No, SWBII 1)'),
+            [Trait(col_name='Stephen W. Bailey', col_no='SWBII 1',
+                   start=0, end=35)])
+
+    def test_parse_14(self):
+        """It handles newlines between collector and collector number."""
+        self.assertEqual(
+            COLLECTOR.parse(textwrap.dedent("""
+                Coll. Marie P. Locke
+
+                No. 2319
+                Date September 4, 1977
+                """)),
+            [Trait(col_name='Marie P. Locke', col_no='2319',
+                   start=1, end=31)])

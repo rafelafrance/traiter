@@ -1,6 +1,7 @@
 # pylint: disable=missing-module-docstring,missing-class-docstring
 # pylint: disable=missing-function-docstring,too-many-public-methods
 
+import textwrap
 from datetime import date
 import unittest
 from dateutil.relativedelta import relativedelta
@@ -71,17 +72,23 @@ class TestLabelDate(unittest.TestCase):
     def test_parse_10(self):
         """It handles no spaces between the date parts."""
         self.assertEqual(
-            LABEL_DATE.parse("""
+            LABEL_DATE.parse(textwrap.dedent("""
                 Altitude 1000 ft.
                 Date 8/20/75
                 Collected by ...Wayne. Hutchins No.
-            """),
-            [Trait(value='1975-08-20', start=51, end=63)])
+            """)),
+            [Trait(value='1975-08-20', start=19, end=31)])
 
     def test_parse_11(self):
         """It handles no spaces between the date parts."""
         self.assertEqual(
-            LABEL_DATE.parse("""
+            LABEL_DATE.parse(textwrap.dedent("""
                 Slender erect shrubs 4-5 m.tall.
-                June 7, 1923 xo, 23163"""),
-            [Trait(value='1923-06-07', start=66, end=78)])
+                June 7, 1923 xo, 23163""")),
+            [Trait(value='1923-06-07', start=34, end=46)])
+
+    def test_parse_12(self):
+        """It handles dates missing a day part (numeric)."""
+        self.assertEqual(
+            LABEL_DATE.parse('Andrew Jenkins 631 2/2010'),
+            [Trait(value='2010-02-??', start=19, end=25)])
