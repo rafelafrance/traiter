@@ -92,3 +92,12 @@ class TestLabelDate(unittest.TestCase):
         self.assertEqual(
             LABEL_DATE.parse('Andrew Jenkins 631 2/2010'),
             [Trait(value='2010-02-??', start=19, end=25)])
+
+    def test_parse_13(self):
+        """It does not parse a bad date."""
+        self.assertEqual(
+            LABEL_DATE.parse(textwrap.dedent("""
+                Coll. Marie L. Locke No. 1599
+                Date Oct. 6, 197),
+            """)),
+            [])

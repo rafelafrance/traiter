@@ -12,6 +12,8 @@ from pylib.label_babel.parsers.base import Base
 
 VOCAB = Vocabulary(patterns.VOCAB)
 
+YEAR_LEN = 2
+
 
 def convert(token):
     """Normalize a parsed date."""
@@ -38,6 +40,9 @@ def convert(token):
 
 def short_date(token):
     """Normalize a parsed month year notation."""
+    if token.groups.get('month') and len(token.groups['digits']) < YEAR_LEN:
+        return None
+
     trait = convert(token)
     if trait:
         trait.value = trait.value[:-2] + '??'
@@ -53,12 +58,11 @@ LABEL_DATE = Base(
         VOCAB.term('label', ' date '.split()),
 
         VOCAB.part(
-            'digits', r'(?<! \d ) ( [12]\d{3} | \d{1,2} ) (?! \d )',
-            capture=True),
+            'digits', r'(?<! \d ) ( [12]\d{3} | \d{1,2} ) (?! \d )'),
 
-        VOCAB.part('sep', r' [/_-]+ ', capture=True),
+        VOCAB.part('sep', r' [/_-]+ ', capture=False),
 
-        VOCAB.part('noise', r""" \w+ """, priority=LOWEST, capture=True),
+        VOCAB.part('noise', r""" \w+ """, priority=LOWEST, capture=False),
 
         VOCAB.producer(convert, """
             label? (?P<value> digits sep? month_name sep? digits ) """),

@@ -146,3 +146,36 @@ class TestLabelDate(unittest.TestCase):
                 """)),
             [Trait(col_name='Marie P. Locke', col_no='2319',
                    start=1, end=31)])
+
+    def test_parse_15(self):
+        """It parses collectors separated by 'with'."""
+        self.assertEqual(
+            COLLECTOR.parse(
+                'Sarah Nunn with Angela Brown 7529 20 October 2002 of'),
+            [Trait(col_name='Sarah Nunn', col_no='7529',
+                   start=0, end=33),
+             Trait(col_name='Angela Brown', start=0, end=33)])
+
+    def test_parse_16(self):
+        """It parses collectors separated by 'with'."""
+        self.assertEqual(
+            COLLECTOR.parse(textwrap.dedent("""
+                Collector: Christopher Reid & Sarah Nunn
+                No.: 2018 Date: 16 May 2001
+                """)),
+            [Trait(col_name='Christopher Reid', col_no='2018',
+                   start=1, end=51),
+             Trait(col_name='Sarah Nunn', start=1, end=51)])
+
+    def test_parse_17(self):
+        """It handles a run-on with the label."""
+        self.assertEqual(
+            COLLECTOR.parse("""ColMrs. Jim Miller No. 736"""),
+            [Trait(col_name='Jim Miller', col_no='736', start=0, end=26)])
+
+    def test_parse_18(self):
+        """It handles a run-on with the label."""
+        self.assertEqual(
+            COLLECTOR.parse("""Sarah Nunn and Laura Eason 9834"""),
+            [Trait(col_name='Sarah Nunn', col_no='9834', start=0, end=31),
+             Trait(col_name='Laura Eason', start=0, end=31)])

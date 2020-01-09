@@ -6,7 +6,7 @@ from pylib.vertnet.util import ordinal, number_to_words
 
 VOCAB = Vocabulary(patterns.VOCAB)
 
-_ = VOCAB.term('word', r' ( [a-z] \w* ) ', capture=False, priority=LOWEST)
+VOCAB.term('word', r' ( [a-z] \w* ) ', capture=False, priority=LOWEST)
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.

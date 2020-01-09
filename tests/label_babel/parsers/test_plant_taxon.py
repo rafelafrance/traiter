@@ -28,3 +28,10 @@ class TestPlantTaxon(unittest.TestCase):
                 CLAY COUNTY
                 """)),
             [Trait(value='Fabaceae', start=17, end=25)])
+
+    def test_parse_03(self):
+        """It gets the full notation."""
+        self.assertEqual(
+            PLANT_TAXON.parse("""Cephalanthus occidentalis L. Rubiaceas"""),
+            [Trait(value='Cephalanthus occidentalis L. Rubiaceas',
+                   start=0, end=38)])

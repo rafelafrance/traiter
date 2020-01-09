@@ -89,7 +89,7 @@ class Parser:
 
         while matches:
             match = matches.popleft()
-            token, _, _ = self.merge_tokens(match, tokens, text)
+            token, *_ = self.merge_tokens(match, tokens, text)
             results.append(token)
 
         return results

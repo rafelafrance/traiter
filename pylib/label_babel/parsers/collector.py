@@ -16,7 +16,9 @@ MIN_LEN = 5     # Minimum collector name length
 
 def convert(token):
     """Build a collector trait"""
-    names = regex.split(r'\s*(?:and|,)\s*', token.groups.get('col_name'))
+    names = regex.split(
+        r'\s*(?:and|with|[,&])\s*',
+        token.groups.get('col_name'))
 
     traits = []
 
@@ -34,6 +36,9 @@ def convert(token):
         if name.lower() not in name_parts.SUFFIXES:
             traits.append(trait)
 
+    if not traits:
+        return None
+
     if token.groups.get('collector_no'):
         traits[0].col_no = token.groups['collector_no']
 
@@ -47,8 +52,8 @@ COLLECTOR = Base(
         VOCAB['month_name'],
         STATE_NAMES,
 
-        VOCAB.term('col_label', r"""
-            ( collect(or|ed) | coll | col ) ( \s* by )? 
+        VOCAB.part('col_label', r"""
+            \b ( collect(or|ed) | coll | col ) ( \s* by )? 
             """, capture=False),
 
         VOCAB.term(
@@ -76,32 +81,39 @@ COLLECTOR = Base(
         VOCAB.part('noise', r" [_`‘|\[\]]+ "),
         VOCAB.term('header_key', r' herbarium '.split()),
 
-        VOCAB.term('col_no', r""" [[:alpha:][:digit:]]+ """, priority=LOWEST),
+        VOCAB.term('junk', r' date '.split()),
+
+        VOCAB.term('col_no', r"""
+            [[:alpha:][:digit:]\-]+ """, priority=LOWEST),
 
         VOCAB.grouper('collector', """
-            ( name_part | initial ){2,} 
+            ( (name_part | initial) )+ 
             ( name_part | part | initial )* """, capture=False),
+
+        VOCAB.grouper('joiner', ' ( conj | comma | with ){1,2} '),
 
         # With a label
         VOCAB.producer(convert, """
             (?<= ^ | eol )
             (?<! other_label comma? name_part? ) (?<! part | col_no )
-                noise? col_label noise?
+                noise? col_label comma? noise?
                 (?P<col_name> collector 
-                    ( ( conj | comma ) collector )* ( comma name_part )? )
+                    ( joiner collector )* ( comma name_part )? )
                 noise?
             ( eol* ( (no_label? comma? (?P<collector_no> col_no )
-                | no_label comma? (?P<collector_no>( part | col_no )+ ) ) ) )?
+                | no_label comma?
+                    (?P<collector_no> ( part | col_no ){1,2} ) ) ) )?
                 """),
 
         # Without a label
         VOCAB.producer(convert, """
             (?<= ^ | eol )
             (?<! other_label noise? name_part? )  (?<! part | col_no )
-            noise? col_label? noise?
-            (?P<col_name> name_part+ ( ( conj | comma ) collector )* )
+            noise? col_label? comma? noise?
+            (?P<col_name> initial? name_part+ ( joiner collector )* )
             ( eol* ( (no_label? comma? (?P<collector_no> col_no )
-                | no_label comma? (?P<collector_no>( part | col_no )+ ) ) ) )?
+                | no_label comma?
+                    (?P<collector_no> ( part | col_no ){1,2} ) ) ) )?
             (?! header_key )
             (?= month_name | col_no | eol | $ ) """),
        ])
