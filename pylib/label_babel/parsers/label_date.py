@@ -1,6 +1,7 @@
 """Parse date notations."""
 
 from datetime import date
+from calendar import IllegalMonthError
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
 import regex
@@ -27,7 +28,7 @@ def convert(token):
 
     try:
         trait.value = parser.parse(value).date()
-    except parser.ParserError:
+    except (parser.ParserError, IllegalMonthError):
         return None
 
     if trait.value > date.today():
@@ -38,14 +39,30 @@ def convert(token):
     return trait
 
 
-def short_date(token):
-    """Normalize a parsed month year notation."""
+def short_date_name(token):
+    """Normalize a month name & year notation."""
     if token.groups.get('month') and len(token.groups['digits']) < YEAR_LEN:
         return None
 
     trait = convert(token)
     if trait:
-        trait.value = trait.value[:-2] + '??'
+        trait.value = str(trait.value[:-2]) + '??'
+    return trait
+
+
+# Until dateutils IllegalMonthError is fixes do this
+def short_date_digits(token):
+    """Normalize a month year as all digits notation."""
+    digits = token.groups['digits']
+
+    has_month = any(x for x in digits if 0 < int(x) <= 12)
+    has_year = any(x for x in digits if len(x) >= YEAR_LEN)
+    if not (has_month and has_year):
+        return None
+
+    trait = convert(token)
+    if trait:
+        trait.value = str(trait.value[:-2]) + '??'
     return trait
 
 
@@ -73,13 +90,13 @@ LABEL_DATE = Base(
         VOCAB.producer(convert, """
             label? (?P<value> digits sep digits sep digits ) """),
 
-        VOCAB.producer(short_date, f"""
+        VOCAB.producer(short_date_digits, f"""
             label? (?P<value> digits sep digits ) """),
 
-        VOCAB.producer(short_date, f"""
+        VOCAB.producer(short_date_name, f"""
             label? (?P<value> month_name sep? digits ) """),
 
-        VOCAB.producer(short_date, f"""
+        VOCAB.producer(short_date_name, f"""
             label? (?P<value> digits sep? month_name ) """),
 
     ])

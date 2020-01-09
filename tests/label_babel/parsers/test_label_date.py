@@ -101,3 +101,10 @@ class TestLabelDate(unittest.TestCase):
                 Date Oct. 6, 197),
             """)),
             [])
+
+    def test_parse_14(self):
+        """It handles a bad month."""
+        self.assertEqual(
+            LABEL_DATE.parse(
+                'WGSB4. Elevation: 1347.22 m (4420 N) - 1359-40 m (4460 Ny'),
+            [])
