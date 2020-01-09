@@ -6,7 +6,7 @@ from pylib.shared import util
 from pylib.shared.trait import Trait
 from pylib.shared.parsers.us_states import STATE_NAMES
 from pylib.shared.parsers import name_parts
-from pylib.stacked_regex.vocabulary import Vocabulary, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LOWEST
 from pylib.label_babel.parsers.base import Base
 
 VOCAB = Vocabulary(name_parts.VOCAB)
@@ -54,7 +54,8 @@ COLLECTOR = Base(
         VOCAB.term(
             'no_label', r""" number no num """.split(), capture=False),
 
-        VOCAB.term('part', r""" [[:alpha:]]+ """, when=LAST, capture=False),
+        VOCAB.term(
+            'part', r""" [[:alpha:]]+ """, priority=LOWEST, capture=False),
 
         VOCAB.term('other_label', r"""
             art artist ass assist assistant auth authors?
@@ -75,7 +76,7 @@ COLLECTOR = Base(
         VOCAB.part('noise', r" [_`‘|\[\]]+ "),
         VOCAB.term('header_key', r' herbarium '.split()),
 
-        VOCAB.term('col_no', r""" [[:alpha:][:digit:]]+ """, when=LAST),
+        VOCAB.term('col_no', r""" [[:alpha:][:digit:]]+ """, priority=LOWEST),
 
         VOCAB.grouper('collector', """
             ( name_part | initial ){2,} 

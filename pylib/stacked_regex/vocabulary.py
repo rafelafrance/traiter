@@ -9,7 +9,7 @@ from pylib.stacked_regex.rule import InRegexp
 
 FIRST = re_rule.FIRST
 SECOND = re_rule.SECOND
-LAST = re_rule.LAST
+LOWEST = re_rule.LOWEST
 
 
 class Vocabulary:
@@ -49,9 +49,10 @@ class Vocabulary:
             name: str,
             regexp: InRegexp,
             capture: bool = True,
-            when: int = 0) -> Rules:
+            priority: int = 0) -> Rules:
         """Add a partial term rule."""
-        self.rules[name] = part(name, regexp, capture=capture, when=when)
+        self.rules[name] = part(
+            name, regexp, capture=capture, priority=priority)
         return self.rules[name]
 
     def term(
@@ -59,9 +60,10 @@ class Vocabulary:
             name: str,
             regexp: InRegexp,
             capture: bool = True,
-            when: int = 0) -> Rules:
+            priority: int = 0) -> Rules:
         """Add a vocabulary term."""
-        self.rules[name] = term(name, regexp, capture=capture, when=when)
+        self.rules[name] = term(
+            name, regexp, capture=capture, priority=priority)
         return self.rules[name]
 
     def grouper(
@@ -69,9 +71,9 @@ class Vocabulary:
             name: str,
             regexp: InRegexp,
             capture: bool = True,
-            when: int = 0) -> Rules:
+            priority: int = 0) -> Rules:
         """Add a grouper rule."""
-        rule = grouper(name, regexp, capture=capture, when=when)
+        rule = grouper(name, regexp, capture=capture, priority=priority)
         self.rules[name] = self._get_sub_patterns(rule)
         return self.rules[name]
 
@@ -80,9 +82,9 @@ class Vocabulary:
             name: str,
             regexp: InRegexp,
             capture: bool = True,
-            when: int = 0) -> Rules:
+            priority: int = 0) -> Rules:
         """Add a replacer rule."""
-        rule = replacer(name, regexp, capture=capture, when=when)
+        rule = replacer(name, regexp, capture=capture, priority=priority)
         self.rules[name] = self._get_sub_patterns(rule)
         return self.rules[name]
 
@@ -93,9 +95,10 @@ class Vocabulary:
             regexp: InRegexp,
             name: str = None,
             capture: bool = True,
-            when: int = 0) -> Rules:
+            priority: int = 0) -> Rules:
         """Add a producer rule."""
-        rule = producer(action, regexp, name=name, capture=capture, when=when)
+        rule = producer(
+            action, regexp, name=name, capture=capture, priority=priority)
         self.rules[rule.name] = self._get_sub_patterns(rule)
         return self.rules[rule.name]
 

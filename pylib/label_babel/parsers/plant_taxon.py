@@ -6,14 +6,14 @@ import pandas as pd
 from pylib.shared.trait import Trait
 from pylib.shared import patterns
 from pylib.shared import util
-from pylib.stacked_regex.vocabulary import Vocabulary, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LOWEST
 from pylib.label_babel.parsers.base import Base
 
 PLANT_FAMILIES = util.DATA_DIR / 'itis_plant_families.csv'
 PLANT_GENERA = util.DATA_DIR / 'itis_plant_genera.csv'
 
 VOCAB = Vocabulary(patterns.VOCAB)
-VOCAB.part('word', r' \S+ ', capture=False, when=LAST)
+VOCAB.part('word', r' \S+ ', capture=False, priority=LOWEST)
 
 DATA = pd.read_csv(PLANT_FAMILIES, na_filter=False, dtype=str)
 VOCAB.term('plant_family', DATA['complete_name'].tolist())

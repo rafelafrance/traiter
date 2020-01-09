@@ -1,7 +1,7 @@
 """Shared reproductive trait tokens (testes & ovaries)."""
 
 import pylib.vertnet.shared_patterns as patterns
-from pylib.stacked_regex.vocabulary import Vocabulary, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LOWEST
 
 VOCAB = Vocabulary(patterns.VOCAB)
 
@@ -69,7 +69,7 @@ VOCAB.term('visible', r""" ( very \s+ )? (
     ) """)
 
 # We allow random words in some situations
-VOCAB.part('word', ' [a-z]+ ', capture=False, when=LAST)
+VOCAB.part('word', ' [a-z]+ ', capture=False, priority=LOWEST)
 
 VOCAB.term('tissue', ' tissue '.split())
 

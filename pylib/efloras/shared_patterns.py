@@ -2,7 +2,7 @@
 
 import regex
 import pylib.shared.patterns as patterns
-from pylib.stacked_regex.vocabulary import Vocabulary, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LOWEST
 
 VOCAB = Vocabulary(patterns.VOCAB)
 
@@ -53,9 +53,9 @@ VOCAB.part('location', r""" \b ( terminal | lateral | basal | cauline ) """)
 VOCAB.term('dim', """
     width wide length long radius diameter diam? """.split())
 
-VOCAB.part('punct', r' [,;:/] ', capture=False, when=LAST)
+VOCAB.part('punct', r' [,;:/] ', capture=False, priority=LOWEST)
 
-VOCAB.term('word', r' [a-z] \w* ', capture=False, when=LAST)
+VOCAB.term('word', r' [a-z] \w* ', capture=False, priority=LOWEST)
 
 # ############################################################################
 # Numeric patterns

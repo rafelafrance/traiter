@@ -23,7 +23,7 @@ InRegexp = Union[str, List[str]]
 
 FIRST = -9999
 SECOND = -9990
-LAST = 9999
+LOWEST = 9999
 
 
 class RuleType(IntEnum):
@@ -46,15 +46,15 @@ class Rule:  # pylint: disable=too-many-instance-attributes
     action: Action = None   # What to do when there is a match
     regexp: Pattern = None  # The compiled regexp
     capture: bool = True    # Will the rule create an outer capture group?
-    when: int = 0           # When should the rule be triggered: FIRST? LAST?
+    priority: int = 0       # When should the rule be triggered: FIRST? LAST?
 
     def __lt__(self, other: 'Rule'):
         """Custom sort order."""
-        return (self.type, self.when) < (other.type, other.when)
+        return (self.type, self.priority) < (other.type, other.priority)
 
     def __eq__(self, other):
         """Compare tokens for tests."""
-        fields = ('name', 'pattern', 'type', 'action', 'capture', 'when')
+        fields = ('name', 'pattern', 'type', 'action', 'capture', 'priority')
         you = tuple(v for k, v in other.__dict__.items() if k in fields)
         me_ = tuple(v for k, v in self.__dict__.items() if k in fields)
         return me_ == you
@@ -104,7 +104,7 @@ def part(
         regexp: InRegexp,
         action: Action = None,
         capture: bool = True,
-        when: int = 0) -> Rule:
+        priority: int = 0) -> Rule:
     """Build a regular expression with a named group."""
     pattern = join(regexp)
     regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
@@ -116,7 +116,7 @@ def part(
         token=next_token(),
         action=action,
         regexp=regexp,
-        when=when)
+        priority=priority)
 
 
 def term(
@@ -124,7 +124,7 @@ def term(
         regexp: InRegexp,
         action: Action = None,
         capture: bool = True,
-        when: int = 0) -> Rule:
+        priority: int = 0) -> Rule:
     r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
     regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
@@ -136,7 +136,7 @@ def term(
         token=next_token(),
         action=action,
         regexp=regexp,
-        when=when)
+        priority=priority)
 
 
 def grouper(
@@ -144,7 +144,7 @@ def grouper(
         regexp: InRegexp,
         action: Action = None,
         capture: bool = True,
-        when: int = 0) -> Rule:
+        priority: int = 0) -> Rule:
     """Build a grouper regular expression."""
     return Rule(
         name=name,
@@ -153,7 +153,7 @@ def grouper(
         token=next_token(),
         action=action,
         capture=capture,
-        when=when)
+        priority=priority)
 
 
 def replacer(
@@ -161,7 +161,7 @@ def replacer(
         regexp: InRegexp,
         action: Action = None,
         capture: bool = True,
-        when: int = 0) -> Rule:
+        priority: int = 0) -> Rule:
     """Build a replacer regular expression."""
     return Rule(
         name=name,
@@ -170,7 +170,7 @@ def replacer(
         token=next_token(),
         action=action,
         capture=capture,
-        when=when)
+        priority=priority)
 
 
 def producer(
@@ -178,7 +178,7 @@ def producer(
         regexp: InRegexp,
         name: str = None,
         capture: bool = False,
-        when: int = 0) -> Rule:
+        priority: int = 0) -> Rule:
     """Build a product regular expression."""
     token = next_token()
     name = name if name else f'producer_{token}'
@@ -190,4 +190,4 @@ def producer(
         token=token,
         action=action,
         capture=capture,
-        when=when)
+        priority=priority)

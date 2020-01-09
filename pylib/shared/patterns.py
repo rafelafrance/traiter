@@ -1,6 +1,6 @@
 """Shared token patterns."""
 
-from pylib.stacked_regex.vocabulary import Vocabulary, FIRST, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, FIRST, LOWEST
 from pylib.vertnet.util import ordinal, number_to_words
 
 VOCAB = Vocabulary()
@@ -12,8 +12,8 @@ VOCAB.part('open', r' [(\[] ', capture=False)
 VOCAB.part('close', r' [)\]] ', capture=False)
 VOCAB.part('x', r' [x×] ', capture=False)
 VOCAB.part('quest', r' [?] ')
-VOCAB.part('comma', r' [,] ', capture=False, when=LAST)
-VOCAB.part('semicolon', r' [;] ', capture=False, when=LAST)
+VOCAB.part('comma', r' [,] ', capture=False, priority=LOWEST)
+VOCAB.part('semicolon', r' [;] ', capture=False, priority=LOWEST)
 VOCAB.part('ampersand', r' [&] ', capture=False)
 VOCAB.part('eq', r' [=] ', capture=False)
 VOCAB.part('under', r' [_] ', capture=False)
@@ -51,7 +51,8 @@ VOCAB.grouper('units', 'len_units mass_units'.split())
 # # UUIDs cause problems when extracting certain shorthand notations.
 VOCAB.part('uuid', r"""
     \b [0-9a-f]{8} - [0-9a-f]{4} - [1-5][0-9a-f]{3}
-        - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """, capture=False, when=FIRST)
+        - [89ab][0-9a-f]{3} - [0-9a-f]{12} \b """,
+           capture=False, priority=FIRST)
 
 # Some numeric values are reported as ordinals or words
 ORDINALS = [ordinal(x) for x in range(1, 6)]

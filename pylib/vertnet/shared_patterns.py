@@ -1,12 +1,12 @@
 """Shared token patterns."""
 
 import pylib.shared.patterns as patterns
-from pylib.stacked_regex.vocabulary import Vocabulary, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LOWEST
 from pylib.vertnet.util import ordinal, number_to_words
 
 VOCAB = Vocabulary(patterns.VOCAB)
 
-_ = VOCAB.term('word', r' ( [a-z] \w* ) ', capture=False, when=LAST)
+_ = VOCAB.term('word', r' ( [a-z] \w* ) ', capture=False, priority=LOWEST)
 
 # This is a common notation: "11-22-33-44:99g".
 # There are other separators "/", ":", etc.

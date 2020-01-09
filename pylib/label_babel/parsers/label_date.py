@@ -7,7 +7,7 @@ import regex
 from pylib.vertnet.trait import Trait
 from pylib.shared import util
 from pylib.shared import patterns
-from pylib.stacked_regex.vocabulary import Vocabulary, LAST
+from pylib.stacked_regex.vocabulary import Vocabulary, LOWEST
 from pylib.label_babel.parsers.base import Base
 
 VOCAB = Vocabulary(patterns.VOCAB)
@@ -58,7 +58,7 @@ LABEL_DATE = Base(
 
         VOCAB.part('sep', r' [/_-]+ ', capture=True),
 
-        VOCAB.part('noise', r""" \w+ """, when=LAST, capture=True),
+        VOCAB.part('noise', r""" \w+ """, priority=LOWEST, capture=True),
 
         VOCAB.producer(convert, """
             label? (?P<value> digits sep? month_name sep? digits ) """),
