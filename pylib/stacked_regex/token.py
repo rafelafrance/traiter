@@ -13,18 +13,18 @@ class Token:
             self,
             rule: Rule = None,
             match: Match = None,
-            groups: Groups = None,
+            group: Groups = None,
             span: Tuple[int, int] = None) -> None:
         """Create a token."""
         self.rule = rule
         self.match = match
         self.span = span if span else (0, 0)
-        self.groups = groups if groups else {}
+        self.group = group if group else {}
 
         if match:
             self.span = match.span()
-            self.groups = {k: v for k, v in match.groupdict().items()
-                           if v is not None}
+            self.group = {k: v for k, v in match.groupdict().items()
+                          if v is not None}
 
     def __repr__(self) -> str:
         """Create string form of the object."""
@@ -40,7 +40,7 @@ class Token:
         return {
             'name': self.name,
             'span': self.span,
-            'groups': self.groups}
+            'groups': self.group}
 
     @property
     def name(self) -> str:

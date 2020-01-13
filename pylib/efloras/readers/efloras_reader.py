@@ -94,17 +94,7 @@ def check_trait_groups(para):  # , text):
     # Fewer trait groups than bold items means something is wrong
     if set(bolds) > set(tg.TRAIT_GROUPS.keys()):
         diff = set(bolds) - set(tg.TRAIT_GROUPS.keys())
-        sys.exit(f'Found new trait groups: {diff}')
-
-    # We get the trait groups from the splits
-    # groups = tg.TRAIT_GROUPS_RE.split(text)[1::2]
-    # groups = [g.lower() for g in groups]
-
-    # Note when the trait group count does not equal the bold item count
-    # if set(groups) > set(bolds):
-    #     print('More trait groups than bold terms ' + ('*' * 60))
-    #     print(groups)
-    #     print(bolds)
+        sys.exit(f'Found new trait group: {diff}')
 
 
 def parse_trait_groups(args, text):

@@ -23,11 +23,11 @@ def shorthand(token):
 def compound(token):
     """Convert a compound weight like: 2 lbs. 3.1 - 4.5 oz."""
     trait = Trait(start=token.start, end=token.end)
-    setattr(trait, 'units', [token.groups['pounds'], token.groups['ounces']])
+    setattr(trait, 'units', [token.group['pounds'], token.group['ounces']])
     setattr(trait, 'units_inferred', False)
     trait.is_flag_missing(token, 'key', rename='ambiguous_key')
-    lbs = convert(to_float(token.groups['lbs']), 'lbs')
-    ozs = [convert(to_float(oz), 'ozs') for oz in as_list(token.groups['ozs'])]
+    lbs = convert(to_float(token.group['lbs']), 'lbs')
+    ozs = [convert(to_float(oz), 'ozs') for oz in as_list(token.group['ozs'])]
     value = [round(lbs + oz, 2) for oz in ozs]
     setattr(trait, 'value', squash(value))
     add_flags(token, trait)

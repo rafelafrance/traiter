@@ -30,7 +30,7 @@ IS_LEFT = regex.compile(r' \b r \b ', FLAGS)
 def simple(token):
     """Post-process the simple parser."""
     trait = numeric.simple(token)
-    if trait.ambiguous_key and token.groups.get('len_key'):
+    if trait.ambiguous_key and token.group.get('len_key'):
         delattr(trait, 'ambiguous_key')
     return trait
 

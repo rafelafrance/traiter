@@ -32,21 +32,21 @@ class TestSharedPatterns(unittest.TestCase):
         """It handles integers."""
         actual = self.number_parser.parse('123')
         expect = [Token(
-            VOCAB['number_product'], span=(0, 3), groups={'number': '123'})]
+            VOCAB['number_product'], span=(0, 3), group={'number': '123'})]
         self.assertEqual(actual, expect)
 
     def test_number_02(self):
         """It handles decimal points."""
         actual = self.number_parser.parse('12.3')
         expect = [Token(
-            VOCAB['number_product'], span=(0, 4), groups={'number': '12.3'})]
+            VOCAB['number_product'], span=(0, 4), group={'number': '12.3'})]
         self.assertEqual(actual, expect)
 
     def test_number_03(self):
         """It parses a partial cross."""
         actual = self.number_parser.parse('   12.3 x')
         expect = [Token(
-            VOCAB['number_product'], span=(3, 7), groups={'number': '12.3'})]
+            VOCAB['number_product'], span=(3, 7), group={'number': '12.3'})]
         self.assertEqual(actual, expect)
 
     def test_number_04(self):
@@ -54,9 +54,9 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.number_parser.parse('12.3 4')
         expect = [
             Token(VOCAB['number_product'], span=(0, 4),
-                  groups={'number': '12.3'}),
+                  group={'number': '12.3'}),
             Token(VOCAB['number_product'], span=(5, 6),
-                  groups={'number': '4'})]
+                  group={'number': '4'})]
         self.assertEqual(actual, expect)
 
     def test_range_01(self):
@@ -64,7 +64,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.range_parser.parse('123')
         expect = [Token(
             VOCAB['range_product'], span=(0, 3),
-            groups={'number': '123', 'low': '123'})]
+            group={'number': '123', 'low': '123'})]
         self.assertEqual(actual, expect)
 
     def test_range_02(self):
@@ -72,7 +72,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.range_parser.parse('123-45')
         expect = [Token(
             VOCAB['range_product'], span=(0, 6),
-            groups={'number': ['123', '45'], 'low': '123', 'high': '45'})]
+            group={'number': ['123', '45'], 'low': '123', 'high': '45'})]
         self.assertEqual(actual, expect)
 
     def test_range_03(self):
@@ -80,7 +80,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.range_parser.parse('(12-)23-34(-45)')
         expect = [Token(
             VOCAB['range_product'], span=(0, 15),
-            groups={
+            group={
                 'number': ['12', '23', '34', '45'],
                 'low': '23', 'high': '34',
                 'min': '12', 'max': '45'})]
@@ -91,7 +91,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.range_parser.parse('23-34(-45)')
         expect = [Token(
             VOCAB['range_product'], span=(0, 10),
-            groups={
+            group={
                 'number': ['23', '34', '45'],
                 'low': '23', 'high': '34', 'max': '45'})]
         self.assertEqual(actual, expect)
@@ -101,7 +101,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.range_parser.parse('(12-)23-34')
         expect = [Token(
             VOCAB['range_product'], span=(0, 10),
-            groups={
+            group={
                 'number': ['12', '23', '34'],
                 'low': '23', 'high': '34', 'min': '12'})]
         self.assertEqual(actual, expect)
@@ -111,7 +111,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.range_parser.parse('blade 1.5–5(–7) cm')
         expect = [Token(
             VOCAB['range_product'], span=(6, 15),
-            groups={
+            group={
                 'number': ['1.5', '5', '7'],
                 'low': '1.5', 'high': '5', 'max': '7'})]
         self.assertEqual(actual, expect)
@@ -121,7 +121,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.cross_parser.parse('(12-)23-34')
         expect = [Token(
             VOCAB['cross_product'], span=(0, 10),
-            groups={
+            group={
                 'number': ['12', '23', '34'],
                 'min_length': '12', 'low_length': '23', 'high_length': '34'})]
         self.assertEqual(actual, expect)
@@ -131,7 +131,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.cross_parser.parse('(12-)23-34 × 45-56')
         expect = [Token(
             VOCAB['cross_product'], span=(0, 18),
-            groups={
+            group={
                 'number': ['12', '23', '34', '45', '56'],
                 'min_length': '12', 'low_length': '23', 'high_length': '34',
                 'low_width': '45', 'high_width': '56'})]
@@ -142,7 +142,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.upper_parser.parse('to 10 cm')
         expect = [Token(
             VOCAB['upper_product'], span=(0, 8),
-            groups={
+            group={
                 'number': '10', 'units': 'cm',
                 'high_length': '10', 'units_length': 'cm'})]
         self.assertEqual(actual, expect)

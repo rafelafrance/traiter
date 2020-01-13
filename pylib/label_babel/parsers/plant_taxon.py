@@ -24,7 +24,7 @@ VOCAB.term('plant_genus', DATA['complete_name'].tolist())
 
 def convert(token):
     """Normalize a parsed taxon notation"""
-    return Trait(start=token.start, end=token.end, value=token.groups['value'])
+    return Trait(start=token.start, end=token.end, value=token.group['value'])
 
 
 PLANT_TAXON = Base(

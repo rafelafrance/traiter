@@ -12,11 +12,11 @@ def convert(token):
     """Normalize a parsed date"""
     trait = Trait(start=token.start, end=token.end)
 
-    if token.groups.get('us_county'):
-        trait.us_county = token.groups['us_county'].title()
+    if token.group.get('us_county'):
+        trait.us_county = token.group['us_county'].title()
 
-    if token.groups.get('us_state'):
-        trait.us_state = us_states.normalize_state(token.groups['us_state'])
+    if token.group.get('us_state'):
+        trait.us_state = us_states.normalize_state(token.group['us_state'])
 
     return trait
 

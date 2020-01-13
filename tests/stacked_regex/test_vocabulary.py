@@ -5,7 +5,7 @@ from pylib.stacked_regex.vocabulary import Vocabulary
 from pylib.stacked_regex.rule import term, part, grouper
 
 
-class TestRuleCatalog(unittest.TestCase):
+class TestVocabulary(unittest.TestCase):
     """Test the rule catalog object."""
     p1 = part('p1', 'my_part1')
     t1 = term('t1', 'my_term1')

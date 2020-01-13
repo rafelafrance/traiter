@@ -21,7 +21,7 @@ def convert(token):
     trait = Trait(start=token.start, end=token.end)
 
     value = regex.sub(
-        r'[^a-z\d]+', '-', token.groups['value'], flags=util.FLAGS)
+        r'[^a-z\d]+', '-', token.group['value'], flags=util.FLAGS)
 
     if len(value) < 4:
         return None
@@ -41,7 +41,7 @@ def convert(token):
 
 def short_date_name(token):
     """Normalize a month name & year notation."""
-    if token.groups.get('month') and len(token.groups['digits']) < YEAR_LEN:
+    if token.group.get('month') and len(token.group['digits']) < YEAR_LEN:
         return None
 
     trait = convert(token)
@@ -53,7 +53,7 @@ def short_date_name(token):
 # Until dateutils IllegalMonthError is fixes do this
 def short_date_digits(token):
     """Normalize a month year as all digits notation."""
-    digits = token.groups['digits']
+    digits = token.group['digits']
 
     has_month = any(x for x in digits if 0 < int(x) <= 12)
     has_year = any(x for x in digits if len(x) >= YEAR_LEN)

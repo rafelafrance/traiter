@@ -18,7 +18,7 @@ def convert(token):
     """Build a collector trait"""
     names = regex.split(
         r'\s*(?:and|with|[,&])\s*',
-        token.groups.get('col_name'))
+        token.group.get('col_name'))
 
     traits = []
 
@@ -39,8 +39,8 @@ def convert(token):
     if not traits:
         return None
 
-    if token.groups.get('collector_no'):
-        traits[0].col_no = token.groups['collector_no']
+    if token.group.get('collector_no'):
+        traits[0].col_no = token.group['collector_no']
 
     return util.squash(traits)
 

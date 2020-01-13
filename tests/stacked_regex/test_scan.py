@@ -18,7 +18,7 @@ class TestScan(unittest.TestCase):
         parser.build()
         self.assertEqual(
             parser.scan('dogs'),
-            [Token(self.r_dog, span=(0, 3), groups={'dog': 'dog'})])
+            [Token(self.r_dog, span=(0, 3), group={'dog': 'dog'})])
 
     def test_scan_02(self):
         """It compares with another token object."""
@@ -32,8 +32,8 @@ class TestScan(unittest.TestCase):
         parser.build()
         self.assertEqual(
             parser.scan('doggie dogs'),
-            [Token(self.r_dog, span=(0, 6), groups={'dog': 'doggie'}),
-             Token(self.r_dog, span=(7, 10), groups={'dog': 'dog'})])
+            [Token(self.r_dog, span=(0, 6), group={'dog': 'doggie'}),
+             Token(self.r_dog, span=(7, 10), group={'dog': 'dog'})])
 
     def test_scan_04(self):
         """It skips strings that are part of a previous token."""
@@ -41,5 +41,5 @@ class TestScan(unittest.TestCase):
         parser.build()
         self.assertEqual(
             parser.scan('bearcat cats'),
-            [Token(self.r_cat, span=(0, 7), groups={'cat': 'bearcat'}),
-             Token(self.r_cat, span=(8, 11), groups={'cat': 'cat'})])
+            [Token(self.r_cat, span=(0, 7), group={'cat': 'bearcat'}),
+             Token(self.r_cat, span=(8, 11), group={'cat': 'cat'})])

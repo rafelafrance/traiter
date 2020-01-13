@@ -15,11 +15,11 @@ def convert_count(token):
     """Convert parsed tokens into a result."""
     trait = Trait(start=token.start, end=token.end)
 
-    trait.value = to_int(token.groups.get('value'))
-    count1 = to_int(token.groups.get('count1'))
-    count2 = to_int(token.groups.get('count2'))
-    side1 = SUB.get(token.groups.get('side1', ' ').lower()[0], 'side1')
-    side2 = SUB.get(token.groups.get('side2', ' ').lower()[0], 'side2')
+    trait.value = to_int(token.group.get('value'))
+    count1 = to_int(token.group.get('count1'))
+    count2 = to_int(token.group.get('count2'))
+    side1 = SUB.get(token.group.get('side1', ' ').lower()[0], 'side1')
+    side2 = SUB.get(token.group.get('side2', ' ').lower()[0], 'side2')
 
     if not trait.value:
         trait.value = count1 + count2

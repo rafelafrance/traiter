@@ -11,7 +11,7 @@ RulesInput = Union[Rules, List[Rules]]
 
 
 class Parser:
-    """Container for the the parser arrays."""
+    """Parser arrays and functionality."""
 
     def __init__(self, rules: RulesInput, name: str = 'parser') -> None:
         """Build the parser."""
@@ -147,7 +147,7 @@ class Parser:
         # Merge all subgroups from sub-tokens into current token
         groups = {}
         for token in tokens[first_idx:last_idx]:
-            for key, value in token.groups.items():
+            for key, value in token.group.items():
                 self.append_group(groups, key, value)
 
         # Add groups from current token with real (not tokenized) text
@@ -158,7 +158,7 @@ class Parser:
                 self.append_group(
                     groups, key, text[tokens[idx1].start:tokens[idx2].end])
 
-        token = Token(match.rule, span=span, groups=groups)
+        token = Token(match.rule, span=span, group=groups)
         return token, first_idx, last_idx
 
     def replace(self, tokens: Tokens, text: str) -> Tuple[Tokens, bool]:

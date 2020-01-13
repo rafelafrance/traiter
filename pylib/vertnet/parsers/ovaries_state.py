@@ -11,7 +11,7 @@ VOCAB = Vocabulary(patterns.VOCAB)
 
 def convert(token):
     """Convert parsed token into a trait."""
-    value = token.groups['value'].lower()
+    value = token.group['value'].lower()
     if regex.match(r'^[\s\d]+$', value):
         return None
     trait = Trait(
@@ -25,14 +25,14 @@ def convert(token):
 def double(token):
     """Convert a single token into two traits."""
     trait1 = Trait(
-        value=token.groups['value'][0].lower(),
-        side=token.groups['side'][0].lower(),
+        value=token.group['value'][0].lower(),
+        side=token.group['side'][0].lower(),
         start=token.start,
         end=token.end)
 
     trait2 = Trait(
-        value=token.groups['value'][1].lower(),
-        side=token.groups['side'][1].lower(),
+        value=token.group['value'][1].lower(),
+        side=token.group['side'][1].lower(),
         start=token.start,
         end=token.end)
 

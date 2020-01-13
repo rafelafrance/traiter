@@ -102,7 +102,7 @@ def convert(token: Token) -> Any:
     """Convert parsed token into a trait."""
     trait = Trait(
         start=token.start, end=token.end,
-        raw_value=token.groups['value'])
+        raw_value=token.group['value'])
 
     trait.transfer(token, ['location', 'part', 'sex'])
 

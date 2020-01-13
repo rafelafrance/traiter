@@ -12,15 +12,15 @@ def convert(token: Token) -> Any:
     """Convert parsed token into a trait."""
     trait = Trait(start=token.start, end=token.end)
 
-    if 'location' in token.groups:
-        trait.location = token.groups['location'].lower()
+    if 'location' in token.group:
+        trait.location = token.group['location'].lower()
 
-    if 'part' in token.groups:
-        trait.part = token.groups['part'].lower()
+    if 'part' in token.group:
+        trait.part = token.group['part'].lower()
 
     for key in ['min', 'low', 'high', 'max']:
-        if key in token.groups:
-            setattr(trait, key, float(token.groups[key]))
+        if key in token.group:
+            setattr(trait, key, float(token.group[key]))
 
     return trait
 

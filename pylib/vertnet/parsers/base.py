@@ -54,5 +54,5 @@ class Base(Parser):  # pylint: disable=too-few-public-methods
 def convert(token):
     """Convert parsed tokens into a result."""
     return Trait(
-        value=token.groups['value'].lower(),
+        value=token.group['value'].lower(),
         start=token.start, end=token.end)

@@ -44,10 +44,10 @@ def remove_suffix(token, suffix):
     """
     new_token = Token(
         rule=token.rule,
-        groups=copy.copy(token.groups),
+        group=copy.copy(token.group),
         span=(token.start, token.end))
-    new = {k[:-2]: v for k, v in token.groups.items() if k.endswith(suffix)}
-    new_token.groups.update(new)
+    new = {k[:-2]: v for k, v in token.group.items() if k.endswith(suffix)}
+    new_token.group.update(new)
     return new_token
 
 
@@ -58,8 +58,8 @@ def set_size_values(trait, token):
     There are typically several measurements (minimum, low, high, & maximum)
     for each dimension (length & width). We normalize to millimeters.
     """
-    length = token.groups.get('units_length', '')
-    width = token.groups.get('units_width', '')
+    length = token.group.get('units_length', '')
+    width = token.group.get('units_width', '')
 
     # No units means it's not a measurement
     if not (length or width):
@@ -72,8 +72,8 @@ def set_size_values(trait, token):
     for dim in ('length', 'width'):
         for value in ('min', 'low', 'high', 'max'):
             key = f'{value}_{dim}'
-            if key in token.groups:
-                norm = convert_units(to_float(token.groups[key]), units[dim])
+            if key in token.group:
+                norm = convert_units(to_float(token.group[key]), units[dim])
                 setattr(trait, key, norm)
 
     return True

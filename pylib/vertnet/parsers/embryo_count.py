@@ -15,16 +15,16 @@ def convert(token):
     """Convert parsed tokens into a result."""
     trait = Trait(start=token.start, end=token.end)
 
-    if token.groups.get('total'):
-        trait.value = to_int(token.groups['total'])
+    if token.group.get('total'):
+        trait.value = to_int(token.group['total'])
 
-    elif token.groups.get('subcount'):
+    elif token.group.get('subcount'):
         trait.value = sum(
-            to_int(c) for c in as_list(token.groups['subcount']))
+            to_int(c) for c in as_list(token.group['subcount']))
 
-    if token.groups.get('subcount') and token.groups.get('sub'):
-        for count, sub in zip(as_list(token.groups['subcount']),
-                              as_list(token.groups.get('sub'))):
+    if token.group.get('subcount') and token.group.get('sub'):
+        for count, sub in zip(as_list(token.group['subcount']),
+                              as_list(token.group.get('sub'))):
             sub = SUB.get(sub[0].lower(), sub)
             setattr(trait, sub, to_int(count))
 

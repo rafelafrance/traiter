@@ -45,6 +45,7 @@ junk*
 # Other code
 args/
 src/
-traiter-gui*/
-flex-bison/
-haskell/
+
+# Experiments
+transformers/
+notebooks/

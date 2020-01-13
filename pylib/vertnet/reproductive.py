@@ -21,21 +21,21 @@ SIDES = {
 def double(token):
     """Convert a single token into multiple (two) parsers."""
     trait1 = Trait(start=token.start, end=token.end)
-    token1 = Token(DOUBLE_CROSS, groups=copy(token.groups))
-    token1.groups['units'] = token.groups.get('units_1')
-    token1.groups['value'] = token.groups.get('value_1')
-    side1 = token.groups.get('side_1')
+    token1 = Token(DOUBLE_CROSS, group=copy(token.group))
+    token1.group['units'] = token.group.get('units_1')
+    token1.group['value'] = token.group.get('value_1')
+    side1 = token.group.get('side_1')
 
     trait2 = Trait(start=token.start, end=token.end)
-    token2 = Token(DOUBLE_CROSS, groups=copy(token.groups))
-    token2.groups['units'] = token.groups.get('units_2')
-    token2.groups['value'] = token.groups.get('value_2')
-    side2 = token.groups.get('side_2')
+    token2 = Token(DOUBLE_CROSS, group=copy(token.group))
+    token2.group['units'] = token.group.get('units_2')
+    token2.group['value'] = token.group.get('value_2')
+    side2 = token.group.get('side_2')
 
-    if token1.groups['units'] and not token2.groups['units']:
-        token2.groups['units'] = token1.groups['units']
-    elif token2.groups['units'] and not token1.groups['units']:
-        token1.groups['units'] = token2.groups['units']
+    if token1.group['units'] and not token2.group['units']:
+        token2.group['units'] = token1.group['units']
+    elif token2.group['units'] and not token1.group['units']:
+        token1.group['units'] = token2.group['units']
 
     flag1 = as_value(token1, trait1, value_field='value')
     flag2 = as_value(token2, trait2, value_field='value')

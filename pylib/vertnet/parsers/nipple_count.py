@@ -11,7 +11,7 @@ VOCAB = Vocabulary(patterns.VOCAB)
 
 def convert(token):
     """Convert single value tokens into a result."""
-    value = token.groups.get('value')
+    value = token.group.get('value')
 
     if not value:
         return None
@@ -22,8 +22,8 @@ def convert(token):
     if trait.value > 100:
         return None
 
-    if token.groups.get('notation'):
-        trait.notation = token.groups['notation']
+    if token.group.get('notation'):
+        trait.notation = token.group['notation']
 
     return trait
 
@@ -31,9 +31,9 @@ def convert(token):
 def typed(token):
     """Convert single value tokens into a result."""
     trait = Trait(start=token.start, end=token.end)
-    trait.notation = token.groups['notation']
-    trait.value = to_int(token.groups['value1'])
-    trait.value += to_int(token.groups.get('value2'))
+    trait.notation = token.group['notation']
+    trait.value = to_int(token.group['value1'])
+    trait.value += to_int(token.group.get('value2'))
     return trait
 
 

@@ -9,7 +9,7 @@ from pylib.vertnet.parsers.base import Base
 def convert(token: Token) -> Trait:
     """Convert parsed token into a trait product."""
     return Trait(
-        value=token.groups['value'],
+        value=token.group['value'],
         as_is=True,
         start=token.start, end=token.end)
 

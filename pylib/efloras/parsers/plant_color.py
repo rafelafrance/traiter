@@ -85,11 +85,11 @@ def convert(token: Token) -> Any:
     """Convert parsed token into a trait."""
     trait = Trait(
         start=token.start, end=token.end,
-        raw_value=token.groups['value'])
+        raw_value=token.group['value'])
 
     for capture in ['location', 'part', 'sex']:
-        if capture in token.groups:
-            setattr(trait, capture, token.groups[capture].lower())
+        if capture in token.group:
+            setattr(trait, capture, token.group[capture].lower())
 
     values = util.split_keywords(trait.raw_value)
     values = dict.fromkeys(normalize(v) for v in values)

@@ -11,7 +11,7 @@ VOCAB = Vocabulary(patterns.VOCAB)
 def convert(token):
     """Convert parsed token into a trait producer."""
     trait = Trait(
-        value=token.groups['value'].lower(),
+        value=token.group['value'].lower(),
         start=token.start, end=token.end)
     trait.is_flag_in_token(token, 'ambiguous_key')
     return trait

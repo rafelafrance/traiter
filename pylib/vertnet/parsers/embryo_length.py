@@ -19,14 +19,14 @@ def convert(token):
 
 def isolate(token):
     """Convert parsed token into a trait product."""
-    token.groups['number'] = token.groups['real']
+    token.group['number'] = token.group['real']
     return convert(token)
 
 
 def convert_many(token):
     """Convert several values."""
-    values = token.groups['value']
-    units = as_list(token.groups.get('len_units', []))
+    values = token.group['value']
+    units = as_list(token.group.get('len_units', []))
 
     traits = []
     for i, value in enumerate(values):

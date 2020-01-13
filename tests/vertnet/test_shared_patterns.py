@@ -25,7 +25,7 @@ class TestSharedPatterns(unittest.TestCase):
         expect = [
             Token(
                 VOCAB['cross_product'], span=(2, 13),
-                groups={'number': ['12.3', '45.6']})]
+                group={'number': ['12.3', '45.6']})]
         self.assertEqual(actual, expect)
 
     def test_cross_04(self):
@@ -33,14 +33,14 @@ class TestSharedPatterns(unittest.TestCase):
         expect = [
             Token(
                 VOCAB['cross_product'], span=(0, 5),
-                groups={'number': ['12', '34']})]
+                group={'number': ['12', '34']})]
         self.assertEqual(actual, expect)
 
     def test_cross_05(self):
         actual = self.cross_parser.parse('3x1.5mm')
         expect = [Token(
             VOCAB['cross_product'], span=(0, 7),
-            groups={'number': ['3', '1.5'],
+            group={'number': ['3', '1.5'],
                     'metric_len': 'mm', 'len_units': 'mm'})]
         self.assertEqual(actual, expect)
 
@@ -48,7 +48,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.cross_parser.parse('3mmx1.5mm')
         expect = [Token(
             VOCAB['cross_product'], span=(0, 9),
-            groups={
+            group={
                 'number': ['3', '1.5'],
                 'metric_len': ['mm', 'mm'], 'len_units': ['mm', 'mm']})]
         self.assertEqual(actual, expect)
@@ -58,7 +58,7 @@ class TestSharedPatterns(unittest.TestCase):
         expect = [
             Token(
                 VOCAB['cross_product'], span=(0, 6),
-                groups={'number': '12.3',
+                group={'number': '12.3',
                         'metric_len': 'mm', 'len_units': 'mm'})]
         self.assertEqual(actual, expect)
 
@@ -66,7 +66,7 @@ class TestSharedPatterns(unittest.TestCase):
         actual = self.fraction_parser.parse('12/34')
         expect = [Token(
             VOCAB['fraction_product'], span=(0, 5),
-            groups={'number': ['12', '34'],
+            group={'number': ['12', '34'],
                     'numerator': '12', 'denominator': '34'})]
         self.assertEqual(actual, expect)
 
@@ -80,5 +80,5 @@ class TestSharedPatterns(unittest.TestCase):
         actual = parser.parse('ddf2d94a-0a49-11ea-a133-000000000004')
         expect = [Token(
             VOCAB['uuid'], span=(0, 36),
-            groups={})]
+            group={})]
         self.assertEqual(actual, expect)
