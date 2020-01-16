@@ -10,13 +10,13 @@ SEX = Base(
     name=__name__.split('.')[-1],
     rules=[
         # JSON keys for sex
-        VOCAB.term('json_key', 'sex'),
+        VOCAB.term('sex_key', 'sex'),
 
         # The sexes
-        VOCAB.term('intrinsic', 'females? males?'.split()),
+        VOCAB.term('sex_vocab', 'females? males?'.split()),
 
         # These are words that indicate that "sex" is not a key
-        VOCAB.term('skip', 'and is was'.split()),
+        VOCAB.term('not_sex', 'and is was'.split()),
 
         # Allow arbitrary words in some cases
         VOCAB.part('word', r' \b [a-z] [^;,"=:\s]* '),
@@ -26,17 +26,15 @@ SEX = Base(
 
         # E.g.: sex might be female;
         VOCAB.producer(convert, [
-            """json_key
-                (?P<value> ( intrinsic | word ){1,2} quest? )
+            """sex_key
+                (?P<value> ( sex_vocab | word ){1,2} quest? )
                 separator"""]),
 
-        # E.g.: sex=female?
-        # Or:   sex=unknown
+        # E.g.: sex=female?, Or: sex=unknown
         VOCAB.producer(convert, [
-            'json_key (?P<value> ( intrinsic | word ) quest? )']),
+            'sex_key (?P<value> ( sex_vocab | word ) quest? )']),
 
-        # E.g.: male
-        # Or:   male?
-        VOCAB.producer(convert, '(?P<value> intrinsic quest? )'),
+        # E.g.: male, Or: male?
+        VOCAB.producer(convert, '(?P<value> sex_vocab quest? )'),
     ],
 )
