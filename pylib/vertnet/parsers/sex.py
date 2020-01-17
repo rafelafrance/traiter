@@ -27,8 +27,7 @@ SEX = Base(
         # E.g.: sex might be female;
         VOCAB.producer(convert, [
             """sex_key
-                (?P<value> ( sex_vocab | word ){1,2} quest? )
-                separator"""]),
+                (?P<value> ( sex_vocab | word ){1,2} quest? ) separator"""]),
 
         # E.g.: sex=female?, Or: sex=unknown
         VOCAB.producer(convert, [
