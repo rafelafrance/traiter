@@ -66,7 +66,7 @@ VOCAB.part('shorthand', fr"""
     """)
 
 # Sometimes the last number is missing. Be careful to not pick up dates.
-VOCAB.part('triple', fr"""
+VOCAB.part('shorthand_triple', fr"""
     (?<! [\d/a-z-] )
     (?P<shorthand_tl> (?P<estimated_tl> \[ )? {SH_VAL} \]? )
     (?P<shorthand_sep> [:/-] )
@@ -108,14 +108,6 @@ VOCAB.part('number', r"""
         | (?<= [^\d] ) \. \d+ | ^ \. \d+ )
     \]?
     """)
-
-# A number or a range of numbers like "12 to 34" or "12.3-45.6"
-# Note we want to exclude dates and to not pick up partial dates
-# So: no part of "2014-12-11" would be in a range
-# VOCAB.grouper('range', """
-#     (?<! dash )
-#     ( number units? (( dash | to ) number units?)? )
-#     (?! dash ) """, capture=False)
 
 # A number or a range of numbers like "12 to 34" or "12.3-45.6"
 # Note we want to exclude dates and to not pick up partial dates

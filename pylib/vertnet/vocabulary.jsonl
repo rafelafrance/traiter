@@ -1,0 +1,19 @@
+{"active": ["active", "inactive"]}
+{"color": ["red", "pink", "brown", "black", "white", "pigmented"]}
+{"texture": ["smooth"]}
+{"covered": ["covered"]}
+{"destroyed": ["destroy", "destroyed"]}
+{"color":  ["red", "dark red", "light red", "pale red"]}
+{"color":  ["pink", "dark pink", "light pink", "pale pink"]}
+{"color":  ["brown", "dark brown", "light brown", "pale brown"]}
+{"color":  ["black", "dark black", "light black", "pale black"]}
+{"color":  ["white", "dark white", "light white", "pale white"]}
+{"color":  ["pigmented"]}
+{"color":  ["gray", "dark gray", "light gray", "pale gray"]}
+{"color":  ["grey", "dark grey", "light grey", "pale grey"]}
+{"size":  ["large", "lg", "enlarged", "enlarge"]}
+{"size":  ["medium", "med", "moderate", "mod"]}
+{"size":  ["small", "sm", "tiny"]}
+{"size":  ["shrunk", "shrunken", "swollen"]}
+{"size":  ["extended", "unobservable", "tiny"]}
+{"size":  ["size", "sized"]}

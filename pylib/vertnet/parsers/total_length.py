@@ -151,7 +151,8 @@ TOTAL_LENGTH = Base(
                 (?P<units> len_units )"""),
 
         # E.g.: total length: 10-29-39 10-11
-        VOCAB.producer(simple, '( key | key_units_req ) triple? len_range'),
+        VOCAB.producer(simple, """
+            ( key | key_units_req ) shorthand_triple? len_range"""),
 
         # E.g.: L 12.4 cm
         VOCAB.producer(simple, """
@@ -167,7 +168,7 @@ TOTAL_LENGTH = Base(
             partial(numeric.shorthand_length, measurement='shorthand_tl'), [
                 'key shorthand',  # With a key
                 'shorthand',  # Without a key
-                """ ( key | key_units_req ) triple
+                """ ( key | key_units_req ) shorthand_triple
                     (?! shorthand | len_range )"""
             ]),
     ],

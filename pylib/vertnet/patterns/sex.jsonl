@@ -1,2 +1,2 @@
-{"label":"SEX","pattern":[{"LOWER":"sex"},{"TEXT":{"REGEX":"[\"]"},"OP":"?"},{"TEXT":{"REGEX":"[=:\"]"},"OP":"?"},{"TEXT":{"REGEX":"[\"]"},"OP":"?"},{"LOWER":{"REGEX":"^[a-z]+$"}},{"LOWER":{"REGEX":"^[a-z]+$"},"OP":"?"},{"TEXT":{"REGEX":"[?]"},"OP":"?"},{"TEXT":{"REGEX":"[;,\"]"},"OP":"?"}],"id":"sex_key"}
-{"label":"SEX","pattern":[{"LEMMA":{"IN":["female","male"]}},{"TEXT":{"REGEX":"[?]"},"OP":"?"}],"id":"sex_word"}
+{"label":"SEX","pattern":[{"LOWER":{"IN":["sex"]}},{"TEXT":{"IN":["=",":","\""]},"OP":"*"},{"LOWER":{"REGEX":"^[a-z]+$"}},{"LOWER":{"REGEX":"^[a-z]+$"},"OP":"?"},{"TEXT":{"IN":["?",";",",","\""]},"OP":"?"}],"id":"sex_key"}
+{"label":"SEX","pattern":[{"LEMMA":{"IN":["female","male"]}},{"TEXT":{"IN":["?"]},"OP":"?"}],"id":"sex_word"}

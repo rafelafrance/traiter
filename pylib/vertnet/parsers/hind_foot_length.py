@@ -58,6 +58,6 @@ HIND_FOOT_LENGTH = Base(
                 'shorthand_key shorthand',  # With a key
                 'shorthand',                # Without a key
                 # Handle a truncated shorthand notation
-                'shorthand_key triple (?! shorthand | len_range )']),
+                'shorthand_key shorthand_triple (?! shorthand | len_range )']),
     ],
 )
