@@ -2,7 +2,7 @@
 
 from collections import deque
 from typing import List, Tuple, Union
-from traiter_shared.util import flatten
+from traiter.util import flatten
 from traiter.rule import Rules, RuleDict, RuleType, SIZE
 from traiter.token import Token, Tokens, Groups
 

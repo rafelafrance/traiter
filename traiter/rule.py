@@ -4,7 +4,7 @@ from enum import IntEnum
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Pattern, Union
 import regex
-from traiter_shared.util import FLAGS
+from traiter.util import FLAGS
 
 TOKEN = 0
 SIZE = 4

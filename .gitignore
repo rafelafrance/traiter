@@ -16,6 +16,9 @@ venv/
 __pycache__
 .ipynb_checkpoints/
 
+
+# Setup tools
+
 # docs
 docs/old/
 admin/

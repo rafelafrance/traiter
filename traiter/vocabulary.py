@@ -1,7 +1,7 @@
 """Build catalogs of rules and their parts for sharing."""
 
 from itertools import groupby
-from traiter_shared.util import flatten
+from traiter.util import flatten
 import traiter.rule as re_rule
 from traiter.rule import Action, Rule, Rules
 from traiter.rule import part, term, grouper, producer, replacer
