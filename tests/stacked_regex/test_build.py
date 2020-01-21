@@ -2,7 +2,7 @@
 
 import unittest
 import regex
-from pylib.stacked_regex.rule import grouper, term
+from traiter.rule import grouper, term
 
 
 class TestReplace(unittest.TestCase):

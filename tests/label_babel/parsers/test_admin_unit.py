@@ -3,8 +3,8 @@
 
 import textwrap
 import unittest
-from pylib.shared.trait import Trait
-from pylib.label_babel.parsers.admin_unit import ADMIN_UNIT
+from traiter_shared.trait import Trait
+from traiter_label_babel.parsers.admin_unit import ADMIN_UNIT
 
 
 class TestAdminUnit(unittest.TestCase):

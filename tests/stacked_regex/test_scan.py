@@ -1,9 +1,9 @@
 """Test the parser's scan function."""
 
 import unittest
-from pylib.stacked_regex.rule import part
-from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.parser import Parser
+from traiter.rule import part
+from traiter.token import Token
+from traiter.parser import Parser
 
 
 class TestScan(unittest.TestCase):

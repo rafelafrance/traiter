@@ -2,9 +2,9 @@
 
 import unittest
 import regex
-from pylib.stacked_regex.rule import replacer, term
-from pylib.stacked_regex.token import Token
-from pylib.stacked_regex.parser import Parser
+from traiter.rule import replacer, term
+from traiter.token import Token
+from traiter.parser import Parser
 
 
 class TestReplace(unittest.TestCase):

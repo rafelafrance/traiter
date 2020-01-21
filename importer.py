@@ -4,9 +4,8 @@
 
 import sys
 import argparse
-from pylib.shared import util
-from pylib.shared.readers import csv_reader
-
+from traiter_shared import util
+from traiter_shared.readers import csv_reader
 
 INPUT_FORMATS = {
     'csv': csv_reader}

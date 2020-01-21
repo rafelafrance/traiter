@@ -5,12 +5,12 @@
 import sys
 import argparse
 import textwrap
-from pylib.shared.util import __VERSION__
-from pylib.vertnet.all_traits import TRAITS
-from pylib.shared.file_parser import FileParser
-from pylib.vertnet.readers.csv_reader import CsvReader
-from pylib.vertnet.writers.csv_writer import CsvWriter
-from pylib.vertnet.writers.html_writer import HtmlWriter
+from traiter_shared.util import __VERSION__
+from traiter_vertnet.all_traits import TRAITS
+from traiter_shared.file_parser import FileParser
+from traiter_vertnet.readers.csv_reader import CsvReader
+from traiter_vertnet.writers.csv_writer import CsvWriter
+from traiter_vertnet.writers.html_writer import HtmlWriter
 
 
 INPUT_FORMATS = {

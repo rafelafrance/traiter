@@ -1,9 +1,9 @@
 """Test plant shape trait notations."""
 
 import unittest
-from pylib.shared.trait import Trait
-from pylib.efloras.parsers.plant_shape import LEAF_SHAPE, PETIOLE_SHAPE
-from pylib.efloras.parsers.plant_shape import HYPANTHIUM_SHAPE, SEPAL_SHAPE
+from traiter_shared.trait import Trait
+from traiter_efloras.parsers.plant_shape import LEAF_SHAPE, PETIOLE_SHAPE
+from traiter_efloras.parsers.plant_shape import HYPANTHIUM_SHAPE, SEPAL_SHAPE
 
 
 # pylint: disable=too-many-public-methods

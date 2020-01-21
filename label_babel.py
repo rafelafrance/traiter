@@ -6,8 +6,8 @@
 import sys
 import argparse
 import textwrap
-from pylib.shared.util import __VERSION__
-from pylib.shared.readers import csv_reader
+from traiter_shared.util import __VERSION__
+from traiter_shared.readers import csv_reader
 
 # Date, taxon names, collector, collector number
 # admin units: like state, county, country

@@ -1,6 +1,6 @@
 # import unittest
-# from pylib.efloras.trait import Trait
-# from pylib.efloras.parsers.plant_count import SEPAL_COUNT
+# from pylib.traiter_efloras.trait import Trait
+# from pylib.traiter_efloras.parsers.plant_count import SEPAL_COUNT
 #
 #
 # class TestFlowerShape(unittest.TestCase):

@@ -1,8 +1,8 @@
 """Test the rule catalog object."""
 
 import unittest
-from pylib.stacked_regex.vocabulary import Vocabulary
-from pylib.stacked_regex.rule import term, part, grouper
+from traiter.vocabulary import Vocabulary
+from traiter.rule import term, part, grouper
 
 
 class TestVocabulary(unittest.TestCase):

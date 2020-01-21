@@ -3,8 +3,8 @@
 """Build traits from the raw input."""
 
 import argparse
-from pylib.shared import util
-from pylib.shared import db
+from traiter_shared import util
+from traiter_shared import db
 
 
 def parse_traits(args):

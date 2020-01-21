@@ -1,9 +1,9 @@
 """Test shared patterns for plant parsers."""
 
 import unittest
-from pylib.stacked_regex.parser import Parser
-from pylib.stacked_regex.token import Token
-from pylib.efloras.shared_patterns import VOCAB
+from traiter.parser import Parser
+from traiter.token import Token
+from traiter_efloras.shared_patterns import VOCAB
 
 
 def nop(token):

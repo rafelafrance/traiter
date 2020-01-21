@@ -2,7 +2,7 @@
 
 import re
 import unittest
-from pylib.efloras.writers.html_writer import Cut, insert_markup
+from traiter_efloras.writers.html_writer import Cut, insert_markup
 
 
 class TestHtmlWriter(unittest.TestCase):

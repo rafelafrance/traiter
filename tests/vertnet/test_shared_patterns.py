@@ -2,9 +2,9 @@
 # pylint: disable=missing-function-docstring,too-many-public-methods
 
 import unittest
-from pylib.stacked_regex.parser import Parser
-from pylib.stacked_regex.token import Token
-from pylib.vertnet.shared_patterns import VOCAB
+from traiter.parser import Parser
+from traiter.token import Token
+from traiter_vertnet.shared_patterns import VOCAB
 
 
 def nop(token):

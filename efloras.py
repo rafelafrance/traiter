@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
-"""Parse extracted efloras web pages."""
+"""Parse extracted traiter_efloras web pages."""
 
 import sys
 import argparse
 import textwrap
-from pylib.shared.util import __VERSION__
-import pylib.efloras.util as util
-import pylib.efloras.trait_groups as tg
-from pylib.efloras.writers.html_writer import html_writer
-from pylib.efloras.writers.csv_writer import csv_writer
-from pylib.efloras.readers.efloras_reader import efloras_reader
+from traiter_shared.util import __VERSION__
+import traiter_efloras.util as util
+import traiter_efloras.trait_groups as tg
+from traiter_efloras.writers import html_writer
+from traiter_efloras.writers import csv_writer
+from traiter_efloras.readers.efloras_reader import efloras_reader
 
 
 INPUT_FORMATS = {
-    'efloras': efloras_reader}
+    'traiter_efloras': efloras_reader}
 
 OUTPUT_FORMATS = {
     'csv': csv_writer,
@@ -58,9 +58,9 @@ def parse_args(families):
         help="""The traits to extract.""")
 
     arg_parser.add_argument(
-        '--input-format', '-I', default='efloras',
+        '--input-format', '-I', default='traiter_efloras',
         choices=INPUT_FORMATS.keys(),
-        help="""The data input format. The default is "efloras".""")
+        help="""The data input format. The default is "traiter_efloras".""")
 
     arg_parser.add_argument(
         '--output-file', '-o', type=argparse.FileType('w'), default=sys.stdout,
