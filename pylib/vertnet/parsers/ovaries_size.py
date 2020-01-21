@@ -19,8 +19,7 @@ OVARY_SIZE = Base(
 
         VOCAB.grouper('value', ' cross | number len_units? '),
 
-        # E.g.: active
-        # Or:   immature
+        # E.g.: active, Or: immature
         VOCAB.grouper(
             'state', 'active mature destroyed visible developed'.split()),
 
