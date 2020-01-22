@@ -2,26 +2,28 @@
 """Setup the Traiter environment."""
 
 import re
-from setuptools import setup, find_packages
+from distutils.core import setup
+from setuptools import find_packages
+# from Cython.Build import cythonize
 
 
 def readme():
     """Get README.md content."""
-    with open("README.md", 'r') as f:
-        return f.read()
+    with open("README.md", 'r') as in_file:
+        return in_file.read()
 
 
 def license_():
     """Get LICENSE.txt content."""
-    with open("LICENSE", 'r') as f:
-        return f.read()
+    with open("LICENSE", 'r') as in_file:
+        return in_file.read()
 
 
 def find_version():
     """Read version from db.py."""
     regex = r"^__VERSION__ = ['\"]v?([^'\"]*)['\"]"
-    with open("./traiter/util.py", 'r') as f:
-        match = re.search(regex, f.read(), re.M)
+    with open("./traiter/util.py", 'r') as in_file:
+        match = re.search(regex, in_file.read(), re.M)
         if match:
             return match.group(1)
 
@@ -30,12 +32,13 @@ def find_version():
 
 def find_requirements():
     """Read requirements.txt file and returns list of requirements."""
-    with open("requirements.txt", 'r') as f:
-        return f.read().splitlines()
+    with open("requirements.txt", 'r') as in_file:
+        return in_file.read().splitlines()
 
 
 setup(
     name="traiter",
+    # ext_modules=cythonize("experiments/parser.pyx"),
     version=find_version(),
     packages=find_packages(),
     install_requires=find_requirements(),
