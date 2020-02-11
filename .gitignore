@@ -56,3 +56,5 @@ build/
 transformers/
 notebooks/
 experiments/
+spaCy/
+spacy

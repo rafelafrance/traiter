@@ -38,7 +38,8 @@ def find_requirements():
 
 setup(
     name="traiter",
-    # ext_modules=cythonize('experiments/*.pyx', language_level="3"),
+    # ext_modules=cythonize(
+    #     'experiments/*.pyx', language_level="3", annotate=True),
     version=find_version(),
     packages=find_packages(),
     install_requires=find_requirements(),
