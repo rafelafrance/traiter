@@ -6,12 +6,12 @@ import regex  # type: ignore
 
 
 class Token:
-    """The what we need to handle scanned words, numbers, puctuation, etc."""
+    """The what we need to handle scanned words, numbers, punctuation, etc."""
 
     def __init__(self, text, **kwargs):
         self.text = intern(text)
         self.genus: str = kwargs.get('genus', '')
-        self.canon = intern(self.cononical(self.text))
+        self.canon = intern(self.canonical(self.text))
         self.start: int = kwargs.get('start', 0)
         self.end: int = kwargs.get('end', 0)
         # self.lemma = None           # The lemma
@@ -32,7 +32,7 @@ class Token:
         """Get an attribute using dict notation."""
         return getattr(self, item)
 
-    def cononical(self, text):
+    def canonical(self, text):
         """Lower case the string & remove noise characters."""
         text = text.lower()
         if self.genus == 'word':

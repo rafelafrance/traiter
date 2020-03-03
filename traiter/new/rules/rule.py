@@ -19,11 +19,11 @@ class Rule:
         self.field: str = kwargs.get('field', 'text')
 
         # To deal with repeated matches like: + * ? or {3,4}
-        self.rep_lo: int = kwargs.get('rep_lo', 1)
-        self.rep_hi: int = kwargs.get('rep_hi', 1)
+        self.repeat_lo: int = kwargs.get('repeat_lo', 1)
+        self.repeat_hi: int = kwargs.get('repeat_hi', 1)
         self.greedy: bool = kwargs.get('greedy', True)
 
-        # Extra data for processing matched tokens
+        # Extra data for processing tokens matched by this rule
         self.aux: str = kwargs.get('aux', '')
 
     def __eq__(self, other):

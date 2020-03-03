@@ -1,6 +1,6 @@
 """Scan an input string and create tokens."""
 
-from typing import List, Optional, Pattern
+from typing import List, Pattern
 import regex
 from .token import Token
 
@@ -11,7 +11,7 @@ class Scanner:
     def __init__(self):
         self.clauses: List[str] = []
         self.compiled: bool = False
-        self.regex: Optional[Pattern] = None
+        self.regex: Pattern = None
 
     def add(self, name: str, regexp: str):
         """Add a tokenizer rule."""
@@ -29,6 +29,6 @@ class Scanner:
         if not self.compiled:
             self.compile()
 
-        return [Token(m.group(), genus=m.lastgroup,
-                      start=m.start(), end=m.end())
-                for m in self.regex.finditer(text)]
+        return [
+            Token(m.group(), genus=m.lastgroup, start=m.start(), end=m.end())
+            for m in self.regex.finditer(text)]
