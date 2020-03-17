@@ -7,7 +7,7 @@ from typing import List
 @dataclass
 class State:
     """Matcher state saved to the backtrack stack."""
-    token_idx: int = 0
+    token_start: int = 0
     rule_idx: int = 0
     first_time: bool = True
     repeat_idx: List[int] = field(default_factory=list)

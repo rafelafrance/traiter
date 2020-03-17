@@ -37,20 +37,20 @@ class TestLiterals(unittest.TestCase):
         """It matches the second token."""
         rule = Literals(literals=[['two']])
         tokens = [Token('one'), Token('two')]
-        state = State(token_idx=1)
+        state = State(token_start=1)
         match = rule.func(tokens, state)
         self.assertTrue(match)
         self.assertEqual(
-            state, State(repeat_idx=[1], token_idx=1, first_time=False))
+            state, State(repeat_idx=[1], token_start=1, first_time=False))
 
     def test_func_greedy_04(self):
         """It does not match after the tokens."""
         rule = Literals(literals=[['one']])
         tokens = [Token('one'), Token('two')]
-        state = State(token_idx=1)
+        state = State(token_start=1)
         match = rule.func(tokens, state)
         self.assertFalse(match)
-        self.assertEqual(state, State(token_idx=1, first_time=False))
+        self.assertEqual(state, State(token_start=1, first_time=False))
 
     def test_func_greedy_05(self):
         """Greedy matches the longest rule first."""
@@ -62,7 +62,7 @@ class TestLiterals(unittest.TestCase):
         self.assertEqual(state, State(repeat_idx=[2], first_time=False))
 
     def test_func_greedy_06(self):
-        """Greedy match both literals."""
+        """Greedy matches both literals."""
         rule = Literals(repeat_hi=2, literals=[['one'], ['one', 'two']])
         tokens = [Token('one'), Token('two'), Token('one')]
         state = State()
@@ -96,6 +96,37 @@ class TestLiterals(unittest.TestCase):
         match = rule.func(tokens, state)
         self.assertTrue(match)
         self.assertEqual(state, State(repeat_idx=[1, 1], first_time=False))
+
+    def test_func_greedy_10(self):
+        """Greedy zero length match."""
+        rule = Literals(repeat_lo=0, repeat_hi=2, literals=[['one']])
+        tokens = [Token('two'), Token('two'), Token('two')]
+        state = State()
+        match = rule.func(tokens, state)
+        self.assertTrue(match)
+        self.assertEqual(state, State(repeat_idx=[], first_time=False))
+
+    def test_func_greedy_11(self):
+        """Backtrack shrinks the match."""
+        rule = Literals(repeat_lo=1, repeat_hi=2, literals=[['one']])
+        tokens = [Token('one'), Token('one')]
+        state = State()
+        rule.func(tokens, state)
+        match = rule.func(tokens, state)
+        self.assertTrue(match)
+        self.assertEqual(state, State(repeat_idx=[1], first_time=False))
+
+    def test_func_greedy_12(self):
+        """Backtrack shrinks the match by more than one token."""
+        rule = Literals(
+            repeat_lo=1, repeat_hi=1,
+            literals=[['one', 'two', 'three'], ['one']])
+        tokens = [Token('one'), Token('two'), Token('three')]
+        state = State()
+        rule.func(tokens, state)
+        match = rule.func(tokens, state)
+        self.assertTrue(match)
+        self.assertEqual(state, State(repeat_idx=[1], first_time=False))
 
     # def test_func_lazy_01(self):
     #     """Lazy matches the shortest rule first."""

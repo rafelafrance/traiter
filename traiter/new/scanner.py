@@ -1,7 +1,7 @@
 """Scan an input string and create tokens."""
 
 from typing import List, Pattern
-import regex
+import regex  # type: ignore
 from .token import Token
 
 
