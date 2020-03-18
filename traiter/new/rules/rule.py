@@ -22,6 +22,14 @@ class Rule:
         # Extra data for processing tokens matched by this rule
         self.aux: str = kwargs.get('aux', '')
 
+        # To deal with repeated matches like: + * ? or {3,4}
+        self.repeat_lo: int = kwargs.get('repeat_lo', 1)
+        self.repeat_hi: int = kwargs.get('repeat_hi', 1)
+        self.greedy: bool = kwargs.get('greedy', True)
+
+        if self.repeat_lo > self.repeat_hi:
+            self.repeat_lo, self.repeat_hi = self.repeat_hi, self.repeat_lo
+
     def __eq__(self, other):
         """Compare rules."""
         return self.__dict__ == other.__dict__

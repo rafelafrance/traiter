@@ -14,6 +14,6 @@ class State:
     phrase_len: List[int] = field(default_factory=list)
 
     @property
-    def total_len(self):
+    def total_len(self) -> int:
         """Get the total length of the match."""
         return sum(self.phrase_len)

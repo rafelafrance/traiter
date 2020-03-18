@@ -1,6 +1,6 @@
 """Scan an input string and create tokens."""
 
-from typing import List, Pattern
+from typing import List, Optional, Pattern
 import regex  # type: ignore
 from .token import Token
 
@@ -12,7 +12,7 @@ class Scanner:
         """Create a scanner."""
         self.clauses: List[str] = []
         self.compiled: bool = False
-        self.regex: Pattern = None
+        self.regex: Optional[Pattern] = None
 
     def add(self, name: str, regexp: str):
         """Add a tokenizer rule."""

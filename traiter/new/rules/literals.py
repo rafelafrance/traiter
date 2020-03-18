@@ -13,14 +13,6 @@ class Literals(Rule):
         """Create sets of literals to match against token streams."""
         super().__init__(**kwargs)
 
-        # To deal with repeated matches like: + * ? or {3,4}
-        self.repeat_lo: int = kwargs.get('repeat_lo', 1)
-        self.repeat_hi: int = kwargs.get('repeat_hi', 1)
-        self.greedy: bool = kwargs.get('greedy', True)
-
-        if self.repeat_lo > self.repeat_hi:
-            self.repeat_lo, self.repeat_hi = self.repeat_hi, self.repeat_lo
-
         self.lengths = set()
         self.literals = {}  # Key = tuple of words, value = literal index
 
