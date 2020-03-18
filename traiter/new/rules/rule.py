@@ -10,6 +10,7 @@ class Rule:
     """How to match tokens."""
 
     def __init__(self, **kwargs):
+        """Create common rule attributes."""
         kwargs = kwargs if kwargs else {}
 
         # Values for the rule
@@ -17,11 +18,6 @@ class Rule:
 
         # What field to compare in the token
         self.field: str = kwargs.get('field', 'text')
-
-        # To deal with repeated matches like: + * ? or {3,4}
-        self.repeat_lo: int = kwargs.get('repeat_lo', 1)
-        self.repeat_hi: int = kwargs.get('repeat_hi', 1)
-        self.greedy: bool = kwargs.get('greedy', True)
 
         # Extra data for processing tokens matched by this rule
         self.aux: str = kwargs.get('aux', '')
@@ -36,7 +32,7 @@ class Rule:
 
     @abstractmethod
     def func(self, tokens: Tokens, state: State) -> bool:
-        """The action for the predicate."""
+        """Predicate action."""
         raise NotImplementedError
 
 

@@ -6,9 +6,10 @@ from .token import Token
 
 
 class Scanner:
-    """Scan text with regular expressions and create tokens."""
+    """Scan text and create tokens."""
 
     def __init__(self):
+        """Create a scanner."""
         self.clauses: List[str] = []
         self.compiled: bool = False
         self.regex: Pattern = None

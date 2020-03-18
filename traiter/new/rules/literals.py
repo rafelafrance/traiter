@@ -1,79 +1,94 @@
 """Look for a sequence of tokens that match the given literals."""
-from abc import ABC
+
 from sys import intern
-from typing import List
 from .rule import Rule
 from ..state import State
 from ..token import Tokens
 
 
-class Literals(Rule, ABC):  # pylint: disable=abstract-method
+class Literals(Rule):
     """Look for a sequence of tokens that match the given phrases."""
 
     def __init__(self, **kwargs):
+        """Create sets of literals to match against token streams."""
         super().__init__(**kwargs)
 
-        lengths = set()
-        self.literals = set()
+        # To deal with repeated matches like: + * ? or {3,4}
+        self.repeat_lo: int = kwargs.get('repeat_lo', 1)
+        self.repeat_hi: int = kwargs.get('repeat_hi', 1)
+        self.greedy: bool = kwargs.get('greedy', True)
+
+        if self.repeat_lo > self.repeat_hi:
+            self.repeat_lo, self.repeat_hi = self.repeat_hi, self.repeat_lo
+
+        self.lengths = set()
+        self.literals = {}  # Key = tuple of words, value = literal index
 
         literals = kwargs.get('literals', [])
-        for phrase in literals:
+        for i, phrase in enumerate(literals):
             words = []
             for word in phrase:
                 words.append(intern(word))
-            self.literals.add(tuple(words))
-            lengths.add(len(words))
+            if not len(words):
+                continue
+            self.literals[tuple(words)] = i
+            self.lengths.add(len(words))
 
-        self.lengths = sorted(list(lengths), reverse=self.greedy)
-        self.func = self.func_greedy if self.greedy else self.func_lazy
-
-    def func_greedy(self, tokens: Tokens, state: State) -> bool:
+    def func(self, tokens: Tokens, state: State) -> bool:
         """Match token parts against phrase literals."""
         if state.first_time:
-            return self.greedy_first_time(tokens, state)
-        return self.greedy_backtrack(tokens, state)
+            return self.first_time(tokens, state)
+        if self.greedy:
+            return self.greedy_backtrack(state)
+        return self.lazy_backtrack(tokens, state)
 
-    def greedy_first_time(self, tokens: Tokens, state: State) -> bool:
+    def first_time(self, tokens: Tokens, state: State) -> bool:
         """First time grab as many tokens as possible."""
         state.first_time = False
-        token_start = state.token_start
         repeat_count = 0
-        while (repeat_count < self.repeat_hi
-               and self.next_repeat(tokens, state, token_start)):
+        repeat_threshold = self.repeat_hi if self.greedy else self.repeat_lo
+        while repeat_count < repeat_threshold and self.repeat(tokens, state):
             repeat_count += 1
-            token_start = state.token_start + state.match_len
         if repeat_count >= self.repeat_lo:
             return True
-        state.repeat_idx = []
+        state.phrase_len = []
         return False
 
-    def greedy_backtrack(self, tokens: Tokens, state: State) -> bool:
+    def greedy_backtrack(self, state: State) -> bool:
         """Restart the search after where the last one left off."""
-        last_repeat = state.repeat_idx.pop()
-        lengths = [i for i in self.lengths if i < last_repeat]
-        if self.next_repeat(tokens, state, state.token_start, lengths):
+        state.phrase_len.pop()
+        if len(state.phrase_len) >= self.repeat_lo:
             return True
-        if len(state.repeat_idx) < self.repeat_lo:
-            state.repeat_idx = []
-            return False
-        return True
+        return False
 
-    def func_lazy(self, tokens: Tokens, state: State) -> bool:
+    def lazy_backtrack(self, tokens: Tokens, state: State) -> bool:
         """Match token parts against phrase literals."""
+        if len(state.phrase_len) == self.repeat_hi:
+            state.phrase_len = []
+            return False
+        return self.repeat(tokens, state)
 
-    def next_repeat(self, tokens: Tokens, state: State, token_start: int,
-                    lengths: List[int] = None) -> bool:
-        """Get the next matching token."""
-        if lengths is None:
-            lengths = self.lengths
+    def repeat(self, tokens: Tokens, state: State) -> bool:
+        """Find the next matching repeat."""
+        start = state.token_start + state.total_len
 
-        for length in lengths:
-            end = token_start + length
-            words = [t[self.field] for t in tokens[token_start:end]]
-            if len(words) < length:
+        last = len(self.literals)
+        first = last
+        phrase_len = 0
+        for length in self.lengths:
+            end = start + length
+            if end > len(tokens):
                 continue
+            words = [t[self.field] for t in tokens[start:end]]
             phrase = tuple(words)
-            if phrase in self.literals:
-                state.repeat_idx.append(length)
-                return True
+
+            position = self.literals.get(phrase, last)
+            if position < first:
+                first = position
+                phrase_len = length
+
+        if phrase_len:
+            state.phrase_len.append(phrase_len)
+            return True
+
         return False

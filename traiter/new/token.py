@@ -9,6 +9,7 @@ class Token:
     """The what we need to handle scanned words, numbers, punctuation, etc."""
 
     def __init__(self, text, **kwargs):
+        """Create a token object."""
         self.text = intern(text)
         self.genus: str = kwargs.get('genus', '')
         self.canon = intern(self.canonical(self.text))
