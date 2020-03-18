@@ -13,9 +13,6 @@ class Rule:
         """Create common rule attributes."""
         kwargs = kwargs if kwargs else {}
 
-        # Values for the rule
-        self.values: Any = kwargs.get('values')
-
         # What field to compare in the token
         self.field: str = kwargs.get('field', 'text')
 

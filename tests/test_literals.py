@@ -6,7 +6,7 @@ from traiter.new.token import Token
 from traiter.new.state import State
 
 
-class TestLiterals(unittest.TestCase):
+class TestMatch(unittest.TestCase):
     """Test literal matches."""
 
     def test__init__01(self):

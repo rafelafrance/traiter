@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass, field
 from typing import List
-from .rules.rule import Patterns
+from .rules.rule import Patterns, Rule
 from .token import Tokens
 from .state import State
 
@@ -13,7 +13,7 @@ class Match:
     pattern_idx: int = 0
     token_start: int = 0
     token_end: int = 0
-    token2rule: List[int] = field(default_factory=list)
+    token2rule: List[Rule] = field(default_factory=list)
 
 
 def match(patterns: Patterns, tokens: Tokens) -> List[Match]:
@@ -36,9 +36,10 @@ def match(patterns: Patterns, tokens: Tokens) -> List[Match]:
                 if success:
                     # A candidate match
                     stack.append(state)
-                    token2rule.append((rule_idx, state.total_len))
+                    token2rule.append((rule, state.total_len))
                     token_start += state.total_len
                     rule_idx += 1
+                    state = State(rule_idx=rule_idx, token_start=token_start)
 
                 elif stack:
                     # The match failed so try backtracking

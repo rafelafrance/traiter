@@ -49,9 +49,7 @@ class Literals(Rule):
     def greedy_backtrack(self, state: State) -> bool:
         """Restart the search after where the last one left off."""
         state.phrase_len.pop()
-        if len(state.phrase_len) >= self.repeat_lo:
-            return True
-        return False
+        return len(state.phrase_len) >= self.repeat_lo
 
     def lazy_backtrack(self, tokens: Tokens, state: State) -> bool:
         """Match token parts against phrase literals."""
