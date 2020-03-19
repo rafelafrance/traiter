@@ -2,8 +2,8 @@
 
 from abc import abstractmethod
 from typing import List
-from ..token import Tokens
 from ..state import State
+from ..token import Tokens
 
 
 class Rule:

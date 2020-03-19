@@ -2,9 +2,9 @@
 
 from dataclasses import dataclass, field
 from typing import List
-from .rules.rule import Patterns, Rule
 from .token import Tokens
 from .state import State
+from .rules.rule import Patterns, Rule
 
 
 @dataclass

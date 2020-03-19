@@ -6,7 +6,7 @@ import regex  # type: ignore
 
 
 class Token:
-    """The what we need to handle scanned words, numbers, punctuation, etc."""
+    """What we need to handle scanned words, numbers, punctuation, etc."""
 
     def __init__(self, text, **kwargs):
         """Create a token object."""

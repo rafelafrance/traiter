@@ -1,9 +1,9 @@
 """Look for a sequence of tokens that match the given regular expression."""
 
 import regex  # type: ignore
-from .rule import Rule
 from ..state import State
 from ..token import Tokens
+from .rule import Rule
 
 
 class Regexp(Rule):

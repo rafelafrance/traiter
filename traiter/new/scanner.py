@@ -19,7 +19,7 @@ class Scanner:
         self.clauses.append(f'(?<{name}>{regexp})')
         self.compiled = False
 
-    def compile(self, flags=regex.IGNORECASE | regex.VERBOSE):
+    def compile(self, flags: int = regex.IGNORECASE | regex.VERBOSE):
         """Compile the regex fragment strings into one regex."""
         self.compiled = True
         joined = '|'.join(self.clauses)

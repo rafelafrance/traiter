@@ -1,9 +1,9 @@
 """Look for a sequence of tokens that match the given literals."""
 
 from sys import intern
-from .rule import Rule
 from ..state import State
 from ..token import Tokens
+from .rule import Rule
 
 
 class Literals(Rule):
