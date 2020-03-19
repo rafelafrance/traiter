@@ -16,9 +16,12 @@ class Match:
     token2rule: List[Rule] = field(default_factory=list)
 
 
-def match(patterns: Patterns, tokens: Tokens) -> List[Match]:
+Matches = List[Match]
+
+
+def match(patterns: Patterns, tokens: Tokens) -> Matches:
     """Match tokens against patterns."""
-    matches: List[Match] = []
+    matches: Matches = []
     stack: List[State] = []
 
     token_idx: int = 0

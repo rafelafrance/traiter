@@ -1,7 +1,7 @@
 """Rules for matching tokens."""
 
 from abc import abstractmethod
-from typing import Any, List
+from typing import List
 from ..token import Tokens
 from ..state import State
 
@@ -35,8 +35,40 @@ class Rule:
         """Create string form of the object."""
         return '{}({})'.format(self.__class__.__name__, self.__dict__)
 
-    @abstractmethod
     def func(self, tokens: Tokens, state: State) -> bool:
+        """Match token parts against phrase literals."""
+        if state.first_time:
+            return self.first_time(tokens, state)
+        if self.greedy:
+            return self.greedy_backtrack(state)
+        return self.lazy_backtrack(tokens, state)
+
+    def first_time(self, tokens: Tokens, state: State) -> bool:
+        """First time grab as many tokens as possible."""
+        state.first_time = False
+        repeat_count = 0
+        repeat_threshold = self.repeat_hi if self.greedy else self.repeat_lo
+        while repeat_count < repeat_threshold and self.repeat(tokens, state):
+            repeat_count += 1
+        if repeat_count >= self.repeat_lo:
+            return True
+        state.phrase_len = []
+        return False
+
+    def greedy_backtrack(self, state: State) -> bool:
+        """Restart the search after where the last one left off."""
+        state.phrase_len.pop()
+        return len(state.phrase_len) >= self.repeat_lo
+
+    def lazy_backtrack(self, tokens: Tokens, state: State) -> bool:
+        """Match token parts against phrase literals."""
+        if len(state.phrase_len) == self.repeat_hi:
+            state.phrase_len = []
+            return False
+        return self.repeat(tokens, state)
+
+    @abstractmethod
+    def repeat(self, tokens: Tokens, state: State) -> bool:
         """Predicate action."""
         raise NotImplementedError
 
