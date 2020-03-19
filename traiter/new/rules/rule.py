@@ -50,22 +50,26 @@ class Rule:
         repeat_threshold = self.repeat_hi if self.greedy else self.repeat_lo
         while repeat_count < repeat_threshold and self.repeat(tokens, state):
             repeat_count += 1
-        if repeat_count >= self.repeat_lo:
-            return True
-        state.phrase_len = []
-        return False
+        if repeat_count < self.repeat_lo:
+            state.phrase_len = []
+            return False
+        return True
 
     def greedy_backtrack(self, state: State) -> bool:
         """Restart the search after where the last one left off."""
         state.phrase_len.pop()
-        return len(state.phrase_len) >= self.repeat_lo
+        if len(state.phrase_len) < self.repeat_lo:
+            state.phrase_len = []
+            return False
+        return True
 
     def lazy_backtrack(self, tokens: Tokens, state: State) -> bool:
         """Match token parts against phrase literals."""
-        if len(state.phrase_len) == self.repeat_hi:
+        if (len(state.phrase_len) == self.repeat_hi
+                or not self.repeat(tokens, state)):
             state.phrase_len = []
             return False
-        return self.repeat(tokens, state)
+        return True
 
     @abstractmethod
     def repeat(self, tokens: Tokens, state: State) -> bool:

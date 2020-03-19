@@ -107,6 +107,16 @@ class TestMatch(unittest.TestCase):
         self.assertTrue(match)
         self.assertEqual(state, State(phrase_len=[1], first_time=False))
 
+    def test_greedy_backtrack_02(self):
+        """Backtrack fails on a shrink."""
+        rule = Literals(repeat_lo=2, repeat_hi=2, literals=[['one']])
+        tokens = [Token('one'), Token('one')]
+        state = State()
+        rule.func(tokens, state)
+        match = rule.func(tokens, state)
+        self.assertFalse(match)
+        self.assertEqual(state, State(phrase_len=[], first_time=False))
+
     def test_lazy_first_time_01(self):
         """It matches a token."""
         rule = Literals(literals=[['one']], greedy=False)
@@ -200,6 +210,17 @@ class TestMatch(unittest.TestCase):
         rule = Literals(
             repeat_lo=2, repeat_hi=2, literals=[['one']], greedy=False)
         tokens = [Token('one'), Token('one'), Token('one')]
+        state = State()
+        rule.func(tokens, state)
+        match = rule.func(tokens, state)
+        self.assertFalse(match)
+        self.assertEqual(state, State(phrase_len=[], first_time=False))
+
+    def test_lazy_backtrack_04(self):
+        """Lazy backtrack fails on expanding the match."""
+        rule = Literals(
+            repeat_lo=2, repeat_hi=3, literals=[['one']], greedy=False)
+        tokens = [Token('one'), Token('one'), Token('two')]
         state = State()
         rule.func(tokens, state)
         match = rule.func(tokens, state)
