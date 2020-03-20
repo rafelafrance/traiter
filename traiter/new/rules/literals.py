@@ -21,7 +21,7 @@ class Literals(Rule):
             words = []
             for word in phrase:
                 words.append(intern(word))
-            if not len(words):
+            if len(words) == 0:
                 continue
             self.literals[tuple(words)] = i
             self.lengths.add(len(words))
