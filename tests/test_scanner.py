@@ -19,5 +19,4 @@ class TestScan(unittest.TestCase):
             [
                 Token(text='This', start=1, end=5, genus='word'),
                 Token(text='is-a', start=6, end=10, genus='word'),
-                Token(text='test', start=11, end=15, genus='word'),
-            ])
+                Token(text='test', start=11, end=15, genus='word')])

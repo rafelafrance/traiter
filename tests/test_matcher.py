@@ -17,8 +17,7 @@ class TestLiterals(unittest.TestCase):
         actual = match(patterns, tokens)
         expect = [
             Match(pattern_idx=0, token_start=1, token_end=2,
-                  token2rule=[rule0]),
-        ]
+                  token2rule=[rule0])]
         self.assertEqual(actual, expect)
 
     def test_match_02(self):
@@ -30,8 +29,7 @@ class TestLiterals(unittest.TestCase):
         actual = match(patterns, tokens)
         expect = [
             Match(pattern_idx=1, token_start=1, token_end=2,
-                  token2rule=[rule1]),
-        ]
+                  token2rule=[rule1])]
         self.assertEqual(actual, expect)
 
     def test_match_03(self):
@@ -44,8 +42,7 @@ class TestLiterals(unittest.TestCase):
         actual = match(patterns, tokens)
         expect = [
             Match(pattern_idx=1, token_start=1, token_end=3,
-                  token2rule=[rule1, rule2]),
-        ]
+                  token2rule=[rule1, rule2])]
         self.assertEqual(actual, expect)
 
     def test_match_04(self):
@@ -60,6 +57,5 @@ class TestLiterals(unittest.TestCase):
             Match(pattern_idx=1, token_start=1, token_end=2,
                   token2rule=[rule1]),
             Match(pattern_idx=2, token_start=3, token_end=4,
-                  token2rule=[rule3]),
-        ]
+                  token2rule=[rule3])]
         self.assertEqual(actual, expect)

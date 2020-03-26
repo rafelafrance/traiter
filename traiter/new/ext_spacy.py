@@ -2,7 +2,7 @@
 
 import regex
 import spacy
-from spacy.tokens import Doc, Span, Token
+from spacy.tokens import Token  # Doc, Span
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER
 from spacy.lang.char_classes import CONCAT_QUOTES, LIST_ELLIPSES, LIST_ICONS
 
@@ -15,7 +15,7 @@ def canon(token):
     return text
 
 
-def setup():
+def extend(traiter):
     """Setup to use spacy."""
     spacy.prefer_gpu()
 
@@ -27,25 +27,21 @@ def setup():
         + [
             r"(?<=[0-9])[+\-\*^](?=[0-9-])",
             r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
-                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-            ),
+                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES),
             r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
             # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
             r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
             # Custom interior rules
             r"""[:"=]""",  # for json-like data
-            r"(?<=[0-9])\.(?=[{a}])".format(a=ALPHA),  # 1.word, 2.other
-            ])
+            r"(?<=[0-9])\.(?=[{a}])".format(a=ALPHA)])  # 1.word, 2.other
     infix_regex = spacy.util.compile_infix_regex(infixes)
     nlp.tokenizer.infix_finditer = infix_regex.finditer
 
+    nlp.add_pipe(traiter, name='traiter')
+
     if Token.has_extension('canon'):
         Token.remove_extension('canon')
+    # TODO: see if Token.set_extension('canon', default='') is faster
     Token.set_extension('canon', getter=canon)
 
     return nlp
-
-
-if __name__ == '__main__':
-    setup()
-

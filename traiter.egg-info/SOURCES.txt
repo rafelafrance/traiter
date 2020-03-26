@@ -4,6 +4,9 @@ experiments/__init__.py
 experiments/run_traiter.py
 tests/__init__.py
 tests/test_build_old.py
+tests/test_literals.py
+tests/test_matcher.py
+tests/test_regexp.py
 tests/test_replace_old.py
 tests/test_scan_old.py
 tests/test_scanner.py
@@ -20,10 +23,12 @@ traiter.egg-info/dependency_links.txt
 traiter.egg-info/requires.txt
 traiter.egg-info/top_level.txt
 traiter/new/__init__.py
+traiter/new/ext_spacy.py
 traiter/new/matcher.py
-traiter/new/reader.py
 traiter/new/scanner.py
+traiter/new/state.py
 traiter/new/token.py
 traiter/new/rules/__init__.py
-traiter/new/rules/in_phrases.py
+traiter/new/rules/literals.py
+traiter/new/rules/regexp.py
 traiter/new/rules/rule.py

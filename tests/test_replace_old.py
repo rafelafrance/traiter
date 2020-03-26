@@ -80,6 +80,5 @@ class TestReplace(unittest.TestCase):
                 [
                     Token(t_one.rule, span=(0, 3), group={'one': 'ONE'}),
                     Token(t_zero.rule, span=(4, 8), group={'zero': 'ZERO'}),
-                    Token(t_two.rule, span=(9, 12), group={'two': 'TWO'}),
-                ],
+                    Token(t_two.rule, span=(9, 12), group={'two': 'TWO'})],
                 False))

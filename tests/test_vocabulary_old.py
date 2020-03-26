@@ -36,8 +36,7 @@ class TestVocabulary(unittest.TestCase):
         cat.grouper(self.g1.name, self.g1.pattern)
         expect = {
             self.t1.name: self.t1,
-            self.g1.name: [self.t1, self.g1],
-        }
+            self.g1.name: [self.t1, self.g1]}
         self.assertEqual(cat.rules, expect)
 
     def test_grouper_02(self):
@@ -49,8 +48,7 @@ class TestVocabulary(unittest.TestCase):
         expect = {
             self.t1.name: self.t1,
             self.t2.name: self.t2,
-            self.g2.name: [self.t1, self.t2, self.g2],
-        }
+            self.g2.name: [self.t1, self.t2, self.g2]}
         self.assertEqual(cat.rules, expect)
 
     def test_grouper_03(self):
@@ -66,8 +64,7 @@ class TestVocabulary(unittest.TestCase):
             self.t2.name: self.t2,
             self.g1.name: [self.t1, self.g1],
             self.g2.name: [self.t1, self.t2, self.g2],
-            self.g3.name: [self.t1, self.t2, self.g1, self.g2, self.g3],
-        }
+            self.g3.name: [self.t1, self.t2, self.g1, self.g2, self.g3]}
         self.assertEqual(cat.rules, expect)
 
     def test_grouper_04(self):
@@ -88,6 +85,5 @@ class TestVocabulary(unittest.TestCase):
             self.g2.name: [self.t1, self.t2, self.g2],
             self.g3.name: [self.t1, self.t2, self.g1, self.g2, self.g3],
             self.g4.name: [
-                self.p1, self.t1, self.t2, self.g1, self.g2, self.g4],
-        }
+                self.p1, self.t1, self.t2, self.g1, self.g2, self.g4]}
         self.assertEqual(cat.rules, expect)
