@@ -23,8 +23,8 @@ traiter.egg-info/dependency_links.txt
 traiter.egg-info/requires.txt
 traiter.egg-info/top_level.txt
 traiter/new/__init__.py
-traiter/new/ext_spacy.py
 traiter/new/matcher.py
+traiter/new/nlp.py
 traiter/new/scanner.py
 traiter/new/state.py
 traiter/new/token.py

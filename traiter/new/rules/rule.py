@@ -1,9 +1,20 @@
 """Rules for matching tokens."""
 
+import sys
 from abc import abstractmethod
 from typing import List
 from ..state import State
 from ..token import Tokens
+
+
+REPEAT = {
+    '*': {'lo': 0, 'hi': sys.maxsize, 'greedy': True},
+    '+': {'lo': 1, 'hi': sys.maxsize, 'greedy': True},
+    '?': {'lo': 0, 'hi': 1, 'greedy': True},
+    '*?': {'lo': 0, 'hi': sys.maxsize, 'greedy': False},
+    '+?': {'lo': 1, 'hi': sys.maxsize, 'greedy': False},
+    '??': {'lo': 0, 'hi': 1, 'greedy': False},
+    }
 
 
 class Rule:
@@ -23,6 +34,10 @@ class Rule:
         self.repeat_lo: int = kwargs.get('repeat_lo', 1)
         self.repeat_hi: int = kwargs.get('repeat_hi', 1)
         self.greedy: bool = kwargs.get('greedy', True)
+        if repeat := kwargs.get('repeat', ''):
+            self.repeat_lo = REPEAT[repeat]['lo']
+            self.repeat_hi = REPEAT[repeat]['hi']
+            self.greedy = REPEAT[repeat]['greedy']
 
         if self.repeat_lo > self.repeat_hi:
             self.repeat_lo, self.repeat_hi = self.repeat_hi, self.repeat_lo

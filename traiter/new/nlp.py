@@ -15,8 +15,8 @@ def canon(token):
     return text
 
 
-def extend(traiter):
-    """Setup to use spacy."""
+def spacy_nlp(patterns):
+    """Wrap spacy."""
     spacy.prefer_gpu()
 
     nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
@@ -37,7 +37,7 @@ def extend(traiter):
     infix_regex = spacy.util.compile_infix_regex(infixes)
     nlp.tokenizer.infix_finditer = infix_regex.finditer
 
-    nlp.add_pipe(traiter, name='traiter')
+    nlp.add_pipe(patterns, name='traiter')
 
     if Token.has_extension('canon'):
         Token.remove_extension('canon')
