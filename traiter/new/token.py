@@ -42,3 +42,10 @@ class Token:
 
 
 Tokens = List[Token]
+
+
+def field(token, name):
+    """Return the field off the spacy object or extension object."""
+    if hasattr(token, name):
+        return getattr(token, name)
+    return getattr(token._, name)

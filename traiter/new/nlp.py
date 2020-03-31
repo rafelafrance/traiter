@@ -2,8 +2,8 @@
 
 import regex
 import spacy
-from spacy.tokens import Token  # Doc, Span
-from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER
+from spacy.tokens import Doc, Token  # Span
+from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, HYPHENS
 from spacy.lang.char_classes import CONCAT_QUOTES, LIST_ELLIPSES, LIST_ICONS
 
 
@@ -15,7 +15,7 @@ def canon(token):
     return text
 
 
-def spacy_nlp(patterns):
+def spacy_nlp(ruler):
     """Wrap spacy."""
     spacy.prefer_gpu()
 
@@ -29,7 +29,7 @@ def spacy_nlp(patterns):
             r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
                 al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES),
             r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-            # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+            r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
             r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
             # Custom interior rules
             r"""[:"=]""",  # for json-like data
@@ -37,11 +37,15 @@ def spacy_nlp(patterns):
     infix_regex = spacy.util.compile_infix_regex(infixes)
     nlp.tokenizer.infix_finditer = infix_regex.finditer
 
-    nlp.add_pipe(patterns, name='traiter')
+    nlp.add_pipe(ruler, name='traiter')
 
     if Token.has_extension('canon'):
         Token.remove_extension('canon')
     # TODO: see if Token.set_extension('canon', default='') is faster
     Token.set_extension('canon', getter=canon)
+
+    if Doc.has_extension('traits'):
+        Doc.remove_extension('traits')
+    Doc.set_extension('traits', default=[])
 
     return nlp

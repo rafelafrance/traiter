@@ -19,7 +19,7 @@ class Match:
 Matches = List[Match]
 
 
-def match(patterns: Patterns, tokens: Tokens) -> Matches:
+def get_matches(patterns: Patterns, tokens: Tokens) -> Matches:
     """Match tokens against patterns."""
     matches: Matches = []
     stack: List[State] = []

@@ -2,7 +2,7 @@
 
 from sys import intern
 from ..state import State
-from ..token import Tokens
+from ..token import Tokens, field
 from .rule import Rule
 
 
@@ -26,7 +26,7 @@ class Literals(Rule):
             self.literals[tuple(words)] = i
             self.lengths.add(len(words))
 
-    def repeat(self, tokens: Tokens, state: State) -> bool:
+    def repeat(self, doc: Tokens, state: State) -> bool:
         """Find the next matching repeat."""
         start = state.token_start + state.total_len
 
@@ -35,9 +35,9 @@ class Literals(Rule):
         phrase_len = 0
         for length in self.lengths:
             end = start + length
-            if end > len(tokens):
+            if end > len(doc):
                 continue
-            words = [t[self.field] for t in tokens[start:end]]
+            words = [field(t, self.field) for t in doc[start:end]]
             phrase = tuple(words)
 
             position = self.literals.get(phrase, last)

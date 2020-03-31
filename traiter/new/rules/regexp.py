@@ -2,7 +2,7 @@
 
 import regex  # type: ignore
 from ..state import State
-from ..token import Tokens
+from ..token import Tokens, field
 from .rule import Rule
 
 
@@ -16,9 +16,11 @@ class Regexp(Rule):
         flags = kwargs.get('flags', regex.IGNORECASE | regex.VERBOSE)
         self.regexp = regex.compile(kwargs['regexp'], flags=flags)
 
-    def repeat(self, tokens: Tokens, state: State) -> bool:
+    def repeat(self, doc: Tokens, state: State) -> bool:
         """Find the next token that matches the regex."""
-        match = self.regexp.search(tokens[state.token_start][self.field])
+        token = doc[state.token_start]
+        text = field(token, self.field)
+        match = self.regexp.search(text)
         if match:
             state.phrase_len.append(1)
             return True

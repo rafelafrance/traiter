@@ -3,7 +3,7 @@
 import unittest
 from traiter.new.rules.literals import Literals
 from traiter.new.token import Token
-from traiter.new.matcher import match, Match
+from traiter.new.matcher import get_matches, Match
 
 
 class TestLiterals(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestLiterals(unittest.TestCase):
         rule0 = Literals(literals=[['one']])
         patterns = [[rule0]]
         tokens = [Token('zero'), Token('one'), Token('two')]
-        actual = match(patterns, tokens)
+        actual = get_matches(patterns, tokens)
         expect = [
             Match(pattern_idx=0, token_start=1, token_end=2,
                   token2rule=[rule0])]
@@ -26,7 +26,7 @@ class TestLiterals(unittest.TestCase):
         rule1 = Literals(literals=[['one']])
         patterns = [[rule0], [rule1]]
         tokens = [Token('zero'), Token('one'), Token('two')]
-        actual = match(patterns, tokens)
+        actual = get_matches(patterns, tokens)
         expect = [
             Match(pattern_idx=1, token_start=1, token_end=2,
                   token2rule=[rule1])]
@@ -39,7 +39,7 @@ class TestLiterals(unittest.TestCase):
         rule2 = Literals(literals=[['two']])
         patterns = [[rule0], [rule1, rule2]]
         tokens = [Token('zero'), Token('one'), Token('two'), Token('three')]
-        actual = match(patterns, tokens)
+        actual = get_matches(patterns, tokens)
         expect = [
             Match(pattern_idx=1, token_start=1, token_end=3,
                   token2rule=[rule1, rule2])]
@@ -52,7 +52,7 @@ class TestLiterals(unittest.TestCase):
         rule3 = Literals(literals=[['three']])
         patterns = [[rule0], [rule1], [rule3]]
         tokens = [Token('zero'), Token('one'), Token('two'), Token('three')]
-        actual = match(patterns, tokens)
+        actual = get_matches(patterns, tokens)
         expect = [
             Match(pattern_idx=1, token_start=1, token_end=2,
                   token2rule=[rule1]),
