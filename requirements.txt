@@ -3,7 +3,6 @@ catalogue==1.0.0
 certifi==2019.11.28
 chardet==3.0.4
 cymem==2.0.3
-en-core-web-sm==2.2.5
 idna==2.9
 murmurhash==1.0.2
 numpy==1.18.2
