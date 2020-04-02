@@ -1,61 +1,40 @@
-"""Test match function."""
+"""Validate the Base matcher class."""
 
 import unittest
-from traiter.new.rules.literals import Literals
-from traiter.new.token import Token
-from traiter.new.matcher import get_matches, Match
+
+from traiter.matcher import Matcher
 
 
-class TestLiterals(unittest.TestCase):
-    """Test literal matches."""
+BASE = Matcher()
 
-    def test_match_01(self):
-        """It finds a match."""
-        rule0 = Literals(literals=[['one']])
-        patterns = [[rule0]]
-        tokens = [Token('zero'), Token('one'), Token('two')]
-        actual = get_matches(patterns, tokens)
-        expect = [
-            Match(pattern_idx=0, token_start=1, token_end=2,
-                  token2rule=[rule0])]
-        self.assertEqual(actual, expect)
 
-    def test_match_02(self):
-        """It finds a match a second pattern."""
-        rule0 = Literals(literals=[['0']])
-        rule1 = Literals(literals=[['one']])
-        patterns = [[rule0], [rule1]]
-        tokens = [Token('zero'), Token('one'), Token('two')]
-        actual = get_matches(patterns, tokens)
-        expect = [
-            Match(pattern_idx=1, token_start=1, token_end=2,
-                  token2rule=[rule1])]
-        self.assertEqual(actual, expect)
+class TestMatcher(unittest.TestCase):
+    """Test the plant color trait parser."""
 
-    def test_match_03(self):
-        """It finds a two rule match."""
-        rule0 = Literals(literals=[['0']])
-        rule1 = Literals(literals=[['one']])
-        rule2 = Literals(literals=[['two']])
-        patterns = [[rule0], [rule1, rule2]]
-        tokens = [Token('zero'), Token('one'), Token('two'), Token('three')]
-        actual = get_matches(patterns, tokens)
-        expect = [
-            Match(pattern_idx=1, token_start=1, token_end=3,
-                  token2rule=[rule1, rule2])]
-        self.assertEqual(actual, expect)
+    def test_first_longest_01(self):
+        """It handles empty matches."""
+        self.assertEqual(BASE.first_longest([]), [])
 
-    def test_match_04(self):
-        """It finds a multiple matches."""
-        rule0 = Literals(literals=[['0']])
-        rule1 = Literals(literals=[['one']])
-        rule3 = Literals(literals=[['three']])
-        patterns = [[rule0], [rule1], [rule3]]
-        tokens = [Token('zero'), Token('one'), Token('two'), Token('three')]
-        actual = get_matches(patterns, tokens)
-        expect = [
-            Match(pattern_idx=1, token_start=1, token_end=2,
-                  token2rule=[rule1]),
-            Match(pattern_idx=2, token_start=3, token_end=4,
-                  token2rule=[rule3])]
-        self.assertEqual(actual, expect)
+    def test_first_longest_02(self):
+        """It removes simple overlapping matches."""
+        matches = [(None, 1, 2), (None, 0, 2)]
+        expect = [(None, 0, 2)]
+        self.assertEqual(BASE.first_longest(matches), expect)
+
+    def test_first_longest_03(self):
+        """It removes complicated overlapping matches."""
+        matches = [(None, 0, 1), (None, 0, 3), (None, 2, 3)]
+        expect = [(None, 0, 3)]
+        self.assertEqual(BASE.first_longest(matches), expect)
+
+    def test_first_longest_04(self):
+        """It removes complicated overlapping matches."""
+        matches = [(None, 0, 1), (None, 0, 4), (None, 0, 2), (None, 3, 4)]
+        expect = [(None, 0, 4)]
+        self.assertEqual(BASE.first_longest(matches), expect)
+
+    def test_first_longest_05(self):
+        """It does not remove non-overlapping matches."""
+        matches = [(None, 0, 1), (None, 0, 4), (None, 0, 2), (None, 4, 5)]
+        expect = [(None, 0, 4), (None, 4, 5)]
+        self.assertEqual(BASE.first_longest(matches), expect)
