@@ -6,7 +6,8 @@ from traiter.nlp import NLP
 class Matcher:
     """Shared lexer logic."""
 
-    def __init__(self):
+    def __init__(self, name=''):
+        self.name = name
         self.matcher = None
         self.nlp = NLP
 
