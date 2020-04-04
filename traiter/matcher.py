@@ -8,7 +8,7 @@ class Matcher:
 
     def __init__(self, name=''):
         self.name = name
-        self.matcher = None
+        self.term_matcher = None
         self.nlp = NLP
 
     @staticmethod
@@ -30,3 +30,11 @@ class Matcher:
     def parse(self, text):
         """Parse the traits."""
         raise NotImplementedError
+
+    @staticmethod
+    def term_label(_, doc, i, matches):
+        """Add the term labels to the tokens."""
+        match_id, start, end = matches[i]
+        label = doc.vocab.strings[match_id]
+        for token in doc[start:end]:
+            token._.term = label

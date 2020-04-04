@@ -15,8 +15,8 @@ def canon(token):
     return text
 
 
-# TODO: See if using default='' would be faster
-Token.set_extension('canon', getter=canon)
+# Token.set_extension('canon', getter=canon)
+Token.set_extension('term', default='')
 
 
 def spacy_nlp():
