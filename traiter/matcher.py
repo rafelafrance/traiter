@@ -8,11 +8,11 @@ class Matcher:
 
     def __init__(self, name=''):
         self.name = name
-        self.term_matcher = None
+        self.term_matchers = []
         self.nlp = NLP
 
     @staticmethod
-    def first_longest(matches):
+    def leftmost_longest(matches):
         """
         Return the longest of any overlapping matches, removing others.
 
