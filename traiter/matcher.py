@@ -9,6 +9,7 @@ class Matcher:
     def __init__(self, name=''):
         self.name = name
         self.term_matchers = []
+        self.trait_matcher = None
         self.nlp = NLP
 
     @staticmethod
