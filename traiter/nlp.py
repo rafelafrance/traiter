@@ -1,21 +1,12 @@
 """A wrapper around spacy so we can use our rule-based parsers."""
 
-import regex
+import re
 import spacy
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
-    CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS, PUNCT
+    CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS
 from spacy.tokens import Token  # Doc, Span
 
 
-def canon(token):
-    """Lower case the string & remove noise characters."""
-    text = token.text.lower()
-    if not (token.is_punct or token.like_num):
-        text = regex.sub(r'\p{Dash_Punctuation}', '', text)
-    return text
-
-
-# Token.set_extension('canon', getter=canon)
 Token.set_extension('term', default='')
 
 
@@ -35,15 +26,22 @@ def spacy_nlp():
             # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
             r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
 
-            ###############################################
-            # Custom interior rules
-
             r"""(?:{h})""".format(h=HYPHENS),
-            r"""[:"=()\[\]]""",
+            r"""[\[\]\(\):;"'-]""",
             r"(?<=[0-9])\.(?=[{a}])".format(a=ALPHA),  # 1.word, 2.other
             ])
+
     infix_regex = spacy.util.compile_infix_regex(infix)
     nlp.tokenizer.infix_finditer = infix_regex.finditer
+
+    breaking = r"""[\[\]\(\):;,."'-]"""
+
+    prefix = re.compile(f'^{breaking}')
+    nlp.tokenizer.prefix_search = prefix.search
+
+    suffix = re.compile(f'{breaking}$')
+    nlp.tokenizer.suffix_search = suffix.search
+
     return nlp
 
 
