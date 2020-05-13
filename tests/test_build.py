@@ -5,7 +5,7 @@ import regex
 from traiter.rule import grouper, term
 
 
-class TestReplace(unittest.TestCase):
+class TestBuild(unittest.TestCase):
     """Test the build function for the rules object."""
 
     flags = regex.VERBOSE | regex.IGNORECASE

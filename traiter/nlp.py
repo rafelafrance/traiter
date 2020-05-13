@@ -8,6 +8,7 @@ from spacy.tokens import Token  # Doc, Span
 
 
 Token.set_extension('term', default='')
+Token.set_extension('code', default='')
 
 
 def spacy_nlp():

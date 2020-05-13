@@ -2,10 +2,10 @@
 
 import unittest
 
-from traiter.matcher import Matcher
+from traiter.matcher import Parser
 
 
-BASE = Matcher()
+BASE = Parser()
 
 
 class TestMatcher(unittest.TestCase):
