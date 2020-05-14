@@ -1,7 +1,7 @@
 """A class to hold an individual token."""
 
 from typing import Dict, List, Match, Tuple
-from traiter.rule import Rule, Action, Groups, SIZE
+from .rule import Rule, Action, Groups, SIZE
 
 Tokens = List['Token']
 

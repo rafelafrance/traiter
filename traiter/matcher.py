@@ -1,112 +1,97 @@
 """Common logic for parsing trait notations."""
 
-from collections import defaultdict
+import sys
 
-import regex
 from spacy.matcher import Matcher, PhraseMatcher
 
-from .catalog import CODES
 from .nlp import NLP
-from .util import FLAGS
+from .pattern import CODES, Type
 
 
 class Parser:
     """Shared parser logic."""
 
-    # Find tokens in the regex. Look for words that are not part of a group
-    # name or a metacharacter. So, "word" not "<word>". Neither "(?P" nor "\b"
-    word_re = regex.compile(r"""
-        (?<! \(\?P< ) (?<! \(\? ) (?<! [\\] )
-        \b (?P<word> [a-z]\w* ) \b """, FLAGS)
-
     def __init__(self, name='', catalog=None):
         self.name = name
-        self.catalog = catalog
-        self.matchers = {}
-        self.groupers = {}
-        self.producers = {}
-        self.nlp = NLP
-
-    def grouper(self, name, pattern):
-        """Add a grouper to the rules."""
-        self.groupers[name] = pattern
-
-    def producer(self, action, pattern):
-        """Add a grouper to the rules."""
-        name = action.__qualname__
-        self.producers[name] = (action, pattern)
+        self.catalog = catalog      # A catalog of all possible rules
+        self.active_terms = set()   # AWhat's being used from the catalog
+        self.matchers = []          # Compiled spacy matchers
+        self.producers = {}         # Compiled producers
+        self.replacers = {}
 
     def build(self):
         """Build the matchers and regular expressions."""
-        self.build_groupers()
+        self.catalog.expand_groupers()
+        self.catalog.complete_active_terms(self)
         self.build_producers()
-        self.build_spacy_matchers()
+        self.build_phrase_matchers()
+        self.build_regex_matchers()
 
-    def get_terms(self):
-        """Get the terms from the groupers and producers."""
+    def complete_active_terms(self, matcher):
+        """Find terms that are used but haven't been directly set."""
+        for parser in self.catalog.active(matcher, Type.PRODUCER):
+            words = parser.get_word_set()
+            matcher.active_terms |= {w for w in words if self.catalog.has(w)}
 
-    def build_groupers(self):
-        """Create regular expressions out of the groupers."""
-        groupers = {}
-        for key, value in self.groupers.items():
-            if isinstance(value, list):
-                value = '|'.join(f'(?:{v})' for v in value)
-            value = ' '.join(value.split())
-            groupers[key] = f'(?:{value})'
-        self.groupers = groupers
+        for parser in self.catalog.active(matcher, Type.GROUPER):
+            words = parser.get_word_set()
+            matcher.active_terms |= {w for w in words if self.catalog.has(w)}
 
     def build_producers(self):
         """Create and compile regex out of the producers."""
-        def _replace(match):
-            word = match.group('word')
-            return f'(?:{CODES[word]})'
+        groupers = self.catalog.active(Type.GROUPER)
+        groupers = {g.name: g for g in groupers}
 
-        producers = []
-        for p_func, p_regex in self.raw_producers:
-            for g_name, g_regex in self.groupers.items():
-                p_regex = p_regex.replace(g_name, g_regex)
-            p_regex = self.word_re.sub(_replace, p_regex)
-            p_regex = ' '.join(p_regex.split())
-            p_regex = regex.compile(p_regex, FLAGS)
-            producers.append([p_func, p_regex])
-        self.producers = producers
+        producers = self.catalog.active(Type.PRODUCER)
+        for producer in producers:
+            self.producers[producer.name] = producer.build_producer(groupers)
 
-    def parse(self, text):
-        """Parse the traits."""
-        raise NotImplementedError
-
-    def build_spacy_matchers(self):
-        """Build terms for this matcher."""
-        term_types = defaultdict(list)
-
-        for term in self.catalog:
-            if term['type'] in self.term_list:
-                term_types[(term['match_on'], term['type'])].append(term)
-
-        for key, terms in term_types.items():
-            match_on, label = key
-
-            if match_on.lower() == 'regex':
-                self.add_regex_matcher(terms, label)
-
-            else:
-                self.add_phrase_matcher(terms, label, match_on)
-
-    def add_phrase_matcher(self, terms, label, match_on):
+    def build_phrase_matchers(self):
         """Add phrase matcher to the term matchers."""
-        if match_on not in self.matchers:
-            self.matchers[match_on] = PhraseMatcher(
-                self.nlp.vocab, attr=match_on)
-        patterns = [self.nlp.make_doc(t['term']) for t in terms]
-        self.matchers[match_on].add(label, self.enrich_tokens, *patterns)
+        if not (phrases := self.catalog.active(Type.PHRASE)):
+            return
+        matcher = PhraseMatcher(NLP.vocab)
+        self.matchers.append(matcher)
+        for phrase in phrases:
+            patterns = phrase.build_phrase()
+            matcher.add(phrase.name, patterns, on_match=self.enrich_tokens)
 
-    def add_regex_matcher(self, terms, label):
+    def build_regex_matchers(self):
         """Add a regex matcher to the term matchers."""
-        if 'regex' not in self.matchers:
-            self.matchers['regex'] = Matcher(self.nlp.vocab)
-        patterns = [[{'TEXT': {'REGEX': t['term']}}] for t in terms]
-        self.matchers['regex'].add(
-            label, patterns, on_match=self.enrich_tokens)
+        if not (regexps := self.catalog.active(Type.REGEXP)):
+            return
+        matcher = Matcher(NLP.vocab)
+        self.matchers.append(matcher)
+        for regexp in regexps:
+            patterns = regexp.build_regexp()
+            matcher.add(regexp.name, patterns, on_match=self.enrich_tokens)
+
+    def use(self, name):
+        """Use a pattern from the catalog."""
+        if self.catalog.has(name):
+            self.active_terms.add(name)
+            return
+        print(f'Error "{name}" is not in the catalog.', file=sys.stderr)
+
+    def phrase(self, name, match_on, terms):
+        """Setup a phrase mather for scanning with spacy."""
+        self.catalog.phrase(name, match_on, terms)
+        self.active_terms.add(name)
+
+    def regexp(self, name, pattern):
+        """Setup a phrase mather for scanning with spacy."""
+        self.catalog.regexp(name, pattern)
+        self.active_terms.add(name)
+
+    def grouper(self, name, pattern):
+        """Setup a phrase mather for scanning with spacy."""
+        self.catalog.grouper(name, pattern)
+        self.active_terms.add(name)
+
+    def producer(self, action, pattern, name=''):
+        """Setup a phrase mather for scanning with spacy."""
+        pattern = self.catalog.producer(action, pattern, name)
+        self.active_terms.add(pattern.name)
 
     @staticmethod
     def leftmost_longest(matches):
@@ -132,3 +117,56 @@ class Parser:
         for token in doc[start:end]:
             token._.term = label
             token._.code = CODES[label]
+
+    def find_terms(self, text):
+        """Find all terms in the text and return the resulting doc.
+
+        There may be more than one matcher for the terms. Gather the results
+        for each one and combine them. Then retokenize the doc to handle terms
+        that span multiple tokens.
+        """
+        doc = NLP(text)
+
+        matches = []
+
+        for matcher in self.matchers:
+            matches += matcher(doc)
+
+        matches = self.leftmost_longest(matches)
+
+        with doc.retokenize() as retokenizer:
+            for match_id, start, end in matches:
+                retokenizer.merge(doc[start:end])
+
+        return doc
+
+    def parse(self, text):
+        """Parse the traits."""
+        doc = self.find_terms(text)
+
+        # Because we elide over some tokens we need an easy way to map them
+        token_map = [t.i for t in doc if t._.code]
+
+        encoded = [t._.code for t in doc if t._.code]
+        encoded = ''.join(encoded)
+
+        enriched_matches = []
+        for name, producer in self.producers.items():
+            for match in producer.compiled.finditer(encoded):
+                start, end = match.span()
+                enriched_matches.append((producer.action, start, end, match))
+
+        enriched_matches = self.leftmost_longest(enriched_matches)
+
+        all_traits = []
+        for enriched_match in enriched_matches:
+            action, _, _, match = enriched_match
+
+            traits = action(self, doc, match, token_map)
+
+            if not traits:
+                continue
+
+            all_traits += traits if isinstance(traits, list) else [traits]
+
+            return all_traits

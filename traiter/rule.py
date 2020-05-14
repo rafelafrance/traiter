@@ -1,9 +1,11 @@
 """RuleList for parsing and rule builders."""
 
-from enum import IntEnum
 from dataclasses import dataclass
+from enum import IntEnum
 from typing import Any, Callable, Dict, List, Pattern, Union
+
 import regex
+
 from traiter.util import FLAGS
 
 TOKEN = 0
