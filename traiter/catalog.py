@@ -15,7 +15,7 @@ class Catalog:
 
     def __getitem__(self, name):
         """Emulate dict access of the rules."""
-        return self.patterns[name]
+        return self.patterns.get(name)
 
     def __iter__(self):
         """Loop over the term values."""
@@ -31,11 +31,6 @@ class Catalog:
         if isinstance(type_, (list, tuple, set)):
             return pattern.type in type_
         return pattern.type == type_
-
-    def active(self, matcher, type_):
-        """Get active patterns for the given type."""
-        return [p for p in self.patterns
-                if self.has(p.name, type_) and p.name in matcher.active_terms]
 
     def expand_groupers(self):
         """Groups can have other groups inside them."""
@@ -73,38 +68,27 @@ class Catalog:
                 finished[name] = False
         return compiled
 
-    @staticmethod
-    def join(pattern) -> str:
-        """Build a single pattern from multiple strings."""
-        if isinstance(pattern, (list, tuple, set)):
-            pattern = ' | '.join(pattern)
-        return ' '.join(pattern.split())
-
     def phrase(self, name, match_on, terms):
         """Setup a phrase mather for scanning with spacy."""
-        pat = Pattern(name, Type.PHRASE, match_on=match_on, terms=terms)
+        pat = Pattern.phrase(name, match_on, terms)
         self.patterns[name] = pat
         return pat
 
     def regexp(self, name, pattern):
         """Setup a phrase mather for scanning with spacy."""
-        pat = Pattern(name, Type.REGEXP, pattern=pattern)
+        pat = Pattern.regexp(name, pattern)
         self.patterns[name] = pat
         return pat
 
     def grouper(self, name, pattern):
         """Setup a phrase mather for scanning with spacy."""
-        pattern = self.join(pattern)
-        pattern = f'(?:{pattern})'
-        pat = Pattern(name, Type.GROUPER, pattern=pattern)
+        pat = Pattern.grouper(name, pattern)
         self.patterns[name] = pat
         return pat
 
     def producer(self, action, pattern, name=''):
         """Setup a phrase mather for scanning with spacy."""
-        name = name if name else action.__qualname__
-        pattern = self.join(pattern)
-        pat = Pattern(name, Type.PRODUCER, action=action, pattern=pattern)
+        pat = Pattern.producer(action, pattern, name)
         self.patterns[name] = pat
         return pat
 
@@ -119,14 +103,3 @@ class Catalog:
         for key, terms in all_terms.items():
             name, match_on = key
             self.phrase(name, match_on, terms)
-
-    def get_term_replacements(self, matcher):
-        """Get replacement values for the terms."""
-        # TODO: It is possible to have 2+ terms mapping to different
-        # TODO: replacements.
-        replacements = {}
-        for phrase in self.active(matcher, Type.PHRASE):
-            for term in phrase.terms:
-                if replace := term.get('replace'):
-                    replacements[term['term']] = replace
-        return replacements

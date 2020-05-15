@@ -42,6 +42,37 @@ class Pattern:
     pattern: str = ''
     compiled: Any = None
 
+    @staticmethod
+    def join(pattern) -> str:
+        """Build a single pattern from multiple strings."""
+        if isinstance(pattern, (list, tuple, set)):
+            pattern = ' | '.join(pattern)
+        return ' '.join(pattern.split())
+
+    @classmethod
+    def phrase(cls, name, match_on, terms):
+        """Setup a phrase mather for scanning with spacy."""
+        return cls(name, Type.PHRASE, match_on=match_on, terms=terms)
+
+    @classmethod
+    def regexp(cls, name, pattern):
+        """Setup a phrase mather for scanning with spacy."""
+        return cls(name, Type.REGEXP, pattern=pattern)
+
+    @classmethod
+    def grouper(cls, name, pattern):
+        """Setup a phrase mather for scanning with spacy."""
+        pattern = cls.join(pattern)
+        pattern = f'(?:{pattern})'
+        return cls(name, Type.GROUPER, pattern=pattern)
+
+    @classmethod
+    def producer(cls, action, pattern, name=''):
+        """Setup a phrase mather for scanning with spacy."""
+        name = name if name else action.__qualname__
+        pattern = cls.join(pattern)
+        return cls(name, Type.PRODUCER, action=action, pattern=pattern)
+
     def get_word_set(self, field='pattern'):
         """Break the pattern into a word set."""
         string = getattr(self, field)
