@@ -37,7 +37,8 @@ class Parser:
                 for word in parser.get_word_set():
                     if word not in active:
                         if pattern := self.catalog[word]:
-                            self.patterns[pattern.type].append(word)
+                            self.patterns[pattern.type].append(
+                                self.catalog[word])
 
     def build_producers(self):
         """Create and compile regex out of the producers."""
@@ -47,7 +48,7 @@ class Parser:
 
     def build_phrase_matchers(self):
         """Add phrase matcher to the term matchers."""
-        if self.patterns[Type.PHRASE]:
+        if not self.patterns[Type.PHRASE]:
             return
         matcher = PhraseMatcher(NLP.vocab)
         self.matchers.append(matcher)
@@ -67,6 +68,7 @@ class Parser:
 
     def use(self, name):
         """Use a pattern from the catalog."""
+        self._built = False
         if pattern := self.catalog[name]:
             self.patterns[pattern.type].append(pattern)
         else:
@@ -74,11 +76,13 @@ class Parser:
 
     def phrase(self, name, match_on, terms):
         """Setup a phrase matcher for scanning with spacy."""
+        self._built = False
         pattern = self.catalog.phrase(name, match_on, terms)
         self.patterns[Type.PHRASE].append(pattern)
 
     def regexp(self, name, pattern):
         """Setup a regex matcher for scanning with spacy."""
+        self._built = False
         pattern = self.catalog.regexp(name, pattern)
         self.patterns[Type.REGEXP].append(pattern)
 
@@ -89,6 +93,7 @@ class Parser:
 
     def producer(self, action, pattern, name=''):
         """Setup a producer regex for parsing with regex."""
+        self._built = False
         pattern = self.catalog.producer(action, pattern, name)
         self.patterns[Type.PRODUCER].append(pattern)
 
@@ -128,7 +133,7 @@ class Parser:
         encoded = ''.join(encoded)
 
         enriched_matches = []
-        for name, producer in self.patterns[Type.PRODUCER]:
+        for producer in self.patterns[Type.PRODUCER]:
             for match in producer.compiled.finditer(encoded):
                 start, end = match.span()
                 enriched_matches.append((producer.action, start, end, match))
@@ -139,7 +144,7 @@ class Parser:
         for enriched_match in enriched_matches:
             action, _, _, match = enriched_match
 
-            traits = action(self, doc, match, token_map)
+            traits = action(doc, match, token_map)
 
             if not traits:
                 continue

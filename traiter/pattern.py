@@ -57,6 +57,7 @@ class Pattern:
     @classmethod
     def regexp(cls, name, pattern):
         """Setup a phrase mather for scanning with spacy."""
+        pattern = cls.join(pattern)
         return cls(name, Type.REGEXP, pattern=pattern)
 
     @classmethod
@@ -80,11 +81,11 @@ class Pattern:
 
     def build_phrase(self):
         """Build a phrase pattern."""
-        return [NLP.make_doc(t) for t in self.terms]
+        return [NLP.make_doc(t['term']) for t in self.terms]
 
     def build_regexp(self):
         """Build a regexp pattern."""
-        return [[{'TEXT': {'REGEX': t}}] for t in self.terms]
+        return [[{'TEXT': {'REGEX': self.pattern}}]]
 
     def build_producer(self, groupers):
         """Build a producer pattern."""
@@ -96,8 +97,8 @@ class Pattern:
         compiled = self.pattern
 
         groups = {w: groupers[w] for w in self.get_word_set() if w in groupers}
-        for name, compiled in groups.items():
-            compiled = compiled.replace(name, compiled)
+        for name, pattern in groups.items():
+            compiled = compiled.replace(name, pattern.compiled)
 
         compiled = WORD.sub(_replace, compiled)
         compiled = ' '.join(compiled.split())

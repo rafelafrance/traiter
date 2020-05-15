@@ -21,7 +21,7 @@ class Catalog:
         """Loop over the term values."""
         yield from self.patterns.values()
 
-    def has(self, name, type_=None):
+    def has(self, name, type_):
         """Check if the name is in the patterns and it's the correct type."""
         pattern = self.patterns.get(name)
         if pattern is None:
@@ -37,7 +37,7 @@ class Catalog:
         groups = {p.name: p for p in self if self.has(p.name, Type.GROUPER)}
         finished = {k: False for k in groups.keys()}
 
-        for group in groups:
+        for group in groups.values():
             group.compiled = group.pattern
 
         tries = 0
@@ -56,7 +56,7 @@ class Catalog:
         compiled = groups[name].compiled
 
         for word in words:
-            if not self.has(word):
+            if not self[word]:
                 print(f'Error: "{word}" is not defined.', file=sys.stderr)
             elif self.has(word, (Type.PHRASE, Type.REGEXP)):
                 continue
@@ -98,8 +98,11 @@ class Catalog:
         with open(path) as term_file:
             reader = csv.DictReader(term_file)
             for term in reader:
-                all_terms[(term['name'], term['match_on'])].append(term)
+                all_terms[(term['type'], term['match_on'])].append(term)
 
         for key, terms in all_terms.items():
             name, match_on = key
-            self.phrase(name, match_on, terms)
+            if match_on == 'regex':
+                self.regexp(name, [t['term'] for t in terms])
+            else:
+                self.phrase(name, match_on, terms)
