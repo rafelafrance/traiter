@@ -32,9 +32,9 @@ class Catalog:
             return pattern.type in type_
         return pattern.type == type_
 
-    def expand_groupers(self):
+    def expand_groupers(self, groupers):
         """Groups can have other groups inside them."""
-        groups = {p.name: p for p in self if self.has(p.name, Type.GROUPER)}
+        groups = {p.name: p for p in groupers}
         finished = {k: False for k in groups.keys()}
 
         for group in groups.values():

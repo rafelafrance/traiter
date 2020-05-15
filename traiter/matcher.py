@@ -31,7 +31,7 @@ class Parser:
 
     def build(self):
         """Build the matchers and regular expressions."""
-        self.catalog.expand_groupers()
+        self.catalog.expand_groupers(self.get_patterns(Type.GROUPER))
         self.get_implicit_patterns()
         self.build_producers()
         self.build_phrase_matchers()
