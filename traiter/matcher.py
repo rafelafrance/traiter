@@ -16,8 +16,18 @@ class Parser:
         self.name = name
         self.catalog = catalog  # The pattern catalog
         self.matchers = []      # Compiled spacy matchers
-        self.patterns = defaultdict(list)   # All patterns grouped by type
+        self.patterns = defaultdict(dict)   # All patterns grouped by type
         self._built = False
+
+    def get_patterns(self, type_=None):
+        """Get patterns by type."""
+        if type_:
+            return self.patterns[type_].values()
+        return [p for v in self.patterns.values() for p in v.values()]
+
+    def add_pattern(self, pattern):
+        """Get patterns by type."""
+        self.patterns[pattern.type][pattern.name] = pattern
 
     def build(self):
         """Build the matchers and regular expressions."""
@@ -30,31 +40,36 @@ class Parser:
 
     def get_implicit_patterns(self):
         """Get patterns from catalog if needed but were not added directly."""
-        active = {p.name for v in self.patterns.values() for p in v}
+        active = {p.name for p in self.get_patterns()}
 
         for type_ in (Type.GROUPER, Type.PRODUCER):
-            for parser in self.patterns[type_]:
+            for parser in self.get_patterns(type_):
                 for word in parser.get_word_set():
                     if word not in active:
-                        if pattern := self.catalog[word]:
-                            self.patterns[pattern.type].append(
-                                self.catalog[word])
+                        if pat := self.catalog[word]:
+                            self.add_pattern(self.catalog[word])
 
     def build_producers(self):
         """Create and compile regex out of the producers."""
-        groupers = {g.name: g for g in self.patterns[Type.GROUPER]}
-        for producer in self.patterns[Type.PRODUCER]:
+        groupers = {g.name: g for g in self.get_patterns(Type.GROUPER)}
+        for producer in self.get_patterns(Type.PRODUCER):
             producer.build_producer(groupers)
 
     def build_phrase_matchers(self):
         """Add phrase matcher to the term matchers."""
         if not self.patterns[Type.PHRASE]:
             return
-        matcher = PhraseMatcher(NLP.vocab)
-        self.matchers.append(matcher)
-        for phrase in self.patterns[Type.PHRASE]:
-            phrases = phrase.build_phrase()
-            matcher.add(phrase.name, phrases, on_match=self.enrich_tokens)
+
+        attrs = defaultdict(list)
+        for pattern in self.get_patterns(Type.PHRASE):
+            attrs[pattern.attr].append(pattern)
+
+        for attr, patterns in attrs.items():
+            matcher = PhraseMatcher(NLP.vocab, attr=attr)
+            self.matchers.append(matcher)
+            for phrase in patterns:
+                phrases = phrase.build_phrase()
+                matcher.add(phrase.name, phrases, on_match=self.enrich_tokens)
 
     def build_regex_matchers(self):
         """Add a regex matcher to the term matchers."""
@@ -62,7 +77,7 @@ class Parser:
             return
         matcher = Matcher(NLP.vocab)
         self.matchers.append(matcher)
-        for regexp in self.patterns[Type.REGEXP]:
+        for regexp in self.get_patterns(Type.REGEXP):
             regexps = regexp.build_regexp()
             matcher.add(regexp.name, regexps, on_match=self.enrich_tokens)
 
@@ -70,32 +85,37 @@ class Parser:
         """Use a pattern from the catalog."""
         self._built = False
         if pattern := self.catalog[name]:
-            self.patterns[pattern.type].append(pattern)
+            self.add_pattern(pattern)
         else:
             print(f'Error "{name}" is not in the catalog.', file=sys.stderr)
 
-    def phrase(self, name, match_on, terms):
+    def phrase(self, name, attr, terms):
         """Setup a phrase matcher for scanning with spacy."""
         self._built = False
-        pattern = self.catalog.phrase(name, match_on, terms)
-        self.patterns[Type.PHRASE].append(pattern)
+        pattern = self.catalog.phrase(name, attr, terms)
+        self.add_pattern(pattern)
 
     def regexp(self, name, pattern):
         """Setup a regex matcher for scanning with spacy."""
         self._built = False
         pattern = self.catalog.regexp(name, pattern)
-        self.patterns[Type.REGEXP].append(pattern)
+        self.add_pattern(pattern)
 
     def grouper(self, name, pattern):
         """Setup a grouper pattern for parsing with regex."""
         pattern = self.catalog.grouper(name, pattern)
-        self.patterns[Type.GROUPER].append(pattern)
+        self.add_pattern(pattern)
+
+    def capture(self, name, pattern):
+        """Setup a capture grouper pattern for parsing with regex."""
+        pattern = self.catalog.capture(name, pattern)
+        self.add_pattern(pattern)
 
     def producer(self, action, pattern, name=''):
         """Setup a producer regex for parsing with regex."""
         self._built = False
         pattern = self.catalog.producer(action, pattern, name)
-        self.patterns[Type.PRODUCER].append(pattern)
+        self.add_pattern(pattern)
 
     def scan(self, text):
         """Find all terms in the text and return the resulting doc.
@@ -126,6 +146,9 @@ class Parser:
         """Parse the traits."""
         doc = self.scan(text)
 
+        # for token in doc:
+        #     print(f'{token._.term} {token}')
+
         # Because we elide over some tokens we need an easy way to map them
         token_map = [t.i for t in doc if t._.code]
 
@@ -133,7 +156,7 @@ class Parser:
         encoded = ''.join(encoded)
 
         enriched_matches = []
-        for producer in self.patterns[Type.PRODUCER]:
+        for producer in self.get_patterns(Type.PRODUCER):
             for match in producer.compiled.finditer(encoded):
                 start, end = match.span()
                 enriched_matches.append((producer.action, start, end, match))
@@ -151,7 +174,7 @@ class Parser:
 
             all_traits += traits if isinstance(traits, list) else [traits]
 
-            return all_traits
+        return all_traits
 
     @staticmethod
     def leftmost_longest(matches):

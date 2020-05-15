@@ -28,7 +28,7 @@ def spacy_nlp():
             r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
 
             r"""(?:{h})""".format(h=HYPHENS),
-            r"""[\[\]\(\):;"'-]""",
+            r"""[/\\\[\]\(\):;"'-]""",
             r"(?<=[0-9])\.(?=[{a}])".format(a=ALPHA),  # 1.word, 2.other
             ])
 

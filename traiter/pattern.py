@@ -38,7 +38,7 @@ class Pattern:
 
     terms: List[Dict] = None
     action: Callable = None
-    match_on: str = ''
+    attr: str = ''
     pattern: str = ''
     compiled: Any = None
 
@@ -50,26 +50,33 @@ class Pattern:
         return ' '.join(pattern.split())
 
     @classmethod
-    def phrase(cls, name, match_on, terms):
-        """Setup a phrase mather for scanning with spacy."""
-        return cls(name, Type.PHRASE, match_on=match_on, terms=terms)
+    def phrase(cls, name, attr, terms):
+        """Setup a phrase matcher for scanning with spacy."""
+        return cls(name, Type.PHRASE, attr=attr, terms=terms)
 
     @classmethod
     def regexp(cls, name, pattern):
-        """Setup a phrase mather for scanning with spacy."""
+        """Setup a regexp matcher for scanning with spacy."""
         pattern = cls.join(pattern)
         return cls(name, Type.REGEXP, pattern=pattern)
 
     @classmethod
     def grouper(cls, name, pattern):
-        """Setup a phrase mather for scanning with spacy."""
+        """Setup a grouper pattern for parsing with regex."""
         pattern = cls.join(pattern)
         pattern = f'(?:{pattern})'
         return cls(name, Type.GROUPER, pattern=pattern)
 
     @classmethod
+    def capture(cls, name, pattern):
+        """Setup a capture grouper pattern for parsing with regex."""
+        pattern = cls.join(pattern)
+        pattern = f'(?P<{name}>{pattern})'
+        return cls(name, Type.GROUPER, pattern=pattern)
+
+    @classmethod
     def producer(cls, action, pattern, name=''):
-        """Setup a phrase mather for scanning with spacy."""
+        """Setup a producer pattern for parsing with regex."""
         name = name if name else action.__qualname__
         pattern = cls.join(pattern)
         return cls(name, Type.PRODUCER, action=action, pattern=pattern)

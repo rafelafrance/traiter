@@ -68,26 +68,32 @@ class Catalog:
                 finished[name] = False
         return compiled
 
-    def phrase(self, name, match_on, terms):
-        """Setup a phrase mather for scanning with spacy."""
-        pat = Pattern.phrase(name, match_on, terms)
+    def phrase(self, name, attr, terms):
+        """Setup a phrase matcher for scanning with spacy."""
+        pat = Pattern.phrase(name, attr, terms)
         self.patterns[name] = pat
         return pat
 
     def regexp(self, name, pattern):
-        """Setup a phrase mather for scanning with spacy."""
+        """Setup a regexp matcher for scanning with spacy."""
         pat = Pattern.regexp(name, pattern)
         self.patterns[name] = pat
         return pat
 
     def grouper(self, name, pattern):
-        """Setup a phrase mather for scanning with spacy."""
+        """Setup a grouper pattern for parsing with regex."""
         pat = Pattern.grouper(name, pattern)
         self.patterns[name] = pat
         return pat
 
+    def capture(self, name, pattern):
+        """Setup a capture grouper pattern for parsing with regex."""
+        pat = Pattern.capture(name, pattern)
+        self.patterns[name] = pat
+        return pat
+
     def producer(self, action, pattern, name=''):
-        """Setup a phrase mather for scanning with spacy."""
+        """Setup a producer pattern for parsing with regex."""
         pat = Pattern.producer(action, pattern, name)
         self.patterns[name] = pat
         return pat
@@ -98,11 +104,12 @@ class Catalog:
         with open(path) as term_file:
             reader = csv.DictReader(term_file)
             for term in reader:
-                all_terms[(term['type'], term['match_on'])].append(term)
+                attr = term['attr'].upper()
+                all_terms[(term['type'], attr)].append(term)
 
         for key, terms in all_terms.items():
-            name, match_on = key
-            if match_on == 'regex':
+            name, attr = key
+            if attr == 'REGEX':
                 self.regexp(name, [t['term'] for t in terms])
             else:
-                self.phrase(name, match_on, terms)
+                self.phrase(name, attr, terms)
