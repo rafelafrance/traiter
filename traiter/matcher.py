@@ -9,8 +9,8 @@ class Parser:
     """Shared parser logic."""
 
     def __init__(self):
-        self.matchers = []  # Spacy matchers for traits
-        self.actions = {}   # Action to take on a matched trait
+        self.trait_matchers = []    # Spacy matchers for traits
+        self.actions = {}           # Action to take on a matched trait
 
     @staticmethod
     def add_terms(terms):
@@ -25,14 +25,13 @@ class Parser:
 
         RULER.add_patterns(patterns)
 
-    def add_traits(self, rules):
+    def add_patterns(self, rules):
         """Build matchers that recognize traits."""
         matcher = Matcher(NLP.vocab)
-        self.matchers.append(matcher)
+        self.trait_matchers.append(matcher)
         for label, rule in rules.items():
             patterns = rule['patterns']
             on_match = rule['on_match']
-            # matcher.add(label, patterns, on_match=self.enrich_traits)
             matcher.add(label, patterns)
             self.actions[label] = on_match
 
@@ -46,7 +45,7 @@ class Parser:
                 retokenizer.merge(doc[ent.start:ent.end], attrs=attrs)
 
         matches = []
-        for matcher in self.matchers:
+        for matcher in self.trait_matchers:
             matches += matcher(doc)
 
         matches = self.leftmost_longest(matches)
@@ -60,8 +59,8 @@ class Parser:
                 attrs = {'_': {'trait': trait, 'data': attrs}}
                 retokenizer.merge(span, attrs=attrs)
 
-        for token in doc:
-            print(token._.trait, token._.data, token.text)
+        # for token in doc:
+        #     print(token._.trait, token._.data, token.text)
 
         return doc
 

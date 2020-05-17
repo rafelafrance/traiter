@@ -1,15 +1,15 @@
 """Misc. utilities."""
 
-from pathlib import Path
+import inflect
 import regex
 
-__VERSION__ = '0.6.0'
+__VERSION__ = '0.7.0'
 
 FLAGS = regex.VERBOSE | regex.IGNORECASE
 
 BATCH_SIZE = 1_000_000  # How many records to work with at a time
 
-DATA_DIR = Path('.') / 'data'
+INFLECT = inflect.engine()
 
 
 class DotDict(dict):
@@ -46,7 +46,26 @@ def as_list(values):
     return values if isinstance(values, (list, tuple, set)) else [values]
 
 
+def as_tuple(values):
+    """Convert values to a tuple."""
+    return values if isinstance(values, tuple) else tuple(values)
+
+
+def as_member(values):
+    """Convert values to set members (hashable)."""
+    return tuple(values) if isinstance(values, (list, set)) else values
+
+
 def to_float(value):
+    """Convert the value to a float."""
+    value = regex.sub(r'[^\d.]', '', value) if value else ''
+    try:
+        return float(value)
+    except ValueError:
+        return None
+
+
+def to_positive_float(value):
     """Convert the value to a float."""
     value = regex.sub(r'[^\d.]', '', value) if value else ''
     try:
@@ -62,3 +81,28 @@ def to_int(value):
         return int(value)
     except ValueError:
         return 0
+
+
+def to_positive_int(value):
+    """Convert the value to an integer."""
+    value = regex.sub(r'[^\d]', '', value) if value else ''
+    try:
+        return int(value)
+    except ValueError:
+        return 0
+
+
+def camel_to_snake(name):
+    """Convert a camel case string to snake case."""
+    split = regex.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return regex.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
+
+
+def ordinal(i):
+    """Convert the digit to an ordinal value: 1->1st, 2->2nd, etc."""
+    return INFLECT.ordinal(i)
+
+
+def number_to_words(number):
+    """Convert the number or ordinal value into words."""
+    return INFLECT.number_to_words(number)
