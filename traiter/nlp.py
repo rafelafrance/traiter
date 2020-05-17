@@ -4,11 +4,13 @@ import re
 import spacy
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
     CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS
-from spacy.tokens import Token  # Doc, Span
+from spacy.tokens import Token
+from spacy.pipeline import EntityRuler
 
 
 Token.set_extension('term', default='')
-Token.set_extension('code', default='')
+Token.set_extension('trait', default='')
+Token.set_extension('data', default={})
 
 
 def spacy_nlp():
@@ -43,7 +45,11 @@ def spacy_nlp():
     suffix = re.compile(f'{breaking}$')
     nlp.tokenizer.suffix_search = suffix.search
 
-    return nlp
+    ruler = EntityRuler(nlp)
+    nlp.add_pipe(ruler)
+
+    return nlp, ruler
 
 
-NLP = spacy_nlp()
+NLP, RULER = spacy_nlp()
+
