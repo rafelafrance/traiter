@@ -45,11 +45,8 @@ def spacy_nlp():
     suffix = re.compile(f'{breaking}$')
     nlp.tokenizer.suffix_search = suffix.search
 
-    ruler = EntityRuler(nlp)
-    nlp.add_pipe(ruler)
-
-    return nlp, ruler
+    return nlp
 
 
-NLP, RULER = spacy_nlp()
+NLP = spacy_nlp()
 
