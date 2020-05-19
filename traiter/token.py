@@ -1,5 +1,7 @@
 """A class to hold an individual token."""
 
+# TODO: Delete me
+
 from typing import Dict, List, Match, Tuple
 from .rule import Rule, Action, Groups, SIZE
 

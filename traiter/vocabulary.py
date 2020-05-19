@@ -1,5 +1,7 @@
 """Build catalogs of rules and their parts for sharing."""
 
+# TODO: Delete me
+
 from itertools import groupby
 
 import traiter.rule as re_rule

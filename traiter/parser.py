@@ -1,5 +1,7 @@
 """Extract information for further analysis."""
 
+# TODO: Delete me
+
 from collections import deque
 from typing import List, Tuple, Union
 from traiter.util import flatten

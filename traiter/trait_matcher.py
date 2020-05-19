@@ -4,15 +4,16 @@ from collections import defaultdict
 
 from spacy.matcher import Matcher, PhraseMatcher
 
-from .nlp import NLP
+from .spacy_nlp import SPACY
 
 
-class Parser:
+class TraitMatcher:
     """Shared parser logic."""
 
     def __init__(self):
         self.term_matchers = []     # Spacy matchers for terms
         self.trait_matchers = []    # Spacy matchers for traits
+        self.group_matchers = []    # Spacy matchers for combining tokens
         self.actions = {}           # Action to take on a matched trait
 
     def add_terms(self, terms):
@@ -31,7 +32,7 @@ class Parser:
 
     def add_phrase_matcher(self, attr, terms):
         """Add a phrase matcher to the term matchers."""
-        matcher = PhraseMatcher(NLP.vocab, attr=attr)
+        matcher = PhraseMatcher(SPACY.vocab, attr=attr)
         self.term_matchers.append(matcher)
 
         by_label = defaultdict(list)
@@ -39,20 +40,20 @@ class Parser:
             by_label[term['label']].append(term)
 
         for label, term_list in by_label.items():
-            phrases = [NLP.make_doc(t['pattern']) for t in term_list]
+            phrases = [SPACY.make_doc(t['pattern']) for t in term_list]
             matcher.add(label, phrases, on_match=self.enrich_tokens)
 
     def add_regex_matcher(self, terms):
         """Add a regex matcher to the term matchers."""
-        matcher = Matcher(NLP.vocab)
+        matcher = Matcher(SPACY.vocab)
         self.term_matchers.append(matcher)
         for term in terms:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
             matcher.add(term['label'], regexp, on_match=self.enrich_tokens)
 
-    def add_patterns(self, rules):
+    def add_trait_patterns(self, rules):
         """Build matchers that recognize traits."""
-        matcher = Matcher(NLP.vocab)
+        matcher = Matcher(SPACY.vocab)
         self.trait_matchers.append(matcher)
         for label, rule in rules.items():
             patterns = rule['patterns']
@@ -60,17 +61,23 @@ class Parser:
             matcher.add(label, patterns)
             self.actions[label] = on_match
 
-    def scan(self, text):
+    def add_group_patterns(self, rules):
+        """Build matchers that recognize groups of tokens."""
+        if rules:
+            matcher = Matcher(SPACY.vocab)
+            self.group_matchers.append(matcher)
+            for label, patterns in rules.items():
+                matcher.add(label, patterns, on_match=self.enrich_tokens)
+
+    def scan(self, doc, matchers):
         """Find all terms in the text and return the resulting doc.
         There may be more than one matcher for the terms. Gather the results
         for each one and combine them. Then retokenize the doc to handle terms
         that span multiple tokens.
         """
-        doc = NLP(text)
-
         matches = []
 
-        for matcher in self.term_matchers:
+        for matcher in matchers:
             matches += matcher(doc)
 
         matches = self.leftmost_longest(matches)
@@ -83,7 +90,12 @@ class Parser:
 
     def parse(self, text):
         """Parse the traits."""
-        doc = self.scan(text)
+        doc = SPACY(text)
+
+        doc = self.scan(doc, self.term_matchers)
+
+        if self.group_matchers:
+            doc = self.scan(doc, self.group_matchers)
 
         # for token in doc:
         #     print(token._.term, token.text)
@@ -98,7 +110,7 @@ class Parser:
             for match in matches:
                 match_id, start, end = match
                 span = doc[start:end]
-                label = NLP.vocab.strings[match_id]
+                label = SPACY.vocab.strings[match_id]
                 data = self.actions[label](span)
                 attrs = {'_': {'label': label, 'data': data}}
                 retokenizer.merge(span, attrs=attrs)

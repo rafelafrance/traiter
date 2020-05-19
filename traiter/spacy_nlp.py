@@ -47,4 +47,4 @@ def spacy_nlp():
     return nlp
 
 
-NLP = spacy_nlp()
+SPACY = spacy_nlp()
