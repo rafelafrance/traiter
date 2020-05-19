@@ -5,12 +5,11 @@ import spacy
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
     CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS
 from spacy.tokens import Token
-from spacy.pipeline import EntityRuler
 
 
 Token.set_extension('term', default='')
-Token.set_extension('trait', default='')
 Token.set_extension('data', default={})
+Token.set_extension('label', default='')
 
 
 def spacy_nlp():
@@ -49,4 +48,3 @@ def spacy_nlp():
 
 
 NLP = spacy_nlp()
-

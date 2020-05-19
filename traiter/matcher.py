@@ -98,13 +98,13 @@ class Parser:
             for match in matches:
                 match_id, start, end = match
                 span = doc[start:end]
-                trait = NLP.vocab.strings[match_id]
-                attrs = self.actions[trait](span)
-                attrs = {'_': {'trait': trait, 'data': attrs}}
+                label = NLP.vocab.strings[match_id]
+                data = self.actions[label](span)
+                attrs = {'_': {'label': label, 'data': data}}
                 retokenizer.merge(span, attrs=attrs)
 
         # for token in doc:
-        #     print(token._.trait, token._.data, token.text)
+        #     print(token._.label, token._.data, token.text)
 
         return doc
 
