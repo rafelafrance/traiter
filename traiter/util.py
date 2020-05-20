@@ -46,6 +46,12 @@ def as_list(values):
     return values if isinstance(values, (list, tuple, set)) else [values]
 
 
+def as_set(values):
+    """Convert values to a list."""
+    settable = isinstance(values, (list, tuple, set))
+    return set(values) if settable else {values}
+
+
 def as_tuple(values):
     """Convert values to a tuple."""
     return values if isinstance(values, tuple) else tuple(values)
@@ -56,15 +62,6 @@ def as_member(values):
     return tuple(values) if isinstance(values, (list, set)) else values
 
 
-def to_float(value):
-    """Convert the value to a float."""
-    value = regex.sub(r'[^\d.]', '', value) if value else ''
-    try:
-        return float(value)
-    except ValueError:
-        return None
-
-
 def to_positive_float(value):
     """Convert the value to a float."""
     value = regex.sub(r'[^\d.]', '', value) if value else ''
@@ -72,15 +69,6 @@ def to_positive_float(value):
         return float(value)
     except ValueError:
         return None
-
-
-def to_int(value):
-    """Convert value to an integer, handle 'no' or 'none' etc."""
-    value = regex.sub(r'\D', '', value) if value else ''
-    try:
-        return int(value)
-    except ValueError:
-        return 0
 
 
 def to_positive_int(value):
