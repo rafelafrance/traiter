@@ -55,7 +55,8 @@ class TraitMatcher:
         """Build matchers that recognize traits."""
         matcher = Matcher(SPACY.vocab)
         self.trait_matchers.append(matcher)
-        for label, rule in rules.items():
+        for rule in rules:
+            label = rule['label']
             patterns = rule['patterns']
             on_match = rule['on_match']
             matcher.add(label, patterns)
