@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from spacy.matcher import Matcher, PhraseMatcher
 
-from .spacy_nlp import SPACY
+from .spacy_nlp import NLP
 
 
 class TraitMatcher:
@@ -32,7 +32,7 @@ class TraitMatcher:
 
     def add_phrase_matcher(self, attr, terms):
         """Add a phrase matcher to the term matchers."""
-        matcher = PhraseMatcher(SPACY.vocab, attr=attr)
+        matcher = PhraseMatcher(NLP.vocab, attr=attr)
         self.term_matchers.append(matcher)
 
         by_label = defaultdict(list)
@@ -40,12 +40,12 @@ class TraitMatcher:
             by_label[term['label']].append(term)
 
         for label, term_list in by_label.items():
-            phrases = [SPACY.make_doc(t['pattern']) for t in term_list]
+            phrases = [NLP.make_doc(t['pattern']) for t in term_list]
             matcher.add(label, phrases, on_match=self.enrich_tokens)
 
     def add_regex_matcher(self, terms):
         """Add a regex matcher to the term matchers."""
-        matcher = Matcher(SPACY.vocab)
+        matcher = Matcher(NLP.vocab)
         self.term_matchers.append(matcher)
         for term in terms:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
@@ -53,7 +53,7 @@ class TraitMatcher:
 
     def add_trait_patterns(self, rules):
         """Build matchers that recognize traits."""
-        matcher = Matcher(SPACY.vocab)
+        matcher = Matcher(NLP.vocab)
         self.trait_matchers.append(matcher)
         for rule in rules:
             label = rule['label']
@@ -65,7 +65,7 @@ class TraitMatcher:
     def add_group_patterns(self, rules):
         """Build matchers that recognize groups of tokens."""
         if rules:
-            matcher = Matcher(SPACY.vocab)
+            matcher = Matcher(NLP.vocab)
             self.group_matchers.append(matcher)
             for label, patterns in rules.items():
                 matcher.add(label, patterns, on_match=self.enrich_tokens)
@@ -91,7 +91,7 @@ class TraitMatcher:
 
     def parse(self, text):
         """Parse the traits."""
-        doc = SPACY(text)
+        doc = NLP(text)
 
         doc = self.scan(doc, self.term_matchers)
 
@@ -111,7 +111,7 @@ class TraitMatcher:
             for match in matches:
                 match_id, start, end = match
                 span = doc[start:end]
-                label = SPACY.vocab.strings[match_id]
+                label = NLP.vocab.strings[match_id]
                 data = self.actions[label](span)
                 attrs = {'_': {'label': label, 'data': data}}
                 retokenizer.merge(span, attrs=attrs)

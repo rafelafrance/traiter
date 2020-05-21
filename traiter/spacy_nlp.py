@@ -12,10 +12,10 @@ Token.set_extension('data', default={})
 Token.set_extension('label', default='')
 
 
-def spacy_nlp():
+def _spacy_nlp():
     """A single function to build the spacy nlp object for singleton use."""
     spacy.prefer_gpu()
-    nlp = spacy.load('en_core_web_sm', disable=['parser', 'ner'])
+    nlp = spacy.load('en_core_web_sm', disable=['ner'])
 
     infix = (
         LIST_ELLIPSES
@@ -46,4 +46,4 @@ def spacy_nlp():
     return nlp
 
 
-SPACY = spacy_nlp()
+NLP = _spacy_nlp()
