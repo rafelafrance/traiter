@@ -98,8 +98,7 @@ class TraitMatcher:
         if self.group_matchers:
             doc = self.scan(doc, self.group_matchers)
 
-        # for token in doc:
-        #     print(token._.term, token.text)
+        # print('\n'.join(f'{t._.term} {t.text}' for t in doc))
 
         matches = []
         for matcher in self.trait_matchers:
@@ -116,8 +115,7 @@ class TraitMatcher:
                 attrs = {'_': {'label': label, 'data': data}}
                 retokenizer.merge(span, attrs=attrs)
 
-        # for token in doc:
-        #     print(token._.label, token._.data, token.text)
+        # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
 
         return doc
 
