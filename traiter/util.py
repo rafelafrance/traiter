@@ -1,11 +1,11 @@
 """Misc. utilities."""
 
 import inflect
-import regex
+import re
 
 __VERSION__ = '0.7.0'
 
-FLAGS = regex.VERBOSE | regex.IGNORECASE
+FLAGS = re.VERBOSE | re.IGNORECASE
 
 BATCH_SIZE = 1_000_000  # How many records to work with at a time
 
@@ -64,7 +64,7 @@ def as_member(values):
 
 def to_positive_float(value):
     """Convert the value to a float."""
-    value = regex.sub(r'[^\d.]', '', value) if value else ''
+    value = re.sub(r'[^\d.]', '', value) if value else ''
     try:
         return float(value)
     except ValueError:
@@ -73,8 +73,8 @@ def to_positive_float(value):
 
 def to_positive_int(value):
     """Convert the value to an integer."""
-    value = regex.sub(r'[^\d.]', '', value) if value else ''
-    value = regex.sub(r'\.$', '', value)
+    value = re.sub(r'[^\d.]', '', value) if value else ''
+    value = re.sub(r'\.$', '', value)
     try:
         return int(value)
     except ValueError:
@@ -83,8 +83,8 @@ def to_positive_int(value):
 
 def camel_to_snake(name):
     """Convert a camel case string to snake case."""
-    split = regex.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return regex.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
+    split = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
 
 
 def ordinal(i):

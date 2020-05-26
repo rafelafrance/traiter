@@ -1,9 +1,2 @@
-beautifulsoup4>=4.9.0
-html5lib>=1.0.1
 inflect>=4.1.0
-Jinja2>=2.11.2
-lxml>=4.5.0
-numpy>=1.18.4
-pandas>=1.0.3
-regex>=2020.5.14
 spacy>=2.2.4
