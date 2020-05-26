@@ -73,11 +73,12 @@ def to_positive_float(value):
 
 def to_positive_int(value):
     """Convert the value to an integer."""
-    value = regex.sub(r'[^\d]', '', value) if value else ''
+    value = regex.sub(r'[^\d.]', '', value) if value else ''
+    value = regex.sub(r'\.$', '', value)
     try:
         return int(value)
     except ValueError:
-        return 0
+        return None
 
 
 def camel_to_snake(name):

@@ -41,7 +41,7 @@ class TraitMatcher:
 
         for label, term_list in by_label.items():
             phrases = [NLP.make_doc(t['pattern']) for t in term_list]
-            matcher.add(label, phrases, on_match=self.enrich_tokens)
+            matcher.add(label, phrases)
 
     def add_regex_matcher(self, terms):
         """Add a regex matcher to the term matchers."""
@@ -49,7 +49,15 @@ class TraitMatcher:
         self.term_matchers.append(matcher)
         for term in terms:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
-            matcher.add(term['label'], regexp, on_match=self.enrich_tokens)
+            matcher.add(term['label'], regexp)
+
+    def add_group_patterns(self, rules):
+        """Build matchers that recognize groups of tokens."""
+        if rules:
+            matcher = Matcher(NLP.vocab)
+            self.group_matchers.append(matcher)
+            for label, patterns in rules.items():
+                matcher.add(label, patterns)
 
     def add_trait_patterns(self, rules):
         """Build matchers that recognize traits."""
@@ -61,14 +69,6 @@ class TraitMatcher:
             on_match = rule['on_match']
             matcher.add(label, patterns)
             self.actions[label] = on_match
-
-    def add_group_patterns(self, rules):
-        """Build matchers that recognize groups of tokens."""
-        if rules:
-            matcher = Matcher(NLP.vocab)
-            self.group_matchers.append(matcher)
-            for label, patterns in rules.items():
-                matcher.add(label, patterns, on_match=self.enrich_tokens)
 
     def scan(self, doc, matchers):
         """Find all terms in the text and return the resulting doc.
@@ -85,7 +85,12 @@ class TraitMatcher:
 
         with doc.retokenize() as retokenizer:
             for match_id, start, end in matches:
-                retokenizer.merge(doc[start:end])
+                span = doc[start:end]
+                label = NLP.vocab.strings[match_id]
+                action = self.actions.get(label)
+                data = action(span) if action else {}
+                attrs = {'_': {'label': label, 'data': data}}
+                retokenizer.merge(span, attrs=attrs)
 
         return doc
 
@@ -97,25 +102,9 @@ class TraitMatcher:
 
         if self.group_matchers:
             doc = self.scan(doc, self.group_matchers)
-
-        # print('\n'.join(f'{t._.term} {t.text}' for t in doc))
-
-        matches = []
-        for matcher in self.trait_matchers:
-            matches += matcher(doc)
-
-        matches = self.leftmost_longest(matches)
-
-        with doc.retokenize() as retokenizer:
-            for match in matches:
-                match_id, start, end = match
-                span = doc[start:end]
-                label = NLP.vocab.strings[match_id]
-                data = self.actions[label](span)
-                attrs = {'_': {'label': label, 'data': data}}
-                retokenizer.merge(span, attrs=attrs)
-
         # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
+
+        doc = self.scan(doc, self.trait_matchers)
 
         return doc
 
@@ -134,11 +123,3 @@ class TraitMatcher:
             if match[1] >= cleaned[-1][2]:
                 cleaned.append(match)
         return cleaned
-
-    @staticmethod
-    def enrich_tokens(_, doc, i, matches):
-        """Add data to tokens."""
-        match_id, start, end = matches[i]
-        label = doc.vocab.strings[match_id]
-        for token in doc[start:end]:
-            token._.term = label
