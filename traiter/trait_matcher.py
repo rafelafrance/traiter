@@ -10,7 +10,8 @@ from .spacy_nlp import NLP
 class TraitMatcher:
     """Shared parser logic."""
 
-    def __init__(self):
+    def __init__(self, nlp=None):
+        self.nlp = nlp if nlp else NLP
         self.term_matchers = []     # Spacy matchers for terms
         self.trait_matchers = []    # Spacy matchers for traits
         self.group_matchers = []    # Spacy matchers for combining tokens
@@ -40,12 +41,12 @@ class TraitMatcher:
             by_label[term['label']].append(term)
 
         for label, term_list in by_label.items():
-            phrases = [NLP.make_doc(t['pattern']) for t in term_list]
+            phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
             matcher.add(label, phrases)
 
     def add_regex_matcher(self, terms):
         """Add a regex matcher to the term matchers."""
-        matcher = Matcher(NLP.vocab)
+        matcher = Matcher(self.nlp.vocab)
         self.term_matchers.append(matcher)
         for term in terms:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
@@ -54,14 +55,14 @@ class TraitMatcher:
     def add_group_patterns(self, rules):
         """Build matchers that recognize groups of tokens."""
         if rules:
-            matcher = Matcher(NLP.vocab)
+            matcher = Matcher(self.nlp.vocab)
             self.group_matchers.append(matcher)
             for label, patterns in rules.items():
                 matcher.add(label, patterns)
 
     def add_trait_patterns(self, rules):
         """Build matchers that recognize traits."""
-        matcher = Matcher(NLP.vocab)
+        matcher = Matcher(self.nlp.vocab)
         self.trait_matchers.append(matcher)
         for rule in rules:
             label = rule['label']
@@ -86,7 +87,7 @@ class TraitMatcher:
         with doc.retokenize() as retokenizer:
             for match_id, start, end in matches:
                 span = doc[start:end]
-                label = NLP.vocab.strings[match_id]
+                label = self.nlp.vocab.strings[match_id]
                 action = self.actions.get(label)
                 data = action(span) if action else {}
                 attrs = {'_': {'label': label, 'data': data}}

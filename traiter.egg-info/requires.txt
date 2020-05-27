@@ -1,2 +1,2 @@
-regex>=2020.4.4
+inflect>=4.1.0
 spacy>=2.2.4
