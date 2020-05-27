@@ -4,14 +4,14 @@ from collections import defaultdict
 
 from spacy.matcher import Matcher, PhraseMatcher
 
-from .spacy_nlp import NLP
+from .spacy_nlp import spacy_nlp
 
 
 class TraitMatcher:
     """Shared parser logic."""
 
     def __init__(self, nlp=None):
-        self.nlp = nlp if nlp else NLP
+        self.nlp = nlp if nlp else spacy_nlp()
         self.term_matchers = []     # Spacy matchers for terms
         self.trait_matchers = []    # Spacy matchers for traits
         self.group_matchers = []    # Spacy matchers for combining tokens
@@ -33,7 +33,7 @@ class TraitMatcher:
 
     def add_phrase_matcher(self, attr, terms):
         """Add a phrase matcher to the term matchers."""
-        matcher = PhraseMatcher(NLP.vocab, attr=attr)
+        matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
         self.term_matchers.append(matcher)
 
         by_label = defaultdict(list)
@@ -97,7 +97,7 @@ class TraitMatcher:
 
     def parse(self, text):
         """Parse the traits."""
-        doc = NLP(text)
+        doc = self.nlp(text)
 
         doc = self.scan(doc, self.term_matchers)
 
