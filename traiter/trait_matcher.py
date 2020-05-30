@@ -103,9 +103,9 @@ class TraitMatcher:
 
         if self.group_matchers:
             doc = self.scan(doc, self.group_matchers)
-        # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
 
         doc = self.scan(doc, self.trait_matchers)
+        # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
 
         return doc
 

@@ -64,7 +64,7 @@ def as_member(values):
 
 def to_positive_float(value):
     """Convert the value to a float."""
-    value = re.sub(r'[^\d.]', '', value) if value else ''
+    value = re.sub(r'[^\d./]', '', value) if value else ''
     try:
         return float(value)
     except ValueError:
@@ -73,7 +73,7 @@ def to_positive_float(value):
 
 def to_positive_int(value):
     """Convert the value to an integer."""
-    value = re.sub(r'[^\d.]', '', value) if value else ''
+    value = re.sub(r'[^\d./]', '', value) if value else ''
     value = re.sub(r'\.$', '', value)
     try:
         return int(value)
