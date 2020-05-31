@@ -11,10 +11,13 @@ Token.set_extension('data', default={})
 Token.set_extension('label', default='')
 
 
-def spacy_nlp():
+def spacy_nlp(disable=None):
     """A single function to build the spacy nlp object for singleton use."""
     spacy.prefer_gpu()
-    nlp = spacy.load('en_core_web_sm', disable=['ner'])
+
+    if disable is None:
+        disable = ['ner']
+    nlp = spacy.load('en_core_web_sm', disable=disable)
 
     infix = (
         LIST_ELLIPSES
@@ -28,7 +31,7 @@ def spacy_nlp():
             r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
             r"""(?:{h})+""".format(h=HYPHENS),
             r"""[\\\[\]\(\):;"']""",
-            r"(?<=[0-9])\.(?=[{a}])".format(a=ALPHA),  # 1.word, 2.other
+            r"(?<=[0-9])\.?(?=[{a}])".format(a=ALPHA),  # 1.word or 1N
             ])
 
     infix_regex = spacy.util.compile_infix_regex(infix)
