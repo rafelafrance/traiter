@@ -16,7 +16,8 @@ def spacy_nlp(disable=None):
     spacy.prefer_gpu()
 
     if disable is None:
-        disable = ['ner']
+        disable = []
+
     nlp = spacy.load('en_core_web_sm', disable=disable)
 
     infix = (
