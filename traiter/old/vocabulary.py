@@ -4,10 +4,10 @@
 
 from itertools import groupby
 
-import traiter.rule as re_rule
+from traiter.old import rule as re_rule
 from .rule import Action, InRegexp, Rule, Rules, grouper, part, producer, \
     replacer, term
-from .util import flatten
+from traiter.util import flatten
 
 FIRST = re_rule.FIRST
 SECOND = re_rule.SECOND

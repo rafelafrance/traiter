@@ -4,10 +4,10 @@
 
 from collections import deque
 from typing import List, Tuple, Union
-from traiter.util import flatten
-from traiter.rule import Rules, RuleDict, RuleType, SIZE
-from traiter.token import Token, Tokens, Groups
 
+from traiter.util import flatten
+from .rule import RuleDict, RuleType, Rules, SIZE
+from .token import Groups, Token, Tokens
 
 RulesInput = Union[Rules, List[Rules]]
 
