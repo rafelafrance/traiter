@@ -1,7 +1,8 @@
 """Misc. utilities."""
 
-import inflect
 import re
+
+import inflect
 
 __VERSION__ = '0.7.0'
 

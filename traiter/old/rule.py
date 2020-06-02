@@ -1,7 +1,5 @@
 """RuleList for parsing and rule builders."""
 
-# TODO: Delete me
-
 from dataclasses import dataclass
 from enum import IntEnum
 from typing import Any, Callable, Dict, List, Pattern, Union

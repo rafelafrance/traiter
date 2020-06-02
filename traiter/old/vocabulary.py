@@ -1,13 +1,11 @@
 """Build catalogs of rules and their parts for sharing."""
 
-# TODO: Delete me
-
 from itertools import groupby
 
 from traiter.old import rule as re_rule
+from traiter.util import flatten
 from .rule import Action, InRegexp, Rule, Rules, grouper, part, producer, \
     replacer, term
-from traiter.util import flatten
 
 FIRST = re_rule.FIRST
 SECOND = re_rule.SECOND
