@@ -5,6 +5,7 @@ from collections import defaultdict
 from spacy.matcher import Matcher, PhraseMatcher
 
 from .spacy_nlp import spacy_nlp
+from .util import Step
 
 
 class TraitMatcher:
@@ -71,7 +72,7 @@ class TraitMatcher:
             matcher.add(label, patterns)
             self.actions[label] = on_match
 
-    def scan(self, doc, matchers):
+    def scan(self, doc, matchers, step=Step.UNKNOWN):
         """Find all terms in the text and return the resulting doc.
         There may be more than one matcher for the terms. Gather the results
         for each one and combine them. Then retokenize the doc to handle terms
@@ -91,7 +92,7 @@ class TraitMatcher:
                 action = self.actions.get(label)
                 data = action(span) if action else {}
                 label = data['relabel'] if data.get('relabel') else label
-                attrs = {'_': {'label': label, 'data': data}}
+                attrs = {'_': {'label': label, 'data': data, 'step': step}}
                 retokenizer.merge(span, attrs=attrs)
 
         return doc
@@ -100,12 +101,12 @@ class TraitMatcher:
         """Parse the traits."""
         doc = self.nlp(text)
 
-        doc = self.scan(doc, self.term_matchers)
+        doc = self.scan(doc, self.term_matchers, step=Step.TERM)
 
         if self.group_matchers:
-            doc = self.scan(doc, self.group_matchers)
+            doc = self.scan(doc, self.group_matchers, step=Step.GROUP)
 
-        doc = self.scan(doc, self.trait_matchers)
+        doc = self.scan(doc, self.trait_matchers, Step.TRAIT)
         # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
 
         return doc
