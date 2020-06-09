@@ -83,10 +83,10 @@ class TraitMatcher:
                 label = self.nlp.vocab.strings[match_id]
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                if data.get('retokenize', True):
-                    if data.get('relabel'):
-                        label = data['relabel']
-                        del data['relabel']
+                if data.get('_retokenize', True):
+                    if data.get('_relabel'):
+                        label = data['_relabel']
+                        del data['_relabel']
                     attrs = {'_': {'label': label, 'data': data, 'step': step}}
                     retokenizer.merge(span, attrs=attrs)
 
