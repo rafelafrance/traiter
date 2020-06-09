@@ -13,11 +13,8 @@ class TraitMatcher:
 
     def __init__(self, nlp=None):
         self.nlp = nlp if nlp else spacy_nlp()
-        self.term_matchers = []     # Spacy matchers for terms
-        self.trait_matchers = []    # Spacy matchers for traits
-        self.group_matchers = []    # Spacy matchers for combining tokens
-        self.final_matchers = []    # Spacy matchers for combining traits
-        self.actions = {}           # Action to take on a matched trait
+        self.matchers = defaultdict(list)  # Patterns to match at each step
+        self.actions = {}                  # Action to take on a matched trait
 
     def add_terms(self, terms):
         """Add phrase matcher to the term matchers."""
@@ -36,7 +33,7 @@ class TraitMatcher:
     def add_phrase_matcher(self, attr, terms):
         """Add a phrase matcher to the term matchers."""
         matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
-        self.term_matchers.append(matcher)
+        self.matchers[Step.TERM].append(matcher)
 
         by_label = defaultdict(list)
         for term in terms:
@@ -49,7 +46,7 @@ class TraitMatcher:
     def add_regex_matcher(self, terms):
         """Add a regex matcher to the term matchers."""
         matcher = Matcher(self.nlp.vocab)
-        self.term_matchers.append(matcher)
+        self.matchers[Step.TERM].append(matcher)
         for term in terms:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
             matcher.add(term['label'], regexp)
@@ -58,20 +55,20 @@ class TraitMatcher:
         """Build matchers that recognize groups of tokens."""
         if rules:
             matcher = Matcher(self.nlp.vocab)
-            self.group_matchers.append(matcher)
+            self.matchers[Step.GROUP].append(matcher)
             for label, patterns in rules.items():
                 matcher.add(label, patterns)
 
     def add_trait_patterns(self, rules):
         """Build matchers that recognize traits."""
         matcher = Matcher(self.nlp.vocab)
-        self.trait_matchers.append(matcher)
+        self.matchers[Step.TRAIT].append(matcher)
         self.add_matcher_patterns(matcher, rules)
 
     def add_final_patterns(self, rules):
         """Build matchers that recognize traits and labels."""
         matcher = Matcher(self.nlp.vocab)
-        self.final_matchers.append(matcher)
+        self.matchers[Step.FINAL].append(matcher)
         self.add_matcher_patterns(matcher, rules)
 
     def add_matcher_patterns(self, matcher, rules):
@@ -111,22 +108,13 @@ class TraitMatcher:
 
         return doc
 
-    def all_matchers(self):
-        """Return a list of all matchers."""
-        return [
-            (self.term_matchers, Step.TERM),
-            (self.group_matchers, Step.GROUP),
-            (self.trait_matchers, Step.TRAIT),
-            (self.final_matchers, Step.FINAL),
-        ]
-
     def parse(self, text):
         """Parse the traits."""
         doc = self.nlp(text)
 
-        for matchers, step in self.all_matchers():
-            if matchers:
-                doc = self.scan(doc, matchers, step=step)
+        for step in Step:
+            if self.matchers.get(step):
+                doc = self.scan(doc, self.matchers[step], step=step)
 
         # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
 
