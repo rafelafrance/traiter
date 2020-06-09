@@ -25,6 +25,7 @@ class Step(IntEnum):
     TERM = 1
     GROUP = 2
     TRAIT = 3
+    FINAL = 4
 
 
 class DotDict(dict):

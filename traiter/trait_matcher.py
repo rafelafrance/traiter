@@ -16,6 +16,7 @@ class TraitMatcher:
         self.term_matchers = []     # Spacy matchers for terms
         self.trait_matchers = []    # Spacy matchers for traits
         self.group_matchers = []    # Spacy matchers for combining tokens
+        self.final_matchers = []    # Spacy matchers for combining traits
         self.actions = {}           # Action to take on a matched trait
 
     def add_terms(self, terms):
@@ -65,6 +66,16 @@ class TraitMatcher:
         """Build matchers that recognize traits."""
         matcher = Matcher(self.nlp.vocab)
         self.trait_matchers.append(matcher)
+        self.add_matcher_patterns(matcher, rules)
+
+    def add_final_patterns(self, rules):
+        """Build matchers that recognize traits and labels."""
+        matcher = Matcher(self.nlp.vocab)
+        self.final_matchers.append(matcher)
+        self.add_matcher_patterns(matcher, rules)
+
+    def add_matcher_patterns(self, matcher, rules):
+        """Build matchers that recognize traits."""
         for rule in rules:
             label = rule['label']
             patterns = rule['patterns']
@@ -72,7 +83,7 @@ class TraitMatcher:
             matcher.add(label, patterns)
             self.actions[label] = on_match
 
-    def scan(self, doc, matchers, step=Step.UNKNOWN):
+    def scan(self, doc, matchers, step=0):
         """Find all terms in the text and return the resulting doc.
         There may be more than one matcher for the terms. Gather the results
         for each one and combine them. Then retokenize the doc to handle terms
@@ -91,22 +102,32 @@ class TraitMatcher:
                 label = self.nlp.vocab.strings[match_id]
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                label = data['relabel'] if data.get('relabel') else label
-                attrs = {'_': {'label': label, 'data': data, 'step': step}}
-                retokenizer.merge(span, attrs=attrs)
+                if data.get('retokenize', True):
+                    if data.get('relabel'):
+                        label = data['relabel']
+                        del data['relabel']
+                    attrs = {'_': {'label': label, 'data': data, 'step': step}}
+                    retokenizer.merge(span, attrs=attrs)
 
         return doc
+
+    def all_matchers(self):
+        """Return a list of all matchers."""
+        return [
+            (self.term_matchers, Step.TERM),
+            (self.group_matchers, Step.GROUP),
+            (self.trait_matchers, Step.TRAIT),
+            (self.final_matchers, Step.FINAL),
+        ]
 
     def parse(self, text):
         """Parse the traits."""
         doc = self.nlp(text)
 
-        doc = self.scan(doc, self.term_matchers, step=Step.TERM)
+        for matchers, step in self.all_matchers():
+            if matchers:
+                doc = self.scan(doc, matchers, step=step)
 
-        if self.group_matchers:
-            doc = self.scan(doc, self.group_matchers, step=Step.GROUP)
-
-        doc = self.scan(doc, self.trait_matchers, Step.TRAIT)
         # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
 
         return doc
