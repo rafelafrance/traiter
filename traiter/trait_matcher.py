@@ -14,7 +14,7 @@ class TraitMatcher:
     def __init__(self, nlp=None):
         self.nlp = nlp if nlp else spacy_nlp()
         self.matchers = defaultdict(list)  # Patterns to match at each step
-        self.actions = {}                  # Action to take on a matched trait
+        self.actions = {}  # Action to take on a matched trait
 
     def add_terms(self, terms):
         """Add phrase matcher to the term matchers."""
@@ -51,36 +51,20 @@ class TraitMatcher:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
             matcher.add(term['label'], regexp)
 
-    def add_group_patterns(self, rules):
-        """Build matchers that recognize groups of tokens."""
-        if rules:
-            matcher = Matcher(self.nlp.vocab)
-            self.matchers[Step.GROUP].append(matcher)
-            for label, patterns in rules.items():
-                matcher.add(label, patterns)
-
-    def add_trait_patterns(self, rules):
-        """Build matchers that recognize traits."""
-        matcher = Matcher(self.nlp.vocab)
-        self.matchers[Step.TRAIT].append(matcher)
-        self.add_matcher_patterns(matcher, rules)
-
-    def add_final_patterns(self, rules):
+    def add_patterns(self, rules, step):
         """Build matchers that recognize traits and labels."""
+        if not rules:
+            return
         matcher = Matcher(self.nlp.vocab)
-        self.matchers[Step.FINAL].append(matcher)
-        self.add_matcher_patterns(matcher, rules)
-
-    def add_matcher_patterns(self, matcher, rules):
-        """Build matchers that recognize traits."""
+        self.matchers[step].append(matcher)
         for rule in rules:
             label = rule['label']
             patterns = rule['patterns']
-            on_match = rule['on_match']
             matcher.add(label, patterns)
-            self.actions[label] = on_match
+            if on_match := rule.get('on_match'):
+                self.actions[label] = on_match
 
-    def scan(self, doc, matchers, step=0):
+    def scan(self, doc, matchers, step=Step.UNKNOWN):
         """Find all terms in the text and return the resulting doc.
         There may be more than one matcher for the terms. Gather the results
         for each one and combine them. Then retokenize the doc to handle terms
