@@ -84,9 +84,7 @@ class TraitMatcher:
                 action = self.actions.get(label)
                 data = action(span) if action else {}
                 if data.get('_retokenize', True):
-                    if data.get('_relabel'):
-                        label = data['_relabel']
-                        del data['_relabel']
+                    label = data['_relabel'] if data.get('_relabel') else label
                     attrs = {'_': {'label': label, 'data': data, 'step': step}}
                     retokenizer.merge(span, attrs=attrs)
 
