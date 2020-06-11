@@ -98,9 +98,11 @@ class TraitMatcher:
             if self.matchers.get(step):
                 doc = self.scan(doc, self.matchers[step], step=step)
 
-                # if step in (Step.TERM, ):
-                #     print('\n'.join(f'{t._.label} {t._.data} {t.text}'
-                #                     for t in doc))
+                # from pprint import pp
+                # if step in list(Step):  # (Step.TERM, ):
+                #     print(step)
+                #     pp([f'{t._.label:<15} {t._.data} {t.text}' for t in doc])
+                #     print()
 
         return doc
 

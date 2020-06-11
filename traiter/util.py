@@ -1,7 +1,7 @@
 """Misc. utilities."""
 
 import re
-from enum import IntEnum
+from enum import IntEnum, auto
 
 import inflect
 
@@ -21,11 +21,11 @@ class Step(IntEnum):
     completed traits.
     """
 
-    UNKNOWN = 0
-    TERM = 1
-    GROUP = 2
-    TRAIT = 3
-    FINAL = 4
+    UNKNOWN = auto()
+    TERM = auto()
+    GROUP = auto()
+    TRAIT = auto()
+    FINAL = auto()
 
 
 class DotDict(dict):
