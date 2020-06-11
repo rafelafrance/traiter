@@ -98,7 +98,9 @@ class TraitMatcher:
             if self.matchers.get(step):
                 doc = self.scan(doc, self.matchers[step], step=step)
 
-        # print('\n'.join(f'{t._.label} {t._.data} {t.text}' for t in doc))
+                # if step in (Step.TERM, ):
+                #     print('\n'.join(f'{t._.label} {t._.data} {t.text}'
+                #                     for t in doc))
 
         return doc
 
