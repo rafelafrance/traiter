@@ -10,6 +10,7 @@ from spacy.tokens import Token
 Token.set_extension('data', default={})
 Token.set_extension('label', default='')
 Token.set_extension('step', default=0)
+Token.set_extension('aux', default={})
 
 
 def spacy_nlp(disable=None):
