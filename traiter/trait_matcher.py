@@ -5,7 +5,6 @@ from collections import defaultdict
 from spacy.matcher import Matcher, PhraseMatcher
 
 from .spacy_nlp import spacy_nlp
-from .util import Step
 
 
 class TraitMatcher:
@@ -16,7 +15,7 @@ class TraitMatcher:
         self.matchers = defaultdict(list)  # Patterns to match at each step
         self.actions = {}  # Action to take on a matched trait
 
-    def add_terms(self, terms):
+    def add_terms(self, terms, step='terms'):
         """Add phrase matcher to the term matchers."""
         by_attr = defaultdict(list)
 
@@ -24,16 +23,16 @@ class TraitMatcher:
             by_attr[pattern['attr']].append(pattern)
 
         for attr, patterns in by_attr.items():
-            self.add_phrase_matcher(attr, patterns)
+            self.add_phrase_matcher(attr, patterns, step)
 
         patterns = [t for t in terms if t['attr'].upper() == 'REGEX']
         if patterns:
-            self.add_regex_matcher(patterns)
+            self.add_regex_matcher(patterns, step)
 
-    def add_phrase_matcher(self, attr, terms):
+    def add_phrase_matcher(self, attr, terms, step):
         """Add a phrase matcher to the term matchers."""
         matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
-        self.matchers[Step.TERM].append(matcher)
+        self.matchers[step].append(matcher)
 
         by_label = defaultdict(list)
         for term in terms:
@@ -43,10 +42,10 @@ class TraitMatcher:
             phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
             matcher.add(label, phrases)
 
-    def add_regex_matcher(self, terms):
+    def add_regex_matcher(self, terms, step):
         """Add a regex matcher to the term matchers."""
         matcher = Matcher(self.nlp.vocab)
-        self.matchers[Step.TERM].append(matcher)
+        self.matchers[step].append(matcher)
         for term in terms:
             regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
             matcher.add(term['label'], regexp)
@@ -64,7 +63,7 @@ class TraitMatcher:
             if on_match := rule.get('on_match'):
                 self.actions[label] = on_match
 
-    def scan(self, doc, matchers, step=Step.UNKNOWN):
+    def scan(self, doc, matchers, step):
         """Find all terms in the text and return the resulting doc.
         There may be more than one matcher for the terms. Gather the results
         for each one and combine them. Then retokenize the doc to handle terms
@@ -94,15 +93,12 @@ class TraitMatcher:
         """Parse the traits."""
         doc = self.nlp(text)
 
-        for step in Step:
-            if self.matchers.get(step):
-                doc = self.scan(doc, self.matchers[step], step=step)
-
-                # from pprint import pp
-                # if step in list(Step):  # (Step.TERM, ):
-                #     print(step)
-                #     pp([f'{t._.label:<15} {t._.data} {t.text}' for t in doc])
-                #     print()
+        for step, matchers in self.matchers.items():
+            doc = self.scan(doc, self.matchers[step], step=step)
+            # from pprint import pp
+            # print(step)
+            # pp([f'{t._.label:<15} {t._.data} {t.text}' for t in doc])
+            # print()
 
         return doc
 

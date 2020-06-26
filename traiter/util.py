@@ -1,7 +1,6 @@
 """Misc. utilities."""
 
 import re
-from enum import IntEnum, auto
 
 import inflect
 
@@ -12,20 +11,6 @@ FLAGS = re.VERBOSE | re.IGNORECASE
 BATCH_SIZE = 1_000_000  # How many records to work with at a time
 
 INFLECT = inflect.engine()
-
-
-class Step(IntEnum):
-    """In what part of the matching process the did the match occur.
-
-    For sparsely matched strings we need to differentiate partial matches from
-    completed traits.
-    """
-
-    UNKNOWN = auto()
-    TERM = auto()
-    GROUP = auto()
-    TRAIT = auto()
-    FINAL = auto()
 
 
 class DotDict(dict):
