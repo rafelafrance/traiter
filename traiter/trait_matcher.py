@@ -3,6 +3,8 @@
 from collections import defaultdict
 
 from spacy.matcher import Matcher, PhraseMatcher
+from spacy.tokens import Span
+from spacy.util import filter_spans
 
 from .spacy_nlp import spacy_nlp
 
@@ -74,12 +76,13 @@ class TraitMatcher:
         for matcher in matchers:
             matches += matcher(doc)
 
-        matches = self.leftmost_longest(matches)
+        spans = [Span(doc, s, e, label=self.nlp.vocab.strings[i])
+                 for i, s, e in matches]
+        spans = filter_spans(spans)
 
         with doc.retokenize() as retokenizer:
-            for match_id, start, end in matches:
-                span = doc[start:end]
-                label = self.nlp.vocab.strings[match_id]
+            for span in spans:
+                label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
                 if data.get('_retokenize', True):
@@ -101,19 +104,3 @@ class TraitMatcher:
             # print()
 
         return doc
-
-    @staticmethod
-    def leftmost_longest(matches):
-        """
-        Return the longest of any overlapping matches, removing others.
-
-        Matches: array of tuples: [(match_id, start, end), ...]
-        """
-        if not matches:
-            return []
-        first, *rest = sorted(matches, key=lambda m: (m[1], -m[2]))
-        cleaned = [first]
-        for match in rest:
-            if match[1] >= cleaned[-1][2]:
-                cleaned.append(match)
-        return cleaned
