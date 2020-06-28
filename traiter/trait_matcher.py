@@ -18,39 +18,29 @@ class TraitMatcher:
         self.actions = {}  # Action to take on a matched trait
 
     def add_terms(self, terms, step='terms'):
-        """Add phrase matcher to the term matchers."""
+        """Add phrase matchers.
+
+        Each term is a dict with at least these three fields:
+            1) attribute: what spacy token field are we matching (ex. LOWER)
+            2) label: what is the term's hypernym (ex. color)
+            3) pattern: the phrase being matched (ex. gray-blue)
+        """
         by_attr = defaultdict(list)
 
-        for pattern in [t for t in terms if t['attr'].upper() != 'REGEX']:
+        for pattern in [t for t in terms]:
             by_attr[pattern['attr']].append(pattern)
 
         for attr, patterns in by_attr.items():
-            self.add_phrase_matcher(attr, patterns, step)
+            matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
+            self.matchers[step].append(matcher)
 
-        patterns = [t for t in terms if t['attr'].upper() == 'REGEX']
-        if patterns:
-            self.add_regex_matcher(patterns, step)
+            by_label = defaultdict(list)
+            for term in terms:
+                by_label[term['label']].append(term)
 
-    def add_phrase_matcher(self, attr, terms, step):
-        """Add a phrase matcher to the term matchers."""
-        matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
-        self.matchers[step].append(matcher)
-
-        by_label = defaultdict(list)
-        for term in terms:
-            by_label[term['label']].append(term)
-
-        for label, term_list in by_label.items():
-            phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
-            matcher.add(label, phrases)
-
-    def add_regex_matcher(self, terms, step):
-        """Add a regex matcher to the term matchers."""
-        matcher = Matcher(self.nlp.vocab)
-        self.matchers[step].append(matcher)
-        for term in terms:
-            regexp = [[{'TEXT': {'REGEX': term['pattern']}}]]
-            matcher.add(term['label'], regexp)
+            for label, term_list in by_label.items():
+                phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
+                matcher.add(label, phrases)
 
     def add_patterns(self, rules, step):
         """Build matchers that recognize traits and labels."""
@@ -98,9 +88,5 @@ class TraitMatcher:
 
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
-            # from pprint import pp
-            # print(step)
-            # pp([f'{t._.label:<15} {t._.data} {t.text}' for t in doc])
-            # print()
 
         return doc
