@@ -13,9 +13,16 @@ Token.set_extension('step', default=0)
 Token.set_extension('aux', default={})
 
 
-def spacy_nlp(disable=None, lang_model='en_core_web_sm', tokenizer=True):
+def spacy_nlp(
+        disable=None,
+        lang_model='en_core_web_sm',
+        tokenizer=True,
+        gpu='prefer'):
     """A single function to build the spacy nlp object for singleton use."""
-    spacy.prefer_gpu()
+    if gpu == 'prefer':
+        spacy.prefer_gpu()
+    elif gpu == 'require':
+        spacy.require_gpu()
 
     if disable is None:
         disable = []
