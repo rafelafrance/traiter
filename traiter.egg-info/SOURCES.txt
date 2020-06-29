@@ -3,7 +3,6 @@ setup.py
 experiments/__init__.py
 experiments/run_traiter.py
 tests/__init__.py
-tests/test_matcher.py
 traiter/__init__.py
 traiter/spacy_nlp.py
 traiter/trait_matcher.py
