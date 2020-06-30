@@ -88,5 +88,9 @@ class TraitMatcher:
 
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
+            # print(step)
+            # for t in doc:
+            #     print(f'{t._.label:<15} {t}')
+            # print()
 
         return doc
