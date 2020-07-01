@@ -75,12 +75,24 @@ class TraitMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                if data.get('_retokenize', True):
+                # Merge tokens and relabel the merged span
+                if data.get('_merge', True):
                     label = data['_relabel'] if data.get('_relabel') else label
-                    attrs = {'_': {'label': label, 'data': data, 'step': step}}
+                    attrs = {
+                        'ENT_TYPE': label, '_': {'data': data, 'step': step}}
                     retokenizer.merge(span, attrs=attrs)
+                # Don't merge tokens, relabel tokens that are flagged
+                else:
+                    for token in span:
+                        if label := token._.data.get('_relabel'):
+                            sub_span = doc[token.i:token.i + 1]
+                            attrs = {'ENT_TYPE': label, '_': {'step': step}}
+                            retokenizer.merge(sub_span, attrs=attrs)
 
         return doc
+
+    def relabel_tokens(self, span):
+        """Relabel individual tokens in a span."""
 
     def parse(self, text):
         """Parse the traits."""
@@ -88,9 +100,9 @@ class TraitMatcher:
 
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
-            # print(step)
+            # print(f'{"-" * 40}\n{step}\n{"-" * 40}')
             # for t in doc:
-            #     print(f'{t._.label:<15} {t}')
+            #     print(f'{t.ent_type_:<15} {step:<7} {t} {t._.data}')
             # print()
 
         return doc
