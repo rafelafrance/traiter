@@ -91,13 +91,8 @@ class TraitMatcher:
 
         return doc
 
-    def relabel_tokens(self, span):
-        """Relabel individual tokens in a span."""
-
-    def parse(self, text):
+    def __call__(self, doc):
         """Parse the traits."""
-        doc = self.nlp(text)
-
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
             # print(f'{"-" * 40}\n{step}\n{"-" * 40}')
