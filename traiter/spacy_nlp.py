@@ -5,11 +5,17 @@ import re
 import spacy
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
     CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS
-from spacy.tokens import Token
+from spacy.tokens import Span, Token
 
+Token.set_extension('label', default='')
 Token.set_extension('data', default={})
 Token.set_extension('step', default='')
 Token.set_extension('aux', default={})
+
+Span.set_extension('label', default='')
+Span.set_extension('data', default={})
+Span.set_extension('step', default='')
+Span.set_extension('aux', default={})
 
 
 def spacy_nlp(

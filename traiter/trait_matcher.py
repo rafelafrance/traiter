@@ -12,10 +12,11 @@ from .spacy_nlp import spacy_nlp
 class TraitMatcher:
     """Shared parser logic."""
 
-    def __init__(self, nlp=None):
+    def __init__(self, nlp=None, as_entities=False):
         self.nlp = nlp if nlp else spacy_nlp()
         self.matchers = defaultdict(list)  # Patterns to match at each step
         self.actions = {}  # Action to take on a matched trait
+        self.as_entities = as_entities
 
     def add_terms(self, terms, step='terms'):
         """Add phrase matchers.
@@ -79,25 +80,34 @@ class TraitMatcher:
                 if data.get('_merge', True):
                     label = data['_relabel'] if data.get('_relabel') else label
                     attrs = {
-                        'ENT_TYPE': label, '_': {'data': data, 'step': step}}
+                        'ENT_TYPE': label,
+                        '_': {'label': label, 'data': data, 'step': step}}
                     retokenizer.merge(span, attrs=attrs)
                 # Don't merge tokens, relabel tokens that are flagged
                 else:
                     for token in span:
                         if label := token._.data.get('_relabel'):
                             sub_span = doc[token.i:token.i + 1]
-                            attrs = {'ENT_TYPE': label, '_': {'step': step}}
+                            attrs = {'ENT_TYPE': label,
+                                     '_': {'label': label, 'step': step}}
                             retokenizer.merge(sub_span, attrs=attrs)
-
         return doc
 
     def __call__(self, doc):
         """Parse the traits."""
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
-            # print(f'{"-" * 40}\n{step}\n{"-" * 40}')
-            # for t in doc:
-            #     print(f'{t.ent_type_:<15} {step:<7} {t} {t._.data}')
-            # print()
 
+        # Convert trait tokens into entities
+        if self.as_entities:
+            spans = []
+            for token in doc:
+                if ent_type := token.ent_type_:
+                    span = Span(doc, token.i, token.i+1, label=ent_type)
+                    span._.label = token._.label
+                    span._.data = token._.data
+                    span._.step = token._.step
+                    span._.aux = token._.aux
+                    spans.append(span)
+            doc.ents = spans
         return doc
