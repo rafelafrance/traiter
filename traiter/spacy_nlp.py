@@ -8,7 +8,7 @@ from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
 from spacy.tokens import Token
 
 Token.set_extension('data', default={})
-Token.set_extension('step', default=0)
+Token.set_extension('step', default='')
 Token.set_extension('aux', default={})
 
 
