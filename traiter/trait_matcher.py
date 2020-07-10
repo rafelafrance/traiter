@@ -98,6 +98,11 @@ class TraitMatcher:
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
 
+            # print(step)
+            # for token in doc:
+            #     print(token.pos_, token)
+            # print()
+
         # Convert trait tokens into entities
         if self.as_entities:
             spans = []
@@ -110,4 +115,5 @@ class TraitMatcher:
                     span._.aux = token._.aux
                     spans.append(span)
             doc.ents = spans
+
         return doc
