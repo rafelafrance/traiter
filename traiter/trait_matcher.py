@@ -15,8 +15,13 @@ class TraitMatcher:
     def __init__(self, nlp=None, as_entities=False):
         self.nlp = nlp if nlp else spacy_nlp()
         self.matchers = defaultdict(list)  # Patterns to match at each step
-        self.actions = {}  # Action to take on a matched trait
+        self.actions = {}               # Action to take on a matched trait
         self.as_entities = as_entities
+        self.after_step = defaultdict(list)     # What to do after a step
+
+    def step_action(self, step, action):
+        """Actions to do either before or after a step."""
+        self.after_step[step].append(action)
 
     def add_terms(self, terms, step='terms'):
         """Add phrase matchers.
@@ -97,6 +102,9 @@ class TraitMatcher:
         """Parse the traits."""
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
+            if actions := self.after_step.get(step):
+                for action in actions:
+                    action(self)
 
             # print(step)
             # for token in doc:
