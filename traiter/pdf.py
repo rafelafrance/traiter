@@ -26,7 +26,7 @@ def pdf2txt(pdf_dir, txt_dir):
             subprocess.check_call(cmd, shell=True)
 
 
-def clean_text(text):
+def clean_text(text, remove_inserts=False, space_normalize=True):
     """Remove headers & footers and join hyphenated words etc."""
     pages = text.count('\f')
 
@@ -36,7 +36,7 @@ def clean_text(text):
     removing = False
     for ln in text.splitlines():
         if NOISE.match(ln):
-            removing = True
+            removing = True & remove_inserts
         elif len(ln) == 0:
             removing = False
         elif removing:
@@ -70,6 +70,7 @@ def clean_text(text):
     text = regex.sub(r' [–-] \n ([a-z]) ', r'\1', text, flags=FLAGS)
 
     # Space normalize text
-    text = ' '.join(text.split())
+    if space_normalize:
+        text = ' '.join(text.split())
 
     return text
