@@ -4,6 +4,7 @@ experiments/__init__.py
 experiments/run_traiter.py
 tests/__init__.py
 traiter/__init__.py
+traiter/pdf.py
 traiter/spacy_nlp.py
 traiter/trait_matcher.py
 traiter/util.py
