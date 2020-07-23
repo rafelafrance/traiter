@@ -108,7 +108,7 @@ class TraitMatcher:
 
             # print(step)
             # for token in doc:
-            #     print(token.pos_, token)
+            #     print(f'{token.ent_type_:<15} {token}')
             # print()
 
         # Convert trait tokens into entities
