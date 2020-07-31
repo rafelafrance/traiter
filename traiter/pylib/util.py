@@ -1,10 +1,15 @@
 """Misc. utilities."""
 
+import os
 import re
+from contextlib import contextmanager
+from datetime import datetime
+from shutil import rmtree
+from tempfile import mkdtemp
 
 import inflect
 
-__VERSION__ = '0.7.0'
+__VERSION__ = '0.8.0'
 
 FLAGS = re.VERBOSE | re.IGNORECASE
 
@@ -18,6 +23,37 @@ class DotDict(dict):
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
+
+
+def log(msg):
+    """Log a status message."""
+    print(f'{now()} {msg}')
+
+
+def now():
+    """Generate a timestamp."""
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+
+def today():
+    """Get today's date."""
+    return now()[:10]
+
+
+@contextmanager
+def get_temp_dir(prefix, where=None, keep=False):
+    """Handle creation and deletion of temporary directory."""
+    if where and not os.path.exists(where):
+        os.mkdir(where)
+
+    temp_dir = mkdtemp(prefix=prefix, dir=where)
+    # os.environ['SQLITE_TMPDIR'] = temp_dir
+
+    try:
+        yield temp_dir
+    finally:
+        if not keep or not where:
+            rmtree(temp_dir)
 
 
 def shorten(text):

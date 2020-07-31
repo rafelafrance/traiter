@@ -1,11 +1,10 @@
 """Common utilities for dealing with PDF files."""
-import subprocess
 from collections import Counter
-from os.path import exists, splitext
 
 import regex
 
-from .util import FLAGS
+import sys
+from traiter.pylib.util import FLAGS
 
 
 TRANS_TABLE = {'¼': '='}
@@ -17,13 +16,11 @@ NOISE = regex.compile(
     flags=FLAGS)
 
 
-def pdf2txt(pdf_dir, txt_dir):
-    """Convert PDF files into text."""
-    for pdf in pdf_dir.glob('*.pdf'):
-        txt = txt_dir / (splitext(pdf.name)[0] + '.txt')
-        if not exists(txt):
-            cmd = f'pdftotext {pdf} {txt}'
-            subprocess.check_call(cmd, shell=True)
+def translate():
+    """Translate characters."""
+    for line in sys.stdin.readlines():
+        line = line.translate(TRANS)
+        sys.stdout.write(line)
 
 
 def clean_text(text, remove_inserts=False, space_normalize=True):

@@ -6,6 +6,9 @@ from distutils.core import setup
 from setuptools import find_packages
 
 
+DESCRIPTION = """Traiter"""
+
+
 def readme():
     """Get README.md content."""
     with open('README.md') as in_file:
@@ -21,7 +24,7 @@ def license_():
 def find_version():
     """Read version from db.py."""
     regex = r"""^__VERSION__ = ['"]v?([^'"]*)['"]"""
-    with open('./traiter/util.py') as in_file:
+    with open('traiter/pylib/util.py') as in_file:
         match = re.search(regex, in_file.read(), re.M)
         if match:
             return match.group(1)
@@ -40,7 +43,7 @@ setup(
     version=find_version(),
     packages=find_packages(),
     install_requires=find_requirements(),
-    description="""Traiter""",
+    description=DESCRIPTION,
     long_description=readme(),
     license=license_(),
     url='https://github.com/rafelafrance/traiter',
