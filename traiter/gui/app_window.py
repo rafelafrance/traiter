@@ -12,9 +12,9 @@ from tkinter.scrolledtext import ScrolledText
 
 from ttkthemes import ThemedTk
 
-import traiter.pylib.script as script_lib
 import traiter.pylib.db as db
 import traiter.pylib.doc as doc
+import traiter.pylib.script as script_lib
 from .add_script_dialog import AddScriptDialog
 
 OK = 0
@@ -43,6 +43,7 @@ class App:
 
         self.doc_sel = None
         self.edits = None
+        self.edits_popup = None
         self.script_sel = None
 
         self.scripts = None
@@ -53,7 +54,7 @@ class App:
         self.win.title(self.get_title())
         self.win.geometry('1200x800')
 
-        self.build_menu()
+        self.build_top_menu()
 
         self.notebook = ttk.Notebook(self.win)
         self.notebook.pack(expand=True, fill="both")
@@ -81,7 +82,7 @@ class App:
         tab_frame = ttk.Frame(tab)
         tab_frame.pack(expand=True, fill='both')
 
-    def build_menu(self):
+    def build_top_menu(self):
         """Build the menu."""
         menu = tk.Menu(self.win)
         sub_menu = tk.Menu(menu, tearoff=False)
@@ -141,6 +142,8 @@ class App:
             sub_frame, orient='vertical', command=self.doc_tree.yview)
         vsb.pack(side='right', fill='y')
 
+        self.doc_tree.bind('<Delete>', self.delete_docs)
+
         self.doc_tree.configure(yscrollcommand=vsb.set)
         self.doc_tree.pack(expand=True, fill='both')
 
@@ -165,6 +168,10 @@ class App:
         self.edits = ScrolledText(sub_frame)
         self.edits.pack(fill="both", expand=True)
         self.edits.insert(tk.INSERT, '')
+
+        self.edits_popup = tk.Menu(self.edits, tearoff=False)
+        self.edits_popup.add_command(label='Test', command=self.test_edits)
+        self.edits.bind('<Button-3>', self.open_edits_menu)
 
         sub_frame = ttk.Frame(tab_frame)
         sub_frame.pack(expand=False, fill='x', pady=(24, 24))
@@ -233,16 +240,7 @@ class App:
         sub_frame = ttk.Frame(tab_frame)
         sub_frame.pack(expand=False, fill='x', pady=(24, 24))
 
-        button = ttk.Button(
-            sub_frame, text='Reset', command=self.reset_edits)
-        button.pack(side=tk.RIGHT, padx=(8, 8))
-
-        button = ttk.Button(
-            sub_frame, text='Cancel', command=self.cancel_edits)
-        button.pack(side=tk.RIGHT, padx=(8, 8))
-
-        button = ttk.Button(
-            sub_frame, text='Save', command=self.save_edits)
+        button = ttk.Button(sub_frame, text='Add', command=self.add_script)
         button.pack(side=tk.RIGHT, padx=(8, 8))
 
     def open_db(self):
@@ -337,6 +335,8 @@ class App:
         else:
             self.doc_sel['values'] = ['']
 
+        self.scripts = script_lib.select_scripts(self.cxn)
+        self.scripts.set_index('script_id', inplace=True)
         self.script_tree.delete(*self.script_tree.get_children())
         for script_id, row in self.scripts.iterrows():
             self.script_tree.insert(
@@ -373,23 +373,39 @@ class App:
         self.edits.delete('1.0', tk.END)
         self.edits.insert(tk.INSERT, text)
 
+    def delete_docs(self, _):
+        """Delete selected docs."""
+        selected = self.doc_tree.selection()
+        if not selected:
+            return
+        doc_ids = [self.doc_tree.item(selected[s])['text']
+                   for s in range(len(selected))]
+        doc.delete_docs(self.cxn, doc_ids)
+        self.repopulate()
+
+    def open_edits_menu(self, event):
+        """Open the edit popup menu."""
+        try:
+            self.edits_popup.tk_popup(event.x_root, event.y_root)
+        finally:
+            self.edits_popup.grab_release()
+
+    def test_edits(self):
+        """Test popup menu selection."""
+        print('test_edits')
+
     def add_script(self):
         """Add a pipe to the select list."""
         dialog = AddScriptDialog(self.win)
         self.win.wait_window(dialog.win)
-        print('id', dialog.script_id)
-        print('script', dialog.script)
-        # if not self.script_sel.get():
-        #     return
-        # print(script_id)
-        # if not script_id:
-        #     return
-        # script = self.script_sel.get()
-        # self.dirty = True
-        # if self.script_sel['values']:
-        #     self.script_sel['values'] += (script_id,)
-        # else:
-        #     self.script_sel['values'] = [script_id]
+        script_id = dialog.script_id.get()
+        action = dialog.action.get()
+        if not action:
+            return
+        self.dirty = True
+        script_id = script_id if script_id else action
+        script_lib.add_script(self.cxn, script_id, action)
+        self.repopulate()
 
     def run_script(self):
         """Run the pipe on the text."""
@@ -432,15 +448,6 @@ class App:
         text = doc.select_doc_raw(self.cxn, self.doc_id)
         self.edits.delete('1.0', tk.END)
         self.edits.insert(tk.INSERT, text)
-
-    def save_cmds(self):
-        """Save edits to the database."""
-
-    def cancel_cmds(self):
-        """Cancel edits back to the last saved point."""
-
-    def reset_cmds(self):
-        """Reset edits back to the original data."""
 
     def get_title(self):
         """Build the window title."""

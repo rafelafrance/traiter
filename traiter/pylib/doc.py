@@ -106,3 +106,11 @@ def reset_doc(cxn, doc_id):
     sql = """update docs set edits = raw where doc_id = ?;"""
     cxn.execute(sql, (doc_id,))
     cxn.commit()
+
+
+def delete_docs(cxn, doc_ids):
+    """Delete docs in the list of IDs."""
+    sql = """delete from docs where doc_id = ?;"""
+    for doc_id in doc_ids:
+        cxn.execute(sql, (doc_id,))
+    cxn.commit()

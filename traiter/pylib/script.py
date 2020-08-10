@@ -6,7 +6,8 @@ def add_script(cxn, script_id, script):
     """Add a pipe to the database."""
     sql = """
         insert or replace into scripts (script_id, action) values (?, ?);"""
-    cxn.execute(sql, (script_id, script, '', 0))
+    cxn.execute(sql, (script_id, script))
+    cxn.commit()
 
 
 def select_scripts(cxn):
