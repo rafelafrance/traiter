@@ -57,7 +57,7 @@ class App:
         self.build_top_menu()
 
         self.notebook = ttk.Notebook(self.win)
-        self.notebook.pack(expand=True, fill="both")
+        self.notebook.pack(expand=True, fill='both')
         self.build_import_tab()
         self.build_scripts_tab()
         self.build_transform_tab()
@@ -166,7 +166,7 @@ class App:
         sub_frame.pack(expand=True, fill='both')
 
         self.edits = ScrolledText(sub_frame)
-        self.edits.pack(fill="both", expand=True)
+        self.edits.pack(fill='both', expand=True)
         self.edits.insert(tk.INSERT, '')
 
         self.edits_popup = tk.Menu(self.edits, tearoff=False)
@@ -392,6 +392,7 @@ class App:
 
     def test_edits(self):
         """Test popup menu selection."""
+        print(self.cxn)
         print('test_edits')
 
     def add_script(self):

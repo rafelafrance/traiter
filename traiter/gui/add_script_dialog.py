@@ -23,8 +23,8 @@ class AddScriptDialog:
         self.action = tk.StringVar(parent, '')
         self.script_id = tk.StringVar(parent, '')
 
-        ttk.Label(win, text="Enter script action").grid(row=0, pady=16, padx=8)
-        ttk.Label(win, text="Enter script name").grid(row=1, pady=16, padx=8)
+        ttk.Label(win, text='Enter script action').grid(row=0, pady=16, padx=8)
+        ttk.Label(win, text='Enter script name').grid(row=1, pady=16, padx=8)
 
         self.action_ent = ttk.Entry(win)
         self.action_ent.grid(row=0, column=1, pady=16, padx=8, sticky='EW')
@@ -32,8 +32,8 @@ class AddScriptDialog:
         self.script_id_ent = ttk.Entry(win)
         self.script_id_ent.grid(row=1, column=1, pady=16, padx=8, sticky='EW')
 
-        ttk.Button(win, text="OK", command=self.ok).grid(row=2, pady=16)
-        ttk.Button(win, text="Cancel", command=self.cancel).grid(
+        ttk.Button(win, text='OK', command=self.ok).grid(row=2, pady=16)
+        ttk.Button(win, text='Cancel', command=self.cancel).grid(
             row=2, column=1, pady=16, padx=8, sticky='W')
 
     def ok(self):
