@@ -3,8 +3,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 
-# from ttkthemes import ThemedStyle
-
 
 class AddScriptDialog:
     """Prompt for script fields."""
