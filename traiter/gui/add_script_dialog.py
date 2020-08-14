@@ -12,9 +12,6 @@ class AddScriptDialog:
 
         win.configure(bg='#f6f4f2')
 
-        # style = ThemedStyle(win)
-        # style.set_theme('radiance')
-
         win.columnconfigure(1, weight=1)
         win.rowconfigure(0, weight=1)
 

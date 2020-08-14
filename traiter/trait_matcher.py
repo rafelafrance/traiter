@@ -12,11 +12,10 @@ from .spacy_nlp import spacy_nlp
 class TraitMatcher:
     """Shared parser logic."""
 
-    def __init__(self, nlp=None, as_entities=False):
+    def __init__(self, nlp=None):
         self.nlp = nlp if nlp else spacy_nlp()
         self.matchers = defaultdict(list)  # Patterns to match at each step
         self.actions = {}               # Action to take on a matched trait
-        self.as_entities = as_entities
         self.after_step = defaultdict(list)     # What to do after a step
 
     def step_action(self, step, action):
@@ -61,6 +60,19 @@ class TraitMatcher:
             if on_match := rule.get('on_match'):
                 self.actions[label] = on_match
 
+    @staticmethod
+    def to_entities(doc):
+        """Convert trait tokens into entities."""
+        spans = []
+        for token in doc:
+            if ent_type_ := token.ent_type_:
+                span = Span(doc, token.i, token.i + 1, label=ent_type_)
+                span._.data = token._.data
+                span._.step = token._.step
+                span._.aux = token._.aux
+                spans.append(span)
+        doc.ents = spans
+
     def scan(self, doc, matchers, step):
         """Find all terms in the text and return the resulting doc.
         There may be more than one matcher for the terms. Gather the results
@@ -81,21 +93,10 @@ class TraitMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                # Merge tokens and relabel the merged span
-                if data.get('_merge', True):
-                    label = data['_relabel'] if data.get('_relabel') else label
-                    attrs = {
-                        'ENT_TYPE': label,
-                        '_': {'label': label, 'data': data, 'step': step}}
-                    retokenizer.merge(span, attrs=attrs)
-                # Don't merge tokens, relabel tokens that are flagged
-                else:
-                    for token in span:
-                        if label := token._.data.get('_relabel'):
-                            sub_span = doc[token.i:token.i + 1]
-                            attrs = {'ENT_TYPE': label,
-                                     '_': {'label': label, 'step': step}}
-                            retokenizer.merge(sub_span, attrs=attrs)
+                label = data['_relabel'] if data.get('_relabel') else label
+                attrs = {'ENT_TYPE': label, '_': {'data': data, 'step': step}}
+                retokenizer.merge(span, attrs=attrs)
+
         return doc
 
     def __call__(self, doc):
@@ -110,18 +111,5 @@ class TraitMatcher:
             # for token in doc:
             #     print(f'{token.ent_type_:<15} {token}')
             # print()
-
-        # Convert trait tokens into entities
-        if self.as_entities:
-            spans = []
-            for token in doc:
-                if ent_type := token.ent_type_:
-                    span = Span(doc, token.i, token.i+1, label=ent_type)
-                    span._.label = token._.label
-                    span._.data = token._.data
-                    span._.step = token._.step
-                    span._.aux = token._.aux
-                    spans.append(span)
-            doc.ents = spans
 
         return doc
