@@ -14,3 +14,4 @@ spacy-lookups-data~=0.3.2
 ttkthemes~=3.1.1
 inflect~=4.1.0
 setuptools~=49.4.0
+xlrd~=1.2.0
