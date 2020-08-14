@@ -2,12 +2,12 @@
 
 """Run the GUI."""
 
-from traiter.gui.app_window import App
+from traiter.gui.app_window import build_app
 
 
 def main():
     """"Do it."""
-    app = App()
+    app = build_app()
     app.win.mainloop()
 
 

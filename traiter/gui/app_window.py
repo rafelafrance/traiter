@@ -15,442 +15,466 @@ from ttkthemes import ThemedTk
 import traiter.pylib.db as db
 import traiter.pylib.doc as doc
 import traiter.pylib.script as script_lib
+from traiter.pylib.util import DotDict
 from .add_script_dialog import AddScriptDialog
 
-OK = 0
-ERROR = 1
 MEMORY = ':memory:'
 
 signal(SIGPIPE, SIG_DFL)
 
 
-# TODO Break this into smaller modules
-class App:
-    """Build the app."""
+def build_app():
+    """Build the app window."""
+    app = DotDict()
 
-    def __init__(self):
-        self.win = ThemedTk(theme='radiance')
+    app.win = ThemedTk(theme='radiance')
 
-        self.dirty = False
-        self.path = MEMORY
-        self.doc_id = ''
+    app.path = MEMORY
+    app.doc_id = ''
 
-        self.cxn = db.connect(self.path)
-        self.curr_dir = '.'
+    app.cxn = db.connect(app.path)
+    app.curr_dir = '.'
 
-        self.docs = None
-        self.doc_tree = None
+    app.docs = None
+    app.doc_tree = None
 
-        self.doc_sel = None
-        self.edits = None
-        self.edits_popup = None
-        self.script_sel = None
+    app.doc_sel = None
+    app.edits = None
+    app.edits_popup = None
+    app.script_sel = None
 
-        self.scripts = None
-        self.script_tree = None
+    app.scripts = None
+    app.script_tree = None
 
-        db.create(self.cxn, self.path)
+    db.create(app.cxn, app.path)
 
-        self.win.title(self.get_title())
-        self.win.geometry('1200x800')
+    app.win.title(get_title(app))
+    app.win.geometry('1200x800')
 
-        self.build_top_menu()
+    build_top_menu(app)
 
-        self.notebook = ttk.Notebook(self.win)
-        self.notebook.pack(expand=True, fill='both')
-        self.build_import_tab()
-        self.build_scripts_tab()
-        self.build_transform_tab()
-        self.build_ner_tab()
-        self.build_nel_tab()
+    app.notebook = ttk.Notebook(app.win)
+    app.notebook.pack(expand=True, fill='both')
+    build_import_tab(app)
+    build_scripts_tab(app)
+    build_transform_tab(app)
+    build_ner_tab(app)
+    build_nel_tab(app)
 
-        self.repopulate()
+    repopulate(app)
 
-    def build_ner_tab(self):
-        """Build the named entity recognition tab."""
-        tab = ttk.Frame(self.notebook)
-        self.notebook.add(tab, text='Entity Recognition')
+    return app
 
-        tab_frame = ttk.Frame(tab)
-        tab_frame.pack(expand=True, fill='both')
 
-    def build_nel_tab(self):
-        """Build the named entity recognition tab."""
-        tab = ttk.Frame(self.notebook)
-        self.notebook.add(tab, text='Entity Linking')
+def build_ner_tab(app):
+    """Build the named entity recognition tab."""
+    tab = ttk.Frame(app.notebook)
+    app.notebook.add(tab, text='Entity Recognition')
 
-        tab_frame = ttk.Frame(tab)
-        tab_frame.pack(expand=True, fill='both')
+    tab_frame = ttk.Frame(tab)
+    tab_frame.pack(expand=True, fill='both')
 
-    def build_top_menu(self):
-        """Build the menu."""
-        menu = tk.Menu(self.win)
-        sub_menu = tk.Menu(menu, tearoff=False)
-        sub_menu.add_command(label='Open', underline=0, command=self.open_db)
-        sub_menu.add_command(label='New', underline=0, command=self.new_db)
-        sub_menu.add_command(
-            label='Save...', underline=0,
-            command=self.save_as_db,
-            state=tk.DISABLED)
-        sub_menu.add_command(
-            label='Save as...', underline=5, command=self.save_as_db)
-        sub_menu.add_separator()
-        sub_menu.add_command(label='Quit', underline=0, command=self.safe_quit)
-        menu.add_cascade(label='File', underline=0, menu=sub_menu)
-        self.win.config(menu=menu)
 
-    def build_import_tab(self):
-        """Build the import tab controls."""
-        tab = ttk.Frame(self.notebook)
-        self.notebook.add(tab, text='Import')
+def build_nel_tab(app):
+    """Build the named entity recognition tab."""
+    tab = ttk.Frame(app.notebook)
+    app.notebook.add(tab, text='Entity Linking')
 
-        tab_frame = ttk.Frame(tab)
-        tab_frame.pack(expand=True, fill='both')
+    tab_frame = ttk.Frame(tab)
+    tab_frame.pack(expand=True, fill='both')
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=False, fill='x', pady=(24, 24))
 
-        button = ttk.Button(
-            sub_frame, text='PDF to Text...', command=self.pdf_to_text)
-        button.pack(side=tk.LEFT, padx=(8, 8))
+def build_top_menu(app):
+    """Build the menu."""
+    menu = tk.Menu(app.win)
+    sub_menu = tk.Menu(menu, tearoff=False)
+    sub_menu.add_command(
+        label='Open', underline=0, command=lambda: open_db(app))
+    sub_menu.add_command(
+        label='New', underline=0, command=lambda: new_db(app))
+    sub_menu.add_command(
+        label='Save...', underline=0, state=tk.DISABLED,
+        command=lambda: save_as_db(app))
+    sub_menu.add_command(
+        label='Save as...', underline=5,
+        command=lambda: save_as_db(app))
+    sub_menu.add_separator()
+    sub_menu.add_command(
+        label='Quit', underline=0, command=lambda: safe_quit(app))
+    menu.add_cascade(label='File', underline=0, menu=sub_menu)
+    app.win.config(menu=menu)
 
-        button = ttk.Button(
-            sub_frame, text='Import Text...', command=self.import_text)
-        button.pack(side=tk.LEFT, padx=(8, 8))
 
-        button = ttk.Button(
-            sub_frame, text='OCR PDF...', state=tk.DISABLED,
-            command=self.ocr_pdf)
-        button.pack(side=tk.LEFT, padx=(8, 8))
+def build_import_tab(app):
+    """Build the import tab controls."""
+    tab = ttk.Frame(app.notebook)
+    app.notebook.add(tab, text='Import')
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=True, fill='both')
+    tab_frame = ttk.Frame(tab)
+    tab_frame.pack(expand=True, fill='both')
 
-        self.docs = doc.select_docs(self.cxn)
-        self.docs.set_index('doc_id', inplace=True)
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=False, fill='x', pady=(24, 24))
 
-        self.doc_tree = ttk.Treeview(sub_frame)
-        self.doc_tree.bind('<Double-Button-1>', self.select_doc)
-        self.doc_tree['columns'] = list(self.docs.columns)
-        self.doc_tree.column('#0', stretch=True)
-        self.doc_tree.heading('#0', text='document')
-        for col in self.docs.columns:
-            self.doc_tree.column(col, stretch=True)
-            self.doc_tree.heading(col, text=col)
+    button = ttk.Button(
+        sub_frame, text='PDF to Text...', command=lambda: pdf_to_text(app))
+    button.pack(side=tk.LEFT, padx=(8, 8))
 
-        vsb = ttk.Scrollbar(
-            sub_frame, orient='vertical', command=self.doc_tree.yview)
-        vsb.pack(side='right', fill='y')
+    button = ttk.Button(
+        sub_frame, text='Import Text...', command=lambda: import_text(app))
+    button.pack(side=tk.LEFT, padx=(8, 8))
 
-        self.doc_tree.bind('<Delete>', self.delete_docs)
+    button = ttk.Button(
+        sub_frame, text='OCR PDF...', state=tk.DISABLED,
+        command=lambda: ocr_pdf(app))
+    button.pack(side=tk.LEFT, padx=(8, 8))
 
-        self.doc_tree.configure(yscrollcommand=vsb.set)
-        self.doc_tree.pack(expand=True, fill='both')
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=True, fill='both')
 
-    def build_transform_tab(self):
-        """Build the transform tab controls."""
-        tab = ttk.Frame(self.notebook)
-        self.notebook.add(tab, text='Transform')
+    app.docs = doc.select_docs(app.cxn)
+    app.docs.set_index('doc_id', inplace=True)
 
-        tab_frame = ttk.Frame(tab)
-        tab_frame.pack(expand=True, fill='both')
+    app.doc_tree = ttk.Treeview(sub_frame)
+    app.doc_tree.bind('<Double-Button-1>', lambda _: select_doc(app))
+    app.doc_tree['columns'] = list(app.docs.columns)
+    app.doc_tree.column('#0', stretch=True)
+    app.doc_tree.heading('#0', text='document')
+    for col in app.docs.columns:
+        app.doc_tree.column(col, stretch=True)
+        app.doc_tree.heading(col, text=col)
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=False, fill='x', pady=(24, 24))
+    vsb = ttk.Scrollbar(
+        sub_frame, orient='vertical', command=app.doc_tree.yview)
+    vsb.pack(side='right', fill='y')
 
-        self.doc_sel = ttk.Combobox(sub_frame)
-        self.doc_sel.pack(side=tk.LEFT, padx=(8, 8))
-        self.doc_sel.bind('<<ComboboxSelected>>', self.doc_selected)
+    app.doc_tree.bind('<Delete>', app.delete_docs)
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=True, fill='both')
+    app.doc_tree.configure(yscrollcommand=vsb.set)
+    app.doc_tree.pack(expand=True, fill='both')
 
-        self.edits = ScrolledText(sub_frame)
-        self.edits.pack(fill='both', expand=True)
-        self.edits.insert(tk.INSERT, '')
 
-        self.edits_popup = tk.Menu(self.edits, tearoff=False)
-        self.edits_popup.add_command(label='Test', command=self.test_edits)
-        self.edits.bind('<Button-3>', self.open_edits_menu)
+def build_transform_tab(app):
+    """Build the transform tab controls."""
+    tab = ttk.Frame(app.notebook)
+    app.notebook.add(tab, text='Transform')
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=False, fill='x', pady=(24, 24))
+    tab_frame = ttk.Frame(tab)
+    tab_frame.pack(expand=True, fill='both')
 
-        self.script_sel = ttk.Combobox(sub_frame)
-        self.script_sel.pack(side=tk.LEFT, padx=(8, 0))
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=False, fill='x', pady=(24, 24))
 
-        button = ttk.Button(
-            sub_frame, text='+', command=self.add_script, width=1)
-        button.pack(side=tk.LEFT, padx=(0, 8))
+    app.doc_sel = ttk.Combobox(sub_frame)
+    app.doc_sel.pack(side=tk.LEFT, padx=(8, 8))
+    app.doc_sel.bind('<<ComboboxSelected>>', doc_selected)
 
-        button = ttk.Button(
-            sub_frame, text='Run Script', command=self.run_script)
-        button.pack(side=tk.LEFT, padx=(8, 8))
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=True, fill='both')
 
-        button = ttk.Button(
-            sub_frame, text='Reset', command=self.reset_edits)
-        button.pack(side=tk.RIGHT, padx=(8, 8))
+    app.edits = ScrolledText(sub_frame)
+    app.edits.pack(fill='both', expand=True)
+    app.edits.insert(tk.INSERT, '')
 
-        button = ttk.Button(
-            sub_frame, text='Cancel', command=self.cancel_edits)
-        button.pack(side=tk.RIGHT, padx=(8, 8))
+    app.edits_popup = tk.Menu(app.edits, tearoff=False)
+    app.edits_popup.add_command(label='Test', command=lambda: test_edits(app))
+    app.edits.bind('<Button-3>', open_edits_menu)
 
-        button = ttk.Button(
-            sub_frame, text='Save', command=self.save_edits)
-        button.pack(side=tk.RIGHT, padx=(8, 8))
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=False, fill='x', pady=(24, 24))
 
-        button = ttk.Button(
-            sub_frame, text='\u21BB', command=self.undo_edits, width=2)
-        button.pack(side=tk.RIGHT, padx=(4, 32))
+    app.script_sel = ttk.Combobox(sub_frame)
+    app.script_sel.pack(side=tk.LEFT, padx=(8, 0))
 
-        button = ttk.Button(
-            sub_frame, text='\u21BA', command=self.redo_edits, width=2)
-        button.pack(side=tk.RIGHT, padx=(32, 4))
+    button = ttk.Button(
+        sub_frame, text='+', width=1, command=lambda: add_script(app))
+    button.pack(side=tk.LEFT, padx=(0, 8))
 
-    def build_scripts_tab(self):
-        """Build the pipes tab controls."""
-        tab = ttk.Frame(self.notebook)
-        self.notebook.add(tab, text='Scripts')
+    button = ttk.Button(
+        sub_frame, text='Run Script', command=lambda: run_script(app))
+    button.pack(side=tk.LEFT, padx=(8, 8))
 
-        tab_frame = ttk.Frame(tab)
-        tab_frame.pack(expand=True, fill='both')
+    button = ttk.Button(
+        sub_frame, text='Reset', command=lambda: reset_edits(app))
+    button.pack(side=tk.RIGHT, padx=(8, 8))
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=True, fill='both')
+    button = ttk.Button(
+        sub_frame, text='Cancel', command=lambda: cancel_edits(app))
+    button.pack(side=tk.RIGHT, padx=(8, 8))
 
-        self.scripts = script_lib.select_scripts(self.cxn)
-        self.scripts.set_index('script_id', inplace=True)
+    button = ttk.Button(
+        sub_frame, text='Save', command=lambda: save_edits(app))
+    button.pack(side=tk.RIGHT, padx=(8, 8))
 
-        self.script_tree = ttk.Treeview(sub_frame)
-        # self.script_tree.bind('<Double-Button-1>', self.select_script)
-        self.script_tree['columns'] = list(self.scripts.columns)
-        self.script_tree.column('#0', stretch=True)
-        self.script_tree.heading('#0', text='')
-        for col in self.scripts.columns:
-            self.script_tree.column(col, stretch=True)
-            self.script_tree.heading(col, text=col)
+    button = ttk.Button(
+        sub_frame, text='\u21BB', command=undo_edits, width=2)
+    button.pack(side=tk.RIGHT, padx=(4, 32))
 
-        vsb = ttk.Scrollbar(
-            sub_frame, orient='vertical', command=self.script_tree.yview)
-        vsb.pack(side='right', fill='y')
+    button = ttk.Button(
+        sub_frame, text='\u21BA', command=redo_edits, width=2)
+    button.pack(side=tk.RIGHT, padx=(32, 4))
 
-        self.script_tree.configure(yscrollcommand=vsb.set)
-        self.script_tree.pack(expand=True, fill='both')
 
-        sub_frame = ttk.Frame(tab_frame)
-        sub_frame.pack(expand=False, fill='x', pady=(24, 24))
+def build_scripts_tab(app):
+    """Build the pipes tab controls."""
+    tab = ttk.Frame(app.notebook)
+    app.notebook.add(tab, text='Scripts')
 
-        button = ttk.Button(sub_frame, text='Add', command=self.add_script)
-        button.pack(side=tk.RIGHT, padx=(8, 8))
+    tab_frame = ttk.Frame(tab)
+    tab_frame.pack(expand=True, fill='both')
 
-    def open_db(self):
-        """Open a database and fill the fields with its data."""
-        path = filedialog.askopenfile(
-            initialdir=self.curr_dir, title='Open a Traiter Database',
-            filetypes=(('db files', '*.db'), ('all files', '*.*')))
-        if not path:
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=True, fill='both')
+
+    app.scripts = script_lib.select_scripts(app.cxn)
+    app.scripts.set_index('script_id', inplace=True)
+
+    app.script_tree = ttk.Treeview(sub_frame)
+    # app.script_tree.bind('<Double-Button-1>', app.select_script)
+    app.script_tree['columns'] = list(app.scripts.columns)
+    app.script_tree.column('#0', stretch=True)
+    app.script_tree.heading('#0', text='')
+    for col in app.scripts.columns:
+        app.script_tree.column(col, stretch=True)
+        app.script_tree.heading(col, text=col)
+
+    vsb = ttk.Scrollbar(
+        sub_frame, orient='vertical', command=app.script_tree.yview)
+    vsb.pack(side='right', fill='y')
+
+    app.script_tree.configure(yscrollcommand=vsb.set)
+    app.script_tree.pack(expand=True, fill='both')
+
+    sub_frame = ttk.Frame(tab_frame)
+    sub_frame.pack(expand=False, fill='x', pady=(24, 24))
+
+    button = ttk.Button(sub_frame, text='Add', command=lambda: add_script(app))
+    button.pack(side=tk.RIGHT, padx=(8, 8))
+
+
+def open_db(app):
+    """Open a database and fill the fields with its data."""
+    path = filedialog.askopenfile(
+        initialdir=app.curr_dir, title='Open a Traiter Database',
+        filetypes=(('db files', '*.db'), ('all files', '*.*')))
+    if not path:
+        return
+    app.curr_dir = dirname(path.name)
+    app.path = path.name
+    app.cxn = db.connect(app.path)
+    repopulate(app)
+
+
+def new_db(app):
+    """Open a database and fill the fields with its data."""
+    path = filedialog.asksaveasfilename(
+        initialdir=app.curr_dir, title='Create a New Traiter Database',
+        filetypes=(('db files', '*.db'), ('all files', '*.*')))
+    if not path:
+        return
+    app.curr_dir = dirname(path)
+    app.path = path
+    app.cxn = db.create(app.cxn, path)
+    repopulate(app)
+
+
+def save_as_db(app):
+    """Open a database and fill the fields with its data."""
+    path = filedialog.asksaveasfilename(
+        initialdir=app.curr_dir, title='Save the Database',
+        filetypes=(('db files', '*.db'), ('all files', '*.*')))
+    if not path:
+        return
+    copy(app.path, path)
+    app.curr_dir = dirname(path)
+    app.path = path
+    app.cxn = db.connect(path)
+    repopulate(app)
+
+
+def safe_quit(app):
+    """Prompt to save changes before quitting."""
+    if app.path == MEMORY:
+        yes = messagebox.askyesno(
+            app.get_title(),
+            'Are you sure you want to exit before saving?')
+        if not yes:
             return
-        self.curr_dir = dirname(path.name)
-        self.path = path.name
-        self.cxn = db.connect(self.path)
-        self.repopulate()
+    app.win.quit()
 
-    def new_db(self):
-        """Open a database and fill the fields with its data."""
-        path = filedialog.asksaveasfilename(
-            initialdir=self.curr_dir, title='Create a New Traiter Database',
-            filetypes=(('db files', '*.db'), ('all files', '*.*')))
-        if not path:
-            return
-        self.curr_dir = dirname(path)
-        self.path = path
-        self.cxn = db.create(self.cxn, path)
-        self.repopulate()
 
-    def save_as_db(self):
-        """Open a database and fill the fields with its data."""
-        path = filedialog.asksaveasfilename(
-            initialdir=self.curr_dir, title='Save the Database',
-            filetypes=(('db files', '*.db'), ('all files', '*.*')))
-        if not path:
-            return
-        copy(self.path, path)
-        self.curr_dir = dirname(path)
-        self.path = path
-        self.cxn = db.connect(path)
-        self.repopulate()
+def pdf_to_text(app):
+    """Import PDFs into the database."""
+    paths = filedialog.askopenfilenames(
+        initialdir=app.curr_dir, title='Import PDF Files', multiple=True,
+        filetypes=(('pdf files', '*.pdf'), ('all files', '*.*')))
+    if paths:
+        app.curr_dir = dirname(paths[0])
+        doc.import_files(app.cxn, paths, type_='pdf')
+        repopulate(app)
 
-    def safe_quit(self):
-        """Prompt to save changes before quitting."""
-        if self.path == MEMORY and self.dirty:
-            yes = messagebox.askyesno(
-                self.get_title(),
-                'Are you sure you want to exit before saving?')
-            if not yes:
-                return
-        self.win.quit()
 
-    def pdf_to_text(self):
-        """Import PDFs into the database."""
-        paths = filedialog.askopenfilenames(
-            initialdir=self.curr_dir, title='Import PDF Files', multiple=True,
-            filetypes=(('pdf files', '*.pdf'), ('all files', '*.*')))
-        if paths:
-            self.dirty = True
-            self.curr_dir = dirname(paths[0])
-            doc.import_files(self.cxn, paths, type_='pdf')
-            self.repopulate()
+def import_text(app):
+    """Import PDFs into the database."""
+    print('import_text')
 
-    def import_text(self):
-        """Import PDFs into the database."""
-        self.dirty = True
-        print('import_text')
 
-    def ocr_pdf(self):
-        """Import PDFs into the database."""
-        self.dirty = True
-        print('ocr_pdf')
+def ocr_pdf(app):
+    """Import PDFs into the database."""
+    print('ocr_pdf')
 
-    def repopulate(self):
-        """Repopulate the controls from new data."""
-        self.win.title(self.get_title())
-        self.docs = doc.select_docs(self.cxn)
-        self.docs.set_index('doc_id', inplace=True)
 
-        self.doc_tree.delete(*self.doc_tree.get_children())
-        for doc_id, row in self.docs.iterrows():
-            self.doc_tree.insert('', tk.END, text=doc_id, values=list(row))
+def repopulate(app):
+    """Repopulate the controls from new data."""
+    app.win.title(get_title(app))
+    app.docs = doc.select_docs(app.cxn)
+    app.docs.set_index('doc_id', inplace=True)
 
-        self.doc_tree.column('#0', stretch=True)
-        self.doc_tree.heading('#0', text='document')
-        for col in self.docs.columns:
-            self.doc_tree.column(col, stretch=True)
-            self.doc_tree.heading(col, text=col)
+    app.doc_tree.delete(*app.doc_tree.get_children())
+    for doc_id, row in app.docs.iterrows():
+        app.doc_tree.insert('', tk.END, text=doc_id, values=list(row))
 
-        doc_ids = self.docs.index.tolist()
-        if doc_ids:
-            self.doc_sel['values'] = [''] + doc_ids
-            self.doc_sel['width'] = max(len(i) for i in doc_ids)
-            self.doc_sel.current(0)
-        else:
-            self.doc_sel['values'] = ['']
+    app.doc_tree.column('#0', stretch=True)
+    app.doc_tree.heading('#0', text='document')
+    for col in app.docs.columns:
+        app.doc_tree.column(col, stretch=True)
+        app.doc_tree.heading(col, text=col)
 
-        self.scripts = script_lib.select_scripts(self.cxn)
-        self.scripts.set_index('script_id', inplace=True)
-        self.script_tree.delete(*self.script_tree.get_children())
-        for script_id, row in self.scripts.iterrows():
-            self.script_tree.insert(
-                '', tk.END, text=script_id, values=list(row))
+    doc_ids = app.docs.index.tolist()
+    if doc_ids:
+        app.doc_sel['values'] = [''] + doc_ids
+        app.doc_sel['width'] = max(len(i) for i in doc_ids)
+        app.doc_sel.current(0)
+    else:
+        app.doc_sel['values'] = ['']
 
-        self.script_tree.column('#0', stretch=True)
-        self.script_tree.heading('#0', text='name')
-        for col in self.scripts.columns:
-            self.script_tree.column(col, stretch=True)
-            self.script_tree.heading(col, text=col)
+    app.scripts = script_lib.select_scripts(app.cxn)
+    app.scripts.set_index('script_id', inplace=True)
+    app.script_tree.delete(*app.script_tree.get_children())
+    for script_id, row in app.scripts.iterrows():
+        app.script_tree.insert(
+            '', tk.END, text=script_id, values=list(row))
 
-        script_ids = self.scripts.index.tolist()
-        if script_ids:
-            self.script_sel['values'] = [''] + script_ids
-            self.script_sel['width'] = max(len(i) for i in script_ids)
-            self.script_sel.current(0)
-        else:
-            self.script_sel['values'] = ['']
+    app.script_tree.column('#0', stretch=True)
+    app.script_tree.heading('#0', text='name')
+    for col in app.scripts.columns:
+        app.script_tree.column(col, stretch=True)
+        app.script_tree.heading(col, text=col)
 
-    def select_doc(self, _):
-        """Select the doc and prepare to edit it."""
-        selected = self.doc_tree.selection()
-        if not selected:
-            return
-        self.doc_id = self.doc_tree.item(selected[0])['text']
-        self.doc_sel.set(self.doc_id)
-        self.doc_selected()
-        self.notebook.select(2)
+    script_ids = app.scripts.index.tolist()
+    if script_ids:
+        app.script_sel['values'] = [''] + script_ids
+        app.script_sel['width'] = max(len(i) for i in script_ids)
+        app.script_sel.current(0)
+    else:
+        app.script_sel['values'] = ['']
 
-    def doc_selected(self, _=None):
-        """Update the doc edit text box when selected."""
-        self.doc_id = self.doc_sel.get()
-        text = doc.select_doc_edits(self.cxn, self.doc_id)
-        self.edits.delete('1.0', tk.END)
-        self.edits.insert(tk.INSERT, text)
 
-    def delete_docs(self, _):
-        """Delete selected docs."""
-        selected = self.doc_tree.selection()
-        if not selected:
-            return
-        doc_ids = [self.doc_tree.item(selected[s])['text']
-                   for s in range(len(selected))]
-        doc.delete_docs(self.cxn, doc_ids)
-        self.repopulate()
+def select_doc(app):
+    """Select the doc and prepare to edit it."""
+    selected = app.doc_tree.selection()
+    if not selected:
+        return
+    app.doc_id = app.doc_tree.item(selected[0])['text']
+    app.doc_sel.set(app.doc_id)
+    doc_selected(app)
+    app.notebook.select(2)
 
-    def open_edits_menu(self, event):
-        """Open the edit popup menu."""
-        try:
-            self.edits_popup.tk_popup(event.x_root, event.y_root)
-        finally:
-            self.edits_popup.grab_release()
 
-    def test_edits(self):
-        """Test popup menu selection."""
-        print(self.cxn)
-        print('test_edits')
+def doc_selected(app, _=None):
+    """Update the doc edit text box when selected."""
+    app.doc_id = app.doc_sel.get()
+    text = doc.select_doc_edits(app.cxn, app.doc_id)
+    app.edits.delete('1.0', tk.END)
+    app.edits.insert(tk.INSERT, text)
 
-    def add_script(self):
-        """Add a pipe to the select list."""
-        dialog = AddScriptDialog(self.win)
-        self.win.wait_window(dialog.win)
-        script_id = dialog.script_id.get()
-        action = dialog.action.get()
-        if not action:
-            return
-        self.dirty = True
-        script_id = script_id if script_id else action
-        script_lib.add_script(self.cxn, script_id, action)
-        self.repopulate()
 
-    def run_script(self):
-        """Run the pipe on the text."""
-        self.dirty = True
-        script = self.script_sel.get()
-        script = self.scripts.at[script, 'action']
-        pipe = pipes.Template()
-        pipe.append(script, '--')
-        with tempfile.NamedTemporaryFile('r') as temp_file:
-            with pipe.open(temp_file.name, 'w') as stream:
-                try:
-                    text = self.edits.get('1.0', tk.END)
-                    stream.write(text)
-                except Exception as err:
-                    print(err)
-                temp_file.seek(0)
-            text = temp_file.read()
-        self.edits.delete('1.0', tk.END)
-        self.edits.insert(tk.INSERT, text)
+def delete_docs(app, _):
+    """Delete selected docs."""
+    selected = app.doc_tree.selection()
+    if not selected:
+        return
+    doc_ids = [app.doc_tree.item(selected[s])['text']
+               for s in range(len(selected))]
+    doc.delete_docs(app.cxn, doc_ids)
+    repopulate(app)
 
-    def undo_edits(self):
-        """Undo the last edit for the current doc."""
 
-    def redo_edits(self):
-        """Redo the last edit for the current doc."""
+def open_edits_menu(app, event):
+    """Open the edit popup menu."""
+    try:
+        app.edits_popup.tk_popup(event.x_root, event.y_root)
+    finally:
+        app.edits_popup.grab_release()
 
-    def save_edits(self):
-        """Save edits to the database."""
-        text = self.edits.get('1.0', tk.END)
-        doc.update_doc(self.cxn, self.doc_id, text)
 
-    def cancel_edits(self):
-        """Cancel edits back to the last saved point."""
-        text = doc.select_doc_edits(self.cxn, self.doc_id)
-        self.edits.delete('1.0', tk.END)
-        self.edits.insert(tk.INSERT, text)
+def test_edits(app):
+    """Test popup menu selection."""
+    print(app.cxn)
+    print('test_edits')
 
-    def reset_edits(self):
-        """Reset edits back to the original data."""
-        text = doc.select_doc_raw(self.cxn, self.doc_id)
-        self.edits.delete('1.0', tk.END)
-        self.edits.insert(tk.INSERT, text)
 
-    def get_title(self):
-        """Build the window title."""
-        title = splitext(basename(self.path))[0]
-        return f'Traiter ({title})'
+def add_script(app):
+    """Add a pipe to the select list."""
+    dialog = AddScriptDialog(app.win)
+    app.win.wait_window(dialog.win)
+    script_id = dialog.script_id.get()
+    action = dialog.action.get()
+    if not action:
+        return
+    script_id = script_id if script_id else action
+    script_lib.add_script(app.cxn, script_id, action)
+    repopulate(app)
+
+
+def run_script(app):
+    """Run the pipe on the text."""
+    script = app.script_sel.get()
+    script = app.scripts.at[script, 'action']
+    pipe = pipes.Template()
+    pipe.append(script, '--')
+    with tempfile.NamedTemporaryFile('r') as temp_file:
+        with pipe.open(temp_file.name, 'w') as stream:
+            try:
+                text = app.edits.get('1.0', tk.END)
+                stream.write(text)
+            except Exception as err:
+                print(err)
+            temp_file.seek(0)
+        text = temp_file.read()
+    app.edits.delete('1.0', tk.END)
+    app.edits.insert(tk.INSERT, text)
+
+
+def undo_edits(app):
+    """Undo the last edit for the current doc."""
+
+
+def redo_edits(app):
+    """Redo the last edit for the current doc."""
+
+
+def save_edits(app):
+    """Save edits to the database."""
+    text = app.edits.get('1.0', tk.END)
+    doc.update_doc(app.cxn, app.doc_id, text)
+
+
+def cancel_edits(app):
+    """Cancel edits back to the last saved point."""
+    text = doc.select_doc_edits(app.cxn, app.doc_id)
+    app.edits.delete('1.0', tk.END)
+    app.edits.insert(tk.INSERT, text)
+
+
+def reset_edits(app):
+    """Reset edits back to the original data."""
+    text = doc.select_doc_raw(app.cxn, app.doc_id)
+    app.edits.delete('1.0', tk.END)
+    app.edits.insert(tk.INSERT, text)
+
+
+def get_title(app):
+    """Build the window title."""
+    title = splitext(basename(app.path))[0]
+    return f'Traiter ({title})'
