@@ -66,7 +66,6 @@ class TraitMatcher:
                 span = Span(doc, token.i, token.i + 1, label=ent_type_)
                 span._.data = token._.data
                 span._.step = token._.step
-                span._.aux = token._.aux
                 spans.append(span)
         doc.ents = spans
 
