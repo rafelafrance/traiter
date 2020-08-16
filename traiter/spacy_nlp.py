@@ -9,11 +9,9 @@ from spacy.tokens import Span, Token
 
 Token.set_extension('data', default={})
 Token.set_extension('step', default='')
-Token.set_extension('aux', default={})
 
 Span.set_extension('data', default={})
 Span.set_extension('step', default='')
-Span.set_extension('aux', default={})
 
 
 def spacy_nlp(

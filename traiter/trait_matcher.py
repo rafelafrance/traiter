@@ -15,12 +15,8 @@ class TraitMatcher:
     def __init__(self, nlp=None):
         self.nlp = nlp if nlp else spacy_nlp()
         self.matchers = defaultdict(list)  # Patterns to match at each step
-        self.actions = {}               # Action to take on a matched trait
-        self.after_step = defaultdict(list)     # What to do after a step
-
-    def step_action(self, step, action):
-        """Actions to do either before or after a step."""
-        self.after_step[step].append(action)
+        self.actions = {}                  # Action to take on a matched trait
+        self.count = 0                     # Allow matchers with same label
 
     def add_terms(self, terms, step='terms'):
         """Add phrase matchers.
@@ -54,7 +50,8 @@ class TraitMatcher:
         matcher = Matcher(self.nlp.vocab)
         self.matchers[step].append(matcher)
         for rule in rules:
-            label = rule['label']
+            self.count += 1
+            label = f"{rule['label']}.{self.count}"
             patterns = rule['patterns']
             matcher.add(label, patterns)
             if on_match := rule.get('on_match'):
@@ -74,11 +71,7 @@ class TraitMatcher:
         doc.ents = spans
 
     def scan(self, doc, matchers, step):
-        """Find all terms in the text and return the resulting doc.
-        There may be more than one matcher for the terms. Gather the results
-        for each one and combine them. Then retokenize the doc to handle terms
-        that span multiple tokens.
-        """
+        """Find all terms in the text and return the resulting doc."""
         matches = []
 
         for matcher in matchers:
@@ -93,6 +86,7 @@ class TraitMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
+                label = label.split('.')[0]
                 label = data['_relabel'] if data.get('_relabel') else label
                 attrs = {'ENT_TYPE': label, '_': {'data': data, 'step': step}}
                 retokenizer.merge(span, attrs=attrs)
@@ -100,12 +94,9 @@ class TraitMatcher:
         return doc
 
     def __call__(self, doc):
-        """Parse the traits."""
+        """Parse the doc in steps, building up a full parse in steps."""
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)
-            if actions := self.after_step.get(step):
-                for action in actions:
-                    action(self)
 
             # print(step)
             # for token in doc:
