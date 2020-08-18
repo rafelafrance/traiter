@@ -76,8 +76,7 @@ class TraitMatcher:
         for matcher in matchers:
             matches += matcher(doc)
 
-        spans = [Span(doc, s, e, label=self.nlp.vocab.strings[i])
-                 for i, s, e in matches]
+        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
         spans = filter_spans(spans)
 
         with doc.retokenize() as retokenizer:
@@ -99,7 +98,8 @@ class TraitMatcher:
 
             # print(step)
             # for token in doc:
-            #     print(f'{token.ent_type_:<15} {token}')
+            #     print(f'{token.ent_type_:<15} {token.pos_:<6} '
+            #           f'{token.lemma_} => {token}')
             # print()
 
         return doc

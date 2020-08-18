@@ -1,13 +1,13 @@
 """Misc. utilities."""
 
 import os
-import re
 from contextlib import contextmanager
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
 
 import inflect
+import regex as re
 
 __VERSION__ = '0.8.0'
 
@@ -147,3 +147,9 @@ def filter_matches(matches):
         if match[1] >= cleaned[-1][2]:
             cleaned.append(match)
     return cleaned
+
+
+def clean_text(text):
+    """Strip control characters from improperly encoded input strings."""
+    text = text if text else ''
+    return re.sub(r'\p{Cc}+', ' ', text)
