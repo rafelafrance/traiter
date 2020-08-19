@@ -6,6 +6,7 @@ from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
 
+import ftfy
 import inflect
 import regex as re
 
@@ -152,4 +153,5 @@ def filter_matches(matches):
 def clean_text(text):
     """Strip control characters from improperly encoded input strings."""
     text = text if text else ''
+    text = ftfy.fix_text(text)
     return re.sub(r'\p{Cc}+', ' ', text)

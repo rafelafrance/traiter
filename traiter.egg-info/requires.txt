@@ -3,6 +3,7 @@ Jinja2~=3.0.0a1
 beautifulsoup4~=4.9.1
 spacy~=2.3.2
 en-core-web-sm@ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz
+ftfy~=5.8
 html5lib~=1.1
 lxml~=4.5.2
 numpy~=1.19.1
@@ -13,5 +14,5 @@ scipy~=1.5.2
 spacy-lookups-data~=0.3.2
 ttkthemes~=3.1.1
 inflect~=4.1.0
-setuptools~=49.4.0
+setuptools~=49.6.0
 xlrd~=1.2.0
