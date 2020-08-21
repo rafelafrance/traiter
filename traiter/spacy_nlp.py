@@ -14,24 +14,14 @@ Span.set_extension('data', default={})
 Span.set_extension('step', default='')
 
 
-def spacy_nlp(
-        disable=None,
-        lang_model='en_core_web_sm',
-        tokenizer=True,
-        gpu='prefer'):
+def spacy_nlp(disable=None, lang_model='en_core_web_sm', gpu='prefer'):
     """A single function to build the spacy nlp object for singleton use."""
     if gpu == 'prefer':
         spacy.prefer_gpu()
     elif gpu == 'require':
         spacy.require_gpu()
 
-    if disable is None:
-        disable = []
-
-    nlp = spacy.load(lang_model, disable=disable)
-
-    if tokenizer:
-        setup_tokenizer(nlp)
+    nlp = spacy.load(lang_model)
 
     return nlp
 

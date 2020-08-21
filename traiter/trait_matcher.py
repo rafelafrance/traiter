@@ -6,14 +6,12 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
 from spacy.util import filter_spans
 
-from .spacy_nlp import spacy_nlp
-
 
 class TraitMatcher:
     """Shared parser logic."""
 
     def __init__(self, nlp=None):
-        self.nlp = nlp if nlp else spacy_nlp()
+        self.nlp = nlp
         self.matchers = defaultdict(list)  # Patterns to match at each step
         self.actions = {}                  # Action to take on a matched trait
         self.count = 0                     # Allow matchers with same label
