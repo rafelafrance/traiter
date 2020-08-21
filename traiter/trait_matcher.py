@@ -57,18 +57,6 @@ class TraitMatcher:
             if on_match := rule.get('on_match'):
                 self.actions[label] = on_match
 
-    @staticmethod
-    def to_entities(doc):
-        """Convert trait tokens into entities."""
-        spans = []
-        for token in doc:
-            if ent_type_ := token.ent_type_:
-                span = Span(doc, token.i, token.i + 1, label=ent_type_)
-                span._.data = token._.data
-                span._.step = token._.step
-                spans.append(span)
-        doc.ents = spans
-
     def scan(self, doc, matchers, step):
         """Find all terms in the text and return the resulting doc."""
         matches = []

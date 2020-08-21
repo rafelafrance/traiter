@@ -63,3 +63,25 @@ def setup_tokenizer(nlp):
 
     suffix = re.compile(f'{breaking}$')
     nlp.tokenizer.suffix_search = suffix.search
+
+
+def to_entities(doc, steps=None):
+    """Convert trait tokens into entities."""
+    spans = []
+    for token in doc:
+        if ent_type_ := token.ent_type_:
+            if steps and token._.step not in steps:
+                continue
+            if token._.data.get('_skip'):
+                continue
+            data = {k: v for k, v in token._.data.items()
+                    if not k.startswith('_')}
+
+            span = Span(doc, token.i, token.i + 1, label=ent_type_)
+
+            span._.data = data
+            span._.step = token._.step
+
+            spans.append(span)
+
+    doc.ents = spans
