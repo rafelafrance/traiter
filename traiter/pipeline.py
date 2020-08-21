@@ -3,7 +3,7 @@
 from .spacy_nlp import to_entities
 
 
-class Pipeline:
+class TraitPipeline:
     """Build a custom traiter pipeline."""
 
     steps2link = None

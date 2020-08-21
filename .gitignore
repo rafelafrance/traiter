@@ -16,7 +16,6 @@ venv/
 __pycache__
 .ipynb_checkpoints/
 
-
 # Setup tools
 dist/
 
@@ -26,25 +25,15 @@ admin/
 
 # data
 output/
-!output/.gitkeep
 
 data/
-!data/.gitkeep
-!data/*.csv
 
 # Temp files
 temp/
 junk*
 
 # Test
-.coverage
-.cache
-.hypothesis
 .pytest_cache/
-
-# R
-.Rhistory
-.RData
 
 # Other code
 args/
@@ -54,9 +43,6 @@ src/
 build/
 
 # Experiments
-transformers/
-notebooks/
 experiments/
-spaCy/
-spacy
 utils/
+notebooks/

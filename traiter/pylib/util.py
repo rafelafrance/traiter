@@ -3,6 +3,7 @@
 import os
 from contextlib import contextmanager
 from datetime import datetime
+from pathlib import Path
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -11,6 +12,8 @@ import inflect
 import regex as re
 
 __VERSION__ = '0.8.0'
+
+DATA_DIR = Path.cwd() / 'data'
 
 FLAGS = re.VERBOSE | re.IGNORECASE
 
