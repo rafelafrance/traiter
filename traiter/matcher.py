@@ -70,6 +70,8 @@ class TraitMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
+                if data.get('_forget'):
+                    continue
                 label = label.split('.')[0]
                 label = data['_relabel'] if data.get('_relabel') else label
                 attrs = {'ENT_TYPE': label, '_': {'data': data, 'step': step}}
