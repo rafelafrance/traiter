@@ -31,7 +31,7 @@ class TraitPipeline:
             data['end'] = ent.end_char
             traits.append(data)
 
-        from pprint import pp
-        pp(traits)
+        # from pprint import pp
+        # pp(traits)
 
         return traits
