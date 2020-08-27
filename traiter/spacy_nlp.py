@@ -14,7 +14,7 @@ Span.set_extension('data', default={})
 Span.set_extension('step', default='')
 
 
-def spacy_nlp(disable=None, lang_model='en_core_web_sm', gpu='prefer'):
+def spacy_nlp(lang_model='en_core_web_sm', gpu='prefer'):
     """A single function to build the spacy nlp object for singleton use."""
     if gpu == 'prefer':
         spacy.prefer_gpu()

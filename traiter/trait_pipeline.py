@@ -8,17 +8,12 @@ class TraitPipeline:
 
     steps2link = None
 
-    def __init__(self, nlp, linker=None):
+    def __init__(self, nlp):
         self.nlp = nlp
-        self.linker = linker
 
     def ner(self, text):
         """Find entities in the doc."""
         doc = self.nlp(text)
-
-        if self.linker:
-            for sent in doc.sents:
-                self.linker(sent)
 
         to_entities(doc, steps=self.steps2link)
         return doc
@@ -36,7 +31,7 @@ class TraitPipeline:
             data['end'] = ent.end_char
             traits.append(data)
 
-        # from pprint import pp
-        # pp(traits)
+        from pprint import pp
+        pp(traits)
 
         return traits

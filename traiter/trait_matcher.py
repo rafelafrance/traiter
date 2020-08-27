@@ -55,6 +55,14 @@ class TraitMatcher:
             if on_match := rule.get('on_match'):
                 self.actions[label] = on_match
 
+    @staticmethod
+    def step_rules(matchers, step):
+        """Get all patterns for a step."""
+        rules = []
+        for matcher in matchers:
+            rules += matcher.get(step, [])
+        return rules
+
     def scan(self, doc, matchers, step):
         """Find all terms in the text and return the resulting doc."""
         matches = []
