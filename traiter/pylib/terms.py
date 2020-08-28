@@ -164,7 +164,7 @@ def mock_itis_traits(name):
         with open(mock_path) as mock_file:
             for line in mock_file.readlines():
                 term = json.loads(line)
-                term['label'] = name
+                term['label'] = term.get('label', name)
                 terms.append(term)
 
     return terms

@@ -1,13 +1,13 @@
 Hyphenate~=1.1.0
 Jinja2~=3.0.0a1
 beautifulsoup4~=4.9.1
-spacy~=3.0.0a0
+spacy~=2.3.2
 en-core-web-sm@ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz
 ftfy~=5.8
 html5lib~=1.1
 lxml~=4.5.2
 numpy~=1.19.1
-pandas~=1.1.0
+pandas~=1.1.1
 python-dateutil~=2.8.1
 regex~=2020.7.14
 scipy~=1.5.2

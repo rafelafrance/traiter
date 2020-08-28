@@ -8,6 +8,7 @@ tests/pylib/test_util.py
 traiter/__init__.py
 traiter/spacy_nlp.py
 traiter/trait_matcher.py
+traiter/trait_pipeline.py
 traiter.egg-info/PKG-INFO
 traiter.egg-info/SOURCES.txt
 traiter.egg-info/dependency_links.txt
@@ -32,4 +33,5 @@ traiter/pylib/db.py
 traiter/pylib/doc.py
 traiter/pylib/pdf.py
 traiter/pylib/script.py
+traiter/pylib/terms.py
 traiter/pylib/util.py
