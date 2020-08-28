@@ -41,10 +41,12 @@ class TraitMatcher:
                 phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
                 matcher.add(label, phrases)
 
-    def add_patterns(self, rules, step):
+    def add_patterns(self, matchers, step):
         """Build matchers that recognize traits and labels."""
+        rules = self.step_rules(matchers, step)
         if not rules:
             return
+
         matcher = Matcher(self.nlp.vocab)
         self.matchers[step].append(matcher)
         for rule in rules:
@@ -54,6 +56,8 @@ class TraitMatcher:
             matcher.add(label, patterns)
             if on_match := rule.get('on_match'):
                 self.actions[label] = on_match
+
+        return rules
 
     @staticmethod
     def step_rules(matchers, step):
