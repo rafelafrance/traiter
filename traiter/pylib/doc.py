@@ -11,7 +11,7 @@ from traiter.pylib.util import FLAGS
 from .util import now
 
 
-# Todo move this into scripts table
+# TODO move this into scripts table
 def clean_text_more(text):
     """Clean peculiarities particular to these guides."""
     text = re.sub(r'(?<= [a-z] -) \s (?= [a-z])', '', text, flags=FLAGS)
