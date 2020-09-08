@@ -25,7 +25,8 @@ class TraitPipeline:
         traits = []
 
         for ent in doc.ents:
-            data = ent._.data
+            data = {k: v for k, v in ent._.data.items()
+                    if not k.startswith('_')}
             data['trait'] = ent.label_
             data['start'] = ent.start_char
             data['end'] = ent.end_char

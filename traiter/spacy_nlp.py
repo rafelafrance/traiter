@@ -64,8 +64,7 @@ def to_entities(doc, steps=None):
                 continue
             if token._.data.get('_skip'):
                 continue
-            data = {k: v for k, v in token._.data.items()
-                    if not k.startswith('_')}
+            data = {k: v for k, v in token._.data.items()}
 
             span = Span(doc, token.i, token.i + 1, label=ent_type_)
 
