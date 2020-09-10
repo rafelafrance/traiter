@@ -1,6 +1,6 @@
 """Common pipeline functions."""
 
-from .spacy_nlp import to_entities
+from spacy.tokens import Span
 
 
 class TraitPipeline:
@@ -11,10 +11,30 @@ class TraitPipeline:
     def __init__(self, nlp):
         self.nlp = nlp
 
+    def to_entities(self, doc):
+        """Convert trait tokens into entities."""
+        spans = []
+        for token in doc:
+            if ent_type_ := token.ent_type_:
+                if self.steps2link and token._.step not in self.steps2link:
+                    continue
+                if token._.data.get('_skip'):
+                    continue
+                data = {k: v for k, v in token._.data.items()}
+
+                span = Span(doc, token.i, token.i + 1, label=ent_type_)
+
+                span._.data = data
+                span._.step = token._.step
+
+                spans.append(span)
+
+        doc.ents = spans
+
     def find_entities(self, text):
         """Find entities in the doc."""
         doc = self.nlp(text)
-        to_entities(doc, steps=self.steps2link)
+        self.to_entities(doc)
         return doc
 
     @staticmethod
