@@ -11,17 +11,15 @@ class TraitPipeline:
     def __init__(self, nlp):
         self.nlp = nlp
 
-    def ner(self, text):
+    def find_entities(self, text):
         """Find entities in the doc."""
         doc = self.nlp(text)
-
         to_entities(doc, steps=self.steps2link)
         return doc
 
-    def trait_list(self, text):
+    @staticmethod
+    def trait_list(doc):
         """Tests require a trait list."""
-        doc = self.ner(text)
-
         traits = []
 
         for ent in doc.ents:
@@ -31,6 +29,13 @@ class TraitPipeline:
             data['start'] = ent.start_char
             data['end'] = ent.end_char
             traits.append(data)
+
+        return traits
+
+    def test_traits(self, text):
+        """Build unit test data."""
+        doc = self.find_entities(text)
+        traits = self.trait_list(doc)
 
         # from pprint import pp
         # pp(traits)
