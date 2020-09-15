@@ -46,7 +46,7 @@ def setup_tokenizer(nlp):
     infix_regex = spacy.util.compile_infix_regex(infix)
     nlp.tokenizer.infix_finditer = infix_regex.finditer
 
-    breaking = r"""[\[\]\\/()<>:;,.?"“”'+-]"""
+    breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'+-]"""
 
     prefix = re.compile(f'^{breaking}')
     nlp.tokenizer.prefix_search = prefix.search
