@@ -7,7 +7,7 @@ from pathlib import Path
 
 from hyphenate import hyphenate_word
 
-from .util import DATA_DIR
+from traiter.pylib.util import DATA_DIR
 
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
 VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'

@@ -67,6 +67,21 @@ class SpacyMatcher:
             rules += matcher.get(step, [])
         return rules
 
+    @staticmethod
+    def filter_matches(matches):
+        """Filter a sequence of matches so they don't contain overlaps.
+
+        Matches: array of tuples: [(match_id, start, end), ...]
+        """
+        if not matches:
+            return []
+        first, *rest = sorted(matches, key=lambda m: (m[1], -m[2]))
+        cleaned = [first]
+        for match in rest:
+            if match[1] >= cleaned[-1][2]:
+                cleaned.append(match)
+        return cleaned
+
     def scan(self, doc, matchers, step):
         """Find all terms in the text and return the resulting doc."""
         matches = []
