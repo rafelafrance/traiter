@@ -1,7 +1,6 @@
 """Get terms from various sources (CSV files or SQLite database."""
 
 import csv
-import json
 import sqlite3
 from pathlib import Path
 
@@ -159,12 +158,11 @@ def mock_itis_traits(name):
     name = name.lower()
     terms = []
 
-    mock_path = VOCAB_DIR / 'mock_itis_terms.jsonl'
+    mock_path = VOCAB_DIR / 'mock_itis_terms.csv'
     if mock_path.exists():
-        with open(mock_path) as mock_file:
-            for line in mock_file.readlines():
-                term = json.loads(line)
-                term['label'] = term.get('label', name)
-                terms.append(term)
+        terms = read_terms(mock_path)
+        for term in terms:
+            label = term['label']
+            term['label'] = label if label else name
 
     return terms
