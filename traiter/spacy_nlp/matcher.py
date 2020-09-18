@@ -7,7 +7,7 @@ from spacy.tokens import Span
 from spacy.util import filter_spans
 
 
-class TraitMatcher:
+class SpacyMatcher:
     """Shared parser logic."""
 
     def __init__(self, nlp=None):

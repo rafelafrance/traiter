@@ -3,7 +3,7 @@
 import regex
 
 
-class Sentencizer:
+class SpacySentencizer:
     """Shared sentencizer logic."""
 
     def __init__(self, abbrevs):
