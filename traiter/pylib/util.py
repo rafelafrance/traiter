@@ -141,5 +141,8 @@ def number_to_words(number):
 def clean_text(text):
     """Strip control characters from improperly encoded input strings."""
     text = text if text else ''
+    text = text.replace('\f', ' ')
+    text = ' '.join(text.split())
+    text = re.sub(r'([a-z])-\s+([a-z])', r'\1\2', text, flags=re.IGNORECASE)
     text = ftfy.fix_text(text)
     return re.sub(r'\p{Cc}+', ' ', text)
