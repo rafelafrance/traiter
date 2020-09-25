@@ -7,11 +7,11 @@ from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
     CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS
 from spacy.tokens import Span, Token
 
-Token.set_extension('data', default={})
-Token.set_extension('step', default='')
-
-Span.set_extension('data', default={})
-Span.set_extension('step', default='')
+if not Token.has_extension('data'):
+    Token.set_extension('data', default={})
+    Token.set_extension('step', default='')
+    Span.set_extension('data', default={})
+    Span.set_extension('step', default='')
 
 
 class SpacyPipeline:
