@@ -19,13 +19,20 @@ class SpacyPipeline:
 
     steps2link = None
 
-    def __init__(self, lang_model='en_core_web_sm', gpu='prefer'):
+    def __init__(
+            self,
+            lang_model='en_core_web_sm',
+            gpu='prefer',
+            tokenizer=True):
         if gpu == 'prefer':
             spacy.prefer_gpu()
         elif gpu == 'require':
             spacy.require_gpu()
+
         self.nlp = spacy.load(lang_model)
-        self.setup_tokenizer()
+
+        if tokenizer:
+            self.setup_tokenizer()
 
     def setup_tokenizer(self):
         """Setup custom tokenizer rules for the pipeline."""

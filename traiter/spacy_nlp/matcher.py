@@ -101,7 +101,8 @@ class SpacyMatcher:
                     continue
                 label = label.split('.')[0]
                 label = data['_relabel'] if data.get('_relabel') else label
-                attrs = {'ENT_TYPE': label, '_': {'data': data, 'step': step}}
+                attrs = {'ENT_TYPE': label, 'ENT_IOB': 3,
+                         '_': {'data': data, 'step': step}}
                 retokenizer.merge(span, attrs=attrs)
 
         return doc
