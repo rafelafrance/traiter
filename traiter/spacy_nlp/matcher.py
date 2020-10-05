@@ -33,12 +33,8 @@ class SpacyMatcher:
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
-        by_attr = defaultdict(list)
-
-        for pattern in [t for t in terms]:
-            by_attr[pattern['attr']].append(pattern)
-
-        for attr, patterns in by_attr.items():
+        attrs = {p['attr'] for p in terms}
+        for attr in attrs:
             matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
             self.matchers[step].append(matcher)
 
@@ -55,7 +51,7 @@ class SpacyMatcher:
         """Build matchers that recognize traits and labels."""
         rules = self.step_rules(matchers, step)
         if not rules:
-            return
+            return None
 
         matcher = Matcher(self.nlp.vocab)
         self.matchers[step].append(matcher)
@@ -119,7 +115,7 @@ class SpacyMatcher:
 
     def __call__(self, doc: Doc) -> Doc:
         """Parse the doc in steps, building up a full parse in steps."""
-        for step, matchers in self.matchers.items():
+        for step, _ in self.matchers.items():  # Preserve order
             doc = self.scan(doc, self.matchers[step], step=step)
 
             # print(step)

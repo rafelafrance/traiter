@@ -58,6 +58,13 @@ def itis_terms(
 
     terms = []
     name = name.lower()
+    append_terms(abbrev, name, species, taxa, terms)
+
+    return terms
+
+
+def append_terms(abbrev, name, species, taxa, terms):
+    """Append terms and modified terms to the term list."""
     for taxon in sorted(taxa):
         terms.append({
             'label': name,
@@ -69,26 +76,22 @@ def itis_terms(
             words = taxon.split()
             if len(words) > 1:
                 first, *rest = words
-                first = first[0]
                 rest = ' '.join(rest)
                 terms.append({
                     'label': name,
-                    'pattern': f'{first} . {rest}',
+                    'pattern': f'{first[0]} . {rest}',
                     'attr': 'lower',
                     'replace': taxon,
                 })
         if species:
             words = taxon.split()
             if len(words) > 1:
-                genus, species, *rest = words
                 terms.append({
                     'label': 'species',
-                    'pattern': species,
+                    'pattern': words[1],
                     'attr': 'lower',
-                    'replace': species.lower(),
+                    'replace': words[1].lower(),
                 })
-
-    return terms
 
 
 def hyphenate_terms(terms: TermsListType) -> TermsListType:

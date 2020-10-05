@@ -18,7 +18,7 @@ if not Token.has_extension('data'):
 class SpacyPipeline:
     """Build a custom traiter pipeline."""
 
-    steps2link = None
+    steps2link = set()
 
     def __init__(
             self,
@@ -69,16 +69,14 @@ class SpacyPipeline:
         spans = []
         for token in doc:
             if ent_type_ := token.ent_type_:
-                if self.steps2link and token._.step not in self.steps2link:
+                if token._.step not in self.steps2link:
                     continue
                 if token._.data.get('_skip'):
                     continue
 
-                data = {k: v for k, v in token._.data.items()}
-
                 span = Span(doc, token.i, token.i + 1, label=ent_type_)
 
-                span._.data = data
+                span._.data = token._.data
                 span._.step = token._.step
 
                 spans.append(span)

@@ -1,4 +1,5 @@
 """Custom sentence splitter."""
+# pylint: disable=too-many-boolean-expressions, too-few-public-methods
 
 from typing import List, Union
 
