@@ -3,6 +3,7 @@
 import csv
 import sqlite3
 from pathlib import Path
+from typing import Dict, List
 
 from hyphenate import hyphenate_word
 
@@ -10,6 +11,8 @@ from traiter.pylib.util import DATA_DIR
 
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
 VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
+
+TermsListType = List[Dict[str, str]]
 
 
 def read_terms(term_path):
@@ -19,7 +22,13 @@ def read_terms(term_path):
         return list(reader)
 
 
-def itis_terms(name, kingdom_id=5, rank_id=220, abbrev=False, species=False):
+def itis_terms(
+        name: str,
+        kingdom_id: int = 5,
+        rank_id: int = 220,
+        abbrev: bool = False,
+        species: bool = False
+) -> TermsListType:
     """Get terms from the ITIS database.
 
     kingdom_id =   5 == Animalia
@@ -82,7 +91,7 @@ def itis_terms(name, kingdom_id=5, rank_id=220, abbrev=False, species=False):
     return terms
 
 
-def hyphenate_terms(terms):
+def hyphenate_terms(terms: TermsListType) -> TermsListType:
     """Systematically handle hyphenated terms."""
     new_terms = []
     for term in terms:
@@ -114,7 +123,8 @@ def hyphenate_terms(terms):
     return new_terms
 
 
-def get_common_names(name, kingdom_id=5, rank_id=220):
+def get_common_names(
+        name: str, kingdom_id: int = 5, rank_id: int = 220) -> TermsListType:
     """Guides often use common names instead of scientific name.
 
         kingdom_id =   5 == Animalia
@@ -153,7 +163,7 @@ def get_common_names(name, kingdom_id=5, rank_id=220):
     return terms
 
 
-def mock_itis_traits(name):
+def mock_itis_traits(name: str) -> TermsListType:
     """Set up mock traits for testing with Travis."""
     name = name.lower()
     terms = []

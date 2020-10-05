@@ -1,11 +1,12 @@
 """Common pipeline functions."""
 
 import re
+from typing import Dict, List
 
 import spacy
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER, \
     CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS
-from spacy.tokens import Span, Token
+from spacy.tokens import Doc, Span, Token
 
 if not Token.has_extension('data'):
     Token.set_extension('data', default={})
@@ -21,9 +22,10 @@ class SpacyPipeline:
 
     def __init__(
             self,
-            lang_model='en_core_web_sm',
-            gpu='prefer',
-            tokenizer=True):
+            lang_model: str = 'en_core_web_sm',
+            gpu: str = 'prefer',
+            tokenizer: bool = True
+    ) -> None:
         if gpu == 'prefer':
             spacy.prefer_gpu()
         elif gpu == 'require':
@@ -34,7 +36,7 @@ class SpacyPipeline:
         if tokenizer:
             self.setup_tokenizer()
 
-    def setup_tokenizer(self):
+    def setup_tokenizer(self) -> None:
         """Setup custom tokenizer rules for the pipeline."""
         infix = (
                 LIST_ELLIPSES
@@ -62,7 +64,7 @@ class SpacyPipeline:
         suffix = re.compile(f'{breaking}$')
         self.nlp.tokenizer.suffix_search = suffix.search
 
-    def to_entities(self, doc):
+    def to_entities(self, doc: Doc) -> None:
         """Convert trait tokens into entities."""
         spans = []
         for token in doc:
@@ -71,6 +73,7 @@ class SpacyPipeline:
                     continue
                 if token._.data.get('_skip'):
                     continue
+
                 data = {k: v for k, v in token._.data.items()}
 
                 span = Span(doc, token.i, token.i + 1, label=ent_type_)
@@ -82,14 +85,14 @@ class SpacyPipeline:
 
         doc.ents = spans
 
-    def find_entities(self, text):
+    def find_entities(self, text: str) -> Doc:
         """Find entities in the doc."""
         doc = self.nlp(text)
         self.to_entities(doc)
         return doc
 
     @staticmethod
-    def trait_list(doc):
+    def trait_list(doc: Doc) -> List[Dict]:
         """Tests require a trait list."""
         traits = []
 
@@ -103,7 +106,7 @@ class SpacyPipeline:
 
         return traits
 
-    def test_traits(self, text):
+    def test_traits(self, text: str) -> List[Dict]:
         """Build unit test data."""
         doc = self.find_entities(text)
         traits = self.trait_list(doc)

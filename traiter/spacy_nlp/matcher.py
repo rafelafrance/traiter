@@ -1,22 +1,31 @@
 """Common logic for parsing trait notations."""
 
 from collections import defaultdict
+from typing import Callable, DefaultDict, Dict, List, Optional, Tuple, Union
 
+from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
-from spacy.tokens import Span
+from spacy.tokens import Doc, Span
 from spacy.util import filter_spans
+
+MatcherDictType = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 
 
 class SpacyMatcher:
     """Shared parser logic."""
 
-    def __init__(self, nlp=None):
-        self.nlp = nlp
-        self.matchers = defaultdict(list)  # Patterns to match at each step
-        self.actions = {}                  # Action to take on a matched trait
-        self.count = 0                     # Allow matchers with same label
+    def __init__(self, nlp: Optional[Language] = None) -> None:
+        self.nlp: Optional[Language] = nlp
 
-    def add_terms(self, terms, step='terms'):
+        # Patterns to match at each step
+        self.matchers: MatcherDictType = defaultdict(list)
+
+        # Action to take on a matched trait
+        self.actions: Dict[str, Callable] = {}
+
+        self.count: int = 0  # Allow matchers with same label
+
+    def add_terms(self, terms: Dict, step: str = 'terms') -> None:
         """Add phrase matchers.
 
         Each term is a dict with at least these three fields:
@@ -41,7 +50,8 @@ class SpacyMatcher:
                 phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
                 matcher.add(label, phrases)
 
-    def add_patterns(self, matchers, step):
+    def add_patterns(
+            self, matchers: List[Dict], step: str) -> Optional[List[Dict]]:
         """Build matchers that recognize traits and labels."""
         rules = self.step_rules(matchers, step)
         if not rules:
@@ -60,7 +70,7 @@ class SpacyMatcher:
         return rules
 
     @staticmethod
-    def step_rules(matchers, step):
+    def step_rules(matchers: List[Dict], step: str) -> List[Dict]:
         """Get all patterns for a step."""
         rules = []
         for matcher in matchers:
@@ -68,7 +78,7 @@ class SpacyMatcher:
         return rules
 
     @staticmethod
-    def filter_matches(matches):
+    def filter_matches(matches: List[Tuple]) -> List[Tuple]:
         """Filter a sequence of matches so they don't contain overlaps.
 
         Matches: array of tuples: [(match_id, start, end), ...]
@@ -82,7 +92,7 @@ class SpacyMatcher:
                 cleaned.append(match)
         return cleaned
 
-    def scan(self, doc, matchers, step):
+    def scan(self, doc: Doc, matchers: List[Matcher], step: str) -> Doc:
         """Find all terms in the text and return the resulting doc."""
         matches = []
 
@@ -107,7 +117,7 @@ class SpacyMatcher:
 
         return doc
 
-    def __call__(self, doc):
+    def __call__(self, doc: Doc) -> Doc:
         """Parse the doc in steps, building up a full parse in steps."""
         for step, matchers in self.matchers.items():
             doc = self.scan(doc, self.matchers[step], step=step)

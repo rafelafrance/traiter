@@ -1,17 +1,20 @@
 """Custom sentence splitter."""
 
+from typing import List, Union
+
 import regex
+from spacy.tokens import Doc
 
 
 class SpacySentencizer:
     """Shared sentencizer logic."""
 
-    def __init__(self, abbrevs):
+    def __init__(self, abbrevs: Union[str, List[str]]) -> None:
         abbrevs = abbrevs.split() if isinstance(abbrevs, str) else abbrevs
         abbrevs = '|'.join(abbrevs)
         self.abbrevs = regex.compile(fr'(?:{abbrevs})$')
 
-    def __call__(self, doc):
+    def __call__(self, doc: Doc) -> Doc:
         """Break the text into sentences."""
         for i, token in enumerate(doc[:-1]):
             prev_token = doc[i - 1] if i > 0 else None
