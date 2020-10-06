@@ -5,7 +5,8 @@ from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
-from tempfile import mkdtemp
+from tempfile import TemporaryDirectory, mkdtemp
+from typing import Any, Hashable, Iterable, List, Optional, Set, Tuple, Union
 
 import ftfy
 import inflect
@@ -29,29 +30,32 @@ class DotDict(dict):
     __delattr__ = dict.__delitem__
 
 
-def log(msg):
+def log(msg: str) -> None:
     """Log a status message."""
     print(f'{now()} {msg}')
 
 
-def now():
+def now() -> str:
     """Generate a timestamp."""
     return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
-def today():
+def today() -> str:
     """Get today's date."""
     return now()[:10]
 
 
 @contextmanager
-def get_temp_dir(prefix, where=None, keep=False):
+def get_temp_dir(
+        prefix: str,
+        where: Optional[Union[str, Path]] = None,
+        keep: bool = False
+) -> TemporaryDirectory:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
         os.mkdir(where)
 
     temp_dir = mkdtemp(prefix=prefix, dir=where)
-    # os.environ['SQLITE_TMPDIR'] = temp_dir
 
     try:
         yield temp_dir
@@ -60,12 +64,12 @@ def get_temp_dir(prefix, where=None, keep=False):
             rmtree(temp_dir)
 
 
-def shorten(text):
+def shorten(text: str) -> str:
     """Collapse whitespace in a string."""
     return ' '.join(text.split())
 
 
-def flatten(nested):
+def flatten(nested: Any) -> Any:
     """Flatten an arbitrarily nested list."""
     flat = []
     nested = nested if isinstance(nested, (list, tuple, set)) else [nested]
@@ -77,33 +81,33 @@ def flatten(nested):
     return flat
 
 
-def squash(values):
+def squash(values: List) -> Any:
     """Squash a list to a single value is its length is one."""
     return values if len(values) != 1 else values[0]
 
 
-def as_list(values):
+def as_list(values: Any) -> Iterable:
     """Convert values to a list."""
     return values if isinstance(values, (list, tuple, set)) else [values]
 
 
-def as_set(values):
+def as_set(values: Any) -> Set:
     """Convert values to a list."""
     settable = isinstance(values, (list, tuple, set))
     return set(values) if settable else {values}
 
 
-def as_tuple(values):
+def as_tuple(values: Any) -> Tuple:
     """Convert values to a tuple."""
     return values if isinstance(values, tuple) else tuple(values)
 
 
-def as_member(values):
+def as_member(values: Any) -> Hashable:
     """Convert values to set members (hashable)."""
     return tuple(values) if isinstance(values, (list, set)) else values
 
 
-def to_positive_float(value):
+def to_positive_float(value: str):
     """Convert the value to a float."""
     value = re.sub(r'[^\d./]', '', value) if value else ''
     try:
@@ -112,7 +116,7 @@ def to_positive_float(value):
         return None
 
 
-def to_positive_int(value):
+def to_positive_int(value: str):
     """Convert the value to an integer."""
     value = re.sub(r'[^\d./]', '', value) if value else ''
     value = re.sub(r'\.$', '', value)
@@ -122,23 +126,23 @@ def to_positive_int(value):
         return None
 
 
-def camel_to_snake(name):
+def camel_to_snake(name: str) -> str:
     """Convert a camel case string to snake case."""
     split = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
 
 
-def ordinal(i):
+def ordinal(i: str) -> str:
     """Convert the digit to an ordinal value: 1->1st, 2->2nd, etc."""
     return INFLECT.ordinal(i)
 
 
-def number_to_words(number):
+def number_to_words(number: str) -> str:
     """Convert the number or ordinal value into words."""
     return INFLECT.number_to_words(number)
 
 
-def clean_text(text):
+def clean_text(text: str) -> str:
     """Strip control characters from improperly encoded input strings."""
     text = text if text else ''
     text = text.replace('\f', ' ')

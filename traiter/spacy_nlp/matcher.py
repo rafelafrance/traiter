@@ -8,7 +8,7 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 from spacy.util import filter_spans
 
-MatcherDictType = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
+MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 
 
 class SpacyMatcher:
@@ -18,7 +18,7 @@ class SpacyMatcher:
         self.nlp: Optional[Language] = nlp
 
         # Patterns to match at each step
-        self.matchers: MatcherDictType = defaultdict(list)
+        self.matchers: MatcherDict = defaultdict(list)
 
         # Action to take on a matched trait
         self.actions: Dict[str, Callable] = {}

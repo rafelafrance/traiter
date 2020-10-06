@@ -3,7 +3,7 @@
 import csv
 import sqlite3
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Set, Union
 
 from hyphenate import hyphenate_word
 
@@ -12,10 +12,10 @@ from traiter.pylib.util import DATA_DIR
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
 VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
 
-TermsListType = List[Dict[str, str]]
+TermsList = List[Dict[str, str]]
 
 
-def read_terms(term_path):
+def read_terms(term_path: Union[str, Path]) -> TermsList:
     """Read and cache the terms."""
     with open(term_path) as term_file:
         reader = csv.DictReader(term_file)
@@ -28,7 +28,7 @@ def itis_terms(
         rank_id: int = 220,
         abbrev: bool = False,
         species: bool = False
-) -> TermsListType:
+) -> TermsList:
     """Get terms from the ITIS database.
 
     kingdom_id =   5 == Animalia
@@ -58,12 +58,18 @@ def itis_terms(
 
     terms = []
     name = name.lower()
-    append_terms(abbrev, name, species, taxa, terms)
+    append_terms(name, taxa, terms, abbrev, species)
 
     return terms
 
 
-def append_terms(abbrev, name, species, taxa, terms):
+def append_terms(
+        name: str,
+        taxa: Set,
+        terms: TermsList,
+        abbrev: bool,
+        species: bool
+) -> None:
     """Append terms and modified terms to the term list."""
     for taxon in sorted(taxa):
         terms.append({
@@ -94,7 +100,7 @@ def append_terms(abbrev, name, species, taxa, terms):
                 })
 
 
-def hyphenate_terms(terms: TermsListType) -> TermsListType:
+def hyphenate_terms(terms: TermsList) -> TermsList:
     """Systematically handle hyphenated terms."""
     new_terms = []
     for term in terms:
@@ -127,7 +133,7 @@ def hyphenate_terms(terms: TermsListType) -> TermsListType:
 
 
 def get_common_names(
-        name: str, kingdom_id: int = 5, rank_id: int = 220) -> TermsListType:
+        name: str, kingdom_id: int = 5, rank_id: int = 220) -> TermsList:
     """Guides often use common names instead of scientific name.
 
         kingdom_id =   5 == Animalia
@@ -166,7 +172,7 @@ def get_common_names(
     return terms
 
 
-def mock_itis_traits(name: str) -> TermsListType:
+def mock_itis_traits(name: str) -> TermsList:
     """Set up mock traits for testing with Travis."""
     name = name.lower()
     terms = []
