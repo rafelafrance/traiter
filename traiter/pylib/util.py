@@ -142,11 +142,15 @@ def number_to_words(number: str) -> str:
     return INFLECT.number_to_words(number)
 
 
-def clean_text(text: str) -> str:
+def clean_text(text: str, trans: Optional[str.translate] = None) -> str:
     """Strip control characters from improperly encoded input strings."""
     text = text if text else ''
-    text = text.replace('\f', ' ')
-    text = ' '.join(text.split())
+    if trans:
+        text = text.translate(trans)        # Handle uncommon mojibake
+    text = text.replace('\f', ' ')          # Remove form feeds
+    text = ' '.join(text.split())           # Space normalize
+    # Join hyphenated words when they are at the end of a line
     text = re.sub(r'([a-z])-\s+([a-z])', r'\1\2', text, flags=re.IGNORECASE)
-    text = ftfy.fix_text(text)
-    return re.sub(r'\p{Cc}+', ' ', text)
+    text = ftfy.fix_text(text)              # Handle common mojibake
+    text = re.sub(r'\p{Cc}+', ' ', text)    # Remove control characters
+    return text

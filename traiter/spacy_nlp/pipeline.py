@@ -56,7 +56,7 @@ class SpacyPipeline:
         infix_regex = spacy.util.compile_infix_regex(infix)
         self.nlp.tokenizer.infix_finditer = infix_regex.finditer
 
-        breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'+-]"""
+        breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'×+-]"""
 
         prefix = re.compile(f'^{breaking}')
         self.nlp.tokenizer.prefix_search = prefix.search
