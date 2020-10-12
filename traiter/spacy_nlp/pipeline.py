@@ -18,7 +18,8 @@ if not Token.has_extension('data'):
 class SpacyPipeline:
     """Build a custom traiter pipeline."""
 
-    steps2link = set()
+    entities2keep = set()
+    token2entity = set()
 
     def __init__(
             self,
@@ -66,10 +67,21 @@ class SpacyPipeline:
 
     def to_entities(self, doc: Doc) -> None:
         """Convert trait tokens into entities."""
-        spans = []
+        new_ents = []
+
+        exclude = set()  # Exclude these tokens when converting to entities
+
+        for ent in doc.ents:
+            if ent.label_ in self.entities2keep:
+                new_ents.append(ent)
+                exclude |= {i for i in range(ent.start, ent.end)}
+
         for token in doc:
+            if token.i in exclude:
+                continue
+
             if ent_type_ := token.ent_type_:
-                if token._.step not in self.steps2link:
+                if token._.step not in self.token2entity:
                     continue
                 if token._.data.get('_skip'):
                     continue
@@ -79,9 +91,9 @@ class SpacyPipeline:
                 span._.data = token._.data
                 span._.step = token._.step
 
-                spans.append(span)
+                new_ents.append(span)
 
-        doc.ents = spans
+        doc.ents = tuple(new_ents)
 
     def find_entities(self, text: str) -> Doc:
         """Find entities in the doc."""
