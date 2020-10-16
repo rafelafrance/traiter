@@ -69,15 +69,15 @@ class SpacyPipeline:
         """Convert trait tokens into entities."""
         new_ents = []
 
-        exclude = set()  # Exclude these tokens when converting to entities
+        keep = set()  # Keep these entities
 
         for ent in doc.ents:
             if ent.label_ in self.entities2keep:
                 new_ents.append(ent)
-                exclude |= {i for i in range(ent.start, ent.end)}
+                keep |= {i for i in range(ent.start, ent.end)}
 
         for token in doc:
-            if token.i in exclude:
+            if token.i in keep:
                 continue
 
             if ent_type_ := token.ent_type_:

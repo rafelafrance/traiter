@@ -118,6 +118,7 @@ class SpacyMatcher:
         for step, _ in self.matchers.items():  # Preserve order
             doc = self.scan(doc, self.matchers[step], step=step)
 
+            # print('-' * 80)
             # print(step)
             # for token in doc:
             #     print(f'{token.ent_type_:<15} {token.pos_:<6} '
