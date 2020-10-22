@@ -81,9 +81,9 @@ def flatten(nested: Any) -> Any:
     return flat
 
 
-def squash(values: List) -> Any:
+def squash(values: Union[List, Set]) -> Any:
     """Squash a list to a single value is its length is one."""
-    return values if len(values) != 1 else values[0]
+    return list(values) if len(values) != 1 else values.pop()
 
 
 def as_list(values: Any) -> Iterable:
