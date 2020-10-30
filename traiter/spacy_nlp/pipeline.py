@@ -39,6 +39,8 @@ class SpacyPipeline:
 
     def setup_tokenizer(self) -> None:
         """Setup custom tokenizer rules for the pipeline."""
+        # The default Spacy tokenizer works great for model-based parsing but
+        # causes trouble with rule-based parser.
         infix = (
                 LIST_ELLIPSES
                 + LIST_ICONS

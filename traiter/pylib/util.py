@@ -1,4 +1,4 @@
-"""Misc. utilities."""
+"""Misc. utilities shared between client Traiters."""
 
 import os
 from contextlib import contextmanager

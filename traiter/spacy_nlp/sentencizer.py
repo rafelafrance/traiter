@@ -11,6 +11,11 @@ class SpacySentencizer:
     """Shared sentencizer logic."""
 
     def __init__(self, abbrevs: Union[str, List[str]]) -> None:
+        """Build a custom sentencizer.
+
+        Each client sentencizer has its own abbreviations that will prevent a
+        sentence split.
+        """
         abbrevs = abbrevs.split() if isinstance(abbrevs, str) else abbrevs
         abbrevs = '|'.join(abbrevs)
         self.abbrevs = regex.compile(fr'(?:{abbrevs})$')

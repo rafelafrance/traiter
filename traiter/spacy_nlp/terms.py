@@ -1,4 +1,4 @@
-"""Get terms from various sources (CSV files or SQLite database."""
+"""Get terms from various sources like CSV files or an SQLite database."""
 
 import csv
 import sqlite3
@@ -16,7 +16,14 @@ TermsList = List[Dict[str, str]]
 
 
 def read_terms(term_path: Union[str, Path]) -> TermsList:
-    """Read and cache the terms."""
+    """Read and cache the terms from a CSV file.
+
+    The CSV file must contain the columns:
+        label = the term's hypernym, "color" is a hypernym of "blue"
+        pattern = the term itself
+        attr = the spaCy attribute being matched upon, this is typically
+            "lower" but sometimes "regex" is used.
+    """
     with open(term_path) as term_file:
         reader = csv.DictReader(term_file)
         return list(reader)
@@ -31,8 +38,11 @@ def itis_terms(
 ) -> TermsList:
     """Get terms from the ITIS database.
 
-    kingdom_id =   5 == Animalia
+    name       = the ITIS term's hypernym, this is often a family name
+    kingdom_id = 5 == Animalia
     rank_id    = 220 == Species
+    abbrev     = Add abbreviated species term like "C. lupus" for "Canis lupus"
+    species    = Should we extract the species name from the ITIS term
     """
     # Bypass using this in tests for now.
     if not ITIS_DB.exists():
@@ -101,13 +111,21 @@ def append_terms(
 
 
 def hyphenate_terms(terms: TermsList) -> TermsList:
-    """Systematically handle hyphenated terms."""
+    """Systematically handle hyphenated terms.
+
+    We cannot depend on terms being present in a contiguous form. We need a
+    systematic method for handling hyphenated terms. The hyphenate library is
+    great for this but sometimes we need to handle non-standard hyphenations
+    manually. Non-standard hyphenations are stored in the terms CSV file.
+    """
     new_terms = []
     for term in terms:
 
         if term['hyphenate']:
+            # Handle a non-standard hyphenation
             parts = term['hyphenate'].split('-')
         else:
+            # A standard hyphenation
             parts = hyphenate_word(term['pattern'])
 
         for i in range(1, len(parts)):
@@ -173,7 +191,11 @@ def get_common_names(
 
 
 def mock_itis_traits(name: str) -> TermsList:
-    """Set up mock traits for testing with Travis."""
+    """Set up mock traits for testing with Travis.
+
+    The ITIS database is too big to put into GitHub so we use a mock database
+    for testing.
+    """
     name = name.lower()
     terms = []
 
