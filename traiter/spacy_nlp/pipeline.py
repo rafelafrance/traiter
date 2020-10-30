@@ -67,7 +67,7 @@ class SpacyPipeline:
         suffix = re.compile(f'{breaking}$')
         self.nlp.tokenizer.suffix_search = suffix.search
 
-    def to_entities(self, doc: Doc) -> None:
+    def to_entities(self, doc: Doc) -> Doc:
         """Convert trait tokens into entities."""
         new_ents = []
 
@@ -96,6 +96,7 @@ class SpacyPipeline:
                 new_ents.append(span)
 
         doc.ents = tuple(new_ents)
+        return doc
 
     def find_entities(self, text: str) -> Doc:
         """Find entities in the doc."""
@@ -123,7 +124,7 @@ class SpacyPipeline:
         doc = self.find_entities(text)
         traits = self.trait_list(doc)
 
-        # from pprint import pp
-        # pp(traits)
+        from pprint import pp
+        pp(traits)
 
         return traits
