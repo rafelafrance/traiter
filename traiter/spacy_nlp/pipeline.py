@@ -18,9 +18,6 @@ if not Token.has_extension('data'):
 class SpacyPipeline:
     """Build a custom traiter pipeline."""
 
-    entities2keep = set()
-    token2entity = set()
-
     def __init__(
             self,
             lang_model: str = 'en_core_web_sm',
@@ -67,43 +64,6 @@ class SpacyPipeline:
         suffix = re.compile(f'{breaking}$')
         self.nlp.tokenizer.suffix_search = suffix.search
 
-    def to_entities(self, doc: Doc) -> Doc:
-        """Convert trait tokens into entities."""
-        new_ents = []
-
-        keep = set()  # Keep these entities
-
-        for ent in doc.ents:
-            if ent.label_ in self.entities2keep:
-                new_ents.append(ent)
-                keep |= {i for i in range(ent.start, ent.end)}
-
-        for token in doc:
-            if token.i in keep:
-                continue
-
-            if ent_type_ := token.ent_type_:
-                if token._.step not in self.token2entity:
-                    continue
-                if token._.data.get('_skip'):
-                    continue
-
-                span = Span(doc, token.i, token.i + 1, label=ent_type_)
-
-                span._.data = token._.data
-                span._.step = token._.step
-
-                new_ents.append(span)
-
-        doc.ents = tuple(new_ents)
-        return doc
-
-    def find_entities(self, text: str) -> Doc:
-        """Find entities in the doc."""
-        doc = self.nlp(text)
-        self.to_entities(doc)
-        return doc
-
     @staticmethod
     def trait_list(doc: Doc) -> List[Dict]:
         """Tests require a trait list."""
@@ -121,7 +81,7 @@ class SpacyPipeline:
 
     def test_traits(self, text: str) -> List[Dict]:
         """Build unit test data."""
-        doc = self.find_entities(text)
+        doc = self.nlp(text)
         traits = self.trait_list(doc)
 
         # from pprint import pp
