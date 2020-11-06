@@ -30,6 +30,9 @@ class SpacySentencizer:
                     and not self.abbrevs.match(next_token.text) and prev_token
                     and len(next_token) > 1 and len(prev_token) > 1):
                 next_token.is_sent_start = True
+            elif (token.text in '"”\''
+                  and prev_token and prev_token.text == '.'):
+                next_token.is_sent_start = True
             else:
                 next_token.is_sent_start = False
 
