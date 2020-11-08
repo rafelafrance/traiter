@@ -23,7 +23,7 @@ WORD = regex.compile(
 Rules = List["Rule"]
 RuleDict = Dict[str, "Rule"]
 Groups = Dict[str, Union[str, List[str]]]
-Action = Callable[["Token"], Any]
+Action = Callable[[Any], Any]  # "Any" squashes linter
 InRegexp = Union[str, List[str]]
 
 FIRST = -9999

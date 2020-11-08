@@ -29,7 +29,7 @@ class ToEntities:
         for ent in doc.ents:
             if ent.label_ in self.entities2keep:
                 new_ents.append(ent)
-                keep |= {i for i in range(ent.start, ent.end)}
+                keep |= set(range(ent.start, ent.end))
 
         for token in doc:
             if token.i in keep:

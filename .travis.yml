@@ -1,8 +1,0 @@
-language: python
-python:
-  - "3.8"
-install:
-  - pip install -r requirements.txt
-  - python -m spacy download en
-script:
-  - python -m unittest discover

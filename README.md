@@ -23,7 +23,7 @@ Some of the literature mined:
 
 ## Install
 You will need to have Python3 installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
-```
+```bash
 git clone https://github.com/rafelafrance/traiter.git
 cd traiter
 optional: virtualenv -p python3 venv
@@ -37,7 +37,7 @@ This repository is a library for the other Traiter projects and is not run direc
 
 ## Tests
 You can run the tests like so:
-```
+```bash
 cd /my/path/to/traiter
 python -m unittest discover
 ```

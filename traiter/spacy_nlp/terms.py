@@ -80,12 +80,7 @@ def append_terms(
     """Append terms and modified terms to the term list."""
     for taxon in sorted(taxa):
         terms.append(
-            {
-                "label": name,
-                "pattern": taxon,
-                "attr": "lower",
-                "replace": taxon,
-            }
+            {"label": name, "pattern": taxon, "attr": "lower", "replace": taxon}
         )
         if abbrev:
             words = taxon.split()
