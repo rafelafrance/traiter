@@ -168,13 +168,13 @@ def get_common_names(name: str, kingdom_id: int = 5, rank_id: int = 220) -> Term
 
     select_tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
     select_names = """
-    select vernacular_name, complete_name
-      from vernaculars
-      join taxonomic_units using (tsn)
-      join hierarchy using (tsn)
-     where hierarchy_string like ?
-       and kingdom_id = ?
-       and rank_id = ?;
+        select vernacular_name, complete_name
+          from vernaculars
+          join taxonomic_units using (tsn)
+          join hierarchy using (tsn)
+         where hierarchy_string like ?
+           and kingdom_id = ?
+           and rank_id = ?;
         """
 
     with sqlite3.connect(ITIS_DB) as cxn:
