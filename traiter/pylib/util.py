@@ -12,9 +12,9 @@ import ftfy
 import inflect
 import regex as re
 
-__VERSION__ = '0.8.0'
+__VERSION__ = "0.8.0"
 
-DATA_DIR = Path.cwd() / 'data'
+DATA_DIR = Path.cwd() / "data"
 
 FLAGS = re.VERBOSE | re.IGNORECASE
 
@@ -25,6 +25,7 @@ INFLECT = inflect.engine()
 
 class DotDict(dict):
     """Allow dot.notation access to dictionary items"""
+
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
     __delattr__ = dict.__delitem__
@@ -32,12 +33,12 @@ class DotDict(dict):
 
 def log(msg: str) -> None:
     """Log a status message."""
-    print(f'{now()} {msg}')
+    print(f"{now()} {msg}")
 
 
 def now() -> str:
     """Generate a timestamp."""
-    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def today() -> str:
@@ -47,9 +48,7 @@ def today() -> str:
 
 @contextmanager
 def get_temp_dir(
-        prefix: str,
-        where: Optional[Union[str, Path]] = None,
-        keep: bool = False
+    prefix: str, where: Optional[Union[str, Path]] = None, keep: bool = False
 ) -> TemporaryDirectory:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
@@ -66,7 +65,7 @@ def get_temp_dir(
 
 def shorten(text: str) -> str:
     """Collapse whitespace in a string."""
-    return ' '.join(text.split())
+    return " ".join(text.split())
 
 
 def flatten(nested: Any) -> Any:
@@ -74,7 +73,7 @@ def flatten(nested: Any) -> Any:
     flat = []
     nested = nested if isinstance(nested, (list, tuple, set)) else [nested]
     for item in nested:
-        if hasattr(item, '__iter__'):
+        if hasattr(item, "__iter__"):
             flat.extend(flatten(item))
         else:
             flat.append(item)
@@ -109,7 +108,7 @@ def as_member(values: Any) -> Hashable:
 
 def to_positive_float(value: str):
     """Convert the value to a float."""
-    value = re.sub(r'[^\d./]', '', value) if value else ''
+    value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
         return float(value)
     except ValueError:
@@ -118,8 +117,8 @@ def to_positive_float(value: str):
 
 def to_positive_int(value: str):
     """Convert the value to an integer."""
-    value = re.sub(r'[^\d./]', '', value) if value else ''
-    value = re.sub(r'\.$', '', value)
+    value = re.sub(r"[^\d./]", "", value) if value else ""
+    value = re.sub(r"\.$", "", value)
     try:
         return int(value)
     except ValueError:
@@ -128,8 +127,8 @@ def to_positive_int(value: str):
 
 def camel_to_snake(name: str) -> str:
     """Convert a camel case string to snake case."""
-    split = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
+    split = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", split).lower()
 
 
 def ordinal(i: str) -> str:
@@ -144,13 +143,13 @@ def number_to_words(number: str) -> str:
 
 def clean_text(text: str, trans: Optional[str.translate] = None) -> str:
     """Strip control characters from improperly encoded input strings."""
-    text = text if text else ''
+    text = text if text else ""
     if trans:
-        text = text.translate(trans)        # Handle uncommon mojibake
-    text = text.replace('\f', ' ')          # Remove form feeds
-    text = ' '.join(text.split())           # Space normalize
+        text = text.translate(trans)  # Handle uncommon mojibake
+    text = text.replace("\f", " ")  # Remove form feeds
+    text = " ".join(text.split())  # Space normalize
     # Join hyphenated words when they are at the end of a line
-    text = re.sub(r'([a-z])-\s+([a-z])', r'\1\2', text, flags=re.IGNORECASE)
-    text = ftfy.fix_text(text)              # Handle common mojibake
-    text = re.sub(r'\p{Cc}+', ' ', text)    # Remove control characters
+    text = re.sub(r"([a-z])-\s+([a-z])", r"\1\2", text, flags=re.IGNORECASE)
+    text = ftfy.fix_text(text)  # Handle common mojibake
+    text = re.sub(r"\p{Cc}+", " ", text)  # Remove control characters
     return text

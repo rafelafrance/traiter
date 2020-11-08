@@ -1,20 +1,22 @@
 """A class to hold an individual token."""
 
 from typing import Dict, List, Match, Tuple
-from .rule import Rule, Action, Groups, SIZE
 
-Tokens = List['Token']
+from .rule import SIZE, Action, Groups, Rule
+
+Tokens = List["Token"]
 
 
 class Token:
     """A token is the result of a rule match."""
 
     def __init__(
-            self,
-            rule: Rule = None,
-            match: Match = None,
-            group: Groups = None,
-            span: Tuple[int, int] = None) -> None:
+        self,
+        rule: Rule = None,
+        match: Match = None,
+        group: Groups = None,
+        span: Tuple[int, int] = None,
+    ) -> None:
         """Create a token."""
         self.rule = rule
         self.match = match
@@ -23,24 +25,20 @@ class Token:
 
         if match:
             self.span = match.span()
-            self.group = {k: v for k, v in match.groupdict().items()
-                          if v is not None}
+            self.group = {k: v for k, v in match.groupdict().items() if v is not None}
 
     def __repr__(self) -> str:
         """Create string form of the object."""
-        return '{}({})'.format(self.__class__.__name__, self.__dict__)
+        return "{}({})".format(self.__class__.__name__, self.__dict__)
 
-    def __eq__(self, other: 'Token') -> bool:
+    def __eq__(self, other: "Token") -> bool:
         """Compare tokens."""
         return self.__dict__ == other.__dict__
 
     @property
     def __dict__(self) -> Dict:
         """Convert to a string."""
-        return {
-            'name': self.name,
-            'span': self.span,
-            'groups': self.group}
+        return {"name": self.name, "span": self.span, "groups": self.group}
 
     @property
     def name(self) -> str:

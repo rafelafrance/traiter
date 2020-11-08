@@ -4,7 +4,8 @@ from collections import deque
 from typing import List, Tuple, Union
 
 from traiter.pylib.util import flatten
-from .rule import RuleDict, RuleType, Rules, SIZE
+
+from .rule import SIZE, RuleDict, Rules, RuleType
 from .token import Groups, Token, Tokens
 
 RulesInput = Union[Rules, List[Rules]]
@@ -13,7 +14,7 @@ RulesInput = Union[Rules, List[Rules]]
 class Parser:
     """Parser arrays and functionality."""
 
-    def __init__(self, rules: RulesInput, name: str = 'parser') -> None:
+    def __init__(self, rules: RulesInput, name: str = "parser") -> None:
         """Build the parser."""
         self.name: str = name
         self.rules: RuleDict = {}
@@ -56,11 +57,11 @@ class Parser:
     def build(self) -> None:
         """Build the regular expressions."""
         self._built = True
-        self.scanners = [r for r in sorted(self.rules.values())
-                         if r.type == RuleType.SCANNER]
+        self.scanners = [
+            r for r in sorted(self.rules.values()) if r.type == RuleType.SCANNER
+        ]
 
-        rules = [r for r in sorted(self.rules.values())
-                 if r.type != RuleType.SCANNER]
+        rules = [r for r in sorted(self.rules.values()) if r.type != RuleType.SCANNER]
         for rule in rules:
             rule.compile(self.rules)
             if rule.type == RuleType.PRODUCER:
@@ -84,7 +85,7 @@ class Parser:
     def produce(self, tokens: Tokens, text: str) -> Tokens:
         """Produce final tokens for consumption by the client code."""
         results = []
-        token_text = ''.join([t.rule.token for t in tokens])
+        token_text = "".join([t.rule.token for t in tokens])
         matches = self.match_tokens(self.producers, token_text)
 
         while matches:
@@ -102,8 +103,9 @@ class Parser:
 
     def sort_matches(self, tokens: Tokens) -> deque:
         """Sort the matches by starting span and when and then by longest."""
-        matches = deque(sorted(
-            tokens, key=lambda m: (m.span[0], m.rule.priority, -m.span[1])))
+        matches = deque(
+            sorted(tokens, key=lambda m: (m.span[0], m.rule.priority, -m.span[1]))
+        )
         matches = self.remove_overlapping(matches)
         return matches
 
@@ -136,8 +138,9 @@ class Parser:
         values = old + new
         groups[key] = values[0] if len(values) == 1 else values
 
-    def merge_tokens(self, match: Token, tokens: Tokens, text: str
-                     ) -> Tuple[Token, int, int]:
+    def merge_tokens(
+        self, match: Token, tokens: Tokens, text: str
+    ) -> Tuple[Token, int, int]:
         """Merge all matched tokens into one token."""
         # Get tokens in match
         first_idx = match.start // SIZE
@@ -156,7 +159,8 @@ class Parser:
                 idx1 = match.match.starts(key)[i] // SIZE
                 idx2 = match.match.ends(key)[i] // SIZE - 1
                 self.append_group(
-                    groups, key, text[tokens[idx1].start:tokens[idx2].end])
+                    groups, key, text[tokens[idx1].start : tokens[idx2].end]
+                )
 
         token = Token(match.rule, span=span, group=groups)
         return token, first_idx, last_idx
@@ -164,15 +168,14 @@ class Parser:
     def replace(self, tokens: Tokens, text: str) -> Tuple[Tokens, bool]:
         """Replace token combinations with another token."""
         replaced = []
-        token_text = ''.join([t.rule.token for t in tokens])
+        token_text = "".join([t.rule.token for t in tokens])
         matches = self.match_tokens(self.replacers, token_text)
         again = bool(matches)
 
         prev_idx = 0
         while matches:
             match = matches.popleft()
-            token, first_idx, last_idx = self.merge_tokens(
-                match, tokens, text)
+            token, first_idx, last_idx = self.merge_tokens(match, tokens, text)
             if token.action:
                 token.action(token)
             if prev_idx != first_idx:

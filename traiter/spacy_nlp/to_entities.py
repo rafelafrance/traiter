@@ -13,9 +13,7 @@ class ToEntities:
     token2entity = set()
 
     def __init__(
-            self,
-            entities2keep: Optional[Set] = None,
-            token2entity: Optional[Set] = None
+        self, entities2keep: Optional[Set] = None, token2entity: Optional[Set] = None
     ) -> None:
         if entities2keep:
             self.entities2keep = entities2keep
@@ -40,7 +38,7 @@ class ToEntities:
             if ent_type_ := token.ent_type_:
                 if token._.step not in self.token2entity:
                     continue
-                if token._.data.get('_skip'):
+                if token._.data.get("_skip"):
                     continue
 
                 span = Span(doc, token.i, token.i + 1, label=ent_type_)
