@@ -1,4 +1,4 @@
-# The Traits Database Project ![Super-Linter](https://github.com/rafelafrance/traiter/workflows/Super-Linter/badge.svg)
+# The Traits Database Project
 
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects ([traiter_floras](https://github.com/rafelafrance/traiter_floras), [traiter_anoplura](https://github.com/rafelafrance/traiter_anoplura), etc.). It contains no runnable code itself.
