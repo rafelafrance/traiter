@@ -77,6 +77,7 @@ class SpacyMatcher:
     def filter_matches(matches: List[Tuple]) -> List[Tuple]:
         """Filter a sequence of matches so they don't contain overlaps.
 
+        This is a counterpart to spacy's filter_spans() function.
         Matches: array of tuples: [(match_id, start, end), ...]
         """
         if not matches:
@@ -118,6 +119,7 @@ class SpacyMatcher:
         for step, _ in self.matchers.items():  # Preserve order
             doc = self.scan(doc, self.matchers[step], step=step)
 
+            # Sometimes the debugger is too slow and constrained
             # print('-' * 80)
             # print(step)
             # for token in doc:

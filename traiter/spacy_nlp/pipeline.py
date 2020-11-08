@@ -84,6 +84,7 @@ class SpacyPipeline:
         doc = self.nlp(text)
         traits = self.trait_list(doc)
 
+        # Useful for building tests and debugging
         # from pprint import pp
         # pp(traits)
 
