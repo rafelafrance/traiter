@@ -9,8 +9,8 @@ from hyphenate import hyphenate_word
 
 from traiter.pylib.util import DATA_DIR
 
-ITIS_DB = DATA_DIR / "ITIS.sqlite"
-VOCAB_DIR = Path.cwd() / "src" / "vocabulary"
+ITIS_DB = DATA_DIR / 'ITIS.sqlite'
+VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
 
 TermsList = List[Dict[str, str]]
 
@@ -19,10 +19,10 @@ def read_terms(term_path: Union[str, Path]) -> TermsList:
     """Read and cache the terms from a CSV file.
 
     The CSV file must contain the columns:
-        label = the term's hypernym, "color" is a hypernym of "blue"
+        label = the term's hypernym, 'color' is a hypernym of 'blue'
         pattern = the term itself
         attr = the spaCy attribute being matched upon, this is typically
-            "lower" but sometimes "regex" is used.
+            'lower' but sometimes 'regex' is used.
     """
     with open(term_path) as term_file:
         reader = csv.DictReader(term_file)
@@ -41,12 +41,12 @@ def itis_terms(
     name       = the ITIS term's hypernym, this is often a family name
     kingdom_id = 5 == Animalia
     rank_id    = 220 == Species
-    abbrev     = Add abbreviated species term like "C. lupus" for "Canis lupus"
+    abbrev     = Add abbreviated species term like 'C. lupus' for 'Canis lupus'
     species    = Should we extract the species name from the ITIS term
     """
     # Bypass using this in tests for now.
     if not ITIS_DB.exists():
-        print("Could not find ITIS database.")
+        print('Could not find ITIS database.')
         return mock_itis_traits(name)
 
     select_tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
@@ -62,7 +62,7 @@ def itis_terms(
     with sqlite3.connect(ITIS_DB) as cxn:
         cursor = cxn.execute(select_tsn, (name,))
         tsn = cursor.fetchone()[0]
-        mask = f"%-{tsn}-%"
+        mask = f'%-{tsn}-%'
         taxa = {
             n[0].lower() for n in cxn.execute(select_names, (mask, kingdom_id, rank_id))
         }
@@ -80,19 +80,19 @@ def append_terms(
     """Append terms and modified terms to the term list."""
     for taxon in sorted(taxa):
         terms.append(
-            {"label": name, "pattern": taxon, "attr": "lower", "replace": taxon}
+            {'label': name, 'pattern': taxon, 'attr': 'lower', 'replace': taxon}
         )
         if abbrev:
             words = taxon.split()
             if len(words) > 1:
                 first, *rest = words
-                rest = " ".join(rest)
+                rest = ' '.join(rest)
                 terms.append(
                     {
-                        "label": name,
-                        "pattern": f"{first[0]} . {rest}",
-                        "attr": "lower",
-                        "replace": taxon,
+                        'label': name,
+                        'pattern': f'{first[0]} . {rest}',
+                        'attr': 'lower',
+                        'replace': taxon,
                     }
                 )
         if species:
@@ -100,10 +100,10 @@ def append_terms(
             if len(words) > 1:
                 terms.append(
                     {
-                        "label": "species",
-                        "pattern": words[1],
-                        "attr": "lower",
-                        "replace": words[1].lower(),
+                        'label': 'species',
+                        'pattern': words[1],
+                        'attr': 'lower',
+                        'replace': words[1].lower(),
                     }
                 )
 
@@ -119,33 +119,33 @@ def hyphenate_terms(terms: TermsList) -> TermsList:
     new_terms = []
     for term in terms:
 
-        if term["hyphenate"]:
+        if term['hyphenate']:
             # Handle a non-standard hyphenation
-            parts = term["hyphenate"].split("-")
+            parts = term['hyphenate'].split('-')
         else:
             # A standard hyphenation
-            parts = hyphenate_word(term["pattern"])
+            parts = hyphenate_word(term['pattern'])
 
         for i in range(1, len(parts)):
-            replace = term["replace"]
-            hyphenated = "".join(parts[:i]) + "-" + "".join(parts[i:])
+            replace = term['replace']
+            hyphenated = ''.join(parts[:i]) + '-' + ''.join(parts[i:])
             new_terms.append(
                 {
-                    "label": term["label"],
-                    "pattern": hyphenated,
-                    "attr": term["attr"],
-                    "replace": replace if replace else term["pattern"],
-                    "category": term["category"],
+                    'label': term['label'],
+                    'pattern': hyphenated,
+                    'attr': term['attr'],
+                    'replace': replace if replace else term['pattern'],
+                    'category': term['category'],
                 }
             )
-            hyphenated = "".join(parts[:i]) + "\xad" + "".join(parts[i:])
+            hyphenated = ''.join(parts[:i]) + '\xad' + ''.join(parts[i:])
             new_terms.append(
                 {
-                    "label": term["label"],
-                    "pattern": hyphenated,
-                    "attr": term["attr"],
-                    "replace": replace if replace else term["pattern"],
-                    "category": term["category"],
+                    'label': term['label'],
+                    'pattern': hyphenated,
+                    'attr': term['attr'],
+                    'replace': replace if replace else term['pattern'],
+                    'category': term['category'],
                 }
             )
 
@@ -175,7 +175,7 @@ def get_common_names(name: str, kingdom_id: int = 5, rank_id: int = 220) -> Term
     with sqlite3.connect(ITIS_DB) as cxn:
         cursor = cxn.execute(select_tsn, (name,))
         tsn = cursor.fetchone()[0]
-        mask = f"%-{tsn}-%"
+        mask = f'%-{tsn}-%'
         names = {
             n[0].lower(): n[1]
             for n in cxn.execute(select_names, (mask, kingdom_id, rank_id))
@@ -185,10 +185,10 @@ def get_common_names(name: str, kingdom_id: int = 5, rank_id: int = 220) -> Term
     for common, sci_name in names.items():
         terms.append(
             {
-                "label": "common_name",
-                "pattern": common,
-                "attr": "lower",
-                "replace": sci_name,
+                'label': 'common_name',
+                'pattern': common,
+                'attr': 'lower',
+                'replace': sci_name,
             }
         )
 
@@ -204,11 +204,11 @@ def mock_itis_traits(name: str) -> TermsList:
     name = name.lower()
     terms = []
 
-    mock_path = VOCAB_DIR / "mock_itis_terms.csv"
+    mock_path = VOCAB_DIR / 'mock_itis_terms.csv'
     if mock_path.exists():
         terms = read_terms(mock_path)
         for term in terms:
-            label = term["label"]
-            term["label"] = label if label else name
+            label = term['label']
+            term['label'] = label if label else name
 
     return terms

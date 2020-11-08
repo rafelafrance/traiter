@@ -15,11 +15,11 @@ from spacy.lang.char_classes import (
 )
 from spacy.tokens import Doc, Span, Token
 
-if not Token.has_extension("data"):
-    Token.set_extension("data", default={})
-    Token.set_extension("step", default="")
-    Span.set_extension("data", default={})
-    Span.set_extension("step", default="")
+if not Token.has_extension('data'):
+    Token.set_extension('data', default={})
+    Token.set_extension('step', default='')
+    Span.set_extension('data', default={})
+    Span.set_extension('step', default='')
 
 
 class SpacyPipeline:
@@ -27,13 +27,13 @@ class SpacyPipeline:
 
     def __init__(
         self,
-        lang_model: str = "en_core_web_sm",
-        gpu: str = "prefer",
+        lang_model: str = 'en_core_web_sm',
+        gpu: str = 'prefer',
         tokenizer: bool = True,
     ) -> None:
-        if gpu == "prefer":
+        if gpu == 'prefer':
             spacy.prefer_gpu()
-        elif gpu == "require":
+        elif gpu == 'require':
             spacy.require_gpu()
 
         self.nlp = spacy.load(lang_model)
@@ -49,16 +49,16 @@ class SpacyPipeline:
             LIST_ELLIPSES
             + LIST_ICONS
             + [
-                r"(?<=[0-9])[+\-\*^](?=[0-9])",
-                r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
+                r'(?<=[0-9])[+\-\*^](?=[0-9])',
+                r'(?<=[{al}{q}])\.(?=[{au}{q}])'.format(
                     al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
                 ),
-                r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-                # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
-                r"(?<=[{a}0-9])[:<>=/+](?=[{a}])".format(a=ALPHA),
+                r'(?<=[{a}]),(?=[{a}])'.format(a=ALPHA),
+                # r'(?<=[{a}])(?:{h})(?=[{a}])'.format(a=ALPHA, h=HYPHENS),
+                r'(?<=[{a}0-9])[:<>=/+](?=[{a}])'.format(a=ALPHA),
                 r"""(?:{h})+""".format(h=HYPHENS),
-                r"""[\\\[\]\(\)/:;"“”'+]""",
-                r"(?<=[0-9])\.?(?=[{a}])".format(a=ALPHA),  # 1.word or 1N
+                r"""[\\\[\]\(\)/:;'“”'+]""",
+                r'(?<=[0-9])\.?(?=[{a}])'.format(a=ALPHA),  # 1.word or 1N
             ]
         )
 
@@ -67,10 +67,10 @@ class SpacyPipeline:
 
         breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'×+-]"""
 
-        prefix = re.compile(f"^{breaking}")
+        prefix = re.compile(f'^{breaking}')
         self.nlp.tokenizer.prefix_search = prefix.search
 
-        suffix = re.compile(f"{breaking}$")
+        suffix = re.compile(f'{breaking}$')
         self.nlp.tokenizer.suffix_search = suffix.search
 
     @staticmethod
@@ -79,10 +79,10 @@ class SpacyPipeline:
         traits = []
 
         for ent in doc.ents:
-            data = {k: v for k, v in ent._.data.items() if not k.startswith("_")}
-            data["trait"] = ent.label_
-            data["start"] = ent.start_char
-            data["end"] = ent.end_char
+            data = {k: v for k, v in ent._.data.items() if not k.startswith('_')}
+            data['trait'] = ent.label_
+            data['start'] = ent.start_char
+            data['end'] = ent.end_char
             traits.append(data)
 
         return traits

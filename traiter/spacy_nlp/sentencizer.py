@@ -18,8 +18,8 @@ class SpacySentencizer:
         sentence split.
         """
         abbrevs = abbrevs.split() if isinstance(abbrevs, str) else abbrevs
-        abbrevs = "|".join(abbrevs)
-        self.abbrevs = regex.compile(fr"(?:{abbrevs})$")
+        abbrevs = '|'.join(abbrevs)
+        self.abbrevs = regex.compile(fr'(?:{abbrevs})$')
 
     def __call__(self, doc: Doc) -> Doc:
         """Break the text into sentences."""
@@ -27,15 +27,15 @@ class SpacySentencizer:
             prev_token = doc[i - 1] if i > 0 else None
             next_token = doc[i + 1]
             if (
-                token.text == "."
-                and regex.match(r"[A-Z]", next_token.prefix_)
+                token.text == '.'
+                and regex.match(r'[A-Z]', next_token.prefix_)
                 and prev_token
                 and not self.abbrevs.match(prev_token.text)
                 and len(next_token) > 1
                 and len(prev_token) > 1
             ):
                 next_token.is_sent_start = True
-            elif token.text in "\"”'" and prev_token and prev_token.text == ".":
+            elif token.text in '"”\'' and prev_token and prev_token.text == '.':
                 next_token.is_sent_start = True
             else:
                 next_token.is_sent_start = False

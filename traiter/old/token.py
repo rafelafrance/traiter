@@ -4,7 +4,7 @@ from typing import Dict, List, Match, Tuple
 
 from .rule import SIZE, Action, Groups, Rule
 
-Tokens = List["Token"]
+Tokens = List['Token']
 
 
 class Token:
@@ -29,16 +29,16 @@ class Token:
 
     def __repr__(self) -> str:
         """Create string form of the object."""
-        return "{}({})".format(self.__class__.__name__, self.__dict__)
+        return '{}({})'.format(self.__class__.__name__, self.__dict__)
 
-    def __eq__(self, other: "Token") -> bool:
+    def __eq__(self, other: 'Token') -> bool:
         """Compare tokens."""
         return self.__dict__ == other.__dict__
 
     @property
     def __dict__(self) -> Dict:
         """Convert to a string."""
-        return {"name": self.name, "span": self.span, "groups": self.group}
+        return {'name': self.name, 'span': self.span, 'groups': self.group}
 
     @property
     def name(self) -> str:

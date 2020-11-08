@@ -25,7 +25,7 @@ class SpacyMatcher:
 
         self.count: int = 0  # Allow matchers with same label
 
-    def add_terms(self, terms: Dict, step: str = "terms") -> None:
+    def add_terms(self, terms: Dict, step: str = 'terms') -> None:
         """Add phrase matchers.
 
         Each term is a dict with at least these three fields:
@@ -33,17 +33,17 @@ class SpacyMatcher:
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
-        attrs = {p["attr"] for p in terms}
+        attrs = {p['attr'] for p in terms}
         for attr in attrs:
             matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
             self.matchers[step].append(matcher)
 
             by_label = defaultdict(list)
             for term in terms:
-                by_label[term["label"]].append(term)
+                by_label[term['label']].append(term)
 
             for label, term_list in by_label.items():
-                phrases = [self.nlp.make_doc(t["pattern"]) for t in term_list]
+                phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
                 matcher.add(label, phrases)
 
     def add_patterns(self, matchers: List[Dict], step: str) -> Optional[List[Dict]]:
@@ -57,9 +57,9 @@ class SpacyMatcher:
         for rule in rules:
             self.count += 1
             label = f"{rule['label']}.{self.count}"
-            patterns = rule["patterns"]
+            patterns = rule['patterns']
             matcher.add(label, patterns)
-            if on_match := rule.get("on_match"):
+            if on_match := rule.get('on_match'):
                 self.actions[label] = on_match
 
         return rules
@@ -103,14 +103,14 @@ class SpacyMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                if data.get("_forget"):
+                if data.get('_forget'):
                     continue
-                label = label.split(".")[0]
-                label = data["_relabel"] if data.get("_relabel") else label
+                label = label.split('.')[0]
+                label = data['_relabel'] if data.get('_relabel') else label
                 attrs = {
-                    "ENT_TYPE": label,
-                    "ENT_IOB": 3,
-                    "_": {"data": data, "step": step},
+                    'ENT_TYPE': label,
+                    'ENT_IOB': 3,
+                    '_': {'data': data, 'step': step},
                 }
                 retokenizer.merge(span, attrs=attrs)
 
