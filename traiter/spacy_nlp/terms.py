@@ -3,7 +3,7 @@
 import csv
 import sqlite3
 from pathlib import Path
-from typing import Dict, List, Set, Union
+from typing import Dict, List, Optional, Union
 
 from hyphenate import hyphenate_word
 
@@ -30,24 +30,25 @@ def read_terms(term_path: Union[str, Path]) -> TermsList:
 
 
 def itis_terms(
-    name: str,
-    kingdom_id: int = 5,
-    rank_id: int = 220,
-    abbrev: bool = False,
-    species: bool = False,
+        taxon: str,
+        label: Optional[str] = None,
+        kingdom_id: int = 5,
+        rank_id: int = 220,
+        attr: str = 'lower'
 ) -> TermsList:
     """Get terms from the ITIS database.
 
     name       = the ITIS term's hypernym, this is often a family name
     kingdom_id = 5 == Animalia
     rank_id    = 220 == Species
-    abbrev     = Add abbreviated species term like 'C. lupus' for 'Canis lupus'
-    species    = Should we extract the species name from the ITIS term
+    attr       = the spacy attribute to match on
     """
+    label = label if label else taxon
+
     # Bypass using this in tests for now.
     if not ITIS_DB.exists():
         print('Could not find ITIS database.')
-        return mock_itis_traits(name)
+        return mock_itis_traits(taxon)
 
     select_tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
     select_names = """
@@ -60,52 +61,45 @@ def itis_terms(
            """
 
     with sqlite3.connect(ITIS_DB) as cxn:
-        cursor = cxn.execute(select_tsn, (name,))
+        cursor = cxn.execute(select_tsn, (taxon,))
         tsn = cursor.fetchone()[0]
         mask = f'%-{tsn}-%'
-        taxa = {
-            n[0].lower() for n in cxn.execute(select_names, (mask, kingdom_id, rank_id))
-        }
+        taxa = {n[0] for n in cxn.execute(select_names, (mask, kingdom_id, rank_id))}
 
-    terms = []
-    name = name.lower()
-    append_terms(name, taxa, terms, abbrev, species)
-
+    terms = [{'label': label, 'pattern': t, 'attr': attr} for t in sorted(taxa)]
     return terms
 
 
-def append_terms(
-    name: str, taxa: Set, terms: TermsList, abbrev: bool, species: bool
-) -> None:
-    """Append terms and modified terms to the term list."""
-    for taxon in sorted(taxa):
-        terms.append(
-            {'label': name, 'pattern': taxon, 'attr': 'lower', 'replace': taxon}
-        )
-        if abbrev:
-            words = taxon.split()
+def species_only(terms: TermsList, label: str, attr='lower') -> TermsList:
+    """Get species names only: 'Canis lupus' -> 'lupus'."""
+    new_terms = []
+    for term in terms:
+        if term['label'] == label:
+            words = term['pattern'].split()
             if len(words) > 1:
-                first, *rest = words
+                new_terms.append({
+                    'label': 'species',
+                    'pattern': words[1],
+                    'attr': attr,
+                    'replace': words[1].lower()})
+    return new_terms
+
+
+def abbrev_species(terms: TermsList, label: str, attr='lower') -> TermsList:
+    """Get abbreviated species: 'Canis lupus' -> 'C. lupus'."""
+    new_terms = []
+    for term in terms:
+        if term['label'] == label:
+            full_name = term['pattern']
+            first, *rest = full_name.split()
+            if rest and first[-1] != '.':
                 rest = ' '.join(rest)
-                terms.append(
-                    {
-                        'label': name,
-                        'pattern': f'{first[0]} . {rest}',
-                        'attr': 'lower',
-                        'replace': taxon,
-                    }
-                )
-        if species:
-            words = taxon.split()
-            if len(words) > 1:
-                terms.append(
-                    {
-                        'label': 'species',
-                        'pattern': words[1],
-                        'attr': 'lower',
-                        'replace': words[1].lower(),
-                    }
-                )
+                new_terms.append({
+                    'label': label,
+                    'pattern': f'{first[0]}. {rest}',
+                    'attr': attr,
+                    'replace': full_name})
+    return new_terms
 
 
 def hyphenate_terms(terms: TermsList) -> TermsList:
@@ -128,31 +122,19 @@ def hyphenate_terms(terms: TermsList) -> TermsList:
 
         for i in range(1, len(parts)):
             replace = term['replace']
-            hyphenated = ''.join(parts[:i]) + '-' + ''.join(parts[i:])
-            new_terms.append(
-                {
+            for hyphen in ('-', '\xad'):
+                hyphenated = ''.join(parts[:i]) + hyphen + ''.join(parts[i:])
+                new_terms.append({
                     'label': term['label'],
                     'pattern': hyphenated,
                     'attr': term['attr'],
                     'replace': replace if replace else term['pattern'],
-                    'category': term['category'],
-                }
-            )
-            hyphenated = ''.join(parts[:i]) + '\xad' + ''.join(parts[i:])
-            new_terms.append(
-                {
-                    'label': term['label'],
-                    'pattern': hyphenated,
-                    'attr': term['attr'],
-                    'replace': replace if replace else term['pattern'],
-                    'category': term['category'],
-                }
-            )
+                    'category': term['category']})
 
     return new_terms
 
 
-def get_common_names(name: str, kingdom_id: int = 5, rank_id: int = 220) -> TermsList:
+def itis_common_names(taxon: str, kingdom_id: int = 5, rank_id: int = 220) -> TermsList:
     """Guides often use common names instead of scientific name.
 
     kingdom_id =   5 == Animalia
@@ -173,7 +155,7 @@ def get_common_names(name: str, kingdom_id: int = 5, rank_id: int = 220) -> Term
         """
 
     with sqlite3.connect(ITIS_DB) as cxn:
-        cursor = cxn.execute(select_tsn, (name,))
+        cursor = cxn.execute(select_tsn, (taxon,))
         tsn = cursor.fetchone()[0]
         mask = f'%-{tsn}-%'
         names = {
@@ -183,14 +165,11 @@ def get_common_names(name: str, kingdom_id: int = 5, rank_id: int = 220) -> Term
 
     terms = []
     for common, sci_name in names.items():
-        terms.append(
-            {
+        terms.append({
                 'label': 'common_name',
                 'pattern': common,
                 'attr': 'lower',
-                'replace': sci_name,
-            }
-        )
+                'replace': sci_name})
 
     return terms
 

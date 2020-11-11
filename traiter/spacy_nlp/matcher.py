@@ -121,7 +121,6 @@ class SpacyMatcher:
         for step, _ in self.matchers.items():  # Preserve order
             doc = self.scan(doc, self.matchers[step], step=step)
 
-            # Sometimes the debugger is too slow and constrained
             # print('-' * 80)
             # print(step)
             # for token in doc:
