@@ -14,6 +14,8 @@ MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 class SpacyMatcher:
     """Shared parser logic."""
 
+    loop_max: int = 5
+
     def __init__(self, nlp: Optional[Language] = None) -> None:
         self.nlp: Optional[Language] = nlp
 
@@ -26,13 +28,17 @@ class SpacyMatcher:
         # Action to take after a step is done
         self.step_action: Dict[str, Callable] = {}
 
+        # Should we loop over the matches for the step?
+        self.loop: Dict[str, int] = {}
+
         self.count: int = 0  # Allow matchers with same label
 
     def add_terms(
             self,
             terms: Dict,
             step: str = 'terms',
-            step_action: Optional[Callable] = None
+            step_action: Optional[Callable] = None,
+            loop: int = 1
     ) -> None:
         """Add phrase matchers.
 
@@ -41,8 +47,8 @@ class SpacyMatcher:
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
-        if step_action:
-            self.step_action[step] = step_action
+        self.loop[step] = loop
+        self.step_action[step] = step_action
 
         attrs = {p['attr'] for p in terms}
         for attr in attrs:
@@ -61,11 +67,12 @@ class SpacyMatcher:
             self,
             matchers: List[Dict],
             step: str,
-            step_action: Optional[Callable] = None
+            step_action: Optional[Callable] = None,
+            loop: int = 1
     ) -> Optional[List[Dict]]:
         """Build matchers that recognize traits and labels."""
-        if step_action:
-            self.step_action[step] = step_action
+        self.loop[step] = loop
+        self.step_action[step] = step_action
 
         rules = self.step_rules(matchers, step)
         if not rules:
@@ -107,7 +114,7 @@ class SpacyMatcher:
                 cleaned.append(match)
         return cleaned
 
-    def scan(self, doc: Doc, matchers: List[Matcher], step: str) -> Doc:
+    def scan(self, doc: Doc, matchers: List[Matcher], step: str) -> Tuple[Doc, bool]:
         """Find all terms in the text and return the resulting doc."""
         matches = []
 
@@ -117,29 +124,46 @@ class SpacyMatcher:
         spans = [Span(doc, s, e, label=i) for i, s, e in matches]
         spans = filter_spans(spans)
 
+        rerun = False
+
         with doc.retokenize() as retokenizer:
             for span in spans:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                if data.get('_forget'):
-                    continue
-                label = label.split('.')[0]
-                label = data['_relabel'] if data.get('_relabel') else label
-                attrs = {
-                    'ENT_TYPE': label,
-                    'ENT_IOB': 3,
-                    '_': {'data': data, 'step': step}}
-                retokenizer.merge(span, attrs=attrs)
+                rerun |= self.retokenize(span, retokenizer, label, data, step)
 
-        return doc
+        return doc, rerun
+
+    @staticmethod
+    def retokenize(
+            span: Span, retokenizer: Doc.retokenize, label: str, data: Dict, step: str
+    ) -> bool:
+        """Retokenize the span."""
+        if data.get('_forget'):
+            return False
+        label = label.split('.')[0]
+        label = data['_relabel'] if data.get('_relabel') else label
+        attrs = {
+            'ENT_TYPE': label,
+            'ENT_IOB': 3,
+            '_': {'data': data, 'step': step}}
+        retokenizer.merge(span, attrs=attrs)
+        return True
 
     def __call__(self, doc: Doc) -> Doc:
         """Parse the doc in steps, building up a full parse in steps."""
         for step, _ in self.matchers.items():  # Preserve order
-            doc = self.scan(doc, self.matchers[step], step=step)
 
-            if self.step_action.get(step):
+            loop = min(self.loop[step], self.loop_max)
+
+            for i in range(loop):
+                doc, rerun = self.scan(doc, self.matchers[step], step=step)
+
+                if not rerun:
+                    break
+
+            if self.step_action[step]:
                 self.step_action[step](self)
 
             # print('-' * 80)
