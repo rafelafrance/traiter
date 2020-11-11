@@ -23,9 +23,17 @@ class SpacyMatcher:
         # Action to take on a matched trait
         self.actions: Dict[str, Callable] = {}
 
+        # Action to take after a step is done
+        self.step_action: Dict[str, Callable] = {}
+
         self.count: int = 0  # Allow matchers with same label
 
-    def add_terms(self, terms: Dict, step: str = 'terms') -> None:
+    def add_terms(
+            self,
+            terms: Dict,
+            step: str = 'terms',
+            step_action: Optional[Callable] = None
+    ) -> None:
         """Add phrase matchers.
 
         Each term is a dict with at least these three fields:
@@ -33,6 +41,9 @@ class SpacyMatcher:
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
+        if step_action:
+            self.step_action[step] = step_action
+
         attrs = {p['attr'] for p in terms}
         for attr in attrs:
             matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
@@ -46,8 +57,16 @@ class SpacyMatcher:
                 phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
                 matcher.add(label, phrases)
 
-    def add_patterns(self, matchers: List[Dict], step: str) -> Optional[List[Dict]]:
+    def add_patterns(
+            self,
+            matchers: List[Dict],
+            step: str,
+            step_action: Optional[Callable] = None
+    ) -> Optional[List[Dict]]:
         """Build matchers that recognize traits and labels."""
+        if step_action:
+            self.step_action[step] = step_action
+
         rules = self.step_rules(matchers, step)
         if not rules:
             return None
@@ -110,8 +129,7 @@ class SpacyMatcher:
                 attrs = {
                     'ENT_TYPE': label,
                     'ENT_IOB': 3,
-                    '_': {'data': data, 'step': step},
-                }
+                    '_': {'data': data, 'step': step}}
                 retokenizer.merge(span, attrs=attrs)
 
         return doc
@@ -120,6 +138,9 @@ class SpacyMatcher:
         """Parse the doc in steps, building up a full parse in steps."""
         for step, _ in self.matchers.items():  # Preserve order
             doc = self.scan(doc, self.matchers[step], step=step)
+
+            if self.step_action.get(step):
+                self.step_action[step](self)
 
             # print('-' * 80)
             # print(step)
