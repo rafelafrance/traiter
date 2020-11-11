@@ -47,7 +47,7 @@ class SpacyMatcher:
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
-        self.loop[step] = loop
+        self.loop[step] = abs(loop)
         self.step_action[step] = step_action
 
         attrs = {p['attr'] for p in terms}
@@ -71,7 +71,7 @@ class SpacyMatcher:
             loop: int = 1
     ) -> Optional[List[Dict]]:
         """Build matchers that recognize traits and labels."""
-        self.loop[step] = loop
+        self.loop[step] = abs(loop)
         self.step_action[step] = step_action
 
         rules = self.step_rules(matchers, step)
