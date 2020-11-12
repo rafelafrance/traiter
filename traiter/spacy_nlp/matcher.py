@@ -124,16 +124,16 @@ class SpacyMatcher:
         spans = [Span(doc, s, e, label=i) for i, s, e in matches]
         spans = filter_spans(spans)
 
-        rerun = False
+        again = False
 
         with doc.retokenize() as retokenizer:
             for span in spans:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                rerun |= self.retokenize(span, retokenizer, label, data, step)
+                again |= self.retokenize(span, retokenizer, label, data, step)
 
-        return doc, rerun
+        return doc, again
 
     @staticmethod
     def retokenize(
@@ -143,7 +143,7 @@ class SpacyMatcher:
         if data.get('_forget'):
             return False
         label = label.split('.')[0]
-        label = data['_relabel'] if data.get('_relabel') else label
+        label = data['_label'] if data.get('_label') else label
         attrs = {
             'ENT_TYPE': label,
             'ENT_IOB': 3,
@@ -158,9 +158,9 @@ class SpacyMatcher:
             loop = min(self.loop[step], self.loop_max)
 
             for i in range(loop):
-                doc, rerun = self.scan(doc, self.matchers[step], step=step)
+                doc, again = self.scan(doc, self.matchers[step], step=step)
 
-                if not rerun:
+                if not again:
                     break
 
             if self.step_action[step]:
