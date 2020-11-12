@@ -1,4 +1,4 @@
-# The Traits Database Project![Python package](https://github.com/rafelafrance/traiter/workflows/Python%20package/badge.svg)
+# The Traits Database Project![Python application](https://github.com/rafelafrance/traiter/workflows/Python%20application/badge.svg)
 
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects ([traiter_floras](https://github.com/rafelafrance/traiter_floras), [traiter_anoplura](https://github.com/rafelafrance/traiter_anoplura), etc.). It contains no runnable code itself.
