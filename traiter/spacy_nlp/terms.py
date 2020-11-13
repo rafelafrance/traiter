@@ -71,11 +71,16 @@ def itis_terms(
 
 
 def taxon_level_terms(
-        terms: TermsList, label: str, level: str = 'species', attr='lower'
+        terms: TermsList,
+        label: str,
+        new_label: str = '',
+        level: str = 'species',
+        attr='lower'
 ) -> TermsList:
     """Get species or genus names only: 'Canis lupus' -> 'lupus'."""
     new_terms = []
     idx = 1 if level == 'species' else 0
+    new_label = new_label if new_label else level
     used_patterns = set()
     for term in terms:
         if term['label'] == label:
@@ -83,7 +88,8 @@ def taxon_level_terms(
             if len(words) > 1 and words[0][-1] != '.':
                 pattern = words[idx]
                 if pattern not in used_patterns:
-                    new_terms.append({'label': level, 'pattern': pattern, 'attr': attr})
+                    new_terms.append({
+                        'label': new_label, 'pattern': pattern, 'attr': attr})
                 used_patterns.add(pattern)
     return new_terms
 
