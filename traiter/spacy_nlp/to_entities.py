@@ -46,6 +46,10 @@ class ToEntities:
                 span._.data = token._.data
                 span._.step = token._.step
 
+                span._.data['trait'] = span.label_
+                span._.data['start'] = span.start_char
+                span._.data['end'] = span.end_char
+
                 new_ents.append(span)
 
         doc.ents = tuple(new_ents)
