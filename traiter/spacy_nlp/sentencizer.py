@@ -11,7 +11,11 @@ from spacy.tokens import Doc
 class SpacySentencizer:
     """Shared sentencizer logic."""
 
-    def __init__(self, abbrevs: Union[str, List[str]]) -> None:
+    def __init__(
+            self,
+            abbrevs: Union[str, List[str]],
+            headings: Union[str, List[str]] = ''
+    ) -> None:
         """Build a custom sentencizer.
 
         Each client sentencizer has its own abbreviations that will prevent a
@@ -21,12 +25,16 @@ class SpacySentencizer:
         abbrevs = '|'.join(abbrevs)
         self.abbrevs = regex.compile(fr'(?:{abbrevs})$')
 
+        self.headings = headings.split() if isinstance(headings, str) else headings
+
     def __call__(self, doc: Doc) -> Doc:
         """Break the text into sentences."""
         for i, token in enumerate(doc[:-1]):
             prev_token = doc[i - 1] if i > 0 else None
             next_token = doc[i + 1]
-            if (
+            if token.ent_type_ in self.headings:
+                next_token.is_sent_start = True
+            elif (
                 token.text == '.'
                 and regex.match(r'[A-Z]', next_token.prefix_)
                 and prev_token
