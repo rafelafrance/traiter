@@ -57,7 +57,8 @@ class SpacyMatcher:
 
             by_label = defaultdict(list)
             for term in terms:
-                by_label[term['label']].append(term)
+                if term['attr'] == attr:
+                    by_label[term['label']].append(term)
 
             for label, term_list in by_label.items():
                 phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
