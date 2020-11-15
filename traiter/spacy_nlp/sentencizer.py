@@ -7,6 +7,8 @@ from typing import List, Union
 import regex
 from spacy.tokens import Doc
 
+PUNCT = ['SPACE', 'PUNCT']
+
 
 class SpacySentencizer:
     """Shared sentencizer logic."""
@@ -30,22 +32,35 @@ class SpacySentencizer:
     def __call__(self, doc: Doc) -> Doc:
         """Break the text into sentences."""
         for i, token in enumerate(doc[:-1]):
-            prev_token = doc[i - 1] if i > 0 else None
-            next_token = doc[i + 1]
-            if token.ent_type_ in self.headings:
-                next_token.is_sent_start = True
-            elif (
-                token.text == '.'
-                and regex.match(r'[A-Z]', next_token.prefix_)
-                and prev_token
-                and not self.abbrevs.match(prev_token.text)
-                and len(next_token) > 1
-                and len(prev_token) > 1
-            ):
-                next_token.is_sent_start = True
-            elif token.text in '"”\'' and prev_token and prev_token.text == '.':
-                next_token.is_sent_start = True
+            prev = doc[i - 1] if i > 0 else None
+            next_ = doc[i + 1]
+            if (token.ent_type_ in self.headings
+                    and (not prev or self.is_prev(prev))
+                    and self.is_next(next_)):
+                next_.is_sent_start = True
+                token.is_sent_start = True
+            elif (token.text == '.'
+                    and prev and not self.abbrevs.match(prev.text)
+                    and (len(prev) > 1 or self.is_prev(prev))
+                    and (len(next_) > 1 or self.is_next(next_))):
+                next_.is_sent_start = True
+            elif (token.text == '.'
+                    and self.is_prev(prev)
+                    and self.is_next(next_)):
+                next_.is_sent_start = True
+            elif token.text in '"”\'' and prev and prev.text == '.':
+                next_.is_sent_start = True
             else:
-                next_token.is_sent_start = False
+                next_.is_sent_start = False
 
         return doc
+
+    @staticmethod
+    def is_prev(token):
+        """See if the surrounding token meets needed criteria."""
+        return token.pos_ == 'SPACE' or token.text in ')].'
+
+    @staticmethod
+    def is_next(token):
+        """See if the next token meets needed criteria."""
+        return token.prefix_.isupper() or token.pos_ == 'SPACE' or token.text in '.'
