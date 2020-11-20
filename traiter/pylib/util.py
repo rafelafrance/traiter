@@ -48,7 +48,9 @@ def today() -> str:
 
 @contextmanager
 def get_temp_dir(
-    prefix: str = 'temp_', where: Optional[Union[str, Path]] = None, keep: bool = False
+    prefix: str = 'temp_',
+    where: Optional[Union[str, Path]] = None,
+    keep: bool = False
 ) -> TemporaryDirectory:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
@@ -153,3 +155,8 @@ def clean_text(text: str, trans: Optional[str.translate] = None) -> str:
     text = ftfy.fix_text(text)  # Handle common mojibake
     text = re.sub(r'\p{Cc}+', ' ', text)  # Remove control characters
     return text
+
+
+def xor(one: Any, two: Any) -> bool:
+    """Emulate a logical xor."""
+    return (one and two) or (not one and not two)
