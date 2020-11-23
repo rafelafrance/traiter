@@ -150,7 +150,8 @@ def itis_common_names(taxon: str, kingdom_id: int = 5, rank_id: int = 220) -> Te
     rank_id    = 220 == Species
     """
     if not ITIS_DB.exists():
-        return []
+        print('Could not find ITIS database.')
+        return mock_itis_traits(taxon)
 
     select_tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
     select_names = """
