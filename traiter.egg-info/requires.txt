@@ -2,5 +2,5 @@ Hyphenate~=1.1.0
 spacy~=2.3.2
 en-core-web-sm@ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
 ftfy~=5.8
-regex~=2020.10.28
-inflect~=4.1.0
+regex~=2020.11.13
+inflect~=5.0.2
