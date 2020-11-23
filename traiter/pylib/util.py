@@ -24,7 +24,7 @@ INFLECT = inflect.engine()
 
 
 class DotDict(dict):
-    """Allow dot.notation access to dictionary items"""
+    """Allow dot.notation access to dictionary items."""
 
     __getattr__ = dict.get
     __setattr__ = dict.__setitem__
@@ -70,12 +70,13 @@ def shorten(text: str) -> str:
     return ' '.join(text.split())
 
 
-def flatten(nested: Any) -> Any:
+def flatten(nested: Any) -> List:
     """Flatten an arbitrarily nested list."""
     flat = []
     nested = nested if isinstance(nested, (list, tuple, set)) else [nested]
     for item in nested:
-        if hasattr(item, '__iter__'):
+        # if not isinstance(item, str) and hasattr(item, '__iter__'):
+        if isinstance(item, (list, tuple, set)):
             flat.extend(flatten(item))
         else:
             flat.append(item)
