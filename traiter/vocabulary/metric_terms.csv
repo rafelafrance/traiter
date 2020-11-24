@@ -1,0 +1,11 @@
+label,pattern,attr,replace
+length_units,centimeters,lower,cm
+length_units,cm,lower,cm
+length_units,decimeters,lower,dm
+length_units,dm,lower,dm
+length_units,m,lower,m
+length_units,m.,lower,m
+length_units,meters,lower,m
+length_units,millimeters,lower,mm
+length_units,mm,lower,mm
+length_units,µm,lower,µm

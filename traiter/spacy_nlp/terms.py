@@ -8,11 +8,17 @@ from typing import Dict, List, Optional, Union
 from hyphenate import hyphenate_word
 
 from traiter.pylib.util import DATA_DIR
+import traiter.vocabulary as vocab
 
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
 VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
 
 TermsList = List[Dict[str, str]]
+
+
+def shared_terms(csv_file: str) -> Path:
+    """Get the path to a shared vocabulary file."""
+    return Path(vocab.__file__).parent / csv_file
 
 
 def read_terms(term_path: Union[str, Path]) -> TermsList:

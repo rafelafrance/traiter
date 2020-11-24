@@ -1,0 +1,12 @@
+label,pattern,attr,replace
+gender,♀,lower,female
+gender,♀♀,lower,female
+gender,♂,lower,male
+gender,♂♂,lower,male
+gender,female,lower,female
+gender,females,lower,female
+gender,male,lower,male
+gender,males,lower,male
+gender,n,lower,nymph
+gender,nymph,lower,nymph
+gender,nymphs,lower,nymph
