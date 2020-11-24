@@ -1,3 +1,4 @@
+MANIFEST.in
 README.md
 setup.py
 Traiter.egg-info/PKG-INFO
@@ -23,3 +24,8 @@ traiter/spacy_nlp/sentencizer.py
 traiter/spacy_nlp/terms.py
 traiter/spacy_nlp/to_entities.py
 traiter/vocabulary/__init__.py
+traiter/vocabulary/animal_terms.csv
+traiter/vocabulary/color_terms.csv
+traiter/vocabulary/insect_body_terms.csv
+traiter/vocabulary/metric_terms.csv
+traiter/vocabulary/time_terms.csv
