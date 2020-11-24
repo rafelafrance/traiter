@@ -6,6 +6,7 @@ from distutils.core import setup
 
 from setuptools import find_packages
 
+NAME = 'Traiter'
 DESCRIPTION = """Traiter"""
 
 
@@ -39,10 +40,11 @@ def find_requirements():
 
 
 setup(
-    name='traiter',
+    name=NAME,
     version=find_version(),
     packages=find_packages(),
     install_requires=find_requirements(),
+    package_data={NAME: ['traiter/vocabulary/*.csv']},
     description=DESCRIPTION,
     long_description=readme(),
     license=license_(),
