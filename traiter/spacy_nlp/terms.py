@@ -16,9 +16,9 @@ VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
 TermsList = List[Dict[str, str]]
 
 
-def shared_terms(csv_file: str) -> Path:
+def shared_terms(csv_file: str) -> TermsList:
     """Get the path to a shared vocabulary file."""
-    return Path(vocab.__file__).parent / csv_file
+    return read_terms(Path(vocab.__file__).parent / csv_file)
 
 
 def read_terms(term_path: Union[str, Path]) -> TermsList:
