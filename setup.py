@@ -44,7 +44,6 @@ setup(
     version=find_version(),
     packages=find_packages(),
     install_requires=find_requirements(),
-    package_data={NAME: ['traiter/vocabulary/*.csv']},
     description=DESCRIPTION,
     long_description=readme(),
     license=license_(),
