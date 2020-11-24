@@ -44,6 +44,7 @@ setup(
     version=find_version(),
     packages=find_packages(),
     install_requires=find_requirements(),
+    include_package_data=True,
     description=DESCRIPTION,
     long_description=readme(),
     license=license_(),
