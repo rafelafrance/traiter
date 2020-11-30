@@ -40,6 +40,7 @@ class SpacyMatcher:
             terms: Dict,
             step: str = 'terms',
             step_action: Optional[Callable] = None,
+            on_match: Optional[Callable] = None,
             loop: int = 1
     ) -> None:
         """Add phrase matchers.
@@ -65,6 +66,8 @@ class SpacyMatcher:
             for label, term_list in by_label.items():
                 phrases = [self.nlp.make_doc(t['pattern']) for t in term_list]
                 matcher.add(label, phrases)
+                if on_match:
+                    self.actions[label] = on_match
 
     def add_patterns(
             self,
