@@ -12,7 +12,7 @@ import ftfy
 import inflect
 import regex as re
 
-__VERSION__ = '0.8.2'
+__VERSION__ = '0.8.3'
 
 DATA_DIR = Path.cwd() / 'data'
 

@@ -8,6 +8,8 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 from spacy.util import filter_spans
 
+from ..pylib.util import as_list
+
 MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 
 
@@ -132,7 +134,10 @@ class SpacyMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                again |= self.retokenize(span, retokenizer, label, data, step)
+                data = as_list(data)
+                for datum in data:
+                    span = datum.get('_span', span)
+                    again |= self.retokenize(span, retokenizer, label, datum, step)
 
         return doc, again
 
