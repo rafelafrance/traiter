@@ -149,7 +149,9 @@ def hyphenate_terms(terms: TermsList) -> TermsList:
     return new_terms
 
 
-def itis_common_names(taxon: str, kingdom_id: int = 5, rank_id: int = 220) -> TermsList:
+def itis_common_names(
+        taxon: str, kingdom_id: int = 5, rank_id: int = 220, replace: bool = False
+) -> TermsList:
     """Guides often use common names instead of scientific name.
 
     kingdom_id =   5 == Animalia
@@ -181,11 +183,10 @@ def itis_common_names(taxon: str, kingdom_id: int = 5, rank_id: int = 220) -> Te
 
     terms = []
     for common, sci_name in names.items():
-        terms.append({
-                'label': 'common_name',
-                'pattern': common,
-                'attr': 'lower',
-                'replace': sci_name})
+        term = {'label': 'common_name', 'pattern': common, 'attr': 'lower'}
+        if replace:
+            term['replace'] = sci_name
+        terms.append(term)
 
     return terms
 
