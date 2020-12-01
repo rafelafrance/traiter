@@ -15,11 +15,13 @@ part,crossveins,lower,crossvein
 part,eye,lower,eye
 part,eyes,lower,eye
 part,face,lower,
+part,femur,lower,
 part,fimbriae,lower,
 part,foreleg,lower,
 part,forelegs,lower,foreleg
 part,forewing,lower,forewing
 part,forewings,lower,forewing
+part,frons,lower,
 part,genital,lower,
 part,genitalia,lower,genital
 part,genitals,lower,genital
@@ -33,14 +35,18 @@ part,hindwings,lower,hindwing
 part,humeral crossvein,lower,
 part,leg,lower,
 part,legs,lower,leg
+part,mandible,lower,mandible
+part,mandibles,lower,mandible
 part,margins,lower,
 part,mesothorax,lower,
 part,metapodal,lower,
 part,metathorax,lower,
-part,node,lower,nodus
-part,nodus,lower,nodus
-part,paramere,lower,
-part,parameres,lower,
+part,ommatidia,lower,ommatidium
+part,ommatidium,lower,ommatidium
+part,ocelli,lower,ocellus
+part,ocellus,lower,ocellus
+part,paramere,lower,paramere
+part,parameres,lower,paramere
 part,plate,lower,
 part,prothorax,lower,
 part,pterostigma,lower,stigma
@@ -54,8 +60,10 @@ part,sternum,lower,
 part,stigma,lower,stigma
 part,stigmas,lower,stigma
 part,stigmata,lower,stigma
+part,synthorax,lower,
 part,thoracic,lower,
 part,thorax,lower,
+part,tibia,lower,
 part,vein,lower,vein
 part,veins,lower,vein
 part,vulva,lower,
@@ -79,6 +87,7 @@ part_location,cubitus,lower,
 part_location,dorsal,lower,
 part_location,dorsal line,lower,
 part_location,dorsal lines,lower,
+part_location,dorsolateral,lower,
 part_location,front,lower,
 part_location,genito-ventral,lower,
 part_location,intercostal,lower,
@@ -97,6 +106,7 @@ part_location,paratergal,lower,
 part_location,postantennal,lower,
 part_location,posterior,lower,
 part_location,postero-medial,lower,
+part_location,postocular ,lower,
 part_location,preantennal,lower,
 part_location,principal,lower,
 part_location,rear,lower,
@@ -111,6 +121,8 @@ part_location,tailed,lower,
 part_location,tergal,lower,
 part_location,terminal,lower,
 part_location,tip,lower,
+part_location,transverse line,lower,
+part_location,transverse lines,lower,
 part_location,underside,lower,
 part_location,upper,lower,
 part_location,upper side,lower,

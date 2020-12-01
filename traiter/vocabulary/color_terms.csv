@@ -1,8 +1,10 @@
 label,pattern,attr,replace
+color,amber,lower,
 color,black,lower,
 color,blackish,lower,black
 color,blue,lower,
 color,blueish,lower,blue
+color,bluish,lower,blue
 color,bronze,lower,bronze
 color,bronzy,lower,bronze
 color,brown,lower,
@@ -18,6 +20,7 @@ color,glaucous-pink,lower,pink
 color,gold,lower,
 color,golden,lower,
 color,golden-yellow,lower,yellow
+color,grass-green ,lower,green
 color,gray,lower,
 color,grayish,lower,gray
 color,green,lower,
@@ -67,6 +70,9 @@ color_modifier,backed,lower,
 color_modifier,blotch,lower,
 color_modifier,blotched,lower,
 color_modifier,blotches,lower,
+color_modifier,bright,lower,
+color_modifier,bull’s-eye,lower,
+color_modifier,bulls-eye,lower,
 color_modifier,colored,lower,
 color_modifier,dark,lower,
 color_modifier,dot,lower,
@@ -82,6 +88,8 @@ color_modifier,line,lower,
 color_modifier,lined,lower,
 color_modifier,lines,lower,
 color_modifier,longitudinal,lower,
+color_modifier,marking,lower,
+color_modifier,markings,lower,
 color_modifier,metallic,lower,
 color_modifier,mottled,lower,
 color_modifier,mottling,lower,
@@ -110,5 +118,6 @@ color_modifier,tinted,lower,
 color_modifier,tip,lower,
 color_modifier,tipped,lower,
 color_modifier,tips,lower,
+color_modifier,uncolored,lower,
 color_modifier,wash,lower,
 color_modifier,washed,lower,
