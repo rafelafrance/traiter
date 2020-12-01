@@ -60,6 +60,7 @@ color,straw-coloured,lower,yellow
 color,sulfur-yellow,lower,yellow
 color,sulphur-yellow,lower,yellow
 color,tan,lower,
+color,turquoise,lower,
 color,violet,lower,purple
 color,violetish,lower,purple
 color,white,lower,
@@ -109,6 +110,7 @@ color_modifier,streaks,lower,
 color_modifier,stripe,lower,
 color_modifier,striped,lower,
 color_modifier,stripes,lower,
+color_modifier,striping,lower,
 color_modifier,throated,lower,
 color_modifier,tinge,lower,
 color_modifier,tinged,lower,

@@ -8,6 +8,9 @@ part,anus,lower,
 part,apodema,lower,apodeme
 part,apodeme,lower,
 part,body,lower,
+part,carina,lower,
+part,cerci,lower,cercus
+part,cercus,lower,cercus
 part,cross-vein,lower,crossvein
 part,cross-veins,lower,crossvein
 part,crossvein,lower,crossvein
@@ -32,7 +35,6 @@ part,hindleg,lower,
 part,hindlegs,lower,hindleg
 part,hindwing,lower,hindwing
 part,hindwings,lower,hindwing
-part,humeral crossvein,lower,
 part,leg,lower,
 part,legs,lower,leg
 part,mandible,lower,mandible
@@ -47,12 +49,14 @@ part,ocelli,lower,ocellus
 part,ocellus,lower,ocellus
 part,paramere,lower,paramere
 part,parameres,lower,paramere
-part,plate,lower,
+part,plate,lower,plate
+part,plates,lower,plate
 part,prothorax,lower,
 part,pterostigma,lower,stigma
 part,pterostigmas,lower,stigma
 part,pterostigmata,lower,stigma
-part,sectoral crossvein,lower,
+part,segment,lower,segment
+part,segments,lower,segment
 part,spiracle,lower,
 part,spiracles,lower,spiracle
 part,sternal,lower,
@@ -73,6 +77,7 @@ part,wingtip,lower,wingtip
 part,wingtips,lower,wingtip
 part_location,accessory,lower,
 part_location,anal,lower,
+part_location,antehumeral,lower,
 part_location,anterior,lower,
 part_location,antero-lateral,lower,
 part_location,apex,lower,
@@ -90,6 +95,7 @@ part_location,dorsal lines,lower,
 part_location,dorsolateral,lower,
 part_location,front,lower,
 part_location,genito-ventral,lower,
+part_location,humeral,lower,
 part_location,intercostal,lower,
 part_location,lateral,lower,
 part_location,lower,lower,
@@ -98,9 +104,11 @@ part_location,lower sides,lower,
 part_location,margin,lower,
 part_location,marginal,lower,
 part_location,media,lower,
-part_location,medial,lower,
+part_location,media,lower,
+part_location,middorsal,lower,
 part_location,mediolateral,lower,
 part_location,mesothoracic,lower,
+part_location,mesostigmal,lower,
 part_location,oral,lower,
 part_location,paratergal,lower,
 part_location,postantennal,lower,
@@ -110,9 +118,11 @@ part_location,postocular ,lower,
 part_location,preantennal,lower,
 part_location,principal,lower,
 part_location,rear,lower,
+part_location,sectoral,lower,
 part_location,side,lower,
 part_location,sides,lower,side
 part_location,sternal,lower,
+part_location,subapical,lower,
 part_location,subcosta,lower,
 part_location,subgenital,lower,
 part_location,supra-antennal,lower,
