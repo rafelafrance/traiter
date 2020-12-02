@@ -1,24 +1,20 @@
 """Custom pipeline component to convert tokens into entities."""
 
-# pylint: disable=too-few-public-methods
 from typing import Optional, Set
 
 from spacy.tokens import Doc, Span
 
 
-class ToEntities:
+class ToEntities:  # pylint: disable=too-few-public-methods
     """Custom pipeline component to convert tokens into entities."""
 
-    entities2keep = set()
-    token2entity = set()
-
     def __init__(
-        self, entities2keep: Optional[Set] = None, token2entity: Optional[Set] = None
+            self,
+            entities2keep: Optional[Set] = None,
+            token2entity: Optional[Set] = None
     ) -> None:
-        if entities2keep:
-            self.entities2keep = entities2keep
-        if token2entity:
-            self.token2entity = token2entity
+        self.entities2keep = entities2keep if entities2keep else set()
+        self.token2entity = token2entity if token2entity else set()
 
     def __call__(self, doc: Doc) -> Doc:
         """Convert trait tokens into entities."""
@@ -35,18 +31,18 @@ class ToEntities:
             if token.i in keep:
                 continue
 
-            if ent_type_ := token.ent_type_:
+            if label := token.ent_type_:
                 if token._.step not in self.token2entity:
                     continue
                 if token._.data.get('_skip'):
                     continue
 
-                span = Span(doc, token.i, token.i + 1, label=ent_type_)
+                span = Span(doc, token.i, token.i + 1, label=label)
 
                 span._.data = token._.data
                 span._.step = token._.step
 
-                span._.data['trait'] = span.label_
+                span._.data['trait'] = label
                 span._.data['start'] = span.start_char
                 span._.data['end'] = span.end_char
 

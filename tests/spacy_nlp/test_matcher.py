@@ -2,7 +2,7 @@
 
 import unittest
 
-from traiter.spacy_nlp.matcher import SpacyMatcher
+from traiter.pylib.matcher import SpacyMatcher
 
 
 class TestSpacyMatcher(unittest.TestCase):

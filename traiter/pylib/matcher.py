@@ -8,7 +8,7 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 from spacy.util import filter_spans
 
-from ..pylib.util import as_list
+from traiter.pylib.util import as_list
 
 MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 
@@ -39,19 +39,17 @@ class SpacyMatcher:
             self,
             terms: Dict,
             step: str = 'terms',
-            step_action: Optional[Callable] = None,
             on_match: Optional[Callable] = None,
             loop: int = 1
     ) -> None:
         """Add phrase matchers.
 
         Each term is a dict with at least these three fields:
-            1) attribute: what spacy token field are we matching (ex. LOWER)
+            1) attr: what spacy token field are we matching (ex. LOWER)
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
         self.loop[step] = abs(loop)
-        self.step_action[step] = step_action
 
         attrs = {p['attr'] for p in terms}
         for attr in attrs:
@@ -70,15 +68,10 @@ class SpacyMatcher:
                     self.actions[label] = on_match
 
     def add_patterns(
-            self,
-            matchers: List[Dict],
-            step: str,
-            step_action: Optional[Callable] = None,
-            loop: int = 1
+            self, matchers: List[Dict], step: str, loop: int = 1
     ) -> Optional[List[Dict]]:
         """Build matchers that recognize traits and labels."""
         self.loop[step] = abs(loop)
-        self.step_action[step] = step_action
 
         rules = self.step_rules(matchers, step)
         if not rules:
@@ -120,15 +113,11 @@ class SpacyMatcher:
                 cleaned.append(match)
         return cleaned
 
-    def scan(self, doc: Doc, matchers: List[Matcher], step: str) -> Tuple[Doc, bool]:
+    def retokenize_matches(
+            self, doc: Doc, matchers: List[Matcher], step: str
+    ) -> Tuple[Doc, bool]:
         """Find all terms in the text and return the resulting doc."""
-        matches = []
-
-        for matcher in matchers:
-            matches += matcher(doc)
-
-        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
-        spans = filter_spans(spans)
+        spans = self.find_matches(doc, matchers)
 
         again = False
 
@@ -160,6 +149,16 @@ class SpacyMatcher:
         retokenizer.merge(span, attrs=attrs)
         return True
 
+    @staticmethod
+    def find_matches(doc, matchers):
+        """Find matches in the doc."""
+        matches = []
+        for matcher in matchers:
+            matches += matcher(doc)
+        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
+        spans = filter_spans(spans)
+        return spans
+
     def __call__(self, doc: Doc) -> Doc:
         """Parse the doc in steps, building up a full parse in steps."""
         for step, _ in self.matchers.items():  # Preserve order
@@ -167,12 +166,13 @@ class SpacyMatcher:
             loop = min(self.loop[step], self.loop_max)
 
             for i in range(loop):
-                doc, again = self.scan(doc, self.matchers[step], step=step)
+                doc, again = self.retokenize_matches(
+                    doc, self.matchers[step], step=step)
 
                 if not again:
                     break
 
-            if self.step_action[step]:
+            if self.step_action.get(step):
                 self.step_action[step](self)
 
             # print('-' * 80)
