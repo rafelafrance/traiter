@@ -1,0 +1,58 @@
+label,pattern,attr,replace,pos
+us_state,Alabama,lower,AL,noun
+us_state,Alaska,lower,AK,noun
+us_state,American Samoa,lower,AS,noun
+us_state,Arizona,lower,AZ,noun
+us_state,Arkansas,lower,AR,noun
+us_state,California,lower,CA,noun
+us_state,Colorado,lower,CO,noun
+us_state,Connecticut,lower,CT,noun
+us_state,Delaware,lower,DE,noun
+us_state,District of Columbia,lower,DC,noun
+us_state,Florida,lower,FL,noun
+us_state,Georgia,lower,GA,noun
+us_state,Guam,lower,GU,noun
+us_state,Hawaii,lower,HI,noun
+us_state,Idaho,lower,ID,noun
+us_state,Illinois,lower,IL,noun
+us_state,Indiana,lower,IN,noun
+us_state,Iowa,lower,IA,noun
+us_state,Kansas,lower,KS,noun
+us_state,Kentucky,lower,KY,noun
+us_state,Louisiana,lower,LA,noun
+us_state,Maine,lower,ME,noun
+us_state,Maryland,lower,MD,noun
+us_state,Massachusetts,lower,MA,noun
+us_state,Michigan,lower,MI,noun
+us_state,Minnesota,lower,MN,noun
+us_state,Minor Outlying Islands,lower,UM,noun
+us_state,Mississippi,lower,MS,noun
+us_state,Missouri,lower,MO,noun
+us_state,Montana,lower,MT,noun
+us_state,Nebraska,lower,NE,noun
+us_state,Nevada,lower,NV,noun
+us_state,New Hampshire,lower,NH,noun
+us_state,New Jersey,lower,NJ,noun
+us_state,New Mexico,lower,NM,noun
+us_state,New York,lower,NY,noun
+us_state,North Carolina,lower,NC,noun
+us_state,North Dakota,lower,ND,noun
+us_state,Northern Mariana Islands,lower,MP,noun
+us_state,Ohio,lower,OH,noun
+us_state,Oklahoma,lower,OK,noun
+us_state,Oregon,lower,OR,noun
+us_state,Pennsylvania,lower,PA,noun
+us_state,Puerto Rico,lower,PR,noun
+us_state,Rhode Island,lower,RI,noun
+us_state,South Carolina,lower,SC,noun
+us_state,South Dakota,lower,SD,noun
+us_state,Tennessee,lower,TN,noun
+us_state,Texas,lower,TX,noun
+us_state,Utah,lower,UT,noun
+us_state,Vermont,lower,VT,noun
+us_state,Virgin Islands,lower,VI,noun
+us_state,Virginia,lower,VA,noun
+us_state,Washington,lower,WA,noun
+us_state,West Virginia,lower,WV,noun
+us_state,Wisconsin,lower,WI,noun
+us_state,Wyoming,lower,WY,noun

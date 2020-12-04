@@ -49,3 +49,6 @@ utils/
 notebooks/
 junk/
 *.log
+
+# Editor files
+.~*
