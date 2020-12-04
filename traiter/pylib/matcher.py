@@ -27,9 +27,6 @@ class SpacyMatcher:
         # Action to take on a matched trait
         self.actions: Dict[str, Callable] = {}
 
-        # Action to take after a step is done
-        self.step_action: Dict[str, Callable] = {}
-
         # Should we loop over the matches for the step?
         self.loop: Dict[str, int] = {}
 
@@ -146,6 +143,8 @@ class SpacyMatcher:
             'ENT_TYPE': label,
             'ENT_IOB': 3,
             '_': {'data': data, 'step': step}}
+        if data.get('_pos'):
+            attrs['POS'] = data['_pos']
         retokenizer.merge(span, attrs=attrs)
         return True
 
@@ -172,14 +171,10 @@ class SpacyMatcher:
                 if not again:
                     break
 
-            if self.step_action.get(step):
-                self.step_action[step](self)
-
             # print('-' * 80)
             # print(step)
             # for token in doc:
-            #     print(f'{token.ent_type_:<15} {token.pos_:<6} '
-            #           f'{token.lemma_} => {token}')
+            #     print(f'{token.ent_type_:<15} {token.pos_:<6} {token}')
             # print()
 
         return doc

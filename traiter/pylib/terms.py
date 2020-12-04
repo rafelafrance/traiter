@@ -72,7 +72,8 @@ def itis_terms(
         mask = f'%-{tsn}-%'
         taxa = {n[0] for n in cxn.execute(select_names, (mask, kingdom_id, rank_id))}
 
-    terms = [{'label': label, 'pattern': t, 'attr': attr} for t in sorted(taxa)]
+    terms = [{'label': label, 'pattern': t, 'attr': attr, 'pos': 'PROPN'}
+             for t in sorted(taxa)]
     return terms
 
 
@@ -95,7 +96,11 @@ def taxon_level_terms(
                 pattern = words[idx]
                 if pattern not in used_patterns:
                     new_terms.append({
-                        'label': new_label, 'pattern': pattern, 'attr': attr})
+                        'label': new_label,
+                        'pattern': pattern,
+                        'attr': attr,
+                        'pos': 'PROPN',
+                    })
                 used_patterns.add(pattern)
     return new_terms
 
@@ -113,7 +118,9 @@ def abbrev_species(terms: TermsList, label: str, attr='lower') -> TermsList:
                     'label': label,
                     'pattern': f'{first[0]}. {rest}',
                     'attr': attr,
-                    'replace': full_name})
+                    'replace': full_name,
+                    'pos': 'PROPN',
+                })
     return new_terms
 
 
@@ -144,7 +151,9 @@ def hyphenate_terms(terms: TermsList) -> TermsList:
                     'pattern': hyphenated,
                     'attr': term['attr'],
                     'replace': replace if replace else term['pattern'],
-                    'category': term['category']})
+                    'category': term['category'],
+                    'pos': 'PROPN',
+                })
 
     return new_terms
 
@@ -183,7 +192,12 @@ def itis_common_names(
 
     terms = []
     for common, sci_name in names.items():
-        term = {'label': 'common_name', 'pattern': common, 'attr': 'lower'}
+        term = {
+            'label': 'common_name',
+            'pattern': common,
+            'attr': 'lower',
+            'pos': 'PROPN',
+        }
         if replace:
             term['replace'] = sci_name
         terms.append(term)

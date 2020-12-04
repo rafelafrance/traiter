@@ -1,13 +1,13 @@
-label,pattern,attr,replace
-sex,♀,lower,female
-sex,♀♀,lower,female
-sex,♂,lower,male
-sex,♂♂,lower,male
-sex,both sexes,lower,
-sex,female,lower,female
-sex,females,lower,female
-sex,male,lower,male
-sex,males,lower,male
-sex,n,lower,nymph
-sex,nymph,lower,nymph
-sex,nymphs,lower,nymph
+label,pattern,attr,replace,pos
+sex,♀,lower,female,noun  adj
+sex,♀♀,lower,female,noun  adj
+sex,♂,lower,male,noun  adj
+sex,♂♂,lower,male,noun  adj
+sex,both sexes,lower,,noun  adj
+sex,female,lower,female,noun  adj
+sex,females,lower,female,noun  adj
+sex,male,lower,male,noun  adj
+sex,males,lower,male,noun  adj
+sex,n,lower,nymph,noun  adj
+sex,nymph,lower,nymph,noun  adj
+sex,nymphs,lower,nymph,noun  adj

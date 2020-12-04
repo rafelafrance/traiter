@@ -1,125 +1,125 @@
-label,pattern,attr,replace
-color,amber,lower,
-color,black,lower,
-color,blackish,lower,black
-color,blue,lower,
-color,blueish,lower,blue
-color,bluish,lower,blue
-color,bronze,lower,bronze
-color,bronzy,lower,bronze
-color,brown,lower,
-color,brownish,lower,brown
-color,clear,lower,
-color,cream,lower,white
-color,cream-yellow,lower,yellow
-color,creamy,lower,white
-color,crimson,lower,red
-color,ebony,lower,black
-color,glaucous,lower,
-color,glaucous-pink,lower,pink
-color,gold,lower,
-color,golden,lower,
-color,golden-yellow,lower,yellow
-color,grass-green ,lower,green
-color,gray,lower,
-color,grayish,lower,gray
-color,green,lower,
-color,greenish,lower,green
-color,grey,lower,
-color,greyish,lower,gray
-color,ivory,lower,white
-color,lavendar,lower,purple
-color,lavender,lower,purple
-color,lemon,lower,yellow
-color,lilac,lower,purple
-color,maroon,lower,red-brown
-color,olive,lower,
-color,olive-green,lower,green
-color,orange,lower,
-color,orangish,lower,orange
-color,pink,lower,
-color,pinkish,lower,pink
-color,pruinose,lower,
-color,purple,lower,
-color,purpleish,lower,purple
-color,purplish,lower,purple
-color,red,lower,
-color,reddish,lower,red
-color,rose,lower,pink
-color,rose-colored,lower,pink
-color,rose-coloured,lower,pink
-color,roseate,lower,
-color,salmon,lower,
-color,salmon-pink,lower,orange-pink
-color,scarlet,lower,red
-color,silver,lower,
-color,silvery,lower,silver
-color,stramineous,lower,yellow
-color,straw-colored,lower,yellow
-color,straw-coloured,lower,yellow
-color,sulfur-yellow,lower,yellow
-color,sulphur-yellow,lower,yellow
-color,tan,lower,
-color,turquoise,lower,
-color,violet,lower,purple
-color,violetish,lower,purple
-color,white,lower,
-color,whitish,lower,white
-color,yellow,lower,
-color,yellowish,lower,yellow
-color_modifier,backed,lower,
-color_modifier,blotch,lower,
-color_modifier,blotched,lower,
-color_modifier,blotches,lower,
-color_modifier,bright,lower,
-color_modifier,bull’s-eye,lower,
-color_modifier,bulls-eye,lower,
-color_modifier,colored,lower,
-color_modifier,dark,lower,
-color_modifier,dot,lower,
-color_modifier,dots,lower,
-color_modifier,dusky,lower,
-color_modifier,dull,lower,
-color_modifier,duller,lower,
-color_modifier,faint,lower,
-color_modifier,faintly,lower,
-color_modifier,gloss,lower,
-color_modifier,glossed,lower,
-color_modifier,line,lower,
-color_modifier,lined,lower,
-color_modifier,lines,lower,
-color_modifier,longitudinal,lower,
-color_modifier,marking,lower,
-color_modifier,markings,lower,
-color_modifier,metallic,lower,
-color_modifier,mottled,lower,
-color_modifier,mottling,lower,
-color_modifier,overtone,lower,
-color_modifier,overtones,lower,
-color_modifier,pale,lower,
-color_modifier,paler,lower,
-color_modifier,patch,lower,
-color_modifier,patched,lower,
-color_modifier,speckled,lower,
-color_modifier,speckles,lower,
-color_modifier,spot,lower,
-color_modifier,spots,lower,
-color_modifier,spotted,lower,
-color_modifier,streaked,lower,
-color_modifier,streaks,lower,
-color_modifier,stripe,lower,
-color_modifier,striped,lower,
-color_modifier,stripes,lower,
-color_modifier,striping,lower,
-color_modifier,throated,lower,
-color_modifier,tinge,lower,
-color_modifier,tinged,lower,
-color_modifier,tinges,lower,
-color_modifier,tint,lower,
-color_modifier,tinted,lower,
-color_modifier,tip,lower,
-color_modifier,tipped,lower,
-color_modifier,tips,lower,
-color_modifier,uncolored,lower,
-color_modifier,wash,lower,
-color_modifier,washed,lower,
+label,pattern,attr,replace,pos
+color,amber,lower,,noun adj
+color,black,lower,,noun adj
+color,blackish,lower,black,adj
+color,blue,lower,,noun adj
+color,blueish,lower,blue,adj
+color,bluish,lower,blue,adj
+color,bronze,lower,bronze,noun adj
+color,bronzy,lower,bronze,adj
+color,brown,lower,,noun adj
+color,brownish,lower,brown,adj
+color,clear,lower,,noun adj
+color,cream,lower,white,noun adj
+color,cream-yellow,lower,yellow,noun adj
+color,creamy,lower,white,adj
+color,crimson,lower,red,noun adj
+color,ebony,lower,black,noun adj
+color,glaucous,lower,,noun adj
+color,glaucous-pink,lower,pink,noun adj
+color,gold,lower,,noun adj
+color,golden,lower,,noun adj
+color,golden-yellow,lower,yellow,noun adj
+color,grass-green ,lower,green,noun adj
+color,gray,lower,,noun adj
+color,grayish,lower,gray,adj
+color,green,lower,,noun adj
+color,greenish,lower,green,adj
+color,grey,lower,,noun adj
+color,greyish,lower,gray,adj
+color,ivory,lower,white,noun adj
+color,lavendar,lower,purple,noun adj
+color,lavender,lower,purple,noun adj
+color,lemon,lower,yellow,noun adj
+color,lilac,lower,purple,noun adj
+color,maroon,lower,red-brown,noun adj
+color,olive,lower,,noun adj
+color,olive-green,lower,green,noun adj
+color,orange,lower,,noun adj
+color,orangish,lower,orange,adj
+color,pink,lower,,noun adj
+color,pinkish,lower,pink,adj
+color,pruinose,lower,,noun adj
+color,purple,lower,,noun adj
+color,purpleish,lower,purple,adj
+color,purplish,lower,purple,adj
+color,red,lower,,noun adj
+color,reddish,lower,red,adj
+color,rose,lower,pink,noun adj
+color,rose-colored,lower,pink,noun adj
+color,rose-coloured,lower,pink,noun adj
+color,roseate,lower,,adj
+color,salmon,lower,,noun adj
+color,salmon-pink,lower,orange-pink,noun adj
+color,scarlet,lower,red,noun adj
+color,silver,lower,,noun adj
+color,silvery,lower,silver,adj
+color,stramineous,lower,yellow,adj
+color,straw-colored,lower,yellow,noun adj
+color,straw-coloured,lower,yellow,noun adj
+color,sulfur-yellow,lower,yellow,noun adj
+color,sulphur-yellow,lower,yellow,noun adj
+color,tan,lower,,noun adj
+color,turquoise,lower,,noun adj
+color,violet,lower,purple,noun adj
+color,violetish,lower,purple,adj
+color,white,lower,,noun adj
+color,whitish,lower,white,adj
+color,yellow,lower,,noun adj
+color,yellowish,lower,yellow,adj
+color_mod,backed,lower,,adj
+color_mod,blotch,lower,,adj noun
+color_mod,blotched,lower,,adj
+color_mod,blotches,lower,,adj noun
+color_mod,bright,lower,,adj
+color_mod,bull’s-eye,lower,,adj noun
+color_mod,bulls-eye,lower,,adj noun
+color_mod,colored,lower,,adj
+color_mod,dark,lower,,adj noun
+color_mod,dot,lower,,adj noun
+color_mod,dots,lower,,adj noun
+color_mod,dusky,lower,,adj
+color_mod,dull,lower,,adj
+color_mod,duller,lower,,adj
+color_mod,faint,lower,,adj
+color_mod,faintly,lower,,adj
+color_mod,gloss,lower,,adj
+color_mod,glossed,lower,,adj
+color_mod,line,lower,,noun adj
+color_mod,lined,lower,,adj noun
+color_mod,lines,lower,,noun adj
+color_mod,longitudinal,lower,,adj
+color_mod,marking,lower,,adj noun
+color_mod,markings,lower,,adj noun
+color_mod,metallic,lower,,adj
+color_mod,mottled,lower,,adj
+color_mod,mottling,lower,,adj noun
+color_mod,overtone,lower,,adj noun
+color_mod,overtones,lower,,adj noun
+color_mod,pale,lower,,adj
+color_mod,paler,lower,,adj
+color_mod,patch,lower,,adj noun
+color_mod,patched,lower,,adj
+color_mod,speckled,lower,,adj noun
+color_mod,speckles,lower,,noun adj
+color_mod,spot,lower,,noun adj
+color_mod,spots,lower,,noun adj
+color_mod,spotted,lower,,adj
+color_mod,streaked,lower,,adj
+color_mod,streaks,lower,,adj noun
+color_mod,stripe,lower,,noun adj
+color_mod,striped,lower,,adj
+color_mod,stripes,lower,,noun adj
+color_mod,striping,lower,,adj
+color_mod,throated,lower,,adj
+color_mod,tinge,lower,,adj noun
+color_mod,tinged,lower,,adj noun
+color_mod,tinges,lower,,adj noun
+color_mod,tint,lower,,adj noun
+color_mod,tinted,lower,,adj
+color_mod,tip,lower,,noun adj
+color_mod,tipped,lower,,adj
+color_mod,tips,lower,,noun adj
+color_mod,uncolored,lower,,adj
+color_mod,wash,lower,,noun adj
+color_mod,washed,lower,,adj

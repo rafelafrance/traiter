@@ -1,143 +1,143 @@
-label,pattern,attr,replace
-part,abdomen,lower,
-part,abdominal,lower,
-part,antenna,lower,
-part,antennae,lower,antenna
-part,antennal,lower,antenna
-part,anus,lower,
-part,apodema,lower,apodeme
-part,apodeme,lower,
-part,body,lower,
-part,carina,lower,
-part,cerci,lower,cercus
-part,cercus,lower,cercus
-part,cross-vein,lower,crossvein
-part,cross-veins,lower,crossvein
-part,crossvein,lower,crossvein
-part,crossveins,lower,crossvein
-part,eye,lower,eye
-part,eyes,lower,eye
-part,face,lower,
-part,femur,lower,
-part,fimbriae,lower,
-part,foreleg,lower,
-part,forelegs,lower,foreleg
-part,forewing,lower,forewing
-part,forewings,lower,forewing
-part,frons,lower,
-part,genital,lower,
-part,genitalia,lower,genital
-part,genitals,lower,genital
-part,gonopod,lower,
-part,gonopods,lower,gonopod
-part,head,lower,
-part,hindleg,lower,
-part,hindlegs,lower,hindleg
-part,hindwing,lower,hindwing
-part,hindwings,lower,hindwing
-part,leg,lower,
-part,legs,lower,leg
-part,mandible,lower,mandible
-part,mandibles,lower,mandible
-part,margins,lower,
-part,mesothorax,lower,
-part,metapodal,lower,
-part,metathorax,lower,
-part,ommatidia,lower,ommatidium
-part,ommatidium,lower,ommatidium
-part,ocelli,lower,ocellus
-part,ocellus,lower,ocellus
-part,paramere,lower,paramere
-part,parameres,lower,paramere
-part,plate,lower,plate
-part,plates,lower,plate
-part,prothorax,lower,
-part,pterostigma,lower,stigma
-part,pterostigmas,lower,stigma
-part,pterostigmata,lower,stigma
-part,segment,lower,segment
-part,segments,lower,segment
-part,spiracle,lower,
-part,spiracles,lower,spiracle
-part,sternal,lower,
-part,sternum,lower,
-part,stigma,lower,stigma
-part,stigmas,lower,stigma
-part,stigmata,lower,stigma
-part,synthorax,lower,
-part,thoracic,lower,
-part,thorax,lower,
-part,tibia,lower,
-part,vein,lower,vein
-part,veins,lower,vein
-part,vulva,lower,
-part,wing,lower,wing
-part,wings,lower,wing
-part,wingtip,lower,wingtip
-part,wingtips,lower,wingtip
-part_location,accessory,lower,
-part_location,anal,lower,
-part_location,antehumeral,lower,
-part_location,anterior,lower,
-part_location,antero-lateral,lower,
-part_location,apex,lower,
-part_location,apical,lower,
-part_location,back,lower,
-part_location,basal,lower,
-part_location,central,lower,
-part_location,costa,lower,
-part_location,costal,lower,
-part_location,cubital,lower,
-part_location,cubitus,lower,
-part_location,dorsal,lower,
-part_location,dorsal line,lower,
-part_location,dorsal lines,lower,
-part_location,dorsolateral,lower,
-part_location,front,lower,
-part_location,genito-ventral,lower,
-part_location,humeral,lower,
-part_location,intercostal,lower,
-part_location,lateral,lower,
-part_location,lower,lower,
-part_location,lower side,lower,
-part_location,lower sides,lower,
-part_location,margin,lower,
-part_location,marginal,lower,
-part_location,media,lower,
-part_location,media,lower,
-part_location,middorsal,lower,
-part_location,mediolateral,lower,
-part_location,mesothoracic,lower,
-part_location,mesostigmal,lower,
-part_location,oral,lower,
-part_location,paratergal,lower,
-part_location,postantennal,lower,
-part_location,posterior,lower,
-part_location,postero-medial,lower,
-part_location,postocular ,lower,
-part_location,preantennal,lower,
-part_location,principal,lower,
-part_location,rear,lower,
-part_location,sectoral,lower,
-part_location,side,lower,
-part_location,sides,lower,side
-part_location,sternal,lower,
-part_location,subapical,lower,
-part_location,subcosta,lower,
-part_location,subgenital,lower,
-part_location,supra-antennal,lower,
-part_location,sutural,lower,
-part_location,tailed,lower,
-part_location,tergal,lower,
-part_location,terminal,lower,
-part_location,tip,lower,
-part_location,transverse line,lower,
-part_location,transverse lines,lower,
-part_location,underside,lower,
-part_location,upper,lower,
-part_location,upper side,lower,
-part_location,upper sides,lower,
-part_location,ventral,lower,
-part_location,ventral line,lower,
-part_location,ventral lines,lower,
-part_location,vulvar,lower,
+label,pattern,attr,replace,pos
+part,abdomen,lower,,noun
+part,abdominal,lower,,noun
+part,antenna,lower,,noun
+part,antennae,lower,antenna,noun
+part,antennal,lower,antenna,noun
+part,anus,lower,,noun
+part,apodema,lower,apodeme,noun
+part,apodeme,lower,,noun
+part,body,lower,,noun
+part,carina,lower,,noun
+part,cerci,lower,cercus,noun
+part,cercus,lower,cercus,noun
+part,cross-vein,lower,crossvein,noun
+part,cross-veins,lower,crossvein,noun
+part,crossvein,lower,crossvein,noun
+part,crossveins,lower,crossvein,noun
+part,eye,lower,eye,noun
+part,eyes,lower,eye,noun
+part,face,lower,,noun
+part,femur,lower,,noun
+part,fimbriae,lower,,noun
+part,foreleg,lower,,noun
+part,forelegs,lower,foreleg,noun
+part,forewing,lower,forewing,noun
+part,forewings,lower,forewing,noun
+part,frons,lower,,noun
+part,genital,lower,,noun
+part,genitalia,lower,genital,noun
+part,genitals,lower,genital,noun
+part,gonopod,lower,,noun
+part,gonopods,lower,gonopod,noun
+part,head,lower,,noun
+part,hindleg,lower,,noun
+part,hindlegs,lower,hindleg,noun
+part,hindwing,lower,hindwing,noun
+part,hindwings,lower,hindwing,noun
+part,leg,lower,,noun
+part,legs,lower,leg,noun
+part,mandible,lower,mandible,noun
+part,mandibles,lower,mandible,noun
+part,margins,lower,,noun
+part,mesothorax,lower,,noun
+part,metapodal,lower,,noun
+part,metathorax,lower,,noun
+part,ommatidia,lower,ommatidium,noun
+part,ommatidium,lower,ommatidium,noun
+part,ocelli,lower,ocellus,noun
+part,ocellus,lower,ocellus,noun
+part,paramere,lower,paramere,noun
+part,parameres,lower,paramere,noun
+part,plate,lower,plate,noun
+part,plates,lower,plate,noun
+part,prothorax,lower,,noun
+part,pterostigma,lower,stigma,noun
+part,pterostigmas,lower,stigma,noun
+part,pterostigmata,lower,stigma,noun
+part,segment,lower,segment,noun
+part,segments,lower,segment,noun
+part,spiracle,lower,,noun
+part,spiracles,lower,spiracle,noun
+part,sternal,lower,,noun
+part,sternum,lower,,noun
+part,stigma,lower,stigma,noun
+part,stigmas,lower,stigma,noun
+part,stigmata,lower,stigma,noun
+part,synthorax,lower,,noun
+part,thoracic,lower,,noun
+part,thorax,lower,,noun
+part,tibia,lower,,noun
+part,vein,lower,vein,noun
+part,veins,lower,vein,noun
+part,vulva,lower,,noun
+part,wing,lower,wing,noun
+part,wings,lower,wing,noun
+part,wingtip,lower,wingtip,noun
+part,wingtips,lower,wingtip,noun
+part_location,accessory,lower,,adj
+part_location,anal,lower,,adj
+part_location,antehumeral,lower,,adj
+part_location,anterior,lower,,adj
+part_location,antero-lateral,lower,,adj
+part_location,apex,lower,,adj noun
+part_location,apical,lower,,adj
+part_location,back,lower,,adj noun
+part_location,basal,lower,,adj
+part_location,central,lower,,adj
+part_location,costa,lower,,adj
+part_location,costal,lower,,adj
+part_location,cubital,lower,,adj
+part_location,cubitus,lower,,adj noun
+part_location,dorsal,lower,,adj
+part_location,dorsal line,lower,,noun
+part_location,dorsal lines,lower,,noun
+part_location,dorsolateral,lower,,adj
+part_location,front,lower,,adj noun
+part_location,genito-ventral,lower,,adj
+part_location,humeral,lower,,adj
+part_location,intercostal,lower,,adj
+part_location,lateral,lower,,adj
+part_location,lower,lower,,adj
+part_location,lower side,lower,,noun
+part_location,lower sides,lower,,noun
+part_location,margin,lower,,adj noun
+part_location,marginal,lower,,adj
+part_location,media,lower,,adj
+part_location,media,lower,,adj
+part_location,middorsal,lower,,adj
+part_location,mediolateral,lower,,adj
+part_location,mesothoracic,lower,,adj
+part_location,mesostigmal,lower,,adj
+part_location,oral,lower,,adj
+part_location,paratergal,lower,,adj
+part_location,postantennal,lower,,adj
+part_location,posterior,lower,,adj
+part_location,postero-medial,lower,,adj
+part_location,postocular ,lower,,adj
+part_location,preantennal,lower,,adj
+part_location,principal,lower,,adj
+part_location,rear,lower,,adj noun
+part_location,sectoral,lower,,adj
+part_location,side,lower,,adj noun
+part_location,sides,lower,side,noun
+part_location,sternal,lower,,adj
+part_location,subapical,lower,,adj
+part_location,subcosta,lower,,adj
+part_location,subgenital,lower,,adj
+part_location,supra-antennal,lower,,adj
+part_location,sutural,lower,,adj
+part_location,tailed,lower,,adj
+part_location,tergal,lower,,adj
+part_location,terminal,lower,,adj
+part_location,tip,lower,,adj noun
+part_location,transverse line,lower,,noun
+part_location,transverse lines,lower,,noun
+part_location,underside,lower,,adj
+part_location,upper,lower,,adj
+part_location,upper side,lower,,noun
+part_location,upper sides,lower,,noun
+part_location,ventral,lower,,adj
+part_location,ventral line,lower,,noun
+part_location,ventral lines,lower,,noun
+part_location,vulvar,lower,,adj
