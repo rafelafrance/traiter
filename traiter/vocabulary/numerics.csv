@@ -1,0 +1,13 @@
+label,pattern,attr,replace,pos
+ordinal,eighth,lower,,adj
+ordinal,eleventh,lower,,adj
+ordinal,fifth,lower,,adj
+ordinal,first,lower,,adj
+ordinal,fourth,lower,,adj
+ordinal,ninth,lower,,adj
+ordinal,second,lower,,adj
+ordinal,seventh,lower,,adj
+ordinal,sixth,lower,,adj
+ordinal,tenth,lower,,adj
+ordinal,third,lower,,adj
+ordinal,twelfth,lower,,adj
