@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
 from tempfile import TemporaryDirectory, mkdtemp
-from typing import Any, Hashable, Iterable, List, Optional, Set, Tuple, Union
+from typing import Any, Hashable, List, Optional, Set, Tuple, Union
 
 import ftfy
 import inflect
@@ -48,9 +48,9 @@ def today() -> str:
 
 @contextmanager
 def get_temp_dir(
-    prefix: str = 'temp_',
-    where: Optional[Union[str, Path]] = None,
-    keep: bool = False
+        prefix: str = 'temp_',
+        where: Optional[Union[str, Path]] = None,
+        keep: bool = False
 ) -> TemporaryDirectory:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
@@ -88,20 +88,19 @@ def squash(values: Union[List, Set]) -> Any:
     return list(values) if len(values) != 1 else values.pop()
 
 
-def as_list(values: Any) -> Iterable:
+def as_list(values: Any) -> List:
     """Convert values to a list."""
-    return values if isinstance(values, (list, tuple, set)) else [values]
+    return list(values) if isinstance(values, (list, tuple, set)) else [values]
 
 
 def as_set(values: Any) -> Set:
     """Convert values to a list."""
-    settable = isinstance(values, (list, tuple, set))
-    return set(values) if settable else {values}
+    return set(values) if isinstance(values, (list, tuple, set)) else {values}
 
 
 def as_tuple(values: Any) -> Tuple:
     """Convert values to a tuple."""
-    return values if isinstance(values, tuple) else tuple(values)
+    return values if isinstance(values, (list, tuple, set)) else (values,)
 
 
 def as_member(values: Any) -> Hashable:
