@@ -61,6 +61,7 @@ color,sulfur-yellow,lower,yellow,noun adj
 color,sulphur-yellow,lower,yellow,noun adj
 color,tan,lower,,noun adj
 color,turquoise,lower,,noun adj
+color,uncolored,lower,,noun adj
 color,violet,lower,purple,noun adj
 color,violetish,lower,purple,adj
 color,white,lower,,noun adj
@@ -74,7 +75,6 @@ color_mod,blotches,lower,,adj noun
 color_mod,bright,lower,,adj
 color_mod,bull’s-eye,lower,,adj noun
 color_mod,bulls-eye,lower,,adj noun
-color_mod,colored,lower,,adj
 color_mod,dark,lower,,adj noun
 color_mod,dot,lower,,adj noun
 color_mod,dots,lower,,adj noun
@@ -120,6 +120,5 @@ color_mod,tinted,lower,,adj
 color_mod,tip,lower,,noun adj
 color_mod,tipped,lower,,adj
 color_mod,tips,lower,,noun adj
-color_mod,uncolored,lower,,adj
 color_mod,wash,lower,,noun adj
 color_mod,washed,lower,,adj
