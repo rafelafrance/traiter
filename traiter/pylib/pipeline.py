@@ -59,6 +59,7 @@ class SpacyPipeline:
                 r"""(?:{h})+""".format(h=HYPHENS),
                 r"""[\\\[\]\(\)/:;'“”'+]""",
                 r'(?<=[0-9])\.?(?=[{a}])'.format(a=ALPHA),  # 1.word or 1N
+                r'(?<=[{a}]),(?=[0-9])'.format(a=ALPHA),    # word,digits
             ]
         )
 
