@@ -164,7 +164,7 @@ class SpacyMatcher:
 
             loop = min(self.loop[step], self.loop_max)
 
-            for i in range(loop):
+            for _ in range(loop):
                 doc, again = self.retokenize_matches(
                     doc, self.matchers[step], step=step)
 

@@ -26,6 +26,7 @@ traiter/vocabulary/__init__.py
 traiter/vocabulary/animals.csv
 traiter/vocabulary/colors.csv
 traiter/vocabulary/insect_anatomy.csv
-traiter/vocabulary/metric.csv
+traiter/vocabulary/numerics.csv
 traiter/vocabulary/time.csv
+traiter/vocabulary/units.csv
 traiter/vocabulary/us_locations.csv
