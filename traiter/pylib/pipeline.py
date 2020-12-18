@@ -5,16 +5,12 @@ from typing import Dict, List
 
 import spacy
 from spacy.lang.char_classes import (
-    ALPHA,
-    ALPHA_LOWER,
-    ALPHA_UPPER,
-    CONCAT_QUOTES,
-    HYPHENS,
-    LIST_ELLIPSES,
-    LIST_ICONS,
-)
+    ALPHA, ALPHA_LOWER, ALPHA_UPPER, CONCAT_QUOTES, HYPHENS, LIST_ELLIPSES, LIST_ICONS)
 from spacy.tokens import Doc, Span, Token
 
+# Custom fields attached to tokens and spans
+# step = We sometimes filter by when (what step) the trait was built
+# data = We need to attach data specific to the trait
 if not Token.has_extension('data'):
     Token.set_extension('data', default={})
     Token.set_extension('step', default='')
@@ -26,10 +22,10 @@ class SpacyPipeline:
     """Build a custom traiter pipeline."""
 
     def __init__(
-        self,
-        lang_model: str = 'en_core_web_sm',
-        gpu: str = 'prefer',
-        tokenizer: bool = True,
+            self,
+            lang_model: str = 'en_core_web_sm',
+            gpu: str = 'prefer',
+            tokenizer: bool = True,
     ) -> None:
         if gpu == 'prefer':
             spacy.prefer_gpu()
@@ -44,29 +40,29 @@ class SpacyPipeline:
     def setup_tokenizer(self) -> None:
         """Setup custom tokenizer rules for the pipeline."""
         # The default Spacy tokenizer works great for model-based parsing but
-        # causes trouble with rule-based parser.
+        # causes trouble with rule-based parsers.
         infix = (
-            LIST_ELLIPSES
-            + LIST_ICONS
-            + [
-                r'(?<=[0-9])[+\-\*^](?=[0-9])',
-                r'(?<=[{al}{q}])\.(?=[{au}{q}])'.format(
-                    al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-                ),
-                r'(?<=[{a}]),(?=[{a}])'.format(a=ALPHA),
-                # r'(?<=[{a}])(?:{h})(?=[{a}])'.format(a=ALPHA, h=HYPHENS),
-                r'(?<=[{a}0-9])[:<>=/+](?=[{a}])'.format(a=ALPHA),
-                r"""(?:{h})+""".format(h=HYPHENS),
-                r"""[\\\[\]\(\)/:;'“”'+]""",
-                r'(?<=[0-9])\.?(?=[{a}])'.format(a=ALPHA),  # 1.word or 1N
-                r'(?<=[{a}]),(?=[0-9])'.format(a=ALPHA),    # word,digits
-            ]
+                LIST_ELLIPSES
+                + LIST_ICONS
+                + [
+                    r'(?<=[0-9])[+\-\*^](?=[0-9])',
+                    r'(?<=[{al}{q}])\.(?=[{au}{q}])'.format(
+                        al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+                    ),
+                    r'(?<=[{a}]),(?=[{a}])'.format(a=ALPHA),
+                    # r'(?<=[{a}])(?:{h})(?=[{a}])'.format(a=ALPHA, h=HYPHENS),
+                    r'(?<=[{a}0-9])[:<>=/+](?=[{a}])'.format(a=ALPHA),
+                    r"""(?:{h})+""".format(h=HYPHENS),
+                    r"""[\\\[\]\(\)/:;'“”'+]""",
+                    r'(?<=[0-9])\.?(?=[{a}])'.format(a=ALPHA),  # 1.word or 1N
+                    r'(?<=[{a}]),(?=[0-9])'.format(a=ALPHA),  # word,digits
+                ]
         )
 
         infix_regex = spacy.util.compile_infix_regex(infix)
         self.nlp.tokenizer.infix_finditer = infix_regex.finditer
 
-        breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'×+-]"""
+        breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'×+~-]"""
 
         prefix = re.compile(f'^{breaking}')
         self.nlp.tokenizer.prefix_search = prefix.search

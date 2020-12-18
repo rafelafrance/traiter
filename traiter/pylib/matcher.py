@@ -16,7 +16,7 @@ MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 class SpacyMatcher:
     """Shared parser logic."""
 
-    loop_max: int = 5
+    loop_max: int = 5   # Don't allow infinite loops
 
     def __init__(self, nlp: Optional[Language] = None) -> None:
         self.nlp: Optional[Language] = nlp
@@ -24,18 +24,23 @@ class SpacyMatcher:
         # Patterns to match at each step
         self.matchers: MatcherDict = defaultdict(list)
 
-        # Action to take on a matched trait
+        # Action to take on a matched trait. So it's trait_name -> action
         self.actions: Dict[str, Callable] = {}
 
         # Should we loop over the matches for the step?
+        # It is possible to use the same rule set repeatedly
         self.loop: Dict[str, int] = {}
 
+        # We sometimes want to process the same trait name with different actions.
+        # This is a tiebreaker for trait names. For instance, we may want to process
+        # sizes like "10 m long" differently from "10-15 m long" even though they're
+        # still both size traits.
         self.count: int = 0  # Allow matchers with same label
 
     def add_terms(
             self,
-            terms: Dict,
-            step: str = 'terms',
+            terms: Dict,            # Terms have specific dict requirements
+            step: str = 'terms',    # Step name
             on_match: Optional[Callable] = None,
             loop: int = 1
     ) -> None:
@@ -48,6 +53,7 @@ class SpacyMatcher:
         """
         self.loop[step] = abs(loop)
 
+        # Spacy requires that we separate phrase matchers by match attribute
         attrs = {p['attr'] for p in terms}
         for attr in attrs:
             matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
