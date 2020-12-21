@@ -50,10 +50,9 @@ class SpacyPipeline:
                         al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
                     ),
                     r'(?<=[{a}]),(?=[{a}])'.format(a=ALPHA),
-                    # r'(?<=[{a}])(?:{h})(?=[{a}])'.format(a=ALPHA, h=HYPHENS),
                     r'(?<=[{a}0-9])[:<>=/+](?=[{a}])'.format(a=ALPHA),
                     r"""(?:{h})+""".format(h=HYPHENS),
-                    r"""[\\\[\]\(\)/:;'“”'+]""",
+                    r"""[\\\[\]\(\)/:;’'“”'+]""",
                     r'(?<=[0-9])\.?(?=[{a}])'.format(a=ALPHA),  # 1.word or 1N
                     r'(?<=[{a}]),(?=[0-9])'.format(a=ALPHA),  # word,digits
                 ]
@@ -62,7 +61,7 @@ class SpacyPipeline:
         infix_regex = spacy.util.compile_infix_regex(infix)
         self.nlp.tokenizer.infix_finditer = infix_regex.finditer
 
-        breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'×+~-]"""
+        breaking = r"""[\[\]\\/()<>˂˃:;,.?"“”'’×+~-]"""
 
         prefix = re.compile(f'^{breaking}')
         self.nlp.tokenizer.prefix_search = prefix.search
