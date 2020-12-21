@@ -155,7 +155,7 @@ class SpacyMatcher:
         return True
 
     @staticmethod
-    def find_matches(doc, matchers):
+    def find_matches(doc: Doc, matchers: List[Matcher]) -> List[Span]:
         """Find matches in the doc."""
         matches = []
         for matcher in matchers:
