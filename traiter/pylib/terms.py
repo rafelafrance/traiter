@@ -257,13 +257,16 @@ class Terms:
         self.terms = [t for t in self.terms if t[field] not in excludes]
 
     def mock_itis_traits(
-            self, name: str, mock_terms_csv: Union[str, Path] = 'mock_itis_terms.csv'
+            self, name: str, mock_terms_csv: Optional[Union[str, Path]] = None
     ) -> None:
         """Set up mock traits for testing with Travis.
 
         The ITIS database is too big to put into GitHub so we use a mock database
         for testing.
         """
+        if not mock_terms_csv:
+            mock_terms_csv = Path.cwd() / 'src' / 'vocabulary' / 'mock_itis_terms.csv'
+
         name = name.lower()
 
         with open(mock_terms_csv) as term_file:
