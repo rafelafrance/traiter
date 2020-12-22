@@ -205,6 +205,17 @@ def itis_common_names(
     return terms
 
 
+def drop(
+        terms: TermsList, excludes: Union[str, List[str]], field: str = 'label'
+) -> TermsList:
+    """Drop terms from the traits.
+
+    If we include terms that interfere with patterns we can drop them.
+    """
+    excludes = excludes.split() if isinstance(excludes, str) else excludes
+    return [t for t in terms if t[field] not in excludes]
+
+
 def mock_itis_traits(name: str) -> TermsList:
     """Set up mock traits for testing with Travis.
 
