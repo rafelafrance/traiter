@@ -14,6 +14,7 @@ import regex as re
 
 __VERSION__ = '0.8.3'
 
+# This points to the client's data directory
 DATA_DIR = Path.cwd() / 'data'
 
 FLAGS = re.VERBOSE | re.IGNORECASE

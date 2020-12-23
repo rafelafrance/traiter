@@ -4,7 +4,7 @@ The CSV file must contain the columns:
     label = the term's hypernym, 'color' is a hypernym of 'blue'
     pattern = the term itself
     attr = the spaCy attribute being matched upon, this is typically
-        'lower' but sometimes 'regex' or 'text' is used.
+        'lower' but sometimes 'regex' or 'text' is used. The default is 'lower'.
 """
 
 import csv
@@ -14,11 +14,17 @@ from typing import Dict, List, Optional, Union
 
 from hyphenate import hyphenate_word
 
-from traiter.pylib.util import DATA_DIR
 import traiter.vocabulary as vocab
+from traiter.pylib.util import DATA_DIR
 
+# This points to a database (or a sym link) in the client's data directory
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
+
+# This points to the client's directory
 VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
+
+# This points to the traiter vocabulary files
+SHARED_CSV = Path(vocab.__file__).parent.glob('*.csv')
 
 PathList = Union[str, Path, List[str], List[Path]]
 StrList = Union[str, List[str]]
@@ -26,10 +32,6 @@ StrList = Union[str, List[str]]
 
 class Terms:
     """A dictionary of terms."""
-
-    shared_dir = Path(vocab.__file__).parent
-    shared_csv = shared_dir.glob('*.csv')
-    itis_db = DATA_DIR / 'ITIS.sqlite'
 
     def __init__(
             self,
@@ -69,7 +71,7 @@ class Terms:
         """
         paths = shared.split() if isinstance(shared, str) else shared
 
-        paths = {c for c in self.shared_csv
+        paths = {c for c in SHARED_CSV
                  if any(c.name.lower().startswith(p) for p in paths)}
 
         self.read_csv(list(paths), labels)
@@ -86,8 +88,14 @@ class Terms:
             with open(path) as term_file:
                 reader = csv.DictReader(term_file)
                 terms = list(reader)
+
             if labels:
                 terms = [t for t in terms if t['label'] in labels]
+
+            for term in terms:
+                if not term.get('attr'):
+                    term['attr'] = 'lower'
+
             self.terms += terms
 
     @staticmethod
@@ -277,7 +285,7 @@ class Terms:
         for testing.
         """
         if not mock_terms_csv:
-            mock_terms_csv = Path.cwd() / 'src' / 'vocabulary' / 'mock_itis_terms.csv'
+            mock_terms_csv = VOCAB_DIR / 'mock_itis_terms.csv'
 
         name = name.lower()
 
