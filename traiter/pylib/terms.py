@@ -1,4 +1,11 @@
-"""Get terms from various sources like CSV files or an SQLite database."""
+"""Get terms from various sources like CSV files or an SQLite database.
+
+The CSV file must contain the columns:
+    label = the term's hypernym, 'color' is a hypernym of 'blue'
+    pattern = the term itself
+    attr = the spaCy attribute being matched upon, this is typically
+        'lower' but sometimes 'regex' or 'text' is used.
+"""
 
 import csv
 import sqlite3
@@ -55,28 +62,33 @@ class Terms:
             self.patterns[column] = {t['pattern']: v for t in self.terms
                                      if (v := t.get(column)) not in (None, '')}
 
-    def shared(self, shared: StrList) -> None:
-        """Get the path to a shared vocabulary file."""
+    def shared(self, shared: StrList, labels: Optional[StrList] = None) -> None:
+        """Get the path to a shared vocabulary file.
+            shared: Names (possibly abbreviated) of the the shared files to include.
+            label:  A list of labels to include from the files. None = all
+        """
         paths = shared.split() if isinstance(shared, str) else shared
 
         paths = {c for c in self.shared_csv
                  if any(c.name.lower().startswith(p) for p in paths)}
 
-        self.read_csv(list(paths))
+        self.read_csv(list(paths), labels)
 
-    def read_csv(self, csv_file: PathList) -> None:
+    def read_csv(self, csv_file: PathList, labels: Optional[StrList] = None) -> None:
         """Read and cache the terms from a CSV file.
 
-        The CSV file must contain the columns:
-            label = the term's hypernym, 'color' is a hypernym of 'blue'
-            pattern = the term itself
-            attr = the spaCy attribute being matched upon, this is typically
-                'lower' but sometimes 'regex' is used.
+            csv_file: A file name or a list of files.
+            label:    A list of labels to include from the files. None = all
         """
+        labels = labels.split() if isinstance(labels, str) else labels
+
         for path in self._paths(csv_file):
             with open(path) as term_file:
                 reader = csv.DictReader(term_file)
-                self.terms += list(reader)
+                terms = list(reader)
+            if labels:
+                terms = [t for t in terms if t['label'] in labels]
+            self.terms += terms
 
     @staticmethod
     def _paths(path_list: PathList) -> List[Union[str, Path]]:
