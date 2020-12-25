@@ -198,9 +198,10 @@ class Terms:
         great for this but sometimes we need to handle non-standard hyphenations
         manually. Non-standard hyphenations are stored in the terms CSV file.
         """
+        terms = []
         for term in self.terms:
 
-            if term['hyphenate']:
+            if term.get('hyphenate'):
                 # Handle a non-standard hyphenation
                 parts = term['hyphenate'].split('-')
             else:
@@ -211,7 +212,7 @@ class Terms:
                 replace = term['replace']
                 for hyphen in ('-', '\xad'):
                     hyphenated = ''.join(parts[:i]) + hyphen + ''.join(parts[i:])
-                    self.terms.append({
+                    terms.append({
                         'label': term['label'],
                         'pattern': hyphenated,
                         'attr': term['attr'],
@@ -219,6 +220,7 @@ class Terms:
                         'category': term['category'],
                         'pos': 'PROPN',
                     })
+        self.terms += terms
 
     def itis_common_names(
             self,
