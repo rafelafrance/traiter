@@ -1,22 +1,18 @@
 """Common logic for parsing trait notations."""
 
 from collections import defaultdict
-from typing import Callable, DefaultDict, Dict, List, Optional, Tuple, Union
+from typing import Callable, DefaultDict, Dict, List, Optional, Union
 
 from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 from spacy.util import filter_spans
 
-from traiter.pylib.util import as_list
-
 MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 
 
 class SpacyMatcher:
     """Shared parser logic."""
-
-    loop_max: int = 5   # Don't allow infinite loops
 
     def __init__(self, nlp: Optional[Language] = None) -> None:
         self.nlp: Optional[Language] = nlp
@@ -27,22 +23,17 @@ class SpacyMatcher:
         # Action to take on a matched trait. So it's trait_name -> action
         self.actions: Dict[str, Callable] = {}
 
-        # Should we loop over the matches for the step?
-        # It is possible to use the same rule set repeatedly
-        self.loop: Dict[str, int] = {}
-
         # We sometimes want to process the same trait name with different actions.
         # This is a tiebreaker for trait names. For instance, we may want to process
         # sizes like "10 m long" differently from "10-15 m long" even though they're
-        # still both size traits.
-        self.count: int = 0  # Allow matchers with same label
+        # both size traits.
+        self.count: int = 0
 
     def add_terms(
             self,
-            terms: Dict,            # Terms have specific dict requirements
-            step: str = 'terms',    # Step name
-            on_match: Optional[Callable] = None,
-            loop: int = 1
+            terms: Dict,
+            step: str = 'temp',  # Step name
+            on_match: Optional[Callable] = None
     ) -> None:
         """Add phrase matchers.
 
@@ -51,8 +42,6 @@ class SpacyMatcher:
             2) label: what is the term's hypernym (ex. color)
             3) pattern: the phrase being matched (ex. gray-blue)
         """
-        self.loop[step] = abs(loop)
-
         # Spacy requires that we separate phrase matchers by match attribute
         attrs = {p['attr'] for p in terms}
         for attr in attrs:
@@ -70,12 +59,8 @@ class SpacyMatcher:
                 if on_match:
                     self.actions[label] = on_match
 
-    def add_patterns(
-            self, matchers: List[Dict], step: str, loop: int = 1
-    ) -> Optional[List[Dict]]:
+    def add_patterns(self, matchers: List[Dict], step: str) -> Optional[List[Dict]]:
         """Build matchers that recognize traits and labels."""
-        self.loop[step] = abs(loop)
-
         rules = self.step_rules(matchers, step)
         if not rules:
             return None
@@ -100,63 +85,29 @@ class SpacyMatcher:
             rules += matcher.get(step, [])
         return rules
 
-    @staticmethod
-    def filter_matches(matches: List[Tuple]) -> List[Tuple]:
-        """Filter a sequence of matches so they don't contain overlaps.
-
-        This is a counterpart to spacy's filter_spans() function.
-        Matches: array of tuples: [(match_id, start, end), ...]
-        """
-        if not matches:
-            return []
-        first, *rest = sorted(matches, key=lambda m: (m[1], -m[2]))
-        cleaned = [first]
-        for match in rest:
-            if match[1] >= cleaned[-1][2]:
-                cleaned.append(match)
-        return cleaned
-
-    def retokenize_matches(
-            self, doc: Doc, matchers: List[Matcher], step: str
-    ) -> Tuple[Doc, bool]:
-        """Find all terms in the text and return the resulting doc."""
-        spans = self.find_matches(doc, matchers)
-
-        again = False
+    def retokenize(self, doc: Doc, step: str) -> Doc:
+        """Find all temp in the text and return the resulting doc."""
+        spans = self.find_matches(doc, step)
 
         with doc.retokenize() as retokenizer:
             for span in spans:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
-                data = as_list(data)
-                for datum in data:
-                    span = datum.get('_span', span)
-                    again |= self.retokenize(span, retokenizer, label, datum, step)
+                if data.get('_forget'):
+                    continue
+                label = label.split('.')[0]
+                label = data['_label'] if data.get('_label') else label
+                attrs = {'ENT_TYPE': label, 'ENT_IOB': 3,
+                         '_': {'data': data, 'step': step}}
+                retokenizer.merge(span, attrs=attrs)
 
-        return doc, again
+        return doc
 
-    @staticmethod
-    def retokenize(
-            span: Span, retokenizer: Doc.retokenize, label: str, data: Dict, step: str
-    ) -> bool:
-        """Retokenize the span."""
-        if data.get('_forget'):
-            return False
-        label = label.split('.')[0]
-        label = data['_label'] if data.get('_label') else label
-        attrs = {
-            'ENT_TYPE': label,
-            'ENT_IOB': 3,
-            '_': {'data': data, 'step': step}}
-        if data.get('_pos'):
-            attrs['POS'] = data['_pos']
-        retokenizer.merge(span, attrs=attrs)
-        return True
-
-    @staticmethod
-    def find_matches(doc: Doc, matchers: List[Matcher]) -> List[Span]:
+    def find_matches(self, doc: Doc, step: str) -> List[Span]:
         """Find matches in the doc."""
+        matchers = self.matchers[step]
+
         matches = []
         for matcher in matchers:
             matches += matcher(doc)
@@ -167,15 +118,7 @@ class SpacyMatcher:
     def __call__(self, doc: Doc) -> Doc:
         """Parse the doc in steps, building up a full parse in steps."""
         for step, _ in self.matchers.items():  # Preserve order
-
-            loop = min(self.loop[step], self.loop_max)
-
-            for _ in range(loop):
-                doc, again = self.retokenize_matches(
-                    doc, self.matchers[step], step=step)
-
-                if not again:
-                    break
+            doc = self.retokenize(doc, step)
 
             # print('-' * 80)
             # print(step)

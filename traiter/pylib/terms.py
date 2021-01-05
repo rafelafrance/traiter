@@ -1,196 +1,147 @@
 """Get terms from various sources like CSV files or an SQLite database.
 
-The CSV file must contain the columns:
-    label = the term's hypernym, 'color' is a hypernym of 'blue'
-    pattern = the term itself
-    attr = the spaCy attribute being matched upon, this is typically
-        'lower' but sometimes 'regex' or 'text' is used. The default is 'lower'.
+Columns for a vocabulary CSV file:
+    Required columns:
+        label   = the term's hypernym, 'color' is a hypernym of 'blue'
+        pattern = the term itself
+        attr    = the spaCy attribute being matched upon, this is typically
+            'lower' but sometimes 'regex' or 'text' is used. The default is 'lower'.
+    Optional columns:
+        replace   = Replace the match with this
+        hyphenate = A custom hyphenation scheme for the pattern
 """
 
 import csv
-import sqlite3
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from hyphenate import hyphenate_word
 
 import traiter.vocabulary as vocab
-from traiter.pylib.util import DATA_DIR
-
-# This points to a database (or a sym link) in the client's data directory
-ITIS_DB = DATA_DIR / 'ITIS.sqlite'
-
-# This points to the client's directory
-VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
 
 # This points to the traiter vocabulary files
 SHARED_CSV = Path(vocab.__file__).parent.glob('*.csv')
 
-PathList = Union[str, Path, List[str], List[Path]]
+HYPHENS = ('-', '\xad')
+
 StrList = Union[str, List[str]]
+OptStrList = Optional[StrList]
 
 
 class Terms:
     """A dictionary of terms."""
 
-    def __init__(
-            self,
-            csv_file: Optional[PathList] = None,
-            shared: Optional[StrList] = None,
-            pattern_dicts: Optional[StrList] = None
-    ) -> None:
-        self.terms = []
-        self.patterns = {}
-
-        if csv_file:
-            self.read_csv(csv_file)
-
-        if shared:
-            self.shared(shared)
-
-        if pattern_dicts:
-            self.pattern_dicts(pattern_dicts)
+    def __init__(self, terms: Optional[List[Dict]] = None) -> None:
+        self.terms = terms if terms else []
 
     def __iter__(self):
         yield from self.terms
 
-    def __getattr__(self, name: str) -> Dict:
-        return self.patterns.get(name, {})
+    def __add__(self, other: 'Terms') -> 'Terms':
+        self.terms += other.terms
+        return self
 
-    def pattern_dicts(self, columns: StrList) -> None:
+    def drop(self, drops: StrList, field: str = 'label') -> None:
+        """Drop term from the traits.
+
+        If we include terms that interfere with patterns we can drop them.
+        For instance, 'in' can be either an inch abbreviation term which may interfere
+        with a preposition so we could: term.drop('in', field='pattern').
+        """
+        drops = drops.split() if isinstance(drops, str) else drops
+        self.terms = [t for t in self.terms if t[field] not in drops]
+
+    def pattern_dicts(self, column: str) -> Dict[str, Dict]:
         """Create a dict from a column in the terms."""
-        columns = columns if isinstance(columns, list) else columns.split()
-        for column in columns:
-            self.patterns[column] = {t['pattern']: v for t in self.terms
-                                     if (v := t.get(column)) not in (None, '')}
+        return {t['pattern']: v for t in self.terms
+                if (v := t.get(column)) not in (None, '')}
 
-    def shared(self, shared: StrList, labels: Optional[StrList] = None) -> None:
-        """Get the path to a shared vocabulary file.
-            shared: Names (possibly abbreviated) of the the shared files to include.
-            label:  A list of labels to include from the files. None = all
-        """
-        paths = shared.split() if isinstance(shared, str) else shared
+    @classmethod
+    def read_csv(cls, path: Union[str, Path], labels: OptStrList = None) -> 'Terms':
+        """Read a CSV file."""
+        with open(path) as term_file:
+            reader = csv.DictReader(term_file)
+            terms = list(reader)
 
-        paths = {c for c in SHARED_CSV
-                 if any(c.name.lower().startswith(p) for p in paths)}
+        if labels:
+            labels = labels if isinstance(labels, list) else labels.split()
+            terms = [t for t in terms if t['label'] in labels]
 
-        self.read_csv(list(paths), labels)
+        for term in terms:
+            if not term.get('attr'):
+                term['attr'] = 'lower'
 
-    def read_csv(self, csv_file: PathList, labels: Optional[StrList] = None) -> None:
-        """Read and cache the terms from a CSV file.
+        return cls(terms=terms)
 
-            csv_file: A file name or a list of files.
-            label:    A list of labels to include from the files. None = all
-        """
-        labels = labels.split() if isinstance(labels, str) else labels
-
-        for path in self._paths(csv_file):
-            with open(path) as term_file:
-                reader = csv.DictReader(term_file)
-                terms = list(reader)
-
-            if labels:
-                terms = [t for t in terms if t['label'] in labels]
-
-            for term in terms:
-                if not term.get('attr'):
-                    term['attr'] = 'lower'
-
-            self.terms += terms
-
-    @staticmethod
-    def _paths(path_list: PathList) -> List[Union[str, Path]]:
-        """Convert the path list into a list of paths."""
-        if isinstance(path_list, Path):
-            return [path_list]
-        elif isinstance(path_list, str):
-            return path_list.split()
-        return path_list
-
-    def itis(
-            self,
-            taxon: str,
-            label: Optional[str] = None,
-            kingdom_id: int = 5,
-            rank_id: int = 220,
+    @classmethod
+    def pick_words(
+            cls,
+            other: 'Terms',
+            old_label: str,
+            idx: Union[int, List[int], Tuple[int]],
+            new_label: str = None,
             attr: str = 'lower'
-    ) -> None:
-        """Get terms from the ITIS database.
+    ) -> 'Terms':
+        """Create a new term by picking a words from an old term.
 
-        name       = the ITIS term's hypernym, this is often a family name
-        kingdom_id = 5 == Animalia
-        rank_id    = 220 == Species
-        attr       = the spacy attribute to match on
+        Used to get species or genus names like: 'Canis lupus' -> 'lupus'.
         """
-        label = label if label else taxon
+        terms = []
+        idx = (idx, idx + 1) if isinstance(idx, int) else idx
+        new_label = new_label if new_label else old_label
 
-        # Bypass using this in tests for now.
-        if not ITIS_DB.exists():
-            print('Could not find ITIS database.')
-            self.mock_itis_traits(taxon)
-            return
-
-        tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
-        names = """
-            select complete_name
-              from hierarchy
-              join taxonomic_units using (tsn)
-             where hierarchy_string like ?
-               and kingdom_id = ?
-               and rank_id = ?;
-               """
-
-        with sqlite3.connect(ITIS_DB) as cxn:
-            cursor = cxn.execute(tsn, (taxon,))
-            tsn = cursor.fetchone()[0]
-            mask = f'%-{tsn}-%'
-            taxa = {n[0] for n in cxn.execute(names, (mask, kingdom_id, rank_id))}
-
-        self.terms += [{'label': label, 'pattern': t, 'attr': attr, 'pos': 'PROPN'}
-                       for t in sorted(taxa)]
-
-    def taxon_level_terms(
-            self,
-            label: str,
-            new_label: str = '',
-            level: str = 'species',
-            attr='lower'
-    ) -> None:
-        """Get species or genus names only: 'Canis lupus' -> 'lupus'."""
-        idx = 1 if level == 'species' else 0
-        new_label = new_label if new_label else level
         used_patterns = set()
-        for term in self.terms:
-            if term['label'] == label:
-                words = term['pattern'].split()
-                if len(words) > 1 and words[0][-1] != '.':
-                    pattern = words[idx]
-                    if pattern not in used_patterns:
-                        self.terms.append({
-                            'label': new_label,
-                            'pattern': pattern,
-                            'attr': attr,
-                            'pos': 'PROPN',
-                        })
-                    used_patterns.add(pattern)
 
-    def abbrev_species(self, label: str, attr='lower') -> None:
-        """Get abbreviated species: 'Canis lupus' -> 'C. lupus'."""
-        for term in self.terms:
-            if term['label'] == label:
-                full_name = term['pattern']
-                first, *rest = full_name.split()
-                if rest and first[-1] != '.':
-                    rest = ' '.join(rest)
-                    self.terms.append({
-                        'label': label,
-                        'pattern': f'{first[0]}. {rest}',
+        for term in [t for t in other.terms if t['label'] == old_label]:
+            words = term['pattern'].split()
+
+            if len(words) >= idx[1]:
+                pattern = ' '.join(words[idx[0]:idx[1]])
+
+                if pattern not in used_patterns:
+                    terms.append({**term, **{
+                        'label': new_label,
+                        'pattern': pattern,
                         'attr': attr,
-                        'replace': full_name,
-                        'pos': 'PROPN',
-                    })
+                    }})
+                    used_patterns.add(pattern)
+        return cls(terms=terms)
 
-    def hyphenate_terms(self) -> None:
+    @classmethod
+    def abbrev_terms(
+            cls,
+            other: 'Terms',
+            label: str,
+            idx: int = 0,
+            attr='lower',
+            suffix='.'
+    ) -> 'Terms':
+        """Create an abbreviated term from another term.
+
+        For example an abbreviated species: 'Canis lupus' -> 'C. lupus'.
+        """
+        terms = []
+        used_patterns = set()
+
+        for term in other.terms:
+            if term['label'] == label:
+                old_pattern = term['pattern']
+                words = old_pattern.split()
+                if len(words) > idx and words[idx][-1] != suffix:
+                    words[idx] = words[idx][0] + suffix
+                    new_pattern = ' '.join(words)
+                    if new_pattern not in used_patterns:
+                        terms.append({**term, **{
+                            'label': label,
+                            'pattern': new_pattern,
+                            'attr': attr,
+                            'replace': old_pattern,
+                        }})
+                        used_patterns.add(new_pattern)
+        return cls(terms=terms)
+
+    @classmethod
+    def hyphenate_terms(cls, other: 'Terms') -> 'Terms':
         """Systematically handle hyphenated terms.
 
         We cannot depend on terms being present in a contiguous form. We need a
@@ -199,7 +150,7 @@ class Terms:
         manually. Non-standard hyphenations are stored in the terms CSV file.
         """
         terms = []
-        for term in self.terms:
+        for term in other.terms:
 
             if term.get('hyphenate'):
                 # Handle a non-standard hyphenation
@@ -209,94 +160,25 @@ class Terms:
                 parts = hyphenate_word(term['pattern'])
 
             for i in range(1, len(parts)):
-                replace = term['replace']
-                for hyphen in ('-', '\xad'):
+                replace = term.get('replace')
+                for hyphen in HYPHENS:
                     hyphenated = ''.join(parts[:i]) + hyphen + ''.join(parts[i:])
-                    terms.append({
+                    terms.append({**term, **{
                         'label': term['label'],
                         'pattern': hyphenated,
                         'attr': term['attr'],
                         'replace': replace if replace else term['pattern'],
-                        'category': term['category'],
-                        'pos': 'PROPN',
-                    })
-        self.terms += terms
+                    }})
+        return cls(terms=terms)
 
-    def itis_common_names(
-            self,
-            taxon: str,
-            kingdom_id: int = 5,
-            rank_id: int = 220,
-            replace: bool = False
-    ) -> None:
-        """Guides often use common names instead of scientific name.
-
-        kingdom_id =   5 == Animalia
-        rank_id    = 220 == Species
+    @classmethod
+    def shared(cls, path: str, labels:  OptStrList = None) -> 'Terms':
+        """Get the path to a shared vocabulary file.
+            shared: Names (possibly abbreviated) of the the shared files to include.
+            label:  A list of labels to include from the files. None = all
         """
-        if not ITIS_DB.exists():
-            print('Could not find ITIS database.')
-            self.mock_itis_traits(taxon)
-            return
+        path = {c for c in SHARED_CSV
+                if any(c.name.lower().startswith(p) for p in path)}
+        path = path.pop()
 
-        select_tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
-        select_names = """
-            select vernacular_name, complete_name
-              from vernaculars
-              join taxonomic_units using (tsn)
-              join hierarchy using (tsn)
-             where hierarchy_string like ?
-               and kingdom_id = ?
-               and rank_id = ?;
-            """
-
-        with sqlite3.connect(ITIS_DB) as cxn:
-            cursor = cxn.execute(select_tsn, (taxon,))
-            tsn = cursor.fetchone()[0]
-            mask = f'%-{tsn}-%'
-            names = {
-                n[0].lower(): n[1]
-                for n in cxn.execute(select_names, (mask, kingdom_id, rank_id))
-            }
-
-        for common, sci_name in names.items():
-            term = {
-                'label': 'common_name',
-                'pattern': common,
-                'attr': 'lower',
-                'pos': 'PROPN',
-            }
-            if replace:
-                term['replace'] = sci_name
-            self.terms.append(term)
-
-    def drop(self, excludes: Union[str, List[str]], field: str = 'label') -> None:
-        """Drop terms from the traits.
-
-        If we include terms that interfere with patterns we can drop them.
-        """
-        excludes = excludes.split() if isinstance(excludes, str) else excludes
-        self.terms = [t for t in self.terms if t[field] not in excludes]
-
-    def mock_itis_traits(
-            self, name: str, mock_terms_csv: Optional[Union[str, Path]] = None
-    ) -> None:
-        """Set up mock traits for testing with Travis.
-
-        The ITIS database is too big to put into GitHub so we use a mock database
-        for testing.
-        """
-        if not mock_terms_csv:
-            mock_terms_csv = VOCAB_DIR / 'mock_itis_terms.csv'
-
-        name = name.lower()
-
-        with open(mock_terms_csv) as term_file:
-            reader = csv.DictReader(term_file)
-            terms = list(reader)
-
-        for term in terms:
-            label = term['label']
-            term['label'] = label if label else name
-
-        self.terms += terms
+        return cls.read_csv(path, labels)
