@@ -56,6 +56,9 @@ class Terms:
         return {t['pattern']: v for t in self.terms
                 if (v := t.get(column)) not in (None, '')}
 
+    ###########################################################################
+    # Other constructors
+
     @classmethod
     def read_csv(cls, path: Union[str, Path], labels: OptStrList = None) -> 'Terms':
         """Read a CSV file."""
@@ -109,12 +112,7 @@ class Terms:
 
     @classmethod
     def abbrev_terms(
-            cls,
-            other: 'Terms',
-            label: str,
-            idx: int = 0,
-            attr='lower',
-            suffix='.'
+            cls, other: 'Terms', label: str, idx: int = 0, attr='lower', suffix='.'
     ) -> 'Terms':
         """Create an abbreviated term from another term.
 
