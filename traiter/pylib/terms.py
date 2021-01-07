@@ -20,7 +20,7 @@ from hyphenate import hyphenate_word
 import traiter.vocabulary as vocab
 
 # This points to the traiter vocabulary files
-SHARED_CSV = Path(vocab.__file__).parent.glob('*.csv')
+SHARED_CSV = list(Path(vocab.__file__).parent.glob('*.csv'))
 
 HYPHENS = ('-', '\xad')
 
@@ -82,9 +82,15 @@ class Terms:
             shared: Names (possibly abbreviated) of the the shared files to include.
             label:  A list of labels to include from the files. None = all
         """
-        path = {c for c in SHARED_CSV
-                if any(c.name.lower().startswith(p) for p in path)}
-        path = path.pop()
+        path_set = {c for c in SHARED_CSV
+                    if any(c.name.lower().startswith(p) for p in path)}
+
+        if not path_set:
+            err = f'\nShared terms "{path}" not found in: '
+            err += ' '.join(f'"{s.stem}"' for s in SHARED_CSV)
+            raise Exception(err)
+
+        path = path_set.pop()
 
         return cls.read_csv(path, labels)
 
