@@ -32,7 +32,7 @@ class SpacyMatcher:
     def add_terms(
             self,
             terms: Dict,
-            step: str = 'temp',  # Step name
+            step: str = 'term',  # Step name
             on_match: Optional[Callable] = None
     ) -> None:
         """Add phrase matchers.
@@ -86,7 +86,7 @@ class SpacyMatcher:
         return rules
 
     def retokenize(self, doc: Doc, step: str) -> Doc:
-        """Find all temp in the text and return the resulting doc."""
+        """Find all term in the text and return the resulting doc."""
         spans = self.find_matches(doc, step)
 
         with doc.retokenize() as retokenizer:
