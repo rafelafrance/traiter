@@ -25,6 +25,7 @@ SHARED_CSV = list(Path(vocab.__file__).parent.glob('*.csv'))
 HYPHENS = ('-', '\xad')
 
 StrList = Union[str, List[str]]
+PathList = Union[str, List[str], Path, List[Path]]
 OptStrList = Optional[StrList]
 
 
@@ -60,39 +61,56 @@ class Terms:
     # Other constructors
 
     @classmethod
-    def read_csv(cls, path: Union[str, Path], labels: OptStrList = None) -> 'Terms':
+    def read_csv(cls, paths: PathList, labels: OptStrList = None) -> 'Terms':
         """Read a CSV file."""
-        with open(path) as term_file:
-            reader = csv.DictReader(term_file)
-            terms = list(reader)
+        terms = cls()
 
-        if labels:
-            labels = labels if isinstance(labels, list) else labels.split()
-            terms = [t for t in terms if t['label'] in labels]
+        if isinstance(paths, str):
+            paths = paths.split()
+        elif isinstance(paths, Path):
+            paths = [paths]
 
-        for term in terms:
-            if not term.get('attr'):
-                term['attr'] = 'lower'
+        for path in paths:
+            with open(path) as term_file:
+                reader = csv.DictReader(term_file)
+                new_terms = list(reader)
 
-        return cls(terms=terms)
+            if labels:
+                labels = labels if isinstance(labels, list) else labels.split()
+                terms = [t for t in new_terms if t['label'] in labels]
+
+            for term in new_terms:
+                if not term.get('attr'):
+                    term['attr'] = 'lower'
+
+            terms += cls(terms=new_terms)
+
+        return terms
 
     @classmethod
-    def shared(cls, path: str, labels:  OptStrList = None) -> 'Terms':
+    def shared(cls, names: StrList, labels:  OptStrList = None) -> 'Terms':
         """Get the path to a shared vocabulary file.
             shared: Names (possibly abbreviated) of the the shared files to include.
             label:  A list of labels to include from the files. None = all
         """
-        path_set = {c for c in SHARED_CSV
-                    if any(c.name.lower().startswith(p) for p in path)}
+        terms = cls()
 
-        if not path_set:
-            err = f'\nShared terms "{path}" not found in: '
-            err += ' '.join(f'"{s.stem}"' for s in SHARED_CSV)
-            raise Exception(err)
+        names = names.split() if isinstance(names, str) else names
 
-        path = path_set.pop()
+        for name in names:
 
-        return cls.read_csv(path, labels)
+            path_set = {s for s in SHARED_CSV if s.name.lower().startswith(name)}
+
+            if not path_set:
+                err = f'\nShared terms "{name}" not found in: '
+                err += ' '.join(f'"{s.stem}"' for s in SHARED_CSV)
+                raise Exception(err)
+
+            path = path_set.pop()
+
+            terms += cls.read_csv(path, labels)
+
+        return terms
 
     @classmethod
     def hyphenate_terms(cls, other: 'Terms') -> 'Terms':
