@@ -17,6 +17,9 @@ __VERSION__ = '0.8.4'
 # This points to the client's data directory
 DATA_DIR = Path.cwd() / 'data'
 
+# Default term step
+TERM_STEP = 'terms'
+
 FLAGS = re.VERBOSE | re.IGNORECASE
 
 BATCH_SIZE = 1_000_000  # How many records to work with at a time

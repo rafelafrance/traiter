@@ -8,6 +8,8 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 from spacy.util import filter_spans
 
+from traiter.pylib.util import TERM_STEP
+
 MatcherDict = DefaultDict[str, List[Union[Matcher, PhraseMatcher]]]
 
 
@@ -32,7 +34,7 @@ class SpacyMatcher:
     def add_terms(
             self,
             terms: Dict,
-            step: str = 'term',  # Step name
+            step: str = TERM_STEP,  # Step name
             on_match: Optional[Callable] = None
     ) -> None:
         """Add phrase matchers.
