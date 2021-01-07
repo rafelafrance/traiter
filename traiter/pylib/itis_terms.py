@@ -19,7 +19,7 @@ class ItisTerms(Terms):
     """A dictionary of temp."""
 
     ###########################################################################
-    # Other constructors
+    # Other constructors related to the ITIS database
 
     @classmethod
     def itis(
@@ -29,7 +29,7 @@ class ItisTerms(Terms):
             kingdom_id: int = 5,
             rank_id: int = 220,
             attr: str = 'lower'
-    ) -> 'Terms':
+    ) -> 'ItisTerms':
         """Get temp from the ITIS database.
 
         name       = the ITIS term's hypernym, this is often a family name

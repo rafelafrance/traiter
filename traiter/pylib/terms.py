@@ -77,6 +77,49 @@ class Terms:
         return cls(terms=terms)
 
     @classmethod
+    def shared(cls, path: str, labels:  OptStrList = None) -> 'Terms':
+        """Get the path to a shared vocabulary file.
+            shared: Names (possibly abbreviated) of the the shared files to include.
+            label:  A list of labels to include from the files. None = all
+        """
+        path = {c for c in SHARED_CSV
+                if any(c.name.lower().startswith(p) for p in path)}
+        path = path.pop()
+
+        return cls.read_csv(path, labels)
+
+    @classmethod
+    def hyphenate_terms(cls, other: 'Terms') -> 'Terms':
+        """Systematically handle hyphenated terms.
+
+        We cannot depend on terms being present in a contiguous form. We need a
+        systematic method for handling hyphenated terms. The hyphenate library is
+        great for this but sometimes we need to handle non-standard hyphenations
+        manually. Non-standard hyphenations are stored in the terms CSV file.
+        """
+        terms = []
+        for term in other.terms:
+
+            if term.get('hyphenate'):
+                # Handle a non-standard hyphenation
+                parts = term['hyphenate'].split('-')
+            else:
+                # A standard hyphenation
+                parts = hyphenate_word(term['pattern'])
+
+            for i in range(1, len(parts)):
+                replace = term.get('replace')
+                for hyphen in HYPHENS:
+                    hyphenated = ''.join(parts[:i]) + hyphen + ''.join(parts[i:])
+                    terms.append({**term, **{
+                        'label': term['label'],
+                        'pattern': hyphenated,
+                        'attr': term['attr'],
+                        'replace': replace if replace else term['pattern'],
+                    }})
+        return cls(terms=terms)
+
+    @classmethod
     def pick_words(
             cls,
             other: 'Terms',
@@ -137,46 +180,3 @@ class Terms:
                         }})
                         used_patterns.add(new_pattern)
         return cls(terms=terms)
-
-    @classmethod
-    def hyphenate_terms(cls, other: 'Terms') -> 'Terms':
-        """Systematically handle hyphenated terms.
-
-        We cannot depend on terms being present in a contiguous form. We need a
-        systematic method for handling hyphenated terms. The hyphenate library is
-        great for this but sometimes we need to handle non-standard hyphenations
-        manually. Non-standard hyphenations are stored in the terms CSV file.
-        """
-        terms = []
-        for term in other.terms:
-
-            if term.get('hyphenate'):
-                # Handle a non-standard hyphenation
-                parts = term['hyphenate'].split('-')
-            else:
-                # A standard hyphenation
-                parts = hyphenate_word(term['pattern'])
-
-            for i in range(1, len(parts)):
-                replace = term.get('replace')
-                for hyphen in HYPHENS:
-                    hyphenated = ''.join(parts[:i]) + hyphen + ''.join(parts[i:])
-                    terms.append({**term, **{
-                        'label': term['label'],
-                        'pattern': hyphenated,
-                        'attr': term['attr'],
-                        'replace': replace if replace else term['pattern'],
-                    }})
-        return cls(terms=terms)
-
-    @classmethod
-    def shared(cls, path: str, labels:  OptStrList = None) -> 'Terms':
-        """Get the path to a shared vocabulary file.
-            shared: Names (possibly abbreviated) of the the shared files to include.
-            label:  A list of labels to include from the files. None = all
-        """
-        path = {c for c in SHARED_CSV
-                if any(c.name.lower().startswith(p) for p in path)}
-        path = path.pop()
-
-        return cls.read_csv(path, labels)
