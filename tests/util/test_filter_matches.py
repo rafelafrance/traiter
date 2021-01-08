@@ -5,7 +5,7 @@ import unittest
 from traiter.pylib.util import filter_matches
 
 
-class TestSpacyMatcher(unittest.TestCase):
+class TestFilterMatches(unittest.TestCase):
     """Test the plant color trait parser."""
 
     def test_filter_matches_01(self):

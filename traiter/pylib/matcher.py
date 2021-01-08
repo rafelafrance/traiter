@@ -33,7 +33,7 @@ class SpacyMatcher:
 
     def add_terms(
             self,
-            terms: Dict,
+            terms: List[Dict],
             step: str = TERM_STEP,  # Step name
             on_match: Optional[Callable] = None
     ) -> None:
@@ -96,12 +96,16 @@ class SpacyMatcher:
                 label = span.label_
                 action = self.actions.get(label)
                 data = action(span) if action else {}
+
                 if data.get('_forget'):
                     continue
+
                 label = label.split('.')[0]
                 label = data['_label'] if data.get('_label') else label
+
                 attrs = {'ENT_TYPE': label, 'ENT_IOB': 3,
                          '_': {'data': data, 'step': step}}
+
                 retokenizer.merge(span, attrs=attrs)
 
         return doc

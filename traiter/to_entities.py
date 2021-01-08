@@ -2,6 +2,7 @@
 
 from typing import Optional, Set
 
+from spacy.language import Language
 from spacy.tokens import Doc, Span
 
 
@@ -48,3 +49,14 @@ class ToEntities:  # pylint: disable=too-few-public-methods
 
         doc.ents = tuple(new_ents)
         return doc
+
+    @staticmethod
+    def add_pipe(
+            nlp: Language,
+            entities2keep: Optional[Set] = None,
+            token2entity: Optional[Set] = None,
+            **kwargs
+    ) -> None:
+        """Add entities converter to the pipeline."""
+        pipe = ToEntities(entities2keep, token2entity)
+        nlp.add_pipe(pipe, **kwargs)
