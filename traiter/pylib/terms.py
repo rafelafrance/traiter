@@ -77,7 +77,7 @@ class Terms:
 
             if labels:
                 labels = labels if isinstance(labels, list) else labels.split()
-                terms = [t for t in new_terms if t['label'] in labels]
+                terms.terms = [t for t in new_terms if t['label'] in labels]
 
             for term in new_terms:
                 if not term.get('attr'):
@@ -88,14 +88,15 @@ class Terms:
         return terms
 
     @classmethod
-    def shared(cls, names: StrList, labels:  OptStrList = None) -> 'Terms':
+    def shared(cls, names: StrList, labels: OptStrList = None) -> 'Terms':
         """Get the path to a shared vocabulary file.
             shared: Names (possibly abbreviated) of the the shared files to include.
             label:  A list of labels to include from the files. None = all
         """
-        terms = cls()
-
         names = names.split() if isinstance(names, str) else names
+        labels = labels.split() if isinstance(labels, str) else labels
+
+        terms = cls()
 
         for name in names:
 

@@ -81,7 +81,9 @@ class ItisTerms(Terms):
         return cls.pick_words(other, label, idx=idx, new_label=new_label, attr=attr)
 
     @classmethod
-    def abbrev_species(cls, other: 'Terms', label: str, attr='lower') -> 'ItisTerms':
+    def abbrev_species(
+            cls, other: 'Terms', label: str, attr: str = 'lower'
+    ) -> 'ItisTerms':
         """Get abbreviated species: 'Canis lupus' -> 'C. lupus'."""
         return cls.abbrev_terms(other, label=label, attr=attr)
 

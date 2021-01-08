@@ -180,4 +180,3 @@ def filter_matches(matches: List[Tuple]) -> List[Tuple]:
         if match[1] >= cleaned[-1][2]:
             cleaned.append(match)
     return cleaned
-
