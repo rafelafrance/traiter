@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Pattern, Union
 
 import regex
 
-from traiter.pylib.util import FLAGS
+from traiter.util import FLAGS
 
 TOKEN = 0
 SIZE = 4

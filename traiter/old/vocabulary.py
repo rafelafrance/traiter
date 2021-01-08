@@ -3,7 +3,7 @@
 from itertools import groupby
 
 from traiter.old import rule as re_rule
-from traiter.pylib.util import flatten
+from traiter.util import flatten
 
 from .rule import Action, InRegexp, Rule, Rules, grouper, part, producer, replacer, term
 
