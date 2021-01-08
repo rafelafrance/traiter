@@ -77,7 +77,7 @@ class Terms:
 
             if labels:
                 labels = labels if isinstance(labels, list) else labels.split()
-                terms.terms = [t for t in new_terms if t['label'] in labels]
+                new_terms = [t for t in new_terms if t['label'] in labels]
 
             for term in new_terms:
                 if not term.get('attr'):
