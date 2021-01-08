@@ -25,7 +25,7 @@ def license_():
 def find_version():
     """Read version from db.py."""
     regex = r"""^__VERSION__ = ['"]v?([^'"]*)['"]"""
-    with open('traiter/pylib/util.py') as in_file:
+    with open('traiter/util.py') as in_file:
         match = re.search(regex, in_file.read(), re.M)
         if match:
             return match.group(1)

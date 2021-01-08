@@ -2,7 +2,7 @@
 
 import unittest
 
-from traiter.pylib.util import filter_matches
+from traiter.util import filter_matches
 
 
 class TestFilterMatches(unittest.TestCase):

@@ -5,7 +5,7 @@ import sqlite3
 from pathlib import Path
 from typing import Optional, Union
 
-from traiter.pylib.util import DATA_DIR
+from traiter.util import DATA_DIR
 from .terms import Terms
 
 # This points to the client's directory
