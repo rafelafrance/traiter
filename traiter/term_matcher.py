@@ -58,9 +58,6 @@ class TermMatcher:
                 label = span.label_
                 data = self.action(span) if self.action else {}
 
-                if data.get('_forget'):
-                    continue
-
                 attrs = {'ENT_TYPE': label, 'ENT_IOB': 3,
                          '_': {'data': data, 'step': self.step}}
 

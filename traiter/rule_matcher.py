@@ -9,6 +9,7 @@ The dict contains these fields:
 """
 
 from typing import Callable, Dict, List
+from warnings import warn
 
 from spacy.language import Language
 from spacy.matcher import Matcher
@@ -54,7 +55,7 @@ class RuleMatcher:
                 action = self.actions.get(label)
                 data = action(span) if action else {}
 
-                if data.get('_forget'):
+                if data is None:
                     continue
 
                 label = label.split('.')[0]
@@ -81,6 +82,7 @@ class RuleMatcher:
             rules += matcher.get(step, [])
 
         if not rules:
-            print(f'Did not find rules "{step}".')
+            warn(f'Did not find rules for "{step}".')
+
         matcher = RuleMatcher(nlp, rules, step)
         nlp.add_pipe(matcher, name=step, **kwargs)

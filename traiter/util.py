@@ -12,7 +12,7 @@ import ftfy
 import inflect
 import regex as re
 
-__VERSION__ = '0.8.5'
+__VERSION__ = '0.8.6'
 
 # This points to the client's data directory
 DATA_DIR = Path.cwd() / 'data'
@@ -164,19 +164,3 @@ def clean_text(text: str, trans: Optional[str.translate] = None) -> str:
 def xor(one: Any, two: Any) -> bool:
     """Emulate a logical xor."""
     return (one and two) or (not one and not two)
-
-
-def filter_matches(matches: List[Tuple]) -> List[Tuple]:
-    """Filter a sequence of matches so they don't contain overlaps.
-
-    This is a counterpart to spacy's filter_spans() function.
-    Matches: array of tuples: [(match_id, start, end), ...]
-    """
-    if not matches:
-        return []
-    first, *rest = sorted(matches, key=lambda m: (m[1], -m[2]))
-    cleaned = [first]
-    for match in rest:
-        if match[1] >= cleaned[-1][2]:
-            cleaned.append(match)
-    return cleaned
