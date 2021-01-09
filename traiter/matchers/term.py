@@ -15,13 +15,13 @@ from typing import Callable, Dict, List, Optional
 
 from spacy.language import Language
 from spacy.matcher import PhraseMatcher
-from spacy.tokens import Doc, Span
-from spacy.util import filter_spans
+from spacy.tokens import Doc
 
-from .util import TERM_STEP
+from traiter.util import TERM_STEP
+from .base import Base
 
 
-class TermMatcher:
+class Term(Base):
     """Phrase matchers for the pipeline."""
 
     def __init__(
@@ -32,8 +32,9 @@ class TermMatcher:
             step: str = TERM_STEP,
             action: Optional[Callable] = None
     ) -> None:
+        super().__init__(nlp, step)
+
         self.matcher = PhraseMatcher(nlp.vocab, attr=attr)
-        self.step = step
         self.action = action
 
         # Group terms by label
@@ -48,10 +49,7 @@ class TermMatcher:
 
     def __call__(self, doc: Doc) -> Doc:
         """Find all term in the text and return the resulting doc."""
-        matches = self.matcher(doc)
-
-        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
-        spans = filter_spans(spans)
+        spans = self.get_spans(doc)
 
         with doc.retokenize() as retokenizer:
             for span in spans:
@@ -63,11 +61,7 @@ class TermMatcher:
 
                 retokenizer.merge(span, attrs=attrs)
 
-        # print('-' * 80)
-        # print(self.step)
-        # for token in doc:
-        #     print(f'{token.ent_type_:<15} {token._.step:<8} {token.pos_:<6} {token}')
-        # print()
+        # self.debug(doc)
 
         return doc
 
@@ -85,6 +79,6 @@ class TermMatcher:
             by_attr[term['attr']].append(term)
 
         for attr, attr_terms in by_attr.items():
-            matcher = TermMatcher(nlp, attr_terms, attr=attr, step=step, action=action)
+            matcher = Term(nlp, attr_terms, attr=attr, step=step, action=action)
             pipe_name = f'{step}_{attr}'
             nlp.add_pipe(matcher, name=pipe_name, **kwargs)

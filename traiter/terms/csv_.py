@@ -29,7 +29,7 @@ PathList = Union[str, List[str], Path, List[Path]]
 OptStrList = Optional[StrList]
 
 
-class Terms:
+class Csv:
     """A dictionary of terms."""
 
     def __init__(self, terms: Optional[List[Dict]] = None) -> None:
@@ -38,7 +38,7 @@ class Terms:
     def __iter__(self):
         yield from self.terms
 
-    def __add__(self, other: 'Terms') -> 'Terms':
+    def __add__(self, other: 'Csv') -> 'Csv':
         self.terms += other.terms
         return self
 
@@ -61,7 +61,7 @@ class Terms:
     # Other constructors
 
     @classmethod
-    def read_csv(cls, paths: PathList, labels: OptStrList = None) -> 'Terms':
+    def read_csv(cls, paths: PathList, labels: OptStrList = None) -> 'Csv':
         """Read a CSV file."""
         terms = cls()
 
@@ -88,7 +88,7 @@ class Terms:
         return terms
 
     @classmethod
-    def shared(cls, names: StrList, labels: OptStrList = None) -> 'Terms':
+    def shared(cls, names: StrList, labels: OptStrList = None) -> 'Csv':
         """Get the path to a shared vocabulary file.
             shared: Names (possibly abbreviated) of the the shared files to include.
             label:  A list of labels to include from the files. None = all
@@ -114,7 +114,7 @@ class Terms:
         return terms
 
     @classmethod
-    def hyphenate_terms(cls, other: 'Terms') -> 'Terms':
+    def hyphenate_terms(cls, other: 'Csv') -> 'Csv':
         """Systematically handle hyphenated terms.
 
         We cannot depend on terms being present in a contiguous form. We need a
@@ -147,12 +147,12 @@ class Terms:
     @classmethod
     def pick_words(
             cls,
-            other: 'Terms',
+            other: 'Csv',
             old_label: str,
             idx: Union[int, List[int], Tuple[int]],
             new_label: str = None,
             attr: str = 'lower'
-    ) -> 'Terms':
+    ) -> 'Csv':
         """Create a new term by picking a words from an old term.
 
         Used to get species or genus names like: 'Canis lupus' -> 'lupus'.
@@ -180,8 +180,8 @@ class Terms:
 
     @classmethod
     def abbrev_terms(
-            cls, other: 'Terms', label: str, idx: int = 0, attr='lower', suffix='.'
-    ) -> 'Terms':
+            cls, other: 'Csv', label: str, idx: int = 0, attr='lower', suffix='.'
+    ) -> 'Csv':
         """Create an abbreviated term from another term.
 
         For example an abbreviated species: 'Canis lupus' -> 'C. lupus'.

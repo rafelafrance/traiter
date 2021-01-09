@@ -13,11 +13,12 @@ from warnings import warn
 
 from spacy.language import Language
 from spacy.matcher import Matcher
-from spacy.tokens import Doc, Span
-from spacy.util import filter_spans
+from spacy.tokens import Doc
+
+from .base import Base
 
 
-class RuleMatcher:
+class Rule(Base):
     """Rule matchers for the pipeline."""
 
     # We sometimes want to process the same trait name with different actions.
@@ -27,16 +28,17 @@ class RuleMatcher:
     count: int = 0
 
     def __init__(self, nlp: Language, rules: List[Dict], step: str):
+        super().__init__(nlp, step)
+
         self.matcher = Matcher(nlp.vocab)
-        self.step = step
 
         # Action to take on a matched trait. So it's trait_name -> action
         self.actions: Dict[str, Callable] = {}
 
         # Build the matcher
         for rule in rules:
-            RuleMatcher.count += 1
-            label = f"{rule['label']}.{RuleMatcher.count}"
+            Rule.count += 1
+            label = f"{rule['label']}.{Rule.count}"
             patterns = rule['patterns']
             self.matcher.add(label, patterns)
             if on_match := rule.get('on_match'):
@@ -44,10 +46,7 @@ class RuleMatcher:
 
     def __call__(self, doc: Doc) -> Doc:
         """Find all term in the text and return the resulting doc."""
-        matches = self.matcher(doc)
-
-        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
-        spans = filter_spans(spans)
+        spans = self.get_spans(doc)
 
         with doc.retokenize() as retokenizer:
             for span in spans:
@@ -66,11 +65,7 @@ class RuleMatcher:
 
                 retokenizer.merge(span, attrs=attrs)
 
-        # print('-' * 80)
-        # print(self.step)
-        # for token in doc:
-        #     print(f'{token.ent_type_:<15} {token._.step:<8} {token.pos_:<6} {token}')
-        # print()
+        # self.debug(doc)
 
         return doc
 
@@ -84,5 +79,5 @@ class RuleMatcher:
         if not rules:
             warn(f'Did not find rules for "{step}".')
 
-        matcher = RuleMatcher(nlp, rules, step)
+        matcher = Rule(nlp, rules, step)
         nlp.add_pipe(matcher, name=step, **kwargs)

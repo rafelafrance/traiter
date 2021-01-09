@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional, Union
 
 from traiter.util import DATA_DIR
-from .terms import Terms
+from .csv_ import Csv
 
 # This points to the client's directory
 VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
@@ -15,7 +15,7 @@ VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
 
 
-class ItisTerms(Terms):
+class Itis(Csv):
     """A dictionary of temp."""
 
     ###########################################################################
@@ -29,7 +29,7 @@ class ItisTerms(Terms):
             kingdom_id: int = 5,
             rank_id: int = 220,
             attr: str = 'lower'
-    ) -> 'ItisTerms':
+    ) -> 'Itis':
         """Get temp from the ITIS database.
 
         name       = the ITIS term's hypernym, this is often a family name
@@ -69,12 +69,12 @@ class ItisTerms(Terms):
     @classmethod
     def taxon_level_terms(
             cls,
-            other: 'Terms',
+            other: 'Csv',
             label: str,
             new_label: str = '',
             level: str = 'species',
             attr='lower'
-    ) -> 'ItisTerms':
+    ) -> 'Itis':
         """Get species or genus names only: 'Canis lupus' -> 'lupus'."""
         idx = 1 if level == 'species' else 0
         new_label = new_label if new_label else level
@@ -82,8 +82,8 @@ class ItisTerms(Terms):
 
     @classmethod
     def abbrev_species(
-            cls, other: 'Terms', label: str, attr: str = 'lower'
-    ) -> 'ItisTerms':
+            cls, other: 'Csv', label: str, attr: str = 'lower'
+    ) -> 'Itis':
         """Get abbreviated species: 'Canis lupus' -> 'C. lupus'."""
         return cls.abbrev_terms(other, label=label, attr=attr)
 
@@ -94,7 +94,7 @@ class ItisTerms(Terms):
             kingdom_id: int = 5,
             rank_id: int = 220,
             replace: bool = False
-    ) -> 'ItisTerms':
+    ) -> 'Itis':
         """Guides often use common names instead of scientific name.
 
         kingdom_id =   5 == Animalia
@@ -141,7 +141,7 @@ class ItisTerms(Terms):
     @classmethod
     def mock_itis_traits(
             cls, name: str, mock_terms_csv: Optional[Union[str, Path]] = None
-    ) -> 'ItisTerms':
+    ) -> 'Itis':
         """Set up mock traits for testing with Travis.
 
         The ITIS database is too big to put into GitHub so we use a mock database

@@ -14,25 +14,21 @@ Could be broken down in several ways but for our purposes we want to keep the bo
 trait, "antennae", and get its description, "unmodified in males", but without being
 overly specific about what a description contains.
 
-The match action returns a list of data dicts that must contain a _start and _end token
-offset within the span.
+The match action returns a list of data dicts that must contain a "_start" and "_end"
+token offsets within the span.
 """
 
-from spacy.tokens import Doc, Span
-from spacy.util import filter_spans
+from spacy.tokens import Doc
 
-from .rule_matcher import RuleMatcher
+from .rule import Rule
 
 
-class FragmentMatcher(RuleMatcher):
+class Fragment(Rule):
     """Fragment matchers for the pipeline."""
 
     def __call__(self, doc: Doc) -> Doc:
         """Find all term in the text and return the resulting doc."""
-        matches = self.matcher(doc)
-
-        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
-        spans = filter_spans(spans)
+        spans = self.get_spans(doc)
 
         with doc.retokenize() as retokenizer:
             for span in spans:
@@ -55,10 +51,6 @@ class FragmentMatcher(RuleMatcher):
 
                     retokenizer.merge(frag, attrs=attrs)
 
-        # print('-' * 80)
-        # print(self.step)
-        # for token in doc:
-        #     print(f'{token.ent_type_:<15} {token._.step:<8} {token.pos_:<6} {token}')
-        # print()
+        # self.debug(doc)
 
         return doc
