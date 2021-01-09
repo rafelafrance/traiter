@@ -69,8 +69,8 @@ class Rule(Base):
 
         return doc
 
-    @staticmethod
-    def add_pipe(nlp: Language, matchers: List[Dict], step: str, **kwargs) -> None:
+    @classmethod
+    def add_pipe(cls, nlp: Language, matchers: List[Dict], step: str, **kwargs) -> None:
         """Build rule matchers that recognize traits."""
         rules = []
         for matcher in matchers:
@@ -79,5 +79,5 @@ class Rule(Base):
         if not rules:
             warn(f'Did not find rules for "{step}".')
 
-        matcher = Rule(nlp, rules, step)
+        matcher = cls(nlp, rules, step)
         nlp.add_pipe(matcher, name=step, **kwargs)

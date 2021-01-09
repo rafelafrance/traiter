@@ -62,11 +62,11 @@ class Term(Base):
                 retokenizer.merge(span, attrs=attrs)
 
         # self.debug(doc)
-
         return doc
 
-    @staticmethod
+    @classmethod
     def add_pipes(
+            cls,
             nlp: Language,
             terms: List[Dict],
             step: str = TERM_STEP,
@@ -79,6 +79,6 @@ class Term(Base):
             by_attr[term['attr']].append(term)
 
         for attr, attr_terms in by_attr.items():
-            matcher = Term(nlp, attr_terms, attr=attr, step=step, action=action)
+            matcher = cls(nlp, attr_terms, attr=attr, step=step, action=action)
             pipe_name = f'{step}_{attr}'
             nlp.add_pipe(matcher, name=pipe_name, **kwargs)

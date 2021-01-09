@@ -1,4 +1,4 @@
-"""Fragment matchers for the pipeline.
+"""Split matchers for the pipeline.
 
 WARNING: THIS IS EXPERIMENTAL AND MAY GO AWAY. I.e. statistical matchers may be better
 at this task (What about training data?). Or I may come up with a better idea later.
@@ -23,8 +23,8 @@ from spacy.tokens import Doc
 from .rule import Rule
 
 
-class Fragment(Rule):
-    """Fragment matchers for the pipeline."""
+class Split(Rule):
+    """Split matchers for the pipeline."""
 
     def __call__(self, doc: Doc) -> Doc:
         """Find all term in the text and return the resulting doc."""
@@ -42,15 +42,14 @@ class Fragment(Rule):
                 label = label.split('.')[0]
 
                 for datum in data:
-                    label = datum['_label'] if datum.get('_label') else label
+                    new_label = datum['_label'] if datum.get('_label') else label
 
-                    attrs = {'ENT_TYPE': label, 'ENT_IOB': 3,
+                    attrs = {'ENT_TYPE': new_label, 'ENT_IOB': 3,
                              '_': {'data': datum, 'step': self.step}}
 
                     frag = span[datum['_start']:datum['_end']]
 
                     retokenizer.merge(frag, attrs=attrs)
 
-        # self.debug(doc)
-
+        self.debug(doc)
         return doc
