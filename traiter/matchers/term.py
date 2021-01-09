@@ -62,6 +62,7 @@ class Term(Base):
                 retokenizer.merge(span, attrs=attrs)
 
         # self.debug(doc)
+
         return doc
 
     @classmethod

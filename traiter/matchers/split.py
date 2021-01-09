@@ -51,5 +51,6 @@ class Split(Rule):
 
                     retokenizer.merge(frag, attrs=attrs)
 
-        self.debug(doc)
+        # self.debug(doc)
+
         return doc

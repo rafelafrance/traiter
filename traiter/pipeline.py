@@ -85,7 +85,7 @@ class SpacyPipeline:
         doc = self.nlp(text)
         traits = self.trait_list(doc)
 
-        from pprint import pp
-        pp(traits)
+        # from pprint import pp
+        # pp(traits)
 
         return traits
