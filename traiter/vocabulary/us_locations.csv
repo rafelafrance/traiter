@@ -1,58 +1,1952 @@
 label,pattern,attr,replace,pos
-us_state,Alabama,lower,AL,noun
-us_state,Alaska,lower,AK,noun
-us_state,American Samoa,lower,AS,noun
-us_state,Arizona,lower,AZ,noun
-us_state,Arkansas,lower,AR,noun
-us_state,California,lower,CA,noun
-us_state,Colorado,lower,CO,noun
-us_state,Connecticut,lower,CT,noun
-us_state,Delaware,lower,DE,noun
-us_state,District of Columbia,lower,DC,noun
-us_state,Florida,lower,FL,noun
-us_state,Georgia,lower,GA,noun
-us_state,Guam,lower,GU,noun
-us_state,Hawaii,lower,HI,noun
-us_state,Idaho,lower,ID,noun
-us_state,Illinois,lower,IL,noun
-us_state,Indiana,lower,IN,noun
-us_state,Iowa,lower,IA,noun
-us_state,Kansas,lower,KS,noun
-us_state,Kentucky,lower,KY,noun
-us_state,Louisiana,lower,LA,noun
-us_state,Maine,lower,ME,noun
-us_state,Maryland,lower,MD,noun
-us_state,Massachusetts,lower,MA,noun
-us_state,Michigan,lower,MI,noun
-us_state,Minnesota,lower,MN,noun
-us_state,Minor Outlying Islands,lower,UM,noun
-us_state,Mississippi,lower,MS,noun
-us_state,Missouri,lower,MO,noun
-us_state,Montana,lower,MT,noun
-us_state,Nebraska,lower,NE,noun
-us_state,Nevada,lower,NV,noun
-us_state,New Hampshire,lower,NH,noun
-us_state,New Jersey,lower,NJ,noun
-us_state,New Mexico,lower,NM,noun
-us_state,New York,lower,NY,noun
-us_state,North Carolina,lower,NC,noun
-us_state,North Dakota,lower,ND,noun
-us_state,Northern Mariana Islands,lower,MP,noun
-us_state,Ohio,lower,OH,noun
-us_state,Oklahoma,lower,OK,noun
-us_state,Oregon,lower,OR,noun
-us_state,Pennsylvania,lower,PA,noun
-us_state,Puerto Rico,lower,PR,noun
-us_state,Rhode Island,lower,RI,noun
-us_state,South Carolina,lower,SC,noun
-us_state,South Dakota,lower,SD,noun
-us_state,Tennessee,lower,TN,noun
-us_state,Texas,lower,TX,noun
-us_state,Utah,lower,UT,noun
-us_state,Vermont,lower,VT,noun
-us_state,Virgin Islands,lower,VI,noun
-us_state,Virginia,lower,VA,noun
-us_state,Washington,lower,WA,noun
-us_state,West Virginia,lower,WV,noun
-us_state,Wisconsin,lower,WI,noun
-us_state,Wyoming,lower,WY,noun
+us_state,Alabama,lower,AL,PROPN
+us_state,Alaska,lower,AK,PROPN
+us_state,American Samoa,lower,AS,PROPN
+us_state,Arizona,lower,AZ,PROPN
+us_state,Arkansas,lower,AR,PROPN
+us_state,California,lower,CA,PROPN
+us_state,Colorado,lower,CO,PROPN
+us_state,Connecticut,lower,CT,PROPN
+us_state,Delaware,lower,DE,PROPN
+us_state,District of Columbia,lower,DC,PROPN
+us_state,Florida,lower,FL,PROPN
+us_state,Georgia,lower,GA,PROPN
+us_state,Guam,lower,GU,PROPN
+us_state,Hawaii,lower,HI,PROPN
+us_state,Idaho,lower,ID,PROPN
+us_state,Illinois,lower,IL,PROPN
+us_state,Indiana,lower,IN,PROPN
+us_state,Iowa,lower,IA,PROPN
+us_state,Kansas,lower,KS,PROPN
+us_state,Kentucky,lower,KY,PROPN
+us_state,Louisiana,lower,LA,PROPN
+us_state,Maine,lower,ME,PROPN
+us_state,Maryland,lower,MD,PROPN
+us_state,Massachusetts,lower,MA,PROPN
+us_state,Michigan,lower,MI,PROPN
+us_state,Minnesota,lower,MN,PROPN
+us_state,Minor Outlying Islands,lower,UM,PROPN
+us_state,Mississippi,lower,MS,PROPN
+us_state,Missouri,lower,MO,PROPN
+us_state,Montana,lower,MT,PROPN
+us_state,Nebraska,lower,NE,PROPN
+us_state,Nevada,lower,NV,PROPN
+us_state,New Hampshire,lower,NH,PROPN
+us_state,New Jersey,lower,NJ,PROPN
+us_state,New Mexico,lower,NM,PROPN
+us_state,New York,lower,NY,PROPN
+us_state,North Carolina,lower,NC,PROPN
+us_state,North Dakota,lower,ND,PROPN
+us_state,Northern Mariana Islands,lower,MP,PROPN
+us_state,Ohio,lower,OH,PROPN
+us_state,Oklahoma,lower,OK,PROPN
+us_state,Oregon,lower,OR,PROPN
+us_state,Pennsylvania,lower,PA,PROPN
+us_state,Puerto Rico,lower,PR,PROPN
+us_state,Rhode Island,lower,RI,PROPN
+us_state,South Carolina,lower,SC,PROPN
+us_state,South Dakota,lower,SD,PROPN
+us_state,Tennessee,lower,TN,PROPN
+us_state,Texas,lower,TX,PROPN
+us_state,Utah,lower,UT,PROPN
+us_state,Vermont,lower,VT,PROPN
+us_state,Virgin Islands,lower,VI,PROPN
+us_state,Virginia,lower,VA,PROPN
+us_state,Washington,lower,WA,PROPN
+us_state,West Virginia,lower,WV,PROPN
+us_state,Wisconsin,lower,WI,PROPN
+us_state,Wyoming,lower,WY,PROPN
+us_state,AL,lower,,PROPN
+us_state,AK,lower,,PROPN
+us_state,AS,lower,,PROPN
+us_state,AZ,lower,,PROPN
+us_state,AR,lower,,PROPN
+us_state,CA,lower,,PROPN
+us_state,CO,lower,,PROPN
+us_state,CT,lower,,PROPN
+us_state,DE,lower,,PROPN
+us_state,DC,lower,,PROPN
+us_state,FL,lower,,PROPN
+us_state,GA,lower,,PROPN
+us_state,GU,lower,,PROPN
+us_state,HI,lower,,PROPN
+us_state,ID,lower,,PROPN
+us_state,IL,lower,,PROPN
+us_state,IN,lower,,PROPN
+us_state,IA,lower,,PROPN
+us_state,KS,lower,,PROPN
+us_state,KY,lower,,PROPN
+us_state,LA,lower,,PROPN
+us_state,ME,lower,,PROPN
+us_state,MD,lower,,PROPN
+us_state,MA,lower,,PROPN
+us_state,MI,lower,,PROPN
+us_state,MN,lower,,PROPN
+us_state,UM,lower,,PROPN
+us_state,MS,lower,,PROPN
+us_state,MO,lower,,PROPN
+us_state,MT,lower,,PROPN
+us_state,NE,lower,,PROPN
+us_state,NV,lower,,PROPN
+us_state,NH,lower,,PROPN
+us_state,NJ,lower,,PROPN
+us_state,NM,lower,,PROPN
+us_state,NY,lower,,PROPN
+us_state,NC,lower,,PROPN
+us_state,ND,lower,,PROPN
+us_state,MP,lower,,PROPN
+us_state,OH,lower,,PROPN
+us_state,OK,lower,,PROPN
+us_state,OR,lower,,PROPN
+us_state,PA,lower,,PROPN
+us_state,PR,lower,,PROPN
+us_state,RI,lower,,PROPN
+us_state,SC,lower,,PROPN
+us_state,SD,lower,,PROPN
+us_state,TN,lower,,PROPN
+us_state,TX,lower,,PROPN
+us_state,UT,lower,,PROPN
+us_state,VT,lower,,PROPN
+us_state,VI,lower,,PROPN
+us_state,VA,lower,,PROPN
+us_state,WA,lower,,PROPN
+us_state,WV,lower,,PROPN
+us_state,WI,lower,,PROPN
+us_state,WY,lower,,PROPN
+us_county,Abbeville,lower,,PROPN,SC
+us_county,Acadia,lower,,PROPN,LA
+us_county,Accomack,lower,,PROPN,VA
+us_county,Ada,lower,,PROPN,ID
+us_county,Adair,lower,,PROPN,IA KY MO OK
+us_county,Adams,lower,,PROPN,CO ID IL IN IA MS NE ND OH PA WA WI
+us_county,Addison,lower,,PROPN,VT
+us_county,Aiken,lower,,PROPN,SC
+us_county,Aitkin,lower,,PROPN,MN
+us_county,Alachua,lower,,PROPN,FL
+us_county,Alamance,lower,,PROPN,NC
+us_county,Alameda,lower,,PROPN,CA
+us_county,Alamosa,lower,,PROPN,CO
+us_county,Albany,lower,,PROPN,NY WY
+us_county,Albemarle,lower,,PROPN,VA
+us_county,Alcona,lower,,PROPN,MI
+us_county,Alcorn,lower,,PROPN,MS
+us_county,Aleutians East,lower,,PROPN,AK
+us_county,Aleutians West,lower,,PROPN,AK
+us_county,Alexander,lower,,PROPN,IL NC
+us_county,Alexandria,lower,,PROPN,VA
+us_county,Alfalfa,lower,,PROPN,OK
+us_county,Alger,lower,,PROPN,MI
+us_county,Allamakee,lower,,PROPN,IA
+us_county,Allegan,lower,,PROPN,MI
+us_county,Allegany,lower,,PROPN,MD NY
+us_county,Alleghany,lower,,PROPN,NC VA
+us_county,Allegheny,lower,,PROPN,PA
+us_county,Allen,lower,,PROPN,IN KS KY LA OH
+us_county,Allendale,lower,,PROPN,SC
+us_county,Alpena,lower,,PROPN,MI
+us_county,Alpine,lower,,PROPN,CA
+us_county,Amador,lower,,PROPN,CA
+us_county,Amelia,lower,,PROPN,VA
+us_county,Amherst,lower,,PROPN,VA
+us_county,Amite,lower,,PROPN,MS
+us_county,Anchorage,lower,,PROPN,AK
+us_county,Anderson,lower,,PROPN,KS KY SC TN TX
+us_county,Andrew,lower,,PROPN,MO
+us_county,Andrews,lower,,PROPN,TX
+us_county,Androscoggin,lower,,PROPN,ME
+us_county,Angelina,lower,,PROPN,TX
+us_county,Anne Arundel,lower,,PROPN,MD
+us_county,Anoka,lower,,PROPN,MN
+us_county,Anson,lower,,PROPN,NC
+us_county,Antelope,lower,,PROPN,NE
+us_county,Antrim,lower,,PROPN,MI
+us_county,Apache,lower,,PROPN,AZ
+us_county,Appanoose,lower,,PROPN,IA
+us_county,Appling,lower,,PROPN,GA
+us_county,Appomattox,lower,,PROPN,VA
+us_county,Aransas,lower,,PROPN,TX
+us_county,Arapahoe,lower,,PROPN,CO
+us_county,Archer,lower,,PROPN,TX
+us_county,Archuleta,lower,,PROPN,CO
+us_county,Arenac,lower,,PROPN,MI
+us_county,Arkansas,lower,,PROPN,AR
+us_county,Arlington,lower,,PROPN,VA
+us_county,Armstrong,lower,,PROPN,PA TX
+us_county,Aroostook,lower,,PROPN,ME
+us_county,Arthur,lower,,PROPN,NE
+us_county,Ascension,lower,,PROPN,LA
+us_county,Ashe,lower,,PROPN,NC
+us_county,Ashland,lower,,PROPN,OH WI
+us_county,Ashley,lower,,PROPN,AR
+us_county,Ashtabula,lower,,PROPN,OH
+us_county,Asotin,lower,,PROPN,WA
+us_county,Assumption,lower,,PROPN,LA
+us_county,Atascosa,lower,,PROPN,TX
+us_county,Atchison,lower,,PROPN,KS MO
+us_county,Athens,lower,,PROPN,OH
+us_county,Atkinson,lower,,PROPN,GA
+us_county,Atlantic,lower,,PROPN,NJ
+us_county,Atoka,lower,,PROPN,OK
+us_county,Attala,lower,,PROPN,MS
+us_county,Audrain,lower,,PROPN,MO
+us_county,Audubon,lower,,PROPN,IA
+us_county,Auglaize,lower,,PROPN,OH
+us_county,Augusta,lower,,PROPN,VA
+us_county,Aurora,lower,,PROPN,SD
+us_county,Austin,lower,,PROPN,TX
+us_county,Autauga,lower,,PROPN,AL
+us_county,Avery,lower,,PROPN,NC
+us_county,Avoyelles,lower,,PROPN,LA
+us_county,Baca,lower,,PROPN,CO
+us_county,Bacon,lower,,PROPN,GA
+us_county,Bailey,lower,,PROPN,TX
+us_county,Baker,lower,,PROPN,FL GA OR
+us_county,Baldwin,lower,,PROPN,AL GA
+us_county,Ballard,lower,,PROPN,KY
+us_county,Baltimore,lower,,PROPN,MD
+us_county,Baltimore city,lower,,PROPN,MD
+us_county,Bamberg,lower,,PROPN,SC
+us_county,Bandera,lower,,PROPN,TX
+us_county,Banks,lower,,PROPN,GA
+us_county,Banner,lower,,PROPN,NE
+us_county,Bannock,lower,,PROPN,ID
+us_county,Baraga,lower,,PROPN,MI
+us_county,Barber,lower,,PROPN,KS
+us_county,Barbour,lower,,PROPN,AL WV
+us_county,Barnes,lower,,PROPN,ND
+us_county,Barnstable,lower,,PROPN,MA
+us_county,Barnwell,lower,,PROPN,SC
+us_county,Barren,lower,,PROPN,KY
+us_county,Barron,lower,,PROPN,WI
+us_county,Barrow,lower,,PROPN,GA
+us_county,Barry,lower,,PROPN,MI MO
+us_county,Bartholomew,lower,,PROPN,IN
+us_county,Barton,lower,,PROPN,KS MO
+us_county,Bartow,lower,,PROPN,GA
+us_county,Bastrop,lower,,PROPN,TX
+us_county,Bates,lower,,PROPN,MO
+us_county,Bath,lower,,PROPN,KY VA
+us_county,Baxter,lower,,PROPN,AR
+us_county,Bay,lower,,PROPN,FL MI
+us_county,Bayfield,lower,,PROPN,WI
+us_county,Baylor,lower,,PROPN,TX
+us_county,Beadle,lower,,PROPN,SD
+us_county,Bear Lake,lower,,PROPN,ID
+us_county,Beaufort,lower,,PROPN,NC SC
+us_county,Beauregard,lower,,PROPN,LA
+us_county,Beaver,lower,,PROPN,OK PA UT
+us_county,Beaverhead,lower,,PROPN,MT
+us_county,Becker,lower,,PROPN,MN
+us_county,Beckham,lower,,PROPN,OK
+us_county,Bedford,lower,,PROPN,PA TN VA VA
+us_county,Bee,lower,,PROPN,TX
+us_county,Belknap,lower,,PROPN,NH
+us_county,Bell,lower,,PROPN,KY TX
+us_county,Belmont,lower,,PROPN,OH
+us_county,Beltrami,lower,,PROPN,MN
+us_county,Ben Hill,lower,,PROPN,GA
+us_county,Benewah,lower,,PROPN,ID
+us_county,Bennett,lower,,PROPN,SD
+us_county,Bennington,lower,,PROPN,VT
+us_county,Benson,lower,,PROPN,ND
+us_county,Bent,lower,,PROPN,CO
+us_county,Benton,lower,,PROPN,AR IN IA MN MS MO OR TN WA
+us_county,Benzie,lower,,PROPN,MI
+us_county,Bergen,lower,,PROPN,NJ
+us_county,Berkeley,lower,,PROPN,SC WV
+us_county,Berks,lower,,PROPN,PA
+us_county,Berkshire,lower,,PROPN,MA
+us_county,Bernalillo,lower,,PROPN,NM
+us_county,Berrien,lower,,PROPN,GA MI
+us_county,Bertie,lower,,PROPN,NC
+us_county,Bethel,lower,,PROPN,AK
+us_county,Bexar,lower,,PROPN,TX
+us_county,Bibb,lower,,PROPN,AL GA
+us_county,Bienville,lower,,PROPN,LA
+us_county,Big Horn,lower,,PROPN,MT WY
+us_county,Big Stone,lower,,PROPN,MN
+us_county,Billings,lower,,PROPN,ND
+us_county,Bingham,lower,,PROPN,ID
+us_county,Black Hawk,lower,,PROPN,IA
+us_county,Blackford,lower,,PROPN,IN
+us_county,Bladen,lower,,PROPN,NC
+us_county,Blaine,lower,,PROPN,ID MT NE OK
+us_county,Blair,lower,,PROPN,PA
+us_county,Blanco,lower,,PROPN,TX
+us_county,Bland,lower,,PROPN,VA
+us_county,Bleckley,lower,,PROPN,GA
+us_county,Bledsoe,lower,,PROPN,TN
+us_county,Blount,lower,,PROPN,AL TN
+us_county,Blue Earth,lower,,PROPN,MN
+us_county,Boise,lower,,PROPN,ID
+us_county,Bolivar,lower,,PROPN,MS
+us_county,Bollinger,lower,,PROPN,MO
+us_county,Bon Homme,lower,,PROPN,SD
+us_county,Bond,lower,,PROPN,IL
+us_county,Bonner,lower,,PROPN,ID
+us_county,Bonneville,lower,,PROPN,ID
+us_county,Boone,lower,,PROPN,AR IL IN IA KY MO NE WV
+us_county,Borden,lower,,PROPN,TX
+us_county,Bosque,lower,,PROPN,TX
+us_county,Bossier,lower,,PROPN,LA
+us_county,Botetourt,lower,,PROPN,VA
+us_county,Bottineau,lower,,PROPN,ND
+us_county,Boulder,lower,,PROPN,CO
+us_county,Boundary,lower,,PROPN,ID
+us_county,Bourbon,lower,,PROPN,KS KY
+us_county,Bowie,lower,,PROPN,TX
+us_county,Bowman,lower,,PROPN,ND
+us_county,Box Butte,lower,,PROPN,NE
+us_county,Box Elder,lower,,PROPN,UT
+us_county,Boyd,lower,,PROPN,KY NE
+us_county,Boyle,lower,,PROPN,KY
+us_county,Bracken,lower,,PROPN,KY
+us_county,Bradford,lower,,PROPN,FL PA
+us_county,Bradley,lower,,PROPN,AR TN
+us_county,Branch,lower,,PROPN,MI
+us_county,Brantley,lower,,PROPN,GA
+us_county,Braxton,lower,,PROPN,WV
+us_county,Brazoria,lower,,PROPN,TX
+us_county,Brazos,lower,,PROPN,TX
+us_county,Breathitt,lower,,PROPN,KY
+us_county,Breckinridge,lower,,PROPN,KY
+us_county,Bremer,lower,,PROPN,IA
+us_county,Brevard,lower,,PROPN,FL
+us_county,Brewster,lower,,PROPN,TX
+us_county,Briscoe,lower,,PROPN,TX
+us_county,Bristol,lower,,PROPN,MA RI VA
+us_county,Bristol Bay,lower,,PROPN,AK
+us_county,Broadwater,lower,,PROPN,MT
+us_county,Bronx,lower,,PROPN,NY
+us_county,Brooke,lower,,PROPN,WV
+us_county,Brookings,lower,,PROPN,SD
+us_county,Brooks,lower,,PROPN,GA TX
+us_county,Broome,lower,,PROPN,NY
+us_county,Broomfield,lower,,PROPN,CO
+us_county,Broward,lower,,PROPN,FL
+us_county,Brown,lower,,PROPN,IL IN KS MN NE OH SD TX WI
+us_county,Brule,lower,,PROPN,SD
+us_county,Brunswick,lower,,PROPN,NC VA
+us_county,Bryan,lower,,PROPN,GA OK
+us_county,Buchanan,lower,,PROPN,IA MO VA
+us_county,Buckingham,lower,,PROPN,VA
+us_county,Bucks,lower,,PROPN,PA
+us_county,Buena Vista,lower,,PROPN,IA VA
+us_county,Buffalo,lower,,PROPN,NE SD WI
+us_county,Bullitt,lower,,PROPN,KY
+us_county,Bulloch,lower,,PROPN,GA
+us_county,Bullock,lower,,PROPN,AL
+us_county,Buncombe,lower,,PROPN,NC
+us_county,Bureau,lower,,PROPN,IL
+us_county,Burke,lower,,PROPN,GA NC ND
+us_county,Burleigh,lower,,PROPN,ND
+us_county,Burleson,lower,,PROPN,TX
+us_county,Burlington,lower,,PROPN,NJ
+us_county,Burnet,lower,,PROPN,TX
+us_county,Burnett,lower,,PROPN,WI
+us_county,Burt,lower,,PROPN,NE
+us_county,Butler,lower,,PROPN,AL IA KS KY MO NE OH PA
+us_county,Butte,lower,,PROPN,CA ID SD
+us_county,Butts,lower,,PROPN,GA
+us_county,Cabarrus,lower,,PROPN,NC
+us_county,Cabell,lower,,PROPN,WV
+us_county,Cache,lower,,PROPN,UT
+us_county,Caddo,lower,,PROPN,LA OK
+us_county,Calaveras,lower,,PROPN,CA
+us_county,Calcasieu,lower,,PROPN,LA
+us_county,Caldwell,lower,,PROPN,KY LA MO NC TX
+us_county,Caledonia,lower,,PROPN,VT
+us_county,Calhoun,lower,,PROPN,AL AR FL GA IL IA MI MS SC TX WV
+us_county,Callahan,lower,,PROPN,TX
+us_county,Callaway,lower,,PROPN,MO
+us_county,Calloway,lower,,PROPN,KY
+us_county,Calumet,lower,,PROPN,WI
+us_county,Calvert,lower,,PROPN,MD
+us_county,Camas,lower,,PROPN,ID
+us_county,Cambria,lower,,PROPN,PA
+us_county,Camden,lower,,PROPN,GA MO NJ NC
+us_county,Cameron,lower,,PROPN,LA PA TX
+us_county,Camp,lower,,PROPN,TX
+us_county,Campbell,lower,,PROPN,KY SD TN VA WY
+us_county,Canadian,lower,,PROPN,OK
+us_county,Candler,lower,,PROPN,GA
+us_county,Cannon,lower,,PROPN,TN
+us_county,Canyon,lower,,PROPN,ID
+us_county,Cape Girardeau,lower,,PROPN,MO
+us_county,Cape May,lower,,PROPN,NJ
+us_county,Carbon,lower,,PROPN,MT PA UT WY
+us_county,Caribou,lower,,PROPN,ID
+us_county,Carlisle,lower,,PROPN,KY
+us_county,Carlton,lower,,PROPN,MN
+us_county,Caroline,lower,,PROPN,MD VA
+us_county,Carroll,lower,,PROPN,AR GA IL IN IA KY MD MS MO NH OH TN VA
+us_county,Carson,lower,,PROPN,TX
+us_county,Carson City city,lower,,PROPN,NV
+us_county,Carter,lower,,PROPN,KY MO MT OK TN
+us_county,Carteret,lower,,PROPN,NC
+us_county,Carver,lower,,PROPN,MN
+us_county,Cascade,lower,,PROPN,MT
+us_county,Casey,lower,,PROPN,KY
+us_county,Cass,lower,,PROPN,IL IN IA MI MN MO NE ND TX
+us_county,Cassia,lower,,PROPN,ID
+us_county,Castro,lower,,PROPN,TX
+us_county,Caswell,lower,,PROPN,NC
+us_county,Catahoula,lower,,PROPN,LA
+us_county,Catawba,lower,,PROPN,NC
+us_county,Catoosa,lower,,PROPN,GA
+us_county,Catron,lower,,PROPN,NM
+us_county,Cattaraugus,lower,,PROPN,NY
+us_county,Cavalier,lower,,PROPN,ND
+us_county,Cayuga,lower,,PROPN,NY
+us_county,Cecil,lower,,PROPN,MD
+us_county,Cedar,lower,,PROPN,IA MO NE
+us_county,Centre,lower,,PROPN,PA
+us_county,Cerro Gordo,lower,,PROPN,IA
+us_county,Chaffee,lower,,PROPN,CO
+us_county,Chambers,lower,,PROPN,AL TX
+us_county,Champaign,lower,,PROPN,IL OH
+us_county,Chariton,lower,,PROPN,MO
+us_county,Charles,lower,,PROPN,MD
+us_county,Charles City,lower,,PROPN,VA
+us_county,Charles Mix,lower,,PROPN,SD
+us_county,Charleston,lower,,PROPN,SC
+us_county,Charlevoix,lower,,PROPN,MI
+us_county,Charlotte,lower,,PROPN,FL VA
+us_county,Charlottesville,lower,,PROPN,VA
+us_county,Charlton,lower,,PROPN,GA
+us_county,Chase,lower,,PROPN,KS NE
+us_county,Chatham,lower,,PROPN,GA NC
+us_county,Chattahoochee,lower,,PROPN,GA
+us_county,Chattooga,lower,,PROPN,GA
+us_county,Chautauqua,lower,,PROPN,KS NY
+us_county,Chaves,lower,,PROPN,NM
+us_county,Cheatham,lower,,PROPN,TN
+us_county,Cheboygan,lower,,PROPN,MI
+us_county,Chelan,lower,,PROPN,WA
+us_county,Chemung,lower,,PROPN,NY
+us_county,Chenango,lower,,PROPN,NY
+us_county,Cherokee,lower,,PROPN,AL GA IA KS NC OK SC TX
+us_county,Cherry,lower,,PROPN,NE
+us_county,Chesapeake,lower,,PROPN,VA
+us_county,Cheshire,lower,,PROPN,NH
+us_county,Chester,lower,,PROPN,PA SC TN
+us_county,Chesterfield,lower,,PROPN,SC VA
+us_county,Cheyenne,lower,,PROPN,CO KS NE
+us_county,Chickasaw,lower,,PROPN,IA MS
+us_county,Chicot,lower,,PROPN,AR
+us_county,Childress,lower,,PROPN,TX
+us_county,Chilton,lower,,PROPN,AL
+us_county,Chippewa,lower,,PROPN,MI MN WI
+us_county,Chisago,lower,,PROPN,MN
+us_county,Chittenden,lower,,PROPN,VT
+us_county,Choctaw,lower,,PROPN,AL MS OK
+us_county,Chouteau,lower,,PROPN,MT
+us_county,Chowan,lower,,PROPN,NC
+us_county,Christian,lower,,PROPN,IL KY MO
+us_county,Churchill,lower,,PROPN,NV
+us_county,Cibola,lower,,PROPN,NM
+us_county,Cimarron,lower,,PROPN,OK
+us_county,Citrus,lower,,PROPN,FL
+us_county,Clackamas,lower,,PROPN,OR
+us_county,Claiborne,lower,,PROPN,LA MS TN
+us_county,Clallam,lower,,PROPN,WA
+us_county,Clare,lower,,PROPN,MI
+us_county,Clarendon,lower,,PROPN,SC
+us_county,Clarion,lower,,PROPN,PA
+us_county,Clark,lower,,PROPN,AR ID IL IN KS KY MO NV OH SD WA WI
+us_county,Clarke,lower,,PROPN,AL GA IA MS VA
+us_county,Clatsop,lower,,PROPN,OR
+us_county,Clay,lower,,PROPN,AL AR FL GA IL IN IA KS KY MN MS MO NE NC SD TN TX WV
+us_county,Clayton,lower,,PROPN,GA IA
+us_county,Clear Creek,lower,,PROPN,CO
+us_county,Clearfield,lower,,PROPN,PA
+us_county,Clearwater,lower,,PROPN,ID MN
+us_county,Cleburne,lower,,PROPN,AL AR
+us_county,Clermont,lower,,PROPN,OH
+us_county,Cleveland,lower,,PROPN,AR NC OK
+us_county,Clifton Forge,lower,,PROPN,VA
+us_county,Clinch,lower,,PROPN,GA
+us_county,Clinton,lower,,PROPN,IL IN IA KY MI MO NY OH PA
+us_county,Cloud,lower,,PROPN,KS
+us_county,Coahoma,lower,,PROPN,MS
+us_county,Coal,lower,,PROPN,OK
+us_county,Cobb,lower,,PROPN,GA
+us_county,Cochise,lower,,PROPN,AZ
+us_county,Cochran,lower,,PROPN,TX
+us_county,Cocke,lower,,PROPN,TN
+us_county,Coconino,lower,,PROPN,AZ
+us_county,Codington,lower,,PROPN,SD
+us_county,Coffee,lower,,PROPN,AL GA TN
+us_county,Coffey,lower,,PROPN,KS
+us_county,Coke,lower,,PROPN,TX
+us_county,Colbert,lower,,PROPN,AL
+us_county,Cole,lower,,PROPN,MO
+us_county,Coleman,lower,,PROPN,TX
+us_county,Coles,lower,,PROPN,IL
+us_county,Colfax,lower,,PROPN,NE NM
+us_county,Colleton,lower,,PROPN,SC
+us_county,Collier,lower,,PROPN,FL
+us_county,Collin,lower,,PROPN,TX
+us_county,Collingsworth,lower,,PROPN,TX
+us_county,Colonial Heights,lower,,PROPN,VA
+us_county,Colorado,lower,,PROPN,TX
+us_county,Colquitt,lower,,PROPN,GA
+us_county,Columbia,lower,,PROPN,AR FL GA NY OR PA WA WI
+us_county,Columbiana,lower,,PROPN,OH
+us_county,Columbus,lower,,PROPN,NC
+us_county,Colusa,lower,,PROPN,CA
+us_county,Comal,lower,,PROPN,TX
+us_county,Comanche,lower,,PROPN,KS OK TX
+us_county,Concho,lower,,PROPN,TX
+us_county,Concordia,lower,,PROPN,LA
+us_county,Conecuh,lower,,PROPN,AL
+us_county,Conejos,lower,,PROPN,CO
+us_county,Contra Costa,lower,,PROPN,CA
+us_county,Converse,lower,,PROPN,WY
+us_county,Conway,lower,,PROPN,AR
+us_county,Cook,lower,,PROPN,GA IL MN
+us_county,Cooke,lower,,PROPN,TX
+us_county,Cooper,lower,,PROPN,MO
+us_county,Coos,lower,,PROPN,NH OR
+us_county,Coosa,lower,,PROPN,AL
+us_county,Copiah,lower,,PROPN,MS
+us_county,Corson,lower,,PROPN,SD
+us_county,Cortland,lower,,PROPN,NY
+us_county,Coryell,lower,,PROPN,TX
+us_county,Coshocton,lower,,PROPN,OH
+us_county,Costilla,lower,,PROPN,CO
+us_county,Cottle,lower,,PROPN,TX
+us_county,Cotton,lower,,PROPN,OK
+us_county,Cottonwood,lower,,PROPN,MN
+us_county,Covington,lower,,PROPN,AL MS VA
+us_county,Coweta,lower,,PROPN,GA
+us_county,Cowley,lower,,PROPN,KS
+us_county,Cowlitz,lower,,PROPN,WA
+us_county,Craig,lower,,PROPN,OK VA
+us_county,Craighead,lower,,PROPN,AR
+us_county,Crane,lower,,PROPN,TX
+us_county,Craven,lower,,PROPN,NC
+us_county,Crawford,lower,,PROPN,AR GA IL IN IA KS MI MO OH PA WI
+us_county,Creek,lower,,PROPN,OK
+us_county,Crenshaw,lower,,PROPN,AL
+us_county,Crisp,lower,,PROPN,GA
+us_county,Crittenden,lower,,PROPN,AR KY
+us_county,Crockett,lower,,PROPN,TN TX
+us_county,Crook,lower,,PROPN,OR WY
+us_county,Crosby,lower,,PROPN,TX
+us_county,Cross,lower,,PROPN,AR
+us_county,Crow Wing,lower,,PROPN,MN
+us_county,Crowley,lower,,PROPN,CO
+us_county,Culberson,lower,,PROPN,TX
+us_county,Cullman,lower,,PROPN,AL
+us_county,Culpeper,lower,,PROPN,VA
+us_county,Cumberland,lower,,PROPN,IL KY ME NJ NC PA TN VA
+us_county,Cuming,lower,,PROPN,NE
+us_county,Currituck,lower,,PROPN,NC
+us_county,Curry,lower,,PROPN,NM OR
+us_county,Custer,lower,,PROPN,CO ID MT NE OK SD
+us_county,Cuyahoga,lower,,PROPN,OH
+us_county,Dade,lower,,PROPN,GA MO
+us_county,Daggett,lower,,PROPN,UT
+us_county,Dakota,lower,,PROPN,MN NE
+us_county,Dale,lower,,PROPN,AL
+us_county,Dallam,lower,,PROPN,TX
+us_county,Dallas,lower,,PROPN,AL AR IA MO TX
+us_county,Dane,lower,,PROPN,WI
+us_county,Daniels,lower,,PROPN,MT
+us_county,Danville,lower,,PROPN,VA
+us_county,Dare,lower,,PROPN,NC
+us_county,Darke,lower,,PROPN,OH
+us_county,Darlington,lower,,PROPN,SC
+us_county,Dauphin,lower,,PROPN,PA
+us_county,Davidson,lower,,PROPN,NC TN
+us_county,Davie,lower,,PROPN,NC
+us_county,Daviess,lower,,PROPN,IN KY MO
+us_county,Davis,lower,,PROPN,IA UT
+us_county,Davison,lower,,PROPN,SD
+us_county,Dawes,lower,,PROPN,NE
+us_county,Dawson,lower,,PROPN,GA MT NE TX
+us_county,Day,lower,,PROPN,SD
+us_county,De Baca,lower,,PROPN,NM
+us_county,De Soto,lower,,PROPN,LA
+us_county,De Witt,lower,,PROPN,IL
+us_county,DeKalb,lower,,PROPN,AL GA IL IN MO TN
+us_county,DeSoto,lower,,PROPN,FL MS
+us_county,DeWitt,lower,,PROPN,TX
+us_county,Deaf Smith,lower,,PROPN,TX
+us_county,Dearborn,lower,,PROPN,IN
+us_county,Decatur,lower,,PROPN,GA IN IA KS TN
+us_county,Deer Lodge,lower,,PROPN,MT
+us_county,Defiance,lower,,PROPN,OH
+us_county,Del Norte,lower,,PROPN,CA
+us_county,Delaware,lower,,PROPN,IN IA NY OH OK PA
+us_county,Delta,lower,,PROPN,CO MI TX
+us_county,Denali,lower,,PROPN,AK
+us_county,Dent,lower,,PROPN,MO
+us_county,Denton,lower,,PROPN,TX
+us_county,Denver,lower,,PROPN,CO
+us_county,Des Moines,lower,,PROPN,IA
+us_county,Deschutes,lower,,PROPN,OR
+us_county,Desha,lower,,PROPN,AR
+us_county,Deuel,lower,,PROPN,NE SD
+us_county,Dewey,lower,,PROPN,OK SD
+us_county,Dickens,lower,,PROPN,TX
+us_county,Dickenson,lower,,PROPN,VA
+us_county,Dickey,lower,,PROPN,ND
+us_county,Dickinson,lower,,PROPN,IA KS MI
+us_county,Dickson,lower,,PROPN,TN
+us_county,Dillingham,lower,,PROPN,AK
+us_county,Dillon,lower,,PROPN,SC
+us_county,Dimmit,lower,,PROPN,TX
+us_county,Dinwiddie,lower,,PROPN,VA
+us_county,District of Columbia,lower,,PROPN,DC
+us_county,Divide,lower,,PROPN,ND
+us_county,Dixie,lower,,PROPN,FL
+us_county,Dixon,lower,,PROPN,NE
+us_county,Doddridge,lower,,PROPN,WV
+us_county,Dodge,lower,,PROPN,GA MN NE WI
+us_county,Dolores,lower,,PROPN,CO
+us_county,Dona Ana,lower,,PROPN,NM
+us_county,Doniphan,lower,,PROPN,KS
+us_county,Donley,lower,,PROPN,TX
+us_county,Dooly,lower,,PROPN,GA
+us_county,Door,lower,,PROPN,WI
+us_county,Dorchester,lower,,PROPN,MD SC
+us_county,Dougherty,lower,,PROPN,GA
+us_county,Douglas,lower,,PROPN,CO GA IL KS MN MO NE NV OR SD WA WI
+us_county,Drew,lower,,PROPN,AR
+us_county,DuPage,lower,,PROPN,IL
+us_county,Dubois,lower,,PROPN,IN
+us_county,Dubuque,lower,,PROPN,IA
+us_county,Duchesne,lower,,PROPN,UT
+us_county,Dukes,lower,,PROPN,MA
+us_county,Dundy,lower,,PROPN,NE
+us_county,Dunklin,lower,,PROPN,MO
+us_county,Dunn,lower,,PROPN,ND WI
+us_county,Duplin,lower,,PROPN,NC
+us_county,Durham,lower,,PROPN,NC
+us_county,Dutchess,lower,,PROPN,NY
+us_county,Duval,lower,,PROPN,FL TX
+us_county,Dyer,lower,,PROPN,TN
+us_county,Eagle,lower,,PROPN,CO
+us_county,Early,lower,,PROPN,GA
+us_county,East Baton Rouge,lower,,PROPN,LA
+us_county,East Carroll,lower,,PROPN,LA
+us_county,East Feliciana,lower,,PROPN,LA
+us_county,Eastland,lower,,PROPN,TX
+us_county,Eaton,lower,,PROPN,MI
+us_county,Eau Claire,lower,,PROPN,WI
+us_county,Echols,lower,,PROPN,GA
+us_county,Ector,lower,,PROPN,TX
+us_county,Eddy,lower,,PROPN,NM ND
+us_county,Edgar,lower,,PROPN,IL
+us_county,Edgecombe,lower,,PROPN,NC
+us_county,Edgefield,lower,,PROPN,SC
+us_county,Edmonson,lower,,PROPN,KY
+us_county,Edmunds,lower,,PROPN,SD
+us_county,Edwards,lower,,PROPN,IL KS TX
+us_county,Effingham,lower,,PROPN,GA IL
+us_county,El Dorado,lower,,PROPN,CA
+us_county,El Paso,lower,,PROPN,CO TX
+us_county,Elbert,lower,,PROPN,CO GA
+us_county,Elk,lower,,PROPN,KS PA
+us_county,Elkhart,lower,,PROPN,IN
+us_county,Elko,lower,,PROPN,NV
+us_county,Elliott,lower,,PROPN,KY
+us_county,Ellis,lower,,PROPN,KS OK TX
+us_county,Ellsworth,lower,,PROPN,KS
+us_county,Elmore,lower,,PROPN,AL ID
+us_county,Emanuel,lower,,PROPN,GA
+us_county,Emery,lower,,PROPN,UT
+us_county,Emmet,lower,,PROPN,IA MI
+us_county,Emmons,lower,,PROPN,ND
+us_county,Emporia,lower,,PROPN,VA
+us_county,Erath,lower,,PROPN,TX
+us_county,Erie,lower,,PROPN,NY OH PA
+us_county,Escambia,lower,,PROPN,AL FL
+us_county,Esmeralda,lower,,PROPN,NV
+us_county,Essex,lower,,PROPN,MA NJ NY VT VA
+us_county,Estill,lower,,PROPN,KY
+us_county,Etowah,lower,,PROPN,AL
+us_county,Eureka,lower,,PROPN,NV
+us_county,Evangeline,lower,,PROPN,LA
+us_county,Evans,lower,,PROPN,GA
+us_county,Fairbanks North Star,lower,,PROPN,AK
+us_county,Fairfax,lower,,PROPN,VA VA
+us_county,Fairfield,lower,,PROPN,CT OH SC
+us_county,Fall River,lower,,PROPN,SD
+us_county,Fallon,lower,,PROPN,MT
+us_county,Falls,lower,,PROPN,TX
+us_county,Falls Church,lower,,PROPN,VA
+us_county,Fannin,lower,,PROPN,GA TX
+us_county,Faribault,lower,,PROPN,MN
+us_county,Faulk,lower,,PROPN,SD
+us_county,Faulkner,lower,,PROPN,AR
+us_county,Fauquier,lower,,PROPN,VA
+us_county,Fayette,lower,,PROPN,AL GA IL IN IA KY OH PA TN TX WV
+us_county,Fentress,lower,,PROPN,TN
+us_county,Fergus,lower,,PROPN,MT
+us_county,Ferry,lower,,PROPN,WA
+us_county,Fillmore,lower,,PROPN,MN NE
+us_county,Finney,lower,,PROPN,KS
+us_county,Fisher,lower,,PROPN,TX
+us_county,Flagler,lower,,PROPN,FL
+us_county,Flathead,lower,,PROPN,MT
+us_county,Fleming,lower,,PROPN,KY
+us_county,Florence,lower,,PROPN,SC WI
+us_county,Floyd,lower,,PROPN,GA IN IA KY TX VA
+us_county,Fluvanna,lower,,PROPN,VA
+us_county,Foard,lower,,PROPN,TX
+us_county,Fond du Lac,lower,,PROPN,WI
+us_county,Ford,lower,,PROPN,IL KS
+us_county,Forest,lower,,PROPN,PA WI
+us_county,Forrest,lower,,PROPN,MS
+us_county,Forsyth,lower,,PROPN,GA NC
+us_county,Fort Bend,lower,,PROPN,TX
+us_county,Foster,lower,,PROPN,ND
+us_county,Fountain,lower,,PROPN,IN
+us_county,Franklin,lower,,PROPN,AL AR FL GA ID IL IN IA KS KY LA ME MA MS MO NE NY NC OH PA TN TX VT VA VA WA
+us_county,Frederick,lower,,PROPN,MD VA
+us_county,Fredericksburg,lower,,PROPN,VA
+us_county,Freeborn,lower,,PROPN,MN
+us_county,Freestone,lower,,PROPN,TX
+us_county,Fremont,lower,,PROPN,CO ID IA WY
+us_county,Fresno,lower,,PROPN,CA
+us_county,Frio,lower,,PROPN,TX
+us_county,Frontier,lower,,PROPN,NE
+us_county,Fulton,lower,,PROPN,AR GA IL IN KY NY OH PA
+us_county,Furnas,lower,,PROPN,NE
+us_county,Gadsden,lower,,PROPN,FL
+us_county,Gage,lower,,PROPN,NE
+us_county,Gaines,lower,,PROPN,TX
+us_county,Galax,lower,,PROPN,VA
+us_county,Gallatin,lower,,PROPN,IL KY MT
+us_county,Gallia,lower,,PROPN,OH
+us_county,Galveston,lower,,PROPN,TX
+us_county,Garden,lower,,PROPN,NE
+us_county,Garfield,lower,,PROPN,CO MT NE OK UT WA
+us_county,Garland,lower,,PROPN,AR
+us_county,Garrard,lower,,PROPN,KY
+us_county,Garrett,lower,,PROPN,MD
+us_county,Garvin,lower,,PROPN,OK
+us_county,Garza,lower,,PROPN,TX
+us_county,Gasconade,lower,,PROPN,MO
+us_county,Gaston,lower,,PROPN,NC
+us_county,Gates,lower,,PROPN,NC
+us_county,Geary,lower,,PROPN,KS
+us_county,Geauga,lower,,PROPN,OH
+us_county,Gem,lower,,PROPN,ID
+us_county,Genesee,lower,,PROPN,MI NY
+us_county,Geneva,lower,,PROPN,AL
+us_county,Gentry,lower,,PROPN,MO
+us_county,George,lower,,PROPN,MS
+us_county,Georgetown,lower,,PROPN,SC
+us_county,Gibson,lower,,PROPN,IN TN
+us_county,Gila,lower,,PROPN,AZ
+us_county,Gilchrist,lower,,PROPN,FL
+us_county,Giles,lower,,PROPN,TN VA
+us_county,Gillespie,lower,,PROPN,TX
+us_county,Gilliam,lower,,PROPN,OR
+us_county,Gilmer,lower,,PROPN,GA WV
+us_county,Gilpin,lower,,PROPN,CO
+us_county,Glacier,lower,,PROPN,MT
+us_county,Glades,lower,,PROPN,FL
+us_county,Gladwin,lower,,PROPN,MI
+us_county,Glascock,lower,,PROPN,GA
+us_county,Glasscock,lower,,PROPN,TX
+us_county,Glenn,lower,,PROPN,CA
+us_county,Gloucester,lower,,PROPN,NJ VA
+us_county,Glynn,lower,,PROPN,GA
+us_county,Gogebic,lower,,PROPN,MI
+us_county,Golden Valley,lower,,PROPN,MT ND
+us_county,Goliad,lower,,PROPN,TX
+us_county,Gonzales,lower,,PROPN,TX
+us_county,Goochland,lower,,PROPN,VA
+us_county,Goodhue,lower,,PROPN,MN
+us_county,Gooding,lower,,PROPN,ID
+us_county,Gordon,lower,,PROPN,GA
+us_county,Goshen,lower,,PROPN,WY
+us_county,Gosper,lower,,PROPN,NE
+us_county,Gove,lower,,PROPN,KS
+us_county,Grady,lower,,PROPN,GA OK
+us_county,Grafton,lower,,PROPN,NH
+us_county,Graham,lower,,PROPN,AZ KS NC
+us_county,Grainger,lower,,PROPN,TN
+us_county,Grand,lower,,PROPN,CO UT
+us_county,Grand Forks,lower,,PROPN,ND
+us_county,Grand Isle,lower,,PROPN,VT
+us_county,Grand Traverse,lower,,PROPN,MI
+us_county,Granite,lower,,PROPN,MT
+us_county,Grant,lower,,PROPN,AR IN KS KY LA MN NE NM ND OK OR SD WA WV WI
+us_county,Granville,lower,,PROPN,NC
+us_county,Gratiot,lower,,PROPN,MI
+us_county,Graves,lower,,PROPN,KY
+us_county,Gray,lower,,PROPN,KS TX
+us_county,Grays Harbor,lower,,PROPN,WA
+us_county,Grayson,lower,,PROPN,KY TX VA
+us_county,Greeley,lower,,PROPN,KS NE
+us_county,Green,lower,,PROPN,KY WI
+us_county,Green Lake,lower,,PROPN,WI
+us_county,Greenbrier,lower,,PROPN,WV
+us_county,Greene,lower,,PROPN,AL AR GA IL IN IA MS MO NY NC OH PA TN VA
+us_county,Greenlee,lower,,PROPN,AZ
+us_county,Greensville,lower,,PROPN,VA
+us_county,Greenup,lower,,PROPN,KY
+us_county,Greenville,lower,,PROPN,SC
+us_county,Greenwood,lower,,PROPN,KS SC
+us_county,Greer,lower,,PROPN,OK
+us_county,Gregg,lower,,PROPN,TX
+us_county,Gregory,lower,,PROPN,SD
+us_county,Grenada,lower,,PROPN,MS
+us_county,Griggs,lower,,PROPN,ND
+us_county,Grimes,lower,,PROPN,TX
+us_county,Grundy,lower,,PROPN,IL IA MO TN
+us_county,Guadalupe,lower,,PROPN,NM TX
+us_county,Guernsey,lower,,PROPN,OH
+us_county,Guilford,lower,,PROPN,NC
+us_county,Gulf,lower,,PROPN,FL
+us_county,Gunnison,lower,,PROPN,CO
+us_county,Guthrie,lower,,PROPN,IA
+us_county,Gwinnett,lower,,PROPN,GA
+us_county,Haakon,lower,,PROPN,SD
+us_county,Habersham,lower,,PROPN,GA
+us_county,Haines,lower,,PROPN,AK
+us_county,Hale,lower,,PROPN,AL TX
+us_county,Halifax,lower,,PROPN,NC VA
+us_county,Hall,lower,,PROPN,GA NE TX
+us_county,Hamblen,lower,,PROPN,TN
+us_county,Hamilton,lower,,PROPN,FL IL IN IA KS NE NY OH TN TX
+us_county,Hamlin,lower,,PROPN,SD
+us_county,Hampden,lower,,PROPN,MA
+us_county,Hampshire,lower,,PROPN,MA WV
+us_county,Hampton,lower,,PROPN,SC VA
+us_county,Hancock,lower,,PROPN,GA IL IN IA KY ME MS OH TN WV
+us_county,Hand,lower,,PROPN,SD
+us_county,Hanover,lower,,PROPN,VA
+us_county,Hansford,lower,,PROPN,TX
+us_county,Hanson,lower,,PROPN,SD
+us_county,Haralson,lower,,PROPN,GA
+us_county,Hardee,lower,,PROPN,FL
+us_county,Hardeman,lower,,PROPN,TN TX
+us_county,Hardin,lower,,PROPN,IL IA KY OH TN TX
+us_county,Harding,lower,,PROPN,NM SD
+us_county,Hardy,lower,,PROPN,WV
+us_county,Harford,lower,,PROPN,MD
+us_county,Harlan,lower,,PROPN,KY NE
+us_county,Harmon,lower,,PROPN,OK
+us_county,Harnett,lower,,PROPN,NC
+us_county,Harney,lower,,PROPN,OR
+us_county,Harper,lower,,PROPN,KS OK
+us_county,Harris,lower,,PROPN,GA TX
+us_county,Harrison,lower,,PROPN,IN IA KY MS MO OH TX WV
+us_county,Harrisonburg,lower,,PROPN,VA
+us_county,Hart,lower,,PROPN,GA KY
+us_county,Hartford,lower,,PROPN,CT
+us_county,Hartley,lower,,PROPN,TX
+us_county,Harvey,lower,,PROPN,KS
+us_county,Haskell,lower,,PROPN,KS OK TX
+us_county,Hawaii,lower,,PROPN,HI
+us_county,Hawkins,lower,,PROPN,TN
+us_county,Hayes,lower,,PROPN,NE
+us_county,Hays,lower,,PROPN,TX
+us_county,Haywood,lower,,PROPN,NC TN
+us_county,Heard,lower,,PROPN,GA
+us_county,Hemphill,lower,,PROPN,TX
+us_county,Hempstead,lower,,PROPN,AR
+us_county,Henderson,lower,,PROPN,IL KY NC TN TX
+us_county,Hendricks,lower,,PROPN,IN
+us_county,Hendry,lower,,PROPN,FL
+us_county,Hennepin,lower,,PROPN,MN
+us_county,Henrico,lower,,PROPN,VA
+us_county,Henry,lower,,PROPN,AL GA IL IN IA KY MO OH TN VA
+us_county,Herkimer,lower,,PROPN,NY
+us_county,Hernando,lower,,PROPN,FL
+us_county,Hertford,lower,,PROPN,NC
+us_county,Hettinger,lower,,PROPN,ND
+us_county,Hickman,lower,,PROPN,KY TN
+us_county,Hickory,lower,,PROPN,MO
+us_county,Hidalgo,lower,,PROPN,NM TX
+us_county,Highland,lower,,PROPN,OH VA
+us_county,Highlands,lower,,PROPN,FL
+us_county,Hill,lower,,PROPN,MT TX
+us_county,Hillsborough,lower,,PROPN,FL NH
+us_county,Hillsdale,lower,,PROPN,MI
+us_county,Hinds,lower,,PROPN,MS
+us_county,Hinsdale,lower,,PROPN,CO
+us_county,Hitchcock,lower,,PROPN,NE
+us_county,Hocking,lower,,PROPN,OH
+us_county,Hockley,lower,,PROPN,TX
+us_county,Hodgeman,lower,,PROPN,KS
+us_county,Hoke,lower,,PROPN,NC
+us_county,Holmes,lower,,PROPN,FL MS OH
+us_county,Holt,lower,,PROPN,MO NE
+us_county,Honolulu,lower,,PROPN,HI
+us_county,Hood,lower,,PROPN,TX
+us_county,Hood River,lower,,PROPN,OR
+us_county,Hooker,lower,,PROPN,NE
+us_county,Hoonah-Angoon,lower,,PROPN,AK
+us_county,Hopewell,lower,,PROPN,VA
+us_county,Hopkins,lower,,PROPN,KY TX
+us_county,Horry,lower,,PROPN,SC
+us_county,Hot Spring,lower,,PROPN,AR
+us_county,Hot Springs,lower,,PROPN,WY
+us_county,Houghton,lower,,PROPN,MI
+us_county,Houston,lower,,PROPN,AL GA MN TN TX
+us_county,Howard,lower,,PROPN,AR IN IA MD MO NE TX
+us_county,Howell,lower,,PROPN,MO
+us_county,Hubbard,lower,,PROPN,MN
+us_county,Hudson,lower,,PROPN,NJ
+us_county,Hudspeth,lower,,PROPN,TX
+us_county,Huerfano,lower,,PROPN,CO
+us_county,Hughes,lower,,PROPN,OK SD
+us_county,Humboldt,lower,,PROPN,CA IA NV
+us_county,Humphreys,lower,,PROPN,MS TN
+us_county,Hunt,lower,,PROPN,TX
+us_county,Hunterdon,lower,,PROPN,NJ
+us_county,Huntingdon,lower,,PROPN,PA
+us_county,Huntington,lower,,PROPN,IN
+us_county,Huron,lower,,PROPN,MI OH
+us_county,Hutchinson,lower,,PROPN,SD TX
+us_county,Hyde,lower,,PROPN,NC SD
+us_county,Iberia,lower,,PROPN,LA
+us_county,Iberville,lower,,PROPN,LA
+us_county,Ida,lower,,PROPN,IA
+us_county,Idaho,lower,,PROPN,ID
+us_county,Imperial,lower,,PROPN,CA
+us_county,Independence,lower,,PROPN,AR
+us_county,Indian River,lower,,PROPN,FL
+us_county,Indiana,lower,,PROPN,PA
+us_county,Ingham,lower,,PROPN,MI
+us_county,Inyo,lower,,PROPN,CA
+us_county,Ionia,lower,,PROPN,MI
+us_county,Iosco,lower,,PROPN,MI
+us_county,Iowa,lower,,PROPN,IA WI
+us_county,Iredell,lower,,PROPN,NC
+us_county,Irion,lower,,PROPN,TX
+us_county,Iron,lower,,PROPN,MI MO UT WI
+us_county,Iroquois,lower,,PROPN,IL
+us_county,Irwin,lower,,PROPN,GA
+us_county,Isabella,lower,,PROPN,MI
+us_county,Isanti,lower,,PROPN,MN
+us_county,Island,lower,,PROPN,WA
+us_county,Isle of Wight,lower,,PROPN,VA
+us_county,Issaquena,lower,,PROPN,MS
+us_county,Itasca,lower,,PROPN,MN
+us_county,Itawamba,lower,,PROPN,MS
+us_county,Izard,lower,,PROPN,AR
+us_county,Jack,lower,,PROPN,TX
+us_county,Jackson,lower,,PROPN,AL AR CO FL GA IL IN IA KS KY LA MI MN MS MO NC OH OK OR SD TN TX WV WI
+us_county,James City,lower,,PROPN,VA
+us_county,Jasper,lower,,PROPN,GA IL IN IA MS MO SC TX
+us_county,Jay,lower,,PROPN,IN
+us_county,Jeff Davis,lower,,PROPN,GA TX
+us_county,Jefferson,lower,,PROPN,AL AR CO FL GA ID IL IN IA KS KY LA MS MO MT NE NY OH OK OR PA TN TX WA WV WI
+us_county,Jefferson Davis,lower,,PROPN,LA MS
+us_county,Jenkins,lower,,PROPN,GA
+us_county,Jennings,lower,,PROPN,IN
+us_county,Jerauld,lower,,PROPN,SD
+us_county,Jerome,lower,,PROPN,ID
+us_county,Jersey,lower,,PROPN,IL
+us_county,Jessamine,lower,,PROPN,KY
+us_county,Jewell,lower,,PROPN,KS
+us_county,Jim Hogg,lower,,PROPN,TX
+us_county,Jim Wells,lower,,PROPN,TX
+us_county,Jo Daviess,lower,,PROPN,IL
+us_county,Johnson,lower,,PROPN,AR GA IL IN IA KS KY MO NE TN TX WY
+us_county,Johnston,lower,,PROPN,NC OK
+us_county,Jones,lower,,PROPN,GA IA MS NC SD TX
+us_county,Josephine,lower,,PROPN,OR
+us_county,Juab,lower,,PROPN,UT
+us_county,Judith Basin,lower,,PROPN,MT
+us_county,Juneau,lower,,PROPN,AK WI
+us_county,Juniata,lower,,PROPN,PA
+us_county,Kalamazoo,lower,,PROPN,MI
+us_county,Kalawao,lower,,PROPN,HI
+us_county,Kalkaska,lower,,PROPN,MI
+us_county,Kanabec,lower,,PROPN,MN
+us_county,Kanawha,lower,,PROPN,WV
+us_county,Kandiyohi,lower,,PROPN,MN
+us_county,Kane,lower,,PROPN,IL UT
+us_county,Kankakee,lower,,PROPN,IL
+us_county,Karnes,lower,,PROPN,TX
+us_county,Kauai,lower,,PROPN,HI
+us_county,Kaufman,lower,,PROPN,TX
+us_county,Kay,lower,,PROPN,OK
+us_county,Kearney,lower,,PROPN,NE
+us_county,Kearny,lower,,PROPN,KS
+us_county,Keith,lower,,PROPN,NE
+us_county,Kemper,lower,,PROPN,MS
+us_county,Kenai Peninsula,lower,,PROPN,AK
+us_county,Kendall,lower,,PROPN,IL TX
+us_county,Kenedy,lower,,PROPN,TX
+us_county,Kennebec,lower,,PROPN,ME
+us_county,Kenosha,lower,,PROPN,WI
+us_county,Kent,lower,,PROPN,DE MD MI RI TX
+us_county,Kenton,lower,,PROPN,KY
+us_county,Keokuk,lower,,PROPN,IA
+us_county,Kern,lower,,PROPN,CA
+us_county,Kerr,lower,,PROPN,TX
+us_county,Kershaw,lower,,PROPN,SC
+us_county,Ketchikan Gateway,lower,,PROPN,AK
+us_county,Kewaunee,lower,,PROPN,WI
+us_county,Keweenaw,lower,,PROPN,MI
+us_county,Keya Paha,lower,,PROPN,NE
+us_county,Kidder,lower,,PROPN,ND
+us_county,Kimball,lower,,PROPN,NE
+us_county,Kimble,lower,,PROPN,TX
+us_county,King,lower,,PROPN,TX WA
+us_county,King George,lower,,PROPN,VA
+us_county,King William,lower,,PROPN,VA
+us_county,King and Queen,lower,,PROPN,VA
+us_county,Kingfisher,lower,,PROPN,OK
+us_county,Kingman,lower,,PROPN,KS
+us_county,Kings,lower,,PROPN,CA NY
+us_county,Kingsbury,lower,,PROPN,SD
+us_county,Kinney,lower,,PROPN,TX
+us_county,Kiowa,lower,,PROPN,CO KS OK
+us_county,Kit Carson,lower,,PROPN,CO
+us_county,Kitsap,lower,,PROPN,WA
+us_county,Kittitas,lower,,PROPN,WA
+us_county,Kittson,lower,,PROPN,MN
+us_county,Klamath,lower,,PROPN,OR
+us_county,Kleberg,lower,,PROPN,TX
+us_county,Klickitat,lower,,PROPN,WA
+us_county,Knott,lower,,PROPN,KY
+us_county,Knox,lower,,PROPN,IL IN KY ME MO NE OH TN TX
+us_county,Kodiak Island,lower,,PROPN,AK
+us_county,Koochiching,lower,,PROPN,MN
+us_county,Kootenai,lower,,PROPN,ID
+us_county,Kosciusko,lower,,PROPN,IN
+us_county,Kossuth,lower,,PROPN,IA
+us_county,La Crosse,lower,,PROPN,WI
+us_county,La Paz,lower,,PROPN,AZ
+us_county,La Plata,lower,,PROPN,CO
+us_county,La Salle,lower,,PROPN,LA TX
+us_county,LaGrange,lower,,PROPN,IN
+us_county,LaMoure,lower,,PROPN,ND
+us_county,LaPorte,lower,,PROPN,IN
+us_county,LaSalle,lower,,PROPN,IL
+us_county,Labette,lower,,PROPN,KS
+us_county,Lac qui Parle,lower,,PROPN,MN
+us_county,Lackawanna,lower,,PROPN,PA
+us_county,Laclede,lower,,PROPN,MO
+us_county,Lafayette,lower,,PROPN,AR FL LA MS MO WI
+us_county,Lafourche,lower,,PROPN,LA
+us_county,Lake,lower,,PROPN,CA CO FL IL IN MI MN MT OH OR SD TN
+us_county,Lake and Peninsula,lower,,PROPN,AK
+us_county,Lake of the Woods,lower,,PROPN,MN
+us_county,Lamar,lower,,PROPN,AL GA MS TX
+us_county,Lamb,lower,,PROPN,TX
+us_county,Lamoille,lower,,PROPN,VT
+us_county,Lampasas,lower,,PROPN,TX
+us_county,Lancaster,lower,,PROPN,NE PA SC VA
+us_county,Lander,lower,,PROPN,NV
+us_county,Lane,lower,,PROPN,KS OR
+us_county,Langlade,lower,,PROPN,WI
+us_county,Lanier,lower,,PROPN,GA
+us_county,Lapeer,lower,,PROPN,MI
+us_county,Laramie,lower,,PROPN,WY
+us_county,Larimer,lower,,PROPN,CO
+us_county,Larue,lower,,PROPN,KY
+us_county,Las Animas,lower,,PROPN,CO
+us_county,Lassen,lower,,PROPN,CA
+us_county,Latah,lower,,PROPN,ID
+us_county,Latimer,lower,,PROPN,OK
+us_county,Lauderdale,lower,,PROPN,AL MS TN
+us_county,Laurel,lower,,PROPN,KY
+us_county,Laurens,lower,,PROPN,GA SC
+us_county,Lavaca,lower,,PROPN,TX
+us_county,Lawrence,lower,,PROPN,AL AR IL IN KY MS MO OH PA SD TN
+us_county,Le Flore,lower,,PROPN,OK
+us_county,Le Sueur,lower,,PROPN,MN
+us_county,Lea,lower,,PROPN,NM
+us_county,Leake,lower,,PROPN,MS
+us_county,Leavenworth,lower,,PROPN,KS
+us_county,Lebanon,lower,,PROPN,PA
+us_county,Lee,lower,,PROPN,AL AR FL GA IL IA KY MS NC SC TX VA
+us_county,Leelanau,lower,,PROPN,MI
+us_county,Leflore,lower,,PROPN,MS
+us_county,Lehigh,lower,,PROPN,PA
+us_county,Lemhi,lower,,PROPN,ID
+us_county,Lenawee,lower,,PROPN,MI
+us_county,Lenoir,lower,,PROPN,NC
+us_county,Leon,lower,,PROPN,FL TX
+us_county,Leslie,lower,,PROPN,KY
+us_county,Letcher,lower,,PROPN,KY
+us_county,Levy,lower,,PROPN,FL
+us_county,Lewis,lower,,PROPN,ID KY MO NY TN WA WV
+us_county,Lewis and Clark,lower,,PROPN,MT
+us_county,Lexington,lower,,PROPN,SC VA
+us_county,Liberty,lower,,PROPN,FL GA MT TX
+us_county,Licking,lower,,PROPN,OH
+us_county,Limestone,lower,,PROPN,AL TX
+us_county,Lincoln,lower,,PROPN,AR CO GA ID KS KY LA ME MN MS MO MT NE NV NM NC OK OR SD TN WA WV WI WY
+us_county,Linn,lower,,PROPN,IA KS MO OR
+us_county,Lipscomb,lower,,PROPN,TX
+us_county,Litchfield,lower,,PROPN,CT
+us_county,Little River,lower,,PROPN,AR
+us_county,Live Oak,lower,,PROPN,TX
+us_county,Livingston,lower,,PROPN,IL KY LA MI MO NY
+us_county,Llano,lower,,PROPN,TX
+us_county,Logan,lower,,PROPN,AR CO IL KS KY NE ND OH OK WV
+us_county,Long,lower,,PROPN,GA
+us_county,Lonoke,lower,,PROPN,AR
+us_county,Lorain,lower,,PROPN,OH
+us_county,Los Alamos,lower,,PROPN,NM
+us_county,Los Angeles,lower,,PROPN,CA
+us_county,Loudon,lower,,PROPN,TN
+us_county,Loudoun,lower,,PROPN,VA
+us_county,Louisa,lower,,PROPN,IA VA
+us_county,Loup,lower,,PROPN,NE
+us_county,Love,lower,,PROPN,OK
+us_county,Loving,lower,,PROPN,TX
+us_county,Lowndes,lower,,PROPN,AL GA MS
+us_county,Lubbock,lower,,PROPN,TX
+us_county,Lucas,lower,,PROPN,IA OH
+us_county,Luce,lower,,PROPN,MI
+us_county,Lumpkin,lower,,PROPN,GA
+us_county,Luna,lower,,PROPN,NM
+us_county,Lunenburg,lower,,PROPN,VA
+us_county,Luzerne,lower,,PROPN,PA
+us_county,Lycoming,lower,,PROPN,PA
+us_county,Lyman,lower,,PROPN,SD
+us_county,Lynchburg,lower,,PROPN,VA
+us_county,Lynn,lower,,PROPN,TX
+us_county,Lyon,lower,,PROPN,IA KS KY MN NV
+us_county,Mackinac,lower,,PROPN,MI
+us_county,Macomb,lower,,PROPN,MI
+us_county,Macon,lower,,PROPN,AL GA IL MO NC TN
+us_county,Macoupin,lower,,PROPN,IL
+us_county,Madera,lower,,PROPN,CA
+us_county,Madison,lower,,PROPN,AL AR FL GA ID IL IN IA KY LA MS MO MT NE NY NC OH TN TX VA
+us_county,Magoffin,lower,,PROPN,KY
+us_county,Mahaska,lower,,PROPN,IA
+us_county,Mahnomen,lower,,PROPN,MN
+us_county,Mahoning,lower,,PROPN,OH
+us_county,Major,lower,,PROPN,OK
+us_county,Malheur,lower,,PROPN,OR
+us_county,Manassas,lower,,PROPN,VA
+us_county,Manassas Park,lower,,PROPN,VA
+us_county,Manatee,lower,,PROPN,FL
+us_county,Manistee,lower,,PROPN,MI
+us_county,Manitowoc,lower,,PROPN,WI
+us_county,Marathon,lower,,PROPN,WI
+us_county,Marengo,lower,,PROPN,AL
+us_county,Maricopa,lower,,PROPN,AZ
+us_county,Maries,lower,,PROPN,MO
+us_county,Marin,lower,,PROPN,CA
+us_county,Marinette,lower,,PROPN,WI
+us_county,Marion,lower,,PROPN,AL AR FL GA IL IN IA KS KY MS MO OH OR SC TN TX WV
+us_county,Mariposa,lower,,PROPN,CA
+us_county,Marlboro,lower,,PROPN,SC
+us_county,Marquette,lower,,PROPN,MI WI
+us_county,Marshall,lower,,PROPN,AL IL IN IA KS KY MN MS OK SD TN WV
+us_county,Martin,lower,,PROPN,FL IN KY MN NC TX
+us_county,Martinsville,lower,,PROPN,VA
+us_county,Mason,lower,,PROPN,IL KY MI TX WA WV
+us_county,Massac,lower,,PROPN,IL
+us_county,Matagorda,lower,,PROPN,TX
+us_county,Matanuska-Susitna,lower,,PROPN,AK
+us_county,Mathews,lower,,PROPN,VA
+us_county,Maui,lower,,PROPN,HI
+us_county,Maury,lower,,PROPN,TN
+us_county,Maverick,lower,,PROPN,TX
+us_county,Mayes,lower,,PROPN,OK
+us_county,McClain,lower,,PROPN,OK
+us_county,McCone,lower,,PROPN,MT
+us_county,McCook,lower,,PROPN,SD
+us_county,McCormick,lower,,PROPN,SC
+us_county,McCracken,lower,,PROPN,KY
+us_county,McCreary,lower,,PROPN,KY
+us_county,McCulloch,lower,,PROPN,TX
+us_county,McCurtain,lower,,PROPN,OK
+us_county,McDonald,lower,,PROPN,MO
+us_county,McDonough,lower,,PROPN,IL
+us_county,McDowell,lower,,PROPN,NC WV
+us_county,McDuffie,lower,,PROPN,GA
+us_county,McHenry,lower,,PROPN,IL ND
+us_county,McIntosh,lower,,PROPN,GA ND OK
+us_county,McKean,lower,,PROPN,PA
+us_county,McKenzie,lower,,PROPN,ND
+us_county,McKinley,lower,,PROPN,NM
+us_county,McLean,lower,,PROPN,IL KY ND
+us_county,McLennan,lower,,PROPN,TX
+us_county,McLeod,lower,,PROPN,MN
+us_county,McMinn,lower,,PROPN,TN
+us_county,McMullen,lower,,PROPN,TX
+us_county,McNairy,lower,,PROPN,TN
+us_county,McPherson,lower,,PROPN,KS NE SD
+us_county,Meade,lower,,PROPN,KS KY SD
+us_county,Meagher,lower,,PROPN,MT
+us_county,Mecklenburg,lower,,PROPN,NC VA
+us_county,Mecosta,lower,,PROPN,MI
+us_county,Medina,lower,,PROPN,OH TX
+us_county,Meeker,lower,,PROPN,MN
+us_county,Meigs,lower,,PROPN,OH TN
+us_county,Mellette,lower,,PROPN,SD
+us_county,Menard,lower,,PROPN,IL TX
+us_county,Mendocino,lower,,PROPN,CA
+us_county,Menifee,lower,,PROPN,KY
+us_county,Menominee,lower,,PROPN,MI WI
+us_county,Merced,lower,,PROPN,CA
+us_county,Mercer,lower,,PROPN,IL KY MO NJ ND OH PA WV
+us_county,Meriwether,lower,,PROPN,GA
+us_county,Merrick,lower,,PROPN,NE
+us_county,Merrimack,lower,,PROPN,NH
+us_county,Mesa,lower,,PROPN,CO
+us_county,Metcalfe,lower,,PROPN,KY
+us_county,Miami,lower,,PROPN,IN KS OH
+us_county,Miami-Dade,lower,,PROPN,FL
+us_county,Middlesex,lower,,PROPN,CT MA NJ VA
+us_county,Midland,lower,,PROPN,MI TX
+us_county,Mifflin,lower,,PROPN,PA
+us_county,Milam,lower,,PROPN,TX
+us_county,Millard,lower,,PROPN,UT
+us_county,Mille Lacs,lower,,PROPN,MN
+us_county,Miller,lower,,PROPN,AR GA MO
+us_county,Mills,lower,,PROPN,IA TX
+us_county,Milwaukee,lower,,PROPN,WI
+us_county,Miner,lower,,PROPN,SD
+us_county,Mineral,lower,,PROPN,CO MT NV WV
+us_county,Mingo,lower,,PROPN,WV
+us_county,Minidoka,lower,,PROPN,ID
+us_county,Minnehaha,lower,,PROPN,SD
+us_county,Missaukee,lower,,PROPN,MI
+us_county,Mississippi,lower,,PROPN,AR MO
+us_county,Missoula,lower,,PROPN,MT
+us_county,Mitchell,lower,,PROPN,GA IA KS NC TX
+us_county,Mobile,lower,,PROPN,AL
+us_county,Modoc,lower,,PROPN,CA
+us_county,Moffat,lower,,PROPN,CO
+us_county,Mohave,lower,,PROPN,AZ
+us_county,Moniteau,lower,,PROPN,MO
+us_county,Monmouth,lower,,PROPN,NJ
+us_county,Mono,lower,,PROPN,CA
+us_county,Monona,lower,,PROPN,IA
+us_county,Monongalia,lower,,PROPN,WV
+us_county,Monroe,lower,,PROPN,AL AR FL GA IL IN IA KY MI MS MO NY OH PA TN WV WI
+us_county,Montague,lower,,PROPN,TX
+us_county,Montcalm,lower,,PROPN,MI
+us_county,Monterey,lower,,PROPN,CA
+us_county,Montezuma,lower,,PROPN,CO
+us_county,Montgomery,lower,,PROPN,AL AR GA IL IN IA KS KY MD MS MO NY NC OH PA TN TX VA
+us_county,Montmorency,lower,,PROPN,MI
+us_county,Montour,lower,,PROPN,PA
+us_county,Montrose,lower,,PROPN,CO
+us_county,Moody,lower,,PROPN,SD
+us_county,Moore,lower,,PROPN,NC TN TX
+us_county,Mora,lower,,PROPN,NM
+us_county,Morehouse,lower,,PROPN,LA
+us_county,Morgan,lower,,PROPN,AL CO GA IL IN KY MO OH TN UT WV
+us_county,Morrill,lower,,PROPN,NE
+us_county,Morris,lower,,PROPN,KS NJ TX
+us_county,Morrison,lower,,PROPN,MN
+us_county,Morrow,lower,,PROPN,OH OR
+us_county,Morton,lower,,PROPN,KS ND
+us_county,Motley,lower,,PROPN,TX
+us_county,Moultrie,lower,,PROPN,IL
+us_county,Mountrail,lower,,PROPN,ND
+us_county,Mower,lower,,PROPN,MN
+us_county,Muhlenberg,lower,,PROPN,KY
+us_county,Multnomah,lower,,PROPN,OR
+us_county,Murray,lower,,PROPN,GA MN OK
+us_county,Muscatine,lower,,PROPN,IA
+us_county,Muscogee,lower,,PROPN,GA
+us_county,Muskegon,lower,,PROPN,MI
+us_county,Muskingum,lower,,PROPN,OH
+us_county,Muskogee,lower,,PROPN,OK
+us_county,Musselshell,lower,,PROPN,MT
+us_county,Nacogdoches,lower,,PROPN,TX
+us_county,Nance,lower,,PROPN,NE
+us_county,Nantucket,lower,,PROPN,MA
+us_county,Napa,lower,,PROPN,CA
+us_county,Nash,lower,,PROPN,NC
+us_county,Nassau,lower,,PROPN,FL NY
+us_county,Natchitoches,lower,,PROPN,LA
+us_county,Natrona,lower,,PROPN,WY
+us_county,Navajo,lower,,PROPN,AZ
+us_county,Navarro,lower,,PROPN,TX
+us_county,Nelson,lower,,PROPN,KY ND VA
+us_county,Nemaha,lower,,PROPN,KS NE
+us_county,Neosho,lower,,PROPN,KS
+us_county,Neshoba,lower,,PROPN,MS
+us_county,Ness,lower,,PROPN,KS
+us_county,Nevada,lower,,PROPN,AR CA
+us_county,New Castle,lower,,PROPN,DE
+us_county,New Hanover,lower,,PROPN,NC
+us_county,New Haven,lower,,PROPN,CT
+us_county,New Kent,lower,,PROPN,VA
+us_county,New London,lower,,PROPN,CT
+us_county,New Madrid,lower,,PROPN,MO
+us_county,New York,lower,,PROPN,NY
+us_county,Newaygo,lower,,PROPN,MI
+us_county,Newberry,lower,,PROPN,SC
+us_county,Newport,lower,,PROPN,RI
+us_county,Newport News,lower,,PROPN,VA
+us_county,Newton,lower,,PROPN,AR GA IN MS MO TX
+us_county,Nez Perce,lower,,PROPN,ID
+us_county,Niagara,lower,,PROPN,NY
+us_county,Nicholas,lower,,PROPN,KY WV
+us_county,Nicollet,lower,,PROPN,MN
+us_county,Niobrara,lower,,PROPN,WY
+us_county,Noble,lower,,PROPN,IN OH OK
+us_county,Nobles,lower,,PROPN,MN
+us_county,Nodaway,lower,,PROPN,MO
+us_county,Nolan,lower,,PROPN,TX
+us_county,Nome,lower,,PROPN,AK
+us_county,Norfolk,lower,,PROPN,MA VA
+us_county,Norman,lower,,PROPN,MN
+us_county,North Slope,lower,,PROPN,AK
+us_county,Northampton,lower,,PROPN,NC PA VA
+us_county,Northumberland,lower,,PROPN,PA VA
+us_county,Northwest Arctic,lower,,PROPN,AK
+us_county,Norton,lower,,PROPN,KS VA
+us_county,Nottoway,lower,,PROPN,VA
+us_county,Nowata,lower,,PROPN,OK
+us_county,Noxubee,lower,,PROPN,MS
+us_county,Nuckolls,lower,,PROPN,NE
+us_county,Nueces,lower,,PROPN,TX
+us_county,Nye,lower,,PROPN,NV
+us_county,O'Brien,lower,,PROPN,IA
+us_county,Oakland,lower,,PROPN,MI
+us_county,Obion,lower,,PROPN,TN
+us_county,Ocean,lower,,PROPN,NJ
+us_county,Oceana,lower,,PROPN,MI
+us_county,Ochiltree,lower,,PROPN,TX
+us_county,Oconee,lower,,PROPN,GA SC
+us_county,Oconto,lower,,PROPN,WI
+us_county,Ogemaw,lower,,PROPN,MI
+us_county,Ogle,lower,,PROPN,IL
+us_county,Oglethorpe,lower,,PROPN,GA
+us_county,Ohio,lower,,PROPN,IN KY WV
+us_county,Okaloosa,lower,,PROPN,FL
+us_county,Okanogan,lower,,PROPN,WA
+us_county,Okeechobee,lower,,PROPN,FL
+us_county,Okfuskee,lower,,PROPN,OK
+us_county,Oklahoma,lower,,PROPN,OK
+us_county,Okmulgee,lower,,PROPN,OK
+us_county,Oktibbeha,lower,,PROPN,MS
+us_county,Oldham,lower,,PROPN,KY TX
+us_county,Oliver,lower,,PROPN,ND
+us_county,Olmsted,lower,,PROPN,MN
+us_county,Oneida,lower,,PROPN,ID NY WI
+us_county,Onondaga,lower,,PROPN,NY
+us_county,Onslow,lower,,PROPN,NC
+us_county,Ontario,lower,,PROPN,NY
+us_county,Ontonagon,lower,,PROPN,MI
+us_county,Orange,lower,,PROPN,CA FL IN NY NC TX VT VA
+us_county,Orangeburg,lower,,PROPN,SC
+us_county,Oregon,lower,,PROPN,MO
+us_county,Orleans,lower,,PROPN,LA NY VT
+us_county,Osage,lower,,PROPN,KS MO OK
+us_county,Osborne,lower,,PROPN,KS
+us_county,Osceola,lower,,PROPN,FL IA MI
+us_county,Oscoda,lower,,PROPN,MI
+us_county,Oswego,lower,,PROPN,NY
+us_county,Otero,lower,,PROPN,CO NM
+us_county,Otoe,lower,,PROPN,NE
+us_county,Otsego,lower,,PROPN,MI NY
+us_county,Ottawa,lower,,PROPN,KS MI OH OK
+us_county,Otter Tail,lower,,PROPN,MN
+us_county,Ouachita,lower,,PROPN,AR LA
+us_county,Ouray,lower,,PROPN,CO
+us_county,Outagamie,lower,,PROPN,WI
+us_county,Overton,lower,,PROPN,TN
+us_county,Owen,lower,,PROPN,IN KY
+us_county,Owsley,lower,,PROPN,KY
+us_county,Owyhee,lower,,PROPN,ID
+us_county,Oxford,lower,,PROPN,ME
+us_county,Ozark,lower,,PROPN,MO
+us_county,Ozaukee,lower,,PROPN,WI
+us_county,Pacific,lower,,PROPN,WA
+us_county,Page,lower,,PROPN,IA VA
+us_county,Palm Beach,lower,,PROPN,FL
+us_county,Palo Alto,lower,,PROPN,IA
+us_county,Palo Pinto,lower,,PROPN,TX
+us_county,Pamlico,lower,,PROPN,NC
+us_county,Panola,lower,,PROPN,MS TX
+us_county,Park,lower,,PROPN,CO MT WY
+us_county,Parke,lower,,PROPN,IN
+us_county,Parker,lower,,PROPN,TX
+us_county,Parmer,lower,,PROPN,TX
+us_county,Pasco,lower,,PROPN,FL
+us_county,Pasquotank,lower,,PROPN,NC
+us_county,Passaic,lower,,PROPN,NJ
+us_county,Patrick,lower,,PROPN,VA
+us_county,Paulding,lower,,PROPN,GA OH
+us_county,Pawnee,lower,,PROPN,KS NE OK
+us_county,Payette,lower,,PROPN,ID
+us_county,Payne,lower,,PROPN,OK
+us_county,Peach,lower,,PROPN,GA
+us_county,Pearl River,lower,,PROPN,MS
+us_county,Pecos,lower,,PROPN,TX
+us_county,Pembina,lower,,PROPN,ND
+us_county,Pemiscot,lower,,PROPN,MO
+us_county,Pend Oreille,lower,,PROPN,WA
+us_county,Pender,lower,,PROPN,NC
+us_county,Pendleton,lower,,PROPN,KY WV
+us_county,Pennington,lower,,PROPN,MN SD
+us_county,Penobscot,lower,,PROPN,ME
+us_county,Peoria,lower,,PROPN,IL
+us_county,Pepin,lower,,PROPN,WI
+us_county,Perkins,lower,,PROPN,NE SD
+us_county,Perquimans,lower,,PROPN,NC
+us_county,Perry,lower,,PROPN,AL AR IL IN KY MS MO OH PA TN
+us_county,Pershing,lower,,PROPN,NV
+us_county,Person,lower,,PROPN,NC
+us_county,Petersburg,lower,,PROPN,AK VA
+us_county,Petroleum,lower,,PROPN,MT
+us_county,Pettis,lower,,PROPN,MO
+us_county,Phelps,lower,,PROPN,MO NE
+us_county,Philadelphia,lower,,PROPN,PA
+us_county,Phillips,lower,,PROPN,AR CO KS MT
+us_county,Piatt,lower,,PROPN,IL
+us_county,Pickaway,lower,,PROPN,OH
+us_county,Pickens,lower,,PROPN,AL GA SC
+us_county,Pickett,lower,,PROPN,TN
+us_county,Pierce,lower,,PROPN,GA NE ND WA WI
+us_county,Pike,lower,,PROPN,AL AR GA IL IN KY MS MO OH PA
+us_county,Pima,lower,,PROPN,AZ
+us_county,Pinal,lower,,PROPN,AZ
+us_county,Pine,lower,,PROPN,MN
+us_county,Pinellas,lower,,PROPN,FL
+us_county,Pipestone,lower,,PROPN,MN
+us_county,Piscataquis,lower,,PROPN,ME
+us_county,Pitkin,lower,,PROPN,CO
+us_county,Pitt,lower,,PROPN,NC
+us_county,Pittsburg,lower,,PROPN,OK
+us_county,Pittsylvania,lower,,PROPN,VA
+us_county,Piute,lower,,PROPN,UT
+us_county,Placer,lower,,PROPN,CA
+us_county,Plaquemines,lower,,PROPN,LA
+us_county,Platte,lower,,PROPN,MO NE WY
+us_county,Pleasants,lower,,PROPN,WV
+us_county,Plumas,lower,,PROPN,CA
+us_county,Plymouth,lower,,PROPN,IA MA
+us_county,Pocahontas,lower,,PROPN,IA WV
+us_county,Poinsett,lower,,PROPN,AR
+us_county,Pointe Coupee,lower,,PROPN,LA
+us_county,Polk,lower,,PROPN,AR FL GA IA MN MO NE NC OR TN TX WI
+us_county,Pondera,lower,,PROPN,MT
+us_county,Pontotoc,lower,,PROPN,MS OK
+us_county,Pope,lower,,PROPN,AR IL MN
+us_county,Poquoson,lower,,PROPN,VA
+us_county,Portage,lower,,PROPN,OH WI
+us_county,Porter,lower,,PROPN,IN
+us_county,Portsmouth,lower,,PROPN,VA
+us_county,Posey,lower,,PROPN,IN
+us_county,Pottawatomie,lower,,PROPN,KS OK
+us_county,Pottawattamie,lower,,PROPN,IA
+us_county,Potter,lower,,PROPN,PA SD TX
+us_county,Powder River,lower,,PROPN,MT
+us_county,Powell,lower,,PROPN,KY MT
+us_county,Power,lower,,PROPN,ID
+us_county,Poweshiek,lower,,PROPN,IA
+us_county,Powhatan,lower,,PROPN,VA
+us_county,Prairie,lower,,PROPN,AR MT
+us_county,Pratt,lower,,PROPN,KS
+us_county,Preble,lower,,PROPN,OH
+us_county,Prentiss,lower,,PROPN,MS
+us_county,Presidio,lower,,PROPN,TX
+us_county,Presque Isle,lower,,PROPN,MI
+us_county,Preston,lower,,PROPN,WV
+us_county,Price,lower,,PROPN,WI
+us_county,Prince Edward,lower,,PROPN,VA
+us_county,Prince George,lower,,PROPN,VA
+us_county,Prince George's,lower,,PROPN,MD
+us_county,Prince William,lower,,PROPN,VA
+us_county,Prince of Wales-Hyder,lower,,PROPN,AK
+us_county,Providence,lower,,PROPN,RI
+us_county,Prowers,lower,,PROPN,CO
+us_county,Pueblo,lower,,PROPN,CO
+us_county,Pulaski,lower,,PROPN,AR GA IL IN KY MO VA
+us_county,Pushmataha,lower,,PROPN,OK
+us_county,Putnam,lower,,PROPN,FL GA IL IN MO NY OH TN WV
+us_county,Quay,lower,,PROPN,NM
+us_county,Queen Anne's,lower,,PROPN,MD
+us_county,Queens,lower,,PROPN,NY
+us_county,Quitman,lower,,PROPN,GA MS
+us_county,Rabun,lower,,PROPN,GA
+us_county,Racine,lower,,PROPN,WI
+us_county,Radford,lower,,PROPN,VA
+us_county,Rains,lower,,PROPN,TX
+us_county,Raleigh,lower,,PROPN,WV
+us_county,Ralls,lower,,PROPN,MO
+us_county,Ramsey,lower,,PROPN,MN ND
+us_county,Randall,lower,,PROPN,TX
+us_county,Randolph,lower,,PROPN,AL AR GA IL IN MO NC WV
+us_county,Rankin,lower,,PROPN,MS
+us_county,Ransom,lower,,PROPN,ND
+us_county,Rapides,lower,,PROPN,LA
+us_county,Rappahannock,lower,,PROPN,VA
+us_county,Ravalli,lower,,PROPN,MT
+us_county,Rawlins,lower,,PROPN,KS
+us_county,Ray,lower,,PROPN,MO
+us_county,Reagan,lower,,PROPN,TX
+us_county,Real,lower,,PROPN,TX
+us_county,Red Lake,lower,,PROPN,MN
+us_county,Red River,lower,,PROPN,LA TX
+us_county,Red Willow,lower,,PROPN,NE
+us_county,Redwood,lower,,PROPN,MN
+us_county,Reeves,lower,,PROPN,TX
+us_county,Refugio,lower,,PROPN,TX
+us_county,Reno,lower,,PROPN,KS
+us_county,Rensselaer,lower,,PROPN,NY
+us_county,Renville,lower,,PROPN,MN ND
+us_county,Republic,lower,,PROPN,KS
+us_county,Reynolds,lower,,PROPN,MO
+us_county,Rhea,lower,,PROPN,TN
+us_county,Rice,lower,,PROPN,KS MN
+us_county,Rich,lower,,PROPN,UT
+us_county,Richardson,lower,,PROPN,NE
+us_county,Richland,lower,,PROPN,IL LA MT ND OH SC WI
+us_county,Richmond,lower,,PROPN,GA NY NC VA VA
+us_county,Riley,lower,,PROPN,KS
+us_county,Ringgold,lower,,PROPN,IA
+us_county,Rio Arriba,lower,,PROPN,NM
+us_county,Rio Blanco,lower,,PROPN,CO
+us_county,Rio Grande,lower,,PROPN,CO
+us_county,Ripley,lower,,PROPN,IN MO
+us_county,Ritchie,lower,,PROPN,WV
+us_county,Riverside,lower,,PROPN,CA
+us_county,Roane,lower,,PROPN,TN WV
+us_county,Roanoke,lower,,PROPN,VA VA
+us_county,Roberts,lower,,PROPN,SD TX
+us_county,Robertson,lower,,PROPN,KY TN TX
+us_county,Robeson,lower,,PROPN,NC
+us_county,Rock,lower,,PROPN,MN NE WI
+us_county,Rock Island,lower,,PROPN,IL
+us_county,Rockbridge,lower,,PROPN,VA
+us_county,Rockcastle,lower,,PROPN,KY
+us_county,Rockdale,lower,,PROPN,GA
+us_county,Rockingham,lower,,PROPN,NH NC VA
+us_county,Rockland,lower,,PROPN,NY
+us_county,Rockwall,lower,,PROPN,TX
+us_county,Roger Mills,lower,,PROPN,OK
+us_county,Rogers,lower,,PROPN,OK
+us_county,Rolette,lower,,PROPN,ND
+us_county,Rooks,lower,,PROPN,KS
+us_county,Roosevelt,lower,,PROPN,MT NM
+us_county,Roscommon,lower,,PROPN,MI
+us_county,Roseau,lower,,PROPN,MN
+us_county,Rosebud,lower,,PROPN,MT
+us_county,Ross,lower,,PROPN,OH
+us_county,Routt,lower,,PROPN,CO
+us_county,Rowan,lower,,PROPN,KY NC
+us_county,Runnels,lower,,PROPN,TX
+us_county,Rush,lower,,PROPN,IN KS
+us_county,Rusk,lower,,PROPN,TX WI
+us_county,Russell,lower,,PROPN,AL KS KY VA
+us_county,Rutherford,lower,,PROPN,NC TN
+us_county,Rutland,lower,,PROPN,VT
+us_county,Sabine,lower,,PROPN,LA TX
+us_county,Sac,lower,,PROPN,IA
+us_county,Sacramento,lower,,PROPN,CA
+us_county,Sagadahoc,lower,,PROPN,ME
+us_county,Saginaw,lower,,PROPN,MI
+us_county,Saguache,lower,,PROPN,CO
+us_county,Salem,lower,,PROPN,NJ VA
+us_county,Saline,lower,,PROPN,AR IL KS MO NE
+us_county,Salt Lake,lower,,PROPN,UT
+us_county,Saluda,lower,,PROPN,SC
+us_county,Sampson,lower,,PROPN,NC
+us_county,San Augustine,lower,,PROPN,TX
+us_county,San Benito,lower,,PROPN,CA
+us_county,San Bernardino,lower,,PROPN,CA
+us_county,San Diego,lower,,PROPN,CA
+us_county,San Francisco,lower,,PROPN,CA
+us_county,San Jacinto,lower,,PROPN,TX
+us_county,San Joaquin,lower,,PROPN,CA
+us_county,San Juan,lower,,PROPN,CO NM UT WA
+us_county,San Luis Obispo,lower,,PROPN,CA
+us_county,San Mateo,lower,,PROPN,CA
+us_county,San Miguel,lower,,PROPN,CO NM
+us_county,San Patricio,lower,,PROPN,TX
+us_county,San Saba,lower,,PROPN,TX
+us_county,Sanborn,lower,,PROPN,SD
+us_county,Sanders,lower,,PROPN,MT
+us_county,Sandoval,lower,,PROPN,NM
+us_county,Sandusky,lower,,PROPN,OH
+us_county,Sangamon,lower,,PROPN,IL
+us_county,Sanilac,lower,,PROPN,MI
+us_county,Sanpete,lower,,PROPN,UT
+us_county,Santa Barbara,lower,,PROPN,CA
+us_county,Santa Clara,lower,,PROPN,CA
+us_county,Santa Cruz,lower,,PROPN,AZ CA
+us_county,Santa Fe,lower,,PROPN,NM
+us_county,Santa Rosa,lower,,PROPN,FL
+us_county,Sarasota,lower,,PROPN,FL
+us_county,Saratoga,lower,,PROPN,NY
+us_county,Sargent,lower,,PROPN,ND
+us_county,Sarpy,lower,,PROPN,NE
+us_county,Sauk,lower,,PROPN,WI
+us_county,Saunders,lower,,PROPN,NE
+us_county,Sawyer,lower,,PROPN,WI
+us_county,Schenectady,lower,,PROPN,NY
+us_county,Schleicher,lower,,PROPN,TX
+us_county,Schley,lower,,PROPN,GA
+us_county,Schoharie,lower,,PROPN,NY
+us_county,Schoolcraft,lower,,PROPN,MI
+us_county,Schuyler,lower,,PROPN,IL MO NY
+us_county,Schuylkill,lower,,PROPN,PA
+us_county,Scioto,lower,,PROPN,OH
+us_county,Scotland,lower,,PROPN,MO NC
+us_county,Scott,lower,,PROPN,AR IL IN IA KS KY MN MS MO TN VA
+us_county,Scotts Bluff,lower,,PROPN,NE
+us_county,Screven,lower,,PROPN,GA
+us_county,Scurry,lower,,PROPN,TX
+us_county,Searcy,lower,,PROPN,AR
+us_county,Sebastian,lower,,PROPN,AR
+us_county,Sedgwick,lower,,PROPN,CO KS
+us_county,Seminole,lower,,PROPN,FL GA OK
+us_county,Seneca,lower,,PROPN,NY OH
+us_county,Sequatchie,lower,,PROPN,TN
+us_county,Sequoyah,lower,,PROPN,OK
+us_county,Sevier,lower,,PROPN,AR TN UT
+us_county,Seward,lower,,PROPN,KS NE
+us_county,Shackelford,lower,,PROPN,TX
+us_county,Shannon,lower,,PROPN,MO SD
+us_county,Sharkey,lower,,PROPN,MS
+us_county,Sharp,lower,,PROPN,AR
+us_county,Shasta,lower,,PROPN,CA
+us_county,Shawano,lower,,PROPN,WI
+us_county,Shawnee,lower,,PROPN,KS
+us_county,Sheboygan,lower,,PROPN,WI
+us_county,Shelby,lower,,PROPN,AL IL IN IA KY MO OH TN TX
+us_county,Shenandoah,lower,,PROPN,VA
+us_county,Sherburne,lower,,PROPN,MN
+us_county,Sheridan,lower,,PROPN,KS MT NE ND WY
+us_county,Sherman,lower,,PROPN,KS NE OR TX
+us_county,Shiawassee,lower,,PROPN,MI
+us_county,Shoshone,lower,,PROPN,ID
+us_county,Sibley,lower,,PROPN,MN
+us_county,Sierra,lower,,PROPN,CA NM
+us_county,Silver Bow,lower,,PROPN,MT
+us_county,Simpson,lower,,PROPN,KY MS
+us_county,Sioux,lower,,PROPN,IA NE ND
+us_county,Siskiyou,lower,,PROPN,CA
+us_county,Sitka,lower,,PROPN,AK
+us_county,Skagit,lower,,PROPN,WA
+us_county,Skagway,lower,,PROPN,AK
+us_county,Skamania,lower,,PROPN,WA
+us_county,Slope,lower,,PROPN,ND
+us_county,Smith,lower,,PROPN,KS MS TN TX
+us_county,Smyth,lower,,PROPN,VA
+us_county,Snohomish,lower,,PROPN,WA
+us_county,Snyder,lower,,PROPN,PA
+us_county,Socorro,lower,,PROPN,NM
+us_county,Solano,lower,,PROPN,CA
+us_county,Somerset,lower,,PROPN,ME MD NJ PA
+us_county,Somervell,lower,,PROPN,TX
+us_county,Sonoma,lower,,PROPN,CA
+us_county,South Boston,lower,,PROPN,VA
+us_county,Southampton,lower,,PROPN,VA
+us_county,Southeast Fairbanks,lower,,PROPN,AK
+us_county,Spalding,lower,,PROPN,GA
+us_county,Spartanburg,lower,,PROPN,SC
+us_county,Spencer,lower,,PROPN,IN KY
+us_county,Spink,lower,,PROPN,SD
+us_county,Spokane,lower,,PROPN,WA
+us_county,Spotsylvania,lower,,PROPN,VA
+us_county,St. Bernard,lower,,PROPN,LA
+us_county,St. Charles,lower,,PROPN,LA MO
+us_county,St. Clair,lower,,PROPN,AL IL MI MO
+us_county,St. Croix,lower,,PROPN,WI
+us_county,St. Francis,lower,,PROPN,AR
+us_county,St. Francois,lower,,PROPN,MO
+us_county,St. Helena,lower,,PROPN,LA
+us_county,St. James,lower,,PROPN,LA
+us_county,St. John the Baptist,lower,,PROPN,LA
+us_county,St. Johns,lower,,PROPN,FL
+us_county,St. Joseph,lower,,PROPN,IN MI
+us_county,St. Landry,lower,,PROPN,LA
+us_county,St. Lawrence,lower,,PROPN,NY
+us_county,St. Louis,lower,,PROPN,MN MO
+us_county,St. Louis city,lower,,PROPN,MO
+us_county,St. Lucie,lower,,PROPN,FL
+us_county,St. Martin,lower,,PROPN,LA
+us_county,St. Mary,lower,,PROPN,LA
+us_county,St. Mary's,lower,,PROPN,MD
+us_county,St. Tammany,lower,,PROPN,LA
+us_county,Stafford,lower,,PROPN,KS VA
+us_county,Stanislaus,lower,,PROPN,CA
+us_county,Stanley,lower,,PROPN,SD
+us_county,Stanly,lower,,PROPN,NC
+us_county,Stanton,lower,,PROPN,KS NE
+us_county,Stark,lower,,PROPN,IL ND OH
+us_county,Starke,lower,,PROPN,IN
+us_county,Starr,lower,,PROPN,TX
+us_county,Staunton,lower,,PROPN,VA
+us_county,Ste. Genevieve,lower,,PROPN,MO
+us_county,Stearns,lower,,PROPN,MN
+us_county,Steele,lower,,PROPN,MN ND
+us_county,Stephens,lower,,PROPN,GA OK TX
+us_county,Stephenson,lower,,PROPN,IL
+us_county,Sterling,lower,,PROPN,TX
+us_county,Steuben,lower,,PROPN,IN NY
+us_county,Stevens,lower,,PROPN,KS MN WA
+us_county,Stewart,lower,,PROPN,GA TN
+us_county,Stillwater,lower,,PROPN,MT
+us_county,Stoddard,lower,,PROPN,MO
+us_county,Stokes,lower,,PROPN,NC
+us_county,Stone,lower,,PROPN,AR MS MO
+us_county,Stonewall,lower,,PROPN,TX
+us_county,Storey,lower,,PROPN,NV
+us_county,Story,lower,,PROPN,IA
+us_county,Strafford,lower,,PROPN,NH
+us_county,Stutsman,lower,,PROPN,ND
+us_county,Sublette,lower,,PROPN,WY
+us_county,Suffolk,lower,,PROPN,MA NY VA
+us_county,Sullivan,lower,,PROPN,IN MO NH NY PA TN
+us_county,Sully,lower,,PROPN,SD
+us_county,Summers,lower,,PROPN,WV
+us_county,Summit,lower,,PROPN,CO OH UT
+us_county,Sumner,lower,,PROPN,KS TN
+us_county,Sumter,lower,,PROPN,AL FL GA SC
+us_county,Sunflower,lower,,PROPN,MS
+us_county,Surry,lower,,PROPN,NC VA
+us_county,Susquehanna,lower,,PROPN,PA
+us_county,Sussex,lower,,PROPN,DE NJ VA
+us_county,Sutter,lower,,PROPN,CA
+us_county,Sutton,lower,,PROPN,TX
+us_county,Suwannee,lower,,PROPN,FL
+us_county,Swain,lower,,PROPN,NC
+us_county,Sweet Grass,lower,,PROPN,MT
+us_county,Sweetwater,lower,,PROPN,WY
+us_county,Swift,lower,,PROPN,MN
+us_county,Swisher,lower,,PROPN,TX
+us_county,Switzerland,lower,,PROPN,IN
+us_county,Talbot,lower,,PROPN,GA MD
+us_county,Taliaferro,lower,,PROPN,GA
+us_county,Talladega,lower,,PROPN,AL
+us_county,Tallahatchie,lower,,PROPN,MS
+us_county,Tallapoosa,lower,,PROPN,AL
+us_county,Tama,lower,,PROPN,IA
+us_county,Taney,lower,,PROPN,MO
+us_county,Tangipahoa,lower,,PROPN,LA
+us_county,Taos,lower,,PROPN,NM
+us_county,Tarrant,lower,,PROPN,TX
+us_county,Tate,lower,,PROPN,MS
+us_county,Tattnall,lower,,PROPN,GA
+us_county,Taylor,lower,,PROPN,FL GA IA KY TX WV WI
+us_county,Tazewell,lower,,PROPN,IL VA
+us_county,Tehama,lower,,PROPN,CA
+us_county,Telfair,lower,,PROPN,GA
+us_county,Teller,lower,,PROPN,CO
+us_county,Tensas,lower,,PROPN,LA
+us_county,Terrebonne,lower,,PROPN,LA
+us_county,Terrell,lower,,PROPN,GA TX
+us_county,Terry,lower,,PROPN,TX
+us_county,Teton,lower,,PROPN,ID MT WY
+us_county,Texas,lower,,PROPN,MO OK
+us_county,Thayer,lower,,PROPN,NE
+us_county,Thomas,lower,,PROPN,GA KS NE
+us_county,Throckmorton,lower,,PROPN,TX
+us_county,Thurston,lower,,PROPN,NE WA
+us_county,Tift,lower,,PROPN,GA
+us_county,Tillamook,lower,,PROPN,OR
+us_county,Tillman,lower,,PROPN,OK
+us_county,Tioga,lower,,PROPN,NY PA
+us_county,Tippah,lower,,PROPN,MS
+us_county,Tippecanoe,lower,,PROPN,IN
+us_county,Tipton,lower,,PROPN,IN TN
+us_county,Tishomingo,lower,,PROPN,MS
+us_county,Titus,lower,,PROPN,TX
+us_county,Todd,lower,,PROPN,KY MN SD
+us_county,Tolland,lower,,PROPN,CT
+us_county,Tom Green,lower,,PROPN,TX
+us_county,Tompkins,lower,,PROPN,NY
+us_county,Tooele,lower,,PROPN,UT
+us_county,Toole,lower,,PROPN,MT
+us_county,Toombs,lower,,PROPN,GA
+us_county,Torrance,lower,,PROPN,NM
+us_county,Towner,lower,,PROPN,ND
+us_county,Towns,lower,,PROPN,GA
+us_county,Traill,lower,,PROPN,ND
+us_county,Transylvania,lower,,PROPN,NC
+us_county,Traverse,lower,,PROPN,MN
+us_county,Travis,lower,,PROPN,TX
+us_county,Treasure,lower,,PROPN,MT
+us_county,Trego,lower,,PROPN,KS
+us_county,Trempealeau,lower,,PROPN,WI
+us_county,Treutlen,lower,,PROPN,GA
+us_county,Trigg,lower,,PROPN,KY
+us_county,Trimble,lower,,PROPN,KY
+us_county,Trinity,lower,,PROPN,CA TX
+us_county,Tripp,lower,,PROPN,SD
+us_county,Troup,lower,,PROPN,GA
+us_county,Trousdale,lower,,PROPN,TN
+us_county,Trumbull,lower,,PROPN,OH
+us_county,Tucker,lower,,PROPN,WV
+us_county,Tulare,lower,,PROPN,CA
+us_county,Tulsa,lower,,PROPN,OK
+us_county,Tunica,lower,,PROPN,MS
+us_county,Tuolumne,lower,,PROPN,CA
+us_county,Turner,lower,,PROPN,GA SD
+us_county,Tuscaloosa,lower,,PROPN,AL
+us_county,Tuscarawas,lower,,PROPN,OH
+us_county,Tuscola,lower,,PROPN,MI
+us_county,Twiggs,lower,,PROPN,GA
+us_county,Twin Falls,lower,,PROPN,ID
+us_county,Tyler,lower,,PROPN,TX WV
+us_county,Tyrrell,lower,,PROPN,NC
+us_county,Uinta,lower,,PROPN,WY
+us_county,Uintah,lower,,PROPN,UT
+us_county,Ulster,lower,,PROPN,NY
+us_county,Umatilla,lower,,PROPN,OR
+us_county,Unicoi,lower,,PROPN,TN
+us_county,Union,lower,,PROPN,AR FL GA IL IN IA KY LA MS NJ NM NC OH OR PA SC SD TN
+us_county,Upshur,lower,,PROPN,TX WV
+us_county,Upson,lower,,PROPN,GA
+us_county,Upton,lower,,PROPN,TX
+us_county,Utah,lower,,PROPN,UT
+us_county,Uvalde,lower,,PROPN,TX
+us_county,Val Verde,lower,,PROPN,TX
+us_county,Valdez-Cordova,lower,,PROPN,AK
+us_county,Valencia,lower,,PROPN,NM
+us_county,Valley,lower,,PROPN,ID MT NE
+us_county,Van Buren,lower,,PROPN,AR IA MI TN
+us_county,Van Wert,lower,,PROPN,OH
+us_county,Van Zandt,lower,,PROPN,TX
+us_county,Vance,lower,,PROPN,NC
+us_county,Vanderburgh,lower,,PROPN,IN
+us_county,Venango,lower,,PROPN,PA
+us_county,Ventura,lower,,PROPN,CA
+us_county,Vermilion,lower,,PROPN,IL LA
+us_county,Vermillion,lower,,PROPN,IN
+us_county,Vernon,lower,,PROPN,LA MO WI
+us_county,Victoria,lower,,PROPN,TX
+us_county,Vigo,lower,,PROPN,IN
+us_county,Vilas,lower,,PROPN,WI
+us_county,Vinton,lower,,PROPN,OH
+us_county,Virginia Beach,lower,,PROPN,VA
+us_county,Volusia,lower,,PROPN,FL
+us_county,Wabash,lower,,PROPN,IL IN
+us_county,Wabasha,lower,,PROPN,MN
+us_county,Wabaunsee,lower,,PROPN,KS
+us_county,Wade Hampton,lower,,PROPN,AK
+us_county,Wadena,lower,,PROPN,MN
+us_county,Wagoner,lower,,PROPN,OK
+us_county,Wahkiakum,lower,,PROPN,WA
+us_county,Wake,lower,,PROPN,NC
+us_county,Wakulla,lower,,PROPN,FL
+us_county,Waldo,lower,,PROPN,ME
+us_county,Walker,lower,,PROPN,AL GA TX
+us_county,Walla Walla,lower,,PROPN,WA
+us_county,Wallace,lower,,PROPN,KS
+us_county,Waller,lower,,PROPN,TX
+us_county,Wallowa,lower,,PROPN,OR
+us_county,Walsh,lower,,PROPN,ND
+us_county,Walthall,lower,,PROPN,MS
+us_county,Walton,lower,,PROPN,FL GA
+us_county,Walworth,lower,,PROPN,SD WI
+us_county,Wapello,lower,,PROPN,IA
+us_county,Ward,lower,,PROPN,ND TX
+us_county,Ware,lower,,PROPN,GA
+us_county,Warren,lower,,PROPN,GA IL IN IA KY MS MO NJ NY NC OH PA TN VA
+us_county,Warrick,lower,,PROPN,IN
+us_county,Wasatch,lower,,PROPN,UT
+us_county,Wasco,lower,,PROPN,OR
+us_county,Waseca,lower,,PROPN,MN
+us_county,Washakie,lower,,PROPN,WY
+us_county,Washburn,lower,,PROPN,WI
+us_county,Washington,lower,,PROPN,AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI
+us_county,Washita,lower,,PROPN,OK
+us_county,Washoe,lower,,PROPN,NV
+us_county,Washtenaw,lower,,PROPN,MI
+us_county,Watauga,lower,,PROPN,NC
+us_county,Watonwan,lower,,PROPN,MN
+us_county,Waukesha,lower,,PROPN,WI
+us_county,Waupaca,lower,,PROPN,WI
+us_county,Waushara,lower,,PROPN,WI
+us_county,Wayne,lower,,PROPN,GA IL IN IA KY MI MS MO NE NY NC OH PA TN UT WV
+us_county,Waynesboro,lower,,PROPN,VA
+us_county,Weakley,lower,,PROPN,TN
+us_county,Webb,lower,,PROPN,TX
+us_county,Weber,lower,,PROPN,UT
+us_county,Webster,lower,,PROPN,GA IA KY LA MS MO NE WV
+us_county,Weld,lower,,PROPN,CO
+us_county,Wells,lower,,PROPN,IN ND
+us_county,West Baton Rouge,lower,,PROPN,LA
+us_county,West Carroll,lower,,PROPN,LA
+us_county,West Feliciana,lower,,PROPN,LA
+us_county,Westchester,lower,,PROPN,NY
+us_county,Westmoreland,lower,,PROPN,PA VA
+us_county,Weston,lower,,PROPN,WY
+us_county,Wetzel,lower,,PROPN,WV
+us_county,Wexford,lower,,PROPN,MI
+us_county,Wharton,lower,,PROPN,TX
+us_county,Whatcom,lower,,PROPN,WA
+us_county,Wheatland,lower,,PROPN,MT
+us_county,Wheeler,lower,,PROPN,GA NE OR TX
+us_county,White,lower,,PROPN,AR GA IL IN TN
+us_county,White Pine,lower,,PROPN,NV
+us_county,Whiteside,lower,,PROPN,IL
+us_county,Whitfield,lower,,PROPN,GA
+us_county,Whitley,lower,,PROPN,IN KY
+us_county,Whitman,lower,,PROPN,WA
+us_county,Wibaux,lower,,PROPN,MT
+us_county,Wichita,lower,,PROPN,KS TX
+us_county,Wicomico,lower,,PROPN,MD
+us_county,Wilbarger,lower,,PROPN,TX
+us_county,Wilcox,lower,,PROPN,AL GA
+us_county,Wilkes,lower,,PROPN,GA NC
+us_county,Wilkin,lower,,PROPN,MN
+us_county,Wilkinson,lower,,PROPN,GA MS
+us_county,Will,lower,,PROPN,IL
+us_county,Willacy,lower,,PROPN,TX
+us_county,Williams,lower,,PROPN,ND OH
+us_county,Williamsburg,lower,,PROPN,SC VA
+us_county,Williamson,lower,,PROPN,IL TN TX
+us_county,Wilson,lower,,PROPN,KS NC TN TX
+us_county,Winchester,lower,,PROPN,VA
+us_county,Windham,lower,,PROPN,CT VT
+us_county,Windsor,lower,,PROPN,VT
+us_county,Winkler,lower,,PROPN,TX
+us_county,Winn,lower,,PROPN,LA
+us_county,Winnebago,lower,,PROPN,IL IA WI
+us_county,Winneshiek,lower,,PROPN,IA
+us_county,Winona,lower,,PROPN,MN
+us_county,Winston,lower,,PROPN,AL MS
+us_county,Wirt,lower,,PROPN,WV
+us_county,Wise,lower,,PROPN,TX VA
+us_county,Wolfe,lower,,PROPN,KY
+us_county,Wood,lower,,PROPN,OH TX WV WI
+us_county,Woodbury,lower,,PROPN,IA
+us_county,Woodford,lower,,PROPN,IL KY
+us_county,Woodruff,lower,,PROPN,AR
+us_county,Woods,lower,,PROPN,OK
+us_county,Woodson,lower,,PROPN,KS
+us_county,Woodward,lower,,PROPN,OK
+us_county,Worcester,lower,,PROPN,MD MA
+us_county,Worth,lower,,PROPN,GA IA MO
+us_county,Wrangell,lower,,PROPN,AK
+us_county,Wright,lower,,PROPN,IA MN MO
+us_county,Wyandot,lower,,PROPN,OH
+us_county,Wyandotte,lower,,PROPN,KS
+us_county,Wyoming,lower,,PROPN,NY PA WV
+us_county,Wythe,lower,,PROPN,VA
+us_county,Yadkin,lower,,PROPN,NC
+us_county,Yakima,lower,,PROPN,WA
+us_county,Yakutat,lower,,PROPN,AK
+us_county,Yalobusha,lower,,PROPN,MS
+us_county,Yamhill,lower,,PROPN,OR
+us_county,Yancey,lower,,PROPN,NC
+us_county,Yankton,lower,,PROPN,SD
+us_county,Yates,lower,,PROPN,NY
+us_county,Yavapai,lower,,PROPN,AZ
+us_county,Yazoo,lower,,PROPN,MS
+us_county,Yell,lower,,PROPN,AR
+us_county,Yellow Medicine,lower,,PROPN,MN
+us_county,Yellowstone,lower,,PROPN,MT
+us_county,Yellowstone National Park,lower,,PROPN,MT
+us_county,Yoakum,lower,,PROPN,TX
+us_county,Yolo,lower,,PROPN,CA
+us_county,York,lower,,PROPN,ME NE PA SC VA
+us_county,Young,lower,,PROPN,TX
+us_county,Yuba,lower,,PROPN,CA
+us_county,Yukon-Koyukuk,lower,,PROPN,AK
+us_county,Yuma,lower,,PROPN,AZ CO
+us_county,Zapata,lower,,PROPN,TX
+us_county,Zavala,lower,,PROPN,TX
+us_county,Ziebach,lower,,PROPN,SD

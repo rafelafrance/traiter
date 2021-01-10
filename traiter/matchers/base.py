@@ -23,7 +23,7 @@ class Base:
         print('-' * 80)
         print(self.step)
         for token in doc:
-            print(f'{token.ent_type_:<15} {token._.step:<8} {token.pos_:<6} {token}')
+            print(f'{token.ent_type_:<15} {token.pos_:<6} {token}')
         print()
 
     def get_spans(self, doc):
