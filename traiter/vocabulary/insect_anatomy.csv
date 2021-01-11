@@ -21,6 +21,8 @@ part,eye,lower,eye,noun
 part,eyes,lower,eye,noun
 part,face,lower,,noun
 part,femur,lower,,noun
+part,femora,lower,femur,noun
+part,femurs,lower,femur,noun
 part,fimbriae,lower,,noun
 part,foreleg,lower,,noun
 part,forelegs,lower,foreleg,noun
@@ -37,6 +39,8 @@ part,hindleg,lower,,noun
 part,hindlegs,lower,hindleg,noun
 part,hindwing,lower,hindwing,noun
 part,hindwings,lower,hindwing,noun
+part,horn,lower,,noun
+part,horns,lower,horn,noun
 part,leg,lower,,noun
 part,legs,lower,leg,noun
 part,lower side,lower,,noun
@@ -68,6 +72,8 @@ part,sternum,lower,,noun
 part,stigma,lower,stigma,noun
 part,stigmas,lower,stigma,noun
 part,stigmata,lower,stigma,noun
+part,suture,lower,,noun
+part,sutures,lower,suture,noun
 part,synthorax,lower,,noun
 part,thoracic,lower,,noun
 part,thorax,lower,,noun

@@ -9,6 +9,7 @@ color,bronze,lower,bronze,noun adj
 color,bronzy,lower,bronze,adj
 color,brown,lower,,noun adj
 color,brownish,lower,brown,adj
+color,chartreuse,lower,,noun adj
 color,clear,lower,,noun adj
 color,cream,lower,white,noun adj
 color,cream-yellow,lower,yellow,noun adj
@@ -73,6 +74,7 @@ color_mod,blotch,lower,,adj noun
 color_mod,blotched,lower,,adj
 color_mod,blotches,lower,,adj noun
 color_mod,bright,lower,,adj
+color_mod,broadsaddle,lower,,adj
 color_mod,bull’s-eye,lower,,adj noun
 color_mod,bulls-eye,lower,,adj noun
 color_mod,dark,lower,,adj noun
@@ -85,6 +87,7 @@ color_mod,faint,lower,,adj
 color_mod,faintly,lower,,adj
 color_mod,gloss,lower,,adj
 color_mod,glossed,lower,,adj
+color_mod,glossy,lower,,adj
 color_mod,line,lower,,noun adj
 color_mod,lined,lower,,adj noun
 color_mod,lines,lower,,noun adj
@@ -92,19 +95,27 @@ color_mod,longitudinal,lower,,adj
 color_mod,marking,lower,,adj noun
 color_mod,markings,lower,,adj noun
 color_mod,metallic,lower,,adj
+color_mod,matte,lower,,adj
 color_mod,mottled,lower,,adj
 color_mod,mottling,lower,,adj noun
+color_mod,narrowsaddle,lower,,adj
 color_mod,overtone,lower,,adj noun
 color_mod,overtones,lower,,adj noun
 color_mod,pale,lower,,adj
 color_mod,paler,lower,,adj
 color_mod,patch,lower,,adj noun
 color_mod,patched,lower,,adj
+color_mod,pruinescence,lower,,adj
+color_mod,pruinosity,lower,,adj
+color_mod,pruinose,lower,,adj
+color_mod,saddlebags,lower,,adj
 color_mod,speckled,lower,,adj noun
 color_mod,speckles,lower,,noun adj
 color_mod,spot,lower,,noun adj
 color_mod,spots,lower,,noun adj
 color_mod,spotted,lower,,adj
+color_mod,square,lower,,adj
+color_mod,squares,lower,,adj
 color_mod,streaked,lower,,adj
 color_mod,streaks,lower,,adj noun
 color_mod,stripe,lower,,noun adj
