@@ -32,10 +32,13 @@ class Rule(Base):
 
         self.matcher = Matcher(nlp.vocab)
 
-        # Action to take on a matched trait. So it's trait_name -> action
+        # Action to take on a matched trait. It's trait_name -> action
         self.actions: Dict[str, Callable] = {}
 
-        # Build the matcher
+        self.build_matcher(rules)
+
+    def build_matcher(self, rules):
+        """Build the matcher."""
         for rule in rules:
             Rule.count += 1
             label = f"{rule['label']}.{Rule.count}"
