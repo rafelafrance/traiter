@@ -9,6 +9,11 @@ Replace = Optional[Dict[str, Dict]]
 Keys = Optional[set]
 
 
+def null(*args, **kwargs):
+    """Return a null."""
+    return
+
+
 def text_action(span: Span, replace: Replace = None) -> Data:
     """Enrich term matches."""
     label = span.label_.split('.')[0]
