@@ -9,7 +9,7 @@ Replace = Optional[Dict[str, Dict]]
 Keys = Optional[set]
 
 
-def null(*args, **kwargs):
+def forget(*args, **kwargs):
     """Return a null."""
     return
 
