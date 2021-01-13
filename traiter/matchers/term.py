@@ -31,7 +31,7 @@ class Term(Base):
             attr: str = 'lower',
             step: str = TERM_STEP,
             action: Optional[Callable] = None,
-            poss: Optional[Dict[str, str]] = None,
+            pos: Optional[Dict[str, str]] = None,
     ) -> None:
         super().__init__(nlp, step)
 
@@ -40,11 +40,11 @@ class Term(Base):
         self.attr = attr
 
         # So we can adjust the POS of terms
-        poss = poss if poss else {}
+        pos = pos if pos else {}
         if attr == 'lower':
-            self.poss = {k.lower(): v.upper().split() for k, v in poss.items()}
+            self.pos = {k.lower(): v.upper().split() for k, v in pos.items()}
         else:
-            self.poss = {k: v.upper().split() for k, v in poss.items()}
+            self.pos = {k: v.upper().split() for k, v in pos.items()}
 
         # Group terms by label
         by_label = defaultdict(list)
@@ -78,7 +78,7 @@ class Term(Base):
     def get_pos(self, span: Span) -> str:
         """Get the part of speech (POS) for a span."""
         key = span.root.text.lower() if self.attr == 'lower' else span.root.text
-        pos = self.poss.get(key)
+        pos = self.pos.get(key)
         return span.root.pos_ if (not pos or span.root.pos_ in pos) else pos[0]
 
     @classmethod
@@ -88,6 +88,7 @@ class Term(Base):
             terms: List[Dict],
             step: str = TERM_STEP,
             action: Optional[Callable] = None,
+            pos: Optional[Dict[str, str]] = None,
             **kwargs
     ) -> None:
         """Add one terms matcher for each term attribute."""
@@ -97,6 +98,6 @@ class Term(Base):
             by_attr[term['attr']].append(term)
 
         for attr, attr_terms in by_attr.items():
-            matcher = cls(nlp, attr_terms, attr=attr, step=step, action=action)
+            matcher = cls(nlp, attr_terms, attr=attr, step=step, action=action, pos=pos)
             pipe_name = f'{step}_{attr}'
             nlp.add_pipe(matcher, name=pipe_name, **kwargs)
