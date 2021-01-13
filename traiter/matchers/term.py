@@ -15,7 +15,7 @@ from typing import Callable, Dict, List, Optional
 
 from spacy.language import Language
 from spacy.matcher import PhraseMatcher
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 
 from traiter.util import TERM_STEP
 from .base import Base
@@ -30,12 +30,21 @@ class Term(Base):
             terms: List,
             attr: str = 'lower',
             step: str = TERM_STEP,
-            action: Optional[Callable] = None
+            action: Optional[Callable] = None,
+            poss: Optional[Dict[str, str]] = None,
     ) -> None:
         super().__init__(nlp, step)
 
         self.matcher = PhraseMatcher(nlp.vocab, attr=attr)
         self.action = action
+        self.attr = attr
+
+        # So we can adjust the POS of terms
+        poss = poss if poss else {}
+        if attr == 'lower':
+            self.poss = {k.lower(): v.upper().split() for k, v in poss.items()}
+        else:
+            self.poss = {k: v.upper().split() for k, v in poss.items()}
 
         # Group terms by label
         by_label = defaultdict(list)
@@ -55,8 +64,9 @@ class Term(Base):
             for span in spans:
                 label = span.label_
                 data = self.action(span) if self.action else {}
+                pos = self.get_pos(span)
 
-                attrs = {'ENT_TYPE': label, 'ENT_IOB': 3,
+                attrs = {'ENT_TYPE': label, 'ENT_IOB': 3, 'POS': pos,
                          '_': {'data': data, 'step': self.step}}
 
                 retokenizer.merge(span, attrs=attrs)
@@ -64,6 +74,12 @@ class Term(Base):
         # self.debug(doc)
 
         return doc
+
+    def get_pos(self, span: Span) -> str:
+        """Get the part of speech (POS) for a span."""
+        key = span.root.text.lower() if self.attr == 'lower' else span.root.text
+        pos = self.poss.get(key)
+        return span.root.pos_ if (not pos or span.root.pos_ in pos) else pos[0]
 
     @classmethod
     def add_pipes(
