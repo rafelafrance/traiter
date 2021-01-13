@@ -75,6 +75,7 @@ class Rule(Base):
     @classmethod
     def add_pipe(cls, nlp: Language, matchers: List[Dict], step: str, **kwargs) -> None:
         """Build rule matchers that recognize traits."""
+        kwargs = {'before': 'parser'} if not kwargs else kwargs
         rules = []
         for matcher in matchers:
             rules += matcher.get(step, [])

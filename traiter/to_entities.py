@@ -58,5 +58,6 @@ class ToEntities:  # pylint: disable=too-few-public-methods
             **kwargs
     ) -> None:
         """Add entities converter to the pipeline."""
+        kwargs = {'before': 'parser'} if not kwargs else kwargs
         pipe = ToEntities(entities2keep, token2entity)
         nlp.add_pipe(pipe, **kwargs)

@@ -75,6 +75,7 @@ class Term(Base):
             **kwargs
     ) -> None:
         """Add one terms matcher for each term attribute."""
+        kwargs = {'before': 'parser'} if not kwargs else kwargs
         by_attr = defaultdict(list)
         for term in terms:
             by_attr[term['attr']].append(term)

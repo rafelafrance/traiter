@@ -74,5 +74,6 @@ class Sentencizer:
             **kwargs
     ) -> None:
         """Add entities converter to the pipeline."""
+        kwargs = {'before': 'parser'} if not kwargs else kwargs
         pipe = Sentencizer(abbrevs=abbrevs, headings=headings)
         nlp.add_pipe(pipe, **kwargs)
