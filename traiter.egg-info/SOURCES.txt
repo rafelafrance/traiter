@@ -16,8 +16,10 @@ traiter.egg-info/top_level.txt
 traiter/matchers/__init__.py
 traiter/matchers/base.py
 traiter/matchers/rule.py
+traiter/matchers/ruler.py
 traiter/matchers/split.py
 traiter/matchers/term.py
+traiter/matchers/term_new.py
 traiter/old/__init__.py
 traiter/old/parser.py
 traiter/old/rule.py

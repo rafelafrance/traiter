@@ -50,8 +50,9 @@ class ToEntities:  # pylint: disable=too-few-public-methods
         doc.ents = tuple(new_ents)
         return doc
 
-    @staticmethod
+    @classmethod
     def add_pipe(
+            cls,
             nlp: Language,
             entities2keep: Optional[Set] = None,
             token2entity: Optional[Set] = None,
@@ -59,5 +60,5 @@ class ToEntities:  # pylint: disable=too-few-public-methods
     ) -> None:
         """Add entities converter to the pipeline."""
         kwargs = {'before': 'parser'} if not kwargs else kwargs
-        pipe = ToEntities(entities2keep, token2entity)
+        pipe = cls(entities2keep, token2entity)
         nlp.add_pipe(pipe, **kwargs)

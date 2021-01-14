@@ -7,6 +7,8 @@ Each term is a dict with at least these three fields:
     1) attr: what spacy token field are we matching (ex. LOWER)
     2) label: what is the term's hypernym (ex. color)
     3) pattern: the phrase being matched (ex. gray-blue)
+    4) pos: (Optional) A space separated list of parts of speech the term may belong to.
+       if the span's POS does not belong to the list then we use the first in the list.
     ** There may be other fields in the dict but this module does not use them.
 """
 
@@ -53,7 +55,8 @@ class Term(Base):
 
         # Add patterns for each label
         for label, term_list in by_label.items():
-            phrases = [nlp.make_doc(t['pattern']) for t in term_list]
+            phrases = [t['pattern'] for t in term_list]
+            phrases = list(nlp.tokenizer.pipe(phrases))
             self.matcher.add(label, phrases)
 
     def __call__(self, doc: Doc) -> Doc:

@@ -66,8 +66,9 @@ class Sentencizer:
         """See if the next token meets needed criteria."""
         return token.prefix_.isupper() or token.pos_ == 'SPACE' or token.text in '.'
 
-    @staticmethod
+    @classmethod
     def add_pipe(
+            cls,
             nlp: Language,
             abbrevs: Union[str, List[str]],
             headings: Union[str, List[str]] = '',
@@ -75,5 +76,5 @@ class Sentencizer:
     ) -> None:
         """Add entities converter to the pipeline."""
         kwargs = {'before': 'parser'} if not kwargs else kwargs
-        pipe = Sentencizer(abbrevs=abbrevs, headings=headings)
+        pipe = cls(abbrevs=abbrevs, headings=headings)
         nlp.add_pipe(pipe, **kwargs)

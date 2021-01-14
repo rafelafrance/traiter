@@ -83,6 +83,10 @@ class SpacyPipeline:
     def test_traits(self, text: str) -> List[Dict]:
         """Build unit test data."""
         doc = self.nlp(text)
+
+        for ent in doc.ents:
+            print(f'{ent.label_:<12} {len(ent)} {ent}')
+
         traits = self.trait_list(doc)
 
         # from pprint import pp
