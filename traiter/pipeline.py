@@ -9,13 +9,16 @@ from spacy.lang.char_classes import (
 from spacy.tokens import Doc, Span, Token
 
 # Custom fields attached to tokens and spans
-# step: Is here so we can filter by when (what step) the trait was built
-# data: Attach data specific to the trait in this dict
-if not Token.has_extension('data'):
-    Token.set_extension('data', default={})
-    Token.set_extension('step', default='')
+# data:      Attach data specific to the trait in this dict
+# prev_label: A token's original label_ which is set when during retokenization
+# action:    Used to pass commands from callback (actions) to the pipe
+if not Span.has_extension('data'):
     Span.set_extension('data', default={})
-    Span.set_extension('step', default='')
+    Span.set_extension('prev_label', default='')
+    Span.set_extension('new_label', default='')
+    Token.set_extension('data', default={})
+    Token.set_extension('prev_label', default='')
+    Token.set_extension('new_label', default='')
 
 
 class SpacyPipeline:
@@ -75,7 +78,7 @@ class SpacyPipeline:
         traits = []
 
         for ent in doc.ents:
-            data = {k: v for k, v in ent._.data.items() if not k.startswith('_')}
+            data = {k: v for k, v in ent._.data.items()}
             traits.append(data)
 
         return traits
@@ -83,9 +86,6 @@ class SpacyPipeline:
     def test_traits(self, text: str) -> List[Dict]:
         """Build unit test data."""
         doc = self.nlp(text)
-
-        for ent in doc.ents:
-            print(f'{ent.label_:<12} {len(ent)} {ent}')
 
         traits = self.trait_list(doc)
 

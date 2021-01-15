@@ -1,11 +1,16 @@
 """Common actions for enriching matches."""
 
-from typing import Callable, Dict, List, Optional, Set, Union
+from typing import Callable, Dict, List, Optional, Union
 
 from spacy.tokens import Span
 
 ResultType = Optional[Dict]
 ActionsType = Dict[str, Union[Callable, str]]
+
+
+class RejectMatch(Exception):
+    """Raise this when you want to remove a match from doc.ents."""
+    pass
 
 
 class Actions:
@@ -59,49 +64,43 @@ class Actions:
             for i, rule in enumerate(matcher):
                 if action := rule.get('action', default):
                     label = [rule['label'], rule.get('id')]
-                    label = '_'.join(k for k in label if k)
+                    label = '.'.join(k for k in label if k)
                     actions[label] = action
 
         return cls(actions)
 
 
-def forget(*args, **kwargs):
-    """Return a null so that matchers will exclude (or forget) the match.
-
-    This is useful for when a phrase that will match a term but is not actually one.
-    For instance, it may be normal for the documents to have an unadorned number "4" as
-    a count but only if the suffix isn't something like "days". So, "4" is a count but
-    "4 days" is not.
-    """
-    return
+def reject_match(_: Span) -> None:
+    """Use this to reject a pattern from doc.ents."""
+    raise RejectMatch
 
 
-def text_action(span: Span, replace: Optional[Dict] = None) -> ResultType:
+def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     """Enrich term matches."""
-    label = span.label_.split('.')[0]
-
-    if replace:
-        return {label: replace.get(span.lower_, span.lower_)}
-
-    return {label: span.lower_}
+    label = ent.label_.split('.')[0]
+    ent._.data[label] = replace.get(ent.lower_, ent.lower_) if replace else ent.lower_
 
 
-def hoist_action(span: Span, keys: Optional[Set] = None) -> ResultType:
-    """Move data from tokens in span up to the current span."""
-    data = {}
+# def hoist_action(ent: Span, keys: Optional[Set] = None) -> None:
+#     """Move data from tokens in span up to the current span."""
+#     data = ent._.data
+#
+#     for token in ent:
+#         if not keys:
+#             data = {**data, **token._.data}
+#         else:
+#             update = {k: v for k, v in token._.data.items() if k in keys}
+#             data = {**data, **update}
+#     ent._.data = data
 
-    for token in span:
-        if not keys:
-            data = {**data, **token._.data}
-        else:
-            update = {k: v for k, v in token._.data.items() if k in keys}
-            data = {**data, **update}
 
-    return data
-
-
-def flag_action(span: Span, flag: str = 'flag', value: bool = True) -> ResultType:
+def flag_action(
+        ent: Span, flag: str = 'flag', value: bool = True, tokens_only: bool = False
+) -> None:
     """Flag each token in the span and don't group them."""
-    for token in span:
+    print(ent)
+    ent._.data[flag] = value
+    for token in ent:
         token._.data[flag] = value
-    return
+    if tokens_only:
+        raise RejectMatch

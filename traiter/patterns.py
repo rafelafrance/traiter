@@ -1,15 +1,17 @@
 """Append patterns to pattern list from various input sources."""
 
-from typing import Dict, List, Optional
+from collections import defaultdict
+from typing import DefaultDict, Dict, List, Optional
 
-PatternType = List[Dict]
+PatternRulerType = List[Dict]
+PatternMatcherType = DefaultDict[str, List[List[Dict]]]
 
 
 class Patterns:
     """A list of patterns."""
 
-    def __init__(self, patterns: Optional[PatternType] = None) -> None:
-        self.patterns: PatternType = patterns if patterns else []
+    def __init__(self, patterns: Optional[PatternRulerType] = None) -> None:
+        self.patterns: PatternRulerType = patterns if patterns else []
 
     def __iter__(self):
         yield from self.patterns
@@ -17,6 +19,17 @@ class Patterns:
     def __add__(self, other: 'Patterns') -> 'Patterns':
         self.patterns += other.patterns
         return self
+
+    def for_ruler(self) -> PatternRulerType:
+        """Organize the patterns for a ruler."""
+        return self.patterns
+
+    def for_matcher(self) -> PatternMatcherType:
+        """Organize the patterns for a matcher."""
+        patterns = defaultdict(list)
+        for pat in self.patterns:
+            patterns[pat['label']].append(pat['pattern'])
+        return patterns
 
     @classmethod
     def from_terms(cls, terms: List[Dict], attr: str = 'LOWER') -> 'Patterns':

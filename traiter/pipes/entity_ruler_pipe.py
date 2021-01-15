@@ -22,5 +22,5 @@ class EntityRulerPipe:
         """Build rule matchers that recognize traits."""
         kwargs = {'before': 'parser'} if not kwargs else kwargs
         ruler = EntityRuler(nlp, phrase_matcher_attr=attr, overwrite_ents=True)
-        ruler.add_patterns(patterns.patterns)
+        ruler.add_patterns(patterns.for_ruler())
         nlp.add_pipe(ruler, name=name, **kwargs)

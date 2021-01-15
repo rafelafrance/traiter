@@ -4,16 +4,16 @@ from spacy.language import Language
 from spacy.pipeline import EntityRuler
 from spacy.tokens import Doc
 
-from traiter.patterns import PatternType, Patterns
+from traiter.patterns import PatternRulerType, Patterns
 
 
-class RetokenizePipe:
+class RetokenizeRulerPipe:
     """Add an entity ruler that retokenizes matches."""
 
     def __init__(
             self,
             nlp: Language,
-            patterns: PatternType,
+            patterns: PatternRulerType,
             *,
             attr: str = 'lower',
             overwrite: bool = True
@@ -27,7 +27,8 @@ class RetokenizePipe:
         self.ruler(doc)
         with doc.retokenize() as retokenizer:
             for ent in doc.ents:
-                attrs = {'ENT_TYPE': ent.label_, 'ENT_IOB': 3}
+                attrs = {'ENT_TYPE': ent.label_, 'ENT_IOB': 3,
+                         '_': {'data': ent._.data, 'prev_label': ent.label_}}
                 retokenizer.merge(ent, attrs=attrs)
         return doc
 
@@ -43,5 +44,5 @@ class RetokenizePipe:
     ) -> None:
         """Add an entity ruler to the pipeline."""
         kwargs = {'before': 'parser'} if not kwargs else kwargs
-        ruler = RetokenizePipe(nlp, patterns.patterns, attr=attr)
+        ruler = RetokenizeRulerPipe(nlp, patterns.for_ruler(), attr=attr)
         nlp.add_pipe(ruler, name=name, **kwargs)

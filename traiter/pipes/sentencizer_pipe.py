@@ -11,7 +11,7 @@ from spacy.language import Language
 PUNCT = ['SPACE', 'PUNCT']
 
 
-class Sentencizer:
+class SentencizerPipe:
     """Shared sentencizer logic."""
 
     def __init__(
