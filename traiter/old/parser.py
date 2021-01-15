@@ -84,7 +84,7 @@ class Parser:
     def produce(self, tokens: Tokens, text: str) -> Tokens:
         """Produce final tokens for consumption by the client code."""
         results = []
-        token_text = ''.join([t.rule.token for t in tokens])
+        token_text = ''.join(t.rule.token for t in tokens)
         matches = self.match_tokens(self.producers, token_text)
 
         while matches:
