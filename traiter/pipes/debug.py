@@ -9,7 +9,7 @@ def debug_tokens(doc):
     print('=' * 80)
     print('tokens')
     for token in doc:
-        print(f'{token.ent_type_:<20} {token}')
+        print(f'{token.ent_type_:<20} {token.dep_:6} {token.pos_:6} {token}')
     print()
     return doc
 
@@ -20,6 +20,6 @@ def debug_entities(doc):
     print('=' * 80)
     print('entities')
     for ent in doc.ents:
-        print(f'{ent.label_:<20} {ent}')
+        print(f'{ent.label_:<20} {ent} {ent._.data}')
     print()
     return doc

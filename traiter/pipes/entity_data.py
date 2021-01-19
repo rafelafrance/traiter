@@ -57,7 +57,7 @@ class EntityData:
 
             entities.append(ent)
 
-        doc.ents = tuple(entities)
+        doc.set_ents(entities)
         return doc
 
     @staticmethod
@@ -103,7 +103,7 @@ class EntityData:
         actions = {}
         for matcher in matchers:
             for i, rule in enumerate(matcher):
-                if action := rule.get('action', default):
+                if action := rule.get('on_match', default):
                     label = [rule['label'], rule.get('id')]
                     label = '.'.join(k for k in label if k)
                     actions[label] = action
@@ -121,7 +121,8 @@ def reject_match(_: Span) -> None:
 def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     """Enrich term matches."""
     label = ent.label_.split('.')[0]
-    ent._.data[label] = replace.get(ent.lower_, ent.lower_) if replace else ent.lower_
+    lower = ent.text.lower()
+    ent._.data[label] = replace.get(lower, lower) if replace else lower
 
 
 @spacy.registry.misc('flag_action.v1')

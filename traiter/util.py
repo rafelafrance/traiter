@@ -12,7 +12,7 @@ import ftfy
 import inflect
 import regex as re
 
-__VERSION__ = '0.8.6'
+__VERSION__ = '0.9.0'
 
 # This points to the client's data directory
 DATA_DIR = Path.cwd() / 'data'
