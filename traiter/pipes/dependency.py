@@ -16,10 +16,10 @@ def dependency(
         on_match
 ):
     """Build a dependency pipe."""
-    return DependencyPipe(nlp.vocab, label, patterns, on_match)
+    return Dependency(nlp.vocab, label, patterns, on_match)
 
 
-class DependencyPipe:
+class Dependency:
     """Matchers that walk the parse tree of a sentence or doc."""
 
     def __init__(self, vocab, label, patterns, on_match):
@@ -29,10 +29,6 @@ class DependencyPipe:
         self.matcher.add(label, patterns)
 
     def __call__(self, doc):
-        matches = self.matcher(doc)
-        print(len(matches))
-        for match_id, indexes in matches:
-            print(self.vocab.strings[match_id])
-            for idx in indexes:
-                print(doc[idx])
+        for sent in doc.sents:
+            self.matcher(sent)
         return doc

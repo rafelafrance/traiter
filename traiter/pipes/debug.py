@@ -7,7 +7,7 @@ from spacy.language import Language
 def debug_tokens(doc):
     """Print debug messages."""
     print('=' * 80)
-    print('debug_tokens')
+    print('tokens')
     for token in doc:
         print(f'{token.ent_type_:<20} {token}')
     print()
@@ -18,7 +18,7 @@ def debug_tokens(doc):
 def debug_entities(doc):
     """Print debug messages."""
     print('=' * 80)
-    print('debug_entities')
+    print('entities')
     for ent in doc.ents:
         print(f'{ent.label_:<20} {ent}')
     print()

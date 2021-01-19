@@ -52,7 +52,7 @@ class Csv:
         drops = drops.split() if isinstance(drops, str) else drops
         self.terms = [t for t in self.terms if t[field] not in drops]
 
-    def as_phrase_patterns(self, attr: str = 'LOWER'):
+    def for_entity_ruler(self, attr: str = 'LOWER'):
         """Return ruler pattens from the terms."""
         attr = attr.upper()
         rules = [{'label': t['label'], 'pattern': t['pattern']}

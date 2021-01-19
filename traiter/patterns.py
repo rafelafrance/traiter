@@ -18,13 +18,12 @@ def add_ruler_patterns(ruler: EntityRuler, *patterns):
     """Add patterns to a ruler."""
     rules = []
     for matcher in patterns:
-        for rule_set in matcher:
-            label = rule_set['label']
-            id_ = rule_set.get('id')
-            for pattern in rule_set['patterns']:
+        for rule in matcher:
+            label = rule['label']
+            id_ = rule.get('id')
+            for pattern in rule['patterns']:
                 rule = {'label': label, 'pattern': pattern}
                 if id_:
                     rule['id'] = id_
                 rules.append(rule)
-
     ruler.add_patterns(rules)

@@ -1,17 +1,10 @@
-"""Common actions for enriching matches.
+"""Actions for enriching matches."""
 
-Warning:
-    This component uses a dispatch table for data enrichment. Spacy does not allow this
-    without some sort of registry or global use etc.
-    TODO I need to fix the hacky workaround.
-"""
+from typing import Callable, Dict, List, Optional
 
-from typing import Optional
-
+import spacy
 from spacy.language import Language
-from spacy.tokens import Span, Token
-
-from ..actions import ActionsType, RejectMatch
+from spacy.tokens import Doc, Span, Token
 
 # Extensions for entity data
 if not Span.has_extension('data'):
@@ -21,45 +14,136 @@ if not Span.has_extension('data'):
     Token.set_extension('new_label', default='')
 
 
-# TODO Change this to use registered functions
-ACTIONS: Optional[ActionsType] = None  # HACK
+class RejectMatch(Exception):
+    """Raise this when you want to remove a match from doc.ents."""
+    pass
 
 
-@Language.component('entity_data')
-def entity_data(doc):
+@Language.factory('entity_data')
+def entity_data(nlp: Language, name: str, actions: Dict[str, str]):
+    """Create a entity data dispatch table."""
+    return EntityData(actions)
+
+
+class EntityData:
     """Perform actions to fill user defined fields etc. for all entities."""
-    entities = []
 
-    for ent in doc.ents:
-        label = f'{ent.label_}.{ent.ent_id_}' if ent.ent_id_ else ent.label_
+    def __init__(self, actions: Dict[str, str]):
+        self.dispatch = {k: self.get_action(v) for k, v in actions.items()}
 
-        action = ACTIONS.get(label)
+    def __call__(self, doc: Doc) -> Doc:
+        entities = []
 
-        if action:
-            try:
-                action(ent)
-            except RejectMatch:
-                continue
+        for ent in doc.ents:
+            label = f'{ent.label_}.{ent.ent_id_}' if ent.ent_id_ else ent.label_
 
-            if new_label := ent._.new_label:
-                span = Span(ent.doc, ent.start, ent.end, label=new_label)
-                span._.data = ent._.data
-                ent = span
-                label = new_label
+            action = self.dispatch.get(label)
 
-        ent._.data['trait'] = label.split('.')[0]
-        ent._.data['start'] = ent.start_char
-        ent._.data['end'] = ent.end_char
+            if action:
+                try:
+                    action(ent)
+                except RejectMatch:
+                    continue
 
-        entities.append(ent)
+                if new_label := ent._.new_label:
+                    span = Span(ent.doc, ent.start, ent.end, label=new_label)
+                    span._.data = ent._.data
+                    ent = span
+                    label = new_label
 
-    doc.ents = tuple(entities)
-    return doc
+            ent._.data['trait'] = label.split('.')[0]
+            ent._.data['start'] = ent.start_char
+            ent._.data['end'] = ent.end_char
+
+            entities.append(ent)
+
+        doc.ents = tuple(entities)
+        return doc
+
+    @staticmethod
+    def get_action(action: str) -> Callable:
+        """Return an action from the misc registry."""
+        return spacy.registry.misc.get(action)
+
+    @staticmethod
+    def from_terms(
+            terms: List[Dict],
+            *,
+            actions: Optional[Dict[str, str]] = None,
+            default: Optional[str] = None
+    ) -> Dict[str, str]:
+        """Add patterns from terms.
+
+        Add a pattern matcher for each term in the list.
+
+        Each term is a dict with at least these three fields:
+            1) label: what is the term's hypernym (ex. color)
+            2) pattern: the phrase being matched (ex. gray-blue)
+            3) attr: what spacy token field are we matching (ex. LOWER)
+            ** There may be other fields in the dict but this method does not use them.
+        """
+        actions = actions if actions else {}
+        if default:
+            for label in {t['label'] for t in terms}:
+                if label not in actions:
+                    actions[label] = default
+        return actions
+
+    @staticmethod
+    def from_matchers(*matchers, default: Optional[str] = None) -> Dict[str, str]:
+        """Build rules from matchers.
+
+        Matchers are a list of dicts.
+        The dict contains these fields:
+            1) A "label" for the match.
+            2) An optional "action", a registered function name to run upon a match.
+            3) An "id" used to add extra data to the match.
+            4) A list of spacy patterns. Each pattern is its own list.
+        """
+        actions = {}
+        for matcher in matchers:
+            for i, rule in enumerate(matcher):
+                if action := rule.get('action', default):
+                    label = [rule['label'], rule.get('id')]
+                    label = '.'.join(k for k in label if k)
+                    actions[label] = action
+
+        return actions
 
 
-# TODO Change this to use registered functions
-def set_actions(actions: ActionsType):
-    """Set the global actions."""
-    global ACTIONS
-    ACTIONS = actions
-# HACK ^^^^^^
+@spacy.registry.misc('reject_match.v1')
+def reject_match(_: Span) -> None:
+    """Use this to reject a pattern from doc.ents."""
+    raise RejectMatch
+
+
+@spacy.registry.misc('text_action.v1')
+def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
+    """Enrich term matches."""
+    label = ent.label_.split('.')[0]
+    ent._.data[label] = replace.get(ent.lower_, ent.lower_) if replace else ent.lower_
+
+
+@spacy.registry.misc('flag_action.v1')
+def flag_action(
+        ent: Span, flag: str = 'flag', value: bool = True, tokens_only: bool = False
+) -> None:
+    """Flag each token in the span and don't group them."""
+    ent._.data[flag] = value
+    for token in ent:
+        token._.data[flag] = value
+    if tokens_only:
+        raise RejectMatch
+
+# @spacy.registry.misc('hoist_action.v1')
+# def hoist_action(ent: Span, keys: Optional[Set] = None) -> None:
+#     """Move data from tokens in span up to the current span."""
+#     data = ent._.data
+#
+#     for token in ent:
+#         if not keys:
+#             data = {**data, **token._.data}
+#         else:
+#             update = {k: v for k, v in token._.data.items() if k in keys}
+#             data = {**data, **update}
+#     ent._.data = data
