@@ -98,7 +98,6 @@ def flag_action(
         ent: Span, flag: str = 'flag', value: bool = True, tokens_only: bool = False
 ) -> None:
     """Flag each token in the span and don't group them."""
-    print(ent)
     ent._.data[flag] = value
     for token in ent:
         token._.data[flag] = value

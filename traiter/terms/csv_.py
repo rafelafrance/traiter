@@ -52,7 +52,14 @@ class Csv:
         drops = drops.split() if isinstance(drops, str) else drops
         self.terms = [t for t in self.terms if t[field] not in drops]
 
-    def pattern_dicts(self, column: str) -> Dict[str, Dict]:
+    def as_phrase_patterns(self, attr: str = 'LOWER'):
+        """Return ruler pattens from the terms."""
+        attr = attr.upper()
+        rules = [{'label': t['label'], 'pattern': t['pattern']}
+                 for t in self.terms if t['attr'].upper() == attr]
+        return rules
+
+    def pattern_dict(self, column: str) -> Dict[str, Dict]:
         """Create a dict from a column in the terms."""
         return {t['pattern']: v for t in self.terms
                 if (v := t.get(column)) not in (None, '')}

@@ -44,9 +44,9 @@ class Term(Base):
         # So we can adjust the POS of terms
         pos = pos if pos else {}
         if attr == 'lower':
-            self.pos = {k.lower(): v.upper().split() for k, v in pos.items()}
+            self.pos = {k.lower(): v.split() for k, v in pos.items()}
         else:
-            self.pos = {k: v.upper().split() for k, v in pos.items()}
+            self.pos = {k: v.split() for k, v in pos.items()}
 
         # Group terms by label
         by_label = defaultdict(list)

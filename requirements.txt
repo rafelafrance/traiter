@@ -1,8 +1,4 @@
-Hyphenate~=1.1.0
-spacy~=2.3.5
-# spacy[cuda111]~=2.3.5
-en-core-web-sm @https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
-# spacy-nightly==3.0.0rc2
-ftfy~=5.8
-regex~=2020.11.13
-inflect~=5.0.2
+Hyphenate==1.1.0
+ftfy==5.8
+regex==2020.11.13
+inflect==5.0.2

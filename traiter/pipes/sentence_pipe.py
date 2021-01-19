@@ -2,33 +2,40 @@
 
 # pylint: disable=too-many-boolean-expressions, too-few-public-methods
 
-from typing import List, Union
+from typing import List, Optional
 
 import regex
 from spacy.tokens import Doc
 from spacy.language import Language
 
-PUNCT = ['SPACE', 'PUNCT']
+
+@Language.factory('sentence')
+def sentence(
+        nlp: Language,
+        name: str,
+        abbrevs: Optional[List[str]] = None,
+        headings: Optional[List[str]] = None):
+    """Create a sentence pipe."""
+    return SentencePipe(abbrevs, headings)
 
 
-class SentencizerPipe:
+class SentencePipe:
     """Shared sentencizer logic."""
 
     def __init__(
             self,
-            abbrevs: Union[str, List[str]],
-            headings: Union[str, List[str]] = ''
+            abbrevs: Optional[List[str]] = None,
+            headings: Optional[List[str]] = None
     ) -> None:
         """Build a custom sentencizer.
 
         Each client sentencizer has its own abbreviations that will prevent a
         sentence split.
         """
-        abbrevs = abbrevs.split() if isinstance(abbrevs, str) else abbrevs
+        abbrevs = abbrevs if abbrevs else []
         abbrevs = '|'.join(abbrevs)
         self.abbrevs = regex.compile(fr'(?:{abbrevs})$')
-
-        self.headings = headings.split() if isinstance(headings, str) else headings
+        self.headings = headings if headings else []
 
     def __call__(self, doc: Doc) -> Doc:
         """Break the text into sentences."""
@@ -65,16 +72,3 @@ class SentencizerPipe:
     def is_next(token):
         """See if the next token meets needed criteria."""
         return token.prefix_.isupper() or token.pos_ == 'SPACE' or token.text in '.'
-
-    @classmethod
-    def add_pipe(
-            cls,
-            nlp: Language,
-            abbrevs: Union[str, List[str]],
-            headings: Union[str, List[str]] = '',
-            **kwargs
-    ) -> None:
-        """Add entities converter to the pipeline."""
-        kwargs = {'before': 'parser'} if not kwargs else kwargs
-        pipe = cls(abbrevs=abbrevs, headings=headings)
-        nlp.add_pipe(pipe, **kwargs)

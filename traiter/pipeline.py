@@ -10,14 +10,14 @@ from spacy.tokens import Doc, Span, Token
 
 # Custom fields attached to tokens and spans
 # data:      Attach data specific to the trait in this dict
-# prev_label: A token's original label_ which is set when during retokenization
+# label_cache: A token's original label_ which is set when during retokenization
 # action:    Used to pass commands from callback (actions) to the pipe
 if not Span.has_extension('data'):
     Span.set_extension('data', default={})
-    Span.set_extension('prev_label', default='')
+    Span.set_extension('label_cache', default='')
     Span.set_extension('new_label', default='')
     Token.set_extension('data', default={})
-    Token.set_extension('prev_label', default='')
+    Token.set_extension('label_cache', default='')
     Token.set_extension('new_label', default='')
 
 

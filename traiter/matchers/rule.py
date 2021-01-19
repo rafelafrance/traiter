@@ -53,7 +53,7 @@ class Rule(Base):
                 self.actions[label] = on_match
 
             if pos := rule.get('pos'):
-                self.pos[label] = pos.upper().split() if isinstance(pos, str) else pos
+                self.pos[label] = pos.split() if isinstance(pos, str) else pos
 
     def __call__(self, doc: Doc) -> Doc:
         """Find all term in the text and return the resulting doc."""
