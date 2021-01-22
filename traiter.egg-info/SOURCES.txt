@@ -16,7 +16,7 @@ traiter/old/rule.py
 traiter/old/token.py
 traiter/old/vocabulary.py
 traiter/pipes/__init__.py
-traiter/pipes/cache_label.py
+traiter/pipes/cache.py
 traiter/pipes/debug.py
 traiter/pipes/dependency.py
 traiter/pipes/entity_data.py

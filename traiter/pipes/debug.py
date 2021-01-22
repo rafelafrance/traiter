@@ -20,6 +20,7 @@ def debug_entities(doc):
     print('=' * 80)
     print('entities')
     for ent in doc.ents:
-        print(f'{ent.label_:<20} {ent} {ent._.data}')
+        print(f'{ent.label_:<20} {ent}')
+        print(f'{" " * 20} {ent._.data}\n')
     print()
     return doc
