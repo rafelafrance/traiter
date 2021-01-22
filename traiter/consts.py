@@ -1,4 +1,3 @@
-
 """Shared constants."""
 
 CLOSE = '  ) ] '.split()
@@ -17,4 +16,4 @@ QUOTE = ' “ ” " \' '.split()
 LETTERS = list('abcdefghijklmnopqrstuvwxyz')
 
 FLOAT_RE = r'^\d+(\.\d*)?$'
-INT = r'^\d+$'
+INT_RE = r'^\d+$'
