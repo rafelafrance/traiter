@@ -97,21 +97,21 @@ class EntityData:
         The dict contains these fields:
             1) A "label" for the match.
             2) An optional "action", a registered function name to run upon a match.
-            3) An "id" used to add extra data to the match.
-            4) A list of spacy patterns. Each pattern is its own list.
+            3) An optional "id".
+            4) A list of spacy patterns. Each pattern itself is a list of dicts.
         """
         actions = {}
         for matcher in matchers:
-            for i, rule in enumerate(matcher):
+            for rule in matcher:
                 if action := rule.get('on_match', default):
-                    label = [rule['label'], rule.get('id')]
-                    label = '.'.join(k for k in label if k)
+                    label = rule['label']
                     actions[label] = action
-
         return actions
 
 
 REJECT_MATCH = 'reject_match.v1'
+
+
 @spacy.registry.misc(REJECT_MATCH)
 def reject_match(_: Span) -> None:
     """Use this to reject a pattern from doc.ents."""
@@ -119,6 +119,8 @@ def reject_match(_: Span) -> None:
 
 
 TEXT_ACTION = 'text_action.v1'
+
+
 @spacy.registry.misc(TEXT_ACTION)
 def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     """Enrich term matches."""
@@ -128,6 +130,8 @@ def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
 
 
 FLAG_ACTION = 'flag_action.v1'
+
+
 @spacy.registry.misc(FLAG_ACTION)
 def flag_action(
         ent: Span, flag: str = 'flag', value: bool = True, tokens_only: bool = False
@@ -139,7 +143,9 @@ def flag_action(
     if tokens_only:
         raise RejectMatch
 
-# @spacy.registry.misc('hoist_action.v1')
+
+# HOIST_ACTION = 'hoist_action.v1'
+# @spacy.registry.misc(HOIST_ACTION)
 # def hoist_action(ent: Span, keys: Optional[Set] = None) -> None:
 #     """Move data from tokens in span up to the current span."""
 #     data = ent._.data
