@@ -5,7 +5,6 @@ COLON = ' :'.split()
 COMMA = ' , '.split()
 CROSS = ' x × '.split()
 DASH = ' – - –– -- '.split()
-DASH_RE = '|'.join(DASH)
 DOT = ' . '.split()
 EQ = ' = '.split()
 OPEN = ' ( [ '.split()
@@ -15,5 +14,6 @@ SLASH = ' / '.split()
 QUOTE = ' “ ” " \' '.split()
 LETTERS = list('abcdefghijklmnopqrstuvwxyz')
 
+DASH_RE = '(' + '|'.join(DASH) + ')'
 FLOAT_RE = r'^\d+(\.\d*)?$'
 INT_RE = r'^\d+$'
