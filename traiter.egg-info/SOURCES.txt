@@ -3,6 +3,7 @@ README.md
 setup.py
 tests/__init__.py
 traiter/__init__.py
+traiter/consts.py
 traiter/patterns.py
 traiter/util.py
 traiter.egg-info/PKG-INFO

@@ -111,13 +111,15 @@ class EntityData:
         return actions
 
 
-@spacy.registry.misc('reject_match.v1')
+REJECT_MATCH = 'reject_match.v1'
+@spacy.registry.misc(REJECT_MATCH)
 def reject_match(_: Span) -> None:
     """Use this to reject a pattern from doc.ents."""
     raise RejectMatch
 
 
-@spacy.registry.misc('text_action.v1')
+TEXT_ACTION = 'text_action.v1'
+@spacy.registry.misc(TEXT_ACTION)
 def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     """Enrich term matches."""
     label = ent.label_.split('.')[0]
@@ -125,7 +127,8 @@ def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     ent._.data[label] = replace.get(lower, lower) if replace else lower
 
 
-@spacy.registry.misc('flag_action.v1')
+FLAG_ACTION = 'flag_action.v1'
+@spacy.registry.misc(FLAG_ACTION)
 def flag_action(
         ent: Span, flag: str = 'flag', value: bool = True, tokens_only: bool = False
 ) -> None:
