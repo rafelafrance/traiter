@@ -17,6 +17,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from hyphenate import hyphenate_word
 
+from ..consts import DASH_CHAR
 import traiter.vocabulary as vocab
 
 # This points to the traiter vocabulary files
@@ -148,6 +149,27 @@ class Csv:
                         'pattern': hyphenated,
                         'attr': term['attr'],
                         'replace': replace if replace else term['pattern'],
+                    }})
+        return cls(terms=terms)
+
+    @classmethod
+    def trailing_dash(cls, other: 'Csv', label: str) -> 'Csv':
+        """Systematically handle hyphenated terms.
+
+        We cannot depend on terms being present in a contiguous form. We need a
+        systematic method for handling hyphenated terms. The hyphenate library is
+        great for this but sometimes we need to handle non-standard hyphenations
+        manually. Non-standard hyphenations are stored in the terms CSV file.
+        """
+        terms = []
+        for term in other.terms:
+            pattern = term['pattern']
+            if term.get('label') == label and pattern[-1] not in DASH_CHAR:
+                replace = term.get('replace')
+                for dash in DASH_CHAR:
+                    terms.append({**term, **{
+                        'pattern': pattern + dash,
+                        'replace': replace if replace else pattern,
                     }})
         return cls(terms=terms)
 

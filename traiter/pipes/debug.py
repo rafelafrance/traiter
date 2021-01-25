@@ -9,7 +9,7 @@ def debug_tokens(doc):
     print('=' * 80)
     print('tokens')
     for token in doc:
-        print(f'{token.ent_type_:<20} {token.dep_:6} {token.pos_:6} {token}')
+        print(f'{token.ent_type_:<20} {token.dep_:8} {token.pos_:6} {token}')
     print()
     return doc
 
