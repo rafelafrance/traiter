@@ -1,135 +1,135 @@
-label,pattern,attr,replace,pos
-color,amber,lower,,noun adj
-color,black,lower,,noun adj
-color,blackish,lower,black,adj
-color,blue,lower,,noun adj
-color,blueish,lower,blue,adj
-color,bluish,lower,blue,adj
-color,bronze,lower,bronze,noun adj
-color,bronzy,lower,bronze,adj
-color,brown,lower,,noun adj
-color,brownish,lower,brown,adj
-color,chartreuse,lower,,noun adj
-color,clear,lower,,noun adj
-color,cream,lower,white,noun adj
-color,cream-yellow,lower,yellow,noun adj
-color,creamy,lower,white,adj
-color,crimson,lower,red,noun adj
-color,ebony,lower,black,noun adj
-color,glaucous,lower,,noun adj
-color,glaucous-pink,lower,pink,noun adj
-color,gold,lower,,noun adj
-color,golden,lower,,noun adj
-color,golden-yellow,lower,yellow,noun adj
-color,grass-green ,lower,green,noun adj
-color,gray,lower,,noun adj
-color,grayish,lower,gray,adj
-color,green,lower,,noun adj
-color,greenish,lower,green,adj
-color,grey,lower,,noun adj
-color,greyish,lower,gray,adj
-color,ivory,lower,white,noun adj
-color,lavendar,lower,purple,noun adj
-color,lavender,lower,purple,noun adj
-color,lemon,lower,yellow,noun adj
-color,lilac,lower,purple,noun adj
-color,maroon,lower,red-brown,noun adj
-color,olive,lower,,noun adj
-color,olive-green,lower,green,noun adj
-color,orange,lower,,noun adj
-color,orangish,lower,orange,adj
-color,pink,lower,,noun adj
-color,pinkish,lower,pink,adj
-color,pruinose,lower,,noun adj
-color,purple,lower,,noun adj
-color,purpleish,lower,purple,adj
-color,purplish,lower,purple,adj
-color,red,lower,,noun adj
-color,reddish,lower,red,adj
-color,rose,lower,pink,noun adj
-color,rose-colored,lower,pink,noun adj
-color,rose-coloured,lower,pink,noun adj
-color,roseate,lower,,adj
-color,salmon,lower,,noun adj
-color,salmon-pink,lower,orange-pink,noun adj
-color,scarlet,lower,red,noun adj
-color,silver,lower,,noun adj
-color,silvery,lower,silver,adj
-color,stramineous,lower,yellow,adj
-color,straw-colored,lower,yellow,noun adj
-color,straw-coloured,lower,yellow,noun adj
-color,sulfur-yellow,lower,yellow,noun adj
-color,sulphur-yellow,lower,yellow,noun adj
-color,tan,lower,,noun adj
-color,turquoise,lower,,noun adj
-color,uncolored,lower,,noun adj
-color,violet,lower,purple,noun adj
-color,violetish,lower,purple,adj
-color,white,lower,,noun adj
-color,whitish,lower,white,adj
-color,yellow,lower,,noun adj
-color,yellowish,lower,yellow,adj
-color_mod,backed,lower,,adj
-color_mod,blotch,lower,,adj noun
-color_mod,blotched,lower,,adj
-color_mod,blotches,lower,,adj noun
-color_mod,bright,lower,,adj
-color_mod,broadsaddle,lower,,adj
-color_mod,bull’s-eye,lower,,adj noun
-color_mod,bulls-eye,lower,,adj noun
-color_mod,dark,lower,,adj noun
-color_mod,dot,lower,,adj noun
-color_mod,dots,lower,,adj noun
-color_mod,dusky,lower,,adj
-color_mod,dull,lower,,adj
-color_mod,duller,lower,,adj
-color_mod,faint,lower,,adj
-color_mod,faintly,lower,,adj
-color_mod,gloss,lower,,adj
-color_mod,glossed,lower,,adj
-color_mod,glossy,lower,,adj
-color_mod,line,lower,,noun adj
-color_mod,lined,lower,,adj noun
-color_mod,lines,lower,,noun adj
-color_mod,longitudinal,lower,,adj
-color_mod,marking,lower,,adj noun
-color_mod,markings,lower,,adj noun
-color_mod,metallic,lower,,adj
-color_mod,matte,lower,,adj
-color_mod,mottled,lower,,adj
-color_mod,mottling,lower,,adj noun
-color_mod,narrowsaddle,lower,,adj
-color_mod,overtone,lower,,adj noun
-color_mod,overtones,lower,,adj noun
-color_mod,pale,lower,,adj
-color_mod,paler,lower,,adj
-color_mod,patch,lower,,adj noun
-color_mod,patched,lower,,adj
-color_mod,pruinescence,lower,,adj
-color_mod,pruinosity,lower,,adj
-color_mod,pruinose,lower,,adj
-color_mod,saddlebags,lower,,adj
-color_mod,speckled,lower,,adj noun
-color_mod,speckles,lower,,noun adj
-color_mod,spot,lower,,noun adj
-color_mod,spots,lower,,noun adj
-color_mod,spotted,lower,,adj
-color_mod,square,lower,,adj
-color_mod,squares,lower,,adj
-color_mod,streaked,lower,,adj
-color_mod,streaks,lower,,adj noun
-color_mod,stripe,lower,,noun adj
-color_mod,striped,lower,,adj
-color_mod,stripes,lower,,noun adj
-color_mod,striping,lower,,adj
-color_mod,throated,lower,,adj
-color_mod,tinge,lower,,adj noun
-color_mod,tinged,lower,,adj noun
-color_mod,tinges,lower,,adj noun
-color_mod,tint,lower,,adj noun
-color_mod,tinted,lower,,adj
-color_mod,tip,lower,,noun adj
-color_mod,tipped,lower,,adj
-color_mod,tips,lower,,noun adj
-color_mod,wash,lower,,noun adj
-color_mod,washed,lower,,adj
+label,pattern,attr,replace,remove
+color,amber,lower,,
+color,black,lower,,
+color,blackish,lower,black,
+color,blue,lower,,
+color,blueish,lower,blue,
+color,bluish,lower,blue,
+color,bronze,lower,bronze,
+color,bronzy,lower,bronze,
+color,brown,lower,,
+color,brownish,lower,brown,
+color,chartreuse,lower,,
+color,clear,lower,,
+color,cream,lower,white,
+color,cream-yellow,lower,yellow,
+color,creamy,lower,white,
+color,crimson,lower,red,
+color,ebony,lower,black,
+color,glaucous,lower,,
+color,glaucous-pink,lower,pink,
+color,gold,lower,,
+color,golden,lower,,
+color,golden-yellow,lower,yellow,
+color,grass-green ,lower,green,
+color,gray,lower,,
+color,grayish,lower,gray,
+color,green,lower,,
+color,greenish,lower,green,
+color,grey,lower,,
+color,greyish,lower,gray,
+color,ivory,lower,white,
+color,lavendar,lower,purple,
+color,lavender,lower,purple,
+color,lemon,lower,yellow,
+color,lilac,lower,purple,
+color,maroon,lower,red-brown,
+color,olive,lower,,
+color,olive-green,lower,green,
+color,orange,lower,,
+color,orangish,lower,orange,
+color,pink,lower,,
+color,pinkish,lower,pink,
+color,pruinose,lower,,
+color,purple,lower,,
+color,purpleish,lower,purple,
+color,purplish,lower,purple,
+color,red,lower,,
+color,reddish,lower,red,
+color,rose,lower,pink,
+color,rose-colored,lower,pink,
+color,rose-coloured,lower,pink,
+color,roseate,lower,,
+color,salmon,lower,,
+color,salmon-pink,lower,orange-pink,
+color,scarlet,lower,red,
+color,silver,lower,,
+color,silvery,lower,silver,
+color,stramineous,lower,yellow,
+color,straw-colored,lower,yellow,
+color,straw-coloured,lower,yellow,
+color,sulfur-yellow,lower,yellow,
+color,sulphur-yellow,lower,yellow,
+color,tan,lower,,
+color,turquoise,lower,,
+color,uncolored,lower,,
+color,violet,lower,purple,
+color,violetish,lower,purple,
+color,white,lower,,
+color,whitish,lower,white,
+color,yellow,lower,,
+color,yellowish,lower,yellow,
+color_mod,backed,lower,,
+color_mod,blotch,lower,,
+color_mod,blotched,lower,,
+color_mod,blotches,lower,,
+color_mod,bright,lower,,1
+color_mod,broadsaddle,lower,,
+color_mod,bull’s-eye,lower,,
+color_mod,bulls-eye,lower,,
+color_mod,dark,lower,,1
+color_mod,dot,lower,,
+color_mod,dots,lower,,
+color_mod,dusky,lower,,1
+color_mod,dull,lower,,1
+color_mod,duller,lower,,1
+color_mod,faint,lower,,1
+color_mod,faintly,lower,,1
+color_mod,gloss,lower,,
+color_mod,glossed,lower,,
+color_mod,glossy,lower,,
+color_mod,line,lower,,
+color_mod,lined,lower,,
+color_mod,lines,lower,,
+color_mod,longitudinal,lower,,
+color_mod,marking,lower,,1
+color_mod,markings,lower,,1
+color_mod,metallic,lower,,
+color_mod,matte,lower,,
+color_mod,mottled,lower,,
+color_mod,mottling,lower,,
+color_mod,narrowsaddle,lower,,
+color_mod,overtone,lower,,1
+color_mod,overtones,lower,,1
+color_mod,pale,lower,,1
+color_mod,paler,lower,,1
+color_mod,patch,lower,,1
+color_mod,patched,lower,,1
+color_mod,pruinescence,lower,,
+color_mod,pruinosity,lower,,
+color_mod,pruinose,lower,,
+color_mod,saddlebags,lower,,
+color_mod,speckled,lower,,
+color_mod,speckles,lower,,
+color_mod,spot,lower,,
+color_mod,spots,lower,,
+color_mod,spotted,lower,,
+color_mod,square,lower,,
+color_mod,squares,lower,,
+color_mod,streaked,lower,,
+color_mod,streaks,lower,,
+color_mod,stripe,lower,,
+color_mod,striped,lower,,
+color_mod,stripes,lower,,
+color_mod,striping,lower,,
+color_mod,throated,lower,,
+color_mod,tinge,lower,,
+color_mod,tinged,lower,,
+color_mod,tinges,lower,,
+color_mod,tint,lower,,1
+color_mod,tinted,lower,,1
+color_mod,tip,lower,,
+color_mod,tipped,lower,,
+color_mod,tips,lower,,
+color_mod,wash,lower,,1
+color_mod,washed,lower,,1
