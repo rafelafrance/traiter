@@ -124,9 +124,8 @@ TEXT_ACTION = 'text_action.v1'
 @spacy.registry.misc(TEXT_ACTION)
 def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     """Enrich term matches."""
-    label = ent.label_.split('.')[0]
     lower = ent.text.lower()
-    ent._.data[label] = replace.get(lower, lower) if replace else lower
+    ent._.data[ent.label_] = replace.get(lower, lower) if replace else lower
 
 
 FLAG_ACTION = 'flag_action.v1'
