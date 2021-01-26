@@ -3,24 +3,44 @@
 from spacy.language import Language
 
 
-@Language.component('debug_tokens')
-def debug_tokens(doc):
+@Language.factory('debug_tokens')
+def debug_tokens(nlp: Language, name: str, message: str):
     """Print debug messages."""
-    print('=' * 80)
-    print('tokens')
-    for token in doc:
-        print(f'{token.ent_type_:<20} {token.dep_:8} {token.pos_:6} {token}')
-    print()
-    return doc
+    return DebugTokens(message)
 
 
-@Language.component('debug_entities')
-def debug_entities(doc):
+class DebugTokens:
     """Print debug messages."""
-    print('=' * 80)
-    print('entities')
-    for ent in doc.ents:
-        print(f'{ent.label_:<20} {ent}')
-        print(f'{" " * 20} {ent._.data}\n')
-    print()
-    return doc
+
+    def __init__(self, message):
+        self.message = message
+
+    def __call__(self, doc):
+        print('=' * 80)
+        print(f'tokens: {self.message}')
+        for token in doc:
+            print(f'{token.ent_type_:<20} {token.dep_:8} {token.pos_:6} {token}')
+        print()
+        return doc
+
+
+@Language.factory('debug_entities')
+def debug_entities(nlp: Language, name: str, message: str):
+    """Print debug messages."""
+    return DebugEntities(message)
+
+
+class DebugEntities:
+    """Print debug messages."""
+
+    def __init__(self, message):
+        self.message = message
+
+    def __call__(self, doc):
+        print('=' * 80)
+        print(f'entities: {self.message}')
+        for ent in doc.ents:
+            print(f'{ent.label_:<20} {ent}')
+            print(f'{" " * 20} {ent._.data}\n')
+        print()
+        return doc

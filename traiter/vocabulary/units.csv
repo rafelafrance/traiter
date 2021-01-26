@@ -24,3 +24,15 @@ imperial_length,in,lower,in,noun,
 imperial_length,mi,lower,mi,noun,
 imperial_length,mile,lower,mi,noun,
 imperial_length,miles,lower,mi,noun,
+metric_mass,g,lower,g,,,NOUN
+metric_mass,gm,lower,g,,,NOUN
+metric_mass,gms,lower,g,,,NOUN
+metric_mass,grams,lower,g,,,NOUN
+metric_mass,kg,lower,kg,,,NOUN
+metric_mass,kilograms,lower,kg,,,NOUN
+imperial_mass,ounce,lower,oz,,,NOUN
+imperial_mass,ounces,lower,oz,,,NOUN
+imperial_mass,oz,lower,oz,,,NOUN
+imperial_mass,ozs,lower,oz,,,NOUN
+imperial_mass,pound,lower,lbs,,,NOUN
+imperial_mass,pounds,lower,lbs,,,NOUN

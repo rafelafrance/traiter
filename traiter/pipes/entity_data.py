@@ -13,6 +13,10 @@ if not Span.has_extension('data'):
     Span.set_extension('new_label', default='')
     Token.set_extension('new_label', default='')
 
+REJECT_MATCH = 'reject_match.v1'
+TEXT_ACTION = 'text_action.v1'
+FLAG_ACTION = 'flag_action.v1'
+
 
 class RejectMatch(Exception):
     """Raise this when you want to remove a match from doc.ents."""
@@ -35,7 +39,7 @@ class EntityData:
         entities = []
 
         for ent in doc.ents:
-            label = f'{ent.label_}.{ent.ent_id_}' if ent.ent_id_ else ent.label_
+            label = ent.label_
 
             action = self.dispatch.get(label)
 
@@ -48,16 +52,17 @@ class EntityData:
                 if new_label := ent._.new_label:
                     span = Span(ent.doc, ent.start, ent.end, label=new_label)
                     span._.data = ent._.data
+                    span._.new_label = ''
                     ent = span
                     label = new_label
 
-            ent._.data['trait'] = label.split('.')[0]
+            ent._.data['trait'] = label
             ent._.data['start'] = ent.start_char
             ent._.data['end'] = ent.end_char
 
             entities.append(ent)
 
-        doc.set_ents(entities)
+        doc.ents = entities
         return doc
 
     @staticmethod
@@ -109,16 +114,10 @@ class EntityData:
         return actions
 
 
-REJECT_MATCH = 'reject_match.v1'
-
-
 @spacy.registry.misc(REJECT_MATCH)
 def reject_match(_: Span) -> None:
     """Use this to reject a pattern from doc.ents."""
     raise RejectMatch
-
-
-TEXT_ACTION = 'text_action.v1'
 
 
 @spacy.registry.misc(TEXT_ACTION)
@@ -126,9 +125,6 @@ def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
     """Enrich term matches."""
     lower = ent.text.lower()
     ent._.data[ent.label_] = replace.get(lower, lower) if replace else lower
-
-
-FLAG_ACTION = 'flag_action.v1'
 
 
 @spacy.registry.misc(FLAG_ACTION)
@@ -142,12 +138,11 @@ def flag_action(
     if tokens_only:
         raise RejectMatch
 
-
 # HOIST_ACTION = 'hoist_action.v1'
 # @spacy.registry.misc(HOIST_ACTION)
 # def hoist_action(ent: Span, keys: Optional[Set] = None) -> None:
 #     """Move data from tokens in span up to the current span."""
-#     data = ent._.data
+#     data = {}
 #
 #     for token in ent:
 #         if not keys:

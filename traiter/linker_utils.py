@@ -3,7 +3,7 @@
 from collections import defaultdict
 
 
-def linker(_, doc, idx, matches, *keys):
+def linker(_, doc, idx, matches, key, exclude=''):
     """Link traits to the root trait trait."""
     match_ents = defaultdict(list)
     for ent in doc.ents:
@@ -13,11 +13,7 @@ def linker(_, doc, idx, matches, *keys):
                 break
     match_ents = dict(sorted(match_ents.items(), key=lambda x: min(x[1])))
     root, *others = match_ents.keys()
-    key, value = '', ''
-    for key in keys:
-        print(key)
-        print(root._.data.get(key))
-        if (value := root._.data.get(key)) is not None:
-            break
+    value = root._.data.get(key)
     for ent in others:
-        ent._.data[key] = value
+        if ent.label_ != exclude:
+            ent._.data[key] = value
