@@ -5,8 +5,7 @@ from typing import Dict, List
 import spacy
 from spacy.language import Language
 from spacy.matcher import Matcher
-from spacy.tokens import Doc, Span
-from spacy.util import filter_spans
+from spacy.tokens import Doc
 
 
 @Language.factory('greedy_matcher')
@@ -20,25 +19,19 @@ class GreedyMatcher:
 
     def __init__(self, vocab, patterns):
         self.matcher = Matcher(vocab)
-        self.on_match = {}
         for pattern_set in patterns:
             for pattern in pattern_set:
                 label = pattern['label']
                 on_match = spacy.registry.misc.get(pattern['on_match'])
-                self.on_match[label] = on_match
-                self.matcher.add(label, pattern['patterns'])
+                self.matcher.add(
+                    label, pattern['patterns'], on_match=on_match, greedy='LONGEST')
 
     def __call__(self, doc: Doc) -> Doc:
-        matches = self.matcher(doc)
-        spans = [Span(doc, s, e, label=i) for i, s, e in matches]
-        spans = filter_spans(spans)
+        spans = self.matcher(doc, as_spans=True)
 
         seen = set()
         for span in spans:
-            label = span.label_.split('.')[0]
             seen.update(range(span.start, span.end))
-            if on_match := self.on_match.get(label):
-                on_match(span)
 
         for span in doc.ents:
             if span.start not in seen and span.end - 1 not in seen:

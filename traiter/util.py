@@ -164,3 +164,8 @@ def clean_text(text: str, trans: Optional[str.translate] = None) -> str:
 def xor(one: Any, two: Any) -> bool:
     """Emulate a logical xor."""
     return (one and two) or (not one and not two)
+
+
+def sign(x: Union[int, float]) -> int:
+    """Return the sign of a number (-1, 0, 1)."""
+    return 0 if x == 0 else (-1 if x < 0 else 1)

@@ -19,7 +19,8 @@ class DebugTokens:
         print('=' * 80)
         print(f'tokens: {self.message}')
         for token in doc:
-            print(f'{token.ent_type_:<20} {token.dep_:8} {token.pos_:6} {token}')
+            print(f'{token.ent_type_:<20} {token.dep_:8} {token.pos_:6} '
+                  f'{token._.cached_label:<20} {token}')
         print()
         return doc
 

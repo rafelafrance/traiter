@@ -17,7 +17,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from hyphenate import hyphenate_word
 
-from ..consts import DASH_CHAR
+from ..const import DASH_CHAR
 import traiter.vocabulary as vocab
 
 # This points to the traiter vocabulary files
@@ -42,6 +42,16 @@ class Csv:
     def __add__(self, other: 'Csv') -> 'Csv':
         self.terms += other.terms
         return self
+
+    def with_pattern(self, pattern: str = ''):
+        """Given a pattern get the term."""
+        terms = [t for t in self.terms if t['pattern'] == pattern]
+        return terms
+
+    def with_label(self, label: str = ''):
+        """Given a pattern get the term."""
+        terms = [t for t in self.terms if t['label'] == label]
+        return terms
 
     def drop(self, drops: StrList, field: str = 'label') -> None:
         """Drop term from the traits.
