@@ -8,9 +8,6 @@ from typing import Optional, Union
 from traiter.util import DATA_DIR
 from .csv_ import Csv
 
-# This points to the client's directory
-VOCAB_DIR = Path.cwd() / 'src' / 'vocabulary'
-
 # This points to a database (or a sym link) in the client's data directory
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'
 
@@ -40,11 +37,6 @@ class Itis(Csv):
         terms = []
 
         label = label if label else taxon
-
-        # Bypass using this in tests for now.
-        if not ITIS_DB.exists():
-            print('Could not find ITIS database.')
-            return cls.mock_itis_traits(taxon)
 
         tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
         names = """
@@ -101,9 +93,6 @@ class Itis(Csv):
         rank_id    = 220 == Species
         """
         terms = []
-        if not ITIS_DB.exists():
-            print('Could not find ITIS database.')
-            return cls.mock_itis_traits(taxon)
 
         select_tsn = """ select tsn from taxonomic_units where unit_name1 = ?; """
         select_names = """
@@ -139,18 +128,16 @@ class Itis(Csv):
         return cls(terms=terms)
 
     @classmethod
-    def mock_itis_traits(
-            cls, name: str, mock_terms_csv: Optional[Union[str, Path]] = None
-    ) -> 'Itis':
+    def mock_itis_traits(cls, mock_terms_csv: Union[str, Path], taxon: str) -> 'Itis':
         """Set up mock traits for testing with Travis.
 
         The ITIS database is too big to put into GitHub so we use a mock database
         for testing.
         """
-        if not mock_terms_csv:
-            mock_terms_csv = VOCAB_DIR / 'mock_itis_terms.csv'
+        # Bypass using this in tests for now.
+        print('Could not find ITIS database.')
 
-        name = name.lower()
+        taxon = taxon.lower()
 
         with open(mock_terms_csv) as term_file:
             reader = csv.DictReader(term_file)
@@ -158,6 +145,6 @@ class Itis(Csv):
 
         for term in terms:
             label = term['label']
-            term['label'] = label if label else name
+            term['label'] = label if label else taxon
 
         return cls(terms=terms)
