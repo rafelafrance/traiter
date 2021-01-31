@@ -3,9 +3,9 @@ README.md
 setup.py
 tests/__init__.py
 traiter/__init__.py
-traiter/consts.py
-traiter/pattern_utils.py
-traiter/tokenizer_utils.py
+traiter/const.py
+traiter/pattern_util.py
+traiter/tokenizer_util.py
 traiter/util.py
 traiter.egg-info/PKG-INFO
 traiter.egg-info/SOURCES.txt
@@ -24,6 +24,7 @@ traiter/pipes/dependency.py
 traiter/pipes/entity_data.py
 traiter/pipes/greedy_matcher.py
 traiter/pipes/sentence.py
+traiter/pipes/simple_entity_data.py
 traiter/terms/__init__.py
 traiter/terms/csv_.py
 traiter/terms/itis.py

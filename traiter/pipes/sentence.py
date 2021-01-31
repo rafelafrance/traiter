@@ -6,8 +6,10 @@ import regex
 from spacy.language import Language
 from spacy.tokens import Doc
 
+SENTENCE = 'sentence'
 
-@Language.factory('sentence')
+
+@Language.factory(SENTENCE)
 def sentence(
         nlp: Language,
         name: str,

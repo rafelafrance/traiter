@@ -10,12 +10,14 @@ from spacy.matcher import DependencyMatcher
 
 from traiter.util import sign
 
-SIMPLE_POST_LINKER = 'simple_post_linker.v1'
+DEPENDENCY = 'dependency'
+NEAREST_LINKER = 'nearest_linker.v1'
 
 
-@Language.factory('dependency', default_config={'after_match': {}})
+@Language.factory(DEPENDENCY, default_config={'after_match': {}})
 def dependency(
-        nlp: Language, name: str,
+        nlp: Language,
+        name: str,
         patterns: List[List[Dict]],
         after_match: Optional[Dict]
 ):
@@ -27,8 +29,14 @@ class Dependency:
     """Matchers that walk the parse tree of a sentence or doc."""
 
     def __init__(self, nlp, patterns, after_match):
+        self.nlp = nlp
         self.matcher = DependencyMatcher(nlp.vocab)
+        self.after_match = {}
+        self.build_matchers(patterns)
+        self.build_after_match(after_match)
 
+    def build_matchers(self, patterns):
+        """Setup matchers."""
         for pattern_set in patterns:
             for pattern in pattern_set:
                 label = pattern['label']
@@ -36,9 +44,10 @@ class Dependency:
                 on_match = spacy.registry.misc.get(on_match) if on_match else None
                 self.matcher.add(label, pattern['patterns'], on_match=on_match)
 
-        self.after_match = {}
+    def build_after_match(self, after_match):
+        """Setup after match actions."""
         for label, values in after_match.items():
-            label = nlp.vocab.strings[label]
+            label = self.nlp.vocab.strings[label]
             func = spacy.registry.misc.get(values['func'])
             kwargs = values.get('kwargs', {})
             self.after_match[label] = (func, kwargs)
@@ -60,7 +69,7 @@ class Dependency:
         return doc
 
     @staticmethod
-    def post_match_args(*matchers):
+    def after_match_args(*matchers):
         """Build arguments for the post matcher function."""
         after_match = {}
         for matcher in matchers:
@@ -70,8 +79,8 @@ class Dependency:
         return after_match
 
 
-@spacy.registry.misc(SIMPLE_POST_LINKER)
-def simple_post_linker(doc, matches, **kwargs):
+@spacy.registry.misc(NEAREST_LINKER)
+def nearest_linker(doc, matches, **kwargs):
     """Link traits to the root trait trait.
 
     This uses a simple algorithm for linking traits.
@@ -79,6 +88,8 @@ def simple_post_linker(doc, matches, **kwargs):
         2) Find all entities
         2) Link entities to closest root entity.
     """
+    # print(kwargs)
+    # print(matches)
     root = kwargs.get('root')
     exclude = kwargs.get('exclude')
 

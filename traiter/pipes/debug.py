@@ -2,8 +2,11 @@
 
 from spacy.language import Language
 
+DEBUG_TOKENS = 'debug_tokens'
+DEBUG_ENTITIES = 'debug_entities'
 
-@Language.factory('debug_tokens')
+
+@Language.factory(DEBUG_TOKENS)
 def debug_tokens(nlp: Language, name: str, message: str):
     """Print debug messages."""
     return DebugTokens(message)
@@ -25,7 +28,7 @@ class DebugTokens:
         return doc
 
 
-@Language.factory('debug_entities')
+@Language.factory(DEBUG_ENTITIES)
 def debug_entities(nlp: Language, name: str, message: str):
     """Print debug messages."""
     return DebugEntities(message)

@@ -30,10 +30,10 @@ INFIX = LIST_ELLIPSES + LIST_ICONS + [
 
 def breaking_prefix(nlp: Language, breaking: Optional[str] = None) -> None:
     """Setup custom tokenizer rule for the breaking prefix punctuation."""
+    # print(nlp.tokenizer.prefix_search)
+    # print(nlp.tokenizer.prefix_search.__self__.pattern)
     breaking = breaking if breaking else BREAKING
     prefix = re.compile(f'^{breaking}')
-    print(nlp.tokenizer.prefix_search)
-    print(nlp.tokenizer.prefix_search.__self__.pattern)
     nlp.tokenizer.prefix_search = prefix.search
 
 
@@ -46,8 +46,8 @@ def breaking_infix(nlp, breaking: Optional[List[str]]) -> None:
 
 def breaking_suffix(nlp: Language, breaking: Optional[str] = None) -> None:
     """Setup custom tokenizer rule for the breaking suffix punctuation."""
+    # print(nlp.tokenizer.suffix_search)
+    # print(nlp.tokenizer.suffix_search.__self__.pattern)
     breaking = breaking if breaking else BREAKING
     suffix = re.compile(f'{breaking}$')
-    print(nlp.tokenizer.suffix_search)
-    print(nlp.tokenizer.suffix_search.__self__.pattern)
     nlp.tokenizer.suffix_search = suffix.search
