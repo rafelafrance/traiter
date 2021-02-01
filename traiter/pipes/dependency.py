@@ -2,7 +2,7 @@
 
 from array import array
 from collections import defaultdict
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import spacy
 from spacy.language import Language
@@ -14,26 +14,20 @@ DEPENDENCY = 'dependency'
 NEAREST_LINKER = 'nearest_linker.v1'
 
 
-@Language.factory(DEPENDENCY, default_config={'after_match': {}})
-def dependency(
-        nlp: Language,
-        name: str,
-        patterns: List[List[Dict]],
-        after_match: Optional[Dict]
-):
+@Language.factory(DEPENDENCY)
+def dependency(nlp: Language, name: str, patterns: List[List[Dict]]):
     """Build a dependency pipe."""
-    return Dependency(nlp, patterns, after_match)
+    return Dependency(nlp, patterns)
 
 
 class Dependency:
     """Matchers that walk the parse tree of a sentence or doc."""
 
-    def __init__(self, nlp, patterns, after_match):
+    def __init__(self, nlp, patterns):
         self.nlp = nlp
         self.matcher = DependencyMatcher(nlp.vocab)
-        self.after_match = {}
+        self.after_match = self.build_after_match(patterns)
         self.build_matchers(patterns)
-        self.build_after_match(after_match)
 
     def build_matchers(self, patterns):
         """Setup matchers."""
@@ -44,13 +38,22 @@ class Dependency:
                 on_match = spacy.registry.misc.get(on_match) if on_match else None
                 self.matcher.add(label, pattern['patterns'], on_match=on_match)
 
-    def build_after_match(self, after_match):
+    def build_after_match(self, patterns):
         """Setup after match actions."""
-        for label, values in after_match.items():
+        after_dict = {}
+        for matcher in patterns:
+            for pattern_set in matcher:
+                if after := pattern_set.get('after_match'):
+                    after_dict[pattern_set['label']] = after
+
+        after_match = {}
+        for label, values in after_dict.items():
             label = self.nlp.vocab.strings[label]
             func = spacy.registry.misc.get(values['func'])
             kwargs = values.get('kwargs', {})
-            self.after_match[label] = (func, kwargs)
+            after_match[label] = (func, kwargs)
+
+        return after_match
 
     def __call__(self, doc):
         matches = self.matcher(doc)
@@ -63,20 +66,10 @@ class Dependency:
             matches_by_id[match[0]].append(match)
 
         for match_id, match_list in matches_by_id.items():
-            if post := self.after_match.get(match_id):
-                post[0](doc, match_list, **post[1])
+            if after := self.after_match.get(match_id):
+                after[0](doc, match_list, **after[1])
 
         return doc
-
-    @staticmethod
-    def after_match_args(*matchers):
-        """Build arguments for the post matcher function."""
-        after_match = {}
-        for matcher in matchers:
-            for pattern_set in matcher:
-                if post := pattern_set['after_match']:
-                    after_match[pattern_set['label']] = post
-        return after_match
 
 
 @spacy.registry.misc(NEAREST_LINKER)

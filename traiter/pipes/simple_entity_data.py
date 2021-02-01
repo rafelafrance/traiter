@@ -8,11 +8,11 @@ from typing import Dict, Optional
 
 from spacy.language import Language
 
-from ..entity_data_util import add_extensions
+from ..pipe_util import add_spacy_extensions
 
 SIMPLE_ENTITY_DATA = 'simple_entity_data'
 
-add_extensions()
+add_spacy_extensions()
 
 
 @Language.factory(SIMPLE_ENTITY_DATA)

@@ -1,4 +1,4 @@
-"""Actions for enriching entities with new data."""
+"""Common functions for custom pipes."""
 
 from typing import Callable, Dict, List, Optional
 
@@ -15,7 +15,7 @@ class RejectMatch(Exception):
     pass
 
 
-def add_extensions() -> None:
+def add_spacy_extensions() -> None:
     """Add span and token extensions for entity data."""
     if not Span.has_extension('data'):
         Span.set_extension('data', default={})
@@ -24,6 +24,10 @@ def add_extensions() -> None:
     if not Span.has_extension('new_label'):
         Span.set_extension('new_label', default='')
         Token.set_extension('new_label', default='')
+
+    if not Span.has_extension('cached_label'):
+        Span.set_extension('cached_label', default='')
+        Token.set_extension('cached_label', default='')
 
 
 def get_action(action: str) -> Callable:

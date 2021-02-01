@@ -1,13 +1,12 @@
 """Save labels for later analysis."""
 
 from spacy.language import Language
-from spacy.tokens import Span, Token
+
+from ..pipe_util import add_spacy_extensions
 
 CACHE_LABEL = 'cache_label'
 
-if not Span.has_extension('cached_label'):
-    Span.set_extension('cached_label', default='')
-    Token.set_extension('cached_label', default='')
+add_spacy_extensions()
 
 
 @Language.component(CACHE_LABEL)

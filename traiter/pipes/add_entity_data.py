@@ -5,20 +5,20 @@ from typing import Dict
 from spacy.language import Language
 from spacy.tokens import Doc
 
-from ..entity_data_util import RejectMatch, add_extensions, get_action, relabel_entity
+from ..pipe_util import RejectMatch, add_spacy_extensions, get_action, relabel_entity
 
-NEW_ENTITY_DATA = 'new_entity_data'
+ADD_ENTITY_DATA = 'add_entity_data'
 
-add_extensions()
+add_spacy_extensions()
 
 
-@Language.factory(NEW_ENTITY_DATA)
-def new_entity_data(nlp: Language, name: str, actions: Dict[str, str]):
+@Language.factory(ADD_ENTITY_DATA)
+def add_entity_data(nlp: Language, name: str, actions: Dict[str, str]):
     """Create a entity data dispatch table."""
-    return NewEntityData(actions)
+    return AddEntityData(actions)
 
 
-class NewEntityData:
+class AddEntityData:
     """Perform actions to fill user defined fields etc. for all entities."""
 
     def __init__(self, actions: Dict[str, str]):
@@ -30,9 +30,7 @@ class NewEntityData:
         for ent in doc.ents:
             label = ent.label_
 
-            action = self.dispatch.get(label)
-
-            if action:
+            if action := self.dispatch.get(label):
                 try:
                     action(ent)
                 except RejectMatch:
