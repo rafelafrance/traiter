@@ -2,3 +2,4 @@ Hyphenate==1.1.0
 ftfy==5.8
 regex==2020.11.13
 inflect==5.0.2
+spacy==3.0.0

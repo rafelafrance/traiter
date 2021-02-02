@@ -10,6 +10,7 @@ import spacy
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
+from spacy.util import filter_spans
 
 from traiter.pipe_util import RejectMatch, add_spacy_extensions, relabel_entity
 
@@ -58,7 +59,10 @@ class UpdateEntityData:
         entities = []
         seen = set()
 
-        for ent in self.matcher(doc, as_spans=True):
+        matches = self.matcher(doc, as_spans=True)
+        matches = filter_spans(matches)
+
+        for ent in matches:
             if action := self.after_match.get(ent.label_):
                 try:
                     action(ent)

@@ -16,13 +16,13 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip setuptools wheel
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements_dev.txt ]; then pip install -r requirements_dev.txt; fi
-        pip install -U spacy-nightly --pre
+        pip install -U spacy
         python -m spacy download en_core_web_sm
     - name: Lint with flake8
       run: |

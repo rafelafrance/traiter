@@ -2,7 +2,6 @@
 
 from spacy.lang.char_classes import LIST_HYPHENS, LIST_QUOTES
 
-
 CLOSE = '  ) ] '.split()
 COLON = ' :'.split()
 COMMA = ' , '.split()
@@ -24,7 +23,7 @@ TEMP = ['\\' + x for x in OPEN]
 OPEN_RE = fr'[{"".join(TEMP)}]'
 
 TEMP = ['\\' + c for c in DASH[:2]]
-DASH_RE = fr'[{"".join(TEMP)}]'
+DASH_RE = fr'[{"".join(TEMP)}]{{1,3}}'
 
 FLOAT_RE = r'(\d+\.?\d*)'
 INT_RE = r'(\d+)'
