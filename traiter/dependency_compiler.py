@@ -17,7 +17,7 @@ REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
 class DependencyCompiler:
     """Convert patterns strings to spacy token pattern arrays."""
 
-    def __init__(self, shared_dependencies: dict[dict] = None):
+    def __init__(self, shared_dependencies: dict[str, dict] = None):
         self.shared_dependencies = shared_dependencies if shared_dependencies else {}
 
     def __call__(self, map_: dict[str, dict], *patterns: str) -> list[list[dict]]:

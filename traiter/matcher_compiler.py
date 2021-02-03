@@ -14,7 +14,7 @@ from warnings import warn
 class MatcherCompiler:
     """Convert patterns strings to spacy token pattern arrays."""
 
-    def __init__(self, shared_patterns: dict[dict] = None):
+    def __init__(self, shared_patterns: dict[str, dict] = None):
         self.shared_patterns = shared_patterns if shared_patterns else {}
 
     def __call__(self, map_: dict[str, dict], *patterns: str) -> list[list[dict]]:
