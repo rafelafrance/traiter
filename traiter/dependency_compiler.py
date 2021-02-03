@@ -17,15 +17,11 @@ REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
 class DependencyCompiler:
     """Convert patterns strings to spacy token pattern arrays."""
 
-    def __init__(self, shared_dependencies: dict[str, dict] = None):
-        self.shared_dependencies = shared_dependencies if shared_dependencies else {}
+    def __init__(self, decoder: dict[str, dict]):
+        self.decoder = decoder
 
-    def __call__(self, map_: dict[str, dict], *patterns: str) -> list[list[dict]]:
+    def __call__(self, *patterns: str) -> list[list[dict]]:
         """Convert patterns strings to spacy dependency pattern arrays."""
-        map_ = map_ if map_ else {}
-        # Allow map_ to overwrite shared_dependencies
-        map_ = {**self.shared_dependencies, **map_}
-
         all_patterns = []
 
         for string in patterns:
@@ -51,7 +47,7 @@ class DependencyCompiler:
                     rel_op = key
 
                 # Build the spacy dependency pattern
-                elif right_attrs := map_.get(key):
+                elif right_attrs := self.decoder.get(key):
                     right_id = f'{key}{i}'
 
                     if left_id and rel_op:

@@ -14,26 +14,22 @@ from warnings import warn
 class MatcherCompiler:
     """Convert patterns strings to spacy token pattern arrays."""
 
-    def __init__(self, shared_patterns: dict[str, dict] = None):
-        self.shared_patterns = shared_patterns if shared_patterns else {}
+    def __init__(self, decoder: dict[str, dict]):
+        self.decoder = decoder
 
-    def __call__(self, map_: dict[str, dict], *patterns: str) -> list[list[dict]]:
+    def __call__(self, *patterns: str) -> list[list[dict]]:
         """Convert patterns strings to spacy token pattern arrays."""
-        map_ = map_ if map_ else {}
-        # Allow map_ to overwrite shared_patterns
-        map_ = {**self.shared_patterns, **map_}
-
         all_patterns = []
 
         for string in patterns:
             pattern_seq = []
 
             for key in string.split():
-                token = deepcopy(map_.get(key))
+                token = deepcopy(self.decoder.get(key))
                 op = key[-1]
 
                 if not token and op in '?*+!':
-                    token = deepcopy(map_.get(key[:-1]))
+                    token = deepcopy(self.decoder.get(key[:-1]))
                     token['OP'] = op
 
                 if token:
