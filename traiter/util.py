@@ -12,18 +12,6 @@ import ftfy
 import inflect
 import regex as re
 
-__VERSION__ = '0.9.0'
-
-# This points to the client's data directory
-DATA_DIR = Path.cwd() / 'data'
-
-# Default term step
-TERM_STEP = 'terms'
-
-FLAGS = re.VERBOSE | re.IGNORECASE
-
-BATCH_SIZE = 1_000_000  # How many records to work with at a time
-
 INFLECT = inflect.engine()
 
 

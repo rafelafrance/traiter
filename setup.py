@@ -25,7 +25,7 @@ def license_():
 def find_version():
     """Read version from db.py."""
     regex = r"""^__VERSION__ = ['"]v?([^'"]*)['"]"""
-    with open('traiter/util.py') as in_file:
+    with open('traiter/const.py') as in_file:
         match = re.search(regex, in_file.read(), re.M)
         if match:
             return match.group(1)
@@ -49,6 +49,6 @@ setup(
     long_description=readme(),
     license=license_(),
     url='https://github.com/rafelafrance/traiter',
-    python_requires='>=3.8',
+    python_requires='>=3.9',
     scripts=[],
 )

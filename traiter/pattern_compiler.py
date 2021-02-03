@@ -27,7 +27,7 @@ class PatternCompiler:
     def to_patterns(self, map_: dict[str, dict], *patterns: str) -> list[list[dict]]:
         """Convert patterns strings to spacy token pattern arrays."""
         map_ = map_ if map_ else {}
-        # We want the arg to overwrite shared_patterns
+        # Allow map_ to overwrite shared_patterns
         map_ = {**self.shared_patterns, **map_}
 
         all_patterns = []
@@ -57,7 +57,7 @@ class PatternCompiler:
             self, map_: dict[str, dict], *patterns: str) -> list[list[dict]]:
         """Convert patterns strings to spacy dependency pattern arrays."""
         map_ = map_ if map_ else {}
-        # We want the arg to overwrite shared_patterns
+        # Allow map_ to overwrite shared_dependencies
         map_ = {**self.shared_dependencies, **map_}
 
         all_patterns = []
@@ -87,6 +87,7 @@ class PatternCompiler:
                             'RIGHT_ID': right_id,
                             'RIGHT_ATTRS': right_attrs,
                         })
+
                     else:
                         warn(f'Dependency patterns must go: ID op ID op ID... {string}')
 

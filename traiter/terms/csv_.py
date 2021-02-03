@@ -17,8 +17,8 @@ from typing import Optional, Union
 
 from hyphenate import hyphenate_word
 
-from ..const import DASH_CHAR
 import traiter.vocabulary as vocab
+from ..const import DASH_CHAR
 
 # This points to the traiter vocabulary files
 SHARED_CSV = list(Path(vocab.__file__).parent.glob('*.csv'))

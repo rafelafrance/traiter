@@ -5,8 +5,8 @@ import sqlite3
 from pathlib import Path
 from typing import Optional, Union
 
-from traiter.util import DATA_DIR
 from .csv_ import Csv
+from ..const import DATA_DIR
 
 # This points to a database (or a sym link) in the client's data directory
 ITIS_DB = DATA_DIR / 'ITIS.sqlite'

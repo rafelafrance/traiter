@@ -1,9 +1,9 @@
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
 ## Traiter
-This is the base Traiter information extraction/data mining library used by all client Traiter projects ([traiter_efloras](https://github.com/rafelafrance/traiter_efloras), [traiter_anoplura](https://github.com/rafelafrance/traiter_anoplura), etc.). It contains no runnable code itself.
+This is the base Traiter information extraction/data mining library used by all client Traiter projects ([traiter_odonata](https://github.com/rafelafrance/traiter_odonata), [traiter_efloras](https://github.com/rafelafrance/traiter_efloras), etc.). It contains no runnable code itself.
 
-Some of the literature mined:
+Some literature mined:
 - PDFs containing research papers of descriptions of species.
 - PDFs containing distribution data of species.
 - Database downloads of field notes and species descriptions.
@@ -22,7 +22,7 @@ Some of the literature mined:
 ![parsing example](assets/anoplura_rules.png)
 
 ## Install
-You will need to have Python3 installed, as well as pip, a package manager for python. You can install the requirements into your python environment like so:
+You will need to have Python3.9+ installed, as well as pip, a package manager for Python. You can install the requirements into your python environment like so:
 ```bash
 git clone https://github.com/rafelafrance/traiter.git
 cd traiter
@@ -43,4 +43,4 @@ python -m unittest discover
 ```
 
 ## Other sources of data
-- (Optional) We use the Integrated Taxonomic Information System (ITIS) for gathering some taxonomic information like species, genus, or common names. We do not store this database in GitHub. If you want to use it you may download the SQLite version of [ITIS here](https://www.itis.gov/downloads/index.html) and extract it into the `/data` directory.
+- (Optional) We use the Integrated Taxonomic Information System (ITIS) for gathering some taxonomic information like species, genus, or common names. We do not store this database in GitHub. If you want to use it you may download the SQLite version of [ITIS here](https://www.itis.gov/downloads/index.html) and extract it into the `./data` directory.

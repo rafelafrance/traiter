@@ -6,7 +6,7 @@ from typing import Any, Callable, Pattern, Union
 
 import regex
 
-from traiter.util import FLAGS
+from traiter.const import FLAGS
 
 TOKEN = 0
 SIZE = 4
@@ -105,11 +105,11 @@ def join(regexp: InRegexp) -> str:
 
 
 def part(
-    name: str,
-    regexp: InRegexp,
-    action: Action = None,
-    capture: bool = True,
-    priority: int = 0,
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True,
+        priority: int = 0,
 ) -> Rule:
     """Build a regular expression with a named group."""
     pattern = join(regexp)
@@ -127,11 +127,11 @@ def part(
 
 
 def term(
-    name: str,
-    regexp: InRegexp,
-    action: Action = None,
-    capture: bool = True,
-    priority: int = 0,
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True,
+        priority: int = 0,
 ) -> Rule:
     r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
@@ -149,11 +149,11 @@ def term(
 
 
 def grouper(
-    name: str,
-    regexp: InRegexp,
-    action: Action = None,
-    capture: bool = True,
-    priority: int = 0,
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True,
+        priority: int = 0,
 ) -> Rule:
     """Build a grouper regular expression."""
     return Rule(
@@ -168,11 +168,11 @@ def grouper(
 
 
 def replacer(
-    name: str,
-    regexp: InRegexp,
-    action: Action = None,
-    capture: bool = True,
-    priority: int = 0,
+        name: str,
+        regexp: InRegexp,
+        action: Action = None,
+        capture: bool = True,
+        priority: int = 0,
 ) -> Rule:
     """Build a replacer regular expression."""
     return Rule(
@@ -187,11 +187,11 @@ def replacer(
 
 
 def producer(
-    action: Action,
-    regexp: InRegexp,
-    name: str = None,
-    capture: bool = False,
-    priority: int = 0,
+        action: Action,
+        regexp: InRegexp,
+        name: str = None,
+        capture: bool = False,
+        priority: int = 0,
 ) -> Rule:
     """Build a product regular expression."""
     token = next_token()
