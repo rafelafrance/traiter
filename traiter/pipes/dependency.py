@@ -2,7 +2,6 @@
 
 from array import array
 from collections import defaultdict
-from typing import Dict, List
 
 import spacy
 from spacy.language import Language
@@ -15,18 +14,19 @@ NEAREST_LINKER = 'nearest_linker.v1'
 
 
 @Language.factory(DEPENDENCY)
-def dependency(nlp: Language, name: str, patterns: List[List[Dict]]):
+def dependency(nlp: Language, name: str, patterns: list[list[dict]]):
     """Build a dependency pipe."""
-    return Dependency(nlp, patterns)
+    return Dependency(nlp, name, patterns)
 
 
 class Dependency:
     """Matchers that walk the parse tree of a sentence or doc."""
 
-    def __init__(self, nlp, patterns):
+    def __init__(self, nlp, name, patterns):
         self.nlp = nlp
+        self.name = name
         self.matcher = DependencyMatcher(nlp.vocab)
-        self.after_match = self.build_after_match(patterns)
+        self.dispatch = self.build_dispatch_table(patterns)
         self.build_matchers(patterns)
 
     def build_matchers(self, patterns):
@@ -34,31 +34,30 @@ class Dependency:
         for pattern_set in patterns:
             for pattern in pattern_set:
                 label = pattern['label']
-                on_match = pattern.get('on_match')
-                on_match = spacy.registry.misc.get(on_match) if on_match else None
-                self.matcher.add(label, pattern['patterns'], on_match=on_match)
+                self.matcher.add(label, pattern['patterns'])
 
-    def build_after_match(self, patterns):
+    def build_dispatch_table(self, patterns):
         """Setup after match actions."""
-        after_dict = {}
+        dispatch = {}
         for matcher in patterns:
             for pattern_set in matcher:
-                if after := pattern_set.get('after_match'):
-                    after_dict[pattern_set['label']] = after
-
-        after_match = {}
-        for label, values in after_dict.items():
-            label = self.nlp.vocab.strings[label]
-            func = spacy.registry.misc.get(values['func'])
-            kwargs = values.get('kwargs', {})
-            after_match[label] = (func, kwargs)
-
-        return after_match
+                label = pattern_set['label']
+                label = self.nlp.vocab.strings[label]
+                if on_match := pattern_set.get('on_match'):
+                    if isinstance(on_match, str):
+                        func = on_match
+                        kwargs = {}
+                    else:
+                        func = on_match['func']
+                        kwargs = on_match.get('kwargs', {})
+                    func = spacy.registry.misc.get(func)
+                    dispatch[label] = (func, kwargs)
+        return dispatch
 
     def __call__(self, doc):
         matches = self.matcher(doc)
 
-        if not self.after_match:
+        if not self.dispatch:
             return doc
 
         matches_by_id = defaultdict(list)
@@ -66,7 +65,7 @@ class Dependency:
             matches_by_id[match[0]].append(match)
 
         for match_id, match_list in matches_by_id.items():
-            if after := self.after_match.get(match_id):
+            if after := self.dispatch.get(match_id):
                 after[0](doc, match_list, **after[1])
 
         return doc
@@ -78,8 +77,9 @@ def nearest_linker(doc, matches, **kwargs):
 
     This uses a simple algorithm for linking traits.
         1) Create a set of matched entities from matches of tokens.
-        2) Find all entities
-        2) Link entities to closest root entity.
+        2) Find all entities.
+        2) Link entities to closest root entity, favoring entities being downstream
+           being downstream of the root entity.
     """
     # print(kwargs)
     # print(matches)

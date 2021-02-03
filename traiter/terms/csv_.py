@@ -13,7 +13,7 @@ Columns for a vocabulary CSV file:
 
 import csv
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 from hyphenate import hyphenate_word
 
@@ -25,15 +25,15 @@ SHARED_CSV = list(Path(vocab.__file__).parent.glob('*.csv'))
 
 HYPHENS = ('-', '\xad')
 
-StrList = Union[str, List[str]]
-PathList = Union[str, List[str], Path, List[Path]]
+StrList = Union[str, list[str]]
+PathList = Union[str, list[str], Path, list[Path]]
 OptStrList = Optional[StrList]
 
 
 class Csv:
     """A dictionary of terms."""
 
-    def __init__(self, terms: Optional[List[Dict]] = None) -> None:
+    def __init__(self, terms: Optional[list[dict]] = None) -> None:
         self.terms = terms if terms else []
 
     def __iter__(self):
@@ -70,7 +70,7 @@ class Csv:
                  for t in self.terms if t['attr'].upper() == attr]
         return rules
 
-    def pattern_dict(self, column: str) -> Dict[str, Dict]:
+    def pattern_dict(self, column: str) -> dict[str, dict]:
         """Create a dict from a column in the terms."""
         return {t['pattern']: v for t in self.terms
                 if (v := t.get(column)) not in (None, '')}
@@ -188,7 +188,7 @@ class Csv:
             cls,
             other: 'Csv',
             old_label: str,
-            idx: Union[int, List[int], Tuple[int]],
+            idx: Union[int, list[int], tuple[int]],
             new_label: str = None,
             attr: str = 'lower'
     ) -> 'Csv':

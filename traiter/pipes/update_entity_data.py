@@ -4,8 +4,6 @@ It performs matches and runs functions on those matches. The "after_match" funct
 perform the actual updates.
 """
 
-from typing import Dict, List
-
 import spacy
 from spacy.language import Language
 from spacy.matcher import Matcher
@@ -20,18 +18,19 @@ add_spacy_extensions()
 
 
 @Language.factory(UPDATE_ENTITY_DATA)
-def update_entity_data(nlp: Language, name: str, patterns: List[List[Dict]]):
+def update_entity_data(nlp: Language, name: str, patterns: list[list[dict]]):
     """Create a entity data dispatch table."""
-    return UpdateEntityData(nlp, patterns)
+    return UpdateEntityData(nlp, name, patterns)
 
 
 class UpdateEntityData:
     """Perform actions to update user defined fields etc. for all entities."""
 
-    def __init__(self, nlp, patterns):
+    def __init__(self, nlp, name, patterns):
         self.nlp = nlp
+        self.name = name
         self.matcher = Matcher(nlp.vocab)
-        self.after_match = self.build_after_match(patterns)
+        self.dispatch = self.build_dispatch_table(patterns)
         self.build_matchers(patterns)
 
     def build_matchers(self, patterns):
@@ -45,15 +44,17 @@ class UpdateEntityData:
                     label, pattern['patterns'], on_match=on_match, greedy='LONGEST')
 
     @staticmethod
-    def build_after_match(patterns):
+    def build_dispatch_table(patterns):
         """Setup after match actions."""
-        after_match = {}
+        dispatch = {}
         for matcher in patterns:
             for pattern_set in matcher:
-                if after := pattern_set.get('after_match'):
-                    func = spacy.registry.misc.get(after['func'])
-                    after_match[pattern_set['label']] = func
-        return after_match
+                label = pattern_set['label']
+                if on_match := pattern_set.get('on_match'):
+                    func = on_match if isinstance(on_match, str) else on_match['func']
+                    func = spacy.registry.misc.get(func)
+                    dispatch[label] = func
+        return dispatch
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
@@ -63,7 +64,7 @@ class UpdateEntityData:
         matches = filter_spans(matches)
 
         for ent in matches:
-            if action := self.after_match.get(ent.label_):
+            if action := self.dispatch.get(ent.label_):
                 try:
                     action(ent)
                 except RejectMatch:

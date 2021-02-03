@@ -1,6 +1,6 @@
 """Common functions for custom pipes."""
 
-from typing import Callable, Dict, List, Optional
+from typing import Optional
 
 import spacy
 from spacy.tokens import Span, Token
@@ -30,11 +30,6 @@ def add_spacy_extensions() -> None:
         Token.set_extension('cached_label', default='')
 
 
-def get_action(action: str) -> Callable:
-    """Return an action from the misc registry."""
-    return spacy.registry.misc.get(action)
-
-
 def relabel_entity(ent, label):
     """Relabel an entity.
 
@@ -50,11 +45,11 @@ def relabel_entity(ent, label):
 
 
 def from_terms(
-        terms: List[Dict],
+        terms: list[dict],
         *,
-        actions: Optional[Dict[str, str]] = None,
+        actions: Optional[dict[str, str]] = None,
         default: Optional[str] = None
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Add patterns from terms.
 
     Add a pattern matcher for each term in the list.
@@ -73,25 +68,6 @@ def from_terms(
     return actions
 
 
-def from_matchers(*matchers, default: Optional[str] = None) -> Dict[str, str]:
-    """Build rules from matchers.
-
-    Matchers are a list of dicts.
-    The dict contains these fields:
-        1) A "label" for the match.
-        2) An optional "action", a registered function name to run upon a match.
-        3) An optional "id".
-        4) A list of spacy patterns. Each pattern itself is a list of dicts.
-    """
-    actions = {}
-    for matcher in matchers:
-        for rule in matcher:
-            if action := rule.get('on_match', default):
-                label = rule['label']
-                actions[label] = action
-    return actions
-
-
 @spacy.registry.misc(REJECT_MATCH)
 def reject_match(_: Span) -> None:
     """Use this to reject a pattern from doc.ents."""
@@ -99,7 +75,7 @@ def reject_match(_: Span) -> None:
 
 
 @spacy.registry.misc(TEXT_ACTION)
-def text_action(ent: Span, replace: Optional[Dict] = None) -> None:
+def text_action(ent: Span, replace: Optional[dict] = None) -> None:
     """Enrich term matches."""
     lower = ent.text.lower()
     ent._.data[ent.label_] = replace.get(lower, lower) if replace else lower

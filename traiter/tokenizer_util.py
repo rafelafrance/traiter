@@ -4,7 +4,7 @@ The default Spacy tokenizer works great for model-based parsing but sometimes ca
 complications for rule-based parsers.
 """
 
-from typing import List, Optional
+from typing import Optional
 
 from spacy.lang.char_classes import (
     ALPHA, HYPHENS, LIST_HYPHENS, LIST_PUNCT, LIST_QUOTES)
@@ -25,7 +25,7 @@ INFIX = [
 ]
 
 
-def append_prefix_regex(nlp: Language, prefixes: Optional[List[str]] = None):
+def append_prefix_regex(nlp: Language, prefixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
     prefixes = prefixes if prefixes else BREAKING
     prefixes += nlp.Defaults.prefixes
@@ -34,7 +34,7 @@ def append_prefix_regex(nlp: Language, prefixes: Optional[List[str]] = None):
     nlp.tokenizer.suffix_search = prefix_re.search
 
 
-def append_suffix_regex(nlp: Language, suffixes: Optional[List[str]] = None):
+def append_suffix_regex(nlp: Language, suffixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
     suffixes = suffixes if suffixes else BREAKING
     suffixes += nlp.Defaults.suffixes
@@ -43,7 +43,7 @@ def append_suffix_regex(nlp: Language, suffixes: Optional[List[str]] = None):
     nlp.tokenizer.suffix_search = suffix_re.search
 
 
-def append_infix_regex(nlp: Language, infixes: Optional[List[str]] = None):
+def append_infix_regex(nlp: Language, infixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
     infixes = infixes if infixes else INFIX
     infixes += nlp.Defaults.infixes
@@ -54,9 +54,9 @@ def append_infix_regex(nlp: Language, infixes: Optional[List[str]] = None):
 
 def append_tokenizer_regex(
         nlp: Language,
-        prefixes: Optional[List[str]] = None,
-        infixes: Optional[List[str]] = None,
-        suffixes: Optional[List[str]] = None
+        prefixes: Optional[list[str]] = None,
+        infixes: Optional[list[str]] = None,
+        suffixes: Optional[list[str]] = None
 ):
     """Append all three prefix, infix, suffix."""
     append_prefix_regex(nlp, prefixes)

@@ -4,7 +4,7 @@ This is most often used after creating entities from phrase patterns.
 It may also be used on rule patterns that are very early in the pipeline.
 """
 
-from typing import Dict, Optional
+from typing import Optional
 
 from spacy.language import Language
 
@@ -17,15 +17,17 @@ add_spacy_extensions()
 
 @Language.factory(SIMPLE_ENTITY_DATA)
 def simple_entity_data(
-        nlp: Language, name: str, replace: Optional[Dict[str, str]] = None):
+        nlp: Language, name: str, replace: Optional[dict[str, str]] = None):
     """Set update term text."""
-    return SimpleEntityData(replace)
+    return SimpleEntityData(nlp, name, replace)
 
 
 class SimpleEntityData:
     """Save the text (lower) in the entity data and cache the label."""
 
-    def __init__(self, replace):
+    def __init__(self, nlp, name, replace):
+        self.nlp = nlp
+        self.name = name
         self.replace = replace
 
     def __call__(self, doc):

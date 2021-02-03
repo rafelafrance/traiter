@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
 from tempfile import TemporaryDirectory, mkdtemp
-from typing import Any, Hashable, List, Optional, Set, Tuple, Union
+from typing import Any, Hashable, Optional, Union
 
 import ftfy
 import inflect
@@ -74,7 +74,7 @@ def shorten(text: str) -> str:
     return ' '.join(text.split())
 
 
-def flatten(nested: Any) -> List:
+def flatten(nested: Any) -> list:
     """Flatten an arbitrarily nested list."""
     flat = []
     nested = nested if isinstance(nested, (list, tuple, set)) else [nested]
@@ -87,22 +87,22 @@ def flatten(nested: Any) -> List:
     return flat
 
 
-def squash(values: Union[List, Set]) -> Any:
+def squash(values: Union[list, set]) -> Any:
     """Squash a list to a single value is its length is one."""
     return list(values) if len(values) != 1 else values.pop()
 
 
-def as_list(values: Any) -> List:
+def as_list(values: Any) -> list:
     """Convert values to a list."""
     return list(values) if isinstance(values, (list, tuple, set)) else [values]
 
 
-def as_set(values: Any) -> Set:
+def as_set(values: Any) -> set:
     """Convert values to a list."""
     return set(values) if isinstance(values, (list, tuple, set)) else {values}
 
 
-def as_tuple(values: Any) -> Tuple:
+def as_tuple(values: Any) -> tuple:
     """Convert values to a tuple."""
     return values if isinstance(values, (list, tuple, set)) else (values,)
 

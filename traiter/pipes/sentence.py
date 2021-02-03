@@ -1,6 +1,6 @@
 """Custom sentence splitter."""
 
-from typing import List, Optional
+from typing import Optional
 
 import regex
 from spacy.language import Language
@@ -13,25 +13,23 @@ SENTENCE = 'sentence'
 def sentence(
         nlp: Language,
         name: str,
-        abbrevs: Optional[List[str]] = None,
-        headings: Optional[List[str]] = None):
+        abbrevs: Optional[list[str]] = None,
+        headings: Optional[list[str]] = None):
     """Create a sentence pipe."""
-    return Sentence(abbrevs, headings)
+    return Sentence(nlp, name, abbrevs, headings)
 
 
 class Sentence:
     """Shared sentencizer logic."""
 
-    def __init__(
-            self,
-            abbrevs: Optional[List[str]] = None,
-            headings: Optional[List[str]] = None
-    ) -> None:
+    def __init__(self, nlp, name, abbrevs, headings):
         """Build a custom sentencizer.
 
         Each client sentencizer has its own abbreviations that will prevent a
         sentence split.
         """
+        self.nlp = nlp
+        self.name = name
         abbrevs = abbrevs if abbrevs else []
         abbrevs = '|'.join(abbrevs)
         self.abbrevs = regex.compile(fr'(?:{abbrevs})$')

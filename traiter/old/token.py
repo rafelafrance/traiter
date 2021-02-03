@@ -1,10 +1,10 @@
 """A class to hold an individual token."""
 
-from typing import Dict, List, Match, Tuple
+from typing import Match
 
-from .rule import SIZE, Action, Groups, Rule
+from traiter.old.rule import SIZE, Action, Groups, Rule
 
-Tokens = List['Token']
+Tokens = list['Token']
 
 
 class Token:
@@ -15,7 +15,7 @@ class Token:
         rule: Rule = None,
         match: Match = None,
         group: Groups = None,
-        span: Tuple[int, int] = None,
+        span: tuple[int, int] = None,
     ) -> None:
         """Create a token."""
         self.rule = rule
@@ -36,7 +36,7 @@ class Token:
         return self.__dict__ == other.__dict__
 
     @property
-    def __dict__(self) -> Dict:
+    def __dict__(self) -> dict:
         """Convert to a string."""
         return {'name': self.name, 'span': self.span, 'groups': self.group}
 
