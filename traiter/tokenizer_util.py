@@ -13,7 +13,8 @@ from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix
 
 # These rules were useful in the past
 BREAKING = LIST_QUOTES + LIST_HYPHENS + LIST_PUNCT
-BREAKING += """ \\ / ˂ ˃ × """.split()
+BREAKING += """ \\ / ˂ ˃ × [.] """.split()
+PREFIX = SUFFIX = BREAKING
 
 # These rules were useful in the past
 INFIX = [
@@ -27,7 +28,7 @@ INFIX = [
 
 def append_prefix_regex(nlp: Language, prefixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
-    prefixes = prefixes if prefixes else BREAKING
+    prefixes = prefixes if prefixes else PREFIX
     prefixes += nlp.Defaults.prefixes
     prefixes = set(prefixes)
     prefix_re = compile_prefix_regex(prefixes)
@@ -36,7 +37,7 @@ def append_prefix_regex(nlp: Language, prefixes: Optional[list[str]] = None):
 
 def append_suffix_regex(nlp: Language, suffixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
-    suffixes = suffixes if suffixes else BREAKING
+    suffixes = suffixes if suffixes else SUFFIX
     suffixes += nlp.Defaults.suffixes
     suffixes = set(suffixes)
     suffix_re = compile_suffix_regex(suffixes)
@@ -52,7 +53,7 @@ def append_infix_regex(nlp: Language, infixes: Optional[list[str]] = None):
     nlp.tokenizer.infix_finditer = infix_re.finditer
 
 
-def append_tokenizer_regex(
+def append_tokenizer_regexes(
         nlp: Language,
         prefixes: Optional[list[str]] = None,
         infixes: Optional[list[str]] = None,
@@ -62,3 +63,9 @@ def append_tokenizer_regex(
     append_prefix_regex(nlp, prefixes)
     append_infix_regex(nlp, infixes)
     append_suffix_regex(nlp, suffixes)
+
+
+def append_abbrevs(nlp: Language, special_cases: list[str], attr: str = 'ORTH'):
+    """Add special case tokens to the tokenizer."""
+    for case in special_cases:
+        nlp.tokenizer.add_special_case(case, [{attr: case}])

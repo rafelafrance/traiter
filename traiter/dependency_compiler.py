@@ -8,7 +8,7 @@ dictionary and some simple rules.
 """
 
 from collections import deque
-
+from traceback import print_exc
 from warnings import warn
 
 REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
@@ -40,6 +40,7 @@ class DependencyCompiler:
                     if len(stack):
                         left_id, rel_op = stack.pop()
                     else:
+                        print_exc()
                         warn(f'Unbalanced parentheses in pattern: {string}')
 
                 # Add an operator to the queue
@@ -66,11 +67,13 @@ class DependencyCompiler:
                         })
 
                     else:
+                        print_exc()
                         warn(f'Dependency patterns go: ID op ID op ID... {string}')
 
                     left_id = right_id
 
                 else:
+                    print_exc()
                     warn(f'No right_attrs or rel_op for "{key}" in "{string}"')
 
             all_patterns.append(pattern_seq)

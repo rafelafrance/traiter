@@ -37,4 +37,6 @@ class SimpleEntityData:
                 lower = ent.text.lower()
                 lower = self.replace.get(lower, lower) if self.replace else lower
                 ent._.data[label] = lower
+                for token in ent:
+                    token._.cached_label = label
         return doc

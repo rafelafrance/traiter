@@ -38,10 +38,7 @@ class UpdateEntityData:
         for pattern_set in patterns:
             for pattern in pattern_set:
                 label = pattern['label']
-                on_match = pattern.get('on_match')
-                on_match = spacy.registry.misc.get(on_match) if on_match else None
-                self.matcher.add(
-                    label, pattern['patterns'], on_match=on_match, greedy='LONGEST')
+                self.matcher.add(label, pattern['patterns'], greedy='LONGEST')
 
     @staticmethod
     def build_dispatch_table(patterns):

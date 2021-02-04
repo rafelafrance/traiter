@@ -4,6 +4,8 @@ setup.py
 tests/__init__.py
 traiter/__init__.py
 traiter/const.py
+traiter/dependency_compiler.py
+traiter/matcher_compiler.py
 traiter/pattern_util.py
 traiter/pipe_util.py
 traiter/tokenizer_util.py

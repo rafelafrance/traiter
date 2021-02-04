@@ -78,8 +78,7 @@ def nearest_anchor(doc, matches, **kwargs):
     This uses a simple algorithm for linking traits.
         1) Create a set of matched entities from matches of tokens.
         2) Find all entities.
-        2) Link entities to closest anchor entity, favoring entities being downstream
-           of the anchor.
+        2) Link entities to closest anchor entity. There are different distance metrics.
     """
     # print(kwargs)
     # print(matches)
@@ -95,21 +94,36 @@ def nearest_anchor(doc, matches, **kwargs):
     anchor_2_ent = array('i', [-1] * len(doc))
     token_2_ent = array('i', [-1] * len(doc))
 
-    for i, ent in enumerate(doc.ents):
+    for e, ent in enumerate(doc.ents):
         if ent.label_ == exclude:
             continue
         elif ent.label_ == anchor:
-            anchor_2_ent[ent.start:ent.end] = array('i', [i] * len(ent))
+            anchor_2_ent[ent.start:ent.end] = array('i', [e] * len(ent))
         else:
-            token_2_ent[ent.start:ent.end] = array('i', [i] * len(ent))
+            token_2_ent[ent.start:ent.end] = array('i', [e] * len(ent))
 
     # From the matches with token indexes get the entity index
-    root_indexes, ent_indexes = set(), set()
+    anchor_indexes, ent_indexes = set(), set()
     for _, token_ids in matches:
         ent_indexes |= {e for t in token_ids if (e := token_2_ent[t]) > -1}
-        root_indexes |= {e for t in token_ids if (e := anchor_2_ent[t]) > -1}
+        anchor_indexes |= {e for t in token_ids if (e := anchor_2_ent[t]) > -1}
 
-    # Find the closest root entity to the target entity
-    for ent_idx in ent_indexes:
-        nearest = sorted(root_indexes, key=lambda r: (abs(r - ent_idx), -sign(r)))[0]
-        doc.ents[ent_idx]._.data[anchor] = doc.ents[nearest]._.data[anchor]
+    # Find the closest anchor entity to the target entity
+    for e in ent_indexes:
+        if not doc.ents[e]._.data.get(anchor):
+            nearest = sorted(anchor_indexes, key=lambda a: token_distance(a, e, doc))[0]
+            doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
+
+
+def token_distance(anchor_i, entity_i, doc):
+    """Calculate the distance in token offset from the anchor to the entity."""
+    sign_ = 1 if anchor_i > entity_i else -1
+    hi, lo = (anchor_i, entity_i) if anchor_i > entity_i else (entity_i, anchor_i)
+    dist = doc.ents[hi][-1].i - doc.ents[lo][0].i
+    return dist, sign_
+
+
+def entity_distance(anchor_idx, entity_idx, _):
+    """Calculate the distance in token offset from the anchor to the entity."""
+    dist = abs(anchor_idx - entity_idx)
+    return abs(dist), sign(dist)
