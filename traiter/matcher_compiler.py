@@ -8,7 +8,6 @@ some simple rules.
 """
 
 from copy import deepcopy
-from traceback import print_exc
 from warnings import warn
 
 
@@ -36,7 +35,6 @@ class MatcherCompiler:
                 if token:
                     pattern_seq.append(token)
                 else:
-                    print_exc()
                     warn(f'No token pattern for "{key}"')
 
             all_patterns.append(pattern_seq)

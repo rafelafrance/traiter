@@ -103,27 +103,42 @@ def nearest_anchor(doc, matches, **kwargs):
             token_2_ent[ent.start:ent.end] = array('i', [e] * len(ent))
 
     # From the matches with token indexes get the entity index
-    anchor_indexes, ent_indexes = set(), set()
+    anchor_idx, ent_idx = set(), set()
     for _, token_ids in matches:
-        ent_indexes |= {e for t in token_ids if (e := token_2_ent[t]) > -1}
-        anchor_indexes |= {e for t in token_ids if (e := anchor_2_ent[t]) > -1}
+        ent_idx |= {e for t in token_ids if (e := token_2_ent[t]) > -1}
+        anchor_idx |= {e for t in token_ids if (e := anchor_2_ent[t]) > -1}
 
     # Find the closest anchor entity to the target entity
-    for e in ent_indexes:
+    for e in ent_idx:
         if not doc.ents[e]._.data.get(anchor):
-            nearest = sorted(anchor_indexes, key=lambda a: token_distance(a, e, doc))[0]
+            nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
+            nearest = sorted(nearest)[0][1]
             doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
 
 
+PENALTY = {
+    ',': 2,
+    ';': 5,
+}
+
+
+def token_penalty(anchor_i, entity_i, doc):
+    """Calculate the token offset from the anchor to the entity, penalize punct."""
+    lo, hi = (entity_i, anchor_i) if entity_i < anchor_i else (anchor_i, entity_i)
+    lo, hi = doc.ents[lo][-1].i, doc.ents[hi][0].i
+    dist = hi - lo
+    penalty = sum(PENALTY.get(doc[i].text, 0) for i in range(lo + 1, hi))
+    return dist + penalty, sign(anchor_i - entity_i)
+
+
 def token_distance(anchor_i, entity_i, doc):
-    """Calculate the distance in token offset from the anchor to the entity."""
-    sign_ = 1 if anchor_i > entity_i else -1
+    """Calculate token offset from the anchor to the entity."""
     hi, lo = (anchor_i, entity_i) if anchor_i > entity_i else (entity_i, anchor_i)
-    dist = doc.ents[hi][-1].i - doc.ents[lo][0].i
-    return dist, sign_
+    dist = doc.ents[hi][0].i - doc.ents[lo][-1].i
+    return dist, sign(anchor_i - entity_i)
 
 
-def entity_distance(anchor_idx, entity_idx, _):
+def entity_distance(anchor_i, entity_i, _):
     """Calculate the distance in token offset from the anchor to the entity."""
-    dist = abs(anchor_idx - entity_idx)
+    dist = anchor_i - entity_i
     return abs(dist), sign(dist)

@@ -12,17 +12,18 @@ from spacy.language import Language
 from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
 
 # These rules were useful in the past
-BREAKING = LIST_QUOTES + LIST_HYPHENS + LIST_PUNCT
+DASHES = [h for h in LIST_HYPHENS if len(h) == 1]
+BREAKING = LIST_QUOTES + LIST_PUNCT + DASHES
 BREAKING += """ \\ / ˂ ˃ × [.] """.split()
 PREFIX = SUFFIX = BREAKING
 
 # These rules were useful in the past
 INFIX = [
-    r'(?<=[{a}0-9])[:<>=/+](?=[{a}])'.format(a=ALPHA),
-    r"""(?:{h})+""".format(h=HYPHENS),  # Break on any hyphen
-    r"""[\\\[\]\(\)/:;’'“”'+]""",  # Break on these characters
-    r'(?<=[0-9])\.?(?=[{a}])'.format(a=ALPHA),  # 1.word or 1N
-    r'(?<=[{a}]),(?=[0-9])'.format(a=ALPHA),  # word,digits
+    fr'(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])',
+    fr"""(?:{HYPHENS})+""",             # Break on any hyphen
+    r"""[\\\[\]\(\)/:;’'“”'+]""",       # Break on these characters
+    fr'(?<=[0-9])\.?(?=[{ALPHA}])',     # 1.word or 1N
+    fr'(?<=[{ALPHA}]),(?=[0-9])',       # word,digits
 ]
 
 

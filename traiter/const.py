@@ -3,6 +3,7 @@ from pathlib import Path
 
 import regex as re
 from spacy.lang.char_classes import LIST_HYPHENS, LIST_QUOTES
+from spacy.lang.char_classes import HYPHENS
 
 __VERSION__ = '0.9.0'
 
@@ -15,9 +16,10 @@ BATCH_SIZE = 1_000_000  # How many records to work with at a time
 
 # Useful character classes
 CLOSE = '  ) ] '.split()
-COLON = ' :'.split()
+COLON = ' : '.split()
 COMMA = ' , '.split()
 CROSS = ' x × '.split()
+# DASH = ' – - –– -- '.split()
 DASH = LIST_HYPHENS
 DOT = ' . '.split()
 EQ = ' = '.split()
@@ -34,11 +36,10 @@ CLOSE_RE = fr'[{"".join(TEMP)}]'
 TEMP = ['\\' + x for x in OPEN]
 OPEN_RE = fr'[{"".join(TEMP)}]'
 
-TEMP = ['\\' + c for c in DASH[:2]]
-DASH_RE = fr'[{"".join(TEMP)}]{{1,3}}'
+DASH_RE = f'(?:{HYPHENS})'
 
-FLOAT_RE = r'(\d+\.?\d*)'
-INT_RE = r'(\d+)'
+FLOAT_RE = r'(?:\d+\.?\d*)'
+INT_RE = r'(?:\d+)'
 
 FLOAT_TOKEN_RE = f'^{FLOAT_RE}$'
 INT_TOKEN_RE = f'^{INT_RE}$'
