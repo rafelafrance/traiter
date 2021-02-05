@@ -20,7 +20,7 @@ PREFIX = SUFFIX = BREAKING
 # These rules were useful in the past
 INFIX = [
     fr'(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])',
-    fr"""(?:{HYPHENS})+""",             # Break on any hyphen
+    fr"""(?:{HYPHENS})""",             # Break on any hyphen
     r"""[\\\[\]\(\)/:;’'“”'+]""",       # Break on these characters
     fr'(?<=[0-9])\.?(?=[{ALPHA}])',     # 1.word or 1N
     fr'(?<=[{ALPHA}]),(?=[0-9])',       # word,digits
