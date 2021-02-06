@@ -43,15 +43,19 @@ class Csv:
         self.terms += other.terms
         return self
 
-    def with_pattern(self, pattern: str = ''):
+    def with_pattern(self, pattern: str = '') -> list[dict]:
         """Given a pattern get the term."""
         terms = [t for t in self.terms if t['pattern'] == pattern]
         return terms
 
-    def with_label(self, label: str = ''):
+    def with_label(self, label: str = '') -> list[dict]:
         """Given a pattern get the term."""
         terms = [t for t in self.terms if t['label'] == label]
         return terms
+
+    def patterns_with_label(self, label: str = '') -> list[str]:
+        """Get all patterns with the given label."""
+        return [t['pattern'] for t in self.with_label(label)]
 
     def drop(self, drops: StrList, field: str = 'label') -> None:
         """Drop term from the traits.
