@@ -35,7 +35,7 @@ class Token:
 
     @property
     def __dict__(self) -> dict:
-        """Convert to a string."""
+        """Convert to a dict."""
         return {'name': self.name, 'span': self.span, 'groups': self.group}
 
     @property

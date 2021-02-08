@@ -2,8 +2,8 @@
 
 EXPERIMENTAL!
 
-In an effort to make dependency patterns readable I've created simple compilers that
-take in, hopefully, readable strings and convert them to spacy patterns using a
+In an effort to make dependency patterns moire readable I've created simple compilers
+that take in, hopefully, readable strings and convert them to spacy patterns using a
 dictionary and some simple rules.
 """
 

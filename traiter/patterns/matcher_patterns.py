@@ -2,7 +2,7 @@
 
 EXPERIMENTAL!
 
-In an effort to make patterns readable I've created simple compilers that take in,
+In an effort to make patterns more readable I've created simple compilers that take in,
 hopefully, readable strings and convert them to spacy patterns using a dictionary and
 some simple rules.
 """
@@ -75,7 +75,12 @@ class MatcherPatterns:
         return all_patterns
 
 
-def add_ruler_patterns(ruler: EntityRuler, *patterns: MatcherPatterns):
+def as_dicts(patterns: list[MatcherPatterns]) -> list[dict]:
+    """Convert all patterns to a dicts."""
+    return [p.as_dict() for p in patterns]
+
+
+def add_ruler_patterns(ruler: EntityRuler, patterns: list[MatcherPatterns]) -> None:
     """Add patterns to a ruler."""
     rules = []
     for matcher in patterns:

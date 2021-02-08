@@ -6,7 +6,7 @@ perform the actual updates.
 
 from typing import Union
 
-import spacy
+from spacy import registry
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
@@ -32,29 +32,13 @@ class UpdateEntityData(EntityData):
         super().__init__()
         self.nlp = nlp
         self.name = name
+        self.dispatch = {on: registry.misc.get(on) for p in as_list(patterns)
+                         if (on := p.get('on_match'))}
+
         self.matcher = Matcher(nlp.vocab)
-        self.dispatch = self.build_dispatch_table(patterns)
-        self.build_matchers(patterns)
-
-    def build_matchers(self, patterns):
-        """Setup matchers."""
-        for pattern_set in patterns:
-            for pattern in pattern_set:
-                label = pattern['label']
-                self.matcher.add(label, pattern['patterns'], greedy='LONGEST')
-
-    @staticmethod
-    def build_dispatch_table(patterns):
-        """Setup after match actions."""
-        dispatch = {}
         for matcher in patterns:
-            for pattern_set in matcher:
-                label = pattern_set['label']
-                if on_match := pattern_set.get('on_match'):
-                    func = on_match if isinstance(on_match, str) else on_match['func']
-                    func = spacy.registry.misc.get(func)
-                    dispatch[label] = func
-        return dispatch
+            label = matcher['label']
+            self.matcher.add(label, matcher['patterns'], greedy='LONGEST')
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
