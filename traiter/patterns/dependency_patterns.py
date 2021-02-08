@@ -8,18 +8,43 @@ dictionary and some simple rules.
 """
 
 from collections import deque
+from typing import Any, Union
 from warnings import warn
+
+from spacy import registry
 
 REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
 
 
-class DependencyCompiler:
+class DependencyPatterns:
     """Convert patterns strings to spacy token pattern arrays."""
 
-    def __init__(self, decoder: dict[str, dict]):
+    def __init__(
+            self,
+            label: str,
+            *,
+            patterns: Union[str, list[str]],
+            decoder: dict[str, dict] = None,
+            on_match: dict[str, Any]):
         self.decoder = decoder
+        self.label = label
+        self.decoder = decoder
+        self.patterns = self.compile(patterns)
+        self.on_match = on_match
 
-    def __call__(self, *patterns: str) -> list[list[dict]]:
+        if callable(on_match['func']):
+            registry.misc.register(name=label, func=on_match)
+            self.on_match['func'] = label
+
+    def as_dict(self) -> dict:
+        """Return the object as a serializable dict."""
+        return {
+            'label': self.label,
+            'on_match': self.on_match,
+            'patterns': self.patterns,
+        }
+
+    def compile(self, patterns: list[str]) -> list[list[dict]]:
         """Convert patterns strings to spacy dependency pattern arrays."""
         all_patterns = []
 
@@ -65,7 +90,7 @@ class DependencyCompiler:
                         })
 
                     else:
-                        warn(f'Dependency patterns go: ID op ID op ID... {string}')
+                        warn(f'Dependency patterns do not start with an op... {string}')
 
                     left_id = right_id
 

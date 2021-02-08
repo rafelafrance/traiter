@@ -8,11 +8,9 @@ from typing import Optional
 
 from spacy.language import Language
 
-from ..pipe_util import add_spacy_extensions
+from traiter.pipes.entity_data import EntityData
 
 SIMPLE_ENTITY_DATA = 'simple_entity_data'
-
-add_spacy_extensions()
 
 
 @Language.factory(SIMPLE_ENTITY_DATA)
@@ -22,13 +20,14 @@ def simple_entity_data(
     return SimpleEntityData(nlp, name, replace)
 
 
-class SimpleEntityData:
+class SimpleEntityData(EntityData):
     """Save the text (lower) in the entity data and cache the label."""
 
     def __init__(self, nlp, name, replace):
+        super().__init__()
         self.nlp = nlp
         self.name = name
-        self.replace = replace
+        self.replace = replace if replace else {}
 
     def __call__(self, doc):
         for ent in doc.ents:

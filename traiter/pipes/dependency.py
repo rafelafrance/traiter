@@ -2,19 +2,25 @@
 
 from array import array
 from collections import defaultdict
+from typing import Union
 
 import spacy
 from spacy.language import Language
 from spacy.matcher import DependencyMatcher
 
-from traiter.util import sign
+from traiter.util import as_list, sign
 
 DEPENDENCY = 'dependency'
 NEAREST_ANCHOR = 'nearest_anchor.v1'
 
+PENALTY = {
+    ',': 2,
+    ';': 5,
+}
+
 
 @Language.factory(DEPENDENCY)
-def dependency(nlp: Language, name: str, patterns: list[list[dict]]):
+def dependency(nlp: Language, name: str, patterns: Union[dict, list[dict]]):
     """Build a dependency pipe."""
     return Dependency(nlp, name, patterns)
 
@@ -26,32 +32,31 @@ class Dependency:
         self.nlp = nlp
         self.name = name
         self.matcher = DependencyMatcher(nlp.vocab)
+        patterns = as_list(patterns)
         self.dispatch = self.build_dispatch_table(patterns)
         self.build_matchers(patterns)
 
     def build_matchers(self, patterns):
         """Setup matchers."""
-        for pattern_set in patterns:
-            for pattern in pattern_set:
-                label = pattern['label']
-                self.matcher.add(label, pattern['patterns'])
+        for matcher in patterns:
+            label = matcher['label']
+            self.matcher.add(label, matcher['patterns'])
 
     def build_dispatch_table(self, patterns):
         """Setup after match actions."""
         dispatch = {}
         for matcher in patterns:
-            for pattern_set in matcher:
-                label = pattern_set['label']
-                label = self.nlp.vocab.strings[label]
-                if on_match := pattern_set.get('on_match'):
-                    if isinstance(on_match, str):
-                        func = on_match
-                        kwargs = {}
-                    else:
-                        func = on_match['func']
-                        kwargs = on_match.get('kwargs', {})
-                    func = spacy.registry.misc.get(func)
-                    dispatch[label] = (func, kwargs)
+            label = matcher['label']
+            label = self.nlp.vocab.strings[label]
+            if on_match := matcher.get('on_match'):
+                if isinstance(on_match, str):
+                    func = on_match
+                    kwargs = {}
+                else:
+                    func = on_match['func']
+                    kwargs = on_match.get('kwargs', {})
+                func = spacy.registry.misc.get(func)
+                dispatch[label] = (func, kwargs)
         return dispatch
 
     def __call__(self, doc):
@@ -114,12 +119,6 @@ def nearest_anchor(doc, matches, **kwargs):
             nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
             nearest = sorted(nearest)[0][1]
             doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
-
-
-PENALTY = {
-    ',': 2,
-    ';': 5,
-}
 
 
 def token_penalty(anchor_i, entity_i, doc):
