@@ -7,6 +7,7 @@ from typing import Union
 import spacy
 from spacy.language import Language
 from spacy.matcher import DependencyMatcher
+from spacy.tokens import Span, Token
 
 from traiter.util import as_list, sign
 
@@ -17,6 +18,13 @@ PENALTY = {
     ',': 2,
     ';': 5,
 }
+
+
+def add_extensions():
+    """Add extensions for spans and tokens used by entity linker pipes."""
+    if not Span.has_extension('links'):
+        Span.set_extension('links', default={})
+        Token.set_extension('links', default={})
 
 
 @Language.factory(DEPENDENCY)
@@ -35,6 +43,7 @@ class Dependency:
         patterns = as_list(patterns)
         self.dispatch = self.build_dispatch_table(patterns)
         self.build_matchers(patterns)
+        add_extensions()
 
     def build_matchers(self, patterns):
         """Setup matchers."""
@@ -119,6 +128,8 @@ def nearest_anchor(doc, matches, **kwargs):
             nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
             nearest = sorted(nearest)[0][1]
             doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
+            doc.ents[e]._.links[anchor] = (doc.ents[nearest].start_char,
+                                           doc.ents[nearest].end_char)
 
 
 def token_penalty(anchor_i, entity_i, doc):
