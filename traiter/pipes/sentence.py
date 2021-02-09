@@ -36,11 +36,11 @@ class Sentence:
                 next_.is_sent_start = True
                 token.is_sent_start = True
 
-            # A normal sentence split
-            elif token.text == '.' and self.is_prev(prev) and self.is_next(next_):
+            # A period followed by a capital letter (or space, digit or another period)
+            elif token.text == '.' and self.is_next(next_):
                 next_.is_sent_start = True
 
-            # Capture sentences inside of quotes
+            # Quotes preceded by a period
             elif token.text in '"”\'' and prev and prev.text == '.':
                 next_.is_sent_start = True
 
@@ -58,4 +58,5 @@ class Sentence:
     @staticmethod
     def is_next(token):
         """See if the next token starts with an uppercase is a space or period."""
-        return token.prefix_.isupper() or token.pos_ == 'SPACE' or token.text in '.'
+        return (token.prefix_.isupper() or token.prefix_.isdigit()
+                or token.pos_ == 'SPACE' or token.text == '.')
