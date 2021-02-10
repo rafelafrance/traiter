@@ -58,14 +58,8 @@ class Dependency:
             label = matcher['label']
             label = self.nlp.vocab.strings[label]
             if on_match := matcher.get('on_match'):
-                if isinstance(on_match, str):
-                    func = on_match
-                    kwargs = {}
-                else:
-                    func = on_match['func']
-                    kwargs = on_match.get('kwargs', {})
-                func = spacy.registry.misc.get(func)
-                dispatch[label] = (func, kwargs)
+                func = spacy.registry.misc.get(on_match['func'])
+                dispatch[label] = (func, on_match.get('kwargs', {}))
         return dispatch
 
     def __call__(self, doc):

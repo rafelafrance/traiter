@@ -26,7 +26,7 @@ class AddEntityData(EntityData):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.dispatch = {on: registry.misc.get(on) for p in as_list(patterns)
+        self.dispatch = {p['label']: registry.misc.get(on) for p in as_list(patterns)
                          if (on := p.get('on_match'))}
 
     def __call__(self, doc: Doc) -> Doc:

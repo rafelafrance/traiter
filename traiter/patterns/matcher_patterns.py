@@ -11,7 +11,6 @@ from copy import deepcopy
 from typing import Callable, Union
 from warnings import warn
 
-from spacy import registry
 from spacy.pipeline import EntityRuler
 from spacy.tokens import Span
 
@@ -36,10 +35,6 @@ class MatcherPatterns:
         if decoder:
             patterns = patterns if isinstance(patterns, list) else [patterns]
             self.patterns = self.compile(patterns)
-
-        if callable(on_match):
-            registry.misc.register(name=label, func=on_match)
-            self.on_match = label
 
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""

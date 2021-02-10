@@ -2,7 +2,7 @@
 
 EXPERIMENTAL!
 
-In an effort to make dependency patterns moire readable I've created simple compilers
+In an effort to make dependency patterns more readable I've created simple compilers
 that take in, hopefully, readable strings and convert them to spacy patterns using a
 dictionary and some simple rules.
 """
@@ -10,8 +10,6 @@ dictionary and some simple rules.
 from collections import deque
 from typing import Any, Union
 from warnings import warn
-
-from spacy import registry
 
 REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
 
@@ -32,10 +30,6 @@ class DependencyPatterns:
         self.patterns = self.compile(patterns)
         self.on_match = on_match
 
-        if callable(on_match['func']):
-            registry.misc.register(name=label, func=on_match)
-            self.on_match['func'] = label
-
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""
         return {
@@ -53,10 +47,14 @@ class DependencyPatterns:
             stack = deque()
             left_id, rel_op, right_id, right_attrs = '', '', '', {}
 
-            for i, key in enumerate(string.split()):
+            # Parens can be contiguous with the a symbol or operator
+            new_str = string.replace('(', ' ( ').replace(')', ' ) ')
+
+            for i, key in enumerate(new_str.split()):
 
                 # Start a branching pattern by saving the current state
                 if key == '(':
+                    # Allow nested fragment to start with either an ID or an OP
                     stack.append((left_id, rel_op))
 
                 # Return to the previous state from a branching pattern
