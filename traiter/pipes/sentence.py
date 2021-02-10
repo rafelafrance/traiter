@@ -5,7 +5,12 @@ from typing import Optional
 from spacy.language import Language
 from spacy.tokens import Doc
 
+from traiter.const import CLOSE, QUOTE
+
 SENTENCE = 'sentence'
+
+EOS = """ . ? ! … """.split()  # End Of Sentence
+PREV_EOS = CLOSE + EOS
 
 
 @Language.factory(SENTENCE)
@@ -41,7 +46,7 @@ class Sentence:
                 next_.is_sent_start = True
 
             # Quotes preceded by a period
-            elif token.text in '"”\'' and prev and prev.text == '.':
+            elif token.text in QUOTE and prev and prev.text in EOS:
                 next_.is_sent_start = True
 
             # Not a sentence break
@@ -53,10 +58,10 @@ class Sentence:
     @staticmethod
     def is_prev(token):
         """See if the previous token is a space or a bracket."""
-        return token.pos_ == 'SPACE' or token.text in ')].'
+        return token.pos_ == 'SPACE' or token.text in PREV_EOS
 
     @staticmethod
     def is_next(token):
         """See if the next token starts with an uppercase is a space or period."""
         return (token.prefix_.isupper() or token.prefix_.isdigit()
-                or token.pos_ == 'SPACE' or token.text == '.')
+                or token.pos_ == 'SPACE' or token.text in EOS)
