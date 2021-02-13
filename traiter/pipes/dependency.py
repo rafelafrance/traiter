@@ -23,8 +23,8 @@ PENALTY = {
 def add_extensions():
     """Add extensions for spans and tokens used by entity linker pipes."""
     if not Span.has_extension('links'):
-        Span.set_extension('links', default={})
-        Token.set_extension('links', default={})
+        Span.set_extension('links', default=defaultdict(list))
+        Token.set_extension('links', default=defaultdict(list))
 
 
 @Language.factory(DEPENDENCY)
@@ -122,8 +122,10 @@ def nearest_anchor(doc, matches, **kwargs):
             nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
             nearest = sorted(nearest)[0][1]
             doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
-            doc.ents[e]._.links[anchor] = (doc.ents[nearest].start_char,
-                                           doc.ents[nearest].end_char)
+            doc.ents[e]._.links[anchor].append({
+                'start': doc.ents[nearest].start_char,
+                'end': doc.ents[nearest].end_char,
+            })
 
 
 def token_penalty(anchor_i, entity_i, doc):

@@ -2,8 +2,12 @@
 
 from spacy.language import Language
 
+from traiter.pipes.entity_data import add_extensions
+
 DEBUG_TOKENS = 'debug_tokens'
 DEBUG_ENTITIES = 'debug_entities'
+
+add_extensions()
 
 
 @Language.factory(DEBUG_TOKENS, default_config={'message': ''})

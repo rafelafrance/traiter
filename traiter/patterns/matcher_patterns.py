@@ -12,7 +12,9 @@ from typing import Callable, Union
 from warnings import warn
 
 from spacy.pipeline import EntityRuler
-from spacy.tokens import Span
+from spacy.tokens import Doc, Span
+
+RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
 
 
 class MatcherPatterns:
@@ -75,7 +77,7 @@ def as_dicts(patterns: list[MatcherPatterns]) -> list[dict]:
     return [p.as_dict() for p in patterns]
 
 
-def add_ruler_patterns(ruler: EntityRuler, patterns: list[MatcherPatterns]) -> None:
+def add_ruler_patterns(ruler: RulerType, patterns: list[MatcherPatterns]) -> None:
     """Add patterns to a ruler."""
     rules = []
     for matcher in patterns:
