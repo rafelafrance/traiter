@@ -7,15 +7,10 @@ CLEANUP = 'clean_up'
 
 
 @Language.factory(CLEANUP)
-def cleanup(nlp: Language, name: str, entities: list[str]):
-    """Create a pipe that removes unneeded entities from the doc."""
-    return Cleanup(nlp, name, entities)
-
-
 class Cleanup:
     """Save current token label so it can be used after it is replaced."""
 
-    def __init__(self, nlp, name, entities):
+    def __init__(self, nlp: Language, name: str, entities: list[str]):
         super().__init__()
         self.nlp = nlp
         self.name = name

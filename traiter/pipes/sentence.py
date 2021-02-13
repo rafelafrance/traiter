@@ -14,15 +14,10 @@ PREV_EOS = CLOSE + EOS
 
 
 @Language.factory(SENTENCE)
-def sentence(nlp: Language, name: str, automatic: Optional[list[str]] = None):
-    """Create a sentence pipe."""
-    return Sentence(nlp, name, automatic)
-
-
 class Sentence:
     """Shared sentencizer logic."""
 
-    def __init__(self, nlp, name, automatic):
+    def __init__(self, nlp: Language, name: str, automatic: Optional[list[str]] = None):
         """Build a custom sentencizer."""
         self.nlp = nlp
         self.name = name

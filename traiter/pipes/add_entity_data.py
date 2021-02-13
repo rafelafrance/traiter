@@ -14,15 +14,10 @@ ADD_ENTITY_DATA = 'add_entity_data'
 
 
 @Language.factory(ADD_ENTITY_DATA)
-def add_entity_data(nlp: Language, name: str, patterns: Union[dict, list[dict]]):
-    """Create a entity data dispatch table."""
-    return AddEntityData(nlp, name, patterns)
-
-
 class AddEntityData(EntityData):
     """Perform actions to fill user defined fields etc. for all entities."""
 
-    def __init__(self, nlp, name, patterns):
+    def __init__(self, nlp: Language, name: str, patterns: Union[dict, list[dict]]):
         super().__init__()
         self.nlp = nlp
         self.name = name

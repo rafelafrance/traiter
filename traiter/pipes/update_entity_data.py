@@ -20,15 +20,10 @@ UPDATE_ENTITY_DATA = 'update_entity_data'
 
 
 @Language.factory(UPDATE_ENTITY_DATA)
-def update_entity_data(nlp: Language, name: str, patterns: Union[dict, list[dict]]):
-    """Create a entity data dispatch table."""
-    return UpdateEntityData(nlp, name, patterns)
-
-
 class UpdateEntityData(EntityData):
     """Perform actions to update user defined fields etc. for all entities."""
 
-    def __init__(self, nlp, name, patterns):
+    def __init__(self, nlp: Language, name: str, patterns: Union[dict, list[dict]]):
         super().__init__()
         self.nlp = nlp
         self.name = name

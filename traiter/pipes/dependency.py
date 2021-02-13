@@ -28,15 +28,10 @@ def add_extensions():
 
 
 @Language.factory(DEPENDENCY)
-def dependency(nlp: Language, name: str, patterns: Union[dict, list[dict]]):
-    """Build a dependency pipe."""
-    return Dependency(nlp, name, patterns)
-
-
 class Dependency:
     """Matchers that walk the parse tree of a sentence or doc."""
 
-    def __init__(self, nlp, name, patterns):
+    def __init__(self, nlp: Language, name: str, patterns: Union[dict, list[dict]]):
         self.nlp = nlp
         self.name = name
         self.matcher = DependencyMatcher(nlp.vocab)

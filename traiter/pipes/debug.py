@@ -11,15 +11,10 @@ add_extensions()
 
 
 @Language.factory(DEBUG_TOKENS, default_config={'message': ''})
-def debug_tokens(nlp: Language, name: str, message: str):
-    """Print debug messages."""
-    return DebugTokens(nlp, name, message)
-
-
 class DebugTokens:
     """Print debug messages."""
 
-    def __init__(self, nlp, name, message):
+    def __init__(self, nlp: Language, name: str, message: str):
         self.nlp = nlp
         self.name = name
         self.message = message
@@ -35,15 +30,10 @@ class DebugTokens:
 
 
 @Language.factory(DEBUG_ENTITIES, default_config={'message': ''})
-def debug_entities(nlp: Language, name: str, message: str):
-    """Print debug messages."""
-    return DebugEntities(nlp, name, message)
-
-
 class DebugEntities:
     """Print debug messages."""
 
-    def __init__(self, nlp, name, message):
+    def __init__(self, nlp: Language, name: str, message: str):
         self.nlp = nlp
         self.name = name
         self.message = message

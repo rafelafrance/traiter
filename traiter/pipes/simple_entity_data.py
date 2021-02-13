@@ -12,18 +12,14 @@ from traiter.pipes.entity_data import EntityData
 
 SIMPLE_ENTITY_DATA = 'simple_entity_data'
 
+OptStrDict = Optional[dict[str, str]]
+
 
 @Language.factory(SIMPLE_ENTITY_DATA)
-def simple_entity_data(
-        nlp: Language, name: str, replace: Optional[dict[str, str]] = None):
-    """Set update term text."""
-    return SimpleEntityData(nlp, name, replace)
-
-
 class SimpleEntityData(EntityData):
     """Save the text (lower) in the entity data and cache the label."""
 
-    def __init__(self, nlp, name, replace):
+    def __init__(self, nlp: Language, name: str, replace: OptStrDict = None):
         super().__init__()
         self.nlp = nlp
         self.name = name
