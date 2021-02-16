@@ -117,10 +117,7 @@ def nearest_anchor(doc, matches, **kwargs):
             nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
             nearest = sorted(nearest)[0][1]
             doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
-            doc.ents[e]._.links[anchor].append({
-                'start': doc.ents[nearest].start_char,
-                'end': doc.ents[nearest].end_char,
-            })
+            doc.ents[e]._.links[f'{anchor}_link'].append(nearest)
 
 
 def token_penalty(anchor_i, entity_i, doc):

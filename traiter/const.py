@@ -37,6 +37,7 @@ TEMP = ['\\' + x for x in OPEN]
 OPEN_RE = fr'[{"".join(TEMP)}]'
 
 DASH_RE = f'(?:{HYPHENS})'
+DASH_CHAR = [d for d in DASH if len(d) == 1]
 
 FLOAT_RE = r'(?:\d+\.?\d*)'
 INT_RE = r'(?:\d+)'
