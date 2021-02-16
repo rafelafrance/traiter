@@ -14,7 +14,7 @@ from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix
 # These rules were useful in the past
 DASHES = [h for h in LIST_HYPHENS if len(h) == 1]
 BREAKING = LIST_QUOTES + LIST_PUNCT + DASHES
-BREAKING += """ \\ / ˂ ˃ × [.] """.split()
+BREAKING += r""" \\ / ˂ ˃ × [.] [\+] """.split()
 PREFIX = SUFFIX = BREAKING
 
 # These rules were useful in the past

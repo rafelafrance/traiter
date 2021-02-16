@@ -14,9 +14,12 @@ from traiter.util import as_list, sign
 DEPENDENCY = 'dependency'
 NEAREST_ANCHOR = 'nearest_anchor.v1'
 
+
+NEVER = 9999
 PENALTY = {
     ',': 2,
     ';': 5,
+    '.': NEVER,
 }
 
 
@@ -115,9 +118,11 @@ def nearest_anchor(doc, matches, **kwargs):
     for e in ent_idx:
         if not doc.ents[e]._.data.get(anchor):
             nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
-            nearest = sorted(nearest)[0][1]
-            doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
-            doc.ents[e]._.links[f'{anchor}_link'].append(nearest)
+            nearest = [n for n in nearest if n[0][0] < NEVER]
+            if nearest:
+                nearest = sorted(nearest)[0][1]
+                doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
+                doc.ents[e]._.links[f'{anchor}_link'].append(nearest)
 
 
 def token_penalty(anchor_i, entity_i, doc):
