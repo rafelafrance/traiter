@@ -3,7 +3,7 @@
 from typing import Optional
 
 import spacy
-from spacy.tokens import Span, Token
+from spacy.tokens import Span
 
 REJECT_MATCH = 'reject_match.v1'
 TEXT_ACTION = 'text_action.v1'
