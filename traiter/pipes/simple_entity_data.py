@@ -12,14 +12,14 @@ from traiter.pipes.entity_data import EntityData
 
 SIMPLE_ENTITY_DATA = 'simple_entity_data'
 
-OptStrDict = Optional[dict[str, str]]
+StrDict = dict[str, str]
 
 
 @Language.factory(SIMPLE_ENTITY_DATA)
 class SimpleEntityData(EntityData):
     """Save the text (lower) in the entity data and cache the label."""
 
-    def __init__(self, nlp: Language, name: str, replace: OptStrDict = None):
+    def __init__(self, nlp: Language, name: str, replace: Optional[StrDict] = None):
         super().__init__()
         self.nlp = nlp
         self.name = name

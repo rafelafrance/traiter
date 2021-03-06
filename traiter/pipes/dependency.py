@@ -14,6 +14,7 @@ from traiter.util import as_list, sign
 DEPENDENCY = 'dependency'
 NEAREST_ANCHOR = 'nearest_anchor.v1'
 
+DependencyPatterns = Union[dict, list[dict]]
 
 NEVER = 9999
 PENALTY = {
@@ -34,7 +35,7 @@ def add_extensions():
 class Dependency:
     """Matchers that walk the parse tree of a sentence or doc."""
 
-    def __init__(self, nlp: Language, name: str, patterns: Union[dict, list[dict]]):
+    def __init__(self, nlp: Language, name: str, patterns: DependencyPatterns):
         self.nlp = nlp
         self.name = name
         self.matcher = DependencyMatcher(nlp.vocab)
@@ -43,13 +44,13 @@ class Dependency:
         self.build_matchers(patterns)
         add_extensions()
 
-    def build_matchers(self, patterns):
+    def build_matchers(self, patterns: DependencyPatterns):
         """Setup matchers."""
         for matcher in patterns:
             label = matcher['label']
             self.matcher.add(label, matcher['patterns'])
 
-    def build_dispatch_table(self, patterns):
+    def build_dispatch_table(self, patterns: DependencyPatterns):
         """Setup after match actions."""
         dispatch = {}
         for matcher in patterns:

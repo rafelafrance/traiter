@@ -4,8 +4,6 @@ It performs matches and runs functions on those matches. The "after_match" funct
 perform the actual updates.
 """
 
-from typing import Union
-
 from spacy import registry
 from spacy.language import Language
 from spacy.matcher import Matcher
@@ -13,7 +11,7 @@ from spacy.tokens import Doc
 from spacy.util import filter_spans
 
 from traiter.actions import RejectMatch
-from traiter.pipes.entity_data import EntityData
+from traiter.pipes.entity_data import EntityData, EntityPatterns
 from traiter.util import as_list
 
 UPDATE_ENTITY_DATA = 'update_entity_data'
@@ -23,7 +21,7 @@ UPDATE_ENTITY_DATA = 'update_entity_data'
 class UpdateEntityData(EntityData):
     """Perform actions to update user defined fields etc. for all entities."""
 
-    def __init__(self, nlp: Language, name: str, patterns: Union[dict, list[dict]]):
+    def __init__(self, nlp: Language, name: str, patterns: EntityPatterns):
         super().__init__()
         self.nlp = nlp
         self.name = name

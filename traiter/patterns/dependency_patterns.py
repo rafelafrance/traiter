@@ -8,10 +8,15 @@ dictionary and some simple rules.
 """
 
 from collections import deque
-from typing import Any, Union
+from typing import Any, Optional
 from warnings import warn
 
+from traiter.patterns.patterns import (
+    CompilerPatterns, Decoder, PatternArg, SpacyPatterns)
+
 REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
+
+OnMatchWithArgs = dict[str, Any]
 
 
 class DependencyPatterns:
@@ -21,14 +26,17 @@ class DependencyPatterns:
             self,
             label: str,
             *,
-            patterns: Union[str, list[str]],
-            decoder: dict[str, dict] = None,
-            on_match: dict[str, Any]):
+            on_match: OnMatchWithArgs,
+            patterns: PatternArg,
+            decoder: Optional[Decoder] = None):
         self.decoder = decoder
         self.label = label
         self.decoder = decoder
-        self.patterns = self.compile(patterns)
         self.on_match = on_match
+
+        if decoder:
+            patterns = patterns if isinstance(patterns, list) else [patterns]
+            self.patterns: SpacyPatterns = self.compile(patterns)
 
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""
@@ -38,7 +46,7 @@ class DependencyPatterns:
             'patterns': self.patterns,
         }
 
-    def compile(self, patterns: list[str]) -> list[list[dict]]:
+    def compile(self, patterns: CompilerPatterns) -> SpacyPatterns:
         """Convert patterns strings to spacy dependency pattern arrays."""
         all_patterns = []
 

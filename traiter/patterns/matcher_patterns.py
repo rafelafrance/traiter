@@ -8,11 +8,14 @@ some simple rules.
 """
 
 from copy import deepcopy
-from typing import Callable, Union
+from typing import Callable, Optional, Union
 from warnings import warn
 
 from spacy.pipeline import EntityRuler
-from spacy.tokens import Doc, Span
+from spacy.tokens.doc import Doc
+
+from traiter.patterns.patterns import (
+    CompilerPatterns, Decoder, PatternArg, SpacyPatterns)
 
 RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
 
@@ -24,9 +27,9 @@ class MatcherPatterns:
             self,
             label: str,
             *,
-            patterns: Union[str, list[Union[str, list[dict]]]],
-            decoder: Union[dict[str, dict], None] = None,
-            on_match: Union[Callable[[Span], None], str, None] = None,
+            patterns: PatternArg,
+            decoder: Optional[Decoder] = None,
+            on_match: Optional[str] = None,
             id_: str = ''):
         self.label = label
         self.decoder = decoder
@@ -36,7 +39,7 @@ class MatcherPatterns:
 
         if decoder:
             patterns = patterns if isinstance(patterns, list) else [patterns]
-            self.patterns = self.compile(patterns)
+            self.patterns: SpacyPatterns = self.compile(patterns)
 
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""
@@ -47,7 +50,7 @@ class MatcherPatterns:
             'id': self.id,
         }
 
-    def compile(self, patterns: list[str]) -> list[list[dict]]:
+    def compile(self, patterns: CompilerPatterns) -> SpacyPatterns:
         """Convert patterns strings to spacy matcher pattern arrays."""
         all_patterns = []
 

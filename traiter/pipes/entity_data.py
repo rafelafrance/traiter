@@ -1,6 +1,9 @@
 """Common functions for entity data pipes."""
+from typing import Union
 
 from spacy.tokens import Span, Token
+
+EntityPatterns = Union[dict, list[dict]]
 
 
 def add_extensions():

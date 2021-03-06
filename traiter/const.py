@@ -2,8 +2,7 @@
 from pathlib import Path
 
 import regex as re
-from spacy.lang.char_classes import LIST_HYPHENS, LIST_QUOTES
-from spacy.lang.char_classes import HYPHENS
+from spacy.lang.char_classes import HYPHENS, LIST_HYPHENS, LIST_QUOTES
 
 __VERSION__ = '0.9.0'
 
@@ -44,5 +43,3 @@ INT_RE = r'(?:\d+)'
 
 FLOAT_TOKEN_RE = f'^{FLOAT_RE}$'
 INT_TOKEN_RE = f'^{INT_RE}$'
-
-DASH_CHAR = [d for d in DASH if len(d) == 1]

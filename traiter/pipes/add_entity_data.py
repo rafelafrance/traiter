@@ -1,13 +1,11 @@
 """Actions for enriching entities with new data."""
 
-from typing import Union
-
 from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
 from traiter.actions import RejectMatch
-from traiter.pipes.entity_data import EntityData
+from traiter.pipes.entity_data import EntityData, EntityPatterns
 from traiter.util import as_list
 
 ADD_ENTITY_DATA = 'add_entity_data'
@@ -17,7 +15,7 @@ ADD_ENTITY_DATA = 'add_entity_data'
 class AddEntityData(EntityData):
     """Perform actions to fill user defined fields etc. for all entities."""
 
-    def __init__(self, nlp: Language, name: str, patterns: Union[dict, list[dict]]):
+    def __init__(self, nlp: Language, name: str, patterns: EntityPatterns):
         super().__init__()
         self.nlp = nlp
         self.name = name
