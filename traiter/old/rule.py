@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, Callable, Pattern, Union
+from typing import Any, Callable, Dict, List, Pattern, Union
 
 import regex
 
@@ -20,11 +20,11 @@ WORD = regex.compile(
     FLAGS,
 )
 
-Rules = list['Rule']
-RuleDict = dict[str, 'Rule']
-Groups = dict[str, Union[str, list[str]]]
+Rules = List['Rule']
+RuleDict = Dict[str, 'Rule']
+Groups = Dict[str, Union[str, List[str]]]
 Action = Callable[[Any], Any]  # "Any" squashes linter
-InRegexp = Union[str, list[str]]
+InRegexp = Union[str, List[str]]
 
 FIRST = -9999
 SECOND = -9990

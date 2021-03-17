@@ -20,6 +20,7 @@ traiter/old/vocabulary.py
 traiter/patterns/__init__.py
 traiter/patterns/dependency_patterns.py
 traiter/patterns/matcher_patterns.py
+traiter/patterns/patterns.py
 traiter/pipes/__init__.py
 traiter/pipes/add_entity_data.py
 traiter/pipes/cache.py

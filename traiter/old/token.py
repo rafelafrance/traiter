@@ -1,8 +1,9 @@
 """A class to hold an individual token."""
 
+from typing import List, Tuple
 from traiter.old.rule import Action, Groups, Rule, SIZE
 
-Tokens = list['Token']
+Tokens = List['Token']
 
 
 class Token:
@@ -13,7 +14,7 @@ class Token:
             rule: Rule = None,
             match=None,  # A regex match (not re)
             group: Groups = None,
-            span: tuple[int, int] = None,
+            span: Tuple[int, int] = None,
     ) -> None:
         """Create a token."""
         self.rule = rule

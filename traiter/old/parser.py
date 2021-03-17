@@ -1,13 +1,13 @@
 """Extract information for further analysis."""
 
 from collections import deque
-from typing import Union
+from typing import Union, List, Tuple
 
 from traiter.util import flatten
 from .rule import RuleDict, RuleType, Rules, SIZE
 from .token import Groups, Token, Tokens
 
-RulesInput = Union[Rules, list[Rules]]
+RulesInput = Union[Rules, List[Rules]]
 
 
 class Parser:
@@ -23,7 +23,7 @@ class Parser:
         self.producers: Rules = []
         self.__add__(rules)
 
-    def __add__(self, rule_list: list[Rules]) -> None:
+    def __add__(self, rule_list: List[Rules]) -> None:
         """Add rules to the parser."""
         self._built = False
         for rule in sorted(flatten(rule_list)):
@@ -139,7 +139,7 @@ class Parser:
 
     def merge_tokens(
             self, match: Token, tokens: Tokens, text: str
-    ) -> tuple[Token, int, int]:
+    ) -> Tuple[Token, int, int]:
         """Merge all matched tokens into one token."""
         # Get tokens in match
         first_idx = match.start // SIZE
@@ -164,7 +164,7 @@ class Parser:
         token = Token(match.rule, span=span, group=groups)
         return token, first_idx, last_idx
 
-    def replace(self, tokens: Tokens, text: str) -> tuple[Tokens, bool]:
+    def replace(self, tokens: Tokens, text: str) -> Tuple[Tokens, bool]:
         """Replace token combinations with another token."""
         replaced = []
         token_text = ''.join([t.rule.token for t in tokens])

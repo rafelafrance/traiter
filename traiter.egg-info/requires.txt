@@ -3,4 +3,3 @@ ftfy>=5.9
 regex>=2020.11.13
 inflect>=5.0.2
 spacy>=3.0.3
-en-core-web-sm>=3.0.0

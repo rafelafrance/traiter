@@ -14,6 +14,8 @@ import regex as re
 
 INFLECT = inflect.engine()
 
+FLAGS = re.IGNORECASE | re.VERBOSE
+
 
 class DotDict(dict):
     """Allow dot.notation access to dictionary items."""
