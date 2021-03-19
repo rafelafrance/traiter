@@ -41,6 +41,14 @@ class UpdateEntityData(EntityData):
         matches = filter_spans(matches)
 
         for ent in matches:
+            for token in ent:
+                label = token._.cached_label
+                if action := self.dispatch.get(label):
+                    try:
+                        action(token)
+                    except RejectMatch:
+                        continue
+
             if action := self.dispatch.get(ent.label_):
                 try:
                     action(ent)

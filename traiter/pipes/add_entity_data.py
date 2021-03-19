@@ -26,6 +26,14 @@ class AddEntityData(EntityData):
         entities = []
 
         for ent in doc.ents:
+            for token in ent:
+                label = token._.cached_label
+                if action := self.dispatch.get(label):
+                    try:
+                        action(token)
+                    except RejectMatch:
+                        continue
+
             label = ent.label_
 
             if action := self.dispatch.get(label):
