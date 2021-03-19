@@ -1,8 +1,11 @@
 """Misc. utilities shared between client Traiters."""
 
+import logging
 import os
+import sys
 from contextlib import contextmanager
 from datetime import datetime
+from os.path import basename, splitext
 from pathlib import Path
 from shutil import rmtree
 from tempfile import TemporaryDirectory, mkdtemp
@@ -25,6 +28,32 @@ class DotDict(dict):
     __delattr__ = dict.__delitem__
 
 
+def setup_logger(level=logging.INFO):
+    """Setup the logger."""
+    logging.basicConfig(
+        level=level,
+        format='%(asctime)s %(levelname)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S')
+
+
+def module_name() -> str:
+    """Get the current module name."""
+    return splitext(basename(sys.argv[0]))[0]
+
+
+def started() -> None:
+    """Log the program start time."""
+    setup_logger()
+    logging.info('=' * 80)
+    logging.info(f'{module_name()} started')
+
+
+def finished() -> None:
+    """Log the program end time."""
+    logging.info(f'{module_name()} finished')
+
+
+# TODO: Replace these functions with the logger functions above
 def log(msg: str) -> None:
     """Log a status message."""
     print(f'{now()} {msg}')
@@ -38,6 +67,9 @@ def now() -> str:
 def today() -> str:
     """Get today's date."""
     return now()[:10]
+
+
+# TODO: End replace ^^^
 
 
 @contextmanager
