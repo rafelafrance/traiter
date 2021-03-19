@@ -1,7 +1,6 @@
 """Actions for enriching matches.
 
 This is most often used after creating entities from phrase patterns.
-It may also be used on rule patterns that are very early in the pipeline.
 """
 
 from typing import Optional

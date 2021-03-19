@@ -6,13 +6,15 @@ complications for rule-based parsers.
 
 from typing import Optional
 
-from spacy.lang.char_classes import (
-    ALPHA, HYPHENS, LIST_HYPHENS, LIST_PUNCT, LIST_QUOTES)
+from spacy.lang.char_classes import ALPHA, LIST_HYPHENS, LIST_PUNCT, LIST_QUOTES
 from spacy.language import Language
 from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
 
+from traiter.util import list_to_char_class
+
 # These rules were useful in the past
 DASHES = [h for h in LIST_HYPHENS if len(h) == 1]
+DASH_CLASS = list_to_char_class(DASHES)
 BREAKING = LIST_QUOTES + LIST_PUNCT + DASHES
 BREAKING += r""" \\ / ˂ ˃ × [.] [\+] """.split()
 PREFIX = SUFFIX = BREAKING
@@ -20,10 +22,10 @@ PREFIX = SUFFIX = BREAKING
 # These rules were useful in the past
 INFIX = [
     fr'(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])',
-    fr"""(?:{HYPHENS})""",              # Break on any hyphen
-    r"""[\\\[\]\(\)/:;’'“”'+]""",       # Break on these characters
-    fr'(?<=[0-9])\.?(?=[{ALPHA}])',     # 1.word or 1N
-    fr'(?<=[{ALPHA}]),(?=[0-9])',       # word,digits
+    fr"""{DASH_CLASS}""",  # Break on any hyphen
+    r"""[\\\[\]\(\)/:;’'“”'+]""",  # Break on these characters
+    fr'(?<=[0-9])\.?(?=[{ALPHA}])',  # 1.word or 1N
+    fr'(?<=[{ALPHA}]),(?=[0-9])',  # word,digits
 ]
 
 

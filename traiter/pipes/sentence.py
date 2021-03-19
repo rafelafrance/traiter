@@ -51,12 +51,15 @@ class Sentence:
         return doc
 
     @staticmethod
-    def is_prev(token):
-        """See if the previous token is a space or a bracket."""
-        return token.pos_ == 'SPACE' or token.text in PREV_EOS
+    def is_space(token):
+        """Check if the token is space."""
+        return token.text.isspace() or token.pos_ == 'SPACE'
 
-    @staticmethod
-    def is_next(token):
+    def is_prev(self, token):
+        """See if the previous token is a space or a bracket."""
+        return self.is_space(token) or token.text in PREV_EOS
+
+    def is_next(self, token):
         """See if the next token starts with an uppercase is a space or period."""
         return (token.prefix_.isupper() or token.prefix_.isdigit()
-                or token.pos_ == 'SPACE' or token.text in EOS)
+                or self.is_space(token) or token.text in EOS)
