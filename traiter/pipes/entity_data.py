@@ -3,7 +3,9 @@ from typing import Union
 
 from spacy.tokens import Span, Token
 
+
 EntityPatterns = Union[dict, list[dict]]
+DispatchTable = dict[str, str]
 
 
 def add_extensions():
@@ -17,8 +19,22 @@ def add_extensions():
         Token.set_extension('new_label', default='')
 
     if not Span.has_extension('cached_label'):
-        Span.set_extension('cached_label', default='')
-        Token.set_extension('cached_label', default='')
+        Span.set_extension('label_stack', default=[])
+        Token.set_extension('label_stack', default=[])
+        Span.set_extension(
+            'cached_label',
+            getter=lambda x: x._.label_stack[-1] if x._.label_stack else '',
+            setter=lambda x, v: x._.label_stack.append(v))
+        Token.set_extension(
+            'cached_label',
+            getter=lambda x: x._.label_stack[-1] if x._.label_stack else '',
+            setter=lambda x, v: x._.label_stack.append(v))
+        Span.set_extension(
+            'first_label',
+            getter=lambda x: x._.label_stack[0] if x._.label_stack else '')
+        Token.set_extension(
+            'first_label',
+            getter=lambda x: x._.label_stack[0] if x._.label_stack else '')
 
 
 class EntityData:

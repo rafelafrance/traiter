@@ -16,6 +16,7 @@ from spacy.tokens.doc import Doc
 
 from traiter.patterns.patterns import (
     CompilerPatterns, Decoder, PatternArg, SpacyPatterns)
+from traiter.util import as_list
 
 RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
 
@@ -92,3 +93,12 @@ def add_ruler_patterns(ruler: RulerType, patterns: list[MatcherPatterns]) -> Non
                 rule['id'] = id_
             rules.append(rule)
     ruler.add_patterns(rules)
+
+
+Matchers = Union[MatcherPatterns, list[MatcherPatterns]]
+
+
+def patterns_to_dispatch(patterns: Matchers) -> dict[str, str]:
+    """Convert patterns to a dispatch table."""
+    dispatch = {p.label: p.on_match for p in as_list(patterns) if p.on_match}
+    return dispatch
