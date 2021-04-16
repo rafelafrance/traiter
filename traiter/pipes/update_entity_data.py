@@ -21,11 +21,11 @@ UPDATE_ENTITY_DATA = 'update_entity_data'
 class UpdateEntityData(EntityData):
     """Perform actions to update user defined fields etc. for all entities."""
 
-    def __init__(self, nlp: Language, name: str, patterns: EntityPatterns):
+    def __init__(self, nlp: Language, name: str, patterns: list[dict]):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.dispatch = {p['label']: registry.misc.get(on) for p in as_list(patterns)
+        self.dispatch = {p['label']: registry.misc.get(on) for p in patterns
                          if (on := p.get('on_match'))}
 
         self.matcher = Matcher(nlp.vocab)

@@ -39,7 +39,7 @@ class MatcherPatterns:
         self.id = id_
 
         if decoder:
-            patterns = patterns if isinstance(patterns, list) else [patterns]
+            patterns = as_list(patterns)
             self.patterns: SpacyPatterns = self.compile(patterns)
 
     def as_dict(self) -> dict:
@@ -76,13 +76,17 @@ class MatcherPatterns:
         return all_patterns
 
 
-def as_dicts(patterns: list[MatcherPatterns]) -> list[dict]:
+Patterns = Union[MatcherPatterns, list[MatcherPatterns]]
+
+
+def as_dicts(patterns: Patterns) -> list[dict]:
     """Convert all patterns to a dicts."""
-    return [p.as_dict() for p in patterns]
+    return [p.as_dict() for p in as_list(patterns)]
 
 
-def add_ruler_patterns(ruler: RulerType, patterns: list[MatcherPatterns]) -> None:
+def add_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
     """Add patterns to a ruler."""
+    patterns = as_list(patterns)
     rules = []
     for matcher in patterns:
         label = matcher.label
@@ -95,10 +99,7 @@ def add_ruler_patterns(ruler: RulerType, patterns: list[MatcherPatterns]) -> Non
     ruler.add_patterns(rules)
 
 
-Matchers = Union[MatcherPatterns, list[MatcherPatterns]]
-
-
-def patterns_to_dispatch(patterns: Matchers) -> dict[str, str]:
+def patterns_to_dispatch(patterns: Patterns) -> dict[str, str]:
     """Convert patterns to a dispatch table."""
     dispatch = {p.label: p.on_match for p in as_list(patterns) if p.on_match}
     return dispatch
