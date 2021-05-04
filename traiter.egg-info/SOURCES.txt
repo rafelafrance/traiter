@@ -1,3 +1,4 @@
+LICENSE
 MANIFEST.in
 README.md
 setup.py
@@ -39,6 +40,7 @@ traiter/vocabulary/animals.csv
 traiter/vocabulary/colors.csv
 traiter/vocabulary/insect_anatomy.csv
 traiter/vocabulary/numerics.csv
+traiter/vocabulary/plant_treatment.csv
 traiter/vocabulary/time.csv
 traiter/vocabulary/units.csv
 traiter/vocabulary/us_locations.csv

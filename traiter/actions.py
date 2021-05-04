@@ -5,8 +5,8 @@ from typing import Optional, Union
 import spacy
 from spacy.tokens import Span, Token
 
-REJECT_MATCH = 'reject_match.v1'
-TEXT_ACTION = 'text_action.v1'
+REJECT_MATCH = 'traiter.reject_match.v1'
+TEXT_ACTION = 'traiter.text_action.v1'
 
 EntityType = Union[Span, Token]
 

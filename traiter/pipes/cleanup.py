@@ -3,7 +3,7 @@
 from spacy.language import Language
 from spacy.tokens import Doc
 
-CLEANUP = 'clean_up'
+CLEANUP = 'traiter.clean_up.v1'
 
 
 @Language.factory(CLEANUP)

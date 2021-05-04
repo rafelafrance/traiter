@@ -96,7 +96,7 @@ class DependencyPatterns:
                         })
 
                     else:
-                        warn(f'Dependency patterns do not start with an op... {string}')
+                        warn(f"Dependency patterns don't start with an op... {string}")
 
                     left_id = right_id
 

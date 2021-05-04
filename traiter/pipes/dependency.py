@@ -11,8 +11,8 @@ from spacy.tokens import Span, Token
 
 from traiter.util import as_list, sign
 
-DEPENDENCY = 'dependency'
-NEAREST_ANCHOR = 'nearest_anchor.v1'
+DEPENDENCY = 'traiter.dependency.v1'
+NEAREST_ANCHOR = 'traiter.nearest_anchor.v1'
 
 DependencyPatterns = Union[dict, list[dict]]
 

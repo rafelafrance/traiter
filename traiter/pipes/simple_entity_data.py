@@ -9,7 +9,7 @@ from spacy.language import Language
 
 from traiter.pipes.entity_data import EntityData
 
-SIMPLE_ENTITY_DATA = 'simple_entity_data'
+SIMPLE_ENTITY_DATA = 'traiter.simple_entity_data.v1'
 
 StrDict = dict[str, str]
 

@@ -14,7 +14,7 @@ from traiter.actions import RejectMatch
 from traiter.pipes.entity_data import EntityData, EntityPatterns
 from traiter.util import as_list
 
-UPDATE_ENTITY_DATA = 'update_entity_data'
+UPDATE_ENTITY_DATA = 'traiter.update_entity_data.v1'
 
 
 @Language.factory(UPDATE_ENTITY_DATA)

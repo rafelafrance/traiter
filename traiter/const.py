@@ -4,7 +4,7 @@ from pathlib import Path
 import regex as re
 from spacy.lang.char_classes import HYPHENS, LIST_HYPHENS, LIST_QUOTES
 
-__VERSION__ = '0.9.0'
+__VERSION__ = '0.9.1'
 
 # This points to the client's data directory to the data directory here
 DATA_DIR = Path.cwd() / 'data'
