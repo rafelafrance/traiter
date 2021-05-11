@@ -4,21 +4,28 @@ from spacy.language import Language
 
 from traiter.pipes.entity_data import add_extensions
 
-DEBUG_TOKENS = 'traiter.debug_tokens.v1'
-DEBUG_ENTITIES = 'traiter.debug_entities.v1'
+DEBUG_TOKENS = 'debug_tokens.v1'
+DEBUG_ENTITIES = 'debug_entities.v1'
 
 add_extensions()
 
 DEBUG_COUNT = 0  # Used to rename debug pipes
 
 
+def rename(name: str):
+    """Add pipes for debugging."""
+    global DEBUG_COUNT
+    DEBUG_COUNT += 1
+    return f'{name}_{DEBUG_COUNT}'
+
+
 @Language.factory(DEBUG_TOKENS, default_config={'message': ''})
 class DebugTokens:
     """Print debug messages."""
 
-    def __init__(self, nlp: Language, name: str, message: str):
+    def __init__(self, nlp: Language, name: str, message: str = ''):
         self.nlp = nlp
-        self.name = name
+        self.name = rename(name)
         self.message = message
 
     def __call__(self, doc):
@@ -35,9 +42,9 @@ class DebugTokens:
 class DebugEntities:
     """Print debug messages."""
 
-    def __init__(self, nlp: Language, name: str, message: str):
+    def __init__(self, nlp: Language, name: str, message: str = ''):
         self.nlp = nlp
-        self.name = name
+        self.name = rename(name)
         self.message = message
 
     def __call__(self, doc):
@@ -48,29 +55,3 @@ class DebugEntities:
             print(f'{" " * 20} {ent._.data}\n')
         print()
         return doc
-
-
-def debug_tokens(nlp, message='', **kwargs):
-    """Add pipes for debugging."""
-    global DEBUG_COUNT
-    DEBUG_COUNT += 1
-    config = {'message': message}
-    nlp.add_pipe(
-        DEBUG_TOKENS,
-        name=f'tokens_{DEBUG_COUNT}',
-        config=config,
-        **kwargs,
-    )
-
-
-def debug_ents(nlp, message='', **kwargs):
-    """Add pipes for debugging."""
-    global DEBUG_COUNT
-    DEBUG_COUNT += 1
-    config = {'message': message}
-    nlp.add_pipe(
-        DEBUG_ENTITIES,
-        name=f'entities_{DEBUG_COUNT}',
-        config=config,
-        **kwargs,
-    )
