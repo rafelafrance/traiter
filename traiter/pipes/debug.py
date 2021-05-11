@@ -9,6 +9,8 @@ DEBUG_ENTITIES = 'traiter.debug_entities.v1'
 
 add_extensions()
 
+DEBUG_COUNT = 0  # Used to rename debug pipes
+
 
 @Language.factory(DEBUG_TOKENS, default_config={'message': ''})
 class DebugTokens:
@@ -46,3 +48,29 @@ class DebugEntities:
             print(f'{" " * 20} {ent._.data}\n')
         print()
         return doc
+
+
+def debug_tokens(nlp, message='', **kwargs):
+    """Add pipes for debugging."""
+    global DEBUG_COUNT
+    DEBUG_COUNT += 1
+    config = {'message': message}
+    nlp.add_pipe(
+        DEBUG_TOKENS,
+        name=f'tokens_{DEBUG_COUNT}',
+        config=config,
+        **kwargs,
+    )
+
+
+def debug_ents(nlp, message='', **kwargs):
+    """Add pipes for debugging."""
+    global DEBUG_COUNT
+    DEBUG_COUNT += 1
+    config = {'message': message}
+    nlp.add_pipe(
+        DEBUG_ENTITIES,
+        name=f'entities_{DEBUG_COUNT}',
+        config=config,
+        **kwargs,
+    )
