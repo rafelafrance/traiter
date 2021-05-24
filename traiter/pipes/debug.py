@@ -9,6 +9,7 @@ DEBUG_ENTITIES = 'debug_entities.v1'
 
 add_extensions()
 
+# So we don't have to come up with new names all the time
 DEBUG_COUNT = 0  # Used to rename debug pipes
 
 

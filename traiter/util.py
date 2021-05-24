@@ -185,7 +185,7 @@ def clean_text(text: str, trans: Optional[str.translate] = None) -> str:
 
 def xor(one: Any, two: Any) -> bool:
     """Emulate a logical xor."""
-    return (one and two) or (not one and not two)
+    return (not one and two) or (one and not two)
 
 
 def sign(x: Union[int, float]) -> int:

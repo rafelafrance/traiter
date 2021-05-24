@@ -1,4 +1,0 @@
-autopep8==1.5.7
-isort==5.8.0
-pylint==2.8.2
-flake8==3.9.0
