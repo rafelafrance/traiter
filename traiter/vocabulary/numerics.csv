@@ -40,3 +40,15 @@ numeric_units,hundred,lower,100
 numeric_units,hundreds,lower,100
 numeric_units,thousand,lower,1000
 numeric_units,thousands,lower,1000
+roman,i,lower,1
+roman,ii,lower,2
+roman,iii,lower,3
+roman,iv,lower,4
+roman,v,lower,5
+roman,vi,lower,6
+roman,vii,lower,7
+roman,viii,lower,8
+roman,ix,lower,9
+roman,x,lower,10
+roman,xi,lower,11
+roman,x11,lower,12

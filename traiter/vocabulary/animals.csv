@@ -1,4 +1,10 @@
 label,pattern,attr,replace
+life_stage,immature,lower,immature
+life_stage,immatures,lower,immature
+life_stage,imm.,lower,immature
+life_stage,n,lower,nymph
+life_stage,nymph,lower,nymph
+life_stage,nymphs,lower,nymph
 sex,♀,lower,female
 sex,♀♀,lower,female
 sex,♂,lower,male
@@ -8,6 +14,3 @@ sex,female,lower,female
 sex,females,lower,female
 sex,male,lower,male
 sex,males,lower,male
-sex,n,lower,nymph
-sex,nymph,lower,nymph
-sex,nymphs,lower,nymph
