@@ -13,6 +13,7 @@ from warnings import warn
 
 from traiter.patterns.patterns import (
     CompilerPatterns, Decoder, PatternArg, SpacyPatterns)
+from traiter.util import as_list
 
 REL_OP = ' < > << >> . .* ; ;* $+ $- $++ $-- '.split()
 
@@ -26,16 +27,16 @@ class DependencyPatterns:
             self,
             label: str,
             *,
-            on_match: OnMatchWithArgs,
             patterns: PatternArg,
-            decoder: Optional[Decoder] = None):
+            decoder: Optional[Decoder] = None,
+            on_match: OnMatchWithArgs):
         self.decoder = decoder
         self.label = label
         self.decoder = decoder
         self.on_match = on_match
 
         if decoder:
-            patterns = patterns if isinstance(patterns, list) else [patterns]
+            patterns = as_list(patterns)
             self.patterns: SpacyPatterns = self.compile(patterns)
 
     def as_dict(self) -> dict:
@@ -43,8 +44,7 @@ class DependencyPatterns:
         return {
             'label': self.label,
             'on_match': self.on_match,
-            'patterns': self.patterns,
-        }
+            'patterns': self.patterns}
 
     def compile(self, patterns: CompilerPatterns) -> SpacyPatterns:
         """Convert patterns strings to spacy dependency pattern arrays."""

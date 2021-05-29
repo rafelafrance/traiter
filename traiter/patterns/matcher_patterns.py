@@ -48,8 +48,7 @@ class MatcherPatterns:
             'label': self.label,
             'on_match': self.on_match,
             'patterns': self.patterns,
-            'id': self.id,
-        }
+            'id': self.id}
 
     def compile(self, patterns: CompilerPatterns) -> SpacyPatterns:
         """Convert patterns strings to spacy matcher pattern arrays."""
