@@ -29,6 +29,7 @@ part,femora,lower,femur
 part,femur,lower,femur
 part,femurs,lower,femur
 part,fimbriae,lower,
+part,fringe,lower,
 part,foreleg,lower,foreleg
 part,forelegs,lower,foreleg
 part,forewing,lower,forewing
@@ -39,6 +40,7 @@ part,genitalia,lower,genital
 part,genitals,lower,genital
 part,gonopod,lower,
 part,gonopods,lower,gonopod
+part,gula,lower,
 part,head,lower,
 part,hindleg,lower,
 part,hindlegs,lower,hindleg
@@ -114,7 +116,7 @@ part_loc,accessory,lower,
 part_loc,anal,lower,
 part_loc,antehumeral,lower,
 part_loc,anterior,lower,
-part_loc,antero-lateral,lower,
+part_loc,antero-lateral,lower,anterolateral
 part_loc,anterolateral,lower,
 part_loc,anteversion,lower,
 part_loc,apex,lower,
@@ -126,6 +128,7 @@ part_loc,bilateral,lower,
 part_loc,caudal,lower,
 part_loc,central,lower,
 part_loc,cephalo,lower,
+part_loc,contra-lateral,lower,contralateral
 part_loc,contralateral,lower,
 part_loc,coronal,lower,
 part_loc,costa,lower,
@@ -134,12 +137,12 @@ part_loc,cubital,lower,
 part_loc,cubitus,lower,
 part_loc,distal,lower,
 part_loc,dorsal,lower,
-part_loc,dorso-lateral,lower,
+part_loc,dorso-lateral,lower,dorsolateral
 part_loc,dorsolateral,lower,
 part_loc,femural,lower,
 part_loc,front,lower,
 part_loc,frontal,lower,
-part_loc,genito-ventral,lower,
+part_loc,genito-ventral,lower,genitoventral
 part_loc,genitoventral,lower,
 part_loc,gular,lower,
 part_loc,horizontal,lower,
@@ -148,7 +151,7 @@ part_loc,intercostal,lower,
 part_loc,ipsilateral,lower,
 part_loc,labial,lower,
 part_loc,lateral,lower,
-part_loc,latero-ventral,lower,
+part_loc,latero-ventral,lower,lateroventral
 part_loc,lateroventral,lower,
 part_loc,lower,lower,
 part_loc,luminal,lower,
@@ -166,7 +169,7 @@ part_loc,paratergal,lower,
 part_loc,parietal,lower,
 part_loc,postantennal,lower,
 part_loc,posterior,lower,
-part_loc,postero-medial,lower,
+part_loc,postero-medial,lower,posteromedial
 part_loc,posteromedial,lower,
 part_loc,postocular ,lower,
 part_loc,postspiracular,lower,
@@ -188,7 +191,8 @@ part_loc,subapical,lower,
 part_loc,subcosta,lower,
 part_loc,subgenital,lower,
 part_loc,superficial,lower,
-part_loc,supra-antennal,lower,
+part_loc,supra-antennal,lower,supraantennal
+part_loc,supraantennal,lower,
 part_loc,sutural,lower,
 part_loc,tailed,lower,
 part_loc,tergal,lower,
@@ -200,7 +204,8 @@ part_loc,upper,lower,
 part_loc,valgus,lower,
 part_loc,varus,lower,
 part_loc,ventral,lower,
-part_loc,ventro-lateral,lower,
+part_loc,ventro-lateral,lower,ventrolateral
+part_loc,ventrolateral,lower,
 part_loc,visceral,lower,
 part_loc,vulval,lower,
 part_loc,vulvar,lower,
