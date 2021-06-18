@@ -28,9 +28,12 @@ class SimpleEntityData(EntityData):
         for ent in doc.ents:
             if label := ent.label_:
                 ent._.cached_label = label
-                lower = ent.text.lower()
-                lower = self.replace.get(lower, lower) if self.replace else lower
-                ent._.data[label] = lower
+                texts = []
                 for token in ent:
                     token._.cached_label = label
+                    text = self.replace.get(token.lower_, token.lower_)
+                    token._.data[label] = text
+                    texts.append(text)
+                    texts.append(token.whitespace_)
+                ent._.data[label] = ''.join(texts).strip()
         return doc
