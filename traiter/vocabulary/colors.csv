@@ -128,8 +128,7 @@ color_mod,tinged,lower,,
 color_mod,tinges,lower,,
 color_mod,tint,lower,,1
 color_mod,tinted,lower,,1
-color_mod,tip,lower,,
 color_mod,tipped,lower,,
-color_mod,tips,lower,,
+color_mod,unmarked,lower,,
 color_mod,wash,lower,,1
 color_mod,washed,lower,,1

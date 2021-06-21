@@ -2,26 +2,17 @@ label,pattern,attr,replace
 egg,egg,lower,egg
 egg,eggs,lower,egg
 part,abdomen,lower,
-part,abdominal,lower,
 part,antenna,lower,
 part,antennae,lower,antenna
-part,antennal,lower,antenna
 part,anus,lower,
 part,apodema,lower,apodeme
 part,apodeme,lower,
 part,apparat,lower,
 part,aster,lower,
 part,body,lower,
-part,brush,lower,
 part,carina,lower,
 part,cerci,lower,cercus
 part,cercus,lower,cercus
-part,cross-vein,lower,crossvein
-part,cross-veins,lower,crossvein
-part,crossvein,lower,crossvein
-part,crossveins,lower,crossvein
-part,dorsal line,lower,
-part,dorsal lines,lower,
 part,eye,lower,eye
 part,eyes,lower,eye
 part,face,lower,
@@ -29,13 +20,11 @@ part,femora,lower,femur
 part,femur,lower,femur
 part,femurs,lower,femur
 part,fimbriae,lower,
-part,fringe,lower,
 part,foreleg,lower,foreleg
 part,forelegs,lower,foreleg
 part,forewing,lower,forewing
 part,forewings,lower,forewing
 part,frons,lower,
-part,genital,lower,
 part,genitalia,lower,genital
 part,genitals,lower,genital
 part,gonopod,lower,
@@ -46,22 +35,15 @@ part,hindleg,lower,
 part,hindlegs,lower,hindleg
 part,hindwing,lower,hindwing
 part,hindwings,lower,hindwing
-part,horn,lower,horn
-part,horns,lower,horn
 part,hypopharynx,lower,
 part,leg,lower,leg
 part,legs,lower,leg
-part,lower side,lower,
-part,lower sides,lower,
 part,mandible,lower,mandible
 part,mandibles,lower,mandible
-part,margin,lower,margin
-part,margins,lower,margin
 part,mesonotum,lower,
 part,mesothorax,lower,
 part,metanotum,lower,
 part,metapleurite,lower,
-part,metapodal,lower,
 part,metasternum,lower,
 part,metathorax,lower,
 part,ocelli,lower,ocellus
@@ -71,8 +53,6 @@ part,ommatidium,lower,ommatidium
 part,paramere,lower,paramere
 part,parameres,lower,paramere
 part,phanerum,lower,
-part,plate,lower,plate
-part,plates,lower,plate
 part,pleurite,lower,pleurite
 part,pleurites,lower,pleurite
 part,prothorax,lower,
@@ -80,10 +60,6 @@ part,protonotum,lower,
 part,pterostigma,lower,stigma
 part,pterostigmas,lower,stigma
 part,pterostigmata,lower,stigma
-part,sclerite,lower,sclerite
-part,sclerites,lower,sclerite
-part,segment,lower,segment
-part,segments,lower,segment
 part,spiracle,lower,spiracle
 part,spiracles,lower,spiracle
 part,sternite,lower,
@@ -91,30 +67,22 @@ part,sternum,lower,
 part,stigma,lower,stigma
 part,stigmas,lower,stigma
 part,stigmata,lower,stigma
-part,suture,lower,
-part,sutures,lower,suture
 part,synthorax,lower,
 part,tergites,lower,
 part,thoracic,lower,
 part,thorax,lower,
 part,tibia,lower,
-part,transverse line,lower,
-part,transverse lines,lower,
-part,upper side,lower,
-part,upper sides,lower,
-part,vein,lower,vein
-part,veins,lower,vein
-part,ventral line,lower,
-part,ventral lines,lower,
 part,vulva,lower,
 part,wing,lower,wing
 part,wings,lower,wing
 part,wingtip,lower,wingtip
 part,wingtips,lower,wingtip
+part_loc,abdominal,lower,
 part_loc,aboral,lower,
 part_loc,accessory,lower,
 part_loc,anal,lower,
 part_loc,antehumeral,lower,
+part_loc,antennal,lower,antenna
 part_loc,anterior,lower,
 part_loc,antero-lateral,lower,anterolateral
 part_loc,anterolateral,lower,
@@ -142,6 +110,7 @@ part_loc,dorsolateral,lower,
 part_loc,femural,lower,
 part_loc,front,lower,
 part_loc,frontal,lower,
+part_loc,genital,lower,
 part_loc,genito-ventral,lower,genitoventral
 part_loc,genitoventral,lower,
 part_loc,gular,lower,
@@ -162,6 +131,7 @@ part_loc,medial,lower,
 part_loc,mediolateral,lower,
 part_loc,mesostigmal,lower,
 part_loc,mesothoracic,lower,
+part_loc,metapodal,lower,
 part_loc,middorsal,lower,
 part_loc,oral,lower,
 part_loc,parasagittal,lower,
@@ -209,3 +179,26 @@ part_loc,ventrolateral,lower,
 part_loc,visceral,lower,
 part_loc,vulval,lower,
 part_loc,vulvar,lower,
+subpart,brush,lower,
+subpart,cross-vein,lower,crossvein
+subpart,cross-veins,lower,crossvein
+subpart,crossvein,lower,crossvein
+subpart,crossveins,lower,crossvein
+subpart,fringe,lower,
+subpart,horn,lower,horn
+subpart,horns,lower,horn
+subpart,margin,lower,margin
+subpart,margins,lower,margin
+subpart,plate,lower,plate
+subpart,plates,lower,plate
+subpart,sclerite,lower,sclerite
+subpart,sclerites,lower,sclerite
+subpart,segment,lower,segment
+subpart,segments,lower,segment
+subpart,side,lower,
+subpart,sides,lower,
+subpart,suture,lower,
+subpart,sutures,lower,suture
+subpart,tip,lower,
+subpart,vein,lower,vein
+subpart,veins,lower,vein
