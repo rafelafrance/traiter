@@ -13,6 +13,11 @@ part,body,lower,
 part,carina,lower,
 part,cerci,lower,cercus
 part,cercus,lower,cercus
+part,cross-vein,lower,crossvein
+part,cross-veins,lower,crossvein
+part,crossvein,lower,crossvein
+part,crossveins,lower,crossvein
+part,epiproct,lower,
 part,eye,lower,eye
 part,eyes,lower,eye
 part,face,lower,
@@ -69,9 +74,10 @@ part,stigmas,lower,stigma
 part,stigmata,lower,stigma
 part,synthorax,lower,
 part,tergites,lower,
-part,thoracic,lower,
 part,thorax,lower,
 part,tibia,lower,
+part,vein,lower,vein
+part,veins,lower,vein
 part,vulva,lower,
 part,wing,lower,wing
 part,wings,lower,wing
@@ -167,6 +173,7 @@ part_loc,sutural,lower,
 part_loc,tailed,lower,
 part_loc,tergal,lower,
 part_loc,terminal,lower,
+part_loc,thoracic,lower,
 part_loc,transverse,lower,
 part_loc,underside,lower,
 part_loc,unilateral,lower,
@@ -180,10 +187,8 @@ part_loc,visceral,lower,
 part_loc,vulval,lower,
 part_loc,vulvar,lower,
 subpart,brush,lower,
-subpart,cross-vein,lower,crossvein
-subpart,cross-veins,lower,crossvein
-subpart,crossvein,lower,crossvein
-subpart,crossveins,lower,crossvein
+subpart,end,lower,
+subpart,ends,lower,
 subpart,fringe,lower,
 subpart,horn,lower,horn
 subpart,horns,lower,horn
@@ -200,5 +205,4 @@ subpart,sides,lower,
 subpart,suture,lower,
 subpart,sutures,lower,suture
 subpart,tip,lower,
-subpart,vein,lower,vein
-subpart,veins,lower,vein
+subpart,tips,lower,

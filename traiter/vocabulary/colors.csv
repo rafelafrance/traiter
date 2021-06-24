@@ -78,6 +78,7 @@ color_mod,broadsaddle,lower,,
 color_mod,bull’s-eye,lower,,
 color_mod,bulls-eye,lower,,
 color_mod,dark,lower,,1
+color_mod,darker,lower,,1
 color_mod,dot,lower,,
 color_mod,dots,lower,,
 color_mod,dusky,lower,,1
@@ -88,10 +89,13 @@ color_mod,faintly,lower,,1
 color_mod,gloss,lower,,
 color_mod,glossed,lower,,
 color_mod,glossy,lower,,
+color_mod,light,lower,,
+color_mod,lighter,lower,,
 color_mod,line,lower,,
 color_mod,lined,lower,,
 color_mod,lines,lower,,
 color_mod,longitudinal,lower,,
+color_mod,marked,lower,,
 color_mod,marking,lower,,1
 color_mod,markings,lower,,1
 color_mod,metallic,lower,,
@@ -101,6 +105,9 @@ color_mod,mottling,lower,,
 color_mod,narrowsaddle,lower,,
 color_mod,overtone,lower,,1
 color_mod,overtones,lower,,1
+color_mod,pattern,lower,,
+color_mod,patterned,lower,,
+color_mod,patterns,lower,,
 color_mod,pale,lower,,1
 color_mod,paler,lower,,1
 color_mod,patch,lower,,1
@@ -108,6 +115,9 @@ color_mod,patched,lower,,1
 color_mod,pruinescence,lower,,
 color_mod,pruinosity,lower,,
 color_mod,pruinose,lower,,
+color_mod,ring,lower,,
+color_mod,ringed,lower,,
+color_mod,rings,lower,,
 color_mod,saddlebags,lower,,
 color_mod,speckled,lower,,
 color_mod,speckles,lower,,
