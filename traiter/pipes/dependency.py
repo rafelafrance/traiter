@@ -83,10 +83,8 @@ def link_nearest(doc, matches, **kwargs):
     """Link traits."""
     anchor = kwargs.get('anchor')
     e_matches = tokens2entities(doc, matches)
-    labels = [(doc.vocab.strings[mid], [doc.ents[i].label_ for i in idx])
-              for mid, idx in e_matches]
 
-    # Group indices by anchor index and other entity label
+    # Group indices by anchor index (instance) and the other entity's label
     groups = defaultdict(list)
     for _, m_idx in e_matches:
         anchor_i = [i for i in m_idx if doc.ents[i].label_ == anchor][0]
@@ -98,7 +96,7 @@ def link_nearest(doc, matches, **kwargs):
     # Then sort the groups by weighted distance & grab the closest entity
     groups = {k: sorted(v)[0][1] for k, v in groups.items()}
 
-    # Now update the anchor entity with data from the closest entity
+    # Update the anchor entity with data from the closest entity
     for (anchor_i, e_label), nearest in groups.items():
         doc.ents[anchor_i]._.data[e_label] = doc.ents[nearest]._.data[e_label]
         doc.ents[anchor_i]._.links[f'{anchor}_link'].append(
