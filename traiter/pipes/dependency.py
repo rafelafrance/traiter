@@ -1,7 +1,7 @@
 """Add dependency matcher pipe to the pipeline."""
 
 from array import array
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from typing import Union
 
 import spacy
@@ -22,6 +22,8 @@ PENALTY = {
 }
 
 DependencyPatterns = Union[dict, list[dict]]
+
+Link = namedtuple('Link', 'start_char end_char ent_idx')
 
 
 def add_extensions():
@@ -99,8 +101,8 @@ def link_nearest(doc, matches, **kwargs):
     # Update the anchor entity with data from the closest entity
     for (anchor_i, e_label), nearest in groups.items():
         doc.ents[anchor_i]._.data[e_label] = doc.ents[nearest]._.data[e_label]
-        doc.ents[anchor_i]._.links[f'{anchor}_link'].append(
-            (doc.ents[nearest].start_char, doc.ents[nearest].end_char))
+        doc.ents[anchor_i]._.links[e_label].append(Link(
+            doc.ents[nearest].start_char, doc.ents[nearest].end_char, nearest))
 
 
 def weighted_distance(anchor_i, entity_i, doc):
@@ -160,11 +162,11 @@ def nearest_anchor(doc, matches, **kwargs):
             nearest = [(token_penalty(a, e, doc), a) for a in anchor_idx]
             nearest = [n for n in nearest if n[0][0] < NEVER]
             if nearest:
-                nearest = sorted(nearest)[0][1]
+                nearest_idx = sorted(nearest)[0][1]
                 doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
-                nearest = doc.ents[nearest]
+                nearest = doc.ents[nearest_idx]
                 doc.ents[e]._.links[f'{anchor}_link'].append(
-                    (nearest.start_char, nearest.end_char))
+                    Link(nearest.start_char, nearest.end_char, nearest_idx))
 
 
 def map_tokens2entities(doc, matches, kwargs):
