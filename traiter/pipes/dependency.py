@@ -23,14 +23,14 @@ PENALTY = {
 
 DependencyPatterns = Union[dict, list[dict]]
 
-Link = namedtuple('Link', 'start_char end_char ent_idx')
+Link = namedtuple('Link', 'trait start_char end_char')
 
 
 def add_extensions():
     """Add extensions for spans and tokens used by entity linker pipes."""
     if not Span.has_extension('links'):
-        Span.set_extension('links', default=defaultdict(list))
-        Token.set_extension('links', default=defaultdict(list))
+        Span.set_extension('links', default=[])
+        Token.set_extension('links', default=[])
 
 
 @Language.factory(DEPENDENCY)
@@ -100,9 +100,10 @@ def link_nearest(doc, matches, **kwargs):
 
     # Update the anchor entity with data from the closest entity
     for (anchor_i, e_label), nearest in groups.items():
-        doc.ents[anchor_i]._.data[e_label] = doc.ents[nearest]._.data[e_label]
-        doc.ents[anchor_i]._.links[e_label].append(Link(
-            doc.ents[nearest].start_char, doc.ents[nearest].end_char, nearest))
+        n_ent = doc.ents[nearest]
+        doc.ents[anchor_i]._.data[e_label] = n_ent._.data[e_label]
+        doc.ents[anchor_i]._.links.append(Link(
+            e_label, n_ent.start_char, n_ent.end_char))
 
 
 def weighted_distance(anchor_i, entity_i, doc):
@@ -165,8 +166,8 @@ def nearest_anchor(doc, matches, **kwargs):
                 nearest_idx = sorted(nearest)[0][1]
                 doc.ents[e]._.data[anchor] = doc.ents[nearest]._.data[anchor]
                 nearest = doc.ents[nearest_idx]
-                doc.ents[e]._.links[f'{anchor}_link'].append(
-                    Link(nearest.start_char, nearest.end_char, nearest_idx))
+                doc.ents[e]._.links.append(Link(
+                    anchor, nearest.start_char, nearest.end_char))
 
 
 def map_tokens2entities(doc, matches, kwargs):

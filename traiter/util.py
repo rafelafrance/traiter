@@ -120,7 +120,7 @@ def as_list(values: Any) -> list:
 
 
 def as_set(values: Any) -> set:
-    """Convert values to a list."""
+    """Convert values to a set."""
     return set(values) if isinstance(values, (list, tuple, set)) else {values}
 
 
@@ -221,7 +221,7 @@ def list_to_re_choice(values):
 
 
 def list_to_char_class(values):
-    """Convert a list of values into a regex choice."""
+    """Convert a list of values into a regex character class."""
     values = sorted(values, key=lambda v: -len(v))
     values = [re.escape(v) for v in values]
     pattern = ''.join(values)
