@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import IntEnum
-from typing import Any, Callable, Dict, List, Pattern, Union
+from typing import Any, Callable, Dict, List, Optional, Pattern, Union
 
 import regex
 
@@ -48,13 +48,13 @@ class Rule:  # pylint: disable=too-many-instance-attributes
     pattern: str  # The regex before it is manipulated
     type: RuleType
     token: str
-    action: Action = None  # What to do when there is a match
-    regexp: Pattern = None  # The compiled regexp
+    action: Optional[Action] = None  # What to do when there is a match
+    regexp: Optional[Pattern] = None  # The compiled regexp
     capture: bool = True  # Will the rule create an outer capture group?
     priority: int = 0  # When should the rule be triggered: FIRST? LAST?
 
     def __lt__(self, other: 'Rule'):
-        """Custom sort order."""
+        """Sort in a custom order."""
         return (self.type, self.priority) < (other.type, other.priority)
 
     def __eq__(self, other):
@@ -113,15 +113,15 @@ def part(
 ) -> Rule:
     """Build a regular expression with a named group."""
     pattern = join(regexp)
-    regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
-    regexp = regex.compile(regexp, FLAGS)
+    reg_ = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
+    reg = regex.compile(reg_, FLAGS)
     return Rule(
         name=name,
         pattern=pattern,
         type=RuleType.SCANNER,
         token=next_token(),
         action=action,
-        regexp=regexp,
+        regexp=reg,
         priority=priority,
     )
 
@@ -135,15 +135,15 @@ def term(
 ) -> Rule:
     r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
-    regexp = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
-    regexp = regex.compile(fr'\b {regexp} \b', FLAGS)
+    reg_ = f'(?P<{name}> {pattern} )' if capture else f'(?: {pattern} )'
+    reg = regex.compile(fr'\b {reg_} \b', FLAGS)
     return Rule(
         name=name,
         pattern=pattern,
         type=RuleType.SCANNER,
         token=next_token(),
         action=action,
-        regexp=regexp,
+        regexp=reg,
         priority=priority,
     )
 

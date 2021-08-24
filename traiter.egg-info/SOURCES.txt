@@ -29,6 +29,7 @@ traiter/pipes/cleanup.py
 traiter/pipes/debug.py
 traiter/pipes/dependency.py
 traiter/pipes/entity_data.py
+traiter/pipes/retokenize.py
 traiter/pipes/sentence.py
 traiter/pipes/simple_entity_data.py
 traiter/pipes/update_entity_data.py

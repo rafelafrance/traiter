@@ -34,7 +34,7 @@ class Vocabulary:
 
     def __init__(self, other: 'Vocabulary' = None) -> None:
         """Create the rule set."""
-        self.rules = dict(other.rules) if other else {}
+        self.rules: dict = dict(other.rules) if other else {}
 
     def __getitem__(self, name: str) -> Rule:
         """Emulate dict access of the rules."""

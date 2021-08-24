@@ -71,8 +71,8 @@ class Parser:
     def scan(self, text: str) -> Tokens:
         """Scan a string & return tokens."""
         tokens = []
-        matches = self.get_matches(self.scanners, text)
-        matches = self.sort_matches(matches)
+        matches_ = self.get_matches(self.scanners, text)
+        matches = self.sort_matches(matches_)
 
         while matches:
             token = matches.popleft()
@@ -84,7 +84,7 @@ class Parser:
     def produce(self, tokens: Tokens, text: str) -> Tokens:
         """Produce final tokens for consumption by the client code."""
         results = []
-        token_text = ''.join(t.rule.token for t in tokens)
+        token_text = ''.join(t.rule.token for t in tokens if t)
         matches = self.match_tokens(self.producers, token_text)
 
         while matches:
@@ -117,7 +117,7 @@ class Parser:
     @staticmethod
     def remove_overlapping(matches: deque) -> deque:
         """Remove matches that overlap a previous match."""
-        cleaned = deque()
+        cleaned: deque = deque()
         while matches:
             cleaned.append(matches.popleft())
             while matches and matches[0].span[0] < cleaned[-1].span[1]:
@@ -127,12 +127,9 @@ class Parser:
     @staticmethod
     def append_group(groups: Groups, key: str, value: str) -> None:
         """Append a group to the groups dictionary."""
-        old = []
+        old: list[str] = []
         if key in groups:
-            if isinstance(groups[key], list):
-                old = groups[key]
-            else:
-                old = [groups[key]]
+            old = groups[key] if isinstance(groups[key], list) else [groups[key]]
         new = value if isinstance(value, list) else [value]
         values = old + new
         groups[key] = values[0] if len(values) == 1 else values
