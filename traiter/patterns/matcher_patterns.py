@@ -33,14 +33,13 @@ class MatcherPatterns:
             on_match: Optional[str] = None,
             id_: str = ''):
         self.label = label
-        self.decoder = decoder
         self.on_match = on_match
         self.patterns = patterns
         self.id = id_
 
         if decoder:
-            patterns = as_list(patterns)
-            self.patterns: SpacyPatterns = self.compile(patterns)
+            patterns2 = as_list(patterns)
+            self.patterns = self.compile(patterns2, decoder)
 
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""
@@ -50,7 +49,8 @@ class MatcherPatterns:
             'patterns': self.patterns,
             'id': self.id}
 
-    def compile(self, patterns: CompilerPatterns) -> SpacyPatterns:
+    @staticmethod
+    def compile(patterns: CompilerPatterns, decoder: Decoder) -> SpacyPatterns:
         """Convert patterns strings to spacy matcher pattern arrays."""
         all_patterns = []
 
@@ -58,11 +58,11 @@ class MatcherPatterns:
             pattern_seq = []
 
             for key in string.split():
-                token = deepcopy(self.decoder.get(key))
+                token = deepcopy(decoder.get(key))
                 op = key[-1]
 
                 if not token and op in '?*+!':
-                    token = deepcopy(self.decoder.get(key[:-1]))
+                    token = deepcopy(decoder.get(key[:-1]))
                     token['OP'] = op
 
                 if token:

@@ -1,5 +1,7 @@
 """Retokenize entities and carry 'ent._.*' data over to the new entities."""
 
+from typing import Any
+
 from spacy.language import Language
 from spacy.tokens import Doc
 
@@ -18,7 +20,7 @@ class Retokenize:
     def __call__(self, doc: Doc) -> Doc:
         with doc.retokenize() as retokenizer:
             for ent in doc.ents:
-                data = {}
+                data: dict[str, Any] = {}
                 for token in ent:
                     data |= token._.data
                 data |= ent._.data

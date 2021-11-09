@@ -66,7 +66,7 @@ class Itis(Csv):
             new_label: str = '',
             level: str = 'species',
             attr='lower'
-    ) -> 'Itis':
+    ) -> 'Csv':
         """Get species or genus names only: 'Canis lupus' -> 'lupus'."""
         idx = 1 if level == 'species' else 0
         new_label = new_label if new_label else level
@@ -75,7 +75,7 @@ class Itis(Csv):
     @classmethod
     def abbrev_species(
             cls, other: 'Csv', label: str, attr: str = 'lower'
-    ) -> 'Itis':
+    ) -> 'Csv':
         """Get abbreviated species: 'Canis lupus' -> 'C. lupus'."""
         return cls.abbrev_terms(other, label=label, attr=attr)
 

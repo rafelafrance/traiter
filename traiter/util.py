@@ -8,8 +8,8 @@ from datetime import datetime
 from os.path import basename, splitext
 from pathlib import Path
 from shutil import rmtree
-from tempfile import TemporaryDirectory, mkdtemp
-from typing import Any, Hashable, Optional, Union
+from tempfile import mkdtemp
+from typing import Any, Generator, Hashable, Optional, Union
 
 import ftfy
 import inflect
@@ -20,12 +20,12 @@ INFLECT = inflect.engine()
 FLAGS = re.IGNORECASE | re.VERBOSE
 
 
-class DotDict(dict):
-    """Allow dot.notation access to dictionary items."""
-
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
+# class DotDict(dict):
+#     """Allow dot.notation access to dictionary items."""
+#
+#     __getattr__ = dict.get
+#     __setattr__ = dict.__setitem__
+#     __delattr__ = dict.__delitem__
 
 
 def setup_logger(level=logging.INFO):
@@ -77,7 +77,7 @@ def get_temp_dir(
         prefix: str = 'temp_',
         where: Optional[Union[str, Path]] = None,
         keep: bool = False
-) -> TemporaryDirectory:
+) -> Generator:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
         os.mkdir(where)
@@ -111,7 +111,7 @@ def flatten(nested: Any) -> list:
 
 def squash(values: Union[list, set]) -> Any:
     """Squash a list to a single value is its length is one."""
-    return list(values) if len(values) != 1 else values.pop()
+    return list(values) if len(values) != 1 else values[0]
 
 
 def as_list(values: Any) -> list:
@@ -124,9 +124,9 @@ def as_set(values: Any) -> set:
     return set(values) if isinstance(values, (list, tuple, set)) else {values}
 
 
-def as_tuple(values: Any) -> tuple:
+def as_tuple(values: Any) -> tuple[Any, ...]:
     """Convert values to a tuple."""
-    return values if isinstance(values, (list, tuple, set)) else (values,)
+    return tuple(values) if isinstance(values, (list, tuple, set)) else (values,)
 
 
 def as_member(values: Any) -> Hashable:
@@ -171,7 +171,7 @@ def number_to_words(number: str) -> str:
 
 def clean_text(
         text: str,
-        trans: Optional[str.translate] = None,
+        trans: Optional[str] = None,
         replace: Optional[dict[str, str]] = None,
 ) -> str:
     """Strip control characters from improperly encoded input strings."""

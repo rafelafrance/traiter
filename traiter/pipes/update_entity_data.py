@@ -3,6 +3,7 @@
 It performs matches and runs functions on those matches. The "after_match" functions
 perform the actual updates.
 """
+from typing import Any
 
 from spacy import registry
 from spacy.language import Language
@@ -11,8 +12,7 @@ from spacy.tokens import Doc
 from spacy.util import filter_spans
 
 from traiter.actions import RejectMatch
-from traiter.pipes.entity_data import EntityData, EntityPatterns
-from traiter.util import as_list
+from traiter.pipes.entity_data import EntityData
 
 UPDATE_ENTITY_DATA = 'traiter.update_entity_data.v1'
 
@@ -35,7 +35,7 @@ class UpdateEntityData(EntityData):
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
-        seen = set()
+        seen: set[Any] = set()
 
         matches = self.matcher(doc, as_spans=True)
         matches = filter_spans(matches)

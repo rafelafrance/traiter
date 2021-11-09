@@ -13,7 +13,7 @@ Columns for a vocabulary CSV file:
 
 import csv
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from hyphenate import hyphenate_word
 
@@ -74,7 +74,7 @@ class Csv:
                  for t in self.terms if t['attr'].upper() == attr]
         return rules
 
-    def pattern_dict(self, column: str) -> dict[str, dict]:
+    def pattern_dict(self, column: str) -> dict[str, Any]:
         """Create a dict from a column in the terms."""
         return {t['pattern']: v for t in self.terms
                 if (v := t.get(column)) not in (None, '')}
@@ -192,7 +192,7 @@ class Csv:
             cls,
             other: 'Csv',
             old_label: str,
-            idx: Union[int, list[int], tuple[int]],
+            idx: Union[int, list[int], tuple],
             new_label: str = None,
             attr: str = 'lower'
     ) -> 'Csv':

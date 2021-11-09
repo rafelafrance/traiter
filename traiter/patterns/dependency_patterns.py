@@ -36,8 +36,8 @@ class DependencyPatterns:
         self.on_match = on_match
 
         if decoder:
-            patterns = as_list(patterns)
-            self.patterns: SpacyPatterns = self.compile(patterns)
+            patterns2 = as_list(patterns)
+            self.patterns: SpacyPatterns = self.compile(patterns2)
 
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""
@@ -52,8 +52,8 @@ class DependencyPatterns:
 
         for string in patterns:
             pattern_seq = []
-            stack = deque()
-            left_id, rel_op, right_id, right_attrs = '', '', '', {}
+            stack: deque = deque()
+            left_id, rel_op, right_id = '', '', ''
 
             # Parens can be contiguous with the a symbol or operator
             new_str = string.replace('(', ' ( ').replace(')', ' ) ')
@@ -77,7 +77,7 @@ class DependencyPatterns:
                     rel_op = key
 
                 # Build the spacy dependency pattern
-                elif right_attrs := self.decoder.get(key):
+                elif self.decoder and (right_attrs := self.decoder.get(key)):
                     right_id = f'{key}{i}'
 
                     if left_id and rel_op:
