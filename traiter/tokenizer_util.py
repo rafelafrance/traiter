@@ -4,7 +4,7 @@ The default Spacy tokenizer works great for model-based parsing but sometimes ca
 complications for rule-based parsers.
 """
 
-from typing import Iterable, Optional
+from typing import Optional
 
 from spacy.lang.char_classes import ALPHA, LIST_HYPHENS, LIST_PUNCT, LIST_QUOTES
 from spacy.language import Language

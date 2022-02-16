@@ -1,7 +1,15 @@
+.flake8
+.gitignore
+.mypy.ini
 LICENSE
 MANIFEST.in
 README.md
+dev_env.bash
+requirements.txt
 setup.py
+.github/workflows/python-app.yml
+assets/anoplura_rules.png
+data/.gitkeep
 tests/__init__.py
 traiter/__init__.py
 traiter/actions.py
@@ -42,6 +50,7 @@ traiter/vocabulary/colors.csv
 traiter/vocabulary/insect_anatomy.csv
 traiter/vocabulary/numerics.csv
 traiter/vocabulary/plant_treatment.csv
+traiter/vocabulary/sources.txt
 traiter/vocabulary/time.csv
 traiter/vocabulary/units.csv
 traiter/vocabulary/us_locations.csv
