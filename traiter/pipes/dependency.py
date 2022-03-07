@@ -119,7 +119,7 @@ def tokens2entities(doc, matches):
     """Map tokens in the matches to entities.
 
     The dependency tree is built by a neural net before running the linker rules.
-    The dependency tree links tokens, not spans/entities to tokens. Therefore a
+    The dependency tree links tokens (not spans/entities) to tokens. Therefore a
     tree arc may point to any token in an entity/span and many arcs may point to
     the same entity. We want to add data to the entity not to the tokens. So we
     need to map tokens in the matches to entities. This function turns match token

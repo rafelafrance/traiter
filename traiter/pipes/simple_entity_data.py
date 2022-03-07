@@ -31,9 +31,12 @@ class SimpleEntityData(EntityData):
                 texts = []
                 for token in ent:
                     token._.cached_label = label
-                    text = self.replace.get(token.lower_, token.lower_)
+                    text = self.replace.get(token.lower_, token.text)
                     token._.data[label] = text
                     texts.append(text)
                     texts.append(token.whitespace_)
                 ent._.data[label] = ''.join(texts).strip()
+                ent._.data['trait'] = label
+                ent._.data['start'] = ent.start_char
+                ent._.data['end'] = ent.end_char
         return doc
