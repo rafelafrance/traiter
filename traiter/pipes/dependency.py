@@ -86,6 +86,8 @@ def link_nearest(doc, matches, **kwargs):
     """Link traits."""
     anchor = kwargs.get('anchor')
     exclude = kwargs.get('exclude', '')
+    dir_bias = kwargs.get('dir_bias', '')
+    bias = -1 if dir_bias == 'after' else 1
     entity_matches = tokens2entities(doc, matches)
 
     # All possible anchors for every entity
@@ -98,7 +100,7 @@ def link_nearest(doc, matches, **kwargs):
             if doc.ents[i].label_ != anchor and doc.ents[i].label_ != exclude:
                 entities.append(i)
         for entity_i in entities:
-            dist, dir_ = weighted_distance(anchor_i, entity_i, doc)
+            dist, dir_ = weighted_distance(anchor_i, entity_i, doc, bias)
             groups[entity_i].append(LinkAnchor(dist, dir_, text))
 
     # Find the closest (weighted) anchor to the entity
@@ -108,7 +110,7 @@ def link_nearest(doc, matches, **kwargs):
         entity._.data[anchor] = nearest.text
 
 
-def weighted_distance(anchor_i, entity_i, doc):
+def weighted_distance(anchor_i, entity_i, doc, bias):
     """Calculate the token offset from the anchor to the entity, penalize punct.
 
     Also indicate if the anchor is before or after the entity.
@@ -117,7 +119,7 @@ def weighted_distance(anchor_i, entity_i, doc):
     lo, hi = doc.ents[lo][-1].i, doc.ents[hi][0].i
     dist = hi - lo
     dist += sum(PENALTY.get(doc[i].text, 0) for i in range(lo + 1, hi))
-    dir_ = sign(anchor_i - entity_i)
+    dir_ = sign(anchor_i - entity_i) * bias
     return dist, dir_
 
 
