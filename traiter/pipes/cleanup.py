@@ -10,17 +10,17 @@ CLEANUP = 'traiter.clean_up.v1'
 class Cleanup:
     """Save current token label so it can be used after it is replaced."""
 
-    def __init__(self, nlp: Language, name: str, entities: list[str]):
+    def __init__(self, nlp: Language, name: str, forget: list[str]):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.entities = entities
+        self.forget = forget
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            if ent.label_ not in self.entities:
+            if ent.label_ not in self.forget:
                 entities.append(ent)
 
         doc.ents = entities
