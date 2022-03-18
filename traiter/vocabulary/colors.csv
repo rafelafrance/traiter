@@ -89,8 +89,8 @@ color_mod,faintly,lower,,1
 color_mod,gloss,lower,,
 color_mod,glossed,lower,,
 color_mod,glossy,lower,,
-color_mod,light,lower,,
-color_mod,lighter,lower,,
+color_mod,light,lower,,1
+color_mod,lighter,lower,,1
 color_mod,line,lower,,
 color_mod,lined,lower,,
 color_mod,lines,lower,,

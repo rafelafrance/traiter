@@ -1,5 +1,6 @@
 """Add dependency matcher pipe to the pipeline."""
 
+import string
 from array import array
 from collections import defaultdict, namedtuple
 from typing import Union
@@ -13,13 +14,6 @@ from traiter.util import as_list, sign
 
 DEPENDENCY = 'traiter.dependency.v1'
 LINK_NEAREST = 'traiter.link_nearest.v1'
-
-NEVER = 9999
-PENALTY = {
-    ',': 2,
-    ';': 5,
-    '.': NEVER,
-}
 
 DependencyPatterns = Union[dict, list[dict]]
 
@@ -110,6 +104,14 @@ def link_nearest(doc, matches, **kwargs):
         entity._.data[anchor] = nearest.text
 
 
+NEVER = 9999
+PENALTY = {
+    ',': 2,
+    ';': 5,
+    '.': NEVER,
+}
+
+
 def weighted_distance(anchor_i, entity_i, doc, bias):
     """Calculate the token offset from the anchor to the entity, penalize punct.
 
@@ -118,7 +120,13 @@ def weighted_distance(anchor_i, entity_i, doc, bias):
     lo, hi = (entity_i, anchor_i) if entity_i < anchor_i else (anchor_i, entity_i)
     lo, hi = doc.ents[lo][-1].i, doc.ents[hi][0].i
     dist = hi - lo
-    dist += sum(PENALTY.get(doc[i].text, 0) for i in range(lo + 1, hi))
+    first, last = doc[lo+1].idx + len(doc[lo+1]), doc[hi].idx
+    seg = doc.text[first-1:last+1]
+    if seg and seg[0] == '.' and seg[-1] in string.ascii_uppercase:
+        dist += NEVER
+    for i in range(lo + 1, hi):
+        dist += PENALTY.get(doc[i].text, 0)
+    # dist += sum(PENALTY.get(doc[i].text, 0) for i in range(lo + 1, hi))
     dir_ = sign(anchor_i - entity_i) * bias
     return dist, dir_
 
