@@ -10,6 +10,7 @@ from spacy.language import Language
 from spacy.matcher import DependencyMatcher
 from spacy.tokens import Span, Token
 
+from traiter import const
 from traiter.util import as_list, sign
 
 DEPENDENCY = 'traiter.dependency.v1'
@@ -81,6 +82,7 @@ def link_nearest(doc, matches, **kwargs):
     anchor = kwargs.get('anchor')
     exclude = kwargs.get('exclude', '')
     dir_bias = kwargs.get('dir_bias', '')
+    penalty = kwargs.get('penalty')
     bias = -1 if dir_bias == 'after' else 1
     entity_matches = tokens2entities(doc, matches)
 
@@ -94,8 +96,9 @@ def link_nearest(doc, matches, **kwargs):
             if doc.ents[i].label_ != anchor and doc.ents[i].label_ != exclude:
                 entities.append(i)
         for entity_i in entities:
-            dist, dir_ = weighted_distance(anchor_i, entity_i, doc, bias)
-            groups[entity_i].append(LinkAnchor(dist, dir_, text))
+            dist, dir_ = weighted_distance(anchor_i, entity_i, doc, bias, penalty)
+            if dist < const.NEVER:
+                groups[entity_i].append(LinkAnchor(dist, dir_, text))
 
     # Find the closest (weighted) anchor to the entity
     for entity_i, link_anchors in groups.items():
@@ -104,28 +107,26 @@ def link_nearest(doc, matches, **kwargs):
         entity._.data[anchor] = nearest.text
 
 
-NEVER = 9999
-PENALTY = {
-    ',': 2,
-    ';': 5,
-    '.': NEVER,
-}
-
-
-def weighted_distance(anchor_i, entity_i, doc, bias):
+def weighted_distance(anchor_i, entity_i, doc, bias, penalty=None):
     """Calculate the token offset from the anchor to the entity, penalize punct.
 
     Also indicate if the anchor is before or after the entity.
     """
+    penalty = penalty if penalty else const.PUNCT_PENALTY
+
     lo, hi = (entity_i, anchor_i) if entity_i < anchor_i else (anchor_i, entity_i)
     lo, hi = doc.ents[lo][-1].i, doc.ents[hi][0].i
     dist = hi - lo
-    first, last = doc[lo+1].idx + len(doc[lo+1]), doc[hi].idx
-    seg = doc.text[first-1:last+1]
-    if seg and seg[0] == '.' and seg[-1] in string.ascii_uppercase:
-        dist += NEVER
+
+    # Penalize a period that doubles as sentence ender and an abbreviation dot
+    for i in range(lo, hi + 1):
+        if doc[i].text[-1] == '.' and doc[i+1].text[0] in string.ascii_uppercase:
+            dist += penalty.get('.', 0)
+
+    # Penalize interior punctuation
     for i in range(lo + 1, hi):
-        dist += PENALTY.get(doc[i].text, 0)
+        dist += penalty.get(doc[i].text, 0)
+
     # dist += sum(PENALTY.get(doc[i].text, 0) for i in range(lo + 1, hi))
     dir_ = sign(anchor_i - entity_i) * bias
     return dist, dir_
