@@ -10,10 +10,10 @@ from spacy.language import Language
 from spacy.matcher import DependencyMatcher
 from spacy.tokens import Span, Token
 
+from traiter.pipes.pipes import DEPENDENCY
+from traiter.pipes.pipes import LINK_NEAREST
 from traiter.util import as_list, sign
 
-DEPENDENCY = 'traiter.dependency.v1'
-LINK_NEAREST = 'traiter.link_nearest.v1'
 
 DependencyPatterns = Union[dict, list[dict]]
 

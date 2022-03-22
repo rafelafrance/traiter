@@ -3,9 +3,9 @@
 from spacy.language import Language
 
 from traiter.pipes.entity_data import add_extensions
+from traiter.pipes.pipes import DEBUG_ENTITIES
+from traiter.pipes.pipes import DEBUG_TOKENS
 
-DEBUG_TOKENS = 'debug_tokens.v1'
-DEBUG_ENTITIES = 'debug_entities.v1'
 
 add_extensions()
 

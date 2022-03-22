@@ -1,9 +1,10 @@
-"""Remove noise entities from the doc."""
+"""Remove noise entities from the docLINK_NEAREST = 'traiter.link_nearest.v1'
+."""
 
 from spacy.language import Language
 from spacy.tokens import Doc
 
-CLEANUP = 'traiter.clean_up.v1'
+from traiter.pipes.pipes import CLEANUP
 
 
 @Language.factory(CLEANUP)

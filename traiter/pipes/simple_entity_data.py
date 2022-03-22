@@ -8,8 +8,7 @@ from typing import Optional
 from spacy.language import Language
 
 from traiter.pipes.entity_data import EntityData
-
-SIMPLE_ENTITY_DATA = 'traiter.simple_entity_data.v1'
+from traiter.pipes.pipes import SIMPLE_ENTITY_DATA
 
 StrDict = dict[str, str]
 
