@@ -12,14 +12,15 @@ class Cleanup:
     """Save current token label so it can be used after it is replaced."""
 
     def __init__(
-        self, nlp: Language, name: str, forget: list[str], forget_when: str = ''
+        self, nlp: Language, name: str, forget: list[str] = None, forget_when: str = ''
     ):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.forget = forget
-        self.forget_when = registry.misc.get(forget_when)
-        if not self.forget_when:
+        self.forget = forget if forget else []
+        if forget_when:
+            self.forget_when = registry.misc.get(forget_when)
+        else:
             self.forget_when = lambda _: False
 
     def __call__(self, doc: Doc) -> Doc:
