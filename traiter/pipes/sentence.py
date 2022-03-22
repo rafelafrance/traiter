@@ -6,7 +6,8 @@ from spacy.language import Language
 from spacy.tokens import Doc
 
 from traiter.const import CLOSE, QUOTE
-from traiter.pipes.pipes import SENTENCE
+
+SENTENCE = 'traiter.sentence.v1'
 
 EOS = """ . ? ! … """.split()  # End Of Sentence
 PREV_EOS = CLOSE + EOS

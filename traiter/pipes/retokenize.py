@@ -5,7 +5,7 @@ from typing import Any
 from spacy.language import Language
 from spacy.tokens import Doc
 
-from traiter.pipes.pipes import RETOKENIZE
+RETOKENIZE = 'traiter.retokenize.v1'
 
 
 @Language.factory(RETOKENIZE)

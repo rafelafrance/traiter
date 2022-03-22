@@ -13,7 +13,8 @@ from spacy.util import filter_spans
 
 from traiter.actions import RejectMatch
 from traiter.pipes.entity_data import EntityData
-from traiter.pipes.pipes import MERGE_ENTITY_DATA
+
+MERGE_ENTITY_DATA = 'traiter.merge_entity_data.v1'
 
 
 @Language.factory(MERGE_ENTITY_DATA)

@@ -5,8 +5,9 @@ from spacy.language import Language
 from spacy.tokens import Doc
 
 from traiter.actions import RejectMatch
-from traiter.pipes.pipes import ADD_ENTITY_DATA
 from traiter.pipes.entity_data import DispatchTable, EntityData
+
+ADD_ENTITY_DATA = 'traiter.add_entity_data.v1'
 
 
 @Language.factory(ADD_ENTITY_DATA)
