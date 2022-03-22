@@ -18,6 +18,10 @@ def add_extensions():
         Span.set_extension('new_label', default='')
         Token.set_extension('new_label', default='')
 
+    if not Span.has_extension('merge'):
+        Span.set_extension('merge', default=False)
+        Token.set_extension('merge', default=False)
+
     if not Span.has_extension('cached_label'):
         Span.set_extension('label_stack', default=[])
         Token.set_extension('label_stack', default=[])

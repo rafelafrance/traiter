@@ -54,7 +54,8 @@ class MergeEntityData(EntityData):
             seen.update(range(ent.start, ent.end))
 
             for sub_ent in ent.ents:
-                ent._.data |= sub_ent._.data
+                if sub_ent._.merge:
+                    ent._.data |= sub_ent._.data
 
             ent._.data['trait'] = label
             ent._.data['start'] = ent.start_char
