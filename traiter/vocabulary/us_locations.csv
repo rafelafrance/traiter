@@ -1,118 +1,4 @@
-label,pattern,attr,replace,
-us_state,Alabama,lower,AL,
-us_state,Alaska,lower,AK,
-us_state,American Samoa,lower,AS,
-us_state,Arizona,lower,AZ,
-us_state,Arkansas,lower,AR,
-us_state,California,lower,CA,
-us_state,Colorado,lower,CO,
-us_state,Connecticut,lower,CT,
-us_state,Delaware,lower,DE,
-us_state,District of Columbia,lower,DC,
-us_state,Florida,lower,FL,
-us_state,Georgia,lower,GA,
-us_state,Guam,lower,GU,
-us_state,Hawaii,lower,HI,
-us_state,Idaho,lower,ID,
-us_state,Illinois,lower,IL,
-us_state,Indiana,lower,IN,
-us_state,Iowa,lower,IA,
-us_state,Kansas,lower,KS,
-us_state,Kentucky,lower,KY,
-us_state,Louisiana,lower,LA,
-us_state,Maine,lower,ME,
-us_state,Maryland,lower,MD,
-us_state,Massachusetts,lower,MA,
-us_state,Michigan,lower,MI,
-us_state,Minnesota,lower,MN,
-us_state,Minor Outlying Islands,lower,UM,
-us_state,Mississippi,lower,MS,
-us_state,Missouri,lower,MO,
-us_state,Montana,lower,MT,
-us_state,Nebraska,lower,NE,
-us_state,Nevada,lower,NV,
-us_state,New Hampshire,lower,NH,
-us_state,New Jersey,lower,NJ,
-us_state,New Mexico,lower,NM,
-us_state,New York,lower,NY,
-us_state,North Carolina,lower,NC,
-us_state,North Dakota,lower,ND,
-us_state,Northern Mariana Islands,lower,MP,
-us_state,Ohio,lower,OH,
-us_state,Oklahoma,lower,OK,
-us_state,Oregon,lower,OR,
-us_state,Pennsylvania,lower,PA,
-us_state,Puerto Rico,lower,PR,
-us_state,Rhode Island,lower,RI,
-us_state,South Carolina,lower,SC,
-us_state,South Dakota,lower,SD,
-us_state,Tennessee,lower,TN,
-us_state,Texas,lower,TX,
-us_state,Utah,lower,UT,
-us_state,Vermont,lower,VT,
-us_state,Virgin Islands,lower,VI,
-us_state,Virginia,lower,VA,
-us_state,Washington,lower,WA,
-us_state,West Virginia,lower,WV,
-us_state,Wisconsin,lower,WI,
-us_state,Wyoming,lower,WY,
-us_state,AL,lower,,
-us_state,AK,lower,,
-us_state,AS,lower,,
-us_state,AZ,lower,,
-us_state,AR,lower,,
-us_state,CA,lower,,
-us_state,CO,lower,,
-us_state,CT,lower,,
-us_state,DE,lower,,
-us_state,DC,lower,,
-us_state,FL,lower,,
-us_state,GA,lower,,
-us_state,GU,lower,,
-us_state,HI,lower,,
-us_state,ID,lower,,
-us_state,IL,lower,,
-us_state,IN,lower,,
-us_state,IA,lower,,
-us_state,KS,lower,,
-us_state,KY,lower,,
-us_state,LA,lower,,
-us_state,ME,lower,,
-us_state,MD,lower,,
-us_state,MA,lower,,
-us_state,MI,lower,,
-us_state,MN,lower,,
-us_state,UM,lower,,
-us_state,MS,lower,,
-us_state,MO,lower,,
-us_state,MT,lower,,
-us_state,NE,lower,,
-us_state,NV,lower,,
-us_state,NH,lower,,
-us_state,NJ,lower,,
-us_state,NM,lower,,
-us_state,NY,lower,,
-us_state,NC,lower,,
-us_state,ND,lower,,
-us_state,MP,lower,,
-us_state,OH,lower,,
-us_state,OK,lower,,
-us_state,OR,lower,,
-us_state,PA,lower,,
-us_state,PR,lower,,
-us_state,RI,lower,,
-us_state,SC,lower,,
-us_state,SD,lower,,
-us_state,TN,lower,,
-us_state,TX,lower,,
-us_state,UT,lower,,
-us_state,VT,lower,,
-us_state,VI,lower,,
-us_state,VA,lower,,
-us_state,WA,lower,,
-us_state,WV,lower,,
-us_state,WI,lower,,
-us_state,WY,lower,,
+label,pattern,attr,replace,inside
 us_county,Abbeville,lower,,SC
 us_county,Acadia,lower,,LA
 us_county,Accomack,lower,,VA
@@ -169,7 +55,6 @@ us_county,Arapahoe,lower,,CO
 us_county,Archer,lower,,TX
 us_county,Archuleta,lower,,CO
 us_county,Arenac,lower,,MI
-us_county,Arkansas,lower,,AR
 us_county,Arlington,lower,,VA
 us_county,Armstrong,lower,,PA TX
 us_county,Aroostook,lower,,ME
@@ -489,8 +374,7 @@ us_county,Collier,lower,,FL
 us_county,Collin,lower,,TX
 us_county,Collingsworth,lower,,TX
 us_county,Colonial Heights,lower,,VA
-us_county,Colorado,lower,,TX
-us_county,Colquitt,lower,,GA
+us_county,Colquitt,lower,,
 us_county,Columbia,lower,,AR FL GA NY OR PA WA WI
 us_county,Columbiana,lower,,OH
 us_county,Columbus,lower,,NC
@@ -570,16 +454,13 @@ us_county,Day,lower,,SD
 us_county,De Baca,lower,,NM
 us_county,De Soto,lower,,LA
 us_county,De Witt,lower,,IL
-us_county,DeKalb,lower,,AL GA IL IN MO TN
-us_county,DeSoto,lower,,FL MS
-us_county,DeWitt,lower,,TX
 us_county,Deaf Smith,lower,,TX
 us_county,Dearborn,lower,,IN
 us_county,Decatur,lower,,GA IN IA KS TN
 us_county,Deer Lodge,lower,,MT
 us_county,Defiance,lower,,OH
+us_county,DeKalb,lower,,AL GA IL IN MO TN
 us_county,Del Norte,lower,,CA
-us_county,Delaware,lower,,IN IA NY OH OK PA
 us_county,Delta,lower,,CO MI TX
 us_county,Denali,lower,,AK
 us_county,Dent,lower,,MO
@@ -588,8 +469,10 @@ us_county,Denver,lower,,CO
 us_county,Des Moines,lower,,IA
 us_county,Deschutes,lower,,OR
 us_county,Desha,lower,,AR
+us_county,DeSoto,lower,,FL MS
 us_county,Deuel,lower,,NE SD
 us_county,Dewey,lower,,OK SD
+us_county,DeWitt,lower,,TX
 us_county,Dickens,lower,,TX
 us_county,Dickenson,lower,,VA
 us_county,Dickey,lower,,ND
@@ -615,7 +498,6 @@ us_county,Dorchester,lower,,MD SC
 us_county,Dougherty,lower,,GA
 us_county,Douglas,lower,,CO GA IL KS MN MO NE NV OR SD WA WI
 us_county,Drew,lower,,AR
-us_county,DuPage,lower,,IL
 us_county,Dubois,lower,,IN
 us_county,Dubuque,lower,,IA
 us_county,Duchesne,lower,,UT
@@ -623,6 +505,7 @@ us_county,Dukes,lower,,MA
 us_county,Dundy,lower,,NE
 us_county,Dunklin,lower,,MO
 us_county,Dunn,lower,,ND WI
+us_county,DuPage,lower,,IL
 us_county,Duplin,lower,,NC
 us_county,Durham,lower,,NC
 us_county,Dutchess,lower,,NY
@@ -845,7 +728,6 @@ us_county,Hartford,lower,,CT
 us_county,Hartley,lower,,TX
 us_county,Harvey,lower,,KS
 us_county,Haskell,lower,,KS OK TX
-us_county,Hawaii,lower,,HI
 us_county,Hawkins,lower,,TN
 us_county,Hayes,lower,,NE
 us_county,Hays,lower,,TX
@@ -911,16 +793,13 @@ us_county,Hyde,lower,,NC SD
 us_county,Iberia,lower,,LA
 us_county,Iberville,lower,,LA
 us_county,Ida,lower,,IA
-us_county,Idaho,lower,,ID
 us_county,Imperial,lower,,CA
 us_county,Independence,lower,,AR
 us_county,Indian River,lower,,FL
-us_county,Indiana,lower,,PA
 us_county,Ingham,lower,,MI
 us_county,Inyo,lower,,CA
 us_county,Ionia,lower,,MI
 us_county,Iosco,lower,,MI
-us_county,Iowa,lower,,IA WI
 us_county,Iredell,lower,,NC
 us_county,Irion,lower,,TX
 us_county,Iron,lower,,MI MO UT WI
@@ -995,9 +874,9 @@ us_county,Kidder,lower,,ND
 us_county,Kimball,lower,,NE
 us_county,Kimble,lower,,TX
 us_county,King,lower,,TX WA
+us_county,King and Queen,lower,,VA
 us_county,King George,lower,,VA
 us_county,King William,lower,,VA
-us_county,King and Queen,lower,,VA
 us_county,Kingfisher,lower,,OK
 us_county,Kingman,lower,,KS
 us_county,Kings,lower,,CA NY
@@ -1022,22 +901,20 @@ us_county,La Crosse,lower,,WI
 us_county,La Paz,lower,,AZ
 us_county,La Plata,lower,,CO
 us_county,La Salle,lower,,LA TX
-us_county,LaGrange,lower,,IN
-us_county,LaMoure,lower,,ND
-us_county,LaPorte,lower,,IN
-us_county,LaSalle,lower,,IL
 us_county,Labette,lower,,KS
 us_county,Lac qui Parle,lower,,MN
 us_county,Lackawanna,lower,,PA
 us_county,Laclede,lower,,MO
 us_county,Lafayette,lower,,AR FL LA MS MO WI
 us_county,Lafourche,lower,,LA
+us_county,LaGrange,lower,,IN
 us_county,Lake,lower,,CA CO FL IL IN MI MN MT OH OR SD TN
 us_county,Lake and Peninsula,lower,,AK
 us_county,Lake of the Woods,lower,,MN
 us_county,Lamar,lower,,AL GA MS TX
 us_county,Lamb,lower,,TX
 us_county,Lamoille,lower,,VT
+us_county,LaMoure,lower,,ND
 us_county,Lampasas,lower,,TX
 us_county,Lancaster,lower,,NE PA SC VA
 us_county,Lander,lower,,NV
@@ -1045,10 +922,12 @@ us_county,Lane,lower,,KS OR
 us_county,Langlade,lower,,WI
 us_county,Lanier,lower,,GA
 us_county,Lapeer,lower,,MI
+us_county,LaPorte,lower,,IN
 us_county,Laramie,lower,,WY
 us_county,Larimer,lower,,CO
 us_county,Larue,lower,,KY
 us_county,Las Animas,lower,,CO
+us_county,LaSalle,lower,,IL
 us_county,Lassen,lower,,CA
 us_county,Latah,lower,,ID
 us_county,Latimer,lower,,OK
@@ -1212,7 +1091,6 @@ us_county,Mingo,lower,,WV
 us_county,Minidoka,lower,,ID
 us_county,Minnehaha,lower,,SD
 us_county,Missaukee,lower,,MI
-us_county,Mississippi,lower,,AR MO
 us_county,Missoula,lower,,MT
 us_county,Mitchell,lower,,GA IA KS NC TX
 us_county,Mobile,lower,,AL
@@ -1271,14 +1149,12 @@ us_county,Nemaha,lower,,KS NE
 us_county,Neosho,lower,,KS
 us_county,Neshoba,lower,,MS
 us_county,Ness,lower,,KS
-us_county,Nevada,lower,,AR CA
 us_county,New Castle,lower,,DE
 us_county,New Hanover,lower,,NC
 us_county,New Haven,lower,,CT
 us_county,New Kent,lower,,VA
 us_county,New London,lower,,CT
 us_county,New Madrid,lower,,MO
-us_county,New York,lower,,NY
 us_county,Newaygo,lower,,MI
 us_county,Newberry,lower,,SC
 us_county,Newport,lower,,RI
@@ -1318,12 +1194,10 @@ us_county,Oconto,lower,,WI
 us_county,Ogemaw,lower,,MI
 us_county,Ogle,lower,,IL
 us_county,Oglethorpe,lower,,GA
-us_county,Ohio,lower,,IN KY WV
 us_county,Okaloosa,lower,,FL
 us_county,Okanogan,lower,,WA
 us_county,Okeechobee,lower,,FL
 us_county,Okfuskee,lower,,OK
-us_county,Oklahoma,lower,,OK
 us_county,Okmulgee,lower,,OK
 us_county,Oktibbeha,lower,,MS
 us_county,Oldham,lower,,KY TX
@@ -1454,8 +1328,8 @@ us_county,Price,lower,,WI
 us_county,Prince Edward,lower,,VA
 us_county,Prince George,lower,,VA
 us_county,Prince George's,lower,,MD
-us_county,Prince William,lower,,VA
 us_county,Prince of Wales-Hyder,lower,,AK
+us_county,Prince William,lower,,VA
 us_county,Providence,lower,,RI
 us_county,Prowers,lower,,CO
 us_county,Pueblo,lower,,CO
@@ -1738,7 +1612,6 @@ us_county,Terrebonne,lower,,LA
 us_county,Terrell,lower,,GA TX
 us_county,Terry,lower,,TX
 us_county,Teton,lower,,ID MT WY
-us_county,Texas,lower,,MO OK
 us_county,Thayer,lower,,NE
 us_county,Thomas,lower,,GA KS NE
 us_county,Throckmorton,lower,,TX
@@ -1799,7 +1672,6 @@ us_county,Union,lower,,AR FL GA IL IN IA KY LA MS NJ NM NC OH OR PA SC SD TN
 us_county,Upshur,lower,,TX WV
 us_county,Upson,lower,,GA
 us_county,Upton,lower,,TX
-us_county,Utah,lower,,UT
 us_county,Uvalde,lower,,TX
 us_county,Val Verde,lower,,TX
 us_county,Valdez-Cordova,lower,,AK
@@ -1850,7 +1722,6 @@ us_county,Wasco,lower,,OR
 us_county,Waseca,lower,,MN
 us_county,Washakie,lower,,WY
 us_county,Washburn,lower,,WI
-us_county,Washington,lower,,AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI
 us_county,Washita,lower,,OK
 us_county,Washoe,lower,,NV
 us_county,Washtenaw,lower,,MI
@@ -1924,7 +1795,6 @@ us_county,Wrangell,lower,,AK
 us_county,Wright,lower,,IA MN MO
 us_county,Wyandot,lower,,OH
 us_county,Wyandotte,lower,,KS
-us_county,Wyoming,lower,,NY PA WV
 us_county,Wythe,lower,,VA
 us_county,Yadkin,lower,,NC
 us_county,Yakima,lower,,WA
@@ -1950,3 +1820,196 @@ us_county,Yuma,lower,,AZ CO
 us_county,Zapata,lower,,TX
 us_county,Zavala,lower,,TX
 us_county,Ziebach,lower,,SD
+us_state,AK,text,AK,
+us_state,AL,text,AL,
+us_state,Ala.,lower,AL,
+us_state,Alabama,lower,AL,
+us_state,Alas.,lower,AK,
+us_state,Alaska,lower,AK,
+us_state,Alsk.,lower,AK,
+us_state,American Samoa,lower,AS,
+us_state,AR,text,AR,
+us_state,Ar. T.,lower,AR,
+us_state,Ariz.,lower,AZ,
+us_state,Arizona,lower,AZ,
+us_state,Ark.,lower,AR,
+us_state,AS,text,AS,
+us_state,ASM,lower,AS,
+us_state,AZ,text,AZ,
+us_state,C.F.,lower,CA,
+us_state,C.L.,lower,CO,
+us_state,C.M.,lower,MP,
+us_state,C.N.M.I.,lower,MP,
+us_state,CA,text,CA,
+us_state,Cal.,lower,CA,
+us_state,Calif.,lower,CA,
+us_state,California,lower,CA,
+us_state,CO,text,CO,
+us_state,Col.,lower,CO,
+us_state,Colo.,lower,CO,
+us_state,Conn.,lower,CT,
+us_state,Connecticut,lower,CT,
+us_state,CT,text,CT,
+us_state,D.L.,lower,DE,
+us_state,DC,text,DC,
+us_state,DE,text,DE,
+us_state,Del.,lower,DE,
+us_state,District of Columbia,lower,DC,
+us_state,FL,text,FL,
+us_state,Fla.,lower,FL,
+us_state,Flor.,lower,FL,
+us_state,Florida,lower,FL,
+us_state,GA,text,GA,
+us_state,Geo.,lower,GA,
+us_state,Georgia,lower,GA,
+us_state,GU,text,GU,
+us_state,Guam,lower,GU,
+us_state,GUM,lower,GU,
+us_state,H.A.,lower,HI,
+us_state,Haw.,lower,HI,
+us_state,HI,text,HI,
+us_state,IA,text,IA,
+us_state,ID,text,ID,
+us_state,Ida.,lower,ID,
+us_state,IL,text,IL,
+us_state,Ill.,text,IL,
+us_state,Illinois,lower,IL,
+us_state,Ills.,lower,IL,
+us_state,IN,text,IN,
+us_state,Ind.,lower,IN,
+us_state,Ioa.,lower,IA,
+us_state,K.A.,lower,KS,
+us_state,Kan.,lower,KS,
+us_state,Kans.,lower,KS,
+us_state,Kansas,lower,KS,
+us_state,Ken.,lower,KY,
+us_state,Kent.,lower,KY,
+us_state,Kentucky,lower,KY,
+us_state,KS,text,KS,
+us_state,KY,text,KY,
+us_state,LA,text,LA,
+us_state,Louisiana,lower,LA,
+us_state,M.C.,lower,MI,
+us_state,M.N.P.,lower,MP,
+us_state,MA,text,MA,
+us_state,Maine,lower,ME,
+us_state,Mar.,lower,MD,
+us_state,Mary.,lower,MD,
+us_state,Maryland,lower,MD,
+us_state,Mass.,lower,MA,
+us_state,Massachusetts,lower,MA,
+us_state,MD,text,MD,
+us_state,ME,text,ME,
+us_state,MI,text,MI,
+us_state,Mich.,lower,MI,
+us_state,Michigan,lower,MI,
+us_state,Minn.,lower,MN,
+us_state,Minnesota,lower,MN,
+us_state,Minor Outlying Islands,lower,UM,
+us_state,Miss.,lower,MS,
+us_state,Missouri,lower,MO,
+us_state,MN,text,MN,
+us_state,MO,text,MO,
+us_state,Mont.,lower,MT,
+us_state,Montana,lower,MT,
+us_state,MP,text,MP,
+us_state,MS,text,MS,
+us_state,MT,text,MT,
+us_state,N. Car.,lower,NC,
+us_state,N. Dak.,lower,ND,
+us_state,N. Mex.,lower,NM,
+us_state,N. York,lower,NY,
+us_state,N.B.,lower,NB,
+us_state,N.Jersey,lower,NJ,
+us_state,NC,text,NC,
+us_state,ND,text,ND,
+us_state,NE,text,NE,
+us_state,Neb.,lower,NE,
+us_state,Nebr.,lower,NE,
+us_state,Nebraska,lower,NE,
+us_state,Nev.,lower,NV,
+us_state,New Hampshire,lower,NH,
+us_state,New Jersey,lower,NJ,
+us_state,New M.,lower,NM,
+us_state,New Mexico,lower,NM,
+us_state,NH,text,NH,
+us_state,NJ,text,NJ,
+us_state,NM,text,NM,
+us_state,No. Dak.,lower,ND,
+us_state,North Carolina,lower,NC,
+us_state,North Dakota,lower,ND,
+us_state,Northern Mariana Islands,lower,MP,
+us_state,NV,text,NV,
+us_state,NY,text,NY,
+us_state,OH,text,OH,
+us_state,OK,text,OK,
+us_state,Okla.,lower,OK,
+us_state,OR,text,OR,
+us_state,Ore.,lower,OR,
+us_state,Oreg.,lower,OR,
+us_state,Oregon,lower,OR,
+us_state,P.P.,lower,RI,
+us_state,PA,text,PA,
+us_state,Penn.,lower,PA,
+us_state,Penna.,lower,PA,
+us_state,Pennsylvania,lower,PA,
+us_state,PR,text,PR,
+us_state,PRI,text,PR,
+us_state,Puerto Rico,lower,PR,
+us_state,R. Isl.,lower,RI,
+us_state,Rhode Island,lower,RI,
+us_state,RI,text,RI,
+us_state,S. Car.,lower,SC,
+us_state,S. Dak.,lower,SD,
+us_state,SC,text,SC,
+us_state,SD,text,SD,
+us_state,So. Dak.,lower,SD,
+us_state,South Carolina,lower,SC,
+us_state,South Dakota,lower,SD,
+us_state,Tenn.,lower,TN,
+us_state,Tennessee,lower,TN,
+us_state,Tex.,lower,TX,
+us_state,TN,text,TN,
+us_state,TX,text,TX,
+us_state,U.S.V.I.,lower,VI,
+us_state,UM,text,UM,
+us_state,UT,text,UT,
+us_state,V.I.R.,lower,VI,
+us_state,VA,text,VA,
+us_state,Vermont,lower,VT,
+us_state,VI,text,VA,
+us_state,Virg.,lower,VA,
+us_state,Virgin Islands,lower,VI,
+us_state,Virginia,lower,VA,
+us_state,VT,text,VT,
+us_state,W. Va.,lower,WV,
+us_state,W. Virg.,lower,WV,
+us_state,W.N.,lower,WA,
+us_state,W.S.,lower,WI,
+us_state,WA,text,WA,
+us_state,Wash.,lower,WA,
+us_state,Wash. D.C.,lower,DC,
+us_state,West Virginia,lower,WV,
+us_state,WI,text,WI,
+us_state,Wis.,lower,WI,
+us_state,Wisc.,lower,WI,
+us_state,Wisconsin,lower,WI,
+us_state,WV,text,WV,
+us_state,WY,lower,WY,
+us_state,Wyo.,lower,WY,
+us_state_or_county,Arkansas,lower,AR,AR
+us_state_or_county,Colorado,lower,CO,TX
+us_state_or_county,Delaware,lower,DE,IN IA NY OH OK PA
+us_state_or_county,Hawaii,lower,HI,HI
+us_state_or_county,Idaho,lower,ID,ID
+us_state_or_county,Indiana,lower,IN,PA
+us_state_or_county,Iowa,lower,IA,IA WI
+us_state_or_county,Mississippi,lower,MS,AR MO
+us_state_or_county,Nevada,lower,NV,AR CA
+us_state_or_county,New York,lower,NY,NY
+us_state_or_county,Ohio,lower,OH,IN KY WV
+us_state_or_county,Oklahoma,lower,OK,OK
+us_state_or_county,Texas,lower,TX,MO OK
+us_state_or_county,Utah,lower,UT,UT
+us_state_or_county,Washington,lower,WA,AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI
+us_state_or_county,Wyoming,lower,WY,NY PA WV
