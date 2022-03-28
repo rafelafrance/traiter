@@ -110,7 +110,7 @@ def flatten(nested: Any) -> list:
 
 
 def squash(values: Union[list, set]) -> Any:
-    """Squash a list to a single value is its length is one."""
+    """Squash a list to a single value if its length is one."""
     return list(values) if len(values) != 1 else values[0]
 
 
@@ -171,10 +171,10 @@ def number_to_words(number: str) -> str:
 
 def clean_text(
         text: str,
-        trans: Optional[str] = None,
+        trans: Optional[dict[int, str]] = None,
         replace: Optional[dict[str, str]] = None,
 ) -> str:
-    """Strip control characters from improperly encoded input strings."""
+    """Clean text before trait extraction."""
     text = text if text else ''
 
     # Handle uncommon mojibake
@@ -184,19 +184,14 @@ def clean_text(
         for old, new in replace.items():
             text = text.replace(old, new)
 
-    # Compress whitespace
-    text = text.replace('\f', '\n\n')  # replace form feeds
-    text = re.sub(r'^\s+$', '', text, flags=re.MULTILINE)
-    text = re.sub(r'\n{3,}', '\n\n', text)
-
-    # text = ' '.join(text.split())  # Space normalize
+    text = ' '.join(text.split())  # Space normalize
 
     # Join hyphenated words when they are at the end of a line
     text = re.sub(r'([a-z])-\s+([a-z])', r'\1\2', text, flags=re.IGNORECASE)
 
     text = ftfy.fix_text(text)  # Handle common mojibake
 
-    # text = re.sub(r'\p{Cc}+', ' ', text)  # Remove control characters
+    text = re.sub(r'\p{Cc}+', ' ', text)  # Remove control characters
 
     return text
 
