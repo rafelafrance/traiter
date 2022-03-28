@@ -4,3 +4,4 @@ regex
 inflect
 spacy
 flake8
+gcalcli
