@@ -4,4 +4,4 @@ regex
 inflect
 spacy
 flake8
-gcalcli
+click==7.1.2
