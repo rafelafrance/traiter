@@ -5,12 +5,15 @@ from typing import Optional
 from spacy.language import Language
 from spacy.tokens import Doc
 
-from traiter.const import CLOSE, QUOTE
+from traiter import const
 
 SENTENCE = 'traiter.sentence.v1'
 
 EOS = """ . ? ! … """.split()  # End Of Sentence
-PREV_EOS = CLOSE + EOS
+PREV_EOS = const.CLOSE + EOS
+
+QUOTES = set(const.QUOTE)
+QUOTES.discard(',')
 
 
 @Language.factory(SENTENCE)
@@ -41,7 +44,7 @@ class Sentence:
                 next_.is_sent_start = True
 
             # Quotes preceded by a period
-            elif token.text in QUOTE and prev and prev.text in EOS:
+            elif token.text in QUOTES and prev and prev.text in EOS:
                 next_.is_sent_start = True
 
             # Not a sentence break
