@@ -83,6 +83,11 @@ def as_dicts(patterns: Patterns) -> list[dict]:
     return [p.as_dict() for p in as_list(patterns)]
 
 
+def compile_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
+    """Rename add_ruler_patterns."""
+    add_ruler_patterns(ruler, patterns)
+
+
 def add_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
     """Add patterns to a ruler."""
     patterns = as_list(patterns)
