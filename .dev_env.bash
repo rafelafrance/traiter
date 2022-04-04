@@ -6,7 +6,7 @@ if [[ ! -z "$VIRTUAL_ENV" ]]; then
 fi
 
 rm -rf .venv
-virtualenv -p python3.10 .venv
+virtualenv -p python3.9 .venv
 
 source ./.venv/bin/activate
 
