@@ -1,29 +1,31 @@
 """Add dependency matcher pipe to the pipeline."""
-
 import string
 from array import array
-from collections import defaultdict, namedtuple
+from collections import defaultdict
+from collections import namedtuple
 from typing import Union
 
 import spacy
 from spacy.language import Language
 from spacy.matcher import DependencyMatcher
-from spacy.tokens import Span, Token
+from spacy.tokens import Span
+from spacy.tokens import Token
 
 from traiter import const
-from traiter.util import as_list, sign
+from traiter.util import as_list
+from traiter.util import sign
 
-DEPENDENCY = 'traiter.dependency.v1'
-LINK_NEAREST = 'traiter.link_nearest.v1'
+DEPENDENCY = "traiter.dependency.v1"
+LINK_NEAREST = "traiter.link_nearest.v1"
 
 DependencyPatterns = Union[dict, list[dict]]
 
 
 def add_extensions():
     """Add extensions for spans and tokens used by entity linker pipes."""
-    if not Span.has_extension('links'):
-        Span.set_extension('links', default={})
-        Token.set_extension('links', default={})
+    if not Span.has_extension("links"):
+        Span.set_extension("links", default={})
+        Token.set_extension("links", default={})
 
 
 @Language.factory(DEPENDENCY)
@@ -42,18 +44,18 @@ class Dependency:
     def build_matchers(self, patterns: DependencyPatterns):
         """Setup matchers."""
         for matcher in patterns:
-            label = matcher['label']
-            self.matcher.add(label, matcher['patterns'])
+            label = matcher["label"]
+            self.matcher.add(label, matcher["patterns"])
 
     def build_dispatch_table(self, patterns: DependencyPatterns):
         """Setup after match actions."""
         dispatch = {}
         for matcher in patterns:
-            label = matcher['label']
+            label = matcher["label"]
             label = self.nlp.vocab.strings[label]
-            if on_match := matcher.get('on_match'):
-                func = spacy.registry.misc.get(on_match['func'])
-                dispatch[label] = (func, on_match.get('kwargs', {}))
+            if on_match := matcher.get("on_match"):
+                func = spacy.registry.misc.get(on_match["func"])
+                dispatch[label] = (func, on_match.get("kwargs", {}))
         return dispatch
 
     def __call__(self, doc):
@@ -73,17 +75,17 @@ class Dependency:
         return doc
 
 
-LinkAnchor = namedtuple('LinkAnchor', 'dist dir_ text')
+LinkAnchor = namedtuple("LinkAnchor", "dist dir_ text")
 
 
 @spacy.registry.misc(LINK_NEAREST)
 def link_nearest(doc, matches, **kwargs):
     """Link traits."""
-    anchor = kwargs.get('anchor')
-    exclude = kwargs.get('exclude', '')
-    dir_bias = kwargs.get('dir_bias', '')
-    penalty = kwargs.get('penalty')
-    bias = -1 if dir_bias == 'after' else 1
+    anchor = kwargs.get("anchor")
+    exclude = kwargs.get("exclude", "")
+    dir_bias = kwargs.get("dir_bias", "")
+    penalty = kwargs.get("penalty")
+    bias = -1 if dir_bias == "after" else 1
     entity_matches = tokens2entities(doc, matches)
 
     # All possible anchors for every entity
@@ -120,8 +122,8 @@ def weighted_distance(anchor_i, entity_i, doc, bias, penalty=None):
 
     # Penalize a period that doubles as sentence ender and an abbreviation dot
     for i in range(lo, hi + 1):
-        if doc[i].text[-1] == '.' and doc[i+1].text[0] in string.ascii_uppercase:
-            dist += penalty.get('.', 0)
+        if doc[i].text[-1] == "." and doc[i + 1].text[0] in string.ascii_uppercase:
+            dist += penalty.get(".", 0)
 
     # Penalize interior punctuation
     for i in range(lo + 1, hi):
@@ -142,14 +144,15 @@ def tokens2entities(doc, matches):
     need to map tokens in the matches to entities. This function turns match token
     indices into entity indices.
     """
-    token2ent = array('i', [-1] * len(doc))
+    token2ent = array("i", [-1] * len(doc))
 
     # This creates an array of tokens indices and the entity indices they map to
     for e, ent in enumerate(doc.ents):
-        token2ent[ent.start:ent.end] = array('i', [e] * len(ent))
+        token2ent[ent.start : ent.end] = array("i", [e] * len(ent))
 
     # Map the matched tokens to entities, remove duplicates and remove non-entities
-    mapped = {tuple(e for i in t_idx if (e := token2ent[i]) >= 0)
-              for _, t_idx in matches}
+    mapped = {
+        tuple(e for i in t_idx if (e := token2ent[i]) >= 0) for _, t_idx in matches
+    }
 
     return sorted(mapped)

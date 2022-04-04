@@ -9,8 +9,9 @@ def setup_logger(level=logging.INFO):
     """Setup the logger."""
     logging.basicConfig(
         level=level,
-        format='%(asctime)s %(levelname)s: %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S')
+        format="%(asctime)s %(levelname)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
 
 
 def module_name() -> str:
@@ -21,10 +22,10 @@ def module_name() -> str:
 def started() -> None:
     """Log the program start time."""
     setup_logger()
-    logging.info('=' * 80)
-    logging.info(f'{module_name()} started')
+    logging.info("=" * 80)
+    logging.info(f"{module_name()} started")
 
 
 def finished() -> None:
     """Log the program end time."""
-    logging.info(f'{module_name()} finished')
+    logging.info(f"{module_name()} finished")

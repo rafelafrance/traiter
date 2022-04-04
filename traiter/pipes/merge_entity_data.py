@@ -14,7 +14,7 @@ from spacy.util import filter_spans
 from traiter.actions import RejectMatch
 from traiter.pipes.entity_data import EntityData
 
-MERGE_ENTITY_DATA = 'traiter.merge_entity_data.v1'
+MERGE_ENTITY_DATA = "traiter.merge_entity_data.v1"
 
 
 @Language.factory(MERGE_ENTITY_DATA)
@@ -25,13 +25,16 @@ class MergeEntityData(EntityData):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.dispatch = {p['label']: registry.misc.get(on) for p in patterns
-                         if (on := p.get('on_match'))}
+        self.dispatch = {
+            p["label"]: registry.misc.get(on)
+            for p in patterns
+            if (on := p.get("on_match"))
+        }
 
         self.matcher = Matcher(nlp.vocab)
         for matcher in patterns:
-            label = matcher['label']
-            self.matcher.add(label, matcher['patterns'], greedy='LONGEST')
+            label = matcher["label"]
+            self.matcher.add(label, matcher["patterns"], greedy="LONGEST")
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
@@ -57,9 +60,9 @@ class MergeEntityData(EntityData):
                 if sub_ent._.merge:
                     ent._.data |= sub_ent._.data
 
-            ent._.data['trait'] = label
-            ent._.data['start'] = ent.start_char
-            ent._.data['end'] = ent.end_char
+            ent._.data["trait"] = label
+            ent._.data["start"] = ent.start_char
+            ent._.data["end"] = ent.end_char
             entities.append(ent)
 
         for ent in doc.ents:

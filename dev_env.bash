@@ -6,14 +6,14 @@ if [[ ! -z "$VIRTUAL_ENV" ]]; then
 fi
 
 rm -rf .venv
-virtualenv -p python3.9 .venv
+virtualenv -p python3.10 .venv
 
 source ./.venv/bin/activate
 
 python -m pip install --upgrade pip setuptools wheel
 if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-pip install -U spacy[cuda,transformers,lookups]
+pip install -U spacy[cuda113]
 python -m spacy download en_core_web_sm
 
 # Commonly used for dev

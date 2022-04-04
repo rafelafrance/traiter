@@ -3,12 +3,16 @@
 The default Spacy tokenizer works great for model-based parsing but sometimes causes
 complications for rule-based parsers.
 """
-
 from typing import Optional
 
-from spacy.lang.char_classes import ALPHA, LIST_HYPHENS, LIST_PUNCT, LIST_QUOTES
+from spacy.lang.char_classes import ALPHA
+from spacy.lang.char_classes import LIST_HYPHENS
+from spacy.lang.char_classes import LIST_PUNCT
+from spacy.lang.char_classes import LIST_QUOTES
 from spacy.language import Language
-from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
+from spacy.util import compile_infix_regex
+from spacy.util import compile_prefix_regex
+from spacy.util import compile_suffix_regex
 
 from traiter.util import list_to_char_class
 
@@ -21,11 +25,11 @@ PREFIX = SUFFIX = BREAKING
 
 # These rules were useful in the past
 INFIX = [
-    fr'(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])',
+    fr"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",
     fr"""{DASH_CLASS}""",  # Break on any hyphen
     r"""[\\\[\]\(\)/:;’'“”'+]""",  # Break on these characters
-    fr'(?<=[0-9])\.?(?=[{ALPHA}])',  # 1.word or 1N
-    fr'(?<=[{ALPHA}]),(?=[0-9])',  # word,digits
+    fr"(?<=[0-9])\.?(?=[{ALPHA}])",  # 1.word or 1N
+    fr"(?<=[{ALPHA}]),(?=[0-9])",  # word,digits
 ]
 
 
@@ -57,10 +61,10 @@ def append_infix_regex(nlp: Language, infixes: Optional[list[str]] = None):
 
 
 def append_tokenizer_regexes(
-        nlp: Language,
-        prefixes: Optional[list[str]] = None,
-        infixes: Optional[list[str]] = None,
-        suffixes: Optional[list[str]] = None
+    nlp: Language,
+    prefixes: Optional[list[str]] = None,
+    infixes: Optional[list[str]] = None,
+    suffixes: Optional[list[str]] = None,
 ):
     """Append all three prefix, infix, suffix."""
     append_prefix_regex(nlp, prefixes)
@@ -68,7 +72,7 @@ def append_tokenizer_regexes(
     append_suffix_regex(nlp, suffixes)
 
 
-def append_abbrevs(nlp: Language, special_cases: list[str], attr: str = 'ORTH'):
+def append_abbrevs(nlp: Language, special_cases: list[str], attr: str = "ORTH"):
     """Add special case tokens to the tokenizer."""
     for case in special_cases:
         nlp.tokenizer.add_special_case(case, [{attr: case}])

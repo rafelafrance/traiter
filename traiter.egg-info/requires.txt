@@ -4,3 +4,4 @@ regex
 inflect
 spacy
 flake8
+click==7.1.2

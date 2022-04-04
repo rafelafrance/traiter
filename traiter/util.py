@@ -1,11 +1,14 @@
 """Misc. utilities shared between client Traiters."""
-
 import os
 from contextlib import contextmanager
 from pathlib import Path
 from shutil import rmtree
 from tempfile import mkdtemp
-from typing import Any, Generator, Hashable, Optional, Union
+from typing import Any
+from typing import Generator
+from typing import Hashable
+from typing import Optional
+from typing import Union
 
 import ftfy
 import inflect
@@ -13,22 +16,10 @@ import regex as re
 
 INFLECT = inflect.engine()
 
-FLAGS = re.IGNORECASE | re.VERBOSE
-
-
-class DotDict(dict):
-    """Allow dot.notation access to dictionary items."""
-
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
-
 
 @contextmanager
 def get_temp_dir(
-        prefix: str = 'temp_',
-        where: Optional[Union[str, Path]] = None,
-        keep: bool = False
+    prefix: str = "temp_", where: Optional[Union[str, Path]] = None, keep: bool = False
 ) -> Generator:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
@@ -45,7 +36,7 @@ def get_temp_dir(
 
 def shorten(text: str) -> str:
     """Collapse whitespace in a string."""
-    return ' '.join(text.split())
+    return " ".join(text.split())
 
 
 def flatten(nested: Any) -> list:
@@ -88,7 +79,7 @@ def as_member(values: Any) -> Hashable:
 
 def to_positive_float(value: str):
     """Convert the value to a float."""
-    value = re.sub(r'[^\d./]', '', value) if value else ''
+    value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
         return float(value)
     except ValueError:
@@ -97,8 +88,8 @@ def to_positive_float(value: str):
 
 def to_positive_int(value: str):
     """Convert the value to an integer."""
-    value = re.sub(r'[^\d./]', '', value) if value else ''
-    value = re.sub(r"\.$", '', value)
+    value = re.sub(r"[^\d./]", "", value) if value else ""
+    value = re.sub(r"\.$", "", value)
     try:
         return int(value)
     except ValueError:
@@ -107,8 +98,8 @@ def to_positive_int(value: str):
 
 def camel_to_snake(name: str) -> str:
     """Convert a camel case string to snake case."""
-    split = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', split).lower()
+    split = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", split).lower()
 
 
 def ordinal(i: str) -> str:
@@ -122,12 +113,12 @@ def number_to_words(number: str) -> str:
 
 
 def clean_text(
-        text: str,
-        trans: Optional[dict[int, str]] = None,
-        replace: Optional[dict[str, str]] = None,
+    text: str,
+    trans: Optional[dict[int, str]] = None,
+    replace: Optional[dict[str, str]] = None,
 ) -> str:
     """Clean text before trait extraction."""
-    text = text if text else ''
+    text = text if text else ""
 
     # Handle uncommon mojibake
     if trans:
@@ -136,21 +127,21 @@ def clean_text(
         for old, new in replace.items():
             text = text.replace(old, new)
 
-    text = ' '.join(text.split())  # Space normalize
+    text = " ".join(text.split())  # Space normalize
 
     # Join hyphenated words when they are at the end of a line
-    text = re.sub(r'([a-z])-\s+([a-z])', r'\1\2', text, flags=re.IGNORECASE)
+    text = re.sub(r"([a-z])-\s+([a-z])", r"\1\2", text, flags=re.IGNORECASE)
 
     text = ftfy.fix_text(text)  # Handle common mojibake
 
-    text = re.sub(r'\p{Cc}+', ' ', text)  # Remove control characters
+    text = re.sub(r"\p{Cc}+", " ", text)  # Remove control characters
 
     return text
 
 
 def xor(one: Any, two: Any) -> bool:
     """Emulate a logical xor."""
-    return (not one and two) or (one and not two)
+    return (one and not two) or (not one and two)
 
 
 def sign(x: Union[int, float]) -> int:
@@ -162,8 +153,8 @@ def list_to_re_choice(values):
     """Convert a list of values into a regex choice."""
     values = sorted(values, key=lambda v: -len(v))
     values = [re.escape(v) for v in values]
-    pattern = '|'.join(values)
-    pattern = fr'({pattern})'
+    pattern = "|".join(values)
+    pattern = fr"({pattern})"
     return pattern
 
 
@@ -171,6 +162,6 @@ def list_to_char_class(values):
     """Convert a list of values into a regex character class."""
     values = sorted(values, key=lambda v: -len(v))
     values = [re.escape(v) for v in values]
-    pattern = ''.join(values)
-    pattern = fr'[{pattern}]'
+    pattern = "".join(values)
+    pattern = fr"[{pattern}]"
     return pattern

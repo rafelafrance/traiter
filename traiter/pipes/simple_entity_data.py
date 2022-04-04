@@ -2,14 +2,13 @@
 
 This is most often used after creating entities from phrase patterns.
 """
-
 from typing import Optional
 
 from spacy.language import Language
 
 from traiter.pipes.entity_data import EntityData
 
-SIMPLE_ENTITY_DATA = 'traiter.simple_entity_data.v1'
+SIMPLE_ENTITY_DATA = "traiter.simple_entity_data.v1"
 
 StrDict = dict[str, str]
 
@@ -35,8 +34,8 @@ class SimpleEntityData(EntityData):
                     token._.data[label] = text
                     texts.append(text)
                     texts.append(token.whitespace_)
-                ent._.data[label] = ''.join(texts).strip()
-                ent._.data['trait'] = label
-                ent._.data['start'] = ent.start_char
-                ent._.data['end'] = ent.end_char
+                ent._.data[label] = "".join(texts).strip()
+                ent._.data["trait"] = label
+                ent._.data["start"] = ent.start_char
+                ent._.data["end"] = ent.end_char
         return doc

@@ -1,20 +1,25 @@
 """A class to hold an individual token."""
+from typing import List
+from typing import Optional
+from typing import Tuple
 
-from typing import List, Optional, Tuple
-from traiter.old.rule import Action, Groups, Rule, SIZE
+from traiter.old.rule import Action
+from traiter.old.rule import Groups
+from traiter.old.rule import Rule
+from traiter.old.rule import SIZE
 
-Tokens = List['Token']
+Tokens = List["Token"]
 
 
 class Token:
     """A token is the result of a rule match."""
 
     def __init__(
-            self,
-            rule: Rule = None,
-            match=None,  # A regex match (not re)
-            group: Groups = None,
-            span: Tuple[int, int] = None,
+        self,
+        rule: Rule = None,
+        match=None,  # A regex match (not re)
+        group: Groups = None,
+        span: Tuple[int, int] = None,
     ) -> None:
         """Create a token."""
         self.rule = rule
@@ -28,7 +33,7 @@ class Token:
 
     def __repr__(self) -> str:
         """Create string form of the object."""
-        return '{}({})'.format(self.__class__.__name__, self.__dict__)
+        return f"{self.__class__.__name__}({self.__dict__})"
 
     def __eq__(self, other: object) -> bool:
         """Compare tokens."""
@@ -37,7 +42,7 @@ class Token:
     @property
     def __dict__(self):
         """Convert to a dict."""
-        return {'name': self.name, 'span': self.span, 'groups': self.group}
+        return {"name": self.name, "span": self.span, "groups": self.group}
 
     @property
     def name(self) -> str:

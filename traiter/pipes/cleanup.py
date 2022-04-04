@@ -1,10 +1,9 @@
 """Remove noise entities from the doc."""
-
 from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
-CLEANUP = 'traiter.clean_up.v1'
+CLEANUP = "traiter.clean_up.v1"
 
 
 @Language.factory(CLEANUP)
@@ -12,7 +11,7 @@ class Cleanup:
     """Save current token label so it can be used after it is replaced."""
 
     def __init__(
-        self, nlp: Language, name: str, forget: list[str] = None, forget_when: str = ''
+        self, nlp: Language, name: str, forget: list[str] = None, forget_when: str = ""
     ):
         super().__init__()
         self.nlp = nlp

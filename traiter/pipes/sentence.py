@@ -1,5 +1,4 @@
 """Custom sentence splitter."""
-
 from typing import Optional
 
 from spacy.language import Language
@@ -7,13 +6,13 @@ from spacy.tokens import Doc
 
 from traiter import const
 
-SENTENCE = 'traiter.sentence.v1'
+SENTENCE = "traiter.sentence.v1"
 
 EOS = """ . ? ! … """.split()  # End Of Sentence
 PREV_EOS = const.CLOSE + EOS
 
 QUOTES = set(const.QUOTE)
-QUOTES.discard(',')
+QUOTES.discard(",")
 
 
 @Language.factory(SENTENCE)
@@ -33,14 +32,16 @@ class Sentence:
             next_ = doc[i + 1]
 
             # Some tokens are automatically their own sentence
-            if (token.ent_type_ in self.automatic
-                    and (not prev or self.is_prev(prev))
-                    and self.is_next(next_)):
+            if (
+                token.ent_type_ in self.automatic
+                and (not prev or self.is_prev(prev))
+                and self.is_next(next_)
+            ):
                 next_.is_sent_start = True
                 token.is_sent_start = True
 
             # A period followed by a capital letter (or space, digit or another period)
-            elif token.text == '.' and self.is_next(next_):
+            elif token.text == "." and self.is_next(next_):
                 next_.is_sent_start = True
 
             # Quotes preceded by a period
@@ -56,7 +57,7 @@ class Sentence:
     @staticmethod
     def is_space(token):
         """Check if the token is space."""
-        return token.text.isspace() or token.pos_ == 'SPACE'
+        return token.text.isspace() or token.pos_ == "SPACE"
 
     def is_prev(self, token):
         """See if the previous token is a space or a bracket."""
@@ -64,5 +65,9 @@ class Sentence:
 
     def is_next(self, token):
         """See if the next token starts with an uppercase is a space or period."""
-        return (token.prefix_.isupper() or token.prefix_.isdigit()
-                or self.is_space(token) or token.text in EOS)
+        return (
+            token.prefix_.isupper()
+            or token.prefix_.isdigit()
+            or self.is_space(token)
+            or token.text in EOS
+        )

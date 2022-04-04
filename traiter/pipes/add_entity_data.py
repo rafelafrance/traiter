@@ -1,13 +1,13 @@
 """Actions for enriching entities with new data."""
-
 from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
 from traiter.actions import RejectMatch
-from traiter.pipes.entity_data import DispatchTable, EntityData
+from traiter.pipes.entity_data import DispatchTable
+from traiter.pipes.entity_data import EntityData
 
-ADD_ENTITY_DATA = 'traiter.add_entity_data.v1'
+ADD_ENTITY_DATA = "traiter.add_entity_data.v1"
 
 
 @Language.factory(ADD_ENTITY_DATA)
@@ -34,9 +34,9 @@ class AddEntityData(EntityData):
 
                 ent, label = self.relabel_entity(ent, label)
 
-            ent._.data['trait'] = label
-            ent._.data['start'] = ent.start_char
-            ent._.data['end'] = ent.end_char
+            ent._.data["trait"] = label
+            ent._.data["start"] = ent.start_char
+            ent._.data["end"] = ent.end_char
             entities.append(ent)
 
         doc.ents = entities

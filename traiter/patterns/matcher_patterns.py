@@ -6,16 +6,19 @@ In an effort to make patterns more readable I've created simple compilers that t
 hopefully, readable strings and convert them to spacy patterns using a dictionary and
 some simple rules.
 """
-
 from copy import deepcopy
-from typing import Callable, Optional, Union
+from typing import Callable
+from typing import Optional
+from typing import Union
 from warnings import warn
 
 from spacy.pipeline import EntityRuler
 from spacy.tokens.doc import Doc
 
-from traiter.patterns.patterns import (
-    CompilerPatterns, Decoder, PatternArg, SpacyPatterns)
+from traiter.patterns.patterns import CompilerPatterns
+from traiter.patterns.patterns import Decoder
+from traiter.patterns.patterns import PatternArg
+from traiter.patterns.patterns import SpacyPatterns
 from traiter.util import as_list
 
 RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
@@ -25,13 +28,14 @@ class MatcherPatterns:
     """Pattern object for rule-based matchers."""
 
     def __init__(
-            self,
-            label: str,
-            *,
-            patterns: PatternArg,
-            decoder: Optional[Decoder] = None,
-            on_match: Optional[str] = None,
-            id_: str = ''):
+        self,
+        label: str,
+        *,
+        patterns: PatternArg,
+        decoder: Optional[Decoder] = None,
+        on_match: Optional[str] = None,
+        id_: str = "",
+    ):
         self.label = label
         self.on_match = on_match
         self.patterns = patterns
@@ -44,10 +48,11 @@ class MatcherPatterns:
     def as_dict(self) -> dict:
         """Return the object as a serializable dict."""
         return {
-            'label': self.label,
-            'on_match': self.on_match,
-            'patterns': self.patterns,
-            'id': self.id}
+            "label": self.label,
+            "on_match": self.on_match,
+            "patterns": self.patterns,
+            "id": self.id,
+        }
 
     @staticmethod
     def compile(patterns: CompilerPatterns, decoder: Decoder) -> SpacyPatterns:
@@ -61,9 +66,9 @@ class MatcherPatterns:
                 token = deepcopy(decoder.get(key))
                 op = key[-1]
 
-                if not token and op in '?*+!':
+                if not token and op in "?*+!":
                     token = deepcopy(decoder.get(key[:-1]))
-                    token['OP'] = op
+                    token["OP"] = op
 
                 if token:
                     pattern_seq.append(token)
@@ -96,9 +101,9 @@ def add_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
         label = matcher.label
         id_ = matcher.id
         for pattern in matcher.patterns:
-            rule = {'label': label, 'pattern': pattern}
+            rule = {"label": label, "pattern": pattern}
             if id_:
-                rule['id'] = id_
+                rule["id"] = id_
             rules.append(rule)
     ruler.add_patterns(rules)
 

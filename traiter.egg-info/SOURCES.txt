@@ -14,6 +14,7 @@ tests/__init__.py
 traiter/__init__.py
 traiter/actions.py
 traiter/const.py
+traiter/log.py
 traiter/tokenizer_util.py
 traiter/util.py
 traiter.egg-info/PKG-INFO
@@ -37,6 +38,7 @@ traiter/pipes/cleanup.py
 traiter/pipes/debug.py
 traiter/pipes/dependency.py
 traiter/pipes/entity_data.py
+traiter/pipes/merge_entity_data.py
 traiter/pipes/retokenize.py
 traiter/pipes/sentence.py
 traiter/pipes/simple_entity_data.py
