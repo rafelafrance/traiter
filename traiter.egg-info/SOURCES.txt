@@ -4,7 +4,6 @@
 LICENSE
 MANIFEST.in
 README.md
-dev_env.bash
 requirements.txt
 setup.py
 .github/workflows/python-app.yml
