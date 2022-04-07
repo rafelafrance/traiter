@@ -26,7 +26,8 @@ def reject_match(_: Span) -> None:
     """Use this to reject a pattern from doc.ents.
 
     Sometimes it is easier to search for a pattern that you know you don't want
-    rather than writing a bunch of rules to work around the a set of bad patterns.
+    rather than writing a bunch of rules to work around a set of bad patterns within
+    the normal set of rules.
     """
     raise RejectMatch
 

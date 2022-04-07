@@ -1984,22 +1984,22 @@ us_state,Wisconsin,lower,Wisconsin,
 us_state,WV,text,West Virginia,
 us_state,WY,lower,Wyoming,
 us_state,Wyo.,lower,Wyoming,
-us_state_or_county,Arkansas,lower,Arkansas,AR
-us_state_or_county,Colorado,lower,Colorado,TX
-us_state_or_county,Delaware,lower,Delaware,IN IA NY OH OK PA
-us_state_or_county,Hawaii,lower,Hawaii,HI
-us_state_or_county,Idaho,lower,Idaho,ID
-us_state_or_county,Indiana,lower,Indiana,PA
-us_state_or_county,Iowa,lower,Iowa,IA WI
-us_state_or_county,Mississippi,lower,Mississippi,AR MO
-us_state_or_county,Nevada,lower,Nevada,AR CA
-us_state_or_county,New York,lower,New York,NY
-us_state_or_county,Ohio,lower,Ohio,IN KY WV
-us_state_or_county,Oklahoma,lower,Oklahoma,OK
-us_state_or_county,Texas,lower,Texas,MO OK
-us_state_or_county,Utah,lower,Utah,UT
-us_state_or_county,Washington,lower,Washington,AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI
-us_state_or_county,Wyoming,lower,Wyoming,NY PA WV
+us_state-us_county,Arkansas,lower,Arkansas,AR
+us_state-us_county,Colorado,lower,Colorado,TX
+us_state-us_county,Delaware,lower,Delaware,IN IA NY OH OK PA
+us_state-us_county,Hawaii,lower,Hawaii,HI
+us_state-us_county,Idaho,lower,Idaho,ID
+us_state-us_county,Indiana,lower,Indiana,PA
+us_state-us_county,Iowa,lower,Iowa,IA WI
+us_state-us_county,Mississippi,lower,Mississippi,AR MO
+us_state-us_county,Nevada,lower,Nevada,AR CA
+us_state-us_county,New York,lower,New York,NY
+us_state-us_county,Ohio,lower,Ohio,IN KY WV
+us_state-us_county,Oklahoma,lower,Oklahoma,OK
+us_state-us_county,Texas,lower,Texas,MO OK
+us_state-us_county,Utah,lower,Utah,UT
+us_state-us_county,Washington,lower,Washington,AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI
+us_state-us_county,Wyoming,lower,Wyoming,NY PA WV
 us_territory,American Samoa,lower,American Samoa,
 us_territory,AS,text,American Samoa,
 us_territory,ASM,lower,American Samoa,

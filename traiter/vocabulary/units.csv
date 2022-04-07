@@ -1,15 +1,39 @@
 label,pattern,attr,replace
+imperial_length,feet,lower,ft
+imperial_length,foot,lower,ft
+imperial_length,ft,lower,ft
+imperial_length,ft.,lower,ft
+imperial_length,in,lower,in
+imperial_length,in .,lower,in
+imperial_length,in.,lower,in
+imperial_length,inch,lower,in
+imperial_length,inches,lower,in
+imperial_length,mi,lower,mi
+imperial_length,mi .,lower,mi
+imperial_length,mi.,lower,mi
+imperial_length,mile,lower,mi
+imperial_length,miles,lower,mi
+imperial_mass,ounce,lower,oz
+imperial_mass,ounces,lower,oz
+imperial_mass,oz,lower,oz
+imperial_mass,ozs,lower,oz
+imperial_mass,pound,lower,lbs
+imperial_mass,pounds,lower,lbs
 metric_length,centimeters,lower,cm
 metric_length,cm,lower,cm
+metric_length,cm .,lower,cm
 metric_length,cm.,lower,cm
 metric_length,decimeters,lower,dm
 metric_length,dm,lower,dm
+metric_length,dm .,lower,dm
 metric_length,dm.,lower,dm
-metric_length,km,lower,km
-metric_length,km.,lower,km
 metric_length,kilometer,lower,km
 metric_length,kilometers,lower,km
+metric_length,km,lower,km
+metric_length,km .,lower,km
+metric_length,km.,lower,km
 metric_length,m,lower,m
+metric_length,m .,lower,m
 metric_length,m.,lower,m
 metric_length,meter,lower,m
 metric_length,meters,lower,m
@@ -17,29 +41,12 @@ metric_length,metre,lower,m
 metric_length,metres,lower,m
 metric_length,millimeters,lower,mm
 metric_length,mm,lower,mm
+metric_length,mm .,lower,mm
 metric_length,mm.,lower,mm
 metric_length,µm,lower,µm
-imperial_length,foot,lower,ft
-imperial_length,feet,lower,ft
-imperial_length,ft,lower,ft
-imperial_length,ft.,lower,ft
-imperial_length,inch,lower,in
-imperial_length,inches,lower,in
-imperial_length,in,lower,in
-imperial_length,in.,lower,in
-imperial_length,mi,lower,mi
-imperial_length,mi.,lower,mi
-imperial_length,mile,lower,mi
-imperial_length,miles,lower,mi
 metric_mass,g,lower,g
 metric_mass,gm,lower,g
 metric_mass,gms,lower,g
 metric_mass,grams,lower,g
 metric_mass,kg,lower,kg
 metric_mass,kilograms,lower,kg
-imperial_mass,ounce,lower,oz
-imperial_mass,ounces,lower,oz
-imperial_mass,oz,lower,oz
-imperial_mass,ozs,lower,oz
-imperial_mass,pound,lower,lbs
-imperial_mass,pounds,lower,lbs
