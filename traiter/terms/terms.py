@@ -11,6 +11,7 @@ Columns for a vocabulary CSV file:
         hyphenate = A custom hyphenation scheme for the pattern
         and more...
 """
+import warnings
 from typing import Any
 from typing import Optional
 from typing import Union
@@ -27,14 +28,35 @@ StrList = Union[str, list[str]]
 class Terms:
     """A dictionary of terms."""
 
-    def __init__(self, terms: Optional[list[dict]] = None) -> None:
-        self.terms = terms if terms else []
+    def __init__(self, terms: Optional[list[dict]] = None, no_clobber=True) -> None:
+        terms = terms if terms else []
+        self.terms = []
+        self.patterns = {}
+        self.no_clobber = no_clobber
+        self.silent = True
+        self.add_terms(terms)
+
+    def add_terms(self, terms):
+        """Add terms while respecting the no clobber flag."""
+        if self.no_clobber:
+            for term in terms:
+                if term["pattern"] not in self.patterns:
+                    self.terms.append(term)
+                    self.patterns[term["pattern"]] = term["label"]
+                elif not self.silent:
+                    msg = (
+                        f"'{term['pattern']}' in {term['label']} clobbers "
+                        f"it in {self.patterns[term['pattern']]}."
+                    )
+                    warnings.warn(msg)
+        else:
+            self.terms += terms
 
     def __iter__(self):
         yield from self.terms
 
     def __add__(self, other: "Terms") -> "Terms":
-        self.terms += other.terms
+        self.add_terms(other.terms)
         return self
 
     def with_label(self, label: str = "") -> list[dict]:
@@ -55,6 +77,7 @@ class Terms:
         """
         drops = drops.split() if isinstance(drops, str) else drops
         self.terms = [t for t in self.terms if t[field] not in drops]
+        self.patterns = {t["pattern"] for t in self.terms}
 
     def for_entity_ruler(self, attr: str = "LOWER"):
         """Return ruler pattens from the terms."""
