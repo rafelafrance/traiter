@@ -44,7 +44,9 @@ traiter/pipes/simple_entity_data.py
 traiter/pipes/update_entity_data.py
 traiter/terms/__init__.py
 traiter/terms/csv_.py
+traiter/terms/db.py
 traiter/terms/itis.py
+traiter/terms/terms.py
 traiter/vocabulary/__init__.py
 traiter/vocabulary/animals.csv
 traiter/vocabulary/colors.csv
