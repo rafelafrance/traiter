@@ -52,7 +52,7 @@ class Db(terms.Terms):
         sql = "select label, pattern, attr, replace"
         for row in rows:
             sql += f", {row[0]} as {row[1]}"
-        sql += " from terms where group = ?"
+        sql += " from terms where term_set = ?"
 
         with sqlite3.connect(database) as cxn:
             cxn.row_factory = sqlite3.Row
