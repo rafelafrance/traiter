@@ -20,7 +20,7 @@ from traiter.util import list_to_char_class
 DASHES = [h for h in LIST_HYPHENS if len(h) == 1]
 DASH_CLASS = list_to_char_class(DASHES)
 BREAKING = LIST_QUOTES + LIST_PUNCT + DASHES
-BREAKING += r""" [\\/˂˃×.+] """.split()
+BREAKING += r""" [\\/˂˃×.+’] """.split()
 PREFIX = SUFFIX = BREAKING
 
 # These rules were useful in the past

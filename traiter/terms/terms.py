@@ -28,25 +28,27 @@ StrList = Union[str, list[str]]
 class Terms:
     """A dictionary of terms."""
 
-    def __init__(self, terms: Optional[list[dict]] = None, no_clobber=True) -> None:
+    def __init__(self, terms: Optional[list[dict]] = None) -> None:
         terms = terms if terms else []
         self.terms = []
         self.patterns = {}
-        self.no_clobber = no_clobber
-        self.silent = True
+        self.no_clobber = False
+        self.silent = False
         self.add_terms(terms)
 
     def add_terms(self, terms):
         """Add terms while respecting the no clobber flag."""
         if self.no_clobber:
             for term in terms:
-                if term["pattern"] not in self.patterns:
+                lower = term["pattern"].lower()
+                if lower not in self.patterns:
                     self.terms.append(term)
-                    self.patterns[term["pattern"]] = term["label"]
+                    self.patterns[lower] = term["label"]
                 elif not self.silent:
+                    key = term["pattern"].lower()
                     msg = (
                         f"'{term['pattern']}' in {term['label']} clobbers "
-                        f"it in {self.patterns[term['pattern']]}."
+                        f"it in {self.patterns[key]}."
                     )
                     warnings.warn(msg)
         else:

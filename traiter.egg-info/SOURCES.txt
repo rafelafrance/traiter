@@ -54,6 +54,7 @@ traiter/vocabulary/insect_anatomy.csv
 traiter/vocabulary/numerics.csv
 traiter/vocabulary/plant_treatment.csv
 traiter/vocabulary/sources.txt
+traiter/vocabulary/terms.sqlite
 traiter/vocabulary/time.csv
 traiter/vocabulary/units.csv
 traiter/vocabulary/us_locations.csv
