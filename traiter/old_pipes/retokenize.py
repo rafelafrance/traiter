@@ -9,7 +9,7 @@ RETOKENIZE = "traiter.retokenize.v1"
 
 @Language.factory(RETOKENIZE)
 class Retokenize:
-    """ "Merge entities into a single token also merge the 'ent._.*' data."""
+    """Merge entities into a single token also merge the 'ent._.*' data."""
 
     def __init__(self, nlp: Language, name: str):
         super().__init__()

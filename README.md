@@ -1,5 +1,9 @@
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
+## SpaCy Entities vs Traits:
+- A trait is a spaCy entity with custom data attached.
+- We leverage normal spaCy entities to build traits, particularly the phrase ruler, and sometimes we will also use spaCy's NER entities to build traits.
+
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects ([traiter_odonata](https://github.com/rafelafrance/traiter_odonata), [traiter_efloras](https://github.com/rafelafrance/traiter_efloras), etc.). It contains no runnable code itself.
 

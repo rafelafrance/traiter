@@ -1,7 +1,7 @@
 """Add a pipe to print debug messages."""
 from spacy.language import Language
 
-from traiter.pipes.extensions import add_extensions
+from traiter.old_pipes.entity_data import add_extensions
 
 DEBUG_TOKENS = "debug_tokens.v1"
 DEBUG_ENTITIES = "debug_entities.v1"

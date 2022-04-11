@@ -22,7 +22,7 @@ DependencyPatterns = Union[dict, list[dict]]
 
 
 def add_extensions():
-    """Add extensions for spans and tokens used by entity linker pipes."""
+    """Add extensions for spans and tokens used by entity linker old_pipes."""
     if not Span.has_extension("links"):
         Span.set_extension("links", default={})
         Token.set_extension("links", default={})

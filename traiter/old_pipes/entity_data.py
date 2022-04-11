@@ -1,4 +1,4 @@
-"""Common functions for entity data pipes."""
+"""Common functions for entity data old_pipes."""
 from typing import Union
 
 from spacy.tokens import Span
@@ -10,7 +10,7 @@ DispatchTable = dict[str, str]
 
 
 def add_extensions():
-    """Add extensions for spans and tokens used by entity data pipes."""
+    """Add extensions for spans and tokens used by entity data old_pipes."""
     if not Span.has_extension("data"):
         Span.set_extension("data", default={})
         Token.set_extension("data", default={})
@@ -47,7 +47,7 @@ def add_extensions():
 
 
 class EntityData:
-    """A mix-in class for entity data pipes."""
+    """A mix-in class for entity data old_pipes."""
 
     def __init__(self):
         """Add span and token extensions for entity data."""

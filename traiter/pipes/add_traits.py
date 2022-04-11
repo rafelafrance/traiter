@@ -1,24 +1,26 @@
-"""Actions for enriching entities with new data."""
+"""Combine matches to make a trait."""
 from typing import Any
 
 from spacy import registry
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
+from spacy.tokens import Span
 from spacy.util import filter_spans
 
 from traiter.actions import RejectMatch
-from traiter.pipes.entity_data import EntityData
+from traiter.pipes.extensions import add_extensions
 
-ADD_ENTITIES = "traiter.add_entities.v1"
+ADD_TRAITS = "traiter.add_traits.v1"
 
 
-@Language.factory(ADD_ENTITIES)
-class AddEntities(EntityData):
+@Language.factory(ADD_TRAITS)
+class AddTraits:
     """Perform actions to fill user defined fields etc. for all entities."""
 
     def __init__(self, nlp: Language, name: str, patterns: list[dict]):
-        super().__init__()
+        add_extensions()
+
         self.nlp = nlp
         self.name = name
         self.dispatch = {
@@ -67,3 +69,23 @@ class AddEntities(EntityData):
 
         doc.ents = sorted(entities, key=lambda s: s.start)
         return doc
+
+    @staticmethod
+    def relabel_entity(ent, old_label):
+        """Relabel an entity.
+
+        We cannot change a label on a span so we have to make a new one.
+        """
+        label = old_label
+
+        if new_label := ent._.new_label:
+            label = new_label
+            span = Span(ent.doc, ent.start, ent.end, label=new_label)
+            span._.data = ent._.data
+            span._.new_label = ""
+            ent = span
+            if (move := span._.data.get(old_label)) is not None:
+                span._.data[label] = move
+                del span._.data[old_label]
+
+        return ent, label
