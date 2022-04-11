@@ -1,24 +1,24 @@
 """Actions for enriching matches.
 
 This is most often used after creating entities from phrase patterns. All we're doing
-is adding "data" to already existing traits/entities.
+is adding "data" to already existing entities to turn them into traits.
 """
 from typing import Optional
 
 from spacy.language import Language
 
-from traiter.pipes.extensions import add_extensions
+from traiter.pipes.pipe_util import add_extensions
 
 SIMPLE_TRAITS = "traiter.simple_trait.v1"
 
-StrDict = dict[str, str]
+StrDict = Optional[dict[str, str]]
 
 
 @Language.factory(SIMPLE_TRAITS)
 class SimpleTraits:
     """Save the text in the entity data and cache the label."""
 
-    def __init__(self, nlp: Language, name: str, replace: Optional[StrDict] = None):
+    def __init__(self, nlp: Language, name: str, replace: StrDict = None):
         add_extensions()
 
         self.nlp = nlp

@@ -1,22 +1,45 @@
 """Add a pipe to print debug messages."""
 from spacy.language import Language
 
-from traiter.pipes.extensions import add_extensions
+from traiter.pipes.pipe_util import add_extensions
 
-DEBUG_TOKENS = "debug_tokens.v1"
-DEBUG_ENTITIES = "debug_entities.v1"
-
-add_extensions()
+DEBUG_TOKENS = "traiter.debug_tokens.v1"
+DEBUG_ENTITIES = "traiter.debug_entities.v1"
 
 # So we don't have to come up with new names all the time
-DEBUG_COUNT = 0  # Used to rename debug old_pipes
+DEBUG_COUNT = 0  # Used to rename debug pipes
+
+
+def tokens(nlp, message="", **kwargs):
+    """Automatically setup a pipe to print token information."""
+    global DEBUG_COUNT
+    DEBUG_COUNT += 1
+    config = {"message": message}
+    nlp.add_pipe(
+        DEBUG_TOKENS,
+        name=f"tokens_{DEBUG_COUNT}",
+        config=config,
+        **kwargs,
+    )
+
+
+def ents(nlp, message="", **kwargs):
+    """Automatically setup a pipe to print entity information."""
+    global DEBUG_COUNT
+    DEBUG_COUNT += 1
+    config = {"message": message}
+    nlp.add_pipe(
+        DEBUG_ENTITIES,
+        name=f"entities_{DEBUG_COUNT}",
+        config=config,
+        **kwargs,
+    )
 
 
 @Language.factory(DEBUG_TOKENS, default_config={"message": ""})
 class DebugTokens:
-    """Print debug messages."""
-
     def __init__(self, nlp: Language, name: str, message: str = ""):
+        add_extensions()
         self.nlp = nlp
         self.name = name
         self.message = message
@@ -37,9 +60,8 @@ class DebugTokens:
 
 @Language.factory(DEBUG_ENTITIES, default_config={"message": ""})
 class DebugEntities:
-    """Print debug messages."""
-
     def __init__(self, nlp: Language, name: str, message: str = ""):
+        add_extensions()
         self.nlp = nlp
         self.name = name
         self.message = message
@@ -52,29 +74,3 @@ class DebugEntities:
             print(f'{" " * 20} {ent._.data}\n')
         print()
         return doc
-
-
-def debug_tokens(nlp, message="", **kwargs):
-    """Add old_pipes for debugging."""
-    global DEBUG_COUNT
-    DEBUG_COUNT += 1
-    config = {"message": message}
-    nlp.add_pipe(
-        DEBUG_TOKENS,
-        name=f"tokens_{DEBUG_COUNT}",
-        config=config,
-        **kwargs,
-    )
-
-
-def debug_ents(nlp, message="", **kwargs):
-    """Add old_pipes for debugging."""
-    global DEBUG_COUNT
-    DEBUG_COUNT += 1
-    config = {"message": message}
-    nlp.add_pipe(
-        DEBUG_ENTITIES,
-        name=f"entities_{DEBUG_COUNT}",
-        config=config,
-        **kwargs,
-    )
