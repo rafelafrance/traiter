@@ -147,21 +147,3 @@ def xor(one: Any, two: Any) -> bool:
 def sign(x: Union[int, float]) -> int:
     """Return the sign of a number (-1, 0, 1)."""
     return 0 if x == 0 else (-1 if x < 0 else 1)
-
-
-def list_to_re_choice(values):
-    """Convert a list of values into a regex choice."""
-    values = sorted(values, key=lambda v: -len(v))
-    values = [re.escape(v) for v in values]
-    pattern = "|".join(values)
-    pattern = fr"({pattern})"
-    return pattern
-
-
-def list_to_char_class(values):
-    """Convert a list of values into a regex character class."""
-    values = sorted(values, key=lambda v: -len(v))
-    values = [re.escape(v) for v in values]
-    pattern = "".join(values)
-    pattern = fr"[{pattern}]"
-    return pattern

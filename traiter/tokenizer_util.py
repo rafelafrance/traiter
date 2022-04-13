@@ -5,6 +5,7 @@ complications for rule-based parsers.
 """
 from typing import Optional
 
+import regex as re
 from spacy.lang.char_classes import ALPHA
 from spacy.lang.char_classes import LIST_HYPHENS
 from spacy.lang.char_classes import LIST_PUNCT
@@ -14,19 +15,17 @@ from spacy.util import compile_infix_regex
 from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
-from traiter.util import list_to_char_class
+# These rules were useful in the past
+DASHES = "|".join([re.escape(h) for h in LIST_HYPHENS])
+DASHES = f"(?:{DASHES})+"
+BREAKING = LIST_QUOTES + LIST_PUNCT + r""" [\\/˂˃×.+’] """.split()
+PREFIXES = BREAKING + [DASHES + "(?=[0-9])"]
+SUFFIXES = BREAKING + [DASHES]
 
 # These rules were useful in the past
-DASHES = [h for h in LIST_HYPHENS if len(h) == 1]
-DASH_CLASS = list_to_char_class(DASHES)
-BREAKING = LIST_QUOTES + LIST_PUNCT + DASHES
-BREAKING += r""" [\\/˂˃×.+’] """.split()
-PREFIX = SUFFIX = BREAKING
-
-# These rules were useful in the past
-INFIX = [
+INFIXES = [
     fr"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",
-    fr"""{DASH_CLASS}""",  # Break on any hyphen
+    fr"""{DASHES}""",  # Break on any hyphen
     r"""[\\\[\]\(\)/:;’'“”'+]""",  # Break on these characters
     fr"(?<=[0-9])\.?(?=[{ALPHA}])",  # 1.word or 1N
     fr"(?<=[{ALPHA}]),(?=[0-9])",  # word,digits
@@ -35,28 +34,25 @@ INFIX = [
 
 def append_prefix_regex(nlp: Language, prefixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
-    prefixes2 = prefixes if prefixes else PREFIX
-    prefixes2 += nlp.Defaults.prefixes
-    prefixes3 = set(prefixes2)
-    prefix_re = compile_prefix_regex(prefixes3)
-    nlp.tokenizer.suffix_search = prefix_re.search
+    prefixes = prefixes if prefixes else PREFIXES
+    prefixes += nlp.Defaults.prefixes
+    prefix_re = compile_prefix_regex(prefixes)
+    nlp.tokenizer.prefix_search = prefix_re.search
 
 
 def append_suffix_regex(nlp: Language, suffixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
-    suffixes2 = suffixes if suffixes else SUFFIX
-    suffixes2 += nlp.Defaults.suffixes
-    suffixes3 = set(suffixes2)
-    suffix_re = compile_suffix_regex(suffixes3)
+    suffixes = suffixes if suffixes else SUFFIXES
+    suffixes += nlp.Defaults.suffixes
+    suffix_re = compile_suffix_regex(suffixes)
     nlp.tokenizer.suffix_search = suffix_re.search
 
 
 def append_infix_regex(nlp: Language, infixes: Optional[list[str]] = None):
     """Append to the breaking prefix rules."""
-    infixes2 = infixes if infixes else INFIX
-    infixes2 += nlp.Defaults.infixes
-    infixes3 = set(infixes2)
-    infix_re = compile_infix_regex(infixes3)
+    infixes = infixes if infixes else INFIXES
+    infixes += nlp.Defaults.infixes
+    infix_re = compile_infix_regex(infixes)
     nlp.tokenizer.infix_finditer = infix_re.finditer
 
 
