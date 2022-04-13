@@ -3,6 +3,7 @@
 The default Spacy tokenizer works great for model-based parsing but sometimes causes
 complications for rule-based parsers.
 """
+from typing import Iterable
 from typing import Optional
 
 import regex as re
@@ -11,6 +12,7 @@ from spacy.lang.char_classes import LIST_HYPHENS
 from spacy.lang.char_classes import LIST_PUNCT
 from spacy.lang.char_classes import LIST_QUOTES
 from spacy.language import Language
+from spacy.symbols import ORTH
 from spacy.util import compile_infix_regex
 from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
@@ -68,7 +70,15 @@ def append_tokenizer_regexes(
     append_suffix_regex(nlp, suffixes)
 
 
-def append_abbrevs(nlp: Language, special_cases: list[str], attr: str = "ORTH"):
+def append_abbrevs(nlp: Language, special_cases: list[str]):
     """Add special case tokens to the tokenizer."""
     for case in special_cases:
-        nlp.tokenizer.add_special_case(case, [{attr: case}])
+        nlp.tokenizer.add_special_case(case, [{ORTH: case}])
+
+
+def add_special_case(nlp: Language, special_cases: list[Iterable]):
+    """Add special case tokens to the tokenizer."""
+    for case in special_cases:
+        text, *parts = case
+        rule = [{ORTH: p} for p in parts]
+        nlp.tokenizer.add_special_case(text, rule)
