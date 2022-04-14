@@ -35,7 +35,7 @@ class AddTraits:
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
-        seen: set[Any] = set()
+        used_tokens: set[Any] = set()
 
         matches = self.matcher(doc, as_spans=True)
         matches = filter_spans(matches)
@@ -55,7 +55,7 @@ class AddTraits:
 
                 ent, label = pipe_util.relabel_entity(ent, label)
 
-            seen.update(range(ent.start, ent.end))
+            used_tokens.update(range(ent.start, ent.end))
 
             ent._.data["trait"] = label
             ent._.data["start"] = ent.start_char
@@ -63,8 +63,9 @@ class AddTraits:
             entities.append(ent)
 
         for ent in doc.ents:
-            if ent.start not in seen and ent.end - 1 not in seen:
+            ent_tokens = set(range(ent.start, ent.end))
+            if not ent_tokens & used_tokens:
                 entities.append(ent)
 
-        doc.ents = sorted(entities, key=lambda s: s.start)
+        doc.set_ents(sorted(entities, key=lambda s: s.start))
         return doc

@@ -35,5 +35,5 @@ class DeleteTraits:
                 continue
             entities.append(ent)
 
-        doc.ents = entities
+        doc.set_ents(entities)
         return doc

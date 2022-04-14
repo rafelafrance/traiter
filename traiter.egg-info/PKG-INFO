@@ -32,7 +32,7 @@ License-File: LICENSE
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
 ## SpaCy Entities vs Traits:
-- A trait is a spaCy entity with custom data attached.
+- A trait is just an annotated spaCy entity.
 - We leverage normal spaCy entities to build traits, particularly the phrase ruler, and sometimes we will also use spaCy's NER entities to build traits.
 
 ## Traiter

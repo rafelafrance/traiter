@@ -18,9 +18,11 @@ from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
 # These rules were useful in the past
-DASHES = "|".join([re.escape(h) for h in LIST_HYPHENS])
+DASHES = "|".join(re.escape(h) for h in LIST_HYPHENS)
 DASHES = f"(?:{DASHES})+"
+
 BREAKING = LIST_QUOTES + LIST_PUNCT + r""" [\\/˂˃×.+’] """.split()
+
 PREFIXES = BREAKING + [DASHES + "(?=[0-9])"]
 SUFFIXES = BREAKING + [DASHES]
 
@@ -34,25 +36,37 @@ INFIXES = [
 ]
 
 
-def append_prefix_regex(nlp: Language, prefixes: Optional[list[str]] = None):
+def append_prefix_regex(
+    nlp: Language, prefixes: Optional[list[str]] = None, replace: bool = False
+):
     """Append to the breaking prefix rules."""
-    prefixes = prefixes if prefixes else PREFIXES
+    prefixes = prefixes if prefixes else []
+    if not replace:
+        prefixes += PREFIXES
     prefixes += nlp.Defaults.prefixes
     prefix_re = compile_prefix_regex(prefixes)
     nlp.tokenizer.prefix_search = prefix_re.search
 
 
-def append_suffix_regex(nlp: Language, suffixes: Optional[list[str]] = None):
+def append_suffix_regex(
+    nlp: Language, suffixes: Optional[list[str]] = None, replace: bool = False
+):
     """Append to the breaking prefix rules."""
-    suffixes = suffixes if suffixes else SUFFIXES
+    suffixes = suffixes if suffixes else []
+    if not replace:
+        suffixes += SUFFIXES
     suffixes += nlp.Defaults.suffixes
     suffix_re = compile_suffix_regex(suffixes)
     nlp.tokenizer.suffix_search = suffix_re.search
 
 
-def append_infix_regex(nlp: Language, infixes: Optional[list[str]] = None):
+def append_infix_regex(
+    nlp: Language, infixes: Optional[list[str]] = None, replace: bool = False
+):
     """Append to the breaking prefix rules."""
-    infixes = infixes if infixes else INFIXES
+    infixes = infixes if infixes else []
+    if not replace:
+        infixes += INFIXES
     infixes += nlp.Defaults.infixes
     infix_re = compile_infix_regex(infixes)
     nlp.tokenizer.infix_finditer = infix_re.finditer

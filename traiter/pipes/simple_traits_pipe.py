@@ -9,25 +9,30 @@ from spacy.language import Language
 
 from traiter.pipes.pipe_util import add_extensions
 
-SIMPLE_TRAITS = "traiter.simple_trait.v1"
+SIMPLE_TRAITS = "traiter.simple_traits.v2"
 
 StrDict = Optional[dict[str, str]]
+StrList = Optional[list[str]]
 
 
 @Language.factory(SIMPLE_TRAITS)
 class SimpleTraits:
     """Save the text in the entity data and cache the label."""
 
-    def __init__(self, nlp: Language, name: str, replace: StrDict = None):
+    def __init__(
+        self, nlp: Language, name: str, replace: StrDict = None, update: StrList = None
+    ):
         add_extensions()
 
         self.nlp = nlp
         self.name = name
+        self.update = update if update else []
         self.replace = replace if replace else {}
 
     def __call__(self, doc):
         for ent in doc.ents:
-            if label := ent.label_:
+            label = ent.label_
+            if label and (not self.update or label in self.update):
                 ent._.cached_label = label
                 texts = []
                 for token in ent:
