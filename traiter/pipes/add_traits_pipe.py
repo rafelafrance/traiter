@@ -17,11 +17,14 @@ ADD_TRAITS = "traiter.add_traits.v1"
 class AddTraits:
     """Perform actions to fill user defined fields for traits."""
 
-    def __init__(self, nlp: Language, name: str, patterns: list[dict]):
+    def __init__(
+        self, nlp: Language, name: str, patterns: list[dict], overwrite: bool = True
+    ):
         pipe_util.add_extensions()
 
         self.nlp = nlp
         self.name = name
+        self.overwrite = overwrite
         self.dispatch = {
             p["label"]: registry.misc.get(on)
             for p in patterns
@@ -40,8 +43,19 @@ class AddTraits:
         matches = self.matcher(doc, as_spans=True)
         matches = filter_spans(matches)
 
+        if not self.overwrite:
+            for ent in doc.ents:
+                entities.append(ent)
+                used_tokens.update(range(ent.start, ent.end))
+
         for ent in matches:
             label = ent.label_
+
+            ent_tokens = set(range(ent.start, ent.end))
+
+            if not self.overwrite:
+                if ent_tokens & used_tokens:
+                    continue
 
             if action := self.dispatch.get(label):
                 try:
@@ -55,7 +69,7 @@ class AddTraits:
 
                 ent, label = pipe_util.relabel_entity(ent, label)
 
-            used_tokens.update(range(ent.start, ent.end))
+            used_tokens.update(ent_tokens)
 
             ent._.data["trait"] = label
             ent._.data["start"] = ent.start_char
