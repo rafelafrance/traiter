@@ -22,14 +22,11 @@ class TermPipe:
         name: str,
         terms: list[dict],
         replace: Optional[dict[str, str]] = None,
-        overwrite: bool = False,
     ):
         self.pipes = []
         for attr, term_list in split_by_attr(terms).items():
             name = f"{name}_{attr}"
-            self.pipes.append(
-                PhrasePipe(nlp, name, term_list, attr, replace, overwrite)
-            )
+            self.pipes.append(PhrasePipe(nlp, name, term_list, attr, replace))
 
     def __call__(self, doc: Doc) -> Doc:
         for pipe in self.pipes:
@@ -72,20 +69,17 @@ class PhrasePipe:
         matches = self.matcher(doc, as_spans=True)
         matches = filter_spans(matches)
 
-        if not self.overwrite:
-            for ent in doc.ents:
-                entities.append(ent)
-                used_tokens.update(range(ent.start, ent.end))
+        for ent in doc.ents:
+            entities.append(ent)
+            used_tokens.update(range(ent.start, ent.end))
 
         for ent in matches:
             label = ent.label_
             texts = []
 
             ent_tokens = set(range(ent.start, ent.end))
-
-            if not self.overwrite:
-                if ent_tokens & used_tokens:
-                    continue
+            if ent_tokens & used_tokens:
+                continue
 
             for token in ent:
                 token._.cached_label = label
@@ -94,7 +88,7 @@ class PhrasePipe:
                 texts.append(text)
                 texts.append(token.whitespace_)
 
-            used_tokens.update(ent_tokens)
+            used_tokens.update(range(ent.start, ent.end))
 
             ent._.data[label] = "".join(texts).strip()
             ent._.data["trait"] = label
@@ -102,12 +96,8 @@ class PhrasePipe:
             ent._.data["end"] = ent.end_char
             entities.append(ent)
 
-        for ent in doc.ents:
-            ent_tokens = set(range(ent.start, ent.end))
-            if not ent_tokens & used_tokens:
-                entities.append(ent)
-
         doc.set_ents(sorted(entities, key=lambda s: s.start))
+
         return doc
 
 

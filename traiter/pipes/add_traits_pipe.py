@@ -1,5 +1,6 @@
 """Perform actions to fill user defined fields for traits."""
 from typing import Any
+from typing import Optional
 
 from spacy import registry
 from spacy.language import Language
@@ -18,13 +19,17 @@ class AddTraits:
     """Perform actions to fill user defined fields for traits."""
 
     def __init__(
-        self, nlp: Language, name: str, patterns: list[dict], overwrite: bool = True
+        self,
+        nlp: Language,
+        name: str,
+        patterns: list[dict],
+        keep: Optional[list[str]] = None,  # Don't overwrite these entities
     ):
         pipe_util.add_extensions()
 
         self.nlp = nlp
         self.name = name
-        self.overwrite = overwrite
+        self.keep = keep if keep else []
         self.dispatch = {
             p["label"]: registry.misc.get(on)
             for p in patterns
@@ -32,30 +37,40 @@ class AddTraits:
         }
 
         self.matcher = Matcher(nlp.vocab)
+        greedy = None if keep else "LONGEST"
         for matcher in patterns:
             label = matcher["label"]
-            self.matcher.add(label, matcher["patterns"], greedy="LONGEST")
+            self.matcher.add(label, matcher["patterns"], greedy=greedy)
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
         used_tokens: set[Any] = set()
 
         matches = self.matcher(doc, as_spans=True)
-        matches = filter_spans(matches)
 
-        if not self.overwrite:
+        if self.keep:
             for ent in doc.ents:
-                entities.append(ent)
-                used_tokens.update(range(ent.start, ent.end))
+                if ent.label_ in self.keep:
+                    ent_tokens = set(range(ent.start, ent.end))
+                    used_tokens.update(ent_tokens)
+                    entities.append(ent)
+
+            filtered_matches = []
+            for match in matches:
+                match_tokens = set(range(match.start, match.end))
+                if match_tokens & used_tokens:
+                    continue
+                filtered_matches.append(match)
+            matches = filtered_matches
+
+        matches = filter_spans(matches)
 
         for ent in matches:
             label = ent.label_
 
             ent_tokens = set(range(ent.start, ent.end))
-
-            if not self.overwrite:
-                if ent_tokens & used_tokens:
-                    continue
+            if ent_tokens & used_tokens:
+                continue
 
             if action := self.dispatch.get(label):
                 try:
@@ -69,7 +84,7 @@ class AddTraits:
 
                 ent, label = pipe_util.relabel_entity(ent, label)
 
-            used_tokens.update(ent_tokens)
+            used_tokens.update(range(ent.start, ent.end))
 
             ent._.data["trait"] = label
             ent._.data["start"] = ent.start_char
