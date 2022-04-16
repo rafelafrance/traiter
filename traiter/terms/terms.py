@@ -32,8 +32,8 @@ class Terms:
         terms = terms if terms else []
         self.terms = []
         self.patterns = {}
-        self.no_clobber = False
-        self.silent = False
+        self.no_clobber = True
+        self.silent = True
         self.add_terms(terms)
 
     def add_terms(self, terms):
