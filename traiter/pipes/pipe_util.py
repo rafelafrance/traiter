@@ -20,23 +20,3 @@ def add_extensions():
     if not Span.has_extension("cached_label"):
         Span.set_extension("cached_label", default="")
         Token.set_extension("cached_label", default="")
-
-
-def relabel_entity(ent, old_label):
-    """Relabel an entity.
-
-    We cannot change a label on a span so we have to make a new one.
-    """
-    label = old_label
-
-    if new_label := ent._.new_label:
-        label = new_label
-        span = Span(ent.doc, ent.start, ent.end, label=new_label)
-        span._.data = ent._.data
-        span._.new_label = ""
-        ent = span
-        if (move := span._.data.get(old_label)) is not None:
-            span._.data[label] = move
-            del span._.data[old_label]
-
-    return ent, label

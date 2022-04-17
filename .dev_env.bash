@@ -21,9 +21,3 @@ pip install -U pynvim
 pip install -U 'python-lsp-server[all]'
 pip install -U pre-commit pre-commit-hooks
 pip install -U autopep8 flake8 isort pylint yapf pydocstyle black
-pip install -U jupyter jupyter_nbextensions_configurator ipyparallel
-pip install -U jupyter_nbextensions_configurator jupyterlab_code_formatter
-
-# mypy stuff
-pip install -U mypy
-pip install -U data-science-types types-Pillow

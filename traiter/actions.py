@@ -18,8 +18,6 @@ class RejectMatch(Exception):
     document's entities.
     """
 
-    pass
-
 
 @spacy.registry.misc(REJECT_MATCH)
 def reject_match(_: Span) -> None:
@@ -29,7 +27,7 @@ def reject_match(_: Span) -> None:
     rather than writing a bunch of rules to work around a set of bad patterns within
     the normal set of rules.
     """
-    raise RejectMatch
+    raise RejectMatch()
 
 
 # ###################################################################################

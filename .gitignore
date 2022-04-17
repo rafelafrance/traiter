@@ -5,6 +5,9 @@
 .idea/
 .mypy_cache/
 
+# Linters
+.pylintrc
+
 # Environment
 .env
 venv/
@@ -52,3 +55,4 @@ junk/
 
 # Editor files
 .~*
+*-journal

@@ -11,7 +11,7 @@ Columns for a vocabulary CSV file:
         hyphenate = A custom hyphenation scheme for the pattern
         and more...
 """
-import warnings
+import logging
 from typing import Any
 from typing import Optional
 from typing import Union
@@ -45,12 +45,10 @@ class Terms:
                     self.terms.append(term)
                     self.patterns[lower] = term["label"]
                 elif not self.silent:
-                    key = term["pattern"].lower()
-                    msg = (
-                        f"'{term['pattern']}' in {term['label']} clobbers "
-                        f"it in {self.patterns[key]}."
+                    msg = "%s in %s already exists in %s."
+                    logging.warning(
+                        msg, term["pattern"], term["label"], self.patterns[lower]
                     )
-                    warnings.warn(msg)
         else:
             self.terms += terms
 
@@ -94,9 +92,9 @@ class Terms:
     def pattern_dict(self, column: str) -> dict[str, Any]:
         """Create a dict from a column in the terms."""
         return {
-            t["pattern"]: v
+            t["pattern"]: val
             for t in self.terms
-            if (v := t.get(column)) not in (None, "")
+            if (val := t.get(column)) not in (None, "")
         }
 
     ###########################################################################

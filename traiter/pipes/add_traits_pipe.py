@@ -30,17 +30,27 @@ class AddTraits:
         self.nlp = nlp
         self.name = name
         self.keep = keep if keep else []
-        self.dispatch = {
+
+        self.dispatch = self.build_dispatch_table(patterns)
+        self.matcher = self.build_matcher(keep, nlp, patterns)
+
+    @staticmethod
+    def build_dispatch_table(patterns):
+        # Get the on_match registered functions for the patterns
+        return {
             p["label"]: registry.misc.get(on)
             for p in patterns
             if (on := p.get("on_match"))
         }
 
-        self.matcher = Matcher(nlp.vocab)
-        greedy = None if keep else "LONGEST"
-        for matcher in patterns:
-            label = matcher["label"]
-            self.matcher.add(label, matcher["patterns"], greedy=greedy)
+    @staticmethod
+    def build_matcher(keep, nlp, patterns):
+        matcher = Matcher(nlp.vocab)
+        greedy = None if keep else "LONGEST"  # Don't match too much when keep patterns
+        for pat in patterns:
+            label = pat["label"]
+            matcher.add(label, pat["patterns"], greedy=greedy)
+        return matcher
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
@@ -49,19 +59,8 @@ class AddTraits:
         matches = self.matcher(doc, as_spans=True)
 
         if self.keep:
-            for ent in doc.ents:
-                if ent.label_ in self.keep:
-                    ent_tokens = set(range(ent.start, ent.end))
-                    used_tokens.update(ent_tokens)
-                    entities.append(ent)
-
-            filtered_matches = []
-            for match in matches:
-                match_tokens = set(range(match.start, match.end))
-                if match_tokens & used_tokens:
-                    continue
-                filtered_matches.append(match)
-            matches = filtered_matches
+            self.keep_flagged_entities(doc, entities, used_tokens)
+            matches = self.remove_overlapping_matches(matches, used_tokens)
 
         matches = filter_spans(matches)
 
@@ -78,11 +77,9 @@ class AddTraits:
                 except RejectMatch:
                     continue
 
-                # Save the old label
-                for token in ent:
-                    token._.cached_label = token.ent_type_
+                self.cache_old_labels(ent)
 
-                ent, label = pipe_util.relabel_entity(ent, label)
+                label = self.relabel_entity(ent, label)
 
             used_tokens.update(range(ent.start, ent.end))
 
@@ -91,10 +88,51 @@ class AddTraits:
             ent._.data["end"] = ent.end_char
             entities.append(ent)
 
+        self.add_untouched_entities(doc, entities, used_tokens)
+
+        doc.set_ents(sorted(entities, key=lambda s: s.start))
+        return doc
+
+    @staticmethod
+    def cache_old_labels(ent):
+        for token in ent:
+            token._.cached_label = token.ent_type_
+
+    @staticmethod
+    def add_untouched_entities(doc, entities, used_tokens):
+        """Add entities that do not overlap with any of the matches."""
         for ent in doc.ents:
             ent_tokens = set(range(ent.start, ent.end))
             if not ent_tokens & used_tokens:
                 entities.append(ent)
 
-        doc.set_ents(sorted(entities, key=lambda s: s.start))
-        return doc
+    @staticmethod
+    def remove_overlapping_matches(matches, used_tokens):
+        """Remove any matches that overlap with an entity we kept."""
+        filtered_matches = []
+        for match in matches:
+            match_tokens = set(range(match.start, match.end))
+            if match_tokens & used_tokens:
+                continue
+            filtered_matches.append(match)
+        matches = filtered_matches
+        return matches
+
+    def keep_flagged_entities(self, doc, entities, used_tokens):
+        for ent in doc.ents:
+            if ent.label_ in self.keep:
+                ent_tokens = set(range(ent.start, ent.end))
+                used_tokens.update(ent_tokens)
+                entities.append(ent)
+
+    def relabel_entity(self, ent, old_label):
+        """Relabel an entity."""
+        label = old_label
+
+        if new_label := ent._.new_label:
+            if new_label not in self.nlp.vocab.strings:
+                self.nlp.vocab.strings.add(new_label)
+            ent.label = self.nlp.vocab.strings[new_label]
+            label = new_label
+
+        return label

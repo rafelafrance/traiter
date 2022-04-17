@@ -23,9 +23,9 @@ def started() -> None:
     """Log the program start time."""
     setup_logger()
     logging.info("=" * 80)
-    logging.info(f"{module_name()} started")
+    logging.info("%s started", module_name())
 
 
 def finished() -> None:
     """Log the program end time."""
-    logging.info(f"{module_name()} finished")
+    logging.info("%s finished", module_name())

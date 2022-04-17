@@ -25,8 +25,9 @@ class TermPipe:
     ):
         self.pipes = []
         for attr, term_list in split_by_attr(terms).items():
-            name = f"{name}_{attr}"
-            self.pipes.append(PhrasePipe(nlp, name, term_list, attr, replace))
+            new_name = f"{name}_{attr}"
+            pipe = PhrasePipe(nlp, new_name, term_list, attr, replace)
+            self.pipes.append(pipe)
 
     def __call__(self, doc: Doc) -> Doc:
         for pipe in self.pipes:
@@ -36,8 +37,6 @@ class TermPipe:
 
 @Language.factory(PHRASE_PIPE)
 class PhrasePipe:
-    """Add a phrase matcher."""
-
     def __init__(
         self,
         nlp: Language,
@@ -102,12 +101,13 @@ class PhrasePipe:
 
 
 def split_by_attr(terms: list[dict]) -> dict[str, list[dict]]:
-    """Categorize terms by their attr so that we can make matcher per attr.
+    """Categorize terms by their attr so that we can make one matcher per attr.
 
     The returned dictionary's key is the attr and the value is a list of terms with
     that attr.
     """
     by_attr = defaultdict(list)
     for term in terms:
-        by_attr[term["attr"]].append(term)
+        attr = term.get("attr", "lower")
+        by_attr[attr].append(term)
     return by_attr
