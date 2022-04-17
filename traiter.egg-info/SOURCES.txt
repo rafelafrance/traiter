@@ -50,6 +50,7 @@ traiter/pipes/dependency_pipe.py
 traiter/pipes/pipe_util.py
 traiter/pipes/sentence_pipe.py
 traiter/pipes/simple_traits_pipe.py
+traiter/pipes/term_pipe.py
 traiter/terms/__init__.py
 traiter/terms/csv_.py
 traiter/terms/db.py
