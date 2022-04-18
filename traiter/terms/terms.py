@@ -77,7 +77,7 @@ class Terms:
         """
         drops = drops.split() if isinstance(drops, str) else drops
         self.terms = [t for t in self.terms if t[field] not in drops]
-        self.patterns = {t["pattern"] for t in self.terms}
+        self.patterns = {t["pattern"]: t["label"] for t in self.terms}
 
     def for_entity_ruler(self, attr: str = "LOWER"):
         """Return ruler pattens from the terms."""

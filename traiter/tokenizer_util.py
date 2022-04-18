@@ -21,7 +21,7 @@ from spacy.util import compile_suffix_regex
 DASHES = "|".join(re.escape(h) for h in LIST_HYPHENS)
 DASHES = f"(?:{DASHES})+"
 
-BREAKING = LIST_QUOTES + LIST_PUNCT + r""" [\\/˂˃×.+’] """.split()
+BREAKING = LIST_QUOTES + LIST_PUNCT + r""" [:\\/˂˃×.+’] """.split()
 
 PREFIXES = BREAKING + [DASHES + "(?=[0-9])"]
 SUFFIXES = BREAKING + [DASHES]
