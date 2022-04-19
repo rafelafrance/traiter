@@ -1,13 +1,14 @@
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
-![STOP!](assets/StopSign.SVG) Rule-based parsing can be tricky and error-prone (When using rules, homonyms become evil.). If you can get away with it, you may want to try a machine learning approach. Having said that, there are some uses for rule-based parsing:
+![STOP!](assets/StopSign.SVG) Rule-based parsing can be tricky, labor-intensive, and error-prone. -- When using rules, homonyms become evil. -- If you can get away with it, you may want to try an end-to-end machine learning approach. Having said that, there are some uses for rule-based parsing:
 
-- You can use rules to build a corpus of data for training your models.
-- You can use some hand-crafted rules as input for the automatic generation of other rules.
+- You can use rules to build training data for your models.
+- You can use some hand-crafted rule output as input for the automatic generation of other rules.
 - Sometimes existing models can't handle jargon, shorthand notation, and unique (condensed) sentence structures, and you're not really parsing that much data. The "one-off" excuse never really holds because it's never just one.
 - You can use a hybrid model/rule-based approach. I have found this to be quite productive.
-  - For instance, you can let a model find names in a document, then you can use those names to identify people with certain roles (collector, determiner, etc.).
+  - For instance, you can let a model find names (PERSON entities) in a document, then you can use those names as input for rules that identify people with certain roles (collector, determiner, etc.).
   - I almost always use models for finding parts of speech and sentence structure which I then use as rule input.
+  - The goal is still to use the output of the hybrid model as training data for a model that brings you ever closer to the sought after end-to-end model.
 
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects, it contains **no runnable code** itself.
@@ -25,12 +26,12 @@ Some literature mined:
 
 ## SpaCy Entities vs Traits:
 - **A trait is just an annotated spaCy entity.**
-- We leverage normal spaCy entities to build traits. Sometimes we will use spaCy's NER entities to as building block traits.
+- We leverage normal spaCy entities to build traits. Sometimes we will use spaCy's NER entities to as building block traits. (See below.)
 
 ## Parsing strategy
 1. Have experts identify relevant terms and target traits.
 2. We use expert identified terms to label terms using spaCy's phrase matchers. These are sometimes traits themselves but are more often used as anchors for more complex patterns of traits.
-3. We then build up more complex terms from simpler term using spaCy's rule-based matchers repeatedly until there is a recognizable trait. See the image below.
+3. We then build up more complex terms from simpler terms using spaCy's rule-based matchers repeatedly until there is a recognizable trait. See the image below.
 4. We may then link traits to each other (entity relationships) using spaCy's dependency matchers.
 
 ![parsing example](assets/anoplura_rules.png)
