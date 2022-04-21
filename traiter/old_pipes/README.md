@@ -7,4 +7,4 @@ I've learned a bit about what does and does not work for our rule-based trait pa
 
 This directory is only here so support older traiter projects.
 
-Look at the [trait_pipes](../pipes) directory for the newer shiny trait pipes.
+Look at the [pipes](../pipes) directory for the newer shiny trait pipes.

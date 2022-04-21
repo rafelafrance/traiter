@@ -46,7 +46,7 @@ class AddTraits:
     @staticmethod
     def build_matcher(keep, nlp, patterns):
         matcher = Matcher(nlp.vocab)
-        greedy = None if keep else "LONGEST"  # Don't match too much if keep patterns
+        greedy = None if keep else "LONGEST"  # Don't match too much if keeping traits
         for pat in patterns:
             label = pat["label"]
             matcher.add(label, pat["patterns"], greedy=greedy)
