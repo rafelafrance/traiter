@@ -1,4 +1,5 @@
 """Get terms from an SQLite ITIS database."""
+# TODO DEPRECATED: Use the terms.db.Db module instead
 import csv
 import sqlite3
 from pathlib import Path

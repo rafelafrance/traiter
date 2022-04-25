@@ -1,4 +1,5 @@
 """Get terms from CSV files."""
+# TODO DEPRECATED: Use the terms.db.Db module instead
 import csv
 from pathlib import Path
 from typing import Union

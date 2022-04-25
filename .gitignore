@@ -28,9 +28,7 @@ admin/
 
 # data
 output/
-
 data/
-!data/.gitkeep
 
 # Temp files
 temp/

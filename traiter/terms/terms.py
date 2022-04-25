@@ -64,30 +64,16 @@ class Terms:
         terms = [t for t in self.terms if t["label"] == label]
         return terms
 
-    def patterns_with_label(self, label: str = "") -> list[str]:
-        """Get all patterns with the given label."""
-        return [t["pattern"] for t in self.with_label(label)]
-
     def drop(self, drops: StrList, field: str = "label") -> None:
         """Drop term from the traits.
 
-        If we include terms that interfere with patterns we can drop them.
-        For instance, 'in' can be either an inch abbreviation term which may interfere
-        with a preposition so we could: term.drop('in', field='pattern').
+        If we include terms that interfere with patterns we can drop them. For instance,
+        'in' may be an inch abbreviation or a preposition so we could:
+        term.drop('in', field='pattern').
         """
         drops = drops.split() if isinstance(drops, str) else drops
         self.terms = [t for t in self.terms if t[field] not in drops]
         self.patterns = {t["pattern"]: t["label"] for t in self.terms}
-
-    def for_entity_ruler(self, attr: str = "LOWER"):
-        """Return ruler pattens from the terms."""
-        attr = attr.upper()
-        rules = [
-            {"label": t["label"], "pattern": t["pattern"]}
-            for t in self.terms
-            if t["attr"].upper() == attr
-        ]
-        return rules
 
     def pattern_dict(self, column: str) -> dict[str, Any]:
         """Create a dict from a column in the terms."""
@@ -104,10 +90,10 @@ class Terms:
     def hyphenate_terms(cls, other: "Terms") -> "Terms":
         """Systematically handle hyphenated terms.
 
-        We cannot depend on terms being present in a contiguous form. We need a
-        systematic method for handling hyphenated terms. The hyphenate library is
-        great for this but sometimes we need to handle non-standard hyphenations
-        manually. Non-standard hyphenations are stored in the terms CSV file.
+        We cannot depend on terms being present in a contiguous form (e.g. web pages).
+        We need a systematic method for handling hyphenated terms. The hyphenate
+        library is great for this but sometimes we need to handle non-standard
+        hyphenations manually. Non-standard hyphenations are stored with the terms.
         """
         terms = []
         for term in other.terms:
@@ -136,6 +122,20 @@ class Terms:
                     )
         return cls(terms=terms)
 
+    ###########################################################################
+    # TODO DEPRECATED constructors & methods
+
+    def for_entity_ruler(self, attr: str = "LOWER"):
+        """Return ruler pattens from the terms."""
+        # TODO: Deprecated we are phasing out the entity ruler
+        attr = attr.upper()
+        rules = [
+            {"label": t["label"], "pattern": t["pattern"]}
+            for t in self.terms
+            if t["attr"].upper() == attr
+        ]
+        return rules
+
     @classmethod
     def trailing_dash(cls, other: "Terms", label: str) -> "Terms":
         """Systematically handle hyphenated terms.
@@ -145,6 +145,7 @@ class Terms:
         great for this but sometimes we need to handle non-standard hyphenations
         manually. Non-standard hyphenations are stored in the terms CSV file.
         """
+        # TODO DEPRECATED
         terms = []
         for term in other.terms:
             pattern = term["pattern"]
@@ -169,6 +170,7 @@ class Terms:
         """Create an abbreviated term from another term.
         For example an abbreviated species: 'Canis lupus' -> 'C. lupus'.
         """
+        # TODO DEPRECATED
         terms = []
         used_patterns = set()
 
@@ -206,6 +208,7 @@ class Terms:
         """Create a new term by picking a words from an old term.
         Used to get species or genus names like: 'Canis lupus' -> 'lupus'.
         """
+        # TODO DEPRECATED
         terms = []
         idx = (idx, idx + 1) if isinstance(idx, int) else idx
         new_label = new_label if new_label else old_label

@@ -15,8 +15,14 @@ SHARED_DB = const.VOCAB_DIR / "terms.sqlite"
 class Db(terms.Terms):
     """A dictionary of terms."""
 
+    def create_db(self, database: DbPathType) -> None:
+        """Build the term database."""
+        self.create_term_tables(database)
+        self.create_char_tables(database)
+        self.create_spell_check_tables(database)
+
     @staticmethod
-    def create_tables(database: DbPathType):
+    def create_term_tables(database: DbPathType) -> None:
         """Build the term database."""
         sql = """
             create table if not exists terms (
@@ -42,16 +48,48 @@ class Db(terms.Terms):
         with sqlite3.connect(database) as cxn:
             cxn.executescript(sql)
 
+    @staticmethod
+    def create_char_tables(database: DbPathType) -> None:
+        """A table to hold character distances used in multiple-sequence alignments."""
+        sql = """
+            create table if not exists chars (
+                char1 text,
+                char2 text,
+                score real
+            );
+        """
+        with sqlite3.connect(database) as cxn:
+            cxn.executescript(sql)
+
+    @staticmethod
+    def create_spell_check_tables(database: DbPathType) -> None:
+        """Create tables used for spell checking.."""
+        sql = """
+            create table if not exists vocab (
+                word text,
+                freq integer
+            );
+
+            create table if not exists misspellings (
+                miss text,
+                word text,
+                dist text,
+                freq integer
+            );
+        """
+        with sqlite3.connect(database) as cxn:
+            cxn.executescript(sql)
+
     @classmethod
     def select_term_set(cls, database: DbPathType, term_set: str) -> "Db":
         """Select all terms for the given group."""
         sql = "select extra, rename from term_columns where term_set = ?"
         with sqlite3.connect(database) as cxn:
-            rows = cxn.execute(sql, (term_set,))
+            extras = cxn.execute(sql, (term_set,))
 
         sql = "select label, pattern, attr, replace"
-        for row in rows:
-            sql += f", {row[0]} as {row[1]}"
+        for extra in extras:
+            sql += f", {extra[0]} as {extra[1]}"
         sql += " from terms where term_set = ?"
 
         with sqlite3.connect(database) as cxn:

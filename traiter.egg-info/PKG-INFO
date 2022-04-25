@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: traiter
-Version: 0.12.0
+Version: 0.13.0
 Summary: Traiter
 Home-page: https://github.com/rafelafrance/traiter
 License: MIT License
@@ -31,12 +31,18 @@ License-File: LICENSE
 
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
-## SpaCy Entities vs Traits:
-- A trait is just an annotated spaCy entity.
-- We leverage normal spaCy entities to build traits, particularly the phrase ruler, and sometimes we will also use spaCy's NER entities to build traits.
+![STOP!](assets/StopSign.SVG) Rule-based parsing can be tricky, labor-intensive, and error-prone. -- When using rules, homonyms become evil. -- If you can get away with it, you may want to try an end-to-end machine learning approach. Having said that, there are some uses for rule-based parsing:
+
+- You can use rules to build training data for your models.
+- You can use some hand-crafted rule output as input for the automatic generation of other rules.
+- Sometimes existing models can't handle jargon, shorthand notation, and unique (condensed) sentence structures, and you're not really parsing that much data. The "one-off" excuse never really holds because it's never just one.
+- You can use a hybrid model/rule-based approach. I have found this to be quite productive.
+  - For instance, you can let a model find names (PERSON entities) in a document, then you can use those names as input for rules that identify people with certain roles (collector, determiner, etc.).
+  - I almost always use models for finding parts of speech and sentence structure which I then use as rule input.
+  - The goal is still to use the output of the hybrid model as training data for a model that brings you ever closer to the sought after end-to-end model.
 
 ## Traiter
-This is the base Traiter information extraction/data mining library used by all client Traiter projects ([traiter_odonata](https://github.com/rafelafrance/traiter_odonata), [traiter_efloras](https://github.com/rafelafrance/traiter_efloras), etc.). It contains no runnable code itself.
+This is the base Traiter information extraction/data mining library used by all client Traiter projects, it contains **no runnable code** itself.
 
 Some literature mined:
 - PDFs containing research papers of descriptions of species.
@@ -44,15 +50,20 @@ Some literature mined:
 - Database downloads of field notes and species descriptions.
 - Images of museum specimens. We are currently extracting data from the labels in the images.
 - Data scraped from websites containing formal descriptions (treatments) of species.
-- Images of PDSs of species descriptions and distribution data.
+- Images of PDFs of species descriptions and distribution data.
 - Images of data collection notes.
 
 **Note** All terms, traits, and extraction methods are unique to the body of literature being mined so this repository only contains truly universal terms, traits or, for that matter, functions used across many research domains.
 
+## SpaCy Entities vs Traits:
+- **A trait is just an annotated spaCy entity.**
+- We leverage normal spaCy entities to build traits. Sometimes we will use spaCy's NER entities to as building block traits. (See below.)
+
 ## Parsing strategy
 1. Have experts identify relevant terms and target traits.
-1. We use expert identified terms to label terms using Spacy's phrase and regular expression matchers. These are sometimes traits themselves but are more often used as anchors for more complex patterns of traits.
-1. We then build up more complex terms from simpler term using Spacy's rule-based matchers repeatedly until there is a recognizable trait. See the image below.
+2. We use expert identified terms to label terms using spaCy's phrase matchers. These are sometimes traits themselves but are more often used as anchors for more complex patterns of traits.
+3. We then build up more complex terms from simpler terms using spaCy's rule-based matchers repeatedly until there is a recognizable trait. See the image below.
+4. We may then link traits to each other (entity relationships) using spaCy's dependency matchers.
 
 ![parsing example](assets/anoplura_rules.png)
 
@@ -68,7 +79,7 @@ python -m spacy download en
 ```
 
 ## Run
-This repository is a library for the other Traiter projects and is not run directly.
+This repository is a library for other Traiter projects and is not run directly.
 
 ## Tests
 You can run the tests like so:
