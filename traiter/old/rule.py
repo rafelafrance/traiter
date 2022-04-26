@@ -79,15 +79,15 @@ class Rule:  # pylint: disable=too-many-instance-attributes
             sub = rules.get(word)
 
             if sub.type == RuleType.SCANNER:
-                return fr"(?: {sub.token} )"
+                return rf"(?: {sub.token} )"
 
             return sub.regexp.pattern
 
         regexp = WORD.sub(_rep, self.pattern)
 
         if self.capture:
-            return fr"(?P<{self.name}> {regexp} )"
-        return fr"(?: {regexp} )"
+            return rf"(?P<{self.name}> {regexp} )"
+        return rf"(?: {regexp} )"
 
     def compile(self, rules: RuleDict):
         """Build and compile a rule."""
@@ -141,7 +141,7 @@ def term(
     r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
     reg_ = f"(?P<{name}> {pattern} )" if capture else f"(?: {pattern} )"
-    reg = regex.compile(fr"\b {reg_} \b", FLAGS)
+    reg = regex.compile(rf"\b {reg_} \b", FLAGS)
     return Rule(
         name=name,
         pattern=pattern,

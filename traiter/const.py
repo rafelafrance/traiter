@@ -38,10 +38,10 @@ QUOTE = LIST_QUOTES
 LETTERS = list("abcdefghijklmnopqrstuvwxyz")
 
 TEMP = ["\\" + x for x in CLOSE]
-CLOSE_RE = fr'[{"".join(TEMP)}]'
+CLOSE_RE = rf'[{"".join(TEMP)}]'
 
 TEMP = ["\\" + x for x in OPEN]
-OPEN_RE = fr'[{"".join(TEMP)}]'
+OPEN_RE = rf'[{"".join(TEMP)}]'
 
 DASH_RE = f"(?:{HYPHENS})"
 DASH_CHAR = [d for d in DASH if len(d) == 1]

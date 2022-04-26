@@ -28,11 +28,11 @@ SUFFIXES = BREAKING + [DASHES]
 
 # These rules were useful in the past
 INFIXES = [
-    fr"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",
-    fr"""{DASHES}""",  # Break on any hyphen
+    rf"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",
+    rf"""{DASHES}""",  # Break on any hyphen
     r"""[\\\[\]\(\)/:;’'“”'+]""",  # Break on these characters
-    fr"(?<=[0-9])\.?(?=[{ALPHA}])",  # 1.word or 1N
-    fr"(?<=[{ALPHA}]),(?=[0-9])",  # word,digits
+    rf"(?<=[0-9])\.?(?=[{ALPHA}])",  # 1.word or 1N
+    rf"(?<=[{ALPHA}]),(?=[0-9])",  # word,digits
 ]
 
 
