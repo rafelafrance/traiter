@@ -7,13 +7,13 @@ from typing import Optional
 from typing import Union
 
 from ..const import DATA_DIR
-from .terms import Terms
+from .csv_ import Csv
 
 # This points to a database (or a sym link) in the client's data directory
 ITIS_DB = DATA_DIR / "ITIS.sqlite"
 
 
-class Itis(Terms):
+class Itis(Csv):
     """A dictionary of temp."""
 
     ###########################################################################
@@ -64,19 +64,19 @@ class Itis(Terms):
     @classmethod
     def taxon_level_terms(
         cls,
-        other: "Terms",
+        other: "Csv",
         label: str,
         new_label: str = "",
         level: str = "species",
         attr="lower",
-    ) -> "Terms":
+    ) -> "Csv":
         """Get species or genus names only: 'Canis lupus' -> 'lupus'."""
         idx = 1 if level == "species" else 0
         new_label = new_label if new_label else level
         return cls.pick_words(other, label, idx=idx, new_label=new_label, attr=attr)
 
     @classmethod
-    def abbrev_species(cls, other: "Terms", label: str, attr: str = "lower") -> "Terms":
+    def abbrev_species(cls, other: "Csv", label: str, attr: str = "lower") -> "Csv":
         """Get abbreviated species: 'Canis lupus' -> 'C. lupus'."""
         return cls.abbrev_terms(other, label=label, attr=attr)
 

@@ -6,7 +6,7 @@ if [[ ! -z "$VIRTUAL_ENV" ]]; then
 fi
 
 rm -rf .venv
-python -m env -p python3.10 .venv
+python3.10 -m env .venv
 
 source ./.venv/bin/activate
 
@@ -17,14 +17,11 @@ python -m pip install -U spacy[cuda113]
 python -m spacy download en_core_web_sm
 
 # Commonly used for dev
-python -m pip install -U tensorboard
 python -m pip install -U pynvim
 python -m pip install -U 'python-lsp-server[all]'
 python -m pip install -U pre-commit pre-commit-hooks
 python -m pip install -U autopep8 flake8 isort pylint yapf pydocstyle black
 python -m pip install -U jupyter jupyter_nbextensions_configurator ipyparallel
-python -m pip install -U jupyter_nbextensions_configurator jupyterlab_code_formatter
-python -m pip install -U jupyterlab-git
 
 python -m pip install -U jupyterlab
 python -m pip install -U jupyterlab_code_formatter
