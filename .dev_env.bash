@@ -6,14 +6,14 @@ if [[ ! -z "$VIRTUAL_ENV" ]]; then
 fi
 
 rm -rf .venv
-python3.10 -m env .venv
+python3.10 -m venv .venv
 
 source ./.venv/bin/activate
 
 python -m pip install --upgrade pip setuptools wheel
 if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
 
-python -m pip install -U spacy[cuda113]
+#python -m pip install -U spacy[cuda113]
 python -m spacy download en_core_web_sm
 
 # Commonly used for dev
@@ -35,3 +35,8 @@ python -m pip install -U nbdime
 jupyter labextension install jupyterlab_onedarkpro
 jupyter server extension enable --py jupyterlab_git
 jupyter serverextension enable --py jupyterlab_code_formatter
+
+# ##############################################################################
+# I Run pre-commit hooks (optional)
+
+pre-commit install
