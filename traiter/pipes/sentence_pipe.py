@@ -17,16 +17,19 @@ QUOTES.discard(",")
 
 @Language.factory(SENTENCE)
 class Sentence:
-    """Shared sentencizer logic."""
-
-    def __init__(self, nlp: Language, name: str, automatic: Optional[list[str]] = None):
-        """Build a custom sentencizer."""
+    def __init__(
+        self,
+        nlp: Language,
+        name: str,
+        automatic: Optional[list[str]] = None,
+        abbrev: Optional[list[str]] = None,
+    ):
         self.nlp = nlp
         self.name = name
+        self.abbrev = set(abbrev) if abbrev else set()
         self.automatic = automatic if automatic else []
 
     def __call__(self, doc: Doc) -> Doc:
-        """Break the text into sentences."""
         for i, token in enumerate(doc[:-1]):
             prev = doc[i - 1] if i > 0 else None
             next_ = doc[i + 1]
@@ -41,7 +44,11 @@ class Sentence:
                 token.is_sent_start = True
 
             # A period followed by a capital letter (or space, digit or another period)
-            elif token.text == "." and self.is_next(next_):
+            elif (
+                token.text.endswith(".")
+                and self.is_next(next_)
+                and token.text not in self.abbrev
+            ):
                 next_.is_sent_start = True
 
             # Quotes preceded by a period

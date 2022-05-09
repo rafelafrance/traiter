@@ -52,7 +52,7 @@ INT_RE = r"(\d+)"
 FLOAT_TOKEN_RE = f"^{FLOAT_RE}$"
 INT_TOKEN_RE = f"^{INT_RE}$"
 
-# Punctuation penalties when joining tokens
+# Punctuation penalties when linking traits
 NEVER = 9999
 PUNCT_PENALTY = {
     ",": 2,

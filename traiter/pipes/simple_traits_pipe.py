@@ -26,13 +26,12 @@ class SimpleTraits:
 
         self.nlp = nlp
         self.name = name
-        self.update = update if update else []
         self.replace = replace if replace else {}
 
     def __call__(self, doc):
         for ent in doc.ents:
             label = ent.label_
-            if label and (not self.update or label in self.update):
+            if label:
                 ent._.cached_label = label
                 texts = []
                 for token in ent:
