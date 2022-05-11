@@ -17,19 +17,20 @@ class LinkTraits:
         self,
         nlp: Language,
         name: str,
-        parent: str,
+        parents: list[str],
         children: list[str],
         patterns: list[dict],
         times: int = 0,
+        replace: bool = False,
     ):
         pipe_util.add_extensions()
 
         self.nlp = nlp
         self.name = name
-        self.parent = parent
+        self.parents = parents
         self.children = children
         self.times = times
-
+        self.replace = replace
         self.matcher = self.build_matcher(nlp, patterns)
 
     @staticmethod
@@ -46,18 +47,29 @@ class LinkTraits:
 
         for span in matches:
             if len(span) > 1:
-                if span[0].ent_type_ == self.parent:
+                # Get the parent and trait locations
+                if span[0].ent_type_ in self.parents:
                     t_idx, p_idx = span.end - 1, span.start
                 else:
                     t_idx, p_idx = span.start, span.end - 1
 
+                # Get the trait location
+                parent = self.get_ent_from_token(doc, doc[p_idx].i)
+                parent_trait = parent._.data["trait"]
+                ent = self.get_ent_from_token(doc, doc[t_idx].i)
+
+                # Check if we should replace a trait
+                if not self.replace and ent._.data.get(parent_trait):
+                    continue
+
+                # See if the trait count will be exceeded
                 times[p_idx] += 1
                 if self.times and times[p_idx] > self.times:
                     continue
 
-                ent = self.get_ent_from_token(doc, doc[t_idx].i)
-                ent._.data[self.parent] = doc[p_idx]._.data[self.parent]
-                doc[t_idx]._.data[self.parent] = ent._.data[self.parent]
+                # Update trait and token
+                ent._.data[parent_trait] = doc[p_idx]._.data[parent_trait]
+                doc[t_idx]._.data[parent_trait] = ent._.data[parent_trait]
 
         return doc
 
@@ -66,7 +78,9 @@ class LinkTraits:
         return [e for e in doc.ents if e.start <= token_idx < e.end][0]
 
     def filter_matches(self, matches):
-        idx = [m.end - 1 if m[0].ent_type_ == self.parent else m.start for m in matches]
+        idx = [
+            m.end - 1 if m[0].ent_type_ in self.parents else m.start for m in matches
+        ]
         dists = [m.end - m.start for m in matches]
         matches = zip(idx, dists, matches)
         matches = sorted(matches)
