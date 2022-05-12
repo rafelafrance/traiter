@@ -8,6 +8,8 @@ from spacy.matcher import PhraseMatcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
+from traiter.pipes import pipe_util
+
 TERM_PIPE = "traiter.term_pipe.v1"
 PHRASE_PIPE = "traiter.phrase_pipe.v1"
 
@@ -23,6 +25,8 @@ class TermPipe:
         terms: list[dict],
         replace: Optional[dict[str, str]] = None,
     ):
+        pipe_util.add_extensions()
+
         self.pipes = []
         for attr, term_list in split_by_attr(terms).items():
             new_name = f"{name}_{attr}"
