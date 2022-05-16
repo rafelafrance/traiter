@@ -5,6 +5,7 @@ from traiter.pipes.pipe_util import add_extensions
 
 DEBUG_TOKENS = "traiter.debug_tokens.v1"
 DEBUG_ENTITIES = "traiter.debug_entities.v1"
+DEBUG_MESSAGE = "traiter.debug_message.v1"
 
 # So we don't have to come up with new names all the time
 DEBUG_COUNT = 0  # Used to rename debug pipes
@@ -31,6 +32,19 @@ def ents(nlp, message="", **kwargs):
     nlp.add_pipe(
         DEBUG_ENTITIES,
         name=f"show_entities_{DEBUG_COUNT}",
+        config=config,
+        **kwargs,
+    )
+
+
+def msg(nlp, message="", **kwargs):
+    """Automatically setup a pipe to print entity information."""
+    global DEBUG_COUNT
+    DEBUG_COUNT += 1
+    config = {"message": message}
+    nlp.add_pipe(
+        DEBUG_MESSAGE,
+        name=f"show_message_{DEBUG_COUNT}",
         config=config,
         **kwargs,
     )
@@ -73,4 +87,18 @@ class DebugEntities:
             print(f"{ent.label_:<20} {ent}")
             print(f'{" " * 20} {ent._.data}\n')
         print()
+        return doc
+
+
+@Language.factory(DEBUG_MESSAGE, default_config={"message": ""})
+class DebugMessage:
+    def __init__(self, nlp: Language, name: str, message: str = ""):
+        add_extensions()
+        self.nlp = nlp
+        self.name = name
+        self.message = message
+
+    def __call__(self, doc):
+        print("=" * 80)
+        print(f"{self.name}: {self.message}")
         return doc
