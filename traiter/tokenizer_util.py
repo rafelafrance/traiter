@@ -18,10 +18,10 @@ from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
 # These rules were useful in the past
-DASHES = "|".join(re.escape(h) for h in LIST_HYPHENS)
+DASHES = "|".join(re.escape(h) for h in LIST_HYPHENS if len(h) == 1)
 DASHES = f"(?:{DASHES})+"
 
-BREAKING = LIST_QUOTES + LIST_PUNCT + r""" [:\\/˂˃×.+’] """.split()
+BREAKING = LIST_QUOTES + LIST_PUNCT + r""" [:\\/˂˃×.+’()\[\]±] """.split()
 
 PREFIXES = BREAKING + [DASHES + "(?=[0-9])"]
 SUFFIXES = BREAKING + [DASHES]
@@ -30,7 +30,8 @@ SUFFIXES = BREAKING + [DASHES]
 INFIXES = [
     rf"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",
     rf"""{DASHES}""",  # Break on any hyphen
-    r"""[\\\[\]\(\)/:;’'“”'+]""",  # Break on these characters
+    rf"""(?<=\(){DASHES}""",
+    r"""[\\\[\]()/:;’'“”'+]""",  # Break on these characters
     rf"(?<=[0-9])\.?(?=[{ALPHA}])",  # 1.word or 1N
     rf"(?<=[{ALPHA}]),(?=[0-9])",  # word,digits
 ]
