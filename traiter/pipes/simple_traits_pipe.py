@@ -19,9 +19,7 @@ StrList = Optional[list[str]]
 class SimpleTraits:
     """Save the text in the entity data and cache the label."""
 
-    def __init__(
-        self, nlp: Language, name: str, replace: StrDict = None, update: StrList = None
-    ):
+    def __init__(self, nlp: Language, name: str, replace: StrDict = None):
         add_extensions()
 
         self.nlp = nlp
