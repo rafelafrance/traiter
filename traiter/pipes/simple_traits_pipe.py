@@ -19,17 +19,20 @@ StrList = Optional[list[str]]
 class SimpleTraits:
     """Save the text in the entity data and cache the label."""
 
-    def __init__(self, nlp: Language, name: str, replace: StrDict = None):
+    def __init__(
+        self, nlp: Language, name: str, replace: StrDict = None, update: StrList = None
+    ):
         add_extensions()
 
         self.nlp = nlp
         self.name = name
+        self.update = update if update else []
         self.replace = replace if replace else {}
 
     def __call__(self, doc):
         for ent in doc.ents:
             label = ent.label_
-            if label:
+            if label and (not self.update or label in self.update):
                 ent._.cached_label = label
                 texts = []
                 for token in ent:
