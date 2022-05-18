@@ -47,6 +47,8 @@ class DeleteTraits:
 
         for ent in doc.ents:
             label = ent.label_
+            if ent._.delete:
+                continue
             if label in self.delete:
                 continue
             if self.delete_when and any(

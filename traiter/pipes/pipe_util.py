@@ -16,3 +16,7 @@ def add_extensions():
     if not Span.has_extension("cached_label"):
         Span.set_extension("cached_label", default="")
         Token.set_extension("cached_label", default="")
+
+    if not Span.has_extension("delete"):
+        Span.set_extension("delete", default=False)
+        Token.set_extension("delete", default=False)
