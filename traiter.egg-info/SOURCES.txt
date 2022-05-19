@@ -33,6 +33,7 @@ traiter/old_pipes/cache.py
 traiter/old_pipes/cleanup.py
 traiter/old_pipes/debug.py
 traiter/old_pipes/dependency.py
+traiter/old_pipes/dependency_pipe.py
 traiter/old_pipes/entity_data.py
 traiter/old_pipes/merge_entity_data.py
 traiter/old_pipes/retokenize.py
@@ -47,7 +48,8 @@ traiter/pipes/__init__.py
 traiter/pipes/add_traits_pipe.py
 traiter/pipes/debug_pipes.py
 traiter/pipes/delete_traits_pipe.py
-traiter/pipes/dependency_pipe.py
+traiter/pipes/link_traits_pipe.py
+traiter/pipes/merge_traits.py
 traiter/pipes/pipe_util.py
 traiter/pipes/sentence_pipe.py
 traiter/pipes/simple_traits_pipe.py
