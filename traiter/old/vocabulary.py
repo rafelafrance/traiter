@@ -47,7 +47,7 @@ class Vocabulary:
         """Emulate dict access of the rules."""
         rule = self.rules[name]
         if isinstance(rule, list):
-            return [r for r in rule if r.name == name][0]
+            return next(r for r in rule if r.name == name)
         return rule
 
     def part(

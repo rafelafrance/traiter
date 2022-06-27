@@ -5,7 +5,7 @@ import spacy
 
 from traiter import tokenizer_util
 
-NLP = spacy.load("en_core_web_sm")
+NLP = spacy.load("en_core_web_sm")  # Singleton for testing
 
 
 class TestTokenizerUtil(unittest.TestCase):

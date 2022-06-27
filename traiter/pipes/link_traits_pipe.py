@@ -75,7 +75,7 @@ class LinkTraits:
 
     @staticmethod
     def get_ent_from_token(doc, token_idx):
-        return [e for e in doc.ents if e.start <= token_idx < e.end][0]
+        return next(e for e in doc.ents if e.start <= token_idx < e.end)
 
     def filter_matches(self, matches):
         idx = [

@@ -91,7 +91,7 @@ def link_nearest(doc, matches, **kwargs):
     # All possible anchors for every entity
     groups = defaultdict(list)
     for token_idx in entity_matches:
-        anchor_i = [i for i in token_idx if doc.ents[i].label_ == anchor][0]
+        anchor_i = next(i for i in token_idx if doc.ents[i].label_ == anchor)
         text = doc.ents[anchor_i]._.data[anchor]
         entities = []
         for i in token_idx:
