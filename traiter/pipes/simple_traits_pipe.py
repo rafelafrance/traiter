@@ -20,18 +20,28 @@ class SimpleTraits:
     """Save the text in the entity data and cache the label."""
 
     def __init__(
-        self, nlp: Language, name: str, replace: StrDict = None, update: StrList = None
+        self,
+        nlp: Language,
+        name: str,
+        replace: StrDict = None,
+        update: StrList = None,
+        exclude: StrList = None,
     ):
         add_extensions()
 
         self.nlp = nlp
         self.name = name
         self.update = update if update else []
+        self.exclude = exclude if exclude else []
         self.replace = replace if replace else {}
 
     def __call__(self, doc):
         for ent in doc.ents:
             label = ent.label_
+
+            if label in self.exclude:
+                continue
+
             if label and (not self.update or label in self.update):
                 ent._.cached_label = label
                 texts = []
@@ -45,4 +55,5 @@ class SimpleTraits:
                 ent._.data["trait"] = label
                 ent._.data["start"] = ent.start_char
                 ent._.data["end"] = ent.end_char
+
         return doc
