@@ -1,4 +1,3 @@
-"""Add a pipe to print debug messages."""
 from spacy.language import Language
 
 from traiter.pipes.pipe_util import add_extensions

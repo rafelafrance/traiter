@@ -114,7 +114,7 @@ def weighted_distance(anchor_i, entity_i, doc, bias, penalty=None):
 
     Also indicate if the anchor is before or after the entity.
     """
-    penalty = penalty if penalty else const.PUNCT_PENALTY
+    penalty = penalty if penalty else const.TOKEN_WEIGHTS
 
     lo, hi = (entity_i, anchor_i) if entity_i < anchor_i else (anchor_i, entity_i)
     lo, hi = doc.ents[lo][-1].i, doc.ents[hi][0].i

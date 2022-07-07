@@ -1,5 +1,3 @@
-"""Perform actions to fill user defined fields for traits."""
-from collections import defaultdict
 from itertools import groupby
 
 from spacy.language import Language
@@ -20,8 +18,7 @@ class LinkTraits:
         parents: list[str],
         children: list[str],
         patterns: list[dict],
-        times: int = 0,
-        replace: bool = False,
+        weights: dict[str, int] = None,
     ):
         pipe_util.add_extensions()
 
@@ -29,8 +26,7 @@ class LinkTraits:
         self.name = name
         self.parents = parents
         self.children = children
-        self.times = times
-        self.replace = replace
+        self.weights = {k.lower(): v for k, v in weights.items()} if weights else {}
         self.matcher = self.build_matcher(nlp, patterns)
 
     @staticmethod
@@ -42,34 +38,24 @@ class LinkTraits:
 
     def __call__(self, doc: Doc) -> Doc:
         matches = self.matcher(doc, as_spans=True)
-        matches = self.filter_matches(matches)
-        times = defaultdict(int)
+        matches = self.filter_matches(doc, matches)
 
         for span in matches:
             if len(span) <= 1:
                 continue
 
-            # Get the parent and trait locations
+            # Get the parent and child locations
             if span[0].ent_type_ in self.parents:
                 t_idx, p_idx = span.end - 1, span.start
             else:
                 t_idx, p_idx = span.start, span.end - 1
 
-            # Get the trait location
+            # Get the parent's trait
             parent = self.get_ent_from_token(doc, doc[p_idx].i)
             parent_trait = parent._.data["trait"]
+
+            # Update the child entity and token
             ent = self.get_ent_from_token(doc, doc[t_idx].i)
-
-            # Check if we should replace a trait
-            if not self.replace and ent._.data.get(parent_trait):
-                continue
-
-            # See if the trait count will be exceeded
-            times[p_idx] += 1
-            if self.times and times[p_idx] > self.times:
-                continue
-
-            # Update trait and token
             ent._.data[parent_trait] = doc[p_idx]._.data[parent_trait]
             doc[t_idx]._.data[parent_trait] = ent._.data[parent_trait]
 
@@ -79,13 +65,27 @@ class LinkTraits:
     def get_ent_from_token(doc, token_idx):
         return next(e for e in doc.ents if e.start <= token_idx < e.end)
 
-    def filter_matches(self, matches):
+    def filter_matches(self, doc, matches):
+        # Find the index of the child token -- it's at one end or the other
         idx = [
             m.end - 1 if m[0].ent_type_ in self.parents else m.start for m in matches
         ]
-        dists = [m.end - m.start for m in matches]
-        matches = zip(idx, dists, matches)
+        if self.weights:
+            distances = self.weighted_distances(doc, matches)
+        else:
+            distances = [m.end - m.start for m in matches]
+        matches = zip(idx, distances, matches)
         matches = sorted(matches)
         grouped = groupby(matches, key=lambda m: m[0])
-        matches = [list(m)[0][2] for _, m in grouped]
+        matches = [list(g)[0][2] for _, g in grouped]
         return matches
+
+    def weighted_distances(self, doc, matches):
+        distances = []
+        for match in matches:
+            dist = 0
+            for idx in range(match.start, match.end):
+                token = doc[idx]
+                dist += self.weights.get(token.lower_, 1)
+            distances.append(dist)
+        return distances

@@ -55,7 +55,7 @@ INT_TOKEN_RE = f"^{INT_RE}$"
 
 # Punctuation penalties when linking traits
 NEVER = 9999
-PUNCT_PENALTY = {
+TOKEN_WEIGHTS = {
     ",": 2,
     ";": 5,
     ".": NEVER,

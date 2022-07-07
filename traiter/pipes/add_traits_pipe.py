@@ -1,4 +1,3 @@
-"""Perform actions to fill user defined fields for traits."""
 from typing import Any
 from typing import Optional
 

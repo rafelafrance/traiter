@@ -1,4 +1,3 @@
-"""Add extensions for spans and tokens used by trait pipes."""
 from spacy.tokens import Span
 from spacy.tokens import Token
 

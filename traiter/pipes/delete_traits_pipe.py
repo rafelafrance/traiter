@@ -1,4 +1,3 @@
-"""Remove noise partial traits from the doc."""
 from typing import Any
 
 from spacy import registry
