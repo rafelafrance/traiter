@@ -46,30 +46,32 @@ class LinkTraits:
         times = defaultdict(int)
 
         for span in matches:
-            if len(span) > 1:
-                # Get the parent and trait locations
-                if span[0].ent_type_ in self.parents:
-                    t_idx, p_idx = span.end - 1, span.start
-                else:
-                    t_idx, p_idx = span.start, span.end - 1
+            if len(span) <= 1:
+                continue
 
-                # Get the trait location
-                parent = self.get_ent_from_token(doc, doc[p_idx].i)
-                parent_trait = parent._.data["trait"]
-                ent = self.get_ent_from_token(doc, doc[t_idx].i)
+            # Get the parent and trait locations
+            if span[0].ent_type_ in self.parents:
+                t_idx, p_idx = span.end - 1, span.start
+            else:
+                t_idx, p_idx = span.start, span.end - 1
 
-                # Check if we should replace a trait
-                if not self.replace and ent._.data.get(parent_trait):
-                    continue
+            # Get the trait location
+            parent = self.get_ent_from_token(doc, doc[p_idx].i)
+            parent_trait = parent._.data["trait"]
+            ent = self.get_ent_from_token(doc, doc[t_idx].i)
 
-                # See if the trait count will be exceeded
-                times[p_idx] += 1
-                if self.times and times[p_idx] > self.times:
-                    continue
+            # Check if we should replace a trait
+            if not self.replace and ent._.data.get(parent_trait):
+                continue
 
-                # Update trait and token
-                ent._.data[parent_trait] = doc[p_idx]._.data[parent_trait]
-                doc[t_idx]._.data[parent_trait] = ent._.data[parent_trait]
+            # See if the trait count will be exceeded
+            times[p_idx] += 1
+            if self.times and times[p_idx] > self.times:
+                continue
+
+            # Update trait and token
+            ent._.data[parent_trait] = doc[p_idx]._.data[parent_trait]
+            doc[t_idx]._.data[parent_trait] = ent._.data[parent_trait]
 
         return doc
 
