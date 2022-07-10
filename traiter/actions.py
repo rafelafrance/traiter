@@ -44,6 +44,7 @@ def text_action(ent: Union[Span, Token], replace: Optional[dict] = None) -> None
     text = ent.text.lower()
     label = ent.label_ if isinstance(ent, Span) else ent.ent_type_
     label = ent._.cached_label if ent._.cached_label else label
+    label = ent._.new_label if ent._.new_label else label
     ent._.data[label] = text
     if replace:
         words = [replace.get(w, w) for w in text.split()]
