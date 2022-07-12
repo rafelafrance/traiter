@@ -98,6 +98,8 @@ class LinkTraits:
                 continue
 
             # See if this trait is already linked
+            if match.child_ent._.data.get(match.parent_trait):
+                continue
             key = (match.child_idx, match.parent_trait)
             child_link_count[key] += 1
             if child_link_count[key] > 1:
