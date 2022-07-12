@@ -13,7 +13,7 @@ source ./.venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
 
-python -m pip install -U 'spacy[cuda113,transformers,lookups]'
+python -m pip install -U spacy
 python -m spacy download en_core_web_sm
 
 # Commonly used for dev
