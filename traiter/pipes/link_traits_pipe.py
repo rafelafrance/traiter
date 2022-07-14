@@ -56,15 +56,18 @@ class LinkCount:
         self.max_count = max_count
         self.seen: dict[tuple, int] = defaultdict(int)
 
+    def all_values(self, ent):
+        return [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+
     def seen_too_much(self, ent):
         """Check for any difference in the already seen values."""
-        values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
-        return any(self.seen[k] >= self.max_count for k in product(*values))
+        return any(
+            self.seen[k] >= self.max_count for k in product(*self.all_values(ent))
+        )
 
     def update_seen(self, ent):
         """Update the already seen values for each field."""
-        values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
-        for key in product(*values):
+        for key in product(*self.all_values(ent)):
             self.seen[key] += 1
 
 
