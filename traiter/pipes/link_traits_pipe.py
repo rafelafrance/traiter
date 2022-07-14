@@ -64,6 +64,7 @@ class LinkTraits:
         self.nlp = nlp
         self.name = name
         self.parents = parents
+        self.parent_set = set(parents)
         self.children = children
         self.weights = {k.lower(): v for k, v in weights.items()} if weights else {}
         self.max_links = max_links
@@ -83,26 +84,21 @@ class LinkTraits:
         matches = sorted(matches)
 
         parent_link_count = defaultdict(int)
-        child_link_count = defaultdict(int)
 
         for match in matches:
             if len(match) <= 1:
                 continue
 
-            # See if the link limit will be exceeded
+            # See if this trait is already linked
+            if set(match.child_ent._.data.keys()) & self.parent_set:
+                continue
+
+            # See if the parent link limit will be exceeded
             key = [match.parent_idx, match.child_trait]
             key += [match.child_ent._.data.get(d, "") for d in self.differ]
             key = tuple(key)
             parent_link_count[key] += 1
             if parent_link_count[key] > self.max_links:
-                continue
-
-            # See if this trait is already linked
-            if match.child_ent._.data.get(match.parent_trait):
-                continue
-            key = (match.child_idx, match.parent_trait)
-            child_link_count[key] += 1
-            if child_link_count[key] > 1:
                 continue
 
             # Update the child entity and token
