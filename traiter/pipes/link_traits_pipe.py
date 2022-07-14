@@ -1,9 +1,11 @@
 from collections import defaultdict
+from itertools import product
 
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
 
+from traiter import util
 from traiter.pipes import pipe_util
 
 LINK_TRAITS = "traiter.link_traits.v1"
@@ -11,6 +13,7 @@ LINK_TRAITS = "traiter.link_traits.v1"
 NO_LIMIT = 999_999
 
 
+# ####################################################################################
 class LinkMatch:
     def __init__(self, span, weights, doc, parents):
         self.span = span
@@ -46,6 +49,26 @@ class LinkMatch:
         )
 
 
+# ####################################################################################
+class LinkCount:
+    def __init__(self, differ: list[str], max_count: int):
+        self.differ = differ
+        self.max_count = max_count
+        self.seen: dict[tuple, int] = defaultdict(int)
+
+    def seen_too_much(self, ent):
+        """Check for any difference in the already seen values."""
+        values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+        return any(self.seen[k] >= self.max_count for k in product(*values))
+
+    def update_seen(self, ent):
+        """Update the already seen values for each field."""
+        values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+        for key in product(*values):
+            self.seen[key] += 1
+
+
+# ####################################################################################
 @Language.factory(LINK_TRAITS)
 class LinkTraits:
     def __init__(
@@ -83,7 +106,7 @@ class LinkTraits:
         matches = [LinkMatch(m, self.weights, doc, self.parents) for m in matches]
         matches = sorted(matches)
 
-        parent_link_count = defaultdict(int)
+        parent_link_count = defaultdict(lambda: LinkCount(self.differ, self.max_links))
 
         for match in matches:
             if len(match) <= 1:
@@ -93,18 +116,15 @@ class LinkTraits:
             if set(match.child_ent._.data.keys()) & self.parent_set:
                 continue
 
-            # See if the parent link limit will be exceeded
-            key = [match.parent_idx, match.child_trait]
-            key += [match.child_ent._.data.get(d, "") for d in self.differ]
-            key = tuple(key)
-            parent_link_count[key] += 1
-            if parent_link_count[key] > self.max_links:
+            # See if the parent link limit is exceeded
+            link_count = parent_link_count[match.parent_idx, match.child_trait]
+            if link_count.seen_too_much(match.child_ent):
                 continue
+            link_count.update_seen(match.child_ent)
 
-            # Update the child entity and token
+            # Update the child entity
             if match.parent_trait in match.parent_ent._.data:
                 parent_trait = match.parent_ent._.data[match.parent_trait]
                 match.child_ent._.data[match.parent_trait] = parent_trait
-                doc[match.child_idx]._.data[match.parent_trait] = parent_trait
 
         return doc
