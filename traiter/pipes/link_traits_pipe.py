@@ -15,17 +15,18 @@ NO_LIMIT = 999_999
 
 # ####################################################################################
 class LinkMatch:
-    def __init__(self, span, weights, doc, parents):
+    def __init__(self, span, weights, doc, parents, reverse_weights):
         self.span = span
         self.doc = doc
         self.weights = weights
         self.parents = parents
-        self.distance = self.weighted_distance()
         self.child_idx, self.parent_idx = self.get_indices()
         self.child_ent = self.get_ent_from_token(self.child_idx)
         self.parent_ent = self.get_ent_from_token(self.parent_idx)
         self.child_trait = self.child_ent._.data["trait"]
         self.parent_trait = self.parent_ent._.data["trait"]
+        self.reverse_weights = reverse_weights
+        self.distance = self.weighted_distance()
 
     def __lt__(self, other):
         return self.distance < other.distance
@@ -43,8 +44,11 @@ class LinkMatch:
         return child_idx, parent_idx
 
     def weighted_distance(self):
+        weights = self.weights
+        if self.parent_idx > self.child_idx:
+            weights = self.reverse_weights
         return sum(
-            self.weights.get(self.doc[i].lower_, 1)
+            weights.get(self.doc[i].lower_, 1)
             for i in range(self.span.start, self.span.end)
         )
 
@@ -60,7 +64,7 @@ class LinkCount:
         return [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
 
     def seen_too_much(self, ent):
-        """Check for any difference in the already seen values."""
+        """Check if we've seen the this link type (parent to trait) too many times."""
         return any(
             self.seen[k] >= self.max_count for k in product(*self.all_values(ent))
         )
@@ -82,6 +86,7 @@ class LinkTraits:
         children: list[str],
         patterns: list[dict],
         weights: dict[str, int] = None,  # Token weights for scoring distances
+        reverse_weights: dict[str, int] = None,  # Weights for scoring backwards
         max_links: int = NO_LIMIT,  # Max times to link to a parent trait
         differ: list[str] = None,
     ):
@@ -93,6 +98,11 @@ class LinkTraits:
         self.parent_set = set(parents)
         self.children = children
         self.weights = {k.lower(): v for k, v in weights.items()} if weights else {}
+        self.reverse_weights = (
+            {k.lower(): v for k, v in reverse_weights.items()}
+            if reverse_weights
+            else self.weights
+        )
         self.max_links = max_links
         self.differ = differ if differ else []
         self.matcher = self.build_matcher(nlp, patterns)
@@ -106,7 +116,10 @@ class LinkTraits:
 
     def __call__(self, doc: Doc) -> Doc:
         matches = self.matcher(doc, as_spans=True)
-        matches = [LinkMatch(m, self.weights, doc, self.parents) for m in matches]
+        matches = [
+            LinkMatch(m, self.weights, doc, self.parents, self.reverse_weights)
+            for m in matches
+        ]
         matches = sorted(matches)
 
         parent_link_count = defaultdict(lambda: LinkCount(self.differ, self.max_links))
