@@ -57,7 +57,7 @@ class EntityData:
     def relabel_entity(ent, old_label):
         """Relabel an entity.
 
-        We cannot change a label on a span so we have to make a new one.
+        We cannot change a label on a span, so we have to make a new one.
         """
         label = old_label
 

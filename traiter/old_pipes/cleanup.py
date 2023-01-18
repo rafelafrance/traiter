@@ -8,7 +8,7 @@ CLEANUP = "traiter.clean_up.v1"
 
 @Language.factory(CLEANUP)
 class Cleanup:
-    """Save current token label so it can be used after it is replaced."""
+    """Save current token label, so it can be used after it is replaced."""
 
     def __init__(
         self, nlp: Language, name: str, forget: list[str] = None, forget_when: str = ""

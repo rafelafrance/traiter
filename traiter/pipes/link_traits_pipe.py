@@ -64,7 +64,7 @@ class LinkCount:
         return [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
 
     def seen_too_much(self, ent):
-        """Check if we've seen the this link type (parent to trait) too many times."""
+        """Check if we've seen this link type (parent to trait) too many times."""
         return any(
             self.seen[k] >= self.max_count for k in product(*self.all_values(ent))
         )

@@ -2,5 +2,5 @@ Hyphenate
 ftfy
 regex
 inflect
-spacy
+spacy==3.3.0
 flake8
