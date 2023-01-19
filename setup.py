@@ -48,6 +48,6 @@ setup(
     long_description=readme(),
     license=license_(),
     url="https://github.com/rafelafrance/traiter",
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     scripts=[],
 )
