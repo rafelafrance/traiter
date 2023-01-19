@@ -4,7 +4,7 @@ from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
-DELETE_TRAITS = "traiter.delete_traits.v1"
+DELETE_TRAITS = "traiter_delete_traits_v1"
 
 
 @Language.factory(DELETE_TRAITS)

@@ -1,5 +1,0 @@
-Hyphenate
-ftfy
-regex
-inflect
-spacy==3.3.0

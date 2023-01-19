@@ -3,7 +3,7 @@ from spacy.language import Language
 
 from traiter.old_pipes.entity_data import add_extensions
 
-CACHE_LABEL = "traiter.cache_label.v1"
+CACHE_LABEL = "traiter_cache_label_v1"
 
 add_extensions()
 

@@ -2,7 +2,7 @@
 .ONESHELL:
 
 VENV=.venv
-PYTHON=./$(VENV)/bin/python3.10
+PYTHON=./$(VENV)/bin/python3.11
 
 test:
 	$(PYTHON) -m unittest discover
@@ -21,7 +21,7 @@ dev: venv
 	pre-commit install
 
 venv:
-	test -d $(VENV) || python3.10 -m venv $(VENV)
+	test -d $(VENV) || python3.11 -m venv $(VENV)
 
 clean:
 	rm -r $(VENV)

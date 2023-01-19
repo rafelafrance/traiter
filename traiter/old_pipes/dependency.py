@@ -15,8 +15,8 @@ from traiter import const
 from traiter.util import as_list
 from traiter.util import sign
 
-DEPENDENCY = "traiter.dependency_pipe.v1"
-LINK_NEAREST = "traiter.link_nearest.v1"
+DEPENDENCY = "traiter.dependency_pipe_v1"
+LINK_NEAREST = "traiter.link_nearest_v1"
 
 DependencyPatterns = Union[dict, list[dict]]
 

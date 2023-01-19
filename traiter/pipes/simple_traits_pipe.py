@@ -9,7 +9,7 @@ from spacy.language import Language
 
 from traiter.pipes.pipe_util import add_extensions
 
-SIMPLE_TRAITS = "traiter.simple_traits.v2"
+SIMPLE_TRAITS = "traiter_simple_traits_v2"
 
 StrDict = Optional[dict[str, str]]
 StrList = Optional[list[str]]

@@ -7,7 +7,7 @@ from traiter.actions import RejectMatch
 from traiter.old_pipes.entity_data import DispatchTable
 from traiter.old_pipes.entity_data import EntityData
 
-ADD_ENTITY_DATA = "traiter.add_entity_data.v1"
+ADD_ENTITY_DATA = "traiter_add_entity_data_v1"
 
 
 @Language.factory(ADD_ENTITY_DATA)

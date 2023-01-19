@@ -9,7 +9,7 @@ from spacy.tokens import Doc
 
 from traiter.pipes import pipe_util
 
-MERGE_TRAITS = "traiter.merge_traits.v1"
+MERGE_TRAITS = "traiter_merge_traits_v1"
 
 
 @Language.factory(MERGE_TRAITS)

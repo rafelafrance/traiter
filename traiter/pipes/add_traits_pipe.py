@@ -10,7 +10,7 @@ from spacy.util import filter_spans
 from traiter.actions import RejectMatch
 from traiter.pipes import pipe_util
 
-ADD_TRAITS = "traiter.add_traits.v1"
+ADD_TRAITS = "traiter_add_traits_v1"
 
 
 @Language.factory(ADD_TRAITS)

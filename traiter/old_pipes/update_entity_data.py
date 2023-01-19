@@ -14,7 +14,7 @@ from spacy.util import filter_spans
 from traiter.actions import RejectMatch
 from traiter.old_pipes.entity_data import EntityData
 
-UPDATE_ENTITY_DATA = "traiter.update_entity_data.v1"
+UPDATE_ENTITY_DATA = "traiter_update_entity_data_v1"
 
 
 @Language.factory(UPDATE_ENTITY_DATA)

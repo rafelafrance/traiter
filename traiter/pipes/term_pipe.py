@@ -10,8 +10,8 @@ from spacy.util import filter_spans
 
 from traiter.pipes import pipe_util
 
-TERM_PIPE = "traiter.term_pipe.v1"
-PHRASE_PIPE = "traiter.phrase_pipe.v1"
+TERM_PIPE = "traiter_term_pipe_v1"
+PHRASE_PIPE = "traiter_phrase_pipe_v1"
 
 
 @Language.factory(TERM_PIPE)

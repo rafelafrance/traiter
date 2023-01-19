@@ -4,17 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traiter"
-version = "0.1.0"
-description = ""
+version = "0.13.3"
+description = "Rule-based parsers for mining text"
 license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "Hyphenate",
     "ftfy",
     "regex",
     "inflect",
-     "spacy==3.3.0",
+    "spacy",
 ]
 optional-dependencies.dev = [
     "autopep8",

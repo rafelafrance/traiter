@@ -9,8 +9,6 @@ from spacy.lang.char_classes import LIST_QUOTES
 import traiter.vocabulary as vocab
 
 
-__VERSION__ = "0.13.2"
-
 # This points to the traiter (not client) vocabulary directory
 VOCAB_DIR = Path(vocab.__file__).parent
 

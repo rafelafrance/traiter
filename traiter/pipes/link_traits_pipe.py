@@ -8,7 +8,7 @@ from spacy.tokens import Doc
 from traiter import util
 from traiter.pipes import pipe_util
 
-LINK_TRAITS = "traiter.link_traits.v1"
+LINK_TRAITS = "traiter_link_traits_v1"
 
 NO_LIMIT = 999_999
 

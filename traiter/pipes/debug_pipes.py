@@ -2,9 +2,9 @@ from spacy.language import Language
 
 from traiter.pipes.pipe_util import add_extensions
 
-DEBUG_TOKENS = "traiter.debug_tokens.v1"
-DEBUG_ENTITIES = "traiter.debug_entities.v1"
-DEBUG_MESSAGE = "traiter.debug_message.v1"
+DEBUG_TOKENS = "traiter_debug_tokens_v1"
+DEBUG_ENTITIES = "traiter_debug_entities_v1"
+DEBUG_MESSAGE = "traiter_debug_message_v1"
 
 # So we don't have to come up with new names all the time
 DEBUG_COUNT = 0  # Used to rename debug pipes
