@@ -17,7 +17,7 @@ def tokens(nlp, message="", **kwargs):
     config = {"message": message}
     nlp.add_pipe(
         DEBUG_TOKENS,
-        name=f"show_tokens_{DEBUG_COUNT}",
+        name=f"debug_tokens_{DEBUG_COUNT}",
         config=config,
         **kwargs,
     )
@@ -30,7 +30,7 @@ def ents(nlp, message="", **kwargs):
     config = {"message": message}
     nlp.add_pipe(
         DEBUG_ENTITIES,
-        name=f"show_entities_{DEBUG_COUNT}",
+        name=f"debug_entities_{DEBUG_COUNT}",
         config=config,
         **kwargs,
     )
@@ -43,7 +43,7 @@ def msg(nlp, message="", **kwargs):
     config = {"message": message}
     nlp.add_pipe(
         DEBUG_MESSAGE,
-        name=f"show_message_{DEBUG_COUNT}",
+        name=f"debug_message_{DEBUG_COUNT}",
         config=config,
         **kwargs,
     )

@@ -3,4 +3,3 @@ ftfy
 regex
 inflect
 spacy==3.3.0
-flake8
