@@ -29,17 +29,17 @@ class Vocabulary:
 
         grouper('value', ' len_range | number (?P<units> len_units )? ')
 
-    We want to add a rule for the new 'value' grouper but we also want to make
+    We want to add a rule for the new 'value' grouper, but we also want to make
     sure the 'len_range', 'number', and 'len_units' forms are also included.
     This is done recursively so, for example, the 'len_units' sub-grouper will
     also pull in the 'feet', 'inches', and 'metric_len' basal patterns.
 
     It is primarily used with shared patterns. We have catalogs of 100s of
-    shared patterns and we only want to pull in (and search thru) the ones that
+    shared patterns, and we only want to pull in (and search through) the ones that
     are needed for a particular product.
     """
 
-    def __init__(self, other: "Vocabulary" = None) -> None:
+    def __init__(self, other=one) -> None:
         """Create the rule set."""
         self.rules: dict = dict(other.rules) if other else {}
 

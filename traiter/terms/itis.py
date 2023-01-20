@@ -9,7 +9,7 @@ from typing import Union
 from ..const import DATA_DIR
 from .csv_ import Csv
 
-# This points to a database (or a sym link) in the client's data directory
+# This points to a database (or a symlink) in the client's data directory
 ITIS_DB = DATA_DIR / "ITIS.sqlite"
 
 
@@ -128,7 +128,7 @@ class Itis(Csv):
     def mock_itis_traits(cls, mock_terms_csv: Union[str, Path], taxon: str) -> "Itis":
         """Set up mock traits for testing with Travis.
 
-        The ITIS database is too big to put into GitHub so we use a mock database
+        The ITIS database is too big to put into GitHub, so we use a mock database
         for testing.
         """
         # Bypass using this in tests for now.

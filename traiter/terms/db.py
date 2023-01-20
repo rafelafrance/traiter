@@ -63,7 +63,7 @@ class Db(terms.Terms):
 
     @staticmethod
     def create_spell_check_tables(database: DbPathType) -> None:
-        """Create tables used for spell checking.."""
+        """Create tables used for spell checking."""
         sql = """
             create table if not exists vocab (
                 word text,

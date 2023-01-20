@@ -102,7 +102,7 @@ class Parser:
 
     @staticmethod
     def get_matches(rules: Rules, text: str) -> Tokens:
-        """Get all of the text matches for the rules sorted by position."""
+        """Get all the text matches for the rules sorted by position."""
         pairs = [(r, r.regexp.finditer(text)) for r in rules]
         return [Token(match[0], match=m) for match in pairs for m in match[1]]
 
@@ -115,7 +115,7 @@ class Parser:
         return matches
 
     def match_tokens(self, rules: Rules, text: str) -> deque:
-        """Get all of the token matches for the rules sorted by position."""
+        """Get all the token matches for the rules sorted by position."""
         matches = self.get_matches(rules, text)
         matches = [t for t in matches if t.valid_match()]
         return self.sort_matches(matches)
@@ -132,7 +132,7 @@ class Parser:
 
     @staticmethod
     def append_group(groups: Groups, key: str, value: str) -> None:
-        """Append a group to the groups dictionary."""
+        """Append a group to the groups' dictionary."""
         old: list[str] = []
         if key in groups:
             old = groups[key] if isinstance(groups[key], list) else [groups[key]]

@@ -68,7 +68,7 @@ class Terms:
         """Drop term from the traits.
 
         If we include terms that interfere with patterns we can drop them. For instance,
-        'in' may be an inch abbreviation or a preposition so we could:
+        'in' may be an inch abbreviation or a preposition, so we could:
         term.drop('in', field='pattern').
         """
         drops = drops.split() if isinstance(drops, str) else drops
@@ -91,8 +91,8 @@ class Terms:
         """Systematically handle hyphenated terms.
 
         We cannot depend on terms being present in a contiguous form (e.g. web pages).
-        We need a systematic method for handling hyphenated terms. The hyphenate
-        library is great for this but sometimes we need to handle non-standard
+        We need a systematic method for handling hyphenated terms. The Hyphenate
+        library is great for this, but sometimes we need to handle non-standard
         hyphenations manually. Non-standard hyphenations are stored with the terms.
         """
         terms = []
@@ -141,8 +141,8 @@ class Terms:
         """Systematically handle hyphenated terms.
 
         We cannot depend on terms being present in a contiguous form. We need a
-        systematic method for handling hyphenated terms. The hyphenate library is
-        great for this but sometimes we need to handle non-standard hyphenations
+        systematic method for handling hyphenated terms. The Hyphenate library is
+        great for this, but sometimes we need to handle non-standard hyphenations
         manually. Non-standard hyphenations are stored in the terms CSV file.
         """
         # TODO DEPRECATED

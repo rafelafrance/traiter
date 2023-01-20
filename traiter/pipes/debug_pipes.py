@@ -11,7 +11,7 @@ DEBUG_COUNT = 0  # Used to rename debug pipes
 
 
 def tokens(nlp, message="", **kwargs):
-    """Automatically setup a pipe to print token information."""
+    """Automatically set up a pipe to print token information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
     config = {"message": message}
@@ -24,7 +24,7 @@ def tokens(nlp, message="", **kwargs):
 
 
 def ents(nlp, message="", **kwargs):
-    """Automatically setup a pipe to print entity information."""
+    """Automatically set up a pipe to print entity information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
     config = {"message": message}
@@ -37,7 +37,7 @@ def ents(nlp, message="", **kwargs):
 
 
 def msg(nlp, message="", **kwargs):
-    """Automatically setup a pipe to print entity information."""
+    """Automatically set up a pipe to print entity information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
     config = {"message": message}

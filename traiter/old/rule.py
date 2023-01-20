@@ -37,7 +37,7 @@ LOWEST = 9999
 
 
 class RuleType(IntEnum):
-    """What type of a rule are we dealing with."""
+    """What type of rule are we dealing with."""
 
     SCANNER = 1
     GROUPER = 2

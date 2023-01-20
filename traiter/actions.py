@@ -13,7 +13,7 @@ REJECT_MATCH = "traiter.reject_match.v1"
 class RejectMatch(Exception):
     """Raise this when you want to remove a match from doc.ents.
 
-    If you're processing a match and you discover that it really isn't a trait/entity
+    If you're processing a match, and you discover that it really isn't a trait/entity
     then you'd raise this exception so the match would not be included in the
     document's entities.
     """

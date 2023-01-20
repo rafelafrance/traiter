@@ -59,7 +59,7 @@ class DependencyPatterns:
             stack: deque = deque()
             left_id, rel_op, right_id = "", "", ""
 
-            # Parens can be contiguous with the a symbol or operator
+            # Parens can be contiguous with a symbol or operator
             new_str = string.replace("(", " ( ").replace(")", " ) ")
 
             for i, key in enumerate(new_str.split()):

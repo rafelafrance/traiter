@@ -50,7 +50,7 @@ data/
 
 # Temp files
 temp/
-junk*
+*junk*
 
 # Test
 .pytest_cache/
@@ -58,9 +58,6 @@ junk*
 # Other code
 args/
 src/
-
-# Experiments
-*junk*
 
 # Editor files
 .~*
