@@ -32,10 +32,10 @@ class Sentence:
             prev = doc[i - 1] if i > 0 else None
             next_ = doc[i + 1]
 
-            # A period followed by a capital letter (or space, digit or another period)
+            # A period followed by a something that allows a sentence start
             if (
                 token.text.endswith(".")
-                and self.is_next(next_)
+                and self.allows_new_sentence(next_)
                 and token.text not in self.abbrev
             ):
                 next_.is_sent_start = True
@@ -55,8 +55,8 @@ class Sentence:
         """Check if the token is space."""
         return token.text.isspace() or token.pos_ == "SPACE"
 
-    def is_next(self, token):
-        """See if the next token starts with an uppercase is a space or period."""
+    def allows_new_sentence(self, token):
+        """See if the next token does not block a sentence start."""
         return (
             token.prefix_.isupper()
             or token.prefix_.isdigit()
