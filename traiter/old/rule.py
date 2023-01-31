@@ -11,7 +11,7 @@ from typing import Union
 
 import regex
 
-from traiter.const import FLAGS
+from traiter.const import RE_FLAGS
 
 TOKEN = 0
 SIZE = 4
@@ -22,7 +22,7 @@ WORD = regex.compile(
     r"""
     (?<! \(\?P< ) (?<! \(\? ) (?<! [\\] )
     \b (?P<word> [a-z]\w* ) \b """,
-    FLAGS,
+    RE_FLAGS,
 )
 
 Rules = List["Rule"]
@@ -92,7 +92,7 @@ class Rule:  # pylint: disable=too-many-instance-attributes
     def compile(self, rules: RuleDict):
         """Build and compile a rule."""
         pattern = self.build(rules)
-        self.regexp = regex.compile(pattern, FLAGS)
+        self.regexp = regex.compile(pattern, RE_FLAGS)
 
 
 def next_token() -> str:
@@ -119,7 +119,7 @@ def part(
     """Build a regular expression with a named group."""
     pattern = join(regexp)
     reg_ = f"(?P<{name}> {pattern} )" if capture else f"(?: {pattern} )"
-    reg = regex.compile(reg_, FLAGS)
+    reg = regex.compile(reg_, RE_FLAGS)
     return Rule(
         name=name,
         pattern=pattern,
@@ -141,7 +141,7 @@ def term(
     r"""Wrap a regular expression in \b character classes."""
     pattern = join(regexp)
     reg_ = f"(?P<{name}> {pattern} )" if capture else f"(?: {pattern} )"
-    reg = regex.compile(rf"\b {reg_} \b", FLAGS)
+    reg = regex.compile(rf"\b {reg_} \b", RE_FLAGS)
     return Rule(
         name=name,
         pattern=pattern,

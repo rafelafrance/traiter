@@ -39,7 +39,7 @@ class Vocabulary:
     are needed for a particular product.
     """
 
-    def __init__(self, other=one) -> None:
+    def __init__(self, other=None) -> None:
         """Create the rule set."""
         self.rules: dict = dict(other.rules) if other else {}
 

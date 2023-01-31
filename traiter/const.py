@@ -15,7 +15,7 @@ VOCAB_DIR = Path(vocab.__file__).parent
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
 
-FLAGS = re.VERBOSE | re.IGNORECASE
+RE_FLAGS = re.VERBOSE | re.IGNORECASE
 
 BATCH_SIZE = 1_000_000  # How many records to work with at a time
 

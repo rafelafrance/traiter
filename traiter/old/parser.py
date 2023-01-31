@@ -17,8 +17,6 @@ RulesInput = Union[Rules, List[Rules]]
 
 
 class Parser:
-    """Parser arrays and functionality."""
-
     def __init__(self, rules: RulesInput, name: str = "parser") -> None:
         """Build the parser."""
         self.name: str = name
