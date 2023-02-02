@@ -1,6 +1,6 @@
 from spacy.language import Language
 
-from traiter.pipes.pipe_util import add_extensions
+from .pipe_util import add_extensions
 
 DEBUG_TOKENS = "traiter_debug_tokens_v1"
 DEBUG_ENTITIES = "traiter_debug_entities_v1"

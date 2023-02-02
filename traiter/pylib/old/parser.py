@@ -4,14 +4,14 @@ from typing import List
 from typing import Tuple
 from typing import Union
 
+from ..util import flatten
+from .rule import Groups
 from .rule import RuleDict
 from .rule import Rules
 from .rule import RuleType
 from .rule import SIZE
-from .token import Groups
 from .token import Token
 from .token import Tokens
-from traiter.util import flatten
 
 RulesInput = Union[Rules, List[Rules]]
 

@@ -11,8 +11,8 @@ from spacy.matcher import Matcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
-from traiter.actions import RejectMatch
-from traiter.old_pipes.entity_data import EntityData
+from ..actions import RejectMatch
+from .entity_data import EntityData
 
 MERGE_ENTITY_DATA = "traiter_merge_entity_data_v1"
 

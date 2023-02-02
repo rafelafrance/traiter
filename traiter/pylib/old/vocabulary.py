@@ -1,6 +1,8 @@
 """Build catalogs of rules and their parts for sharing."""
 from itertools import groupby
 
+from . import rule as re_rule
+from ..util import flatten
 from .rule import Action
 from .rule import grouper
 from .rule import InRegexp
@@ -10,8 +12,6 @@ from .rule import replacer
 from .rule import Rule
 from .rule import Rules
 from .rule import term
-from traiter.old import rule as re_rule
-from traiter.util import flatten
 
 FIRST = re_rule.FIRST
 SECOND = re_rule.SECOND

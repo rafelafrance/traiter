@@ -1,7 +1,7 @@
 """Save labels for later analysis."""
 from spacy.language import Language
 
-from traiter.old_pipes.entity_data import add_extensions
+from .entity_data import add_extensions
 
 CACHE_LABEL = "traiter_cache_label_v1"
 

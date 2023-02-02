@@ -11,7 +11,7 @@ from typing import Union
 
 import regex
 
-from traiter.const import RE_FLAGS
+from ..const import RE_FLAGS
 
 TOKEN = 0
 SIZE = 4

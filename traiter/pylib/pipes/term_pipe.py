@@ -8,7 +8,7 @@ from spacy.matcher import PhraseMatcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
-from traiter.pipes import pipe_util
+from . import pipe_util
 
 TERM_PIPE = "traiter_term_pipe_v1"
 PHRASE_PIPE = "traiter_phrase_pipe_v1"

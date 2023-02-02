@@ -3,10 +3,10 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
-from traiter.old.rule import Action
-from traiter.old.rule import Groups
-from traiter.old.rule import Rule
-from traiter.old.rule import SIZE
+from .rule import Action
+from .rule import Groups
+from .rule import Rule
+from .rule import SIZE
 
 Tokens = List["Token"]
 

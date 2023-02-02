@@ -3,9 +3,9 @@ from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
-from traiter.actions import RejectMatch
-from traiter.old_pipes.entity_data import DispatchTable
-from traiter.old_pipes.entity_data import EntityData
+from ..actions import RejectMatch
+from .entity_data import DispatchTable
+from .entity_data import EntityData
 
 ADD_ENTITY_DATA = "traiter_add_entity_data_v1"
 

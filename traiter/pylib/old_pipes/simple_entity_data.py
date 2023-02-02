@@ -6,7 +6,7 @@ from typing import Optional
 
 from spacy.language import Language
 
-from traiter.old_pipes.entity_data import EntityData
+from .entity_data import EntityData
 
 SIMPLE_ENTITY_DATA = "traiter_simple_entity_data_v1"
 

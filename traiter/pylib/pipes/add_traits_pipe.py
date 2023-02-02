@@ -7,8 +7,8 @@ from spacy.matcher import Matcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
-from traiter.actions import RejectMatch
-from traiter.pipes import pipe_util
+from . import pipe_util
+from ..actions import RejectMatch
 
 ADD_TRAITS = "traiter_add_traits_v1"
 

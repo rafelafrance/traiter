@@ -6,7 +6,6 @@ from typing import Union
 from . import terms
 from .. import const
 
-
 DbPathType = Union[Path, str]
 
 SHARED_DB = const.VOCAB_DIR / "terms.sqlite"

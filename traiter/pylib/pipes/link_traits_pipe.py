@@ -5,8 +5,8 @@ from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
 
-from traiter import util
-from traiter.pipes import pipe_util
+from . import pipe_util
+from .. import util
 
 LINK_TRAITS = "traiter_link_traits_v1"
 

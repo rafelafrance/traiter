@@ -11,9 +11,9 @@ from spacy.matcher import DependencyMatcher
 from spacy.tokens import Span
 from spacy.tokens import Token
 
-from traiter import const
-from traiter.util import as_list
-from traiter.util import sign
+from .. import const
+from ..util import as_list
+from ..util import sign
 
 DEPENDENCY = "traiter_dependency_v1"
 LINK_NEAREST = "traiter_link_nearest_v1"

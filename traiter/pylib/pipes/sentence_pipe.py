@@ -4,7 +4,7 @@ from typing import Optional
 from spacy.language import Language
 from spacy.tokens import Doc
 
-from traiter import const
+from .. import const
 
 SENTENCE = "traiter_sentence_v1"
 

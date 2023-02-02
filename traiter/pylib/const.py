@@ -6,7 +6,7 @@ from spacy.lang.char_classes import HYPHENS
 from spacy.lang.char_classes import LIST_HYPHENS
 from spacy.lang.char_classes import LIST_QUOTES
 
-import traiter.vocabulary as vocab
+from . import vocabulary as vocab
 
 
 # This points to the traiter (not client) vocabulary directory

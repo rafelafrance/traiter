@@ -11,11 +11,11 @@ from typing import Any
 from typing import Optional
 from warnings import warn
 
-from traiter.patterns.patterns import CompilerPatterns
-from traiter.patterns.patterns import Decoder
-from traiter.patterns.patterns import PatternArg
-from traiter.patterns.patterns import SpacyPatterns
-from traiter.util import as_list
+from ..util import as_list
+from .patterns import CompilerPatterns
+from .patterns import Decoder
+from .patterns import PatternArg
+from .patterns import SpacyPatterns
 
 REL_OP = " < > << >> . .* ; ;* $+ $- $++ $-- ".split()
 

@@ -15,11 +15,11 @@ from warnings import warn
 from spacy.pipeline import EntityRuler
 from spacy.tokens.doc import Doc
 
-from traiter.patterns.patterns import CompilerPatterns
-from traiter.patterns.patterns import Decoder
-from traiter.patterns.patterns import PatternArg
-from traiter.patterns.patterns import SpacyPatterns
-from traiter.util import as_list
+from ..util import as_list
+from .patterns import CompilerPatterns
+from .patterns import Decoder
+from .patterns import PatternArg
+from .patterns import SpacyPatterns
 
 RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
 
