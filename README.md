@@ -1,6 +1,6 @@
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
-![STOP!](assets/StopSign.SVG) Rule-based parsing can be tricky, labor-intensive, and error-prone. -- When using rules, homonyms become evil. -- If you can get away with it, you may want to try an end-to-end machine learning approach. Having said that, there are some uses for rule-based parsing:
+![STOP!](assets/StopSign.SVG) Rule-based parsing can be tricky, labor-intensive, error-prone, and tedious. -- When using rules, homonyms become evil. -- If you can get away with it, you may want to try an end-to-end machine learning approach. Having said that, there are some uses for rule-based parsing:
 
 - You can use rules to build training data for your models.
 - You can use some hand-crafted rule output as input for the automatic generation of other rules.
