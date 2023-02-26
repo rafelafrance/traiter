@@ -22,9 +22,6 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install .
         python -m spacy download en_core_web_sm
-    - name: Create DBs
-      run: |
-        ./traiter/create_term_db.py
     - name: Test with unittest
       run: |
         python -m unittest discover
