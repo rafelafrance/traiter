@@ -62,3 +62,6 @@ src/
 # Editor files
 .~*
 *-journal
+
+# Binary data
+*.sqlite
