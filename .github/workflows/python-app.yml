@@ -22,7 +22,7 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install .
         python -m spacy download en_core_web_sm
-        python ./plants/create_dbs.py
     - name: Test with unittest
       run: |
+        python ./plants/create_dbs.py
         python -m unittest discover
