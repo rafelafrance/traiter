@@ -24,7 +24,7 @@ jobs:
         python -m spacy download en_core_web_sm
     - name: Create DBs
       run: |
-        python create_term_db.py
+        ./traiter/create_term_db.py
     - name: Test with unittest
       run: |
         python -m unittest discover
