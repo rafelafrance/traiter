@@ -6,13 +6,13 @@ from pylib import const
 from pylib import log
 
 CREATE = """
-    CREATE OR REPLACE TABLE term_columns (
+    CREATE TABLE IF NOT EXISTS term_columns (
         term_set text,
         extra    text,
         rename   text
     );
 
-    CREATE OR REPLACE TABLE terms (
+    CREATE TABLE IF NOT EXISTS terms (
         term_set text,
         label    text,
         pattern  text,
@@ -22,10 +22,10 @@ CREATE = """
         extra2   blob
     );
 
-    CREATE OR REPLACE INDEX term_column_sets on term_columns (term_set);
-    CREATE OR REPLACE INDEX term_labels on terms (label);
-    CREATE OR REPLACE INDEX term_patterns on terms (pattern);
-    CREATE OR REPLACE INDEX term_sets on terms (term_set);
+    CREATE INDEX IF NOT EXISTS term_column_sets on term_columns (term_set);
+    CREATE INDEX IF NOT EXISTS term_labels on terms (label);
+    CREATE INDEX IF NOT EXISTS term_patterns on terms (pattern);
+    CREATE INDEX IF NOT EXISTS term_sets on terms (term_set);
 """
 
 INSERT_TERM_COLUMNS = """
