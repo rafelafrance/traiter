@@ -12,17 +12,17 @@ from typing import Optional
 from warnings import warn
 
 from ..util import as_list
-from .patterns import CompilerPatterns
-from .patterns import Decoder
-from .patterns import PatternArg
-from .patterns import SpacyPatterns
+from .compilers import CompilerPatterns
+from .compilers import Decoder
+from .compilers import PatternArg
+from .compilers import SpacyPatterns
 
 REL_OP = " < > << >> . .* ; ;* $+ $- $++ $-- ".split()
 
 OnMatchWithArgs = dict[str, Any]
 
 
-class DependencyPatterns:
+class DependencyCompiler:
     """Convert patterns strings to spacy token pattern arrays."""
 
     def __init__(

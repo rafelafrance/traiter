@@ -16,15 +16,15 @@ from spacy.pipeline import EntityRuler
 from spacy.tokens.doc import Doc
 
 from ..util import as_list
-from .patterns import CompilerPatterns
-from .patterns import Decoder
-from .patterns import PatternArg
-from .patterns import SpacyPatterns
+from .compilers import CompilerPatterns
+from .compilers import Decoder
+from .compilers import PatternArg
+from .compilers import SpacyPatterns
 
 RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
 
 
-class MatcherPatterns:
+class MatcherCompiler:
     """Pattern object for rule-based matchers."""
 
     def __init__(
@@ -80,20 +80,20 @@ class MatcherPatterns:
         return all_patterns
 
 
-Patterns = Union[MatcherPatterns, list[MatcherPatterns]]
+Compilers = Union[MatcherCompiler, list[MatcherCompiler]]
 
 
-def as_dicts(patterns: Patterns) -> list[dict]:
+def as_dicts(patterns: Compilers) -> list[dict]:
     """Convert all patterns to a dicts."""
     return [p.as_dict() for p in as_list(patterns)]
 
 
-def compile_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
+def compile_ruler_patterns(ruler: RulerType, patterns: Compilers) -> None:
     """Rename add_ruler_patterns."""
     add_ruler_patterns(ruler, patterns)
 
 
-def add_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
+def add_ruler_patterns(ruler: RulerType, patterns: Compilers) -> None:
     """Add patterns to a ruler."""
     patterns = as_list(patterns)
     rules = []
@@ -108,7 +108,7 @@ def add_ruler_patterns(ruler: RulerType, patterns: Patterns) -> None:
     ruler.add_patterns(rules)
 
 
-def patterns_to_dispatch(patterns: Patterns) -> dict[str, str]:
+def patterns_to_dispatch(patterns: Compilers) -> dict[str, str]:
     """Convert patterns to a dispatch table."""
     dispatch = {p.label: p.on_match for p in as_list(patterns) if p.on_match}
     return dispatch
