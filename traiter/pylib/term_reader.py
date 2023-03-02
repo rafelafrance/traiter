@@ -17,15 +17,6 @@ from typing import Any
 from . import const
 
 
-HYPHENS = ("-", "\xad")
-
-
-def shared(file_stem: str, dir_: Path = None) -> list[dict]:
-    dir_ = dir_ if dir_ else const.VOCAB_DIR
-    path = dir_ / f"{file_stem}.csv"
-    return read(path)
-
-
 def read(path: Path) -> list[dict]:
     with open(path) as term_file:
         reader = csv.DictReader(term_file)
@@ -35,6 +26,12 @@ def read(path: Path) -> list[dict]:
         term["attr"] = term.get("attr", "lower")
 
     return terms
+
+
+def shared(file_stem: str, dir_: Path = None) -> list[dict]:
+    dir_ = dir_ if dir_ else const.VOCAB_DIR
+    path = dir_ / f"{file_stem}.csv"
+    return read(path)
 
 
 def pattern_dict(terms: list[dict], column: str, type_=None) -> dict[str, Any]:
