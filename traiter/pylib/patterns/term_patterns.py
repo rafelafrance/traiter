@@ -1,14 +1,9 @@
-from ..terms.db import Db
+from .. import term_reader
 
-COLOR_TERMS = Db.shared("colors")
-COLOR_TERMS += Db.trailing_dash(COLOR_TERMS, label="color")
-COLOR_REPLACE = COLOR_TERMS.pattern_dict("replace")
-COLOR_REMOVE = COLOR_TERMS.pattern_dict("remove")
+COLOR_TERMS = term_reader.shared("colors")
+COLOR_TERMS += term_reader.hyphenate(COLOR_TERMS)
+COLOR_REPLACE = term_reader.pattern_dict(COLOR_TERMS, "replace")
+COLOR_REMOVE = term_reader.pattern_dict(COLOR_TERMS, "remove")
 
-UNIT_TERMS = Db.shared("units")
-UNIT_FACTORS = UNIT_TERMS.pattern_dict("factor")
-UNIT_FACTORS = {k: float(v) for k, v in UNIT_FACTORS.items()}
-
-TIME_TERMS = Db.shared("time")
-
-NUMERIC_TERMS = Db.shared("numerics")
+UNIT_TERMS = term_reader.shared("units")
+UNIT_FACTORS = term_reader.pattern_dict(UNIT_TERMS, "factor", float)

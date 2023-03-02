@@ -1,0 +1,9 @@
+term_set,label,pattern,attr,replace
+labels,no_label,number,lower,
+labels,no_label,no,lower,
+labels,no_label,no.,lower,
+labels,no_label,num,lower,
+labels,no_label,num.,lower,
+labels,no_label,#,lower,
+labels,no_label,No.,lower,
+labels,no_label,Num.,lower,

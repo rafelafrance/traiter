@@ -58,6 +58,3 @@ You can run the tests like so:
 cd /my/path/to/traiter
 python -m unittest discover
 ```
-
-## Other sources of data
-- (Optional) We use the Integrated Taxonomic Information System (ITIS) for gathering some taxonomic information like species, genus, or common names. We do not store this database in GitHub. If you want to use it you may download the SQLite version of [ITIS here](https://www.itis.gov/downloads/index.html) and extract it into the `./data` directory.

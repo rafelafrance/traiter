@@ -1,16 +1,16 @@
-label,pattern,attr,replace
-life_stage,immature,lower,immature
-life_stage,immatures,lower,immature
-life_stage,imm.,lower,immature
-life_stage,n,lower,nymph
-life_stage,nymph,lower,nymph
-life_stage,nymphs,lower,nymph
-sex,♀,lower,female
-sex,♀♀,lower,female
-sex,♂,lower,male
-sex,♂♂,lower,male
-sex,both sexes,lower,
-sex,female,lower,female
-sex,females,lower,female
-sex,male,lower,male
-sex,males,lower,male
+term_set,label,pattern,attr,replace
+animals,life_stage,immature,lower,immature
+animals,life_stage,immatures,lower,immature
+animals,life_stage,imm.,lower,immature
+animals,life_stage,n,lower,nymph
+animals,life_stage,nymph,lower,nymph
+animals,life_stage,nymphs,lower,nymph
+animals,sex,♀,lower,female
+animals,sex,♀♀,lower,female
+animals,sex,♂,lower,male
+animals,sex,♂♂,lower,male
+animals,sex,both sexes,lower,
+animals,sex,female,lower,female
+animals,sex,females,lower,female
+animals,sex,male,lower,male
+animals,sex,males,lower,male

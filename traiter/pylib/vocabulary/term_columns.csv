@@ -1,6 +1,0 @@
-term_set,extra,rename
-colors,extra1,remove
-taxon_ranks,extra1,rank_id
-us_locations,extra1,inside
-us_locations,extra2,postal
-units,extra1,factor

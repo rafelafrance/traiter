@@ -6,7 +6,7 @@ from traiter.pylib.util import shorten
 # Singleton for testing
 PIPELINE = PipelineBuilder()
 PIPELINE.add_tokenizer_pipe()
-PIPELINE.add_term_patterns(terms.COLOR_TERMS.terms)
+PIPELINE.add_term_patterns(terms.COLOR_TERMS)
 PIPELINE.add_color_patterns()
 # PIPELINE.add_debug_tokens_pipe()  # #########################################
 

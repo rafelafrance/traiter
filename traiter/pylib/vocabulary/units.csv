@@ -1,52 +1,52 @@
-label,pattern,attr,replace
-imperial_length,feet,lower,ft
-imperial_length,foot,lower,ft
-imperial_length,ft,lower,ft
-imperial_length,ft.,lower,ft
-imperial_length,in,lower,in
-imperial_length,in .,lower,in
-imperial_length,in.,lower,in
-imperial_length,inch,lower,in
-imperial_length,inches,lower,in
-imperial_length,mi,lower,mi
-imperial_length,mi .,lower,mi
-imperial_length,mi.,lower,mi
-imperial_length,mile,lower,mi
-imperial_length,miles,lower,mi
-imperial_mass,ounce,lower,oz
-imperial_mass,ounces,lower,oz
-imperial_mass,oz,lower,oz
-imperial_mass,ozs,lower,oz
-imperial_mass,pound,lower,lbs
-imperial_mass,pounds,lower,lbs
-metric_length,centimeters,lower,cm
-metric_length,cm,lower,cm
-metric_length,cm .,lower,cm
-metric_length,cm.,lower,cm
-metric_length,decimeters,lower,dm
-metric_length,dm,lower,dm
-metric_length,dm .,lower,dm
-metric_length,dm.,lower,dm
-metric_length,kilometer,lower,km
-metric_length,kilometers,lower,km
-metric_length,km,lower,km
-metric_length,km .,lower,km
-metric_length,km.,lower,km
-metric_length,m,lower,m
-metric_length,m .,lower,m
-metric_length,m.,lower,m
-metric_length,meter,lower,m
-metric_length,meters,lower,m
-metric_length,metre,lower,m
-metric_length,metres,lower,m
-metric_length,millimeters,lower,mm
-metric_length,mm,lower,mm
-metric_length,mm .,lower,mm
-metric_length,mm.,lower,mm
-metric_length,µm,lower,µm
-metric_mass,g,lower,g
-metric_mass,gm,lower,g
-metric_mass,gms,lower,g
-metric_mass,grams,lower,g
-metric_mass,kg,lower,kg
-metric_mass,kilograms,lower,kg
+term_set,label,pattern,attr,replace,factor
+units,imperial_length,feet,lower,ft,30.48
+units,imperial_length,foot,lower,ft,30.48
+units,imperial_length,ft,lower,ft,30.48
+units,imperial_length,ft.,lower,ft,30.48
+units,imperial_length,in,lower,in,2.54
+units,imperial_length,in .,lower,in,2.54
+units,imperial_length,in.,lower,in,2.54
+units,imperial_length,inch,lower,in,2.54
+units,imperial_length,inches,lower,in,2.54
+units,imperial_length,mi,lower,mi,160934.4
+units,imperial_length,mi .,lower,mi,160934.4
+units,imperial_length,mi.,lower,mi,160934.4
+units,imperial_length,mile,lower,mi,160934.4
+units,imperial_length,miles,lower,mi,160934.4
+units,imperial_mass,ounce,lower,oz,28.34952
+units,imperial_mass,ounces,lower,oz,28.34952
+units,imperial_mass,oz,lower,oz,28.34952
+units,imperial_mass,ozs,lower,oz,28.34952
+units,imperial_mass,pound,lower,lbs,453.5924
+units,imperial_mass,pounds,lower,lbs,453.5924
+units,metric_length,centimeters,lower,cm,1.0
+units,metric_length,cm,lower,cm,1.0
+units,metric_length,cm .,lower,cm,1.0
+units,metric_length,cm.,lower,cm,1.0
+units,metric_length,decimeters,lower,dm,10.0
+units,metric_length,dm,lower,dm,10.0
+units,metric_length,dm .,lower,dm,10.0
+units,metric_length,dm.,lower,dm,10.0
+units,metric_length,kilometer,lower,km,100000.0
+units,metric_length,kilometers,lower,km,100000.0
+units,metric_length,km,lower,km,100000.0
+units,metric_length,km .,lower,km,100000.0
+units,metric_length,km.,lower,km,100000.0
+units,metric_length,m,lower,m,100.0
+units,metric_length,m .,lower,m,100.0
+units,metric_length,m.,lower,m,100.0
+units,metric_length,meter,lower,m,100.0
+units,metric_length,meters,lower,m,100.0
+units,metric_length,metre,lower,m,100.0
+units,metric_length,metres,lower,m,100.0
+units,metric_length,millimeters,lower,mm,0.1
+units,metric_length,mm,lower,mm,0.1
+units,metric_length,mm .,lower,mm,0.1
+units,metric_length,mm.,lower,mm,0.1
+units,metric_length,µm,lower,µm,0.0001
+units,metric_mass,g,lower,g,1.0
+units,metric_mass,gm,lower,g,1.0
+units,metric_mass,gms,lower,g,1.0
+units,metric_mass,grams,lower,g,1.0
+units,metric_mass,kg,lower,kg,1000.0
+units,metric_mass,kilograms,lower,kg,1000.0
