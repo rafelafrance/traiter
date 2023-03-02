@@ -1,7 +1,6 @@
 from .. import term_reader
 
 COLOR_TERMS = term_reader.shared("colors")
-COLOR_TERMS += term_reader.hyphenate(COLOR_TERMS)
 COLOR_REPLACE = term_reader.pattern_dict(COLOR_TERMS, "replace")
 COLOR_REMOVE = term_reader.pattern_dict(COLOR_TERMS, "remove")
 
