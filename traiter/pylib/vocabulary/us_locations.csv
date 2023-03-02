@@ -1186,6 +1186,7 @@ us_county,nye,lower,,NV,
 us_county,o'brien,lower,,IA,
 us_county,oakland,lower,,MI,
 us_county,obion,lower,,TN,
+us_county,obrien,lower,,IA,
 us_county,ocean,lower,,NJ,
 us_county,oceana,lower,,MI,
 us_county,ochiltree,lower,,TX,
@@ -1327,6 +1328,7 @@ us_county,price,lower,,WI,
 us_county,prince edward,lower,,VA,
 us_county,prince george,lower,,VA,
 us_county,prince george's,lower,,MD,
+us_county,prince georges,lower,,MD,
 us_county,prince of wales-hyder,lower,,AK,
 us_county,prince william,lower,,VA,
 us_county,providence,lower,,RI,
@@ -1337,6 +1339,7 @@ us_county,pushmataha,lower,,OK,
 us_county,putnam,lower,,FL GA IL IN MO NY OH TN WV,
 us_county,quay,lower,,NM,
 us_county,queen anne's,lower,,MD,
+us_county,queen annes,lower,,MD,
 us_county,queens,lower,,NY,
 us_county,quitman,lower,,GA MS,
 us_county,rabun,lower,,GA,
@@ -1521,6 +1524,7 @@ us_county,spencer,lower,,IN KY,
 us_county,spink,lower,,SD,
 us_county,spokane,lower,,WA,
 us_county,spotsylvania,lower,,VA,
+us_county,st marys,lower,,MD,
 us_county,st. bernard,lower,,LA,
 us_county,st. charles,lower,,LA MO,
 us_county,st. clair,lower,,AL IL MI MO,
@@ -1540,6 +1544,7 @@ us_county,st. lucie,lower,,FL,
 us_county,st. martin,lower,,LA,
 us_county,st. mary,lower,,LA,
 us_county,st. mary's,lower,,MD,
+us_county,st. marys,lower,,MD,
 us_county,st. tammany,lower,,LA,
 us_county,stafford,lower,,KS VA,
 us_county,stanislaus,lower,,CA,
@@ -1829,9 +1834,11 @@ us_state,AR,text,Arkansas,,AR
 us_state,ar.t.,lower,Arkansas,,AR
 us_state,ariz.,lower,Arizona,,AZ
 us_state,arizona,lower,Arizona,,AZ
+us_state,ark,lower,Arkansas,,AR
 us_state,ark.,lower,Arkansas,,AR
 us_state,c.f.,lower,California,,CA
 us_state,c.l.,lower,Colorado,,CO
+us_state,CA,text,California,,CA
 us_state,cal.,lower,California,,CA
 us_state,calif.,lower,California,,CA
 us_state,california,lower,California,,CA
@@ -1844,6 +1851,7 @@ us_state,CT,text,Connecticut,,CT
 us_state,d.c.,lower,District of Columbia,,DC
 us_state,d.l.,lower,Delaware,,DE
 us_state,DC,text,District of Columbia,,DC
+us_state,DE,text,Delaware,,DE
 us_state,del.,lower,Delaware,,DE
 us_state,district of columbia,lower,District of Columbia,,DC
 us_state,FL,text,Florida,,FL
@@ -1908,11 +1916,11 @@ us_state,MT,text,Montana,,MT
 us_state,n. car.,lower,North Carolina,,NC
 us_state,n. dak.,lower,North Dakota,,ND
 us_state,n. j.,lower,New Jersey,,NJ
+us_state,n. jersey,lower,New Jersey,,NJ
 us_state,n. mex.,lower,New Mexico,,NM
 us_state,n. y.,lower,New York,,NY
 us_state,n. york,lower,New York,,NY
 us_state,n.b.,lower,Nebraska,,NE
-us_state,n. jersey,lower,New Jersey,,NJ
 us_state,NC,text,North Carolina,,NC
 us_state,ND,text,North Dakota,,ND
 us_state,NE,text,Nebraska,,NE
@@ -1940,6 +1948,7 @@ us_state,ore.,lower,Oregon,,OR
 us_state,oreg.,lower,Oregon,,OR
 us_state,p.p.,lower,Rhode Island,,RI
 us_state,PA,text,Pennsylvania,,PA
+us_state,pa.,lower,Pennsylvania,,PA
 us_state,penn.,lower,Pennsylvania,,PA
 us_state,penna.,lower,Pennsylvania,,PA
 us_state,pennsylvania,lower,Pennsylvania,,PA
@@ -1980,9 +1989,6 @@ us_state,wisconsin,lower,Wisconsin,,WI
 us_state,WV,text,West Virginia,,WV
 us_state,WY,text,Wyoming,,WY
 us_state,wyo.,lower,Wyoming,,WY
-us_state,CA,text,California,,CA
-us_state,DE,text,Delaware,,DE
-us_state-us_county,oregon,lower,Oregon,MO,OR
 us_state-us_county,arkansas,lower,Arkansas,AR,AR
 us_state-us_county,colorado,lower,Colorado,TX,CO
 us_state-us_county,delaware,lower,Delaware,IN IA NY OH OK PA,DE
@@ -1995,11 +2001,11 @@ us_state-us_county,nevada,lower,Nevada,AR CA,NV
 us_state-us_county,new york,lower,New York,NY,NY
 us_state-us_county,ohio,lower,Ohio,IN KY WV,OH
 us_state-us_county,oklahoma,lower,Oklahoma,OK,OK
+us_state-us_county,oregon,lower,Oregon,MO,OR
 us_state-us_county,texas,lower,Texas,MO OK,TX
 us_state-us_county,utah,lower,Utah,UT,UT
 us_state-us_county,washington,lower,Washington,AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI,WA
 us_state-us_county,wyoming,lower,Wyoming,NY PA WV,WY
-us_territory,VI,text,Virgin Islands,,VI
 us_territory,american samoa,lower,American Samoa,,AS
 us_territory,AS,text,American Samoa,,AS
 us_territory,asm,lower,American Samoa,,AS
@@ -2022,11 +2028,5 @@ us_territory,u.s.v.i.,lower,U.S. Virgin Islands,,VI
 us_territory,UM,text,U.S. Minor Outlying Islands,,UM
 us_territory,v.i.,lower,U.S. Virgin Islands,,VI
 us_territory,v.i.r.,lower,U.S. Virgin Islands,,VI
+us_territory,VI,text,Virgin Islands,,VI
 us_territory,virgin islands,lower,U.S. Virgin Islands,,VI
-us_state,ark,lower,Arkansas,,AR
-us_county,prince georges,lower,,MD,
-us_county,queen annes,lower,,MD,
-us_county,st. marys,lower,,MD,
-us_county,st marys,lower,,MD,
-us_county,obrien,lower,,IA,
-us_state,pa.,lower,Pennsylvania,,PA
