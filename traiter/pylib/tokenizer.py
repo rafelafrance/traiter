@@ -1,4 +1,5 @@
 import string
+from typing import Callable
 
 import regex as re
 from spacy.util import registry
@@ -9,26 +10,27 @@ ABBREVS = """
     Jan. Feb. Febr. Mar. Apr. Jun. Jul. Aug. Sep. Sept. Oct. Nov. Dec.
     Var. Sect. Subsect. Ser. Subser. Subsp. Spec. Sp. Spp.
     var. sect. subsect. ser. subser. subsp. spec. sp. spp. nov.
-    Acad. Af. Agri. Amer. Ann. Arb. Arch. Arq. adj. al. alt. ann.
-    Bol. Bot. Bras. Bull. bot. bras.
-    Cat. Ci. Coll. Columb. Com. Contr. Cur. c. ca. cent. centr. cf. cit. coll. com.
-    DC. Dept. Diam. Distr. depto. diam. distr. dtto.
-    Encycl. Encyle. Est. Exot. e. ed. eg. e.g. ememd. ent. est.
-    FIG. Fig. Figs. Fl. fig. figs. fl. flor. flumin. frag.
-    Gard. Gen. Geo. g. gard. geograph.
-    Herb. Hist. Hort. hb. hist.
-    Ind. Is. illeg. infra. is.
+    Acad. adj. Af. Agri. al. alt. Amer. Ann. ann. Arb. Arch. Arq.
+    Bol. Bot. bot. Bras. bras. Bull.
+    c. ca. Cat. cent. centr. cf. Ci. cit. Coll. coll. Columb. Com. com. Contr. Cur.
+    DC. Dept. depto. Diam. diam. Distr. distr. dtto.
+    e. e.g. ed. eg. ememd. Encycl. Encyle. ent. Est. est. Exot.
+    FIG. Fig. fig. Figs. figs. Fl. fl. flor. flumin. frag.
+    g. Gard. gard. Gen. Geo. geograph.
+    hb. Herb. Hist. hist. Hort.
+    illeg. Ind. infra. Is. is.
     Jahrb. Jard. Jr. jug.
-    Lab. Lam. Leg. Legum. Linn. lam. lat. leg. lin. loc. long.
-    Mag. Mem. Mim. Mex. Mts. Mun. Mus. Nac. mem. mens. monac. mont. mun.
-    Nat. Natl. Neg. No. nat. no. nom. nud.
+    Lab. Lam. lam. lat. Leg. leg. Legum. lin. Linn. loc. long.
+    Mag. Mem. mem. mens. Mex. Mim.
+    monac. mont. Mts. Mun. mun. Mus.
+    Nac. Nat. nat. Natl. Neg. No. no. nom. nud.
     Ocas.
-    PI. PL. Pl. Proc. Prodr. Prov. Pt. Pto. Publ. p. photo. pi. pl. pr. prov.
-    Rev. reg. revis.
-    ST. Sa. Sci. Soc. Sr. St. Sta. Sto. Sul. Suppl. Syst.
-    s. sci. stat. stk. str. superfl. suppl. surv. syn.
-    Tex. Trans t. tab. telegr.
-    U.S. US. Univ.
+    p. photo. PI. pi. PL. Pl. pl. pr. Proc. Prodr. Prov. prov. Pt. Pto. Publ.
+    reg. Rev. revis.
+    s. Sa. Sci. sci. Ser. Soc. Spec. Spp. spp. Sr. ST. St. Sta. stat. stk. Sto. str.
+    Sul. superfl. Suppl. suppl. surv. syn. Syst.
+    t. tab. telegr. Tex. Trans Trans.
+    U.S. Univ. US.
     Veg. veg.
     Wm.
     I. II. III. IV. IX. V. VI. VII. VIII. X. XI. XII. XIII. XIV. XIX. XV. XVI. XVII.
@@ -38,7 +40,7 @@ ABBREVS = """
     """.split()
 ABBREVS += [f"{c}." for c in string.ascii_uppercase]
 
-TOKENIZER = "mimosa.custom_tokenizer.v1"
+TOKENIZER = "traiter.custom_tokenizer.v1"
 
 
 def setup_tokenizer(nlp):
@@ -50,8 +52,10 @@ def setup_tokenizer(nlp):
 
 
 @registry.callbacks(TOKENIZER)
-def make_customized_tokenizer():
+def make_customized_tokenizer(tokenizer_setup: Callable = None):
+    tokenizer_setup = tokenizer_setup if tokenizer_setup else setup_tokenizer
+
     def customized_tokenizer(nlp):
-        setup_tokenizer(nlp)
+        tokenizer_setup(nlp)
 
     return customized_tokenizer
