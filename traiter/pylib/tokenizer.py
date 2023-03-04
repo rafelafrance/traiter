@@ -7,7 +7,6 @@ from spacy.util import registry
 from traiter.pylib import tokenizer_util
 
 ABBREVS = """
-    Jan. Feb. Febr. Mar. Apr. Jun. Jul. Aug. Sep. Sept. Oct. Nov. Dec.
     Var. Sect. Subsect. Ser. Subser. Subsp. Spec. Sp. Spp.
     var. sect. subsect. ser. subser. subsp. spec. sp. spp. nov.
     Acad. adj. Af. Agri. al. alt. Amer. Ann. ann. Arb. Arch. Arq.
