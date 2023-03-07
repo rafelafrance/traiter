@@ -10,8 +10,9 @@ from .pipes.term_pipe import TERM_PIPE
 
 
 class PipelineBuilder:
-    def __init__(self, trained_pipeline="en_core_web_sm"):
-        self.nlp = spacy.load(trained_pipeline, exclude=["ner"])
+    def __init__(self, trained_pipeline="en_core_web_sm", exclude=None):
+        exclude = exclude if exclude is not None else []
+        self.nlp = spacy.load(trained_pipeline, exclude=exclude)
 
     def __call__(self, text):
         return self.nlp(text)
@@ -19,14 +20,15 @@ class PipelineBuilder:
     def add_tokenizer_pipe(self):
         tokenizer.setup_tokenizer(self.nlp)
 
-    def add_term_patterns(self, terms, replace=None):
+    def add_term_patterns(self, terms, replace=None, merge=True):
         replace = replace if replace else {}
         self.nlp.add_pipe(
             TERM_PIPE,
             before="parser",
             config={"terms": terms, "replace": replace},
         )
-        self.nlp.add_pipe("merge_entities", name="merge_terms")
+        if merge:
+            self.nlp.add_pipe("merge_entities", name="merge_terms")
 
     def add_color_patterns(self):
         self.nlp.add_pipe(
