@@ -4,7 +4,7 @@ from traiter.pylib.pipeline_builder import PipelineBuilder
 from traiter.pylib.util import shorten
 
 # Singleton for testing
-PIPELINE = PipelineBuilder()
+PIPELINE = PipelineBuilder(exclude="ner")
 PIPELINE.add_tokenizer_pipe()
 PIPELINE.add_term_patterns(terms.COLOR_TERMS)
 PIPELINE.add_color_patterns()

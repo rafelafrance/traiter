@@ -12,6 +12,7 @@ from .pipes.term_pipe import TERM_PIPE
 class PipelineBuilder:
     def __init__(self, trained_pipeline="en_core_web_sm", exclude=None):
         exclude = exclude if exclude is not None else []
+        exclude = exclude if isinstance(exclude, list) else [exclude]
         self.nlp = spacy.load(trained_pipeline, exclude=exclude)
 
     def __call__(self, text):
