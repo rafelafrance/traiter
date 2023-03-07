@@ -5,6 +5,7 @@ from .pattern_compilers import matcher_compiler
 from .patterns import color_patterns
 from .pipes import debug_pipes
 from .pipes.add_traits_pipe import ADD_TRAITS
+from .pipes.delete_traits_pipe import DELETE_TRAITS
 from .pipes.merge_traits import MERGE_TRAITS
 from .pipes.term_pipe import TERM_PIPE
 
@@ -14,6 +15,7 @@ class PipelineBuilder:
         exclude = exclude if exclude is not None else []
         exclude = exclude if isinstance(exclude, list) else [exclude]
         self.nlp = spacy.load(trained_pipeline, exclude=exclude)
+        self.spacy_ent_labels = self.nlp.meta["labels"].get("ner", [])
 
     def __call__(self, text):
         return self.nlp(text)
@@ -30,6 +32,12 @@ class PipelineBuilder:
         )
         if merge:
             self.nlp.add_pipe("merge_entities", name="merge_terms")
+
+    def remove_spacy_ents(self, keep):
+        keep = keep.split() if isinstance(keep, str) else keep
+        keep = [k.upper() for k in keep]
+        labels = [lb for lb in self.spacy_ent_labels if lb not in keep]
+        self.nlp.add_pipe(DELETE_TRAITS, name="delete_spacy", config={"delete": labels})
 
     def add_color_patterns(self):
         self.nlp.add_pipe(
