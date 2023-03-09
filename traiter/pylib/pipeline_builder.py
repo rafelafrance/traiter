@@ -3,6 +3,7 @@ import spacy
 from . import tokenizer
 from .pattern_compilers import matcher_compiler
 from .patterns import color_patterns
+from .patterns import habitat_patterns
 from .pipes import debug_pipes
 from .pipes.add_traits_pipe import ADD_TRAITS
 from .pipes.delete_traits_pipe import DELETE_TRAITS
@@ -45,6 +46,16 @@ class PipelineBuilder:
             name="color_patterns",
             config={"patterns": matcher_compiler.as_dicts([color_patterns.COLOR])},
         )
+
+    def add_habitat_patterns(self):
+        self.nlp.add_pipe(
+            ADD_TRAITS,
+            name="habitat_patterns",
+            config={"patterns": matcher_compiler.as_dicts([habitat_patterns.HABITAT])},
+        )
+
+    def add_delete_traits_patterns(self, traits, name=DELETE_TRAITS):
+        self.nlp.add_pipe(DELETE_TRAITS, name=name, config={"delete": traits})
 
     def add_merge_pipe(self):
         self.nlp.add_pipe(MERGE_TRAITS)

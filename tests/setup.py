@@ -6,9 +6,11 @@ from traiter.pylib.util import shorten
 # Singleton for testing
 PIPELINE = PipelineBuilder(exclude="ner")
 PIPELINE.add_tokenizer_pipe()
-PIPELINE.add_term_patterns(terms.COLOR_TERMS)
+PIPELINE.add_term_patterns(terms.COLOR_TERMS + terms.HABITAT_TERMS)
 PIPELINE.add_color_patterns()
 # PIPELINE.add_debug_tokens_pipe()  # #########################################
+PIPELINE.add_habitat_patterns()
+PIPELINE.add_delete_traits_patterns(terms.PARTIAL_TRAITS)
 
 
 SENT_NLP = sentence_pipeline.pipeline()  # Singleton for testing
