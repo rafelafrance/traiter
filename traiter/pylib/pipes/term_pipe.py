@@ -24,7 +24,6 @@ class TermPipe:
         name: str,
         terms: list[dict],
         replace: Optional[dict[str, str]] = None,
-        overwrite: bool = False,
     ):
         pipe_util.add_extensions()
 
@@ -37,7 +36,6 @@ class TermPipe:
                 terms=term_list,
                 attr=attr,
                 replace=replace,
-                overwrite=overwrite,
             )
             self.pipes.append(pipe)
 
@@ -56,11 +54,9 @@ class PhrasePipe:
         terms: list[dict],
         attr: str = "lower",
         replace: Optional[dict[str, str]] = None,
-        overwrite: bool = False,
     ):
         self.nlp = nlp
         self.name = name
-        self.overwrite = overwrite
         self.replace = replace if replace else {}
 
         self.matcher = PhraseMatcher(self.nlp.vocab, attr=attr.upper())
