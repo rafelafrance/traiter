@@ -23,12 +23,12 @@ class PipelineBuilder:
     def add_tokenizer_pipe(self):
         tokenizer.setup_tokenizer(self.nlp)
 
-    def add_term_patterns(self, terms, replace=None, merge=True):
+    def add_term_patterns(self, terms, replace=None, merge=True, overwrite=False):
         replace = replace if replace else {}
         self.nlp.add_pipe(
             TERM_PIPE,
             before="parser",
-            config={"terms": terms, "replace": replace},
+            config={"terms": terms, "replace": replace, "overwrite": overwrite},
         )
         if merge:
             self.nlp.add_pipe("merge_entities", name="merge_terms")

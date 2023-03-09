@@ -49,3 +49,12 @@ def drop(terms: list[dict], drops: str | list[str], field: str = "label") -> lis
     """
     drops = drops.split() if isinstance(drops, str) else drops
     return [t for t in terms if t[field] not in drops]
+
+
+def take(terms: list[dict], takes: str | list[str], field: str = "label") -> list[dict]:
+    """Take terms from the traits.
+
+    Sometimes you don't need the entire term_set.
+    """
+    takes = takes.split() if isinstance(takes, str) else takes
+    return [t for t in terms if t[field] in takes]

@@ -24,13 +24,21 @@ class TermPipe:
         name: str,
         terms: list[dict],
         replace: Optional[dict[str, str]] = None,
+        overwrite: bool = False,
     ):
         pipe_util.add_extensions()
 
         self.pipes = []
         for attr, term_list in split_by_attr(terms).items():
             new_name = f"{name}_{attr}"
-            pipe = PhrasePipe(nlp, new_name, term_list, attr, replace)
+            pipe = PhrasePipe(
+                nlp=nlp,
+                name=new_name,
+                terms=term_list,
+                attr=attr,
+                replace=replace,
+                overwrite=overwrite,
+            )
             self.pipes.append(pipe)
 
     def __call__(self, doc: Doc) -> Doc:
