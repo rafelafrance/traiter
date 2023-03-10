@@ -34,6 +34,7 @@ INFIXES = [
     r"""[\\\[\]()/:;’'“”'+±_]""",  # Break on these characters
     rf"(?<=[0-9])\.?(?=[{ALPHA}])",  # 1.word or 1N
     rf"(?<=[{ALPHA}]),(?=[0-9])",  # word,digits
+    rf"""(?<=[0-9])"(?=[{ALPHA}]\b)""",  # 1"N
 ]
 
 
