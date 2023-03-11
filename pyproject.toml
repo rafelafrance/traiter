@@ -13,7 +13,9 @@ dependencies = [
     "ftfy",
     "regex",
     "inflect",
+    "pandas",
     "spacy",
+    "tqdm",
 ]
 optional-dependencies.dev = [
     "autopep8",

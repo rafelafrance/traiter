@@ -6,6 +6,7 @@ In an effort to make patterns more readable I've created simple compilers that t
 hopefully, readable strings and convert them to spacy patterns using a dictionary and
 some simple rules.
 """
+import re
 from copy import deepcopy
 from typing import Callable
 from typing import Optional
@@ -25,8 +26,6 @@ RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
 
 
 class MatcherCompiler:
-    """Pattern object for rule-based matchers."""
-
     def __init__(
         self,
         label: str,
@@ -69,6 +68,11 @@ class MatcherCompiler:
                 if not token and op in "?*+!":
                     token = deepcopy(decoder.get(key[:-1]))
                     token["OP"] = op
+                elif not token and op == "}":
+                    if match := re.search(r"{[\d,]+}$", key):
+                        op = match.group()
+                        token = deepcopy(decoder.get(key[: match.start()]))
+                        token["OP"] = op
 
                 if token:
                     pattern_seq.append(token)
