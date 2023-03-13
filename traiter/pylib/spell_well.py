@@ -8,7 +8,7 @@ import sqlite3
 
 import regex as re
 
-from .const import DATA_DIR
+from .const import VOCAB_DIR
 
 
 class SpellWell:
@@ -16,7 +16,7 @@ class SpellWell:
         self.min_len = min_len
         self.min_freq = min_freq
         self.vocab_freq = vocab_freq
-        self.vocab_db = vocab_db if vocab_db else DATA_DIR / "spell_well.sqlite"
+        self.vocab_db = vocab_db if vocab_db else VOCAB_DIR / "spell_well.sqlite"
         self.cxn = sqlite3.connect(":memory:")
         self.db_to_memory()
 
