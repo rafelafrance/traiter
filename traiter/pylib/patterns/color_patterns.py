@@ -6,13 +6,15 @@ from . import common_patterns
 from .. import actions
 from .. import const
 from ..pattern_compilers.matcher_compiler import MatcherCompiler
-from .term_patterns import COLOR_REMOVE
-from .term_patterns import COLOR_REPLACE
+from ..term_list import TermList
 
-MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
-MULTIPLE_DASHES = rf'\s*[{"".join(MULTIPLE_DASHES)}]{{2,}}\s*'
+_MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
+_MULTIPLE_DASHES = rf'\s*[{"".join(_MULTIPLE_DASHES)}]{{2,}}\s*'
 
-SKIP = const.DASH + common_patterns.MISSING
+_SKIP = const.DASH + common_patterns.MISSING
+
+COLOR_TERMS = TermList.shared("colors")
+_COLOR_REMOVE = COLOR_TERMS.pattern_dict("remove")
 
 COLOR = MatcherCompiler(
     "color",
@@ -34,10 +36,10 @@ COLOR = MatcherCompiler(
 def on_color_match(ent):
     parts = []
     for token in ent:
-        replace = COLOR_REPLACE.get(token.lower_, token.lower_)
-        if replace in SKIP:
+        replace = COLOR_TERMS.replace.get(token.lower_, token.lower_)
+        if replace in _SKIP:
             continue
-        if COLOR_REMOVE.get(token.lower_):
+        if _COLOR_REMOVE.get(token.lower_):
             continue
         if token.pos_ in ["AUX"]:
             continue
@@ -46,11 +48,10 @@ def on_color_match(ent):
         parts.append(replace)
 
     if not parts:
-        ent._.delete = True
         raise actions.RejectMatch()
 
     value = "-".join(parts)
-    value = re.sub(MULTIPLE_DASHES, r"-", value)
-    ent._.data["color"] = COLOR_REPLACE.get(value, value)
+    value = re.sub(_MULTIPLE_DASHES, r"-", value)
+    ent._.data["color"] = COLOR_TERMS.replace.get(value, value)
     if any(t for t in ent if t.lower_ in common_patterns.MISSING):
         ent._.data["missing"] = True

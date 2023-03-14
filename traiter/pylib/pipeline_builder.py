@@ -4,6 +4,7 @@ from . import tokenizer
 from .pattern_compilers import matcher_compiler
 from .patterns import color_patterns
 from .patterns import habitat_patterns
+from .patterns import lat_long_patterns
 from .pipes import debug_pipes
 from .pipes.add_traits_pipe import ADD_TRAITS
 from .pipes.delete_traits_pipe import DELETE_TRAITS
@@ -30,7 +31,7 @@ class PipelineBuilder:
             TERM_PIPE,
             before="parser",
             **kwargs,
-            config={"terms": terms, "replace": replace},
+            config={"terms": terms.data, "replace": replace},
         )
         if merge:
             self.nlp.add_pipe("merge_entities", name="merge_terms", after=TERM_PIPE)
@@ -52,6 +53,16 @@ class PipelineBuilder:
             name="color_patterns",
             **kwargs,
             config={"patterns": matcher_compiler.as_dicts([color_patterns.COLOR])},
+        )
+
+    def add_lat_long_patterns(self, **kwargs):
+        self.nlp.add_pipe(
+            ADD_TRAITS,
+            name="lat_long_patterns",
+            **kwargs,
+            config={
+                "patterns": matcher_compiler.as_dicts([lat_long_patterns.LAT_LONG])
+            },
         )
 
     def add_habitat_patterns(self, **kwargs):
