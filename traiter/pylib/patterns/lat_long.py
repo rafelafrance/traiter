@@ -2,19 +2,19 @@ import re
 
 from spacy.util import registry
 
-from . import common_patterns
+from . import common
 from ..term_list import TermList
-from traiter.pylib.pattern_compilers.matcher_compiler import MatcherCompiler
+from traiter.pylib.pattern_compilers.matcher import Compiler
 
 _SYMBOLS = r"""°"”“'`‘´’"""
 _PUNCT = f"""{_SYMBOLS},;._"""
 
-LAT_LONG_TERMS = TermList.shared("lat_long")
+TERMS = TermList.shared("lat_long")
 
-LAT_LONG = MatcherCompiler(
+LAT_LONG = Compiler(
     "lat_long",
     on_match="digi_leap_lat_long_v1",
-    decoder=common_patterns.COMMON_PATTERNS
+    decoder=common.PATTERNS
     | {
         "label": {"ENT_TYPE": "lat_long_label"},
         "deg": {"LOWER": {"REGEX": rf"""^([{_SYMBOLS}]|degrees?|deg\.?)$"""}},
@@ -44,7 +44,7 @@ def on_lat_long_match(ent):
         if token.ent_type_ == "lat_long_label":
             continue
         if token.ent_type_ == "datum":
-            ent._.data["datum"] = LAT_LONG_TERMS.replace.get(token.lower_, token.text)
+            ent._.data["datum"] = TERMS.replace.get(token.lower_, token.text)
         else:
             parts.append(token.text.upper())
 

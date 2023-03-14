@@ -7,7 +7,7 @@ from typing import Optional
 
 from spacy.language import Language
 
-from .pipe_util import add_extensions
+from .extensions import add_extensions
 
 SIMPLE_TRAITS = "traiter_simple_traits_v2"
 

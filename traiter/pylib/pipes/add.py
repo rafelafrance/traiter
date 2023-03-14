@@ -7,7 +7,7 @@ from spacy.matcher import Matcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
-from . import pipe_util
+from . import extensions
 from ..actions import RejectMatch
 
 ADD_TRAITS = "traiter_add_traits_v1"
@@ -24,7 +24,7 @@ class AddTraits:
         patterns: list[dict],
         keep: Optional[list[str]] = None,  # Don't overwrite these entities
     ):
-        pipe_util.add_extensions()
+        extensions.add()
 
         self.nlp = nlp
         self.name = name

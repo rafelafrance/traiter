@@ -8,7 +8,7 @@ MISSING = """
     no without missing lack lacking except excepting not rarely obsolete
     """.split()
 
-COMMON_PATTERNS = {
+PATTERNS = {
     "any": {},
     "(": {"TEXT": {"IN": t_const.OPEN}},
     ")": {"TEXT": {"IN": t_const.CLOSE}},

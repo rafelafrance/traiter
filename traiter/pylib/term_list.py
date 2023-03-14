@@ -43,10 +43,7 @@ class TermList(UserList):
 
     @classmethod
     def split(cls, terms, takes: str | list[str], field: str = "label"):
-        """Take terms from the traits.
-
-        Sometimes you don't need the entire term_set.
-        """
+        """Take terms from another trait list."""
         takes = takes.split() if isinstance(takes, str) else takes
         splits = [t for t in terms if t[field] in takes]
         return cls(splits)

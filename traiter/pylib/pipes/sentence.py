@@ -8,11 +8,11 @@ from .. import const
 
 SENTENCE = "traiter_sentence_v1"
 
-EOS = """ . ? ! … """.split()  # End Of Sentence
-PREV_EOS = const.CLOSE + EOS
+_EOS = """ . ? ! … """.split()  # End Of Sentence
+_PREV_EOS = const.CLOSE + _EOS
 
-QUOTES = set(const.QUOTE)
-QUOTES.discard(",")
+_QUOTES = set(const.QUOTE)
+_QUOTES.discard(",")
 
 
 @Language.factory(SENTENCE)
@@ -41,7 +41,7 @@ class Sentence:
                 next_.is_sent_start = True
 
             # Quotes preceded by a period
-            elif token.text in QUOTES and prev and prev.text in EOS:
+            elif token.text in _QUOTES and prev and prev.text in _EOS:
                 next_.is_sent_start = True
 
             # Not a sentence break
@@ -61,5 +61,5 @@ class Sentence:
             token.prefix_.isupper()
             or token.prefix_.isdigit()
             or self.is_space(token)
-            or token.text in EOS
+            or token.text in _EOS
         )

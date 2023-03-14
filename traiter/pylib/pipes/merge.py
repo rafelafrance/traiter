@@ -7,7 +7,7 @@ from spacy.language import Language
 from spacy.pipeline.functions import merge_entities
 from spacy.tokens import Doc
 
-from . import pipe_util
+from . import extensions
 
 MERGE_TRAITS = "traiter_merge_traits_v1"
 
@@ -15,7 +15,7 @@ MERGE_TRAITS = "traiter_merge_traits_v1"
 @Language.factory(MERGE_TRAITS)
 class MergeTraits:
     def __init__(self, nlp: Language, name: str):
-        pipe_util.add_extensions()
+        extensions.add()
         super().__init__()
         self.nlp = nlp
         self.name = name

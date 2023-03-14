@@ -2,24 +2,24 @@ import re
 
 from spacy import registry
 
-from . import common_patterns
+from . import common
 from .. import actions
 from .. import const
-from ..pattern_compilers.matcher_compiler import MatcherCompiler
+from ..pattern_compilers.matcher import Compiler
 from ..term_list import TermList
 
 _MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
 _MULTIPLE_DASHES = rf'\s*[{"".join(_MULTIPLE_DASHES)}]{{2,}}\s*'
 
-_SKIP = const.DASH + common_patterns.MISSING
+_SKIP = const.DASH + common.MISSING
 
-COLOR_TERMS = TermList.shared("colors")
-_COLOR_REMOVE = COLOR_TERMS.pattern_dict("remove")
+TERMS = TermList.shared("colors")
+_REMOVE = TERMS.pattern_dict("remove")
 
-COLOR = MatcherCompiler(
+MATCHER = Compiler(
     "color",
     on_match="plant_color_v1",
-    decoder=common_patterns.COMMON_PATTERNS
+    decoder=common.PATTERNS
     | {
         "color_words": {"ENT_TYPE": {"IN": ["color", "color_mod"]}},
         "color": {"ENT_TYPE": "color"},
@@ -32,14 +32,14 @@ COLOR = MatcherCompiler(
 )
 
 
-@registry.misc(COLOR.on_match)
+@registry.misc(MATCHER.on_match)
 def on_color_match(ent):
     parts = []
     for token in ent:
-        replace = COLOR_TERMS.replace.get(token.lower_, token.lower_)
+        replace = TERMS.replace.get(token.lower_, token.lower_)
         if replace in _SKIP:
             continue
-        if _COLOR_REMOVE.get(token.lower_):
+        if _REMOVE.get(token.lower_):
             continue
         if token.pos_ in ["AUX"]:
             continue
@@ -52,6 +52,6 @@ def on_color_match(ent):
 
     value = "-".join(parts)
     value = re.sub(_MULTIPLE_DASHES, r"-", value)
-    ent._.data["color"] = COLOR_TERMS.replace.get(value, value)
-    if any(t for t in ent if t.lower_ in common_patterns.MISSING):
+    ent._.data["color"] = TERMS.replace.get(value, value)
+    if any(t for t in ent if t.lower_ in common.MISSING):
         ent._.data["missing"] = True

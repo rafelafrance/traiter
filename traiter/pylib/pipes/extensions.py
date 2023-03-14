@@ -2,8 +2,7 @@ from spacy.tokens import Span
 from spacy.tokens import Token
 
 
-def add_extensions():
-    """Add extensions for spans and tokens used by trait pipes."""
+def add():
     if not Span.has_extension("data"):
         Span.set_extension("data", default={})
         Token.set_extension("data", default={})

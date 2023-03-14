@@ -8,18 +8,24 @@ dictionary and some simple rules.
 """
 from collections import deque
 from typing import Any
+from typing import Callable
 from typing import Optional
+from typing import Union
 from warnings import warn
 
+from spacy.pipeline import EntityRuler
+from spacy.tokens.doc import Doc
+
 from ..util import as_list
-from .compilers import CompilerPatterns
-from .compilers import Decoder
-from .compilers import PatternArg
-from .compilers import SpacyPatterns
 
 REL_OP = " < > << >> . .* ; ;* $+ $- $++ $-- ".split()
 
 OnMatchWithArgs = dict[str, Any]
+RulerType = Union[EntityRuler, Callable[[Doc], Doc]]
+Decoder = dict[str, dict]
+SpacyPatterns = list[list[dict[str, Any]]]
+CompilerPatterns = list[str]
+PatternArg = Union[str, list[str], SpacyPatterns]
 
 
 class DependencyCompiler:

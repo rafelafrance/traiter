@@ -1,6 +1,6 @@
 from spacy.language import Language
 
-from .pipe_util import add_extensions
+from . import extensions
 
 DEBUG_TOKENS = "traiter_debug_tokens_v1"
 DEBUG_ENTITIES = "traiter_debug_entities_v1"
@@ -52,7 +52,7 @@ def msg(nlp, message="", **kwargs):
 @Language.factory(DEBUG_TOKENS, default_config={"message": ""})
 class DebugTokens:
     def __init__(self, nlp: Language, name: str, message: str = ""):
-        add_extensions()
+        extensions.add()
         self.nlp = nlp
         self.name = name
         self.message = message
@@ -74,7 +74,7 @@ class DebugTokens:
 @Language.factory(DEBUG_ENTITIES, default_config={"message": ""})
 class DebugEntities:
     def __init__(self, nlp: Language, name: str, message: str = ""):
-        add_extensions()
+        extensions.add()
         self.nlp = nlp
         self.name = name
         self.message = message
@@ -92,7 +92,7 @@ class DebugEntities:
 @Language.factory(DEBUG_MESSAGE, default_config={"message": ""})
 class DebugMessage:
     def __init__(self, nlp: Language, name: str, message: str = ""):
-        add_extensions()
+        extensions.add()
         self.nlp = nlp
         self.name = name
         self.message = message

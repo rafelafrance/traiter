@@ -1,15 +1,15 @@
 import spacy
 
 from . import tokenizer
-from .pattern_compilers import matcher_compiler
-from .patterns import color_patterns
-from .patterns import habitat_patterns
-from .patterns import lat_long_patterns
-from .pipes import debug_pipes
-from .pipes.add_traits_pipe import ADD_TRAITS
-from .pipes.delete_traits_pipe import DELETE_TRAITS
-from .pipes.merge_traits import MERGE_TRAITS
-from .pipes.term_pipe import TERM_PIPE
+from .pattern_compilers.matcher import Compiler
+from .patterns import color
+from .patterns import habitat
+from .patterns import lat_long
+from .pipes import debug
+from .pipes.add import ADD_TRAITS
+from .pipes.delete import DELETE_TRAITS
+from .pipes.merge import MERGE_TRAITS
+from .pipes.term import TERM_PIPE
 
 
 class PipelineBuilder:
@@ -22,10 +22,10 @@ class PipelineBuilder:
     def __call__(self, text):
         return self.nlp(text)
 
-    def add_tokenizer_pipe(self):
+    def tokenizer(self):
         tokenizer.setup_tokenizer(self.nlp)
 
-    def add_term_patterns(self, terms, replace=None, merge=True, **kwargs):
+    def terms(self, terms, replace=None, merge=True, **kwargs):
         replace = replace if replace else {}
         self.nlp.add_pipe(
             TERM_PIPE,
@@ -47,40 +47,38 @@ class PipelineBuilder:
             config={"delete": labels},
         )
 
-    def add_color_patterns(self, **kwargs):
+    def color(self, **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="color_patterns",
+            name="color",
             **kwargs,
-            config={"patterns": matcher_compiler.as_dicts([color_patterns.COLOR])},
+            config={"patterns": Compiler.as_dicts([color.MATCHER])},
         )
 
-    def add_lat_long_patterns(self, **kwargs):
+    def habitat(self, **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="lat_long_patterns",
+            name="habitat",
             **kwargs,
-            config={
-                "patterns": matcher_compiler.as_dicts([lat_long_patterns.LAT_LONG])
-            },
+            config={"patterns": Compiler.as_dicts([habitat.HABITAT])},
         )
 
-    def add_habitat_patterns(self, **kwargs):
+    def lat_long(self, **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="habitat_patterns",
+            name="lat_long",
             **kwargs,
-            config={"patterns": matcher_compiler.as_dicts([habitat_patterns.HABITAT])},
+            config={"patterns": Compiler.as_dicts([lat_long.LAT_LONG])},
         )
 
-    def add_delete_traits_patterns(self, traits, name=DELETE_TRAITS, **kwargs):
+    def delete_traits(self, traits, name=DELETE_TRAITS, **kwargs):
         self.nlp.add_pipe(DELETE_TRAITS, name=name, **kwargs, config={"delete": traits})
 
-    def add_merge_pipe(self, **kwargs):
+    def merge(self, **kwargs):
         self.nlp.add_pipe(MERGE_TRAITS, **kwargs)
 
     def add_debug_ents_pipe(self):
-        debug_pipes.ents(self.nlp)
+        debug.ents(self.nlp)
 
     def add_debug_tokens_pipe(self):
-        debug_pipes.tokens(self.nlp)
+        debug.tokens(self.nlp)

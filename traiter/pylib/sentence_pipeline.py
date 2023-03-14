@@ -1,7 +1,7 @@
 from spacy.lang.en import English
 
 from . import tokenizer
-from .pipes.sentence_pipe import SENTENCE
+from .pipes.sentence import SENTENCE
 
 
 def pipeline():
