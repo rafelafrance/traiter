@@ -2,11 +2,10 @@ import re
 
 from spacy.util import registry
 
-from . import common
 from ..term_list import TermList
 from traiter.pylib.pattern_compilers.matcher import Compiler
 
-LAT_LONG_TERMS = TermList.shared("lat_long")
+LAT_LONG_TERMS = TermList().shared("lat_long")
 
 _SYM = r"""°"”“'`‘´’"""
 _PUNCT = f"{_SYM},;._"

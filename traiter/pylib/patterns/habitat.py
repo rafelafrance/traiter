@@ -4,7 +4,7 @@ from ..pattern_compilers.matcher import Compiler
 from ..term_list import TermList
 from traiter.pylib.actions import REJECT_MATCH
 
-HABITAT_TERMS = TermList.shared("habitat")
+HABITAT_TERMS = TermList().shared("habitat")
 
 _NOPE_SUFFIX = """ road """.split()
 _NOPE_PREFIX = """national """.split()

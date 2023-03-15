@@ -10,7 +10,7 @@ from traiter.pylib import actions
 from traiter.pylib.pattern_compilers.matcher import Compiler
 from traiter.pylib.term_list import TermList
 
-DATE_TERMS = TermList.pick_shared("time", "month")
+DATE_TERMS = TermList().shared("time").pick("month")
 
 _SEP = "[.,;/_'-]"
 _LABEL_ENDER = "[:=]"

@@ -44,40 +44,40 @@ class PipelineBuilder:
             config={"delete": labels},
         )
 
-    def color(self, **kwargs):
+    def color(self, name="color", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="color",
+            name=name,
             **kwargs,
             config={"patterns": Compiler.as_dicts([color.COLOR])},
         )
 
-    def date_(self, **kwargs):
+    def date_(self, name="date", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="date",
+            name=name,
             **kwargs,
             config={"patterns": Compiler.as_dicts([date_.DATE, date_.MISSING_DAY])},
         )
 
-    def habitat(self, **kwargs):
+    def habitat(self, name="habitat", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="habitat",
+            name=name,
             **kwargs,
             config={"patterns": Compiler.as_dicts([habitat.HABITAT])},
         )
 
-    def lat_long(self, **kwargs):
+    def lat_long(self, name="lat_long", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
-            name="lat_long",
+            name=name,
             **kwargs,
             config={"patterns": Compiler.as_dicts([lat_long.LAT_LONG])},
         )
 
-    def delete_traits(self, traits, name=DELETE_TRAITS, **kwargs):
-        self.nlp.add_pipe(DELETE_TRAITS, name=name, **kwargs, config={"delete": traits})
+    def delete_traits(self, traits, **kwargs):
+        self.nlp.add_pipe(DELETE_TRAITS, **kwargs, config={"delete": traits})
 
     def merge(self, **kwargs):
         self.nlp.add_pipe(MERGE_TRAITS, **kwargs)

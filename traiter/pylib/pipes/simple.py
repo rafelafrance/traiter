@@ -7,7 +7,7 @@ from typing import Optional
 
 from spacy.language import Language
 
-from .extensions import add_extensions
+from . import extensions
 
 SIMPLE_TRAITS = "traiter_simple_traits_v2"
 
@@ -27,7 +27,7 @@ class SimpleTraits:
         update: StrList = None,
         exclude: StrList = None,
     ):
-        add_extensions()
+        extensions.add()
 
         self.nlp = nlp
         self.name = name

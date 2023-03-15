@@ -8,7 +8,7 @@ from .. import const
 from ..pattern_compilers.matcher import Compiler
 from ..term_list import TermList
 
-COLOR_TERMS = TermList.shared("colors")
+COLOR_TERMS = TermList().shared("colors")
 COLOR_TERMS.add_trailing_dash()
 
 _REMOVE = COLOR_TERMS.pattern_dict("remove")
