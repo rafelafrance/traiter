@@ -9,6 +9,7 @@ from ..pattern_compilers.matcher import Compiler
 from ..term_list import TermList
 
 COLOR_TERMS = TermList.shared("colors")
+COLOR_TERMS.add_trailing_dash()
 
 _REMOVE = COLOR_TERMS.pattern_dict("remove")
 _MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
@@ -45,7 +46,7 @@ def on_color_match(ent):
             continue
         if token.shape_ in const.TITLE_SHAPES:
             continue
-        parts.append(replace)
+        parts.append(re.sub(r"-$", "", replace))
 
     if not parts:
         raise actions.RejectMatch()

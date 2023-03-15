@@ -1,6 +1,6 @@
 from spacy.lang.en import English
 
-from . import tokenizer
+from .old import tokenizer
 from .pipes.sentence import SENTENCE
 
 

@@ -1,6 +1,5 @@
 import spacy
 
-from . import tokenizer
 from .pattern_compilers.matcher import Compiler
 from .patterns import color
 from .patterns import date_
@@ -22,9 +21,6 @@ class PipelineBuilder:
 
     def __call__(self, text):
         return self.nlp(text)
-
-    def tokenizer(self, remove_terms=None):
-        tokenizer.setup_tokenizer(self.nlp, remove_terms=remove_terms)
 
     def terms(self, terms, replace=None, merge=True, **kwargs):
         replace = replace if replace else {}

@@ -3,7 +3,7 @@ import unittest
 
 import spacy
 
-from traiter.pylib import tokenizer_util
+from traiter.pylib.old import tokenizer_util
 
 NLP = spacy.load("en_core_web_sm")  # Singleton for testing
 

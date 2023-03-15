@@ -8,31 +8,38 @@ from traiter.pylib.pattern_compilers.matcher import Compiler
 
 LAT_LONG_TERMS = TermList.shared("lat_long")
 
-_SYMBOLS = r"""°"”“'`‘´’"""
-_PUNCT = f"""{_SYMBOLS},;._"""
+_SYM = r"""°"”“'`‘´’"""
+_PUNCT = f"{_SYM},;._"
+_180 = r"[-]?(1\d\d|\d\d?)([.,_;]\d+)?"
+_90 = r"[-]?([1-9]\d|\d)([.,_;]\d+)?"
+_60 = r"[-]?([1-6]\d|\d)([.,_;]\d+)?"
 
 LAT_LONG = Compiler(
     "lat_long",
     on_match="digi_leap_lat_long_v1",
-    decoder=common.PATTERNS
-    | {
+    decoder={
+        ",": {"TEXT": {"REGEX": r"^[,;._]$"}},
         "label": {"ENT_TYPE": "lat_long_label"},
-        "deg": {"LOWER": {"REGEX": rf"""^([{_SYMBOLS}]|degrees?|deg\.?)$"""}},
-        "min": {"LOWER": {"REGEX": rf"""^([{_SYMBOLS}]|minutes?|min\.?)$"""}},
-        "sec": {"LOWER": {"REGEX": rf"""^([{_SYMBOLS}]|seconds?|sec\.?)$"""}},
+        "deg": {"LOWER": {"REGEX": rf"""^([{_SYM}]|degrees?|deg\.?)$"""}},
+        "min": {"LOWER": {"REGEX": rf"""^([{_SYM}]|minutes?|min\.?)$"""}},
+        "sec": {"LOWER": {"REGEX": rf"""^([{_SYM}]|seconds?|sec\.?)$"""}},
         "dir": {"LOWER": {"REGEX": r"""^[nesw]\.?$"""}},
-        "180": {"TEXT": {"REGEX": r"""^[-]?(1?[0-8]\d|\d{1,2})([.,_;]\d+)?$"""}},
-        "90": {"TEXT": {"REGEX": r"""^[-]?([0-8]?\d?)([.,_;]\d+)?$"""}},
-        "60": {"TEXT": {"REGEX": r"""^[-]?([1-5]?\d?)([.,_;]\d+)?$"""}},
-        "ew": {"LOWER": {"REGEX": r"""^[ew]\.?$"""}},
-        "ns": {"LOWER": {"REGEX": r"""^[ns]\.?$"""}},
+        "180": {"TEXT": {"REGEX": rf"""^{_180}$"""}},
+        "90": {"TEXT": {"REGEX": rf"""^{_90}$"""}},
+        "60": {"TEXT": {"REGEX": rf"""^{_60}$"""}},
         "datum": {"ENT_TYPE": "datum"},
+        "180E": {"LOWER": {"REGEX": rf"^{_180}[ew]$"}},
+        "90N": {"LOWER": {"REGEX": rf"^{_90}[ns]$"}},
+        "60'60": {"LOWER": {"REGEX": rf"^{_60}[{_SYM}]{_60}[{_SYM}]$"}},
+        "60'60N": {"LOWER": {"REGEX": rf"^{_60}[{_SYM}]{_60}[{_SYM}][nesw]$"}},
     },
     patterns=[
         "label? 180 deg? 60 min? 60 sec? dir ,? 180 deg? 60 min? 60 sec? dir",
         "label? 180 deg? 60 min?         dir ,? 180 deg? 60 min?         dir",
-        "label? 180 ew ,? 90 ns datum?",
-        "label? 90 ns ,? 180 ew datum?",
+        "label? 180E ,? 90N  datum?",
+        "label? 90N  ,? 180E datum?",
+        "label? 180 deg? 60'60  dir ,? 180 deg? 60'60  dir",
+        "label? 180 deg? 60'60N     ,? 180 deg? 60'60N",
     ],
 )
 

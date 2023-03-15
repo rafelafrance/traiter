@@ -2,7 +2,7 @@ import string
 
 import regex as re
 
-from . import tokenizer_util
+from traiter.pylib.old import tokenizer_util
 
 ABBREVS = """
     Var. Sect. Subsect. Ser. Subser. Subsp. Spec. Sp. Spp.

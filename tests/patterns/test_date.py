@@ -8,7 +8,7 @@ from tests.setup import test
 
 class TestDate(unittest.TestCase):
     def test_date_01(self):
-        """It gets a county notation."""
+        """It handles a date with a month name in the middle."""
         self.assertEqual(
             test("""11 May 2004"""),
             [
@@ -22,7 +22,7 @@ class TestDate(unittest.TestCase):
         )
 
     def test_date_02(self):
-        """It parses a date with a two digit year."""
+        """It handles a date with a month name in the middle and a 2-digit year."""
         self.assertEqual(
             test("11 may 04"),
             [
@@ -36,7 +36,7 @@ class TestDate(unittest.TestCase):
         )
 
     def test_date_03(self):
-        """It adjusts future dates back a century."""
+        """It adjusts future dates back a century for a 2-digit year."""
         tomorrow = date.today() + relativedelta(days=1)
         tomorrow = tomorrow.strftime("%d %b %y")
         expect = date.today() + relativedelta(years=-100, days=1)
@@ -155,7 +155,7 @@ class TestDate(unittest.TestCase):
         )
 
     def test_date_12(self):
-        """It handles a bad month."""
+        """It handles an abbreviated month."""
         self.assertEqual(
             test("14 Jan. 1987"),
             [
@@ -187,5 +187,33 @@ class TestDate(unittest.TestCase):
                     "start": 0,
                     "end": 14,
                 }
+            ],
+        )
+
+    def test_date_15(self):
+        """It handles an abbreviated month."""
+        self.assertEqual(
+            test("14 jan. 1987"),
+            [
+                {
+                    "date": "1987-01-14",
+                    "trait": "date",
+                    "start": 0,
+                    "end": 12,
+                },
+            ],
+        )
+
+    def test_date_16(self):
+        """It handles an abbreviated month."""
+        self.assertEqual(
+            test("14 JAN. 1987"),
+            [
+                {
+                    "date": "1987-01-14",
+                    "trait": "date",
+                    "start": 0,
+                    "end": 12,
+                },
             ],
         )
