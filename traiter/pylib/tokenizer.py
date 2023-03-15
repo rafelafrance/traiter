@@ -1,11 +1,8 @@
 import string
-from typing import Callable
 
 import regex as re
-from spacy.util import registry
 
 from . import tokenizer_util
-from .patterns import date_
 
 ABBREVS = """
     Var. Sect. Subsect. Ser. Subser. Subsp. Spec. Sp. Spp.
@@ -40,33 +37,22 @@ ABBREVS = """
     """.split()
 ABBREVS += [f"{c}." for c in string.ascii_uppercase]
 
-TOKENIZER = "traiter.custom_tokenizer.v1"
-
-INFIX = [
+_INFIX = [
     r"(?<=[0-9])[/,](?=[0-9])",  # digit,digit
     r"(?<=[A-Z])[/-](?=[0-9])",  # letter-digit
     "-_",
 ]
 
 
-def setup_tokenizer(nlp):
-    not_letter = re.compile(r"[^A-Za-z.']")
-    removes = [{"pattern": s} for s in nlp.tokenizer.rules if not_letter.search(s)]
-    tokenizer_util.remove_special_case(nlp, removes)
-    tokenizer_util.remove_special_case(nlp, date_.DATE_TERMS)
-
+def setup_tokenizer(nlp, remove_terms=None):
     tokenizer_util.append_prefix_regex(nlp)
-    tokenizer_util.append_infix_regex(nlp, INFIX)
+    tokenizer_util.append_infix_regex(nlp, _INFIX)
     tokenizer_util.append_suffix_regex(nlp)
 
     tokenizer_util.append_abbrevs(nlp, ABBREVS)
 
-
-@registry.callbacks(TOKENIZER)
-def make_customized_tokenizer(tokenizer_setup: Callable = None):
-    tokenizer_setup = tokenizer_setup if tokenizer_setup else setup_tokenizer
-
-    def customized_tokenizer(nlp):
-        tokenizer_setup(nlp)
-
-    return customized_tokenizer
+    not_letter = re.compile(r"[^A-Za-z.']")
+    removes = [{"pattern": s} for s in nlp.tokenizer.rules if not_letter.search(s)]
+    tokenizer_util.remove_special_case(nlp, removes)
+    if remove_terms:
+        tokenizer_util.remove_special_case(nlp, remove_terms)

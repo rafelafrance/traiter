@@ -10,6 +10,7 @@ Columns for a vocabulary CSV file:
         replace   = Replace the match with this
         and more...
 """
+import copy
 import csv
 from collections import UserList
 from pathlib import Path
@@ -82,3 +83,17 @@ class TermList(UserList):
         """
         drops = drops.split() if isinstance(drops, str) else drops
         self.data = [t for t in self if t[field] not in drops]
+
+    def labels(self):
+        """Get all labels for the terms."""
+        lbs = {t["label"] for t in self}
+        return sorted(lbs)
+
+    def add_trailing_dash(self):
+        new = []
+        for term in self:
+            if term["pattern"][-1] != "-":
+                new_term = copy.deepcopy(term)
+                new_term["pattern"] += "-"
+                new.append(new_term)
+        self.data += new
