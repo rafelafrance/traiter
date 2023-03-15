@@ -4,7 +4,8 @@ from typing import Callable
 import regex as re
 from spacy.util import registry
 
-from traiter.pylib import tokenizer_util
+from . import tokenizer_util
+from .patterns import date_
 
 ABBREVS = """
     Var. Sect. Subsect. Ser. Subser. Subsp. Spec. Sp. Spp.
@@ -41,12 +42,23 @@ ABBREVS += [f"{c}." for c in string.ascii_uppercase]
 
 TOKENIZER = "traiter.custom_tokenizer.v1"
 
+INFIX = [
+    r"(?<=[0-9])[/,](?=[0-9])",  # digit,digit
+    r"(?<=[A-Z])[/-](?=[0-9])",  # letter-digit
+    "-_",
+]
+
 
 def setup_tokenizer(nlp):
-    not_letter = re.compile(r"[^a-zA-Z.']")
+    not_letter = re.compile(r"[^A-Za-z.']")
     removes = [{"pattern": s} for s in nlp.tokenizer.rules if not_letter.search(s)]
     tokenizer_util.remove_special_case(nlp, removes)
-    tokenizer_util.append_tokenizer_regexes(nlp)
+    tokenizer_util.remove_special_case(nlp, date_.DATE_TERMS)
+
+    tokenizer_util.append_prefix_regex(nlp)
+    tokenizer_util.append_infix_regex(nlp, INFIX)
+    tokenizer_util.append_suffix_regex(nlp)
+
     tokenizer_util.append_abbrevs(nlp, ABBREVS)
 
 

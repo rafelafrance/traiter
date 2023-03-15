@@ -6,10 +6,10 @@ from . import common
 from ..term_list import TermList
 from traiter.pylib.pattern_compilers.matcher import Compiler
 
+LAT_LONG_TERMS = TermList.shared("lat_long")
+
 _SYMBOLS = r"""°"”“'`‘´’"""
 _PUNCT = f"""{_SYMBOLS},;._"""
-
-TERMS = TermList.shared("lat_long")
 
 LAT_LONG = Compiler(
     "lat_long",
@@ -44,7 +44,7 @@ def on_lat_long_match(ent):
         if token.ent_type_ == "lat_long_label":
             continue
         if token.ent_type_ == "datum":
-            ent._.data["datum"] = TERMS.replace.get(token.lower_, token.text)
+            ent._.data["datum"] = LAT_LONG_TERMS.replace.get(token.lower_, token.text)
         else:
             parts.append(token.text.upper())
 

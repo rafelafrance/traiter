@@ -1,4 +1,12 @@
 label,pattern,attr,replace,inside,postal
+county_label,co,lower,county,,
+county_label,co.,lower,county,,
+county_label,county,lower,county,,
+county_label,par,lower,parish,,
+county_label,par.,lower,parish,,
+county_label,parish,lower,county,,
+county_label,ph,lower,parish,,
+county_label,ph.,lower,parish,,
 us_county,abbeville,lower,,SC,
 us_county,acadia,lower,,LA,
 us_county,accomack,lower,,VA,

@@ -1,19 +1,20 @@
 from traiter.pylib import sentence_pipeline
-from traiter.pylib.patterns import color
-from traiter.pylib.patterns import habitat
-from traiter.pylib.patterns import lat_long
+from traiter.pylib.patterns.color import COLOR_TERMS
+from traiter.pylib.patterns.date_ import DATE_TERMS
+from traiter.pylib.patterns.habitat import HABITAT_TERMS
+from traiter.pylib.patterns.lat_long import LAT_LONG_TERMS
 from traiter.pylib.pipeline_builder import PipelineBuilder
 from traiter.pylib.util import shorten
 
 PIPELINE = PipelineBuilder(exclude="ner")
 PIPELINE.tokenizer()
-PIPELINE.terms(color.TERMS + lat_long.TERMS + habitat.TERMS)
+PIPELINE.terms(COLOR_TERMS + DATE_TERMS + LAT_LONG_TERMS + HABITAT_TERMS)
 PIPELINE.color()
 # PIPELINE.add_debug_tokens_pipe()  # #########################################
+PIPELINE.date_()
 PIPELINE.habitat()
 PIPELINE.lat_long()
-PIPELINE.delete_traits(["habitat_prefix", "habitat_suffix"])
-
+PIPELINE.delete_traits(["habitat_prefix", "habitat_suffix", "month"])
 
 SENT_NLP = sentence_pipeline.pipeline()
 

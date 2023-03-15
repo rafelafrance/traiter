@@ -4,6 +4,8 @@ from ..pattern_compilers.matcher import Compiler
 from ..term_list import TermList
 from traiter.pylib.actions import REJECT_MATCH
 
+HABITAT_TERMS = TermList.shared("habitat")
+
 _NOPE_SUFFIX = """ road """.split()
 _NOPE_PREFIX = """national """.split()
 
@@ -12,9 +14,8 @@ _DECODER = {
     "prefix": {"ENT_TYPE": "habitat_prefix"},
     "suffix": {"ENT_TYPE": "habitat_suffix"},
     "nope_after": {"LOWER": {"IN": _NOPE_SUFFIX}},
+    "nope_before": {"LOWER": {"IN": _NOPE_PREFIX}},
 }
-
-TERMS = TermList.shared("habitat")
 
 HABITAT = Compiler(
     "habitat",
@@ -32,16 +33,18 @@ HABITAT = Compiler(
 
 @registry.misc(HABITAT.on_match)
 def on_habitat_match(ent):
-    parts = [TERMS.replace.get(t.lower_, t.lower_) for t in ent]
+    parts = [HABITAT_TERMS.replace.get(t.lower_, t.lower_) for t in ent]
     ent._.data["habitat"] = " ".join(parts)
 
 
 # ####################################################################################
-NOT_name = Compiler(
+NOT_HABITAT = Compiler(
     "not_habitat",
     on_match=REJECT_MATCH,
     decoder=_DECODER,
     patterns=[
-        "habitat nope_after",
+        "nope_before habitat",
+        "nope_before habitat nope_after",
+        "            habitat nope_after",
     ],
 )

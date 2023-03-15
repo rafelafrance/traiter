@@ -23,9 +23,8 @@ class TermList(UserList):
         super().__init__(lst)
         self.replace = {t["pattern"]: r for t in self if (r := t.get("replace"))}
 
-    @classmethod
-    def read(cls, path: Path):
-        """Read terms from a CSV file."""
+    @staticmethod
+    def _read(path: Path):
         with open(path) as term_file:
             reader = csv.DictReader(term_file)
             terms = list(reader)
@@ -33,20 +32,40 @@ class TermList(UserList):
         for term in terms:
             term["attr"] = term.get("attr", "lower")
 
+        return terms
+
+    @classmethod
+    def read(cls, path: Path):
+        """Read terms from a CSV file."""
+        terms = cls.read(path)
         return cls(terms)
+
+    @classmethod
+    def pick(cls, path: Path, takes: str | list[str]):
+        """Only select terms with the given labels from the CSV file."""
+        terms = cls._read(path)
+        takes = takes.split() if isinstance(takes, str) else takes
+        terms = [t for t in terms if t["label"] in takes]
+        return cls(terms)
+
+    @classmethod
+    def pick_shared(cls, file_stem: str, takes: str | list[str]):
+        path = const.VOCAB_DIR / f"{file_stem}.csv"
+        return cls.pick(path, takes)
 
     @classmethod
     def shared(cls, file_stem: str):
         """Read a CSV from the traiter vocabulary."""
         path = const.VOCAB_DIR / f"{file_stem}.csv"
-        return cls.read(path)
+        terms = cls._read(path)
+        return cls(terms)
 
     @classmethod
     def split(cls, terms, takes: str | list[str], field: str = "label"):
         """Take terms from another trait list."""
         takes = takes.split() if isinstance(takes, str) else takes
-        splits = [t for t in terms if t[field] in takes]
-        return cls(splits)
+        terms = [t for t in terms if t[field] in takes]
+        return cls(terms)
 
     def pattern_dict(self, column: str, type_=None) -> dict[str, Any]:
         """Create a dict key = pattern,  value = another column value."""
@@ -63,8 +82,3 @@ class TermList(UserList):
         """
         drops = drops.split() if isinstance(drops, str) else drops
         self.data = [t for t in self if t[field] not in drops]
-
-    def labels(self, column: str = "label") -> list[str]:
-        """Get unique labels from the terms."""
-        values = {t[column] for t in self}
-        return sorted(values)

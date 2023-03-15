@@ -3,6 +3,7 @@ import spacy
 from . import tokenizer
 from .pattern_compilers.matcher import Compiler
 from .patterns import color
+from .patterns import date_
 from .patterns import habitat
 from .patterns import lat_long
 from .pipes import debug
@@ -52,7 +53,15 @@ class PipelineBuilder:
             ADD_TRAITS,
             name="color",
             **kwargs,
-            config={"patterns": Compiler.as_dicts([color.MATCHER])},
+            config={"patterns": Compiler.as_dicts([color.COLOR])},
+        )
+
+    def date_(self, **kwargs):
+        self.nlp.add_pipe(
+            ADD_TRAITS,
+            name="date",
+            **kwargs,
+            config={"patterns": Compiler.as_dicts([date_.DATE, date_.MISSING_DAY])},
         )
 
     def habitat(self, **kwargs):
