@@ -9,11 +9,11 @@ from traiter.pylib.util import shorten
 _TERMS = COLOR_TERMS + DATE_TERMS + LAT_LONG_TERMS + HABITAT_TERMS
 _PIPELINE = PipelineBuilder(exclude="ner")
 _PIPELINE.terms(_TERMS)
-_PIPELINE.color()
+_PIPELINE.colors()
 # _PIPELINE.add_debug_tokens_pipe()  # #########################################
-_PIPELINE.date_()
-_PIPELINE.habitat()
-_PIPELINE.lat_long()
+_PIPELINE.dates()
+_PIPELINE.habitats()
+_PIPELINE.lat_longs()
 _PIPELINE.delete_traits(["habitat_prefix", "habitat_suffix", "month"])
 
 SENT_NLP = sentence_pipeline.pipeline()

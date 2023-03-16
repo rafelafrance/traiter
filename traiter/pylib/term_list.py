@@ -13,8 +13,10 @@ Columns for a vocabulary CSV file:
 import copy
 import csv
 from collections import UserList
+from io import TextIOWrapper
 from pathlib import Path
 from typing import Any
+from zipfile import ZipFile
 
 from . import const
 
@@ -29,11 +31,18 @@ class TermList(UserList):
     def update(self):
         self.replace = {t["pattern"]: r for t in self if (r := t.get("replace"))}
 
-    def read(self, path: Path):
-        """Read terms from a CSV file."""
-        with open(path) as term_file:
-            reader = csv.DictReader(term_file)
-            terms = list(reader)
+    def read(self, path: Path, member=""):
+        """Read terms from a possibly zipped CSV file."""
+        if path.suffix == ".zip":
+            member = member if member else f"{path.stem}.csv"
+            with ZipFile(path) as zippy:
+                with zippy.open(member) as in_csv:
+                    reader = csv.DictReader(TextIOWrapper(in_csv, "utf-8"))
+                    terms = list(reader)
+        else:
+            with open(path) as term_file:
+                reader = csv.DictReader(term_file)
+                terms = list(reader)
 
         for term in terms:
             term["attr"] = term.get("attr", "lower")
@@ -42,10 +51,12 @@ class TermList(UserList):
         self.update()
         return self
 
-    def shared(self, file_stem: str):
+    def shared(self, file_stems: str):
         """Read a CSV from the traiter vocabulary."""
-        path = const.VOCAB_DIR / f"{file_stem}.csv"
-        self.read(path)
+        file_stems = file_stems.split() if isinstance(file_stems, str) else file_stems
+        for stem in file_stems:
+            path = const.VOCAB_DIR / f"{stem}.csv"
+            self.read(path)
         return self
 
     def add_trailing_dash(self):

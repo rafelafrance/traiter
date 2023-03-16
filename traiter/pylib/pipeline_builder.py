@@ -22,29 +22,30 @@ class PipelineBuilder:
     def __call__(self, text):
         return self.nlp(text)
 
-    def terms(self, terms, replace=None, merge=True, **kwargs):
+    def terms(self, terms, name=TERM_PIPE, replace=None, merge=True, **kwargs):
         replace = replace if replace else {}
         self.nlp.add_pipe(
             TERM_PIPE,
-            before="parser",
+            name=name,
             **kwargs,
             config={"terms": terms.data, "replace": replace},
         )
         if merge:
-            self.nlp.add_pipe("merge_entities", name="merge_terms", after=TERM_PIPE)
+            self.nlp.add_pipe("merge_entities", name=f"{name}_merge", after=name)
 
-    def remove_spacy_ents(self, keep, **kwargs):
+    def delete_spacy_ents(self, name="delete_spacy", keep=None, **kwargs):
+        keep = keep if keep else []
         keep = keep.split() if isinstance(keep, str) else keep
         keep = [k.upper() for k in keep]
         labels = [lb for lb in self.spacy_ent_labels if lb not in keep]
         self.nlp.add_pipe(
             DELETE_TRAITS,
-            name="delete_spacy",
+            name=name,
             **kwargs,
             config={"delete": labels},
         )
 
-    def color(self, name="color", **kwargs):
+    def colors(self, name="color", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
             name=name,
@@ -52,7 +53,7 @@ class PipelineBuilder:
             config={"patterns": Compiler.as_dicts([color.COLOR])},
         )
 
-    def date_(self, name="date", **kwargs):
+    def dates(self, name="date", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
             name=name,
@@ -60,7 +61,7 @@ class PipelineBuilder:
             config={"patterns": Compiler.as_dicts([date_.DATE, date_.MISSING_DAY])},
         )
 
-    def habitat(self, name="habitat", **kwargs):
+    def habitats(self, name="habitat", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
             name=name,
@@ -68,7 +69,7 @@ class PipelineBuilder:
             config={"patterns": Compiler.as_dicts([habitat.HABITAT])},
         )
 
-    def lat_long(self, name="lat_long", **kwargs):
+    def lat_longs(self, name="lat_long", **kwargs):
         self.nlp.add_pipe(
             ADD_TRAITS,
             name=name,
@@ -82,8 +83,8 @@ class PipelineBuilder:
     def merge(self, **kwargs):
         self.nlp.add_pipe(MERGE_TRAITS, **kwargs)
 
-    def add_debug_ents_pipe(self):
-        debug.ents(self.nlp)
+    def debug_ents(self, **kwargs):
+        debug.ents(self.nlp, **kwargs)
 
-    def add_debug_tokens_pipe(self):
-        debug.tokens(self.nlp)
+    def debug_tokens(self, **kwargs):
+        debug.tokens(self.nlp, **kwargs)
