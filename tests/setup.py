@@ -7,14 +7,16 @@ from traiter.pylib.pipeline_builder import PipelineBuilder
 from traiter.pylib.util import shorten
 
 _TERMS = COLOR_TERMS + DATE_TERMS + LAT_LONG_TERMS + HABITAT_TERMS
+_PARTIAL_TRAITS = ["habitat_prefix", "habitat_suffix", "month"]
+
 _PIPELINE = PipelineBuilder(exclude="ner")
-_PIPELINE.terms(_TERMS)
+_PIPELINE.add_terms(_TERMS)
 _PIPELINE.colors()
 # _PIPELINE.add_debug_tokens_pipe()  # #########################################
 _PIPELINE.dates()
 _PIPELINE.habitats()
 _PIPELINE.lat_longs()
-_PIPELINE.delete_traits(["habitat_prefix", "habitat_suffix", "month"])
+_PIPELINE.delete_traits("delete_partial", delete=_PARTIAL_TRAITS)
 
 SENT_NLP = sentence_pipeline.pipeline()
 

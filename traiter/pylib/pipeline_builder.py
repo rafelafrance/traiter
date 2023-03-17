@@ -8,7 +8,8 @@ from .patterns import lat_long
 from .pipes import debug
 from .pipes.add import ADD_TRAITS
 from .pipes.delete import DELETE_TRAITS
-from .pipes.merge import MERGE_TRAITS
+from .pipes.link import LINK_TRAITS
+from .pipes.simple import SIMPLE_TRAITS
 from .pipes.term import TERM_PIPE
 
 
@@ -22,16 +23,45 @@ class PipelineBuilder:
     def __call__(self, text):
         return self.nlp(text)
 
-    def terms(self, terms, name=TERM_PIPE, replace=None, merge=True, **kwargs):
+    def add_terms(self, terms, name=TERM_PIPE, replace=None, merge=False, **kwargs):
         replace = replace if replace else {}
         self.nlp.add_pipe(
             TERM_PIPE,
             name=name,
-            **kwargs,
             config={"terms": terms.data, "replace": replace},
+            **kwargs,
         )
         if merge:
-            self.nlp.add_pipe("merge_entities", name=f"{name}_merge", after=name)
+            self.merge_entities(name=f"{name}_merge", after=name)
+
+    def add_traits(self, patterns, name, merge=False, **kwargs):
+        self.nlp.add_pipe(
+            ADD_TRAITS,
+            name=name,
+            config={"patterns": Compiler.as_dicts(patterns)},
+            **kwargs,
+        )
+        if merge:
+            self.merge_entities(name=f"{name}_merge", after=name)
+
+    def simple_traits(self, name, exclude=None, **kwargs):
+        self.nlp.add_pipe(
+            SIMPLE_TRAITS,
+            name=name,
+            config={"exclude": exclude},
+            **kwargs,
+        )
+
+    def merge_entities(self, name, **kwargs):
+        self.nlp.add_pipe("merge_entities", name=name, **kwargs)
+
+    def delete_traits(self, name, delete=None, delete_when=None, **kwargs):
+        config = {}
+        if delete is not None:
+            config["delete"] = delete
+        if delete_when is not None:
+            config["delete_when"] = delete_when
+        self.nlp.add_pipe(DELETE_TRAITS, name=name, config=config, **kwargs)
 
     def delete_spacy_ents(self, name="delete_spacy", keep=None, **kwargs):
         keep = keep if keep else []
@@ -45,43 +75,44 @@ class PipelineBuilder:
             config={"delete": labels},
         )
 
-    def colors(self, name="color", **kwargs):
-        self.nlp.add_pipe(
-            ADD_TRAITS,
-            name=name,
-            **kwargs,
-            config={"patterns": Compiler.as_dicts([color.COLOR])},
-        )
+    def add_links(
+        self,
+        patterns,
+        name,
+        parents,
+        children,
+        weights=None,
+        reverse_weights=None,
+        max_links=None,
+        differ=None,
+        **kwargs,
+    ):
+        config = {
+            "patterns": Compiler.as_dicts(patterns),
+            "parents": parents,
+            "children": children,
+        }
+        if weights is not None:
+            config["weights"] = weights
+        if reverse_weights is not None:
+            config["reverse_weights"] = reverse_weights
+        if max_links is not None:
+            config["max_links"] = max_links
+        if differ is not None:
+            config["differ"] = differ
+        self.nlp.add_pipe(LINK_TRAITS, name=name, config=config, **kwargs)
 
-    def dates(self, name="date", **kwargs):
-        self.nlp.add_pipe(
-            ADD_TRAITS,
-            name=name,
-            **kwargs,
-            config={"patterns": Compiler.as_dicts([date_.DATE, date_.MISSING_DAY])},
-        )
+    def colors(self, **kwargs):
+        self.add_traits([color.COLOR], name="color", **kwargs)
 
-    def habitats(self, name="habitat", **kwargs):
-        self.nlp.add_pipe(
-            ADD_TRAITS,
-            name=name,
-            **kwargs,
-            config={"patterns": Compiler.as_dicts([habitat.HABITAT])},
-        )
+    def dates(self, **kwargs):
+        self.add_traits([date_.DATE, date_.MISSING_DAY], name="date", **kwargs)
 
-    def lat_longs(self, name="lat_long", **kwargs):
-        self.nlp.add_pipe(
-            ADD_TRAITS,
-            name=name,
-            **kwargs,
-            config={"patterns": Compiler.as_dicts([lat_long.LAT_LONG])},
-        )
+    def habitats(self, **kwargs):
+        self.add_traits([habitat.HABITAT], name="habitat", **kwargs)
 
-    def delete_traits(self, traits, **kwargs):
-        self.nlp.add_pipe(DELETE_TRAITS, **kwargs, config={"delete": traits})
-
-    def merge(self, **kwargs):
-        self.nlp.add_pipe(MERGE_TRAITS, **kwargs)
+    def lat_longs(self, **kwargs):
+        self.add_traits([lat_long.LAT_LONG], name="lat_long", **kwargs)
 
     def debug_ents(self, **kwargs):
         debug.ents(self.nlp, **kwargs)

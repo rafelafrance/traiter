@@ -7,7 +7,7 @@ from spacy.language import Language
 from spacy.pipeline.functions import merge_entities
 from spacy.tokens import Doc
 
-from . import extensions
+from traiter.pylib.pipes import extensions
 
 MERGE_TRAITS = "traiter_merge_traits_v1"
 
