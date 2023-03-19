@@ -9,14 +9,24 @@ from .pipes import debug
 from .pipes.add import ADD_TRAITS
 from .pipes.delete import DELETE_TRAITS
 from .pipes.link import LINK_TRAITS
+from .pipes.sentence import SENTENCE
 from .pipes.term import TERM_PIPE
 
 
+class SentencePipeline:
+    def __init__(self, base_model="en_core_web_sm"):
+        self.nlp = spacy.load(base_model, exclude=["parser", "ner"])
+        self.nlp.add_pipe(SENTENCE, config={"base_model": base_model})
+
+    def __call__(self, text):
+        return self.nlp(text)
+
+
 class PipelineBuilder:
-    def __init__(self, trained_pipeline="en_core_web_sm", exclude=None):
+    def __init__(self, base_model="en_core_web_sm", exclude=None):
         exclude = exclude if exclude is not None else []
         exclude = exclude if isinstance(exclude, list) else [exclude]
-        self.nlp = spacy.load(trained_pipeline, exclude=exclude)
+        self.nlp = spacy.load(base_model, exclude=exclude)
         self.spacy_ent_labels = self.nlp.meta["labels"].get("ner", [])
 
     def __call__(self, text):
