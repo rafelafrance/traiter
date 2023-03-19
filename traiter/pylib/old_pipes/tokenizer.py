@@ -1,8 +1,5 @@
 import string
 
-import regex as re
-
-from traiter.pylib.old import tokenizer_util
 
 ABBREVS = """
     Var. Sect. Subsect. Ser. Subser. Subsp. Spec. Sp. Spp.
@@ -44,15 +41,15 @@ _INFIX = [
 ]
 
 
-def setup_tokenizer(nlp, remove_terms=None):
-    tokenizer_util.append_prefix_regex(nlp)
-    tokenizer_util.append_infix_regex(nlp, _INFIX)
-    tokenizer_util.append_suffix_regex(nlp)
-
-    tokenizer_util.append_abbrevs(nlp, ABBREVS)
-
-    not_letter = re.compile(r"[^A-Za-z.']")
-    removes = [{"pattern": s} for s in nlp.tokenizer.rules if not_letter.search(s)]
-    tokenizer_util.remove_special_case(nlp, removes)
-    if remove_terms:
-        tokenizer_util.remove_special_case(nlp, remove_terms)
+# def setup_tokenizer(nlp, remove_terms=None):
+#     tokenizer_util.append_prefix_regex(nlp)
+#     tokenizer_util.append_infix_regex(nlp, _INFIX)
+#     tokenizer_util.append_suffix_regex(nlp)
+#
+#     tokenizer_util.append_abbrevs(nlp, ABBREVS)
+#
+#     not_letter = re.compile(r"[^A-Za-z.']")
+#     removes = [{"pattern": s} for s in nlp.tokenizer.rules if not_letter.search(s)]
+#     tokenizer_util.remove_special_case(nlp, removes)
+#     if remove_terms:
+#         tokenizer_util.remove_special_case(nlp, remove_terms)

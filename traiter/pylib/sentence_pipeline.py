@@ -1,11 +1,9 @@
 from spacy.lang.en import English
 
-from .old import tokenizer
 from .pipes.sentence import SENTENCE
 
 
-def pipeline():
+def pipeline(base_model="en_core_web_sm"):
     nlp = English()
-    tokenizer.setup_tokenizer(nlp)
-    nlp.add_pipe(SENTENCE, config={"abbrev": tokenizer.ABBREVS})
+    nlp.add_pipe(SENTENCE, config={"base_model": base_model})
     return nlp

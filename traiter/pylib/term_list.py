@@ -28,6 +28,21 @@ class TermList(UserList):
         self.replace = {}
         self.update()
 
+    def __add__(self, other):
+        if not isinstance(other, TermList):
+            raise ValueError("Can only add another TermList")
+        new = TermList(self.data)
+        new.data += other.data
+        new.update()
+        return new
+
+    def __iadd__(self, other):
+        if not isinstance(other, TermList):
+            raise ValueError("Can only add another TermList")
+        self.data += other.data
+        self.update()
+        return self
+
     def update(self):
         self.replace = {t["pattern"]: r for t in self if (r := t.get("replace"))}
 

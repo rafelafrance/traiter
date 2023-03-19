@@ -67,3 +67,9 @@ class TestSentence(unittest.TestCase):
         doc = SENT_NLP(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 1)
+
+    def test_sentencizer_09(self):
+        text = shorten("""I""")
+        doc = SENT_NLP(text)
+        sents = list(doc.sents)
+        self.assertEqual(len(sents), 1)

@@ -9,7 +9,6 @@ from .pipes import debug
 from .pipes.add import ADD_TRAITS
 from .pipes.delete import DELETE_TRAITS
 from .pipes.link import LINK_TRAITS
-from .pipes.simple import SIMPLE_TRAITS
 from .pipes.term import TERM_PIPE
 
 
@@ -43,14 +42,6 @@ class PipelineBuilder:
         )
         if merge:
             self.merge_entities(name=f"{name}_merge", after=name)
-
-    def simple_traits(self, name, exclude=None, **kwargs):
-        self.nlp.add_pipe(
-            SIMPLE_TRAITS,
-            name=name,
-            config={"exclude": exclude},
-            **kwargs,
-        )
 
     def merge_entities(self, name, **kwargs):
         self.nlp.add_pipe("merge_entities", name=name, **kwargs)
@@ -103,16 +94,16 @@ class PipelineBuilder:
         self.nlp.add_pipe(LINK_TRAITS, name=name, config=config, **kwargs)
 
     def colors(self, **kwargs):
-        self.add_traits([color.COLOR], name="color", **kwargs)
+        self.add_traits([color.COLOR], name="colors", **kwargs)
 
     def dates(self, **kwargs):
-        self.add_traits([date_.DATE, date_.MISSING_DAY], name="date", **kwargs)
+        self.add_traits([date_.DATE, date_.MISSING_DAY], name="dates", **kwargs)
 
     def habitats(self, **kwargs):
-        self.add_traits([habitat.HABITAT], name="habitat", **kwargs)
+        self.add_traits([habitat.HABITAT], name="habitats", **kwargs)
 
     def lat_longs(self, **kwargs):
-        self.add_traits([lat_long.LAT_LONG], name="lat_long", **kwargs)
+        self.add_traits([lat_long.LAT_LONG], name="lat_longs", **kwargs)
 
     def debug_ents(self, **kwargs):
         debug.ents(self.nlp, **kwargs)

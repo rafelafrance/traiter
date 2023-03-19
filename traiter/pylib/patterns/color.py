@@ -42,7 +42,7 @@ def on_color_match(ent):
             continue
         if _REMOVE.get(token.lower_):
             continue
-        if token.pos_ in ["AUX"]:
+        if token.pos_ == "AUX":
             continue
         if token.shape_ in const.TITLE_SHAPES:
             continue
