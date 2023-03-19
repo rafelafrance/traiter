@@ -8,10 +8,10 @@ from spacy.language import Language
 from spacy.tokens import Doc
 
 
-SENTENCE = "traiter_sentence_v2"
+SENTENCES = "traiter_sentences_v2"
 
 
-@Language.factory(SENTENCE)
+@Language.factory(SENTENCES)
 class Sentence:
     def __init__(self, nlp: Language, name: str, base_model: str = "en_core_web_sm"):
         self.nlp = nlp
@@ -23,7 +23,7 @@ class Sentence:
         self.nlp_s.enable_pipe("senter")
 
     def __call__(self, doc: Doc) -> Doc:
-        # Workaround needed for spacy because setting 0 by itself does not work
+        # Workaround needed for spacy because setting 0 by itself errors
         doc[-1].is_sent_start = False
 
         doc_d = self.nlp_d(doc.text)

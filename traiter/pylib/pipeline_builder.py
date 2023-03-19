@@ -9,7 +9,7 @@ from .pipes import debug
 from .pipes.add import ADD_TRAITS
 from .pipes.delete import DELETE_TRAITS
 from .pipes.link import LINK_TRAITS
-from .pipes.sentence import SENTENCE
+from .pipes.sentence import SENTENCES
 from .pipes.term import TERM_PIPE
 
 
@@ -98,7 +98,7 @@ class PipelineBuilder:
     def sentences(self, **kwargs):
         if "parser" in self.nlp.pipe_names:
             self.nlp.remove_pipe("parser")
-        self.nlp.add_pipe(SENTENCE, config={"base_model": self.base_model}, **kwargs)
+        self.nlp.add_pipe(SENTENCES, config={"base_model": self.base_model}, **kwargs)
 
     def colors(self, **kwargs):
         self.add_traits([color.COLOR], name="colors", **kwargs)
