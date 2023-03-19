@@ -5,7 +5,7 @@ from traiter.pylib.spell_well import SpellWell
 
 
 class TestSpellWell(unittest.TestCase):
-    spell_well = SpellWell(vocab_db="tests/spell_well/vocab.sqlite")
+    spell_well = SpellWell(vocab_db="tests/spell_well/mock_vocab.sqlite")
 
     def test_correct_01(self):
         self.assertEqual(self.spell_well.correct("Missing"), "Missing")

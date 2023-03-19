@@ -13,19 +13,11 @@ from .pipes.sentence import SENTENCE
 from .pipes.term import TERM_PIPE
 
 
-class SentencePipeline:
-    def __init__(self, base_model="en_core_web_sm"):
-        self.nlp = spacy.load(base_model, exclude=["parser", "ner"])
-        self.nlp.add_pipe(SENTENCE, config={"base_model": base_model})
-
-    def __call__(self, text):
-        return self.nlp(text)
-
-
 class PipelineBuilder:
     def __init__(self, base_model="en_core_web_sm", exclude=None):
         exclude = exclude if exclude is not None else []
         exclude = exclude if isinstance(exclude, list) else [exclude]
+        self.base_model = base_model
         self.nlp = spacy.load(base_model, exclude=exclude)
         self.spacy_ent_labels = self.nlp.meta["labels"].get("ner", [])
 
@@ -102,6 +94,11 @@ class PipelineBuilder:
         if differ is not None:
             config["differ"] = differ
         self.nlp.add_pipe(LINK_TRAITS, name=name, config=config, **kwargs)
+
+    def sentences(self, **kwargs):
+        if "parser" in self.nlp.pipe_names:
+            self.nlp.remove_pipe("parser")
+        self.nlp.add_pipe(SENTENCE, config={"base_model": self.base_model}, **kwargs)
 
     def colors(self, **kwargs):
         self.add_traits([color.COLOR], name="colors", **kwargs)
