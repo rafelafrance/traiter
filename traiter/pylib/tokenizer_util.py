@@ -3,7 +3,6 @@
 The default Spacy tokenizer works great for model-based parsing but sometimes causes
 complications for rule-based parsers.
 """
-from typing import Iterable
 from typing import Optional
 
 from spacy.language import Language
@@ -64,25 +63,16 @@ def append_infix_regex(nlp: Language, infixes: Optional[list[str]] = None):
     nlp.tokenizer.infix_finditer = infix_re.finditer
 
 
-def append_abbrevs(nlp: Language, special_cases: list[str]):
-    """Add special case tokens to the tokenizer."""
-    for case in special_cases:
-        nlp.tokenizer.add_special_case(case, [{ORTH: case}])
+def append_abbrevs(nlp: Language, abbrevs: list[str]):
+    for abbrev in abbrevs:
+        nlp.tokenizer.add_special_case(abbrev, [{ORTH: abbrev}])
 
 
-def add_special_case(nlp: Language, special_cases: list[Iterable]):
-    """Add special case tokens to the tokenizer."""
-    for case in special_cases:
-        text, *parts = case
-        rule = [{ORTH: p} for p in parts]
-        nlp.tokenizer.add_special_case(text, rule)
-
-
-def remove_special_case(nlp: Language, remove: list[dict]):
+def remove_special_case(nlp: Language, remove: list[str]):
     """Remove special rules from the tokenizer.
     This is a workaround for when these special cases interfere with matcher rules.
     """
-    remove = {r["pattern"].lower() for r in remove}
-    specials = [(r, r) for r in nlp.tokenizer.rules if r.lower() not in remove]
+    specials = [r for r in nlp.tokenizer.rules if r not in remove]
     nlp.tokenizer.rules = None
-    add_special_case(nlp, specials)
+    for text in specials:
+        nlp.tokenizer.add_special_case(text, [{ORTH: text}])

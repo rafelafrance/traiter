@@ -1,4 +1,5 @@
 import spacy
+from spacy.lang.en import English
 
 from .pattern_compilers.matcher import Compiler
 from .patterns import color
@@ -18,7 +19,10 @@ class PipelineBuilder:
         exclude = exclude if exclude is not None else []
         exclude = exclude if isinstance(exclude, list) else [exclude]
         self.base_model = base_model
-        self.nlp = spacy.load(base_model, exclude=exclude)
+        if base_model.lower() == "english":
+            self.nlp = English()
+        else:
+            self.nlp = spacy.load(base_model, exclude=exclude)
         self.spacy_ent_labels = self.nlp.meta["labels"].get("ner", [])
 
     def __call__(self, text):
