@@ -117,7 +117,7 @@ class PipelineBuilder:
         return name
 
     def colors(self, **kwargs) -> str:
-        return self.add_traits([color.COLOR], name="dates", **kwargs)
+        return self.add_traits([color.COLOR], name="colors", **kwargs)
 
     def dates(self, **kwargs) -> str:
         return self.add_traits([date_.DATE, date_.MISSING_DAY], name="dates", **kwargs)
