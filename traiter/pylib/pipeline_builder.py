@@ -29,7 +29,9 @@ class PipelineBuilder:
     def __call__(self, text):
         return self.nlp(text)
 
-    def add_terms(self, terms, name=TERM_PIPE, replace=None, merge=False, **kwargs):
+    def add_terms(
+        self, terms, name=TERM_PIPE, replace=None, merge=False, **kwargs
+    ) -> str:
         replace = replace if replace else {}
         self.nlp.add_pipe(
             TERM_PIPE,
@@ -38,9 +40,10 @@ class PipelineBuilder:
             **kwargs,
         )
         if merge:
-            self.merge_entities(name=f"{name}_merge", after=name)
+            return self.merge_entities(name=f"{name}_merge", after=name)
+        return name
 
-    def add_traits(self, patterns, name, merge=False, **kwargs):
+    def add_traits(self, patterns, name, merge=False, **kwargs) -> str:
         self.nlp.add_pipe(
             ADD_TRAITS,
             name=name,
@@ -48,20 +51,23 @@ class PipelineBuilder:
             **kwargs,
         )
         if merge:
-            self.merge_entities(name=f"{name}_merge", after=name)
+            return self.merge_entities(name=f"{name}_merge", after=name)
+        return name
 
-    def merge_entities(self, name, **kwargs):
+    def merge_entities(self, name, **kwargs) -> str:
         self.nlp.add_pipe("merge_entities", name=name, **kwargs)
+        return name
 
-    def delete_traits(self, name, delete=None, delete_when=None, **kwargs):
+    def delete_traits(self, name, delete=None, delete_when=None, **kwargs) -> str:
         config = {}
         if delete is not None:
             config["delete"] = delete
         if delete_when is not None:
             config["delete_when"] = delete_when
         self.nlp.add_pipe(DELETE_TRAITS, name=name, config=config, **kwargs)
+        return name
 
-    def delete_spacy_ents(self, name="delete_spacy", keep=None, **kwargs):
+    def delete_spacy_ents(self, name="delete_spacy", keep=None, **kwargs) -> str:
         keep = keep if keep else []
         keep = keep.split() if isinstance(keep, str) else keep
         keep = [k.upper() for k in keep]
@@ -72,6 +78,7 @@ class PipelineBuilder:
             **kwargs,
             config={"delete": labels},
         )
+        return name
 
     def add_links(
         self,
@@ -84,7 +91,7 @@ class PipelineBuilder:
         max_links=None,
         differ=None,
         **kwargs,
-    ):
+    ) -> str:
         config = {
             "patterns": Compiler.as_dicts(patterns),
             "parents": parents,
@@ -99,34 +106,39 @@ class PipelineBuilder:
         if differ is not None:
             config["differ"] = differ
         self.nlp.add_pipe(LINK_TRAITS, name=name, config=config, **kwargs)
+        return name
 
-    def sentences(self, **kwargs):
+    def sentences(self, name=SENTENCES, **kwargs):
         if "parser" in self.nlp.pipe_names:
             self.nlp.remove_pipe("parser")
-        self.nlp.add_pipe(SENTENCES, config={"base_model": self.base_model}, **kwargs)
+        self.nlp.add_pipe(
+            SENTENCES, name=name, config={"base_model": self.base_model}, **kwargs
+        )
+        return name
 
-    def colors(self, **kwargs):
-        self.add_traits([color.COLOR], name="colors", **kwargs)
+    def colors(self, **kwargs) -> str:
+        return self.add_traits([color.COLOR], name="dates", **kwargs)
 
-    def dates(self, **kwargs):
-        self.add_traits([date_.DATE, date_.MISSING_DAY], name="dates", **kwargs)
+    def dates(self, **kwargs) -> str:
+        return self.add_traits([date_.DATE, date_.MISSING_DAY], name="dates", **kwargs)
 
-    def elevations(self, **kwargs):
-        self.add_traits(
+    def elevations(self, **kwargs) -> str:
+        return self.add_traits(
             [elevation.ELEVATION, elevation.ELEVATION_RANGE],
             name="elevations",
             **kwargs,
         )
 
-    def habitats(self, **kwargs):
-        self.add_traits([habitat.HABITAT], name="habitats", **kwargs)
+    def habitats(self, **kwargs) -> str:
+        return self.add_traits([habitat.HABITAT], name="habitats", **kwargs)
 
-    def lat_longs(self, **kwargs):
+    def lat_longs(self, **kwargs) -> str:
         self.add_traits([lat_long.LAT_LONG], name="lat_longs", merge=True, **kwargs)
-        self.add_traits([lat_long.LAT_LONG_UNCERTAIN], name="lat_long_uncert", **kwargs)
+        name = "lat_longs_uncertain"
+        return self.add_traits([lat_long.LAT_LONG_UNCERTAIN], name=name, **kwargs)
 
-    def debug_ents(self, **kwargs):
-        debug.ents(self.nlp, **kwargs)
+    def debug_ents(self, **kwargs) -> str:
+        return debug.ents(self.nlp, **kwargs)
 
-    def debug_tokens(self, **kwargs):
-        debug.tokens(self.nlp, **kwargs)
+    def debug_tokens(self, **kwargs) -> str:
+        return debug.tokens(self.nlp, **kwargs)

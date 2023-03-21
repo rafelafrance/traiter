@@ -10,43 +10,34 @@ DEBUG_MESSAGE = "traiter_debug_message_v1"
 DEBUG_COUNT = 0  # Used to rename debug pipes
 
 
-def tokens(nlp, message="", **kwargs):
+def tokens(nlp, message="", **kwargs) -> str:
     """Automatically set up a pipe to print token information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
     config = {"message": message}
-    nlp.add_pipe(
-        DEBUG_TOKENS,
-        name=f"debug_tokens_{DEBUG_COUNT}",
-        config=config,
-        **kwargs,
-    )
+    name = f"debug_tokens_{DEBUG_COUNT}"
+    nlp.add_pipe(DEBUG_TOKENS, name=name, config=config, **kwargs)
+    return name
 
 
-def ents(nlp, message="", **kwargs):
+def ents(nlp, message="", **kwargs) -> str:
     """Automatically set up a pipe to print entity information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
     config = {"message": message}
-    nlp.add_pipe(
-        DEBUG_ENTITIES,
-        name=f"debug_entities_{DEBUG_COUNT}",
-        config=config,
-        **kwargs,
-    )
+    name = f"debug_entities_{DEBUG_COUNT}"
+    nlp.add_pipe(DEBUG_ENTITIES, name=name, config=config, **kwargs)
+    return name
 
 
-def msg(nlp, message="", **kwargs):
+def msg(nlp, message="", **kwargs) -> str:
     """Automatically set up a pipe to print entity information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
     config = {"message": message}
-    nlp.add_pipe(
-        DEBUG_MESSAGE,
-        name=f"debug_message_{DEBUG_COUNT}",
-        config=config,
-        **kwargs,
-    )
+    name = f"debug_message_{DEBUG_COUNT}"
+    nlp.add_pipe(DEBUG_MESSAGE, name=name, config=config, **kwargs)
+    return name
 
 
 @Language.factory(DEBUG_TOKENS, default_config={"message": ""})
