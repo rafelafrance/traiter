@@ -28,12 +28,15 @@ class DeleteTraits:
         nlp: Language,
         name: str,
         delete: list[str] = None,
+        keep: list[str] = None,
         delete_when: dict[str, Any] = None,
     ):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.delete = delete if delete else []
+
+        self.delete = set(delete) if delete else set()
+        self.keep = set(keep) if keep else set()
 
         delete_when = delete_when if delete_when else {}
         self.delete_when = {}
@@ -46,14 +49,21 @@ class DeleteTraits:
 
         for ent in doc.ents:
             label = ent.label_
+
+            if self.keep and label not in self.keep:
+                continue
+
             if ent._.delete:
                 continue
+
             if label in self.delete:
                 continue
+
             if self.delete_when and any(
                 f(ent) for f in self.delete_when.get(label, [])
             ):
                 continue
+
             entities.append(ent)
 
         doc.set_ents(entities)

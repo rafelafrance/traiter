@@ -58,26 +58,17 @@ class PipelineBuilder:
         self.nlp.add_pipe("merge_entities", name=name, **kwargs)
         return name
 
-    def delete_traits(self, name, delete=None, delete_when=None, **kwargs) -> str:
+    def delete_traits(
+        self, name, delete=None, keep=None, delete_when=None, **kwargs
+    ) -> str:
         config = {}
+        if keep is not None:
+            config["keep"] = keep
         if delete is not None:
             config["delete"] = delete
         if delete_when is not None:
             config["delete_when"] = delete_when
         self.nlp.add_pipe(DELETE_TRAITS, name=name, config=config, **kwargs)
-        return name
-
-    def delete_spacy_ents(self, name="delete_spacy", keep=None, **kwargs) -> str:
-        keep = keep if keep else []
-        keep = keep.split() if isinstance(keep, str) else keep
-        keep = [k.upper() for k in keep]
-        labels = [lb for lb in self.spacy_ent_labels if lb not in keep]
-        self.nlp.add_pipe(
-            DELETE_TRAITS,
-            name=name,
-            **kwargs,
-            config={"delete": labels},
-        )
         return name
 
     def add_links(

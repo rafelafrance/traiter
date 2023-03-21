@@ -164,7 +164,6 @@ class TestColor(unittest.TestCase):
                     "start": 72,
                     "end": 82,
                 },
-                {"color_mod": "mottled", "end": 100, "start": 93, "trait": "color_mod"},
                 {
                     "color": "green",
                     "trait": "color",
@@ -330,7 +329,6 @@ class TestColor(unittest.TestCase):
         self.assertEqual(
             test("leaflets surfaces rather densely spotted with blackish dots"),
             [
-                {"color_mod": "spotted", "end": 40, "start": 33, "trait": "color_mod"},
                 {
                     "color": "black-dots",
                     "trait": "color",
