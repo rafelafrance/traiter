@@ -4,6 +4,7 @@ from spacy.lang.en import English
 from .pattern_compilers.matcher import Compiler
 from .patterns import color
 from .patterns import date_
+from .patterns import elevation
 from .patterns import habitat
 from .patterns import lat_long
 from .pipes import debug
@@ -110,11 +111,19 @@ class PipelineBuilder:
     def dates(self, **kwargs):
         self.add_traits([date_.DATE, date_.MISSING_DAY], name="dates", **kwargs)
 
+    def elevations(self, **kwargs):
+        self.add_traits(
+            [elevation.ELEVATION, elevation.ELEVATION_RANGE],
+            name="elevations",
+            **kwargs,
+        )
+
     def habitats(self, **kwargs):
         self.add_traits([habitat.HABITAT], name="habitats", **kwargs)
 
     def lat_longs(self, **kwargs):
-        self.add_traits([lat_long.LAT_LONG], name="lat_longs", **kwargs)
+        self.add_traits([lat_long.LAT_LONG], name="lat_longs", merge=True, **kwargs)
+        self.add_traits([lat_long.LAT_LONG_UNCERTAIN], name="lat_long_uncert", **kwargs)
 
     def debug_ents(self, **kwargs):
         debug.ents(self.nlp, **kwargs)

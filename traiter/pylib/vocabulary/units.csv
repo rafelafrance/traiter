@@ -1,4 +1,4 @@
-label,pattern,replace,factor
+label,pattern,replace,factor_cm
 imperial_length,feet,ft,30.48
 imperial_length,foot,ft,30.48
 imperial_length,ft,ft,30.48

@@ -1,10 +1,8 @@
 from spacy import registry
 
+from . import terms
 from ..pattern_compilers.matcher import Compiler
-from ..term_list import TermList
 from traiter.pylib.actions import REJECT_MATCH
-
-HABITAT_TERMS = TermList().shared("habitat")
 
 _NOPE_SUFFIX = """ road """.split()
 _NOPE_PREFIX = """national """.split()
@@ -33,7 +31,7 @@ HABITAT = Compiler(
 
 @registry.misc(HABITAT.on_match)
 def on_habitat_match(ent):
-    parts = [HABITAT_TERMS.replace.get(t.lower_, t.lower_) for t in ent]
+    parts = [terms.HABITAT_TERMS.replace.get(t.lower_, t.lower_) for t in ent]
     ent._.data["habitat"] = " ".join(parts)
 
 

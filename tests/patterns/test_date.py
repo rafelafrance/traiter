@@ -136,7 +136,7 @@ class TestDate(unittest.TestCase):
         """It handles a bad month."""
         self.assertEqual(
             test("May have elevation: 1347.22 m (4420 N) - 1359-40 m (4460 Ny"),
-            [],
+            [{"elevation": 1347.22, "end": 29, "start": 9, "trait": "elevation"}],
         )
 
     def test_date_11(self):

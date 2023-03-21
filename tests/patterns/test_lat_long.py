@@ -47,7 +47,8 @@ class TestLatLongPatterns(unittest.TestCase):
                     "trait": "lat_long",
                     "start": 0,
                     "end": 28,
-                }
+                },
+                {"elevation": 1217.0, "trait": "elevation", "start": 29, "end": 40},
             ],
         )
 
@@ -57,9 +58,24 @@ class TestLatLongPatterns(unittest.TestCase):
             [
                 {
                     "lat_long": """34° 41'32"N, 116° 49'25"W""",
+                    "uncertainty": 1000.0,
                     "trait": "lat_long",
                     "start": 23,
-                    "end": 46,
+                    "end": 54,
+                }
+            ],
+        )
+
+    def test_lat_long_05(self):
+        self.assertEqual(
+            test("""43.963272° N, 113.446226° W Uncertainty: 100 m."""),
+            [
+                {
+                    "lat_long": """43.963272° N, 113.446226° W""",
+                    "uncertainty": 100.0,
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 47,
                 }
             ],
         )
