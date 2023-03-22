@@ -53,6 +53,10 @@ LAT_LONG = Compiler(
         "label? 180 deg? 60'60  dir ,? 180 deg? 60'60  dir",
         "label? 180 deg? 60'60N     ,? 180 deg? 60'60N",
         "label? 180 deg? dir        ,? 180 deg? dir",
+        "label? dir 180 deg? 60 min? 60 sec? ,? dir 180 deg? 60 min? 60 sec?",
+        "label? dir 180 deg? 60 min?         ,? dir 180 deg? 60 min?",
+        "label? dir 180 deg? 60'60  ,? dir 180 deg? 60'60",
+        "label? dir 180 deg?        ,? dir 180 deg?",
     ],
 )
 
@@ -68,7 +72,8 @@ def on_lat_long_match(ent):
                 token.lower_, token.text
             )
         else:
-            parts.append(token.text.upper())
+            text = token.text.upper() if len(token.text) == 1 else token.text
+            parts.append(text)
 
     lat_long = " ".join(parts)
     lat_long = re.sub(rf"\s([{_PUNCT}])", r"\1", lat_long)
@@ -82,8 +87,8 @@ LAT_LONG_UNCERTAIN = Compiler(
     on_match="digi_leap_lat_long_uncert_v1",
     decoder=_DECODER,
     patterns=[
-        "lat_long+        ,? +99 m",
-        "lat_long+ uncert ,?  99 m",
+        "lat_long+ ,?        ,? +99 m",
+        "lat_long+ ,? uncert ,?  99 m",
     ],
 )
 

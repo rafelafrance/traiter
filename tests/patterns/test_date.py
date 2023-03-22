@@ -231,3 +231,16 @@ class TestDate(unittest.TestCase):
                 },
             ],
         )
+
+    def test_date_18(self):
+        self.assertEqual(
+            test("5/26/03,"),
+            [
+                {
+                    "date": "2003-05-26",
+                    "trait": "date",
+                    "start": 0,
+                    "end": 7,
+                },
+            ],
+        )

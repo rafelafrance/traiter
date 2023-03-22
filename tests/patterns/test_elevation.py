@@ -28,3 +28,11 @@ class TestElevation(unittest.TestCase):
         self.assertEqual(traits[0]["end"], 19)
         self.assertAlmostEqual(traits[0]["elevation"], 2895.6)
         self.assertAlmostEqual(traits[0]["elevation_high"], 2938.272)
+
+    def test_elevation_04(self):
+        """Make sure punctuation is not interpreted as numbers."""
+        traits = test(""" alt., 250 m. """)
+        self.assertEqual(traits[0]["trait"], "elevation")
+        self.assertEqual(traits[0]["start"], 3)
+        self.assertEqual(traits[0]["end"], 12)
+        self.assertAlmostEqual(traits[0]["elevation"], 250.0)

@@ -54,14 +54,14 @@ class TestLatLongPatterns(unittest.TestCase):
 
     def test_lat_long_04(self):
         self.assertEqual(
-            test("""(Ord Mountain 7.5’ Q.: 34°41'32"N, 116°49'25"W, +1000m)"""),
+            test("""(Ord Mountains 7.5’ Q.: 34°41'32"N, 116°49'25"W, +1000m)"""),
             [
                 {
                     "lat_long": """34° 41'32"N, 116° 49'25"W""",
                     "uncertainty": 1000.0,
                     "trait": "lat_long",
-                    "start": 23,
-                    "end": 54,
+                    "start": 24,
+                    "end": 55,
                 }
             ],
         )
@@ -76,6 +76,19 @@ class TestLatLongPatterns(unittest.TestCase):
                     "trait": "lat_long",
                     "start": 0,
                     "end": 47,
+                }
+            ],
+        )
+
+    def test_lat_long_06(self):
+        self.assertEqual(
+            test("""N 33 deg 27' 33", W 111 deg 56' 35","""),
+            [
+                {
+                    "lat_long": """N 33 deg 27' 33", W 111 deg 56' 35\"""",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 35,
                 }
             ],
         )

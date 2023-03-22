@@ -5,8 +5,9 @@ from traiter.pylib.pipeline_builder import PipelineBuilder
 def pipeline():
     pipes = PipelineBuilder(exclude="ner")
     pipes.add_terms(terms.ALL_TERMS)
-    pipes.colors()
+    # pipes.colors()
     pipes.dates()
+    # pipes.debug_tokens()  # #########################################
     pipes.elevations()
     pipes.habitats()
     pipes.lat_longs()

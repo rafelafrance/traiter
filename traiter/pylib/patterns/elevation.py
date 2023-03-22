@@ -11,7 +11,7 @@ from ..pattern_compilers.matcher import Compiler
 _LABEL_ENDER = r"[:=;,.]"
 _UNITS = ["metric_length", "imperial_length"]
 
-_FLOAT_RE = r"^([\d,]+\.?\d*)$"
+_FLOAT_RE = r"^(\d[\d,.]+)$"
 
 _DECODER = common.PATTERNS | {
     "label": {"ENT_TYPE": "elev_label"},
