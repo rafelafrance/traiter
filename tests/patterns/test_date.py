@@ -219,7 +219,7 @@ class TestDate(unittest.TestCase):
         )
 
     def test_date_17(self):
-        """It handles an abbreviated month."""
+        """It handles month first."""
         self.assertEqual(
             test("W May 19, 1998 HR1998-01"),
             [

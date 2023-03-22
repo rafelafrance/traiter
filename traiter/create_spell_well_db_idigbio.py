@@ -83,7 +83,7 @@ def main():
     freq = filter_freq(freq, args.min_freq, args.min_len)
 
     insert_vocab(freq, args.spell_well_db, args.delete_db)
-    insert_misspellings(freq, args.spell_well_db)
+    insert_misspellings(freq, args.spell_well_db, args.deletes)
 
     log.finished()
 
@@ -92,7 +92,7 @@ def filter_freq(freq, min_freq, min_len):
     return {k: v for k, v in freq.items() if v >= min_freq and len(k) >= min_len}
 
 
-def insert_misspellings(freq, spell_well_db):
+def insert_misspellings(freq, spell_well_db, deletes):
     logging.info("Inserting misspellings")
 
     batch = []
@@ -110,10 +110,11 @@ def insert_misspellings(freq, spell_well_db):
                 batch.append((delete, word, 1, count))
                 hits.add(delete)
 
-        for delete in [w for w in spell_well.deletes2(word) if len(w) > 1]:
-            if delete not in hits:
-                batch.append((delete, word, 2, count))
-                hits.add(delete)
+        if deletes > 1:
+            for delete in [w for w in spell_well.deletes2(word) if len(w) > 1]:
+                if delete not in hits:
+                    batch.append((delete, word, 2, count))
+                    hits.add(delete)
 
     with sqlite3.connect(spell_well_db) as cxn:
         cxn.executemany(INSERT_MISSPELLINGS, batch)
@@ -216,6 +217,14 @@ def parse_args() -> argparse.Namespace:
         metavar="LEN",
         default=3,
         help="""A word must long to make it into the DB.""",
+    )
+
+    arg_parser.add_argument(
+        "--deletes",
+        choices=[1, 2],
+        metavar="LEN",
+        default=1,
+        help="""How many deletes to record.""",
     )
 
     return arg_parser.parse_args()

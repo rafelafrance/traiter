@@ -17,9 +17,10 @@ DATA_DIR = Path.cwd() / "data"
 
 RE_FLAGS = re.VERBOSE | re.IGNORECASE
 
+LOWER_SHAPES = set(""" xxxxx xxxx xxx xx x. xx. x """.split())
 TITLE_SHAPES = set(""" Xxxxx Xxxx Xxx Xx X. Xx. X """.split())
 UPPER_SHAPES = set(""" XXXXX XXXX XXX XX X. XX. X """.split())
-NAME_SHAPES = list(TITLE_SHAPES) + list(UPPER_SHAPES)
+NAME_SHAPES = list(TITLE_SHAPES)  # + list(UPPER_SHAPES)
 
 TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
 REVERSE_WEIGHTS = {k: v * 2 for k, v in TOKEN_WEIGHTS.items()}
