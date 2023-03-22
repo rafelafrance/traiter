@@ -217,3 +217,17 @@ class TestDate(unittest.TestCase):
                 },
             ],
         )
+
+    def test_date_17(self):
+        """It handles an abbreviated month."""
+        self.assertEqual(
+            test("W May 19, 1998 HR1998-01"),
+            [
+                {
+                    "date": "1998-05-19",
+                    "trait": "date",
+                    "start": 2,
+                    "end": 14,
+                },
+            ],
+        )

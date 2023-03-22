@@ -46,6 +46,7 @@ DATE = Compiler(
         "label? :? 99-99-99",
         "label? :? month-99-9999",
         "label? :? 9999-99-99",
+        "label? :? month -* 99 -* 9999",
     ],
 )
 
