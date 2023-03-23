@@ -15,7 +15,7 @@ from .pipes.sentence import SENTENCES
 from .pipes.term import TERM_PIPE
 
 
-class PipelineBuilder:
+class PipeBuilder:
     def __init__(self, base_model="en_core_web_sm", exclude=None):
         exclude = exclude if exclude is not None else []
         exclude = exclude if isinstance(exclude, list) else [exclude]

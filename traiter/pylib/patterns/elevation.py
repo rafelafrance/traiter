@@ -3,7 +3,7 @@ import re
 from spacy.util import registry
 
 from . import common
-from . import terms
+from . import terms_old
 from .. import util
 from ..pattern_compilers.matcher import Compiler
 

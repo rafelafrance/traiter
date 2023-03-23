@@ -34,12 +34,10 @@ class Compiler:
         patterns: _Pattern,
         decoder: Optional[_Decoder] = None,
         on_match: Optional[str] = None,
-        id_: str = "",
     ):
         self.label = label
         self.on_match = on_match
         self.patterns = patterns
-        self.id = id_
 
         if decoder:
             patterns2 = as_list(patterns)
@@ -51,7 +49,6 @@ class Compiler:
             "label": self.label,
             "on_match": self.on_match,
             "patterns": self.patterns,
-            "id": self.id,
         }
 
     @staticmethod
@@ -100,11 +97,8 @@ class Compiler:
         rules = []
         for matcher in patterns:
             label = matcher.label
-            id_ = matcher.id
             for pattern in matcher.patterns:
                 rule = {"label": label, "pattern": pattern}
-                if id_:
-                    rule["id"] = id_
                 rules.append(rule)
         ruler.add_patterns(rules)
 

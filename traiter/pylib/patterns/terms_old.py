@@ -1,7 +1,6 @@
 from ..term_list import TermList
 
-COLOR_TERMS = TermList().shared("colors")
-COLOR_TERMS.add_trailing_dash()
+COLOR_TERMS = TermList().shared("colors").add_trailing_dash()
 
 DATE_TERMS = TermList().shared("time").pick("month")
 

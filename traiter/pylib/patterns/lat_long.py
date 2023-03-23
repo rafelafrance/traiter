@@ -2,7 +2,7 @@ import re
 
 from spacy.util import registry
 
-from . import terms
+from . import terms_old
 from .. import util
 from traiter.pylib.pattern_compilers.matcher import Compiler
 

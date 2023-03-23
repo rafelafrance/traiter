@@ -1,6 +1,6 @@
 from spacy import registry
 
-from . import terms
+from . import terms_old
 from ..pattern_compilers.matcher import Compiler
 from traiter.pylib.actions import REJECT_MATCH
 
