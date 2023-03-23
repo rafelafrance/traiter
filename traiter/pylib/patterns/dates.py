@@ -6,7 +6,6 @@ from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from spacy.util import registry
 
-from ..pattern_compilers.matcher import Compiler
 from ..term_list import TermList
 from .matcher_patterns import MatcherPatterns
 from traiter.pylib import actions
@@ -14,7 +13,6 @@ from traiter.pylib import actions
 _SEP = "[.,;/_'-]"
 _LABEL_ENDER = "[:=]"
 _LABELS = """ date """.split()
-
 
 # ####################################################################################
 _DECODER = {
@@ -32,11 +30,11 @@ _DECODER = {
     "99-9999": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+[12]\d\d\d$"}},
 }
 
-_DATE_TERMS = TermList().shared("time").pick("month")
+_TERMS = TermList().shared("time").pick("month")
 
 # ####################################################################################
-NEW_DATE = MatcherPatterns(
-    "date",
+DATES = MatcherPatterns(
+    name="date",
     on_match="traiter.date.v1",
     decoder=_DECODER,
     patterns=[
@@ -51,29 +49,12 @@ NEW_DATE = MatcherPatterns(
         "label? :? 9999-99-99",
         "label? :? month -* 99 -* 9999",
     ],
-    terms=_DATE_TERMS,
-)
-
-DATE = Compiler(
-    "date",
-    on_match="traiter.date.v1",
-    decoder=_DECODER,
-    patterns=[
-        "label? :? 99    -* month -* 99",
-        "label? :? 99    -* month -* 9999",
-        "label? :? 9999  -* month -* 99",
-        "label? :? 99-99 -* 99",
-        "label? :? 99-99 -* 9999",
-        "label? :? 99-99-9999",
-        "label? :? 99-99-99",
-        "label? :? month-99-9999",
-        "label? :? 9999-99-99",
-        "label? :? month -* 99 -* 9999",
-    ],
+    terms=_TERMS,
+    keep=["date"],
 )
 
 
-@registry.misc(DATE.on_match)
+@registry.misc(DATES.on_match)
 def on_date_match(ent):
     flags = re.IGNORECASE | re.VERBOSE
     text = ent.text
@@ -98,8 +79,8 @@ def on_date_match(ent):
 
 
 # ####################################################################################
-NEW_MISSING_DAY = MatcherPatterns(
-    "short_date",
+MISSING_DAYS = MatcherPatterns(
+    name="short_date",
     on_match="traiter.missing_day.v1",
     decoder=_DECODER,
     patterns=[
@@ -113,30 +94,13 @@ NEW_MISSING_DAY = MatcherPatterns(
         # "label? :? month -* 99",
         # "label? :? 9999  -* 9",
     ],
-    terms=_DATE_TERMS,
-)
-
-MISSING_DAY = Compiler(
-    "short_date",
-    on_match="traiter.missing_day.v1",
-    decoder=_DECODER,
-    patterns=[
-        "label? :? 9999  -* month",
-        "label? :? month -* 9999",
-        "label? :? 99-9999",
-        "label? :? 99-9999",
-        # "label? :? 99-99",
-        # "label? :? 9     -* 99",
-        # "label? :? 99    -* 9",
-        # "label? :? 9     -* 9999",
-        # "label? :? month -* 99",
-        # "label? :? 9999  -* 9",
-    ],
+    terms=_TERMS,
+    keep=["date"],
 )
 
 
-@registry.misc(MISSING_DAY.on_match)
-def short_date(ent):
+@registry.misc(MISSING_DAYS.on_match)
+def on_missing_day_match(ent):
     flags = re.IGNORECASE | re.VERBOSE
     if re.match(r"\d\d? [\s'] \d\d?", ent.text, flags=flags):
         raise actions.RejectMatch()

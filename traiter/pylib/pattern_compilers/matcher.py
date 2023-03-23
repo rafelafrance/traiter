@@ -14,16 +14,12 @@ from typing import Optional
 from typing import Union
 from warnings import warn
 
-from spacy.pipeline import EntityRuler
 from spacy.tokens.doc import Doc
 
 from ..util import as_list
 
-_Ruler = Union[EntityRuler, Callable[[Doc], Doc]]
-_Decoder = dict[str, dict]
-_CompilerPatterns = list[str]
-_SpacyPatterns = list[list[dict[str, Any]]]
-_Pattern = Union[str, list[str], _SpacyPatterns]
+_Ruler = Callable[[Doc], Doc]
+_Pattern = Union[str, list[str], list[list[dict[str, Any]]]]
 
 
 class Compiler:
@@ -32,7 +28,7 @@ class Compiler:
         label: str,
         *,
         patterns: _Pattern,
-        decoder: Optional[_Decoder] = None,
+        decoder: Optional[dict[str, dict]] = None,
         on_match: Optional[str] = None,
     ):
         self.label = label
@@ -44,7 +40,6 @@ class Compiler:
             self.patterns = self.compile(patterns2, decoder)
 
     def as_dict(self) -> dict:
-        """Return the object as a serializable dict."""
         return {
             "label": self.label,
             "on_match": self.on_match,
@@ -52,7 +47,9 @@ class Compiler:
         }
 
     @staticmethod
-    def compile(patterns: _CompilerPatterns, decoder: _Decoder) -> _SpacyPatterns:
+    def compile(
+        patterns: list[str], decoder: dict[str, dict]
+    ) -> list[list[dict[str, Any]]]:
         """Convert patterns strings to spacy matcher pattern arrays."""
         all_patterns = []
 
@@ -81,29 +78,7 @@ class Compiler:
 
         return all_patterns
 
-    def compile_ruler_patterns(self, ruler: _Ruler, patterns) -> None:
-        """Rename add_ruler_patterns."""
-        self.add_ruler_patterns(ruler, patterns)
-
     @staticmethod
     def as_dicts(patterns) -> list[dict]:
         """Convert all patterns to a dicts."""
         return [p.as_dict() for p in as_list(patterns)]
-
-    @staticmethod
-    def add_ruler_patterns(ruler: _Ruler, patterns) -> None:
-        """Add patterns to a ruler."""
-        patterns = as_list(patterns)
-        rules = []
-        for matcher in patterns:
-            label = matcher.label
-            for pattern in matcher.patterns:
-                rule = {"label": label, "pattern": pattern}
-                rules.append(rule)
-        ruler.add_patterns(rules)
-
-    @staticmethod
-    def patterns_to_dispatch(patterns) -> dict[str, str]:
-        """Convert patterns to a dispatch table."""
-        dispatch = {p.label: p.on_match for p in as_list(patterns) if p.on_match}
-        return dispatch

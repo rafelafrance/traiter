@@ -2,11 +2,11 @@ import spacy
 from spacy.lang.en import English
 
 from .pattern_compilers.matcher import Compiler
-from .patterns import color
-from .patterns import date_
-from .patterns import elevation
-from .patterns import habitat
-from .patterns import lat_long
+from .patterns import colors
+from .patterns import dates
+from .patterns import elevations
+from .patterns import habitats
+from .patterns import lat_longs
 from .pipes import debug
 from .pipes.add import ADD_TRAITS
 from .pipes.delete import DELETE_TRAITS
@@ -36,7 +36,7 @@ class PipeBuilder:
         self.nlp.add_pipe(
             TERM_PIPE,
             name=name,
-            config={"terms": terms.data, "replace": replace},
+            config={"terms": terms.terms, "replace": replace},
             **kwargs,
         )
         if merge:
@@ -44,6 +44,7 @@ class PipeBuilder:
         return name
 
     def add_traits(self, patterns, name, merge=False, **kwargs) -> str:
+        patterns = [p.compile() for p in patterns]
         self.nlp.add_pipe(
             ADD_TRAITS,
             name=name,
@@ -108,25 +109,35 @@ class PipeBuilder:
         return name
 
     def colors(self, **kwargs) -> str:
-        return self.add_traits([color.COLOR], name="colors", **kwargs)
+        return self.add_traits([colors.COLORS], name="colors", **kwargs)
 
     def dates(self, **kwargs) -> str:
-        return self.add_traits([date_.DATE, date_.MISSING_DAY], name="dates", **kwargs)
+        return self.add_traits(
+            [dates.DATES, dates.MISSING_DAYS], name="dates", **kwargs
+        )
 
     def elevations(self, **kwargs) -> str:
         return self.add_traits(
-            [elevation.ELEVATION, elevation.ELEVATION_RANGE],
+            [elevations.ELEVATIONS, elevations.ELEVATION_RANGES],
             name="elevations",
             **kwargs,
         )
 
     def habitats(self, **kwargs) -> str:
-        return self.add_traits([habitat.HABITAT], name="habitats", **kwargs)
+        return self.add_traits(
+            [habitats.HABITATS, habitats.NOT_HABITATS], name="habitats", **kwargs
+        )
 
     def lat_longs(self, **kwargs) -> str:
-        self.add_traits([lat_long.LAT_LONG], name="lat_longs", merge=True, **kwargs)
-        name = "lat_longs_uncertain"
-        return self.add_traits([lat_long.LAT_LONG_UNCERTAIN], name=name, **kwargs)
+        prev = self.add_traits(
+            [lat_longs.LAT_LONGS], name="lat_longs", merge=True, **kwargs
+        )
+        return self.add_traits(
+            [lat_longs.LAT_LONG_UNCERTAIN],
+            name="lat_long_uncertain",
+            after=prev,
+            **kwargs,
+        )
 
     def debug_ents(self, **kwargs) -> str:
         return debug.ents(self.nlp, **kwargs)

@@ -3,10 +3,9 @@ import re
 from spacy.util import registry
 
 from . import common
-from . import terms_old
 from .. import util
-from ..pattern_compilers.matcher import Compiler
-
+from ..term_list import TermList
+from .matcher_patterns import MatcherPatterns
 
 _LABEL_ENDER = r"[:=;,.]"
 _UNITS = ["metric_length", "imperial_length"]
@@ -20,19 +19,25 @@ _DECODER = common.PATTERNS | {
     "m": {"ENT_TYPE": {"IN": _UNITS}},
 }
 
+_TERMS = TermList().shared("labels units")
+_FACTORS_CM = _TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
+_FACTORS_M = {k: v / 100.0 for k, v in _FACTORS_CM.items()}  # Convert value to meters
+
 # ####################################################################################
-ELEVATION = Compiler(
-    "elevation",
+ELEVATIONS = MatcherPatterns(
+    name="elevation",
     on_match="traiter_elevation_v1",
     decoder=_DECODER,
     patterns=[
         "label :? 99 m",
         "label :? 99 m ( 99 m )",
     ],
+    terms=_TERMS,
+    keep=["elevation"],
 )
 
 
-@registry.misc(ELEVATION.on_match)
+@registry.misc(ELEVATIONS.on_match)
 def on_elevation_match(ent):
     values = []
     units = []
@@ -41,24 +46,26 @@ def on_elevation_match(ent):
         if re.match(_FLOAT_RE, token.text):
             values.append(util.to_positive_float(token.text))
         elif token.ent_type_ in _UNITS:
-            units.append(terms.ELEV_TERMS.replace.get(token.lower_, token.lower_))
+            units.append(ELEVATIONS.replace.get(token.lower_, token.lower_))
 
-    factor = terms.FACTORS_M[units[0]]
+    factor = _FACTORS_M[units[0]]
     ent._.data["elevation"] = round(values[0] * factor, 3)
 
 
 # ####################################################################################
-ELEVATION_RANGE = Compiler(
-    "elevation_range",
+ELEVATION_RANGES = MatcherPatterns(
+    name="elevation_range",
     on_match="traiter_elevation_range_v1",
     decoder=_DECODER,
     patterns=[
         "label :? 99 - 99 m",
     ],
+    terms=_TERMS,
+    keep=["elevation"],
 )
 
 
-@registry.misc(ELEVATION_RANGE.on_match)
+@registry.misc(ELEVATION_RANGES.on_match)
 def on_elevation_range_match(ent):
     values = []
     units = ""
@@ -67,9 +74,9 @@ def on_elevation_range_match(ent):
         if re.match(_FLOAT_RE, token.text):
             values.append(util.to_positive_float(token.text))
         elif token.ent_type_ in _UNITS:
-            units = terms.ELEV_TERMS.replace.get(token.lower_, token.lower_)
+            units = ELEVATION_RANGES.replace.get(token.lower_, token.lower_)
 
-    factor = terms.FACTORS_M[units]
+    factor = _FACTORS_M[units]
     ent._.data["elevation"] = round(values[0] * factor, 3)
     ent._.data["elevation_high"] = round(values[1] * factor, 3)
     ent._.new_label = "elevation"

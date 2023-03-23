@@ -1,11 +1,13 @@
 from spacy import registry
 
-from . import terms_old
-from ..pattern_compilers.matcher import Compiler
-from traiter.pylib.actions import REJECT_MATCH
+from ..actions import REJECT_MATCH
+from ..term_list import TermList
+from .matcher_patterns import MatcherPatterns
 
 _NOPE_SUFFIX = """ road villa street sec sec.""".split()
 _NOPE_PREFIX = """national botanical """.split()
+
+_TERMS = TermList().shared("habitat")
 
 _DECODER = {
     "habitat": {"ENT_TYPE": "habitat_term"},
@@ -15,8 +17,9 @@ _DECODER = {
     "nope_before": {"LOWER": {"IN": _NOPE_PREFIX}},
 }
 
-HABITAT = Compiler(
-    "habitat",
+# ####################################################################################
+HABITATS = MatcherPatterns(
+    name="habitat",
     on_match="plant_habitat_v1",
     decoder=_DECODER,
     patterns=[
@@ -26,12 +29,14 @@ HABITAT = Compiler(
         "         habitat+ suffix",
         "prefix+           suffix",
     ],
+    terms=_TERMS,
+    keep=["habitat"],
 )
 
 
-@registry.misc(HABITAT.on_match)
+@registry.misc(HABITATS.on_match)
 def on_habitat_match(ent):
-    parts = [terms.HABITAT_TERMS.replace.get(t.lower_, t.lower_) for t in ent]
+    parts = [HABITATS.replace.get(t.lower_, t.lower_) for t in ent]
     ent._.data["habitat"] = " ".join(parts)
     ent._.data["trait"] = "habitat"
     ent._.new_label = "habitat"
@@ -40,8 +45,8 @@ def on_habitat_match(ent):
 
 
 # ####################################################################################
-NOT_HABITAT = Compiler(
-    "not_habitat",
+NOT_HABITATS = MatcherPatterns(
+    name="not_habitat",
     on_match=REJECT_MATCH,
     decoder=_DECODER,
     patterns=[
@@ -49,4 +54,5 @@ NOT_HABITAT = Compiler(
         "nope_before habitat nope_after",
         "            habitat nope_after",
     ],
+    terms=_TERMS,
 )

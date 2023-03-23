@@ -12,7 +12,6 @@ Columns for a vocabulary CSV file:
 """
 import copy
 import csv
-from collections import UserList
 from io import TextIOWrapper
 from pathlib import Path
 from typing import Any
@@ -21,56 +20,64 @@ from zipfile import ZipFile
 from . import const
 
 
-class TermList(UserList):
+class TermList:  # (UserList):
     def __init__(self, terms: list[dict] = None):
-        terms = terms if terms else []
-        super().__init__(terms)
+        self._terms = terms if terms else []
         self.replace = {}
-        self._used = {}
-        self.update()
 
     def __add__(self, other):
         if not isinstance(other, TermList):
             raise ValueError("Can only add another TermList")
-        new = TermList(self.data)
-        new.data += other.data
-        new.update()
+        new = TermList(self.terms)
+        new.terms += other.terms
         return new
 
     def __iadd__(self, other):
         if not isinstance(other, TermList):
             raise ValueError("Can only add another TermList")
-        self.data += other.data
-        self.update()
+        self.terms += other.terms
         return self
 
-    def update(self):
-        self.filter_duplicates()
-        self.replace = {t["pattern"]: r for t in self if (r := t.get("replace"))}
+    @property
+    def terms(self):
+        return self._terms
 
-    def __setattr__(self, key, value):
-        print(f"set attr {key=} {value}")
-        print()
+    @terms.setter
+    def terms(self, values):
+        self.set_replace()
+        self.validate_terms(values)
+        self._terms = self.filter_duplicates(values)
 
-    def filter_duplicates(self):
+    def set_replace(self):
+        self.replace = {t["pattern"]: r for t in self.terms if (r := t.get("replace"))}
+
+    @staticmethod
+    def validate_terms(values):
+        for term in values:
+            if not term.get("label") or not term.get("pattern"):
+                raise ValueError("Both: 'label' and 'pattern' are required fields")
+            term["attr"] = term.get("attr", "lower")
+
+    @staticmethod
+    def filter_duplicates(values):
         """Filter out duplicate terms.
 
         If we try to add the same term list more than once or have overlapping term
         lists remove the duplicates. Only an error if we are using the same pattern
         with a different label.
         """
-        self._used = {}
+        used = {}
         unique = []
-        for term in self:
+        for term in values:
             key = term["pattern"]
-            if key in self._used:
+            if key in used:
                 new = term["label"]
-                old = self._used["label"]
+                old = used["label"]
                 if old != new:
                     raise ValueError(f"Pattern {key} is used for both {old} and {new}")
                 continue
             unique.append(term)
-        self.data = unique
+        return unique
 
     def read(self, path: Path, member=""):
         """Read terms from a possibly zipped CSV file."""
@@ -85,15 +92,7 @@ class TermList(UserList):
                 reader = csv.DictReader(term_file)
                 terms = list(reader)
 
-        # Fix up the CSV format
-        for term in terms:
-            if not term.get("label") or not term.get("pattern"):
-                raise ValueError("Both: 'label' and 'pattern' are required fields")
-
-            term["attr"] = term.get("attr", "lower")
-
-        self.data += terms
-        self.update()
+        self.terms += terms
         return self
 
     def shared(self, file_stems: str):
@@ -106,13 +105,12 @@ class TermList(UserList):
 
     def add_trailing_dash(self):
         new = []
-        for term in self:
+        for term in self.terms:
             if term["pattern"][-1] != "-":
                 new_term = copy.deepcopy(term)
                 new_term["pattern"] += "-"
                 new.append(new_term)
-        self.data += new
-        self.update()
+        self.terms += new
         return self
 
     def drop(self, drops: str | list[str], field: str = "label"):
@@ -124,29 +122,29 @@ class TermList(UserList):
         term.drop('imperial_length').
         """
         drops = drops.split() if isinstance(drops, str) else drops
-        self.data = [t for t in self if t[field] not in drops]
-        self.update()
+        self.terms = [t for t in self.terms if t[field] not in drops]
+        # self.set_replace()
         return self
 
     def pick(self, takes: str | list[str]):
         """Only select terms with the given labels from the CSV file."""
         takes = takes.split() if isinstance(takes, str) else takes
-        terms = [t for t in self if t["label"] in takes]
+        terms = [t for t in self.terms if t["label"] in takes]
         return TermList(terms)
 
     def split(self, takes: str | list[str], field: str = "label"):
         """Take selected terms from one trait list and return and return a new list."""
         takes = takes.split() if isinstance(takes, str) else takes
-        terms = [t for t in self if t[field] in takes]
+        terms = [t for t in self.terms if t[field] in takes]
         return TermList(terms)
 
     def pattern_dict(self, column: str, type_=None) -> dict[str, Any]:
         """Create a dict key = pattern,  value = another column value."""
         type_ = type_ if type_ else str
-        patterns = {t["pattern"]: type_(t[column]) for t in self if t.get(column)}
+        patterns = {t["pattern"]: type_(t[column]) for t in self.terms if t.get(column)}
         return patterns
 
     def labels(self):
         """Get all labels for the terms."""
-        lbs = {t["label"] for t in self}
+        lbs = {t["label"] for t in self.terms}
         return sorted(lbs)

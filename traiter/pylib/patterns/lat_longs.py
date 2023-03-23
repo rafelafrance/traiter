@@ -2,10 +2,9 @@ import re
 
 from spacy.util import registry
 
-from . import terms_old
 from .. import util
-from traiter.pylib.pattern_compilers.matcher import Compiler
-
+from ..term_list import TermList
+from .matcher_patterns import MatcherPatterns
 
 _SYM = r"""°"”“'`‘´’"""
 _PUNCT = f"{_SYM},;._"
@@ -40,9 +39,13 @@ _DECODER = {
     "lat_long": {"ENT_TYPE": "lat_long"},
 }
 
+_TERMS = TermList().shared("lat_long units")
+_FACTORS_CM = _TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
+_FACTORS_M = {k: v / 100.0 for k, v in _FACTORS_CM.items()}  # Convert value to meters
+
 # ###################################################################################
-LAT_LONG = Compiler(
-    "lat_long",
+LAT_LONGS = MatcherPatterns(
+    name="lat_long",
     on_match="digi_leap_lat_long_v1",
     decoder=_DECODER,
     patterns=[
@@ -58,19 +61,19 @@ LAT_LONG = Compiler(
         "label? dir 180 deg? 60'60  ,? dir 180 deg? 60'60",
         "label? dir 180 deg?        ,? dir 180 deg?",
     ],
+    terms=_TERMS,
+    keep=["lat_long"],
 )
 
 
-@registry.misc(LAT_LONG.on_match)
+@registry.misc(LAT_LONGS.on_match)
 def on_lat_long_match(ent):
     parts = []
     for token in ent:
         if token.ent_type_ == "lat_long_label":
             continue
         if token.ent_type_ == "datum":
-            ent._.data["datum"] = terms.LAT_LONG_TERMS.replace.get(
-                token.lower_, token.text
-            )
+            ent._.data["datum"] = LAT_LONGS.replace.get(token.lower_, token.text)
         else:
             text = token.text.upper() if len(token.text) == 1 else token.text
             parts.append(text)
@@ -81,15 +84,17 @@ def on_lat_long_match(ent):
     ent[0]._.data = ent._.data
 
 
-# ########################################################c###########################
-LAT_LONG_UNCERTAIN = Compiler(
-    "lat_long_uncert",
-    on_match="digi_leap_lat_long_uncert_v1",
+# ####################################################################################
+LAT_LONG_UNCERTAIN = MatcherPatterns(
+    name="lat_long_uncertain",
+    on_match="digi_leap_lat_long_uncertain_v1",
     decoder=_DECODER,
     patterns=[
         "lat_long+ ,?        ,? +99 m",
         "lat_long+ ,? uncert ,?  99 m",
     ],
+    terms=_TERMS,
+    keep=["lat_long"],
 )
 
 
@@ -104,8 +109,8 @@ def on_lat_long_match(ent):
         elif re.match(_NUM_PLUS, token.text):
             value = util.to_positive_float(token.text)
         elif label in _UNITS:
-            units = terms.LAT_LONG_TERMS.replace.get(token.lower_, token.lower_)
+            units = LAT_LONGS.replace.get(token.lower_, token.lower_)
 
-    factor = terms.FACTORS_M[units]
+    factor = _FACTORS_M[units]
     ent._.data["uncertainty"] = round(value * factor, 3)
     ent._.new_label = "lat_long"
