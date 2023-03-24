@@ -38,7 +38,7 @@ class Pipe:
     kwargs: dict
 
 
-class PipelineBuilder:
+class BasePipelineBuilder:
     def __init__(self, *, base_model="en_core_web_sm", exclude=None):
         exclude = exclude if exclude is not None else []
         exclude = exclude if isinstance(exclude, list) else [exclude]
@@ -56,9 +56,8 @@ class PipelineBuilder:
         return self.nlp(text)
 
     def build(self):
-        # Black is refusing to deal with a match/case
         for pipe in self.pipeline:
-            if pipe.type == Type.TERMS:
+            if pipe.type == Type.TERMS:  # Black is refusing to deal with a match/case
                 self._add_terms(**pipe.kwargs)
             elif pipe.type == Type.TRAITS:
                 self._add_traits(**pipe.kwargs)
@@ -220,6 +219,8 @@ class PipelineBuilder:
         self.pipeline.append(Pipe(Type.DEBUG_TOKENS, kwargs=kwargs))
         return name
 
+
+class PipelineBuilder(BasePipelineBuilder):
     def colors(self, **kwargs) -> str:
         return self.add_traits([colors.COLORS], name="colors", **kwargs)
 
