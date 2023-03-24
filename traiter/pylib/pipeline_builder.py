@@ -1,3 +1,4 @@
+from copy import copy
 from dataclasses import dataclass
 from enum import auto
 from enum import Enum
@@ -51,7 +52,7 @@ class BasePipelineBuilder:
         self.pipeline: list[Pipe] = []
         self.debug_count = 0
         self.patterns = []
-        self.extra_keeps: list[str] = []  # For terms w/o a matcher
+        self.traits_without_matcher: list[str] = []
 
     def __call__(self, text):
         return self.nlp(text)
@@ -94,10 +95,11 @@ class BasePipelineBuilder:
 
     def _delete_traits(self, *, name, config, keep_all, **kwargs):
         if keep_all:
+            keep = copy(self.traits_without_matcher)
             for pat in self.patterns:
                 if pat.keep:
-                    self.extra_keeps += pat.keep
-            config["keep"] = self.extra_keeps
+                    keep += pat.keep
+            config["keep"] = keep
         self.nlp.add_pipe(DELETE_TRAITS, name=name, config=config, **kwargs)
 
     def _add_links(self, *, name, config, **kwargs):
