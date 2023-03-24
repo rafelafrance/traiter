@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Iterable
 
 from traiter.pylib.pattern_compilers.matcher import Compiler
 from traiter.pylib.term_list import TermList
@@ -44,19 +43,3 @@ class MatcherPatterns:
             "on_match": self.on_match,
             "patterns": self.patterns,
         }
-
-    @staticmethod
-    def all_terms(patterns: Iterable["MatcherPatterns"]) -> TermList:
-        combined_terms = TermList()
-        for pattern in patterns:
-            if pattern.terms:
-                combined_terms += pattern.terms
-        return combined_terms
-
-    @staticmethod
-    def all_keeps(patterns: Iterable["MatcherPatterns"]) -> list[str]:
-        keep = []
-        for pattern in patterns:
-            if pattern.keep:
-                keep += pattern.keep
-        return sorted(set(keep))
