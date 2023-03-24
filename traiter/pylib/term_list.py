@@ -140,9 +140,15 @@ class TermList:  # (UserList):
 
     def pattern_dict(self, column: str, type_=None) -> dict[str, Any]:
         """Create a dict key = pattern,  value = another column value."""
+        return self.column_dict("pattern", column, type_)
+
+    def column_dict(self, key: str, value: str, type_=None) -> dict[str, Any]:
+        """Create a dictionary between any 2 columns of terms."""
         type_ = type_ if type_ else str
-        patterns = {t["pattern"]: type_(t[column]) for t in self.terms if t.get(column)}
-        return patterns
+        dict_ = {
+            t[key]: type_(t[value]) for t in self.terms if t.get(key) and t.get(value)
+        }
+        return dict_
 
     def labels(self):
         """Get all labels for the terms."""

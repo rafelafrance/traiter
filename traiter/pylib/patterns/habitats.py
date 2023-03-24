@@ -55,4 +55,5 @@ NOT_HABITATS = MatcherPatterns(
         "            habitat nope_after",
     ],
     terms=_TERMS,
+    keep=None,
 )

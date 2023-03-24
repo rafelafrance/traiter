@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from dataclasses import field
 from typing import Iterable
 
 from ..pattern_compilers.matcher import Compiler
@@ -21,11 +20,11 @@ class MatcherPatterns:
     """
 
     name: str
-    on_match: str
+    on_match: str | None
     decoder: dict[str, dict]
     patterns: list[str]
-    terms: TermList
-    keep: list[str] = field(default_factory=list)
+    terms: TermList | None
+    keep: list[str] | None
 
     @property
     def replace(self):
@@ -50,7 +49,8 @@ class MatcherPatterns:
     def all_terms(patterns: Iterable["MatcherPatterns"]) -> TermList:
         combined_terms = TermList()
         for pattern in patterns:
-            combined_terms += pattern.terms
+            if pattern.terms:
+                combined_terms += pattern.terms
         return combined_terms
 
     @staticmethod

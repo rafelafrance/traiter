@@ -33,23 +33,23 @@ COLORS.remove = COLORS.terms.pattern_dict("remove")
 
 @registry.misc(COLORS.on_match)
 def on_color_match(ent):
-    parts = []
+    color_parts = []
     for token in ent:
         replace = COLORS.replace.get(token.lower_, token.lower_)
-        if replace in _SKIP:
+        if replace in _SKIP:  # Skip any in the list from above
             continue
-        if COLORS.remove.get(token.lower_):
+        if COLORS.remove.get(token.lower_):  # Skip terms marked for removal
             continue
-        if token.pos_ == "AUX":
+        if token.pos_ == "AUX":  # Skip auxiliary verbs/words like: "is", "must"
             continue
-        if token.shape_ in const.TITLE_SHAPES:
+        if token.shape_ in const.TITLE_SHAPES:  # Skip names like "Brown"
             continue
-        parts.append(re.sub(r"-$", "", replace))
+        color_parts.append(re.sub(r"-$", "", replace))  # Remove trailing dash
 
-    if not parts:
+    if not color_parts:
         raise actions.RejectMatch()
 
-    value = "-".join(parts)
+    value = "-".join(color_parts)
     value = re.sub(_MULTIPLE_DASHES, r"-", value)
     ent._.data["color"] = COLORS.replace.get(value, value)
     if any(t for t in ent if t.lower_ in common.MISSING):
