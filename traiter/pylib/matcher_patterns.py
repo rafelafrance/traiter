@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Iterable
 
-from ..pattern_compilers.matcher import Compiler
-from ..term_list import TermList
+from traiter.pylib.pattern_compilers.matcher import Compiler
+from traiter.pylib.term_list import TermList
 
 
 @dataclass()

@@ -5,8 +5,8 @@ from spacy import registry
 from . import common
 from .. import actions
 from .. import const
+from ..matcher_patterns import MatcherPatterns
 from ..term_list import TermList
-from .matcher_patterns import MatcherPatterns
 
 _MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
 _MULTIPLE_DASHES = rf'\s*[{"".join(_MULTIPLE_DASHES)}]{{2,}}\s*'

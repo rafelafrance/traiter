@@ -6,8 +6,8 @@ from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from spacy.util import registry
 
+from ..matcher_patterns import MatcherPatterns
 from ..term_list import TermList
-from .matcher_patterns import MatcherPatterns
 from traiter.pylib import actions
 
 _SEP = "[.,;/_'-]"

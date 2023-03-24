@@ -1,9 +1,9 @@
+from .matcher_patterns import MatcherPatterns
 from .patterns import colors
 from .patterns import dates
 from .patterns import elevations
 from .patterns import habitats
 from .patterns import lat_longs
-from .patterns.matcher_patterns import MatcherPatterns
 from .pipe_builder import PipeBuilder
 
 

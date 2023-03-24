@@ -4,8 +4,8 @@ from spacy.util import registry
 
 from . import common
 from .. import util
+from ..matcher_patterns import MatcherPatterns
 from ..term_list import TermList
-from .matcher_patterns import MatcherPatterns
 
 _LABEL_ENDER = r"[:=;,.]"
 _UNITS = ["metric_length", "imperial_length"]

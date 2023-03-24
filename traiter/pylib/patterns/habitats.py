@@ -1,8 +1,8 @@
 from spacy import registry
 
 from ..actions import REJECT_MATCH
+from ..matcher_patterns import MatcherPatterns
 from ..term_list import TermList
-from .matcher_patterns import MatcherPatterns
 
 _NOPE_SUFFIX = """ road villa street sec sec.""".split()
 _NOPE_PREFIX = """national botanical """.split()

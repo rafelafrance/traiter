@@ -3,8 +3,8 @@ import re
 from spacy.util import registry
 
 from .. import util
+from ..matcher_patterns import MatcherPatterns
 from ..term_list import TermList
-from .matcher_patterns import MatcherPatterns
 
 _SYM = r"""°"”“'`‘´’"""
 _PUNCT = f"{_SYM},;._"
