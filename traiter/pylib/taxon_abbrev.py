@@ -4,8 +4,10 @@ Taxon traits are build up from these two as well as other terms like ranks and n
 """
 from collections import defaultdict
 
+from .term_list import TermList
 
-def abbreviate_binomials(binomials, singles_only=True):
+
+def abbreviate_binomials(binomials: TermList, singles_only=True):
     """Create a mapping from binomial terms to abbreviated binomials.
 
     Example: "C. lupus"  -> {"Canis lupus", "Cartoonus lupus"}
@@ -16,7 +18,7 @@ def abbreviate_binomials(binomials, singles_only=True):
     """
     abbrevs = defaultdict(set)
 
-    for term in binomials:
+    for term in binomials.terms:
         pattern = term["pattern"]
         abbrev = abbreviate(pattern)
         abbrevs[abbrev].add(pattern.split()[0])

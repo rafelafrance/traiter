@@ -25,6 +25,9 @@ class TermList:  # (UserList):
         self._terms = terms if terms else []
         self.replace = {}
 
+    def __iter__(self):
+        yield from self.terms
+
     def __add__(self, other):
         if not isinstance(other, TermList):
             raise ValueError("Can only add another TermList")

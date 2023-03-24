@@ -84,6 +84,7 @@ class PipeBuilder:
         differ=None,
         **kwargs,
     ) -> str:
+        patterns = [p.compile() for p in patterns]
         config = {
             "patterns": Compiler.as_dicts(patterns),
             "parents": parents,
