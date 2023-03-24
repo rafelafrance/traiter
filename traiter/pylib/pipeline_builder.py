@@ -51,6 +51,7 @@ class BasePipelineBuilder:
         self.pipeline: list[Pipe] = []
         self.debug_count = 0
         self.patterns = []
+        self.extra_keeps: list[str] = []  # For terms w/o a matcher
 
     def __call__(self, text):
         return self.nlp(text)
@@ -91,13 +92,12 @@ class BasePipelineBuilder:
     def _merge_entities(self, *, name, **kwargs):
         self.nlp.add_pipe("merge_entities", name=name, **kwargs)
 
-    def _delete_traits(self, *, name, config, all_keeps, **kwargs):
-        if all_keeps:
-            keeps = []
+    def _delete_traits(self, *, name, config, keep_all, **kwargs):
+        if keep_all:
             for pat in self.patterns:
                 if pat.keep:
-                    keeps += pat.keep
-            config["keep"] = keeps
+                    self.extra_keeps += pat.keep
+            config["keep"] = self.extra_keeps
         self.nlp.add_pipe(DELETE_TRAITS, name=name, config=config, **kwargs)
 
     def _add_links(self, *, name, config, **kwargs):
@@ -155,7 +155,7 @@ class BasePipelineBuilder:
         delete=None,
         keep=None,
         delete_when=None,
-        all_keeps=False,
+        keep_all=False,
         **kwargs,
     ) -> str:
         config = {}
@@ -165,7 +165,7 @@ class BasePipelineBuilder:
             config["delete"] = delete
         if delete_when is not None:
             config["delete_when"] = delete_when
-        kwargs |= {"name": name, "config": config, "all_keeps": all_keeps}
+        kwargs |= {"name": name, "config": config, "keep_all": keep_all}
         self.pipeline.append(Pipe(Type.DELETE, kwargs=kwargs))
         return name
 
