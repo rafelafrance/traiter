@@ -12,7 +12,7 @@ def pipeline():
     pipes.habitats()
     pipes.lat_longs()
 
-    pipes.delete_traits("delete_partial", keep_all=True)
+    pipes.delete_traits("delete_partial", keep_outputs=True)
 
     pipes.sentences()
 

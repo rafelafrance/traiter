@@ -26,7 +26,7 @@ COLORS = MatcherPatterns(
         "missing? color_words+ to color_words+ color+ -* color_words*",
     ],
     terms=TermList().shared("colors").add_trailing_dash(),
-    keep=["color"],
+    output=["color"],
 )
 COLORS.remove = COLORS.terms.pattern_dict("remove")
 

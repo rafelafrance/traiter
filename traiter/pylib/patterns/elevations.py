@@ -33,7 +33,7 @@ ELEVATIONS = MatcherPatterns(
         "label :? 99 m ( 99 m )",
     ],
     terms=_TERMS,
-    keep=["elevation"],
+    output=["elevation"],
 )
 
 
@@ -61,7 +61,7 @@ ELEVATION_RANGES = MatcherPatterns(
         "label :? 99 - 99 m",
     ],
     terms=_TERMS,
-    keep=["elevation"],
+    output=["elevation"],
 )
 
 

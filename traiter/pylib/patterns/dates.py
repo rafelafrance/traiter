@@ -50,7 +50,7 @@ DATES = MatcherPatterns(
         "label? :? month -* 99 -* 9999",
     ],
     terms=_TERMS,
-    keep=["date"],
+    output=["date"],
 )
 
 
@@ -95,7 +95,7 @@ MISSING_DAYS = MatcherPatterns(
         # "label? :? 9999  -* 9",
     ],
     terms=_TERMS,
-    keep=["date"],
+    output=["date"],
 )
 
 

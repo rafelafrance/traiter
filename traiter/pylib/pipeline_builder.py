@@ -1,7 +1,6 @@
 from copy import copy
 from dataclasses import dataclass
-from enum import auto
-from enum import Enum
+from typing import Callable
 
 import spacy
 from spacy.lang.en import English
@@ -22,20 +21,9 @@ from .pipes.term import TERM_PIPE
 from .term_list import TermList
 
 
-class Type(Enum):
-    TERMS = auto()
-    TRAITS = auto()
-    MERGE = auto()
-    DELETE = auto()
-    LINK = auto()
-    SENT = auto()
-    DEBUG_ENTS = auto()
-    DEBUG_TOKENS = auto()
-
-
 @dataclass
 class Pipe:
-    type: Type
+    func: Callable
     kwargs: dict
 
 
@@ -59,22 +47,7 @@ class BasePipelineBuilder:
 
     def build(self):
         for pipe in self.pipeline:
-            if pipe.type == Type.TERMS:  # Black is refusing to deal with a match/case
-                self._add_terms(**pipe.kwargs)
-            elif pipe.type == Type.TRAITS:
-                self._add_traits(**pipe.kwargs)
-            elif pipe.type == Type.MERGE:
-                self._merge_entities(**pipe.kwargs)
-            elif pipe.type == Type.DELETE:
-                self._delete_traits(**pipe.kwargs)
-            elif pipe.type == Type.LINK:
-                self._add_links(**pipe.kwargs)
-            elif pipe.type == Type.SENT:
-                self._sentences(**pipe.kwargs)
-            elif pipe.type == Type.DEBUG_ENTS:
-                self._debug_ents(**pipe.kwargs)
-            elif pipe.type == Type.DEBUG_TOKENS:
-                self._debug_tokens(**pipe.kwargs)
+            pipe.func(**pipe.kwargs)
         return self
 
     def _add_terms(self, *, name, config, all_terms, **kwargs):
@@ -93,12 +66,13 @@ class BasePipelineBuilder:
     def _merge_entities(self, *, name, **kwargs):
         self.nlp.add_pipe("merge_entities", name=name, **kwargs)
 
-    def _delete_traits(self, *, name, config, keep_all, **kwargs):
-        if keep_all:
-            keep = copy(self.traits_without_matcher)
+    def _delete_traits(self, *, name, config, keep_outputs, **kwargs):
+        if keep_outputs:
+            keep = keep_outputs if isinstance(keep_outputs, list) else []
+            keep += copy(self.traits_without_matcher)
             for pat in self.patterns:
-                if pat.keep:
-                    keep += pat.keep
+                if pat.output:
+                    keep += pat.output
             config["keep"] = keep
         self.nlp.add_pipe(DELETE_TRAITS, name=name, config=config, **kwargs)
 
@@ -131,7 +105,7 @@ class BasePipelineBuilder:
         replace = replace if replace else {}
         config = {"terms": terms.terms, "replace": replace}
         kwargs |= {"name": name, "config": config, "all_terms": all_terms}
-        self.pipeline.append(Pipe(Type.TERMS, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._add_terms, kwargs=kwargs))
         if merge:
             return self.merge_entities(name=f"{name}_merge", after=name)
         return name
@@ -140,14 +114,14 @@ class BasePipelineBuilder:
         self.patterns += patterns
         config = {"patterns": patterns}
         kwargs |= {"name": name, "config": config}
-        self.pipeline.append(Pipe(Type.TRAITS, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._add_traits, kwargs=kwargs))
         if merge:
             return self.merge_entities(name=f"{name}_merge", after=name)
         return name
 
     def merge_entities(self, *, name, **kwargs) -> str:
         kwargs |= {"name": name}
-        self.pipeline.append(Pipe(Type.MERGE, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._merge_entities, kwargs=kwargs))
         return name
 
     def delete_traits(
@@ -157,7 +131,7 @@ class BasePipelineBuilder:
         delete=None,
         keep=None,
         delete_when=None,
-        keep_all=False,
+        keep_outputs=False,
         **kwargs,
     ) -> str:
         config = {}
@@ -167,8 +141,12 @@ class BasePipelineBuilder:
             config["delete"] = delete
         if delete_when is not None:
             config["delete_when"] = delete_when
-        kwargs |= {"name": name, "config": config, "keep_all": keep_all}
-        self.pipeline.append(Pipe(Type.DELETE, kwargs=kwargs))
+        kwargs |= {
+            "name": name,
+            "config": config,
+            "keep_outputs": keep_outputs,
+        }
+        self.pipeline.append(Pipe(self._delete_traits, kwargs=kwargs))
         return name
 
     def add_links(
@@ -199,26 +177,26 @@ class BasePipelineBuilder:
         if differ is not None:
             config["differ"] = differ
         kwargs |= {"name": name, "config": config}
-        self.pipeline.append(Pipe(Type.LINK, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._add_links, kwargs=kwargs))
         return name
 
     def sentences(self, name=SENTENCES, **kwargs) -> str:
         kwargs |= {"name": name, "config": {"base_model": self.base_model}}
-        self.pipeline.append(Pipe(Type.SENT, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._sentences, kwargs=kwargs))
         return name
 
     def debug_ents(self, **kwargs) -> str:
         self.debug_count += 1
         name = f"debug_entities_{self.debug_count}"
         kwargs |= {"name": name}
-        self.pipeline.append(Pipe(Type.DEBUG_ENTS, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._debug_ents, kwargs=kwargs))
         return name
 
     def debug_tokens(self, **kwargs) -> str:
         self.debug_count += 1
         name = f"debug_tokens_{self.debug_count}"
         kwargs |= {"name": name}
-        self.pipeline.append(Pipe(Type.DEBUG_TOKENS, kwargs=kwargs))
+        self.pipeline.append(Pipe(self._delete_traits, kwargs=kwargs))
         return name
 
 
@@ -251,5 +229,4 @@ class PipelineBuilder(BasePipelineBuilder):
             [lat_longs.LAT_LONG_UNCERTAIN],
             name="lat_long_uncertain",
             after=prev,
-            **kwargs,
         )

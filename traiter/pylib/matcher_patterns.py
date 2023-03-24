@@ -23,7 +23,7 @@ class MatcherPatterns:
     decoder: dict[str, dict]
     patterns: list[str]
     terms: TermList | None
-    keep: list[str] | None
+    output: list[str] | None
 
     @property
     def replace(self):

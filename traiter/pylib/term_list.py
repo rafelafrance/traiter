@@ -47,11 +47,11 @@ class TermList:  # (UserList):
 
     @terms.setter
     def terms(self, values):
-        self.set_replace()
+        self.update_replace()
         self.validate_terms(values)
         self._terms = self.filter_duplicates(values)
 
-    def set_replace(self):
+    def update_replace(self):
         self.replace = {t["pattern"]: r for t in self.terms if (r := t.get("replace"))}
 
     @staticmethod

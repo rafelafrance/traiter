@@ -62,7 +62,7 @@ LAT_LONGS = MatcherPatterns(
         "label? dir 180 deg?        ,? dir 180 deg?",
     ],
     terms=_TERMS,
-    keep=["lat_long"],
+    output=["lat_long"],
 )
 
 
@@ -94,7 +94,7 @@ LAT_LONG_UNCERTAIN = MatcherPatterns(
         "lat_long+ ,? uncert ,?  99 m",
     ],
     terms=_TERMS,
-    keep=["lat_long"],
+    output=["lat_long"],
 )
 
 
