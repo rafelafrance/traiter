@@ -6,6 +6,8 @@ habitat_term,bogs,bog
 habitat_term,bosque,
 habitat_term,canebrake,
 habitat_term,canebreak,canebrake
+habitat_term,canyon,
+habitat_term,canyons,canyon
 habitat_term,chaparral,
 habitat_term,coast,
 habitat_term,desert,
@@ -130,6 +132,7 @@ habitat_prefix,pelagic,
 habitat_prefix,planar,
 habitat_prefix,polar,
 habitat_prefix,riparian,
+habitat_prefix,rocky,
 habitat_prefix,seasonal,
 habitat_prefix,semi-arid,
 habitat_prefix,semideciduous,
@@ -149,8 +152,8 @@ habitat_prefix,urban,
 habitat_prefix,upland,
 habitat_prefix,vernal,
 habitat_prefix,wet,
-habitat_prefix,uppland
-habitat_prefix,sonoran
+habitat_prefix,upland,
+habitat_prefix,sonoran,
 habitat_prefix,xeric,
 habitat_suffix,ecosystem,
 habitat_suffix,ecosystems,ecosystem

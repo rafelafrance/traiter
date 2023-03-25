@@ -7,7 +7,7 @@ from ..term_list import TermList
 _NOPE_SUFFIX = """ road villa street sec sec.""".split()
 _NOPE_PREFIX = """national botanical """.split()
 
-_TERMS = TermList().shared("habitat")
+_TERMS = TermList().shared("habitats")
 
 _DECODER = {
     "habitat": {"ENT_TYPE": "habitat_term"},

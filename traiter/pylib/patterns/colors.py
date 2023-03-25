@@ -44,7 +44,9 @@ def on_color_match(ent):
             continue
         if token.shape_ in const.TITLE_SHAPES:  # Skip names like "Brown"
             continue
-        color_parts.append(re.sub(r"-$", "", replace))  # Remove trailing dash
+        part = re.sub(r"-$", "", replace)  # Remove trailing dash
+        if part not in color_parts:
+            color_parts.append(part)
 
     if not color_parts:
         raise actions.RejectMatch()

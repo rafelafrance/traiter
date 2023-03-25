@@ -1,8 +1,8 @@
-from .pipeline_builder import PipelineBuilder
+from traiter.pylib.pipeline_builders.builder import PipelineBuilder
 
 
 def pipeline():
-    pipes = PipelineBuilder(exclude="ner")
+    pipes = PipelineBuilder(base_model="en_core_web_sm", exclude="ner")
 
     pipes.add_terms(all_terms=True)
 

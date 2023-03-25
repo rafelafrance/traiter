@@ -92,3 +92,17 @@ class TestLatLongPatterns(unittest.TestCase):
                 }
             ],
         )
+
+    def test_lat_long_07(self):
+        self.assertEqual(
+            test("""40.104905N, 79.324561W NAD83."""),
+            [
+                {
+                    "datum": "NAD83",
+                    "lat_long": "40.104905N, 79.324561W",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 28,
+                }
+            ],
+        )

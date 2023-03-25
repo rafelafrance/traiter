@@ -31,6 +31,7 @@ ELEVATIONS = MatcherPatterns(
     patterns=[
         "label :? 99 m",
         "label :? 99 m ( 99 m )",
+        "label :? 99 m / 99 m",
     ],
     terms=_TERMS,
     output=["elevation"],

@@ -1,24 +1,18 @@
-from copy import copy
 from dataclasses import dataclass
 from typing import Callable
 
 import spacy
 from spacy.lang.en import English
 
-from .pattern_compilers.matcher import Compiler
-from .patterns import colors
-from .patterns import dates
-from .patterns import elevations
-from .patterns import habitats
-from .patterns import lat_longs
-from .pipes.add import ADD_TRAITS
-from .pipes.debug import DEBUG_ENTITIES
-from .pipes.debug import DEBUG_TOKENS
-from .pipes.delete import DELETE_TRAITS
-from .pipes.link import LINK_TRAITS
-from .pipes.sentence import SENTENCES
-from .pipes.term import TERM_PIPE
-from .term_list import TermList
+from ..pattern_compilers.matcher import Compiler
+from ..pipes.add import ADD_TRAITS
+from ..pipes.debug import DEBUG_ENTITIES
+from ..pipes.debug import DEBUG_TOKENS
+from ..pipes.delete import DELETE_TRAITS
+from ..pipes.link import LINK_TRAITS
+from ..pipes.sentence import SENTENCES
+from ..pipes.term import TERM_PIPE
+from ..term_list import TermList
 
 
 @dataclass
@@ -30,7 +24,7 @@ class Pipe:
 class BasePipelineBuilder:
     def __init__(self, *, base_model="en_core_web_sm", exclude=None):
         exclude = exclude if exclude is not None else []
-        exclude = exclude if isinstance(exclude, list) else [exclude]
+        exclude = [exclude] if isinstance(exclude, str) else exclude
         self.base_model = base_model
         if base_model.lower() == "english":
             self.nlp = English()
@@ -68,8 +62,8 @@ class BasePipelineBuilder:
 
     def _delete_traits(self, *, name, config, keep_outputs, **kwargs):
         if keep_outputs:
-            keep = keep_outputs if isinstance(keep_outputs, list) else []
-            keep += copy(self.traits_without_matcher)
+            keep = config["keep"] if config.get("keep") else []
+            keep += self.traits_without_matcher
             for pat in self.patterns:
                 if pat.output:
                     keep += pat.output
@@ -83,7 +77,6 @@ class BasePipelineBuilder:
         if "parser" in self.nlp.pipe_names:
             self.nlp.remove_pipe("parser")
         self.nlp.add_pipe(SENTENCES, name=name, config=config, **kwargs)
-        return name
 
     def _debug_ents(self, *, name, **kwargs):
         self.nlp.add_pipe(DEBUG_ENTITIES, name=name, **kwargs)
@@ -188,45 +181,13 @@ class BasePipelineBuilder:
     def debug_ents(self, **kwargs) -> str:
         self.debug_count += 1
         name = f"debug_entities_{self.debug_count}"
-        kwargs |= {"name": name}
+        kwargs |= {"name": name, "config": {}}
         self.pipeline.append(Pipe(self._debug_ents, kwargs=kwargs))
         return name
 
     def debug_tokens(self, **kwargs) -> str:
         self.debug_count += 1
         name = f"debug_tokens_{self.debug_count}"
-        kwargs |= {"name": name}
-        self.pipeline.append(Pipe(self._delete_traits, kwargs=kwargs))
+        kwargs |= {"name": name, "config": {}}
+        self.pipeline.append(Pipe(self._debug_tokens, kwargs=kwargs))
         return name
-
-
-class PipelineBuilder(BasePipelineBuilder):
-    def colors(self, **kwargs) -> str:
-        return self.add_traits([colors.COLORS], name="colors", **kwargs)
-
-    def dates(self, **kwargs) -> str:
-        return self.add_traits(
-            [dates.DATES, dates.MISSING_DAYS], name="dates", **kwargs
-        )
-
-    def elevations(self, **kwargs) -> str:
-        return self.add_traits(
-            [elevations.ELEVATIONS, elevations.ELEVATION_RANGES],
-            name="elevations",
-            **kwargs,
-        )
-
-    def habitats(self, **kwargs) -> str:
-        return self.add_traits(
-            [habitats.HABITATS, habitats.NOT_HABITATS], name="habitats", **kwargs
-        )
-
-    def lat_longs(self, **kwargs) -> str:
-        prev = self.add_traits(
-            [lat_longs.LAT_LONGS], name="lat_longs", merge=True, **kwargs
-        )
-        return self.add_traits(
-            [lat_longs.LAT_LONG_UNCERTAIN],
-            name="lat_long_uncertain",
-            after=prev,
-        )

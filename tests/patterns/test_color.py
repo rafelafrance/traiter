@@ -410,3 +410,17 @@ class TestColor(unittest.TestCase):
                 },
             ],
         )
+
+    def test_color_19(self):
+        """It does not repeat colors."""
+        self.assertEqual(
+            test("""petals clear lemon yellow."""),
+            [
+                {
+                    "color": "yellow",
+                    "trait": "color",
+                    "start": 13,
+                    "end": 25,
+                },
+            ],
+        )
