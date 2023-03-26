@@ -5,7 +5,7 @@ from spacy.util import registry
 from . import common
 from .. import util
 from ..matcher_patterns import MatcherPatterns
-from ..term_list import TermList
+from ..vocabulary.terms import TERMS
 
 _LABEL_ENDER = r"[:=;,.]"
 _UNITS = ["metric_length", "imperial_length"]
@@ -19,8 +19,7 @@ _DECODER = common.PATTERNS | {
     "m": {"ENT_TYPE": {"IN": _UNITS}},
 }
 
-_TERMS = TermList().shared("labels units")
-_FACTORS_CM = _TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
+_FACTORS_CM = TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
 _FACTORS_M = {k: v / 100.0 for k, v in _FACTORS_CM.items()}  # Convert value to meters
 
 # ####################################################################################
@@ -33,7 +32,6 @@ ELEVATIONS = MatcherPatterns(
         "label :? 99 m ( 99 m )",
         "label :? 99 m / 99 m",
     ],
-    terms=_TERMS,
     output=["elevation"],
 )
 
@@ -47,7 +45,7 @@ def on_elevation_match(ent):
         if re.match(_FLOAT_RE, token.text):
             values.append(util.to_positive_float(token.text))
         elif token.ent_type_ in _UNITS:
-            units.append(ELEVATIONS.replace.get(token.lower_, token.lower_))
+            units.append(TERMS.replace.get(token.lower_, token.lower_))
 
     factor = _FACTORS_M[units[0]]
     ent._.data["elevation"] = round(values[0] * factor, 3)
@@ -61,7 +59,6 @@ ELEVATION_RANGES = MatcherPatterns(
     patterns=[
         "label :? 99 - 99 m",
     ],
-    terms=_TERMS,
     output=["elevation"],
 )
 
@@ -75,7 +72,7 @@ def on_elevation_range_match(ent):
         if re.match(_FLOAT_RE, token.text):
             values.append(util.to_positive_float(token.text))
         elif token.ent_type_ in _UNITS:
-            units = ELEVATION_RANGES.replace.get(token.lower_, token.lower_)
+            units = TERMS.replace.get(token.lower_, token.lower_)
 
     factor = _FACTORS_M[units]
     ent._.data["elevation"] = round(values[0] * factor, 3)

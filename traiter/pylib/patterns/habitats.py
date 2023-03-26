@@ -2,12 +2,11 @@ from spacy import registry
 
 from ..actions import REJECT_MATCH
 from ..matcher_patterns import MatcherPatterns
-from ..term_list import TermList
+from ..vocabulary.terms import TERMS
 
 _NOPE_SUFFIX = """ road villa street sec sec.""".split()
 _NOPE_PREFIX = """national botanical """.split()
 
-_TERMS = TermList().shared("habitats")
 
 _DECODER = {
     "habitat": {"ENT_TYPE": "habitat_term"},
@@ -29,14 +28,13 @@ HABITATS = MatcherPatterns(
         "         habitat+ suffix",
         "prefix+           suffix",
     ],
-    terms=_TERMS,
     output=["habitat"],
 )
 
 
 @registry.misc(HABITATS.on_match)
 def on_habitat_match(ent):
-    parts = [HABITATS.replace.get(t.lower_, t.lower_) for t in ent]
+    parts = [TERMS.replace.get(t.lower_, t.lower_) for t in ent]
     ent._.data["habitat"] = " ".join(parts)
     ent._.data["trait"] = "habitat"
     ent._.new_label = "habitat"
@@ -54,6 +52,5 @@ NOT_HABITATS = MatcherPatterns(
         "nope_before habitat nope_after",
         "            habitat nope_after",
     ],
-    terms=_TERMS,
     output=None,
 )

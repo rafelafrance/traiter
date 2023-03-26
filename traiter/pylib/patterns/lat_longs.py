@@ -4,7 +4,7 @@ from spacy.util import registry
 
 from .. import util
 from ..matcher_patterns import MatcherPatterns
-from ..term_list import TermList
+from ..vocabulary.terms import TERMS
 
 _SYM = r"""°"”“'`‘´’"""
 _PUNCT = f"{_SYM},;._"
@@ -41,8 +41,7 @@ _DECODER = {
     "[+]": {"TEXT": {"REGEX": _PLUS}},
 }
 
-_TERMS = TermList().shared("lat_long units")
-_FACTORS_CM = _TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
+_FACTORS_CM = TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
 _FACTORS_M = {k: v / 100.0 for k, v in _FACTORS_CM.items()}  # Convert value to meters
 
 # ###################################################################################
@@ -63,7 +62,6 @@ LAT_LONGS = MatcherPatterns(
         "label? dir 180 deg? 60'60           ,? dir 180 deg? 60'60           datum?",
         "label? dir 180 deg?                 ,? dir 180 deg?                 datum?",
     ],
-    terms=_TERMS,
     output=["lat_long"],
 )
 
@@ -75,7 +73,7 @@ def on_lat_long_match(ent):
         if token.ent_type_ == "lat_long_label":
             continue
         if token.ent_type_ == "datum":
-            ent._.data["datum"] = LAT_LONGS.replace.get(token.lower_, token.text)
+            ent._.data["datum"] = TERMS.replace.get(token.lower_, token.text)
         else:
             text = token.text.upper() if len(token.text) == 1 else token.text
             parts.append(text)
@@ -95,7 +93,6 @@ LAT_LONG_UNCERTAIN = MatcherPatterns(
         "lat_long+ ,?        ,?     +99 m",
         "lat_long+ ,? uncert ,? [+]? 99 m",
     ],
-    terms=_TERMS,
     output=["lat_long"],
 )
 
@@ -111,7 +108,7 @@ def on_lat_long_match(ent):
         elif re.match(_NUM_PLUS, token.text):
             value = util.to_positive_float(token.text)
         elif label in _UNITS:
-            units = LAT_LONGS.replace.get(token.lower_, token.lower_)
+            units = TERMS.replace.get(token.lower_, token.lower_)
 
     factor = _FACTORS_M[units]
     ent._.data["uncertainty"] = round(value * factor, 3)

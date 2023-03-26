@@ -6,11 +6,13 @@ from . import common
 from .. import actions
 from .. import const
 from ..matcher_patterns import MatcherPatterns
-from ..term_list import TermList
+from ..vocabulary.terms import TERMS
 
 _MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
 _MULTIPLE_DASHES = rf'\s*[{"".join(_MULTIPLE_DASHES)}]{{2,}}\s*'
 _SKIP = const.DASH + common.MISSING
+
+_REMOVE = TERMS.pattern_dict("remove")
 
 COLORS = MatcherPatterns(
     name="color",
@@ -25,20 +27,18 @@ COLORS = MatcherPatterns(
         "missing? color_words* -* color+ -* color_words*",
         "missing? color_words+ to color_words+ color+ -* color_words*",
     ],
-    terms=TermList().shared("colors").add_trailing_dash(),
     output=["color"],
 )
-COLORS.remove = COLORS.terms.pattern_dict("remove")
 
 
 @registry.misc(COLORS.on_match)
 def on_color_match(ent):
     color_parts = []
     for token in ent:
-        replace = COLORS.replace.get(token.lower_, token.lower_)
+        replace = TERMS.replace.get(token.lower_, token.lower_)
         if replace in _SKIP:  # Skip any in the list from above
             continue
-        if COLORS.remove.get(token.lower_):  # Skip terms marked for removal
+        if _REMOVE.get(token.lower_):  # Skip terms marked for removal
             continue
         if token.pos_ == "AUX":  # Skip auxiliary verbs/words like: "is", "must"
             continue
@@ -53,6 +53,6 @@ def on_color_match(ent):
 
     value = "-".join(color_parts)
     value = re.sub(_MULTIPLE_DASHES, r"-", value)
-    ent._.data["color"] = COLORS.replace.get(value, value)
+    ent._.data["color"] = TERMS.replace.get(value, value)
     if any(t for t in ent if t.lower_ in common.MISSING):
         ent._.data["missing"] = True

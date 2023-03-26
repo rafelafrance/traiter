@@ -7,7 +7,6 @@ from dateutil.relativedelta import relativedelta
 from spacy.util import registry
 
 from ..matcher_patterns import MatcherPatterns
-from ..term_list import TermList
 from traiter.pylib import actions
 
 _SEP = "[.,;/_'-]"
@@ -30,8 +29,6 @@ _DECODER = {
     "99-9999": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+[12]\d\d\d$"}},
 }
 
-_TERMS = TermList().shared("time").pick("month")
-
 # ####################################################################################
 DATES = MatcherPatterns(
     name="date",
@@ -49,7 +46,6 @@ DATES = MatcherPatterns(
         "label? :? 9999-99-99",
         "label? :? month -* 99 -* 9999",
     ],
-    terms=_TERMS,
     output=["date"],
 )
 
@@ -94,7 +90,6 @@ MISSING_DAYS = MatcherPatterns(
         # "label? :? month -* 99",
         # "label? :? 9999  -* 9",
     ],
-    terms=_TERMS,
     output=["date"],
 )
 

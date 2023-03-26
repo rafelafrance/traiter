@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 from traiter.pylib.pattern_compilers.matcher import Compiler
-from traiter.pylib.term_list import TermList
 
 
 @dataclass()
@@ -22,12 +21,7 @@ class MatcherPatterns:
     on_match: str | None
     decoder: dict[str, dict]
     patterns: list[str]
-    terms: TermList | None
     output: list[str] | None
-
-    @property
-    def replace(self):
-        return self.terms.replace
 
     def compile(self):
         return Compiler(

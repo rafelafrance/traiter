@@ -14,7 +14,7 @@ from setuptools import find_packages
 SETTINGS = {
     "project": {
         "name": "traiter",
-        "version": "0.15.0",
+        "version": "0.16.0",
         "description": "Rule-based parsers for mining text",
         "dependencies": [
             "ftfy",

@@ -1,10 +1,11 @@
-from traiter.pylib.pipeline_builders.builder import PipelineBuilder
+from .pipeline_builders.builder import PipelineBuilder
+from .vocabulary import terms
 
 
 def pipeline():
-    pipes = PipelineBuilder(base_model="en_core_web_sm", exclude="ner")
+    pipes = PipelineBuilder(exclude="ner")
 
-    pipes.add_terms(all_terms=True)
+    pipes.add_terms(terms.TERMS)
 
     pipes.colors()
     pipes.dates()

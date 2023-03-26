@@ -44,12 +44,7 @@ class BasePipelineBuilder:
             pipe.func(**pipe.kwargs)
         return self
 
-    def _add_terms(self, *, name, config, all_terms, **kwargs):
-        if all_terms:
-            terms = []
-            for pat in self.patterns:
-                terms += pat.terms
-            config["terms"] = terms
+    def _add_terms(self, *, name, config, **kwargs):
         self.nlp.add_pipe(TERM_PIPE, name=name, config=config, **kwargs)
 
     def _add_traits(self, *, name, config, **kwargs):
@@ -91,13 +86,12 @@ class BasePipelineBuilder:
         name="terms",
         replace=None,
         merge=False,
-        all_terms=False,
         **kwargs,
     ) -> str:
         terms = terms if terms else TermList()
         replace = replace if replace else {}
         config = {"terms": terms.terms, "replace": replace}
-        kwargs |= {"name": name, "config": config, "all_terms": all_terms}
+        kwargs |= {"name": name, "config": config}
         self.pipeline.append(Pipe(self._add_terms, kwargs=kwargs))
         if merge:
             return self.merge_entities(name=f"{name}_merge", after=name)
