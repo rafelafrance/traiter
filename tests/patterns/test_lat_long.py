@@ -29,7 +29,7 @@ class TestLatLongPatterns(unittest.TestCase):
                     "trait": "habitat",
                 },
                 {
-                    "lat_long": """40.104905N, 79.324561W""",
+                    "lat_long": """40.104905 N, 79.324561 W""",
                     "trait": "lat_long",
                     "datum": "NAD83",
                     "start": 20,
@@ -57,7 +57,7 @@ class TestLatLongPatterns(unittest.TestCase):
             test("""(Ord Mountains 7.5’ Q.: 34°41'32"N, 116°49'25"W, +1000m)"""),
             [
                 {
-                    "lat_long": """34° 41'32"N, 116° 49'25"W""",
+                    "lat_long": """34° 41' 32" N, 116° 49' 25" W""",
                     "uncertainty": 1000.0,
                     "trait": "lat_long",
                     "start": 24,
@@ -99,10 +99,23 @@ class TestLatLongPatterns(unittest.TestCase):
             [
                 {
                     "datum": "NAD83",
-                    "lat_long": "40.104905N, 79.324561W",
+                    "lat_long": "40.104905 N, 79.324561 W",
                     "trait": "lat_long",
                     "start": 0,
                     "end": 28,
+                }
+            ],
+        )
+
+    def test_lat_long_08(self):
+        self.assertEqual(
+            test("""33° 53' 31.0" N, -111° 56' 59.9" W"""),
+            [
+                {
+                    "lat_long": """33° 53' 31.0" N, -111° 56' 59.9" W""",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 34,
                 }
             ],
         )

@@ -14,7 +14,8 @@ _60 = r"[-]?([1-6]\d|\d)([.,_;]\d+)?"
 
 _FLOAT_RE = r"^([\d,]+\.?\d*)$"
 _NUM_PLUS = r"^((±|\+|-)?[\d,]+\.?\d*)$"
-_PLUS = r"^(±|\+|-)$"
+_PLUS = r"^(±|\+|-)+$"
+_MINUS = r"^[-]$"
 
 _UNITS = ["metric_length", "imperial_length"]
 
@@ -39,6 +40,7 @@ _DECODER = {
     "uncert": {"ENT_TYPE": "uncertain_label"},
     "lat_long": {"ENT_TYPE": "lat_long"},
     "[+]": {"TEXT": {"REGEX": _PLUS}},
+    "[-]": {"TEXT": {"REGEX": _PLUS}},
 }
 
 _FACTORS_CM = TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
@@ -50,17 +52,17 @@ LAT_LONGS = MatcherPatterns(
     on_match="digi_leap_lat_long_v1",
     decoder=_DECODER,
     patterns=[
-        "label? 180 deg? 60 min? 60 sec? dir ,? 180 deg? 60 min? 60 sec? dir datum?",
-        "label? 180 deg? 60 min?         dir ,? 180 deg? 60 min?         dir datum?",
-        "label? 180E                         ,? 90N                          datum?",
-        "label? 90N                          ,? 180E                         datum?",
-        "label? 180 deg? 60'60  dir          ,? 180 deg? 60'60           dir datum?",
-        "label? 180 deg? 60'60N              ,? 180 deg? 60'60N              datum?",
-        "label? 180 deg? dir                 ,? 180 deg?                 dir datum?",
-        "label? dir 180 deg? 60 min? 60 sec? ,? dir 180 deg? 60 min? 60 sec? datum?",
-        "label? dir 180 deg? 60 min?         ,? dir 180 deg? 60 min?         datum?",
-        "label? dir 180 deg? 60'60           ,? dir 180 deg? 60'60           datum?",
-        "label? dir 180 deg?                 ,? dir 180 deg?                 datum?",
+        "label? [-]? 180 deg? 60 min? 60 sec? dir ,? [-]? 180 deg? 60 min? 60 sec? dir datum?",
+        "label? [-]? 180 deg? 60 min?         dir ,? [-]? 180 deg? 60 min?         dir datum?",
+        "label? [-]? 180E                         ,? [-]? 90N                          datum?",
+        "label? [-]? 90N                          ,? [-]? 180E                         datum?",
+        "label? [-]? 180 deg? 60'60  dir          ,? [-]? 180 deg? 60'60           dir datum?",
+        "label? [-]? 180 deg? 60'60N              ,? [-]? 180 deg? 60'60N              datum?",
+        "label? [-]? 180 deg? dir                 ,? [-]? 180 deg?                 dir datum?",
+        "label? dir [-]? 180 deg? 60 min? 60 sec? ,? dir [-]? 180 deg? 60 min? 60 sec? datum?",
+        "label? dir [-]? 180 deg? 60 min?         ,? dir [-]? 180 deg? 60 min?         datum?",
+        "label? dir [-]? 180 deg? 60'60           ,? dir [-]? 180 deg? 60'60           datum?",
+        "label? dir [-]? 180 deg?                 ,? dir [-]? 180 deg?                 datum?",
     ],
     output=["lat_long"],
 )
@@ -80,6 +82,7 @@ def on_lat_long_match(ent):
 
     lat_long = " ".join(parts)
     lat_long = re.sub(rf"\s([{_PUNCT}])", r"\1", lat_long)
+    lat_long = re.sub(rf"(-)\s", r"\1", lat_long)
     ent._.data["lat_long"] = lat_long
     ent[0]._.data = ent._.data
 
@@ -90,8 +93,8 @@ LAT_LONG_UNCERTAIN = MatcherPatterns(
     on_match="digi_leap_lat_long_uncertain_v1",
     decoder=_DECODER,
     patterns=[
-        "lat_long+ ,?        ,?     +99 m",
-        "lat_long+ ,? uncert ,? [+]? 99 m",
+        "lat_long+ ,? uncert? ,?     +99 m",
+        "lat_long+ ,? uncert? ,? [+]? 99 m",
     ],
     output=["lat_long"],
 )

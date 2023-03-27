@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable
 
+from .. import tokenizer
 from ..patterns import colors
 from ..patterns import dates
 from ..patterns import elevations
@@ -16,6 +17,9 @@ class Pipe:
 
 
 class PipelineBuilder(BasePipelineBuilder):
+    def tokenizer(self):
+        tokenizer.setup_tokenizer(self.nlp)
+
     def colors(self, **kwargs) -> str:
         return self.add_traits([colors.COLORS], name="colors", **kwargs)
 

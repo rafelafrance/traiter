@@ -8,11 +8,11 @@ imperial_length,in .,in,2.54
 imperial_length,in.,in,2.54
 imperial_length,inch,in,2.54
 imperial_length,inches,in,2.54
-imperial_length,mi,mi,160934.4
-imperial_length,mi .,mi,160934.4
-imperial_length,mi.,mi,160934.4
-imperial_length,mile,mi,160934.4
-imperial_length,miles,mi,160934.4
+imperial_dist,mi,mi,160934.4
+imperial_dist,mi .,mi,160934.4
+imperial_dist,mi.,mi,160934.4
+imperial_dist,mile,mi,160934.4
+imperial_dist,miles,mi,160934.4
 imperial_mass,ounce,oz,28.34952
 imperial_mass,ounces,oz,28.34952
 imperial_mass,oz,oz,28.34952
@@ -27,11 +27,11 @@ metric_length,decimeters,dm,10
 metric_length,dm,dm,10
 metric_length,dm .,dm,10
 metric_length,dm.,dm,10
-metric_length,kilometer,km,100000
-metric_length,kilometers,km,100000
-metric_length,km,km,100000
-metric_length,km .,km,100000
-metric_length,km.,km,100000
+metric_dist,kilometer,km,100000
+metric_dist,kilometers,km,100000
+metric_dist,km,km,100000
+metric_dist,km .,km,100000
+metric_dist,km.,km,100000
 metric_length,m,m,100
 metric_length,m .,m,100
 metric_length,m.,m,100

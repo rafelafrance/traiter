@@ -4,8 +4,8 @@ from ..actions import REJECT_MATCH
 from ..matcher_patterns import MatcherPatterns
 from ..vocabulary.terms import TERMS
 
-_NOPE_SUFFIX = """ road villa street sec sec.""".split()
 _NOPE_PREFIX = """national botanical """.split()
+_NOPE_SUFFIX = """ road villa street sec sec. botanical""".split()
 
 
 _DECODER = {

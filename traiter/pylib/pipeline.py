@@ -5,6 +5,8 @@ from .vocabulary import terms
 def pipeline():
     pipes = PipelineBuilder(exclude="ner")
 
+    pipes.tokenizer()
+
     pipes.add_terms(terms.TERMS)
 
     pipes.colors()
@@ -18,6 +20,5 @@ def pipeline():
     pipes.sentences()
 
     # pipes.debug_tokens()  # #########################################
-    # pipes.debug_ents()  # ###########################################
 
     return pipes.build()
