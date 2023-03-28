@@ -1,31 +1,34 @@
+import spacy
 from spacy.tokens import Span
 
-from .new_patterns.color import color_pipe
-from .new_patterns.date import date_pipe
-from .new_patterns.elevation import elevation_pipe
-from .new_patterns.habitat import habitat_pipe
-from .new_patterns.lat_long import lat_long_pipe
-from .pipeline_builders.builder import PipelineBuilder
+from . import tokenizer
+from .pipes.sentence import SENTENCES
+from .traits.color import color_pipe
+from .traits.date import date_pipe
+from .traits.elevation import elevation_pipe
+from .traits.habitat import habitat_pipe
+from .traits.lat_long import lat_long_pipe
 
 
 def pipeline():
     Span.set_extension("data", default={})
 
-    pipes = PipelineBuilder(exclude="ner")
+    nlp = spacy.load("en_core_web_sm", exclude="ner")
+    nlp.remove_pipe("parser")
 
-    pipes.tokenizer()
+    tokenizer.setup_tokenizer(nlp)
 
-    color_pipe.pipe(pipes.nlp)
-    date_pipe.pipe(pipes.nlp)
-    elevation_pipe.pipe(pipes.nlp)
-    habitat_pipe.pipe(pipes.nlp)
-    lat_long_pipe.pipe(pipes.nlp)
+    color_pipe.pipe(nlp)
+    date_pipe.pipe(nlp)
+    elevation_pipe.pipe(nlp)
+    habitat_pipe.pipe(nlp)
+    lat_long_pipe.pipe(nlp)
 
-    pipes.sentences()
+    nlp.add_pipe(SENTENCES)
 
     # pipes.debug_tokens()  # #########################################
 
-    for name in pipes.nlp.pipe_names:
-        print(name)
+    # for name in nlp.pipe_names:
+    #     print(name)
 
-    return pipes.build()
+    return nlp

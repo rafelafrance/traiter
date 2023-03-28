@@ -6,12 +6,6 @@ from spacy.lang.char_classes import HYPHENS
 from spacy.lang.char_classes import LIST_HYPHENS
 from spacy.lang.char_classes import LIST_QUOTES
 
-from . import vocabulary as vocab
-
-
-# This points to the traiter (not client) vocabulary directory
-VOCAB_DIR = Path(vocab.__file__).parent
-
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
 

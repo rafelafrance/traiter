@@ -1,0 +1,29 @@
+{"label":"imperial_length","pattern":"feet"}
+{"label":"imperial_length","pattern":"foot"}
+{"label":"imperial_length","pattern":"ft"}
+{"label":"imperial_length","pattern":"ft."}
+{"label":"imperial_length","pattern":"in"}
+{"label":"imperial_length","pattern":"in ."}
+{"label":"imperial_length","pattern":"in."}
+{"label":"imperial_length","pattern":"inch"}
+{"label":"imperial_length","pattern":"inches"}
+{"label":"metric_length","pattern":"centimeters"}
+{"label":"metric_length","pattern":"cm"}
+{"label":"metric_length","pattern":"cm ."}
+{"label":"metric_length","pattern":"cm."}
+{"label":"metric_length","pattern":"decimeters"}
+{"label":"metric_length","pattern":"dm"}
+{"label":"metric_length","pattern":"dm ."}
+{"label":"metric_length","pattern":"dm."}
+{"label":"metric_length","pattern":"m"}
+{"label":"metric_length","pattern":"m ."}
+{"label":"metric_length","pattern":"m."}
+{"label":"metric_length","pattern":"meter"}
+{"label":"metric_length","pattern":"meters"}
+{"label":"metric_length","pattern":"metre"}
+{"label":"metric_length","pattern":"metres"}
+{"label":"metric_length","pattern":"millimeters"}
+{"label":"metric_length","pattern":"mm"}
+{"label":"metric_length","pattern":"mm ."}
+{"label":"metric_length","pattern":"mm."}
+{"label":"metric_length","pattern":"\u00b5m"}

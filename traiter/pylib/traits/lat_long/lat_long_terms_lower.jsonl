@@ -1,0 +1,27 @@
+{"label":"datum","pattern":"wgs84"}
+{"label":"datum","pattern":"wgs 84"}
+{"label":"datum","pattern":"wgs72"}
+{"label":"datum","pattern":"wgs 72"}
+{"label":"datum","pattern":"wgs66"}
+{"label":"datum","pattern":"wgs 66"}
+{"label":"datum","pattern":"wgs60"}
+{"label":"datum","pattern":"wgs 60"}
+{"label":"datum","pattern":"nad83"}
+{"label":"datum","pattern":"nad 83"}
+{"label":"datum","pattern":"nad27"}
+{"label":"datum","pattern":"nad 27"}
+{"label":"datum","pattern":"osgb36"}
+{"label":"datum","pattern":"osgb 36"}
+{"label":"datum","pattern":"etrs89"}
+{"label":"datum","pattern":"etrs 89"}
+{"label":"datum","pattern":"ed50"}
+{"label":"datum","pattern":"ed 50"}
+{"label":"datum","pattern":"gda94"}
+{"label":"datum","pattern":"gda 94"}
+{"label":"datum","pattern":"sad69"}
+{"label":"datum","pattern":"sad 69"}
+{"label":"lat_long_label","pattern":"gps"}
+{"label":"uncertain_label","pattern":"uncert"}
+{"label":"uncertain_label","pattern":"uncert."}
+{"label":"uncertain_label","pattern":"uncertain"}
+{"label":"uncertain_label","pattern":"uncertainty"}

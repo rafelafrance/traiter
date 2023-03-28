@@ -1,67 +1,31 @@
-from typing import Any
-
-from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
-DELETE_TRAITS = "traiter_delete_traits_v2"
+DELETE_TRAITS = "traiter_delete_traits_v3"
 
 
 @Language.factory(DELETE_TRAITS)
 class DeleteTraits:
     """Delete partial or unwanted traits.
 
-    Traits are built up in layers and sometimes a partial trait in a lower layer is
+    Traits are built up in layers and sometimes a partial traits in lower layers are
     not used in an upper layer. This will cause noisy output, so delete them.
     Note: This deletes the entity/span not its tokens.
 
-    delete: Is a list of traits that get deleted. They're all considered to be
-        partially formed traits.
-
-    delete_when: Takes the name of a registered function (or a list of function names)
-        and deletes the trait if any of them return true. These functions take an
-        entity and return a boolean.
+    delete: Is a list of traits that get deleted.
     """
 
-    def __init__(
-        self,
-        nlp: Language,
-        name: str,
-        delete: list[str] = None,
-        keep: list[str] = None,
-        delete_when: dict[str, Any] = None,
-    ):
+    def __init__(self, nlp: Language, name: str, delete: list[str]):
         super().__init__()
         self.nlp = nlp
         self.name = name
-
-        self.delete = set(delete) if delete else set()
-        self.keep = set(keep) if keep else set()
-
-        delete_when = delete_when if delete_when else {}
-        self.delete_when = {}
-        for label, funcs in delete_when.items():
-            funcs = funcs if isinstance(funcs, list) else [funcs]
-            self.delete_when[label] = [registry.misc.get(f) for f in funcs]
+        self.delete = delete
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            label = ent.label_
-
-            if self.keep and label not in self.keep:
-                continue
-
-            if ent._.delete:
-                continue
-
-            if label in self.delete:
-                continue
-
-            if self.delete_when and any(
-                f(ent) for f in self.delete_when.get(label, [])
-            ):
+            if ent.label_ in self.delete:
                 continue
 
             entities.append(ent)

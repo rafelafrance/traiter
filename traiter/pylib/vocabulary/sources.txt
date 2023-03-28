@@ -1,9 +1,0 @@
-- insect_anatomy.csv: Wikipedia provided most (but not all) of the data
-    https://en.wikipedia.org/wiki/Entomology
-    https://en.wikipedia.org/wiki/Glossary_of_entomology_terms
-    https://en.wikipedia.org/wiki/External_morphology_of_Odonata
-
-- us_locations.csv: Wikipedia tends to lag an bit and is scant on historical data.
-  The US census data tends to be better for our uses.
-  https://www.census.gov/library/publications/2011/compendia/usa-counties-2011.html
-  https://en.wikipedia.org/wiki/List_of_counties_by_U.S._state_and_territory

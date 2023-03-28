@@ -4,11 +4,11 @@ import textwrap
 from pathlib import Path
 
 from pylib import log
-from pylib.new_patterns.color import color_compilers as color
-from pylib.new_patterns.date import date_compilers as dates
-from pylib.patterns import elevations
-from pylib.patterns import habitats
-from pylib.patterns import lat_longs
+from pylib.traits.color import color_compilers as color
+from pylib.traits.date import date_compilers as dates
+from pylib.traits.elevation import elevation_compilers as elevation
+from pylib.traits.habitat import habitat_compilers as habitat
+from pylib.traits.lat_long import lat_long_compilers as lat_long
 from spacy.lang.en import English
 
 
@@ -16,21 +16,12 @@ def main():
     log.started()
 
     all_matchers = {
-        "color": {"dir": "color", "matchers": [color.COLORS]},
-        "date": {"dir": "date", "matchers": [dates.DATES, dates.MISSING_DAYS]},
-        "elevation": {
-            "dir": "elevation",
-            "matchers": [elevations.ELEVATIONS, elevations.ELEVATION_RANGES],
-        },
-        "habitat": {
-            "dir": "habitat",
-            "matchers": [habitats.HABITATS, habitats.NOT_HABITATS],
-        },
-        "lat_long": {"dir": "lat_long", "matchers": [lat_longs.LAT_LONGS]},
-        "lat_long_uncertain": {
-            "dir": "lat_long",
-            "matchers": [lat_longs.LAT_LONG_UNCERTAIN],
-        },
+        "color": [color.COLOR],
+        "date": [dates.DATE, dates.MISSING_DAYS],
+        "elevation": [elevation.ELEVATION, elevation.ELEVATION_RANGE],
+        "habitat": [habitat.HABITATS, habitat.NOT_HABITATS],
+        "lat_long": [lat_long.LAT_LONG],
+        "lat_long_uncertain": [lat_long.LAT_LONG_UNCERTAIN],
     }
 
     args = parse_args()

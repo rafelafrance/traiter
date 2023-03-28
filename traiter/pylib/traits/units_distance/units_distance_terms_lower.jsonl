@@ -1,0 +1,10 @@
+{"label":"imperial_dist","pattern":"mi"}
+{"label":"imperial_dist","pattern":"mi ."}
+{"label":"imperial_dist","pattern":"mi."}
+{"label":"imperial_dist","pattern":"mile"}
+{"label":"imperial_dist","pattern":"miles"}
+{"label":"metric_dist","pattern":"kilometer"}
+{"label":"metric_dist","pattern":"kilometers"}
+{"label":"metric_dist","pattern":"km"}
+{"label":"metric_dist","pattern":"km ."}
+{"label":"metric_dist","pattern":"km."}

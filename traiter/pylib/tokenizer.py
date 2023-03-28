@@ -17,7 +17,7 @@ from spacy.util import compile_infix_regex
 from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
-from .vocabulary import terms
+from junk.vocabulary import terms
 from traiter.pylib import const as t_const
 
 BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]

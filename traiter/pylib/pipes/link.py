@@ -5,7 +5,6 @@ from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
 
-from . import extensions
 from .. import util
 
 LINK_TRAITS = "traiter_link_traits_v1"
@@ -90,8 +89,6 @@ class LinkTraits:
         max_links: int = NO_LIMIT,  # Max times to link to a parent trait
         differ: list[str] = None,
     ):
-        extensions.add()
-
         self.nlp = nlp
         self.name = name
         self.parents = parents
