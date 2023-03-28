@@ -1,7 +1,7 @@
 from spacy import registry
 
 from ..actions import REJECT_MATCH
-from ..matcher_patterns import MatcherPatterns
+from ..pattern_compilers.matcher import Compiler
 from ..vocabulary.terms import TERMS
 
 _NOPE_PREFIX = """national botanical """.split()
@@ -17,8 +17,8 @@ _DECODER = {
 }
 
 # ####################################################################################
-HABITATS = MatcherPatterns(
-    name="habitat",
+HABITATS = Compiler(
+    label="habitat",
     on_match="plant_habitat_v1",
     decoder=_DECODER,
     patterns=[
@@ -43,8 +43,8 @@ def on_habitat_match(ent):
 
 
 # ####################################################################################
-NOT_HABITATS = MatcherPatterns(
-    name="not_habitat",
+NOT_HABITATS = Compiler(
+    label="not_habitat",
     on_match=REJECT_MATCH,
     decoder=_DECODER,
     patterns=[

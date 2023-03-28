@@ -1,0 +1,12 @@
+{"label":"imperial_mass","pattern":"ounce","id":"oz"}
+{"label":"imperial_mass","pattern":"ounces","id":"oz"}
+{"label":"imperial_mass","pattern":"oz","id":"oz"}
+{"label":"imperial_mass","pattern":"ozs","id":"oz"}
+{"label":"imperial_mass","pattern":"pound","id":"lbs"}
+{"label":"imperial_mass","pattern":"pounds","id":"lbs"}
+{"label":"metric_mass","pattern":"g","id":"g"}
+{"label":"metric_mass","pattern":"gm","id":"g"}
+{"label":"metric_mass","pattern":"gms","id":"g"}
+{"label":"metric_mass","pattern":"grams","id":"g"}
+{"label":"metric_mass","pattern":"kg","id":"kg"}
+{"label":"metric_mass","pattern":"kilograms","id":"kg"}

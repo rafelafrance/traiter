@@ -1,0 +1,10 @@
+{"label":"imperial_dist","pattern":"mi","id":"mi"}
+{"label":"imperial_dist","pattern":"mi .","id":"mi"}
+{"label":"imperial_dist","pattern":"mi.","id":"mi"}
+{"label":"imperial_dist","pattern":"mile","id":"mi"}
+{"label":"imperial_dist","pattern":"miles","id":"mi"}
+{"label":"metric_dist","pattern":"kilometer","id":"km"}
+{"label":"metric_dist","pattern":"kilometers","id":"km"}
+{"label":"metric_dist","pattern":"km","id":"km"}
+{"label":"metric_dist","pattern":"km .","id":"km"}
+{"label":"metric_dist","pattern":"km.","id":"km"}

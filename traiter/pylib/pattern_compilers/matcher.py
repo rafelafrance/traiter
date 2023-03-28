@@ -10,8 +10,6 @@ import re
 from copy import deepcopy
 from typing import Any
 from typing import Callable
-from typing import Optional
-from typing import Union
 from warnings import warn
 
 from spacy.tokens.doc import Doc
@@ -19,7 +17,7 @@ from spacy.tokens.doc import Doc
 from ..util import as_list
 
 _Ruler = Callable[[Doc], Doc]
-_Pattern = Union[str, list[str], list[list[dict[str, Any]]]]
+_Pattern = str | list[str], list[list[dict[str, Any]]]
 
 
 class Compiler:
@@ -28,12 +26,14 @@ class Compiler:
         label: str,
         *,
         patterns: _Pattern,
-        decoder: Optional[dict[str, dict]] = None,
-        on_match: Optional[str] = None,
+        decoder: dict[str, dict] = None,
+        on_match: str = None,
+        output: list[str] = None,
     ):
         self.label = label
         self.on_match = on_match
         self.patterns = patterns
+        self.output = output
 
         if decoder:
             patterns2 = as_list(patterns)

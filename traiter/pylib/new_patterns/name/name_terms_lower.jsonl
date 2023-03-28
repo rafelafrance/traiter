@@ -1,0 +1,5 @@
+{"label":"name_prefix","pattern":"doctor","id":"Dr."}
+{"label":"name_prefix","pattern":"miss","id":"Miss"}
+{"label":"name_suffix","pattern":"filho"}
+{"label":"name_suffix","pattern":"ii","id":"II"}
+{"label":"name_suffix","pattern":"iii","id":"III"}

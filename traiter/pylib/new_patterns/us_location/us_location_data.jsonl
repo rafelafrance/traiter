@@ -1,0 +1,2030 @@
+{"pattern": "abbeville", "inside": "SC"}
+{"pattern": "acadia", "inside": "LA"}
+{"pattern": "accomack", "inside": "VA"}
+{"pattern": "ada", "inside": "ID"}
+{"pattern": "adair", "inside": "IA KY MO OK"}
+{"pattern": "adams", "inside": "CO ID IL IN IA MS NE ND OH PA WA WI"}
+{"pattern": "addison", "inside": "VT"}
+{"pattern": "aiken", "inside": "SC"}
+{"pattern": "aitkin", "inside": "MN"}
+{"pattern": "alachua", "inside": "FL"}
+{"pattern": "alamance", "inside": "NC"}
+{"pattern": "alameda", "inside": "CA"}
+{"pattern": "alamosa", "inside": "CO"}
+{"pattern": "albany", "inside": "NY WY"}
+{"pattern": "albemarle", "inside": "VA"}
+{"pattern": "alcona", "inside": "MI"}
+{"pattern": "alcorn", "inside": "MS"}
+{"pattern": "aleutians east", "inside": "AK"}
+{"pattern": "aleutians west", "inside": "AK"}
+{"pattern": "alexander", "inside": "IL NC"}
+{"pattern": "alexandria", "inside": "VA"}
+{"pattern": "alfalfa", "inside": "OK"}
+{"pattern": "alger", "inside": "MI"}
+{"pattern": "allamakee", "inside": "IA"}
+{"pattern": "allegan", "inside": "MI"}
+{"pattern": "allegany", "inside": "MD NY"}
+{"pattern": "alleghany", "inside": "NC VA"}
+{"pattern": "allegheny", "inside": "PA"}
+{"pattern": "allen", "inside": "IN KS KY LA OH"}
+{"pattern": "allendale", "inside": "SC"}
+{"pattern": "alpena", "inside": "MI"}
+{"pattern": "alpine", "inside": "CA"}
+{"pattern": "amador", "inside": "CA"}
+{"pattern": "amelia", "inside": "VA"}
+{"pattern": "amherst", "inside": "VA"}
+{"pattern": "amite", "inside": "MS"}
+{"pattern": "anchorage", "inside": "AK"}
+{"pattern": "anderson", "inside": "KS KY SC TN TX"}
+{"pattern": "andrew", "inside": "MO"}
+{"pattern": "andrews", "inside": "TX"}
+{"pattern": "androscoggin", "inside": "ME"}
+{"pattern": "angelina", "inside": "TX"}
+{"pattern": "anne arundel", "inside": "MD"}
+{"pattern": "anoka", "inside": "MN"}
+{"pattern": "anson", "inside": "NC"}
+{"pattern": "antelope", "inside": "NE"}
+{"pattern": "antrim", "inside": "MI"}
+{"pattern": "apache", "inside": "AZ"}
+{"pattern": "appanoose", "inside": "IA"}
+{"pattern": "appling", "inside": "GA"}
+{"pattern": "appomattox", "inside": "VA"}
+{"pattern": "aransas", "inside": "TX"}
+{"pattern": "arapahoe", "inside": "CO"}
+{"pattern": "archer", "inside": "TX"}
+{"pattern": "archuleta", "inside": "CO"}
+{"pattern": "arenac", "inside": "MI"}
+{"pattern": "arlington", "inside": "VA"}
+{"pattern": "armstrong", "inside": "PA TX"}
+{"pattern": "aroostook", "inside": "ME"}
+{"pattern": "arthur", "inside": "NE"}
+{"pattern": "ascension", "inside": "LA"}
+{"pattern": "ashe", "inside": "NC"}
+{"pattern": "ashland", "inside": "OH WI"}
+{"pattern": "ashley", "inside": "AR"}
+{"pattern": "ashtabula", "inside": "OH"}
+{"pattern": "asotin", "inside": "WA"}
+{"pattern": "assumption", "inside": "LA"}
+{"pattern": "atascosa", "inside": "TX"}
+{"pattern": "atchison", "inside": "KS MO"}
+{"pattern": "athens", "inside": "OH"}
+{"pattern": "atkinson", "inside": "GA"}
+{"pattern": "atlantic", "inside": "NJ"}
+{"pattern": "atoka", "inside": "OK"}
+{"pattern": "attala", "inside": "MS"}
+{"pattern": "audrain", "inside": "MO"}
+{"pattern": "audubon", "inside": "IA"}
+{"pattern": "auglaize", "inside": "OH"}
+{"pattern": "augusta", "inside": "VA"}
+{"pattern": "aurora", "inside": "SD"}
+{"pattern": "austin", "inside": "TX"}
+{"pattern": "autauga", "inside": "AL"}
+{"pattern": "avery", "inside": "NC"}
+{"pattern": "avoyelles", "inside": "LA"}
+{"pattern": "baca", "inside": "CO"}
+{"pattern": "bacon", "inside": "GA"}
+{"pattern": "bailey", "inside": "TX"}
+{"pattern": "baker", "inside": "FL GA OR"}
+{"pattern": "baldwin", "inside": "AL GA"}
+{"pattern": "ballard", "inside": "KY"}
+{"pattern": "baltimore", "inside": "MD"}
+{"pattern": "baltimore city", "inside": "MD"}
+{"pattern": "bamberg", "inside": "SC"}
+{"pattern": "bandera", "inside": "TX"}
+{"pattern": "banks", "inside": "GA"}
+{"pattern": "banner", "inside": "NE"}
+{"pattern": "bannock", "inside": "ID"}
+{"pattern": "baraga", "inside": "MI"}
+{"pattern": "barber", "inside": "KS"}
+{"pattern": "barbour", "inside": "AL WV"}
+{"pattern": "barnes", "inside": "ND"}
+{"pattern": "barnstable", "inside": "MA"}
+{"pattern": "barnwell", "inside": "SC"}
+{"pattern": "barren", "inside": "KY"}
+{"pattern": "barron", "inside": "WI"}
+{"pattern": "barrow", "inside": "GA"}
+{"pattern": "barry", "inside": "MI MO"}
+{"pattern": "bartholomew", "inside": "IN"}
+{"pattern": "barton", "inside": "KS MO"}
+{"pattern": "bartow", "inside": "GA"}
+{"pattern": "bastrop", "inside": "TX"}
+{"pattern": "bates", "inside": "MO"}
+{"pattern": "bath", "inside": "KY VA"}
+{"pattern": "baxter", "inside": "AR"}
+{"pattern": "bay", "inside": "FL MI"}
+{"pattern": "bayfield", "inside": "WI"}
+{"pattern": "baylor", "inside": "TX"}
+{"pattern": "beadle", "inside": "SD"}
+{"pattern": "bear lake", "inside": "ID"}
+{"pattern": "beaufort", "inside": "NC SC"}
+{"pattern": "beauregard", "inside": "LA"}
+{"pattern": "beaver", "inside": "OK PA UT"}
+{"pattern": "beaverhead", "inside": "MT"}
+{"pattern": "becker", "inside": "MN"}
+{"pattern": "beckham", "inside": "OK"}
+{"pattern": "bedford", "inside": "PA TN VA VA"}
+{"pattern": "bee", "inside": "TX"}
+{"pattern": "belknap", "inside": "NH"}
+{"pattern": "bell", "inside": "KY TX"}
+{"pattern": "belmont", "inside": "OH"}
+{"pattern": "beltrami", "inside": "MN"}
+{"pattern": "ben hill", "inside": "GA"}
+{"pattern": "benewah", "inside": "ID"}
+{"pattern": "bennett", "inside": "SD"}
+{"pattern": "bennington", "inside": "VT"}
+{"pattern": "benson", "inside": "ND"}
+{"pattern": "bent", "inside": "CO"}
+{"pattern": "benton", "inside": "AR IN IA MN MS MO OR TN WA"}
+{"pattern": "benzie", "inside": "MI"}
+{"pattern": "bergen", "inside": "NJ"}
+{"pattern": "berkeley", "inside": "SC WV"}
+{"pattern": "berks", "inside": "PA"}
+{"pattern": "berkshire", "inside": "MA"}
+{"pattern": "bernalillo", "inside": "NM"}
+{"pattern": "berrien", "inside": "GA MI"}
+{"pattern": "bertie", "inside": "NC"}
+{"pattern": "bethel", "inside": "AK"}
+{"pattern": "bexar", "inside": "TX"}
+{"pattern": "bibb", "inside": "AL GA"}
+{"pattern": "bienville", "inside": "LA"}
+{"pattern": "big horn", "inside": "MT WY"}
+{"pattern": "big stone", "inside": "MN"}
+{"pattern": "billings", "inside": "ND"}
+{"pattern": "bingham", "inside": "ID"}
+{"pattern": "black hawk", "inside": "IA"}
+{"pattern": "blackford", "inside": "IN"}
+{"pattern": "bladen", "inside": "NC"}
+{"pattern": "blaine", "inside": "ID MT NE OK"}
+{"pattern": "blair", "inside": "PA"}
+{"pattern": "blanco", "inside": "TX"}
+{"pattern": "bland", "inside": "VA"}
+{"pattern": "bleckley", "inside": "GA"}
+{"pattern": "bledsoe", "inside": "TN"}
+{"pattern": "blount", "inside": "AL TN"}
+{"pattern": "blue earth", "inside": "MN"}
+{"pattern": "boise", "inside": "ID"}
+{"pattern": "bolivar", "inside": "MS"}
+{"pattern": "bollinger", "inside": "MO"}
+{"pattern": "bon homme", "inside": "SD"}
+{"pattern": "bond", "inside": "IL"}
+{"pattern": "bonner", "inside": "ID"}
+{"pattern": "bonneville", "inside": "ID"}
+{"pattern": "boone", "inside": "AR IL IN IA KY MO NE WV"}
+{"pattern": "borden", "inside": "TX"}
+{"pattern": "bosque", "inside": "TX"}
+{"pattern": "bossier", "inside": "LA"}
+{"pattern": "botetourt", "inside": "VA"}
+{"pattern": "bottineau", "inside": "ND"}
+{"pattern": "boulder", "inside": "CO"}
+{"pattern": "boundary", "inside": "ID"}
+{"pattern": "bourbon", "inside": "KS KY"}
+{"pattern": "bowie", "inside": "TX"}
+{"pattern": "bowman", "inside": "ND"}
+{"pattern": "box butte", "inside": "NE"}
+{"pattern": "box elder", "inside": "UT"}
+{"pattern": "boyd", "inside": "KY NE"}
+{"pattern": "boyle", "inside": "KY"}
+{"pattern": "bracken", "inside": "KY"}
+{"pattern": "bradford", "inside": "FL PA"}
+{"pattern": "bradley", "inside": "AR TN"}
+{"pattern": "branch", "inside": "MI"}
+{"pattern": "brantley", "inside": "GA"}
+{"pattern": "braxton", "inside": "WV"}
+{"pattern": "brazoria", "inside": "TX"}
+{"pattern": "brazos", "inside": "TX"}
+{"pattern": "breathitt", "inside": "KY"}
+{"pattern": "breckinridge", "inside": "KY"}
+{"pattern": "bremer", "inside": "IA"}
+{"pattern": "brevard", "inside": "FL"}
+{"pattern": "brewster", "inside": "TX"}
+{"pattern": "briscoe", "inside": "TX"}
+{"pattern": "bristol", "inside": "MA RI VA"}
+{"pattern": "bristol bay", "inside": "AK"}
+{"pattern": "broadwater", "inside": "MT"}
+{"pattern": "bronx", "inside": "NY"}
+{"pattern": "brooke", "inside": "WV"}
+{"pattern": "brookings", "inside": "SD"}
+{"pattern": "brooks", "inside": "GA TX"}
+{"pattern": "broome", "inside": "NY"}
+{"pattern": "broomfield", "inside": "CO"}
+{"pattern": "broward", "inside": "FL"}
+{"pattern": "brown", "inside": "IL IN KS MN NE OH SD TX WI"}
+{"pattern": "brule", "inside": "SD"}
+{"pattern": "brunswick", "inside": "NC VA"}
+{"pattern": "bryan", "inside": "GA OK"}
+{"pattern": "buchanan", "inside": "IA MO VA"}
+{"pattern": "buckingham", "inside": "VA"}
+{"pattern": "bucks", "inside": "PA"}
+{"pattern": "buena vista", "inside": "IA VA"}
+{"pattern": "buffalo", "inside": "NE SD WI"}
+{"pattern": "bullitt", "inside": "KY"}
+{"pattern": "bulloch", "inside": "GA"}
+{"pattern": "bullock", "inside": "AL"}
+{"pattern": "buncombe", "inside": "NC"}
+{"pattern": "bureau", "inside": "IL"}
+{"pattern": "burke", "inside": "GA NC ND"}
+{"pattern": "burleigh", "inside": "ND"}
+{"pattern": "burleson", "inside": "TX"}
+{"pattern": "burlington", "inside": "NJ"}
+{"pattern": "burnet", "inside": "TX"}
+{"pattern": "burnett", "inside": "WI"}
+{"pattern": "burt", "inside": "NE"}
+{"pattern": "butler", "inside": "AL IA KS KY MO NE OH PA"}
+{"pattern": "butte", "inside": "CA ID SD"}
+{"pattern": "butts", "inside": "GA"}
+{"pattern": "cabarrus", "inside": "NC"}
+{"pattern": "cabell", "inside": "WV"}
+{"pattern": "cache", "inside": "UT"}
+{"pattern": "caddo", "inside": "LA OK"}
+{"pattern": "calaveras", "inside": "CA"}
+{"pattern": "calcasieu", "inside": "LA"}
+{"pattern": "caldwell", "inside": "KY LA MO NC TX"}
+{"pattern": "caledonia", "inside": "VT"}
+{"pattern": "calhoun", "inside": "AL AR FL GA IL IA MI MS SC TX WV"}
+{"pattern": "callahan", "inside": "TX"}
+{"pattern": "callaway", "inside": "MO"}
+{"pattern": "calloway", "inside": "KY"}
+{"pattern": "calumet", "inside": "WI"}
+{"pattern": "calvert", "inside": "MD"}
+{"pattern": "camas", "inside": "ID"}
+{"pattern": "cambria", "inside": "PA"}
+{"pattern": "camden", "inside": "GA MO NJ NC"}
+{"pattern": "cameron", "inside": "LA PA TX"}
+{"pattern": "camp", "inside": "TX"}
+{"pattern": "campbell", "inside": "KY SD TN VA WY"}
+{"pattern": "canadian", "inside": "OK"}
+{"pattern": "candler", "inside": "GA"}
+{"pattern": "cannon", "inside": "TN"}
+{"pattern": "canyon", "inside": "ID"}
+{"pattern": "cape girardeau", "inside": "MO"}
+{"pattern": "cape may", "inside": "NJ"}
+{"pattern": "carbon", "inside": "MT PA UT WY"}
+{"pattern": "caribou", "inside": "ID"}
+{"pattern": "carlisle", "inside": "KY"}
+{"pattern": "carlton", "inside": "MN"}
+{"pattern": "caroline", "inside": "MD VA"}
+{"pattern": "carroll", "inside": "AR GA IL IN IA KY MD MS MO NH OH TN VA"}
+{"pattern": "carson", "inside": "TX"}
+{"pattern": "carson city", "inside": "NV"}
+{"pattern": "carter", "inside": "KY MO MT OK TN"}
+{"pattern": "carteret", "inside": "NC"}
+{"pattern": "carver", "inside": "MN"}
+{"pattern": "cascade", "inside": "MT"}
+{"pattern": "casey", "inside": "KY"}
+{"pattern": "cass", "inside": "IL IN IA MI MN MO NE ND TX"}
+{"pattern": "cassia", "inside": "ID"}
+{"pattern": "castro", "inside": "TX"}
+{"pattern": "caswell", "inside": "NC"}
+{"pattern": "catahoula", "inside": "LA"}
+{"pattern": "catawba", "inside": "NC"}
+{"pattern": "catoosa", "inside": "GA"}
+{"pattern": "catron", "inside": "NM"}
+{"pattern": "cattaraugus", "inside": "NY"}
+{"pattern": "cavalier", "inside": "ND"}
+{"pattern": "cayuga", "inside": "NY"}
+{"pattern": "cecil", "inside": "MD"}
+{"pattern": "cedar", "inside": "IA MO NE"}
+{"pattern": "centre", "inside": "PA"}
+{"pattern": "cerro gordo", "inside": "IA"}
+{"pattern": "chaffee", "inside": "CO"}
+{"pattern": "chambers", "inside": "AL TX"}
+{"pattern": "champaign", "inside": "IL OH"}
+{"pattern": "chariton", "inside": "MO"}
+{"pattern": "charles", "inside": "MD"}
+{"pattern": "charles city", "inside": "VA"}
+{"pattern": "charles mix", "inside": "SD"}
+{"pattern": "charleston", "inside": "SC"}
+{"pattern": "charlevoix", "inside": "MI"}
+{"pattern": "charlotte", "inside": "FL VA"}
+{"pattern": "charlottesville", "inside": "VA"}
+{"pattern": "charlton", "inside": "GA"}
+{"pattern": "chase", "inside": "KS NE"}
+{"pattern": "chatham", "inside": "GA NC"}
+{"pattern": "chattahoochee", "inside": "GA"}
+{"pattern": "chattooga", "inside": "GA"}
+{"pattern": "chautauqua", "inside": "KS NY"}
+{"pattern": "chaves", "inside": "NM"}
+{"pattern": "cheatham", "inside": "TN"}
+{"pattern": "cheboygan", "inside": "MI"}
+{"pattern": "chelan", "inside": "WA"}
+{"pattern": "chemung", "inside": "NY"}
+{"pattern": "chenango", "inside": "NY"}
+{"pattern": "cherokee", "inside": "AL GA IA KS NC OK SC TX"}
+{"pattern": "cherry", "inside": "NE"}
+{"pattern": "chesapeake", "inside": "VA"}
+{"pattern": "cheshire", "inside": "NH"}
+{"pattern": "chester", "inside": "PA SC TN"}
+{"pattern": "chesterfield", "inside": "SC VA"}
+{"pattern": "cheyenne", "inside": "CO KS NE"}
+{"pattern": "chickasaw", "inside": "IA MS"}
+{"pattern": "chicot", "inside": "AR"}
+{"pattern": "childress", "inside": "TX"}
+{"pattern": "chilton", "inside": "AL"}
+{"pattern": "chippewa", "inside": "MI MN WI"}
+{"pattern": "chisago", "inside": "MN"}
+{"pattern": "chittenden", "inside": "VT"}
+{"pattern": "choctaw", "inside": "AL MS OK"}
+{"pattern": "chouteau", "inside": "MT"}
+{"pattern": "chowan", "inside": "NC"}
+{"pattern": "christian", "inside": "IL KY MO"}
+{"pattern": "churchill", "inside": "NV"}
+{"pattern": "cibola", "inside": "NM"}
+{"pattern": "cimarron", "inside": "OK"}
+{"pattern": "citrus", "inside": "FL"}
+{"pattern": "clackamas", "inside": "OR"}
+{"pattern": "claiborne", "inside": "LA MS TN"}
+{"pattern": "clallam", "inside": "WA"}
+{"pattern": "clare", "inside": "MI"}
+{"pattern": "clarendon", "inside": "SC"}
+{"pattern": "clarion", "inside": "PA"}
+{"pattern": "clark", "inside": "AR ID IL IN KS KY MO NV OH SD WA WI"}
+{"pattern": "clarke", "inside": "AL GA IA MS VA"}
+{"pattern": "clatsop", "inside": "OR"}
+{"pattern": "clay", "inside": "AL AR FL GA IL IN IA KS KY MN MS MO NE NC SD TN TX WV"}
+{"pattern": "clayton", "inside": "GA IA"}
+{"pattern": "clear creek", "inside": "CO"}
+{"pattern": "clearfield", "inside": "PA"}
+{"pattern": "clearwater", "inside": "ID MN"}
+{"pattern": "cleburne", "inside": "AL AR"}
+{"pattern": "clermont", "inside": "OH"}
+{"pattern": "cleveland", "inside": "AR NC OK"}
+{"pattern": "clifton forge", "inside": "VA"}
+{"pattern": "clinch", "inside": "GA"}
+{"pattern": "clinton", "inside": "IL IN IA KY MI MO NY OH PA"}
+{"pattern": "cloud", "inside": "KS"}
+{"pattern": "coahoma", "inside": "MS"}
+{"pattern": "coal", "inside": "OK"}
+{"pattern": "cobb", "inside": "GA"}
+{"pattern": "cochise", "inside": "AZ"}
+{"pattern": "cochran", "inside": "TX"}
+{"pattern": "cocke", "inside": "TN"}
+{"pattern": "coconino", "inside": "AZ"}
+{"pattern": "codington", "inside": "SD"}
+{"pattern": "coffee", "inside": "AL GA TN"}
+{"pattern": "coffey", "inside": "KS"}
+{"pattern": "coke", "inside": "TX"}
+{"pattern": "colbert", "inside": "AL"}
+{"pattern": "cole", "inside": "MO"}
+{"pattern": "coleman", "inside": "TX"}
+{"pattern": "coles", "inside": "IL"}
+{"pattern": "colfax", "inside": "NE NM"}
+{"pattern": "colleton", "inside": "SC"}
+{"pattern": "collier", "inside": "FL"}
+{"pattern": "collin", "inside": "TX"}
+{"pattern": "collingsworth", "inside": "TX"}
+{"pattern": "colonial heights", "inside": "VA"}
+{"pattern": "columbia", "inside": "AR FL GA NY OR PA WA WI"}
+{"pattern": "columbiana", "inside": "OH"}
+{"pattern": "columbus", "inside": "NC"}
+{"pattern": "colusa", "inside": "CA"}
+{"pattern": "comal", "inside": "TX"}
+{"pattern": "comanche", "inside": "KS OK TX"}
+{"pattern": "concho", "inside": "TX"}
+{"pattern": "concordia", "inside": "LA"}
+{"pattern": "conecuh", "inside": "AL"}
+{"pattern": "conejos", "inside": "CO"}
+{"pattern": "contra costa", "inside": "CA"}
+{"pattern": "converse", "inside": "WY"}
+{"pattern": "conway", "inside": "AR"}
+{"pattern": "cook", "inside": "GA IL MN"}
+{"pattern": "cooke", "inside": "TX"}
+{"pattern": "cooper", "inside": "MO"}
+{"pattern": "coos", "inside": "NH OR"}
+{"pattern": "coosa", "inside": "AL"}
+{"pattern": "copiah", "inside": "MS"}
+{"pattern": "corson", "inside": "SD"}
+{"pattern": "cortland", "inside": "NY"}
+{"pattern": "coryell", "inside": "TX"}
+{"pattern": "coshocton", "inside": "OH"}
+{"pattern": "costilla", "inside": "CO"}
+{"pattern": "cottle", "inside": "TX"}
+{"pattern": "cotton", "inside": "OK"}
+{"pattern": "cottonwood", "inside": "MN"}
+{"pattern": "covington", "inside": "AL MS VA"}
+{"pattern": "coweta", "inside": "GA"}
+{"pattern": "cowley", "inside": "KS"}
+{"pattern": "cowlitz", "inside": "WA"}
+{"pattern": "craig", "inside": "OK VA"}
+{"pattern": "craighead", "inside": "AR"}
+{"pattern": "crane", "inside": "TX"}
+{"pattern": "craven", "inside": "NC"}
+{"pattern": "crawford", "inside": "AR GA IL IN IA KS MI MO OH PA WI"}
+{"pattern": "creek", "inside": "OK"}
+{"pattern": "crenshaw", "inside": "AL"}
+{"pattern": "crisp", "inside": "GA"}
+{"pattern": "crittenden", "inside": "AR KY"}
+{"pattern": "crockett", "inside": "TN TX"}
+{"pattern": "crook", "inside": "OR WY"}
+{"pattern": "crosby", "inside": "TX"}
+{"pattern": "cross", "inside": "AR"}
+{"pattern": "crow wing", "inside": "MN"}
+{"pattern": "crowley", "inside": "CO"}
+{"pattern": "culberson", "inside": "TX"}
+{"pattern": "cullman", "inside": "AL"}
+{"pattern": "culpeper", "inside": "VA"}
+{"pattern": "cumberland", "inside": "IL KY ME NJ NC PA TN VA"}
+{"pattern": "cuming", "inside": "NE"}
+{"pattern": "currituck", "inside": "NC"}
+{"pattern": "curry", "inside": "NM OR"}
+{"pattern": "custer", "inside": "CO ID MT NE OK SD"}
+{"pattern": "cuyahoga", "inside": "OH"}
+{"pattern": "dade", "inside": "GA MO"}
+{"pattern": "daggett", "inside": "UT"}
+{"pattern": "dakota", "inside": "MN NE"}
+{"pattern": "dale", "inside": "AL"}
+{"pattern": "dallam", "inside": "TX"}
+{"pattern": "dallas", "inside": "AL AR IA MO TX"}
+{"pattern": "dane", "inside": "WI"}
+{"pattern": "daniels", "inside": "MT"}
+{"pattern": "danville", "inside": "VA"}
+{"pattern": "dare", "inside": "NC"}
+{"pattern": "darke", "inside": "OH"}
+{"pattern": "darlington", "inside": "SC"}
+{"pattern": "dauphin", "inside": "PA"}
+{"pattern": "davidson", "inside": "NC TN"}
+{"pattern": "davie", "inside": "NC"}
+{"pattern": "daviess", "inside": "IN KY MO"}
+{"pattern": "davis", "inside": "IA UT"}
+{"pattern": "davison", "inside": "SD"}
+{"pattern": "dawes", "inside": "NE"}
+{"pattern": "dawson", "inside": "GA MT NE TX"}
+{"pattern": "day", "inside": "SD"}
+{"pattern": "de baca", "inside": "NM"}
+{"pattern": "de soto", "inside": "LA"}
+{"pattern": "de witt", "inside": "IL"}
+{"pattern": "deaf smith", "inside": "TX"}
+{"pattern": "dearborn", "inside": "IN"}
+{"pattern": "decatur", "inside": "GA IN IA KS TN"}
+{"pattern": "deer lodge", "inside": "MT"}
+{"pattern": "defiance", "inside": "OH"}
+{"pattern": "dekalb", "inside": "AL GA IL IN MO TN"}
+{"pattern": "del norte", "inside": "CA"}
+{"pattern": "delta", "inside": "CO MI TX"}
+{"pattern": "denali", "inside": "AK"}
+{"pattern": "dent", "inside": "MO"}
+{"pattern": "denton", "inside": "TX"}
+{"pattern": "denver", "inside": "CO"}
+{"pattern": "des moines", "inside": "IA"}
+{"pattern": "deschutes", "inside": "OR"}
+{"pattern": "desha", "inside": "AR"}
+{"pattern": "desoto", "inside": "FL MS"}
+{"pattern": "deuel", "inside": "NE SD"}
+{"pattern": "dewey", "inside": "OK SD"}
+{"pattern": "dewitt", "inside": "TX"}
+{"pattern": "dickens", "inside": "TX"}
+{"pattern": "dickenson", "inside": "VA"}
+{"pattern": "dickey", "inside": "ND"}
+{"pattern": "dickinson", "inside": "IA KS MI"}
+{"pattern": "dickson", "inside": "TN"}
+{"pattern": "dillingham", "inside": "AK"}
+{"pattern": "dillon", "inside": "SC"}
+{"pattern": "dimmit", "inside": "TX"}
+{"pattern": "dinwiddie", "inside": "VA"}
+{"pattern": "district of columbia", "inside": "DC"}
+{"pattern": "divide", "inside": "ND"}
+{"pattern": "dixie", "inside": "FL"}
+{"pattern": "dixon", "inside": "NE"}
+{"pattern": "doddridge", "inside": "WV"}
+{"pattern": "dodge", "inside": "GA MN NE WI"}
+{"pattern": "dolores", "inside": "CO"}
+{"pattern": "dona ana", "inside": "NM"}
+{"pattern": "doniphan", "inside": "KS"}
+{"pattern": "donley", "inside": "TX"}
+{"pattern": "dooly", "inside": "GA"}
+{"pattern": "door", "inside": "WI"}
+{"pattern": "dorchester", "inside": "MD SC"}
+{"pattern": "dougherty", "inside": "GA"}
+{"pattern": "douglas", "inside": "CO GA IL KS MN MO NE NV OR SD WA WI"}
+{"pattern": "drew", "inside": "AR"}
+{"pattern": "dubois", "inside": "IN"}
+{"pattern": "dubuque", "inside": "IA"}
+{"pattern": "duchesne", "inside": "UT"}
+{"pattern": "dukes", "inside": "MA"}
+{"pattern": "dundy", "inside": "NE"}
+{"pattern": "dunklin", "inside": "MO"}
+{"pattern": "dunn", "inside": "ND WI"}
+{"pattern": "dupage", "inside": "IL"}
+{"pattern": "duplin", "inside": "NC"}
+{"pattern": "durham", "inside": "NC"}
+{"pattern": "dutchess", "inside": "NY"}
+{"pattern": "duval", "inside": "FL TX"}
+{"pattern": "dyer", "inside": "TN"}
+{"pattern": "eagle", "inside": "CO"}
+{"pattern": "early", "inside": "GA"}
+{"pattern": "east baton rouge", "inside": "LA"}
+{"pattern": "east carroll", "inside": "LA"}
+{"pattern": "east feliciana", "inside": "LA"}
+{"pattern": "eastland", "inside": "TX"}
+{"pattern": "eaton", "inside": "MI"}
+{"pattern": "eau claire", "inside": "WI"}
+{"pattern": "echols", "inside": "GA"}
+{"pattern": "ector", "inside": "TX"}
+{"pattern": "eddy", "inside": "NM ND"}
+{"pattern": "edgar", "inside": "IL"}
+{"pattern": "edgecombe", "inside": "NC"}
+{"pattern": "edgefield", "inside": "SC"}
+{"pattern": "edmonson", "inside": "KY"}
+{"pattern": "edmunds", "inside": "SD"}
+{"pattern": "edwards", "inside": "IL KS TX"}
+{"pattern": "effingham", "inside": "GA IL"}
+{"pattern": "el dorado", "inside": "CA"}
+{"pattern": "el paso", "inside": "CO TX"}
+{"pattern": "elbert", "inside": "CO GA"}
+{"pattern": "elk", "inside": "KS PA"}
+{"pattern": "elkhart", "inside": "IN"}
+{"pattern": "elko", "inside": "NV"}
+{"pattern": "elliott", "inside": "KY"}
+{"pattern": "ellis", "inside": "KS OK TX"}
+{"pattern": "ellsworth", "inside": "KS"}
+{"pattern": "elmore", "inside": "AL ID"}
+{"pattern": "emanuel", "inside": "GA"}
+{"pattern": "emery", "inside": "UT"}
+{"pattern": "emmet", "inside": "IA MI"}
+{"pattern": "emmons", "inside": "ND"}
+{"pattern": "emporia", "inside": "VA"}
+{"pattern": "erath", "inside": "TX"}
+{"pattern": "erie", "inside": "NY OH PA"}
+{"pattern": "escambia", "inside": "AL FL"}
+{"pattern": "esmeralda", "inside": "NV"}
+{"pattern": "essex", "inside": "MA NJ NY VT VA"}
+{"pattern": "estill", "inside": "KY"}
+{"pattern": "etowah", "inside": "AL"}
+{"pattern": "eureka", "inside": "NV"}
+{"pattern": "evangeline", "inside": "LA"}
+{"pattern": "evans", "inside": "GA"}
+{"pattern": "fairbanks north star", "inside": "AK"}
+{"pattern": "fairfax", "inside": "VA VA"}
+{"pattern": "fairfield", "inside": "CT OH SC"}
+{"pattern": "fall river", "inside": "SD"}
+{"pattern": "fallon", "inside": "MT"}
+{"pattern": "falls", "inside": "TX"}
+{"pattern": "falls church", "inside": "VA"}
+{"pattern": "fannin", "inside": "GA TX"}
+{"pattern": "faribault", "inside": "MN"}
+{"pattern": "faulk", "inside": "SD"}
+{"pattern": "faulkner", "inside": "AR"}
+{"pattern": "fauquier", "inside": "VA"}
+{"pattern": "fayette", "inside": "AL GA IL IN IA KY OH PA TN TX WV"}
+{"pattern": "fentress", "inside": "TN"}
+{"pattern": "fergus", "inside": "MT"}
+{"pattern": "ferry", "inside": "WA"}
+{"pattern": "fillmore", "inside": "MN NE"}
+{"pattern": "finney", "inside": "KS"}
+{"pattern": "fisher", "inside": "TX"}
+{"pattern": "flagler", "inside": "FL"}
+{"pattern": "flathead", "inside": "MT"}
+{"pattern": "fleming", "inside": "KY"}
+{"pattern": "florence", "inside": "SC WI"}
+{"pattern": "floyd", "inside": "GA IN IA KY TX VA"}
+{"pattern": "fluvanna", "inside": "VA"}
+{"pattern": "foard", "inside": "TX"}
+{"pattern": "fond du lac", "inside": "WI"}
+{"pattern": "ford", "inside": "IL KS"}
+{"pattern": "forest", "inside": "PA WI"}
+{"pattern": "forrest", "inside": "MS"}
+{"pattern": "forsyth", "inside": "GA NC"}
+{"pattern": "fort bend", "inside": "TX"}
+{"pattern": "foster", "inside": "ND"}
+{"pattern": "fountain", "inside": "IN"}
+{"pattern": "franklin", "inside": "AL AR FL GA ID IL IN IA KS KY LA ME MA MS MO NE NY NC OH PA TN TX VT VA VA WA"}
+{"pattern": "frederick", "inside": "MD VA"}
+{"pattern": "fredericksburg", "inside": "VA"}
+{"pattern": "freeborn", "inside": "MN"}
+{"pattern": "freestone", "inside": "TX"}
+{"pattern": "fremont", "inside": "CO ID IA WY"}
+{"pattern": "fresno", "inside": "CA"}
+{"pattern": "frio", "inside": "TX"}
+{"pattern": "frontier", "inside": "NE"}
+{"pattern": "fulton", "inside": "AR GA IL IN KY NY OH PA"}
+{"pattern": "furnas", "inside": "NE"}
+{"pattern": "gadsden", "inside": "FL"}
+{"pattern": "gage", "inside": "NE"}
+{"pattern": "gaines", "inside": "TX"}
+{"pattern": "galax", "inside": "VA"}
+{"pattern": "gallatin", "inside": "IL KY MT"}
+{"pattern": "gallia", "inside": "OH"}
+{"pattern": "galveston", "inside": "TX"}
+{"pattern": "garden", "inside": "NE"}
+{"pattern": "garfield", "inside": "CO MT NE OK UT WA"}
+{"pattern": "garland", "inside": "AR"}
+{"pattern": "garrard", "inside": "KY"}
+{"pattern": "garrett", "inside": "MD"}
+{"pattern": "garvin", "inside": "OK"}
+{"pattern": "garza", "inside": "TX"}
+{"pattern": "gasconade", "inside": "MO"}
+{"pattern": "gaston", "inside": "NC"}
+{"pattern": "gates", "inside": "NC"}
+{"pattern": "geary", "inside": "KS"}
+{"pattern": "geauga", "inside": "OH"}
+{"pattern": "gem", "inside": "ID"}
+{"pattern": "genesee", "inside": "MI NY"}
+{"pattern": "geneva", "inside": "AL"}
+{"pattern": "gentry", "inside": "MO"}
+{"pattern": "george", "inside": "MS"}
+{"pattern": "georgetown", "inside": "SC"}
+{"pattern": "gibson", "inside": "IN TN"}
+{"pattern": "gila", "inside": "AZ"}
+{"pattern": "gilchrist", "inside": "FL"}
+{"pattern": "giles", "inside": "TN VA"}
+{"pattern": "gillespie", "inside": "TX"}
+{"pattern": "gilliam", "inside": "OR"}
+{"pattern": "gilmer", "inside": "GA WV"}
+{"pattern": "gilpin", "inside": "CO"}
+{"pattern": "glacier", "inside": "MT"}
+{"pattern": "glades", "inside": "FL"}
+{"pattern": "gladwin", "inside": "MI"}
+{"pattern": "glascock", "inside": "GA"}
+{"pattern": "glasscock", "inside": "TX"}
+{"pattern": "glenn", "inside": "CA"}
+{"pattern": "gloucester", "inside": "NJ VA"}
+{"pattern": "glynn", "inside": "GA"}
+{"pattern": "gogebic", "inside": "MI"}
+{"pattern": "golden valley", "inside": "MT ND"}
+{"pattern": "goliad", "inside": "TX"}
+{"pattern": "gonzales", "inside": "TX"}
+{"pattern": "goochland", "inside": "VA"}
+{"pattern": "goodhue", "inside": "MN"}
+{"pattern": "gooding", "inside": "ID"}
+{"pattern": "gordon", "inside": "GA"}
+{"pattern": "goshen", "inside": "WY"}
+{"pattern": "gosper", "inside": "NE"}
+{"pattern": "gove", "inside": "KS"}
+{"pattern": "grady", "inside": "GA OK"}
+{"pattern": "grafton", "inside": "NH"}
+{"pattern": "graham", "inside": "AZ KS NC"}
+{"pattern": "grainger", "inside": "TN"}
+{"pattern": "grand", "inside": "CO UT"}
+{"pattern": "grand forks", "inside": "ND"}
+{"pattern": "grand isle", "inside": "VT"}
+{"pattern": "grand traverse", "inside": "MI"}
+{"pattern": "granite", "inside": "MT"}
+{"pattern": "grant", "inside": "AR IN KS KY LA MN NE NM ND OK OR SD WA WV WI"}
+{"pattern": "granville", "inside": "NC"}
+{"pattern": "gratiot", "inside": "MI"}
+{"pattern": "graves", "inside": "KY"}
+{"pattern": "gray", "inside": "KS TX"}
+{"pattern": "grays harbor", "inside": "WA"}
+{"pattern": "grayson", "inside": "KY TX VA"}
+{"pattern": "greeley", "inside": "KS NE"}
+{"pattern": "green", "inside": "KY WI"}
+{"pattern": "green lake", "inside": "WI"}
+{"pattern": "greenbrier", "inside": "WV"}
+{"pattern": "greene", "inside": "AL AR GA IL IN IA MS MO NY NC OH PA TN VA"}
+{"pattern": "greenlee", "inside": "AZ"}
+{"pattern": "greensville", "inside": "VA"}
+{"pattern": "greenup", "inside": "KY"}
+{"pattern": "greenville", "inside": "SC"}
+{"pattern": "greenwood", "inside": "KS SC"}
+{"pattern": "greer", "inside": "OK"}
+{"pattern": "gregg", "inside": "TX"}
+{"pattern": "gregory", "inside": "SD"}
+{"pattern": "grenada", "inside": "MS"}
+{"pattern": "griggs", "inside": "ND"}
+{"pattern": "grimes", "inside": "TX"}
+{"pattern": "grundy", "inside": "IL IA MO TN"}
+{"pattern": "guadalupe", "inside": "NM TX"}
+{"pattern": "guernsey", "inside": "OH"}
+{"pattern": "guilford", "inside": "NC"}
+{"pattern": "gulf", "inside": "FL"}
+{"pattern": "gunnison", "inside": "CO"}
+{"pattern": "guthrie", "inside": "IA"}
+{"pattern": "gwinnett", "inside": "GA"}
+{"pattern": "haakon", "inside": "SD"}
+{"pattern": "habersham", "inside": "GA"}
+{"pattern": "haines", "inside": "AK"}
+{"pattern": "hale", "inside": "AL TX"}
+{"pattern": "halifax", "inside": "NC VA"}
+{"pattern": "hall", "inside": "GA NE TX"}
+{"pattern": "hamblen", "inside": "TN"}
+{"pattern": "hamilton", "inside": "FL IL IN IA KS NE NY OH TN TX"}
+{"pattern": "hamlin", "inside": "SD"}
+{"pattern": "hampden", "inside": "MA"}
+{"pattern": "hampshire", "inside": "MA WV"}
+{"pattern": "hampton", "inside": "SC VA"}
+{"pattern": "hancock", "inside": "GA IL IN IA KY ME MS OH TN WV"}
+{"pattern": "hand", "inside": "SD"}
+{"pattern": "hanover", "inside": "VA"}
+{"pattern": "hansford", "inside": "TX"}
+{"pattern": "hanson", "inside": "SD"}
+{"pattern": "haralson", "inside": "GA"}
+{"pattern": "hardee", "inside": "FL"}
+{"pattern": "hardeman", "inside": "TN TX"}
+{"pattern": "hardin", "inside": "IL IA KY OH TN TX"}
+{"pattern": "harding", "inside": "NM SD"}
+{"pattern": "hardy", "inside": "WV"}
+{"pattern": "harford", "inside": "MD"}
+{"pattern": "harlan", "inside": "KY NE"}
+{"pattern": "harmon", "inside": "OK"}
+{"pattern": "harnett", "inside": "NC"}
+{"pattern": "harney", "inside": "OR"}
+{"pattern": "harper", "inside": "KS OK"}
+{"pattern": "harris", "inside": "GA TX"}
+{"pattern": "harrison", "inside": "IN IA KY MS MO OH TX WV"}
+{"pattern": "harrisonburg", "inside": "VA"}
+{"pattern": "hart", "inside": "GA KY"}
+{"pattern": "hartford", "inside": "CT"}
+{"pattern": "hartley", "inside": "TX"}
+{"pattern": "harvey", "inside": "KS"}
+{"pattern": "haskell", "inside": "KS OK TX"}
+{"pattern": "hawkins", "inside": "TN"}
+{"pattern": "hayes", "inside": "NE"}
+{"pattern": "hays", "inside": "TX"}
+{"pattern": "haywood", "inside": "NC TN"}
+{"pattern": "heard", "inside": "GA"}
+{"pattern": "hemphill", "inside": "TX"}
+{"pattern": "hempstead", "inside": "AR"}
+{"pattern": "henderson", "inside": "IL KY NC TN TX"}
+{"pattern": "hendricks", "inside": "IN"}
+{"pattern": "hendry", "inside": "FL"}
+{"pattern": "hennepin", "inside": "MN"}
+{"pattern": "henrico", "inside": "VA"}
+{"pattern": "henry", "inside": "AL GA IL IN IA KY MO OH TN VA"}
+{"pattern": "herkimer", "inside": "NY"}
+{"pattern": "hernando", "inside": "FL"}
+{"pattern": "hertford", "inside": "NC"}
+{"pattern": "hettinger", "inside": "ND"}
+{"pattern": "hickman", "inside": "KY TN"}
+{"pattern": "hickory", "inside": "MO"}
+{"pattern": "hidalgo", "inside": "NM TX"}
+{"pattern": "highland", "inside": "OH VA"}
+{"pattern": "highlands", "inside": "FL"}
+{"pattern": "hill", "inside": "MT TX"}
+{"pattern": "hillsborough", "inside": "FL NH"}
+{"pattern": "hillsdale", "inside": "MI"}
+{"pattern": "hinds", "inside": "MS"}
+{"pattern": "hinsdale", "inside": "CO"}
+{"pattern": "hitchcock", "inside": "NE"}
+{"pattern": "hocking", "inside": "OH"}
+{"pattern": "hockley", "inside": "TX"}
+{"pattern": "hodgeman", "inside": "KS"}
+{"pattern": "hoke", "inside": "NC"}
+{"pattern": "holmes", "inside": "FL MS OH"}
+{"pattern": "holt", "inside": "MO NE"}
+{"pattern": "honolulu", "inside": "HI"}
+{"pattern": "hood", "inside": "TX"}
+{"pattern": "hood river", "inside": "OR"}
+{"pattern": "hooker", "inside": "NE"}
+{"pattern": "hoonah-angoon", "inside": "AK"}
+{"pattern": "hopewell", "inside": "VA"}
+{"pattern": "hopkins", "inside": "KY TX"}
+{"pattern": "horry", "inside": "SC"}
+{"pattern": "hot spring", "inside": "AR"}
+{"pattern": "hot springs", "inside": "WY"}
+{"pattern": "houghton", "inside": "MI"}
+{"pattern": "houston", "inside": "AL GA MN TN TX"}
+{"pattern": "howard", "inside": "AR IN IA MD MO NE TX"}
+{"pattern": "howell", "inside": "MO"}
+{"pattern": "hubbard", "inside": "MN"}
+{"pattern": "hudson", "inside": "NJ"}
+{"pattern": "hudspeth", "inside": "TX"}
+{"pattern": "huerfano", "inside": "CO"}
+{"pattern": "hughes", "inside": "OK SD"}
+{"pattern": "humboldt", "inside": "CA IA NV"}
+{"pattern": "humphreys", "inside": "MS TN"}
+{"pattern": "hunt", "inside": "TX"}
+{"pattern": "hunterdon", "inside": "NJ"}
+{"pattern": "huntingdon", "inside": "PA"}
+{"pattern": "huntington", "inside": "IN"}
+{"pattern": "huron", "inside": "MI OH"}
+{"pattern": "hutchinson", "inside": "SD TX"}
+{"pattern": "hyde", "inside": "NC SD"}
+{"pattern": "iberia", "inside": "LA"}
+{"pattern": "iberville", "inside": "LA"}
+{"pattern": "ida", "inside": "IA"}
+{"pattern": "imperial", "inside": "CA"}
+{"pattern": "independence", "inside": "AR"}
+{"pattern": "indian river", "inside": "FL"}
+{"pattern": "ingham", "inside": "MI"}
+{"pattern": "inyo", "inside": "CA"}
+{"pattern": "ionia", "inside": "MI"}
+{"pattern": "iosco", "inside": "MI"}
+{"pattern": "iredell", "inside": "NC"}
+{"pattern": "irion", "inside": "TX"}
+{"pattern": "iron", "inside": "MI MO UT WI"}
+{"pattern": "iroquois", "inside": "IL"}
+{"pattern": "irwin", "inside": "GA"}
+{"pattern": "isabella", "inside": "MI"}
+{"pattern": "isanti", "inside": "MN"}
+{"pattern": "island", "inside": "WA"}
+{"pattern": "isle of wight", "inside": "VA"}
+{"pattern": "issaquena", "inside": "MS"}
+{"pattern": "itasca", "inside": "MN"}
+{"pattern": "itawamba", "inside": "MS"}
+{"pattern": "izard", "inside": "AR"}
+{"pattern": "jack", "inside": "TX"}
+{"pattern": "jackson", "inside": "AL AR CO FL GA IL IN IA KS KY LA MI MN MS MO NC OH OK OR SD TN TX WV WI"}
+{"pattern": "james city", "inside": "VA"}
+{"pattern": "jasper", "inside": "GA IL IN IA MS MO SC TX"}
+{"pattern": "jay", "inside": "IN"}
+{"pattern": "jeff davis", "inside": "GA TX"}
+{"pattern": "jefferson", "inside": "AL AR CO FL GA ID IL IN IA KS KY LA MS MO MT NE NY OH OK OR PA TN TX WA WV WI"}
+{"pattern": "jefferson davis", "inside": "LA MS"}
+{"pattern": "jenkins", "inside": "GA"}
+{"pattern": "jennings", "inside": "IN"}
+{"pattern": "jerauld", "inside": "SD"}
+{"pattern": "jerome", "inside": "ID"}
+{"pattern": "jersey", "inside": "IL"}
+{"pattern": "jessamine", "inside": "KY"}
+{"pattern": "jewell", "inside": "KS"}
+{"pattern": "jim hogg", "inside": "TX"}
+{"pattern": "jim wells", "inside": "TX"}
+{"pattern": "jo daviess", "inside": "IL"}
+{"pattern": "johnson", "inside": "AR GA IL IN IA KS KY MO NE TN TX WY"}
+{"pattern": "johnston", "inside": "NC OK"}
+{"pattern": "jones", "inside": "GA IA MS NC SD TX"}
+{"pattern": "josephine", "inside": "OR"}
+{"pattern": "juab", "inside": "UT"}
+{"pattern": "judith basin", "inside": "MT"}
+{"pattern": "juneau", "inside": "AK WI"}
+{"pattern": "juniata", "inside": "PA"}
+{"pattern": "kalamazoo", "inside": "MI"}
+{"pattern": "kalawao", "inside": "HI"}
+{"pattern": "kalkaska", "inside": "MI"}
+{"pattern": "kanabec", "inside": "MN"}
+{"pattern": "kanawha", "inside": "WV"}
+{"pattern": "kandiyohi", "inside": "MN"}
+{"pattern": "kane", "inside": "IL UT"}
+{"pattern": "kankakee", "inside": "IL"}
+{"pattern": "karnes", "inside": "TX"}
+{"pattern": "kauai", "inside": "HI"}
+{"pattern": "kaufman", "inside": "TX"}
+{"pattern": "kay", "inside": "OK"}
+{"pattern": "kearney", "inside": "NE"}
+{"pattern": "kearny", "inside": "KS"}
+{"pattern": "keith", "inside": "NE"}
+{"pattern": "kemper", "inside": "MS"}
+{"pattern": "kenai peninsula", "inside": "AK"}
+{"pattern": "kendall", "inside": "IL TX"}
+{"pattern": "kenedy", "inside": "TX"}
+{"pattern": "kennebec", "inside": "ME"}
+{"pattern": "kenosha", "inside": "WI"}
+{"pattern": "kent", "inside": "DE MD MI RI TX"}
+{"pattern": "kenton", "inside": "KY"}
+{"pattern": "keokuk", "inside": "IA"}
+{"pattern": "kern", "inside": "CA"}
+{"pattern": "kerr", "inside": "TX"}
+{"pattern": "kershaw", "inside": "SC"}
+{"pattern": "ketchikan gateway", "inside": "AK"}
+{"pattern": "kewaunee", "inside": "WI"}
+{"pattern": "keweenaw", "inside": "MI"}
+{"pattern": "keya paha", "inside": "NE"}
+{"pattern": "kidder", "inside": "ND"}
+{"pattern": "kimball", "inside": "NE"}
+{"pattern": "kimble", "inside": "TX"}
+{"pattern": "king", "inside": "TX WA"}
+{"pattern": "king and queen", "inside": "VA"}
+{"pattern": "king george", "inside": "VA"}
+{"pattern": "king william", "inside": "VA"}
+{"pattern": "kingfisher", "inside": "OK"}
+{"pattern": "kingman", "inside": "KS"}
+{"pattern": "kings", "inside": "CA NY"}
+{"pattern": "kingsbury", "inside": "SD"}
+{"pattern": "kinney", "inside": "TX"}
+{"pattern": "kiowa", "inside": "CO KS OK"}
+{"pattern": "kit carson", "inside": "CO"}
+{"pattern": "kitsap", "inside": "WA"}
+{"pattern": "kittitas", "inside": "WA"}
+{"pattern": "kittson", "inside": "MN"}
+{"pattern": "klamath", "inside": "OR"}
+{"pattern": "kleberg", "inside": "TX"}
+{"pattern": "klickitat", "inside": "WA"}
+{"pattern": "knott", "inside": "KY"}
+{"pattern": "knox", "inside": "IL IN KY ME MO NE OH TN TX"}
+{"pattern": "kodiak island", "inside": "AK"}
+{"pattern": "koochiching", "inside": "MN"}
+{"pattern": "kootenai", "inside": "ID"}
+{"pattern": "kosciusko", "inside": "IN"}
+{"pattern": "kossuth", "inside": "IA"}
+{"pattern": "la crosse", "inside": "WI"}
+{"pattern": "la paz", "inside": "AZ"}
+{"pattern": "la plata", "inside": "CO"}
+{"pattern": "la salle", "inside": "LA TX"}
+{"pattern": "labette", "inside": "KS"}
+{"pattern": "lac qui parle", "inside": "MN"}
+{"pattern": "lackawanna", "inside": "PA"}
+{"pattern": "laclede", "inside": "MO"}
+{"pattern": "lafayette", "inside": "AR FL LA MS MO WI"}
+{"pattern": "lafourche", "inside": "LA"}
+{"pattern": "lagrange", "inside": "IN"}
+{"pattern": "lake", "inside": "CA CO FL IL IN MI MN MT OH OR SD TN"}
+{"pattern": "lake and peninsula", "inside": "AK"}
+{"pattern": "lake of the woods", "inside": "MN"}
+{"pattern": "lamar", "inside": "AL GA MS TX"}
+{"pattern": "lamb", "inside": "TX"}
+{"pattern": "lamoille", "inside": "VT"}
+{"pattern": "lamoure", "inside": "ND"}
+{"pattern": "lampasas", "inside": "TX"}
+{"pattern": "lancaster", "inside": "NE PA SC VA"}
+{"pattern": "lander", "inside": "NV"}
+{"pattern": "lane", "inside": "KS OR"}
+{"pattern": "langlade", "inside": "WI"}
+{"pattern": "lanier", "inside": "GA"}
+{"pattern": "lapeer", "inside": "MI"}
+{"pattern": "laporte", "inside": "IN"}
+{"pattern": "laramie", "inside": "WY"}
+{"pattern": "larimer", "inside": "CO"}
+{"pattern": "larue", "inside": "KY"}
+{"pattern": "las animas", "inside": "CO"}
+{"pattern": "lasalle", "inside": "IL"}
+{"pattern": "lassen", "inside": "CA"}
+{"pattern": "latah", "inside": "ID"}
+{"pattern": "latimer", "inside": "OK"}
+{"pattern": "lauderdale", "inside": "AL MS TN"}
+{"pattern": "laurel", "inside": "KY"}
+{"pattern": "laurens", "inside": "GA SC"}
+{"pattern": "lavaca", "inside": "TX"}
+{"pattern": "lawrence", "inside": "AL AR IL IN KY MS MO OH PA SD TN"}
+{"pattern": "le flore", "inside": "OK"}
+{"pattern": "le sueur", "inside": "MN"}
+{"pattern": "lea", "inside": "NM"}
+{"pattern": "leake", "inside": "MS"}
+{"pattern": "leavenworth", "inside": "KS"}
+{"pattern": "lebanon", "inside": "PA"}
+{"pattern": "lee", "inside": "AL AR FL GA IL IA KY MS NC SC TX VA"}
+{"pattern": "leelanau", "inside": "MI"}
+{"pattern": "leflore", "inside": "MS"}
+{"pattern": "lehigh", "inside": "PA"}
+{"pattern": "lemhi", "inside": "ID"}
+{"pattern": "lenawee", "inside": "MI"}
+{"pattern": "lenoir", "inside": "NC"}
+{"pattern": "leon", "inside": "FL TX"}
+{"pattern": "leslie", "inside": "KY"}
+{"pattern": "letcher", "inside": "KY"}
+{"pattern": "levy", "inside": "FL"}
+{"pattern": "lewis", "inside": "ID KY MO NY TN WA WV"}
+{"pattern": "lewis and clark", "inside": "MT"}
+{"pattern": "lexington", "inside": "SC VA"}
+{"pattern": "liberty", "inside": "FL GA MT TX"}
+{"pattern": "licking", "inside": "OH"}
+{"pattern": "limestone", "inside": "AL TX"}
+{"pattern": "lincoln", "inside": "AR CO GA ID KS KY LA ME MN MS MO MT NE NV NM NC OK OR SD TN WA WV WI WY"}
+{"pattern": "linn", "inside": "IA KS MO OR"}
+{"pattern": "lipscomb", "inside": "TX"}
+{"pattern": "litchfield", "inside": "CT"}
+{"pattern": "little river", "inside": "AR"}
+{"pattern": "live oak", "inside": "TX"}
+{"pattern": "livingston", "inside": "IL KY LA MI MO NY"}
+{"pattern": "llano", "inside": "TX"}
+{"pattern": "logan", "inside": "AR CO IL KS KY NE ND OH OK WV"}
+{"pattern": "long", "inside": "GA"}
+{"pattern": "lonoke", "inside": "AR"}
+{"pattern": "lorain", "inside": "OH"}
+{"pattern": "los alamos", "inside": "NM"}
+{"pattern": "los angeles", "inside": "CA"}
+{"pattern": "loudon", "inside": "TN"}
+{"pattern": "loudoun", "inside": "VA"}
+{"pattern": "louisa", "inside": "IA VA"}
+{"pattern": "loup", "inside": "NE"}
+{"pattern": "love", "inside": "OK"}
+{"pattern": "loving", "inside": "TX"}
+{"pattern": "lowndes", "inside": "AL GA MS"}
+{"pattern": "lubbock", "inside": "TX"}
+{"pattern": "lucas", "inside": "IA OH"}
+{"pattern": "luce", "inside": "MI"}
+{"pattern": "lumpkin", "inside": "GA"}
+{"pattern": "luna", "inside": "NM"}
+{"pattern": "lunenburg", "inside": "VA"}
+{"pattern": "luzerne", "inside": "PA"}
+{"pattern": "lycoming", "inside": "PA"}
+{"pattern": "lyman", "inside": "SD"}
+{"pattern": "lynchburg", "inside": "VA"}
+{"pattern": "lynn", "inside": "TX"}
+{"pattern": "lyon", "inside": "IA KS KY MN NV"}
+{"pattern": "mackinac", "inside": "MI"}
+{"pattern": "macomb", "inside": "MI"}
+{"pattern": "macon", "inside": "AL GA IL MO NC TN"}
+{"pattern": "macoupin", "inside": "IL"}
+{"pattern": "madera", "inside": "CA"}
+{"pattern": "madison", "inside": "AL AR FL GA ID IL IN IA KY LA MS MO MT NE NY NC OH TN TX VA"}
+{"pattern": "magoffin", "inside": "KY"}
+{"pattern": "mahaska", "inside": "IA"}
+{"pattern": "mahnomen", "inside": "MN"}
+{"pattern": "mahoning", "inside": "OH"}
+{"pattern": "major", "inside": "OK"}
+{"pattern": "malheur", "inside": "OR"}
+{"pattern": "manassas", "inside": "VA"}
+{"pattern": "manassas park", "inside": "VA"}
+{"pattern": "manatee", "inside": "FL"}
+{"pattern": "manistee", "inside": "MI"}
+{"pattern": "manitowoc", "inside": "WI"}
+{"pattern": "marathon", "inside": "WI"}
+{"pattern": "marengo", "inside": "AL"}
+{"pattern": "maricopa", "inside": "AZ"}
+{"pattern": "maries", "inside": "MO"}
+{"pattern": "marin", "inside": "CA"}
+{"pattern": "marinette", "inside": "WI"}
+{"pattern": "marion", "inside": "AL AR FL GA IL IN IA KS KY MS MO OH OR SC TN TX WV"}
+{"pattern": "mariposa", "inside": "CA"}
+{"pattern": "marlboro", "inside": "SC"}
+{"pattern": "marquette", "inside": "MI WI"}
+{"pattern": "marshall", "inside": "AL IL IN IA KS KY MN MS OK SD TN WV"}
+{"pattern": "martin", "inside": "FL IN KY MN NC TX"}
+{"pattern": "martinsville", "inside": "VA"}
+{"pattern": "mason", "inside": "IL KY MI TX WA WV"}
+{"pattern": "massac", "inside": "IL"}
+{"pattern": "matagorda", "inside": "TX"}
+{"pattern": "matanuska-susitna", "inside": "AK"}
+{"pattern": "mathews", "inside": "VA"}
+{"pattern": "maui", "inside": "HI"}
+{"pattern": "maury", "inside": "TN"}
+{"pattern": "maverick", "inside": "TX"}
+{"pattern": "mayes", "inside": "OK"}
+{"pattern": "mcclain", "inside": "OK"}
+{"pattern": "mccone", "inside": "MT"}
+{"pattern": "mccook", "inside": "SD"}
+{"pattern": "mccormick", "inside": "SC"}
+{"pattern": "mccracken", "inside": "KY"}
+{"pattern": "mccreary", "inside": "KY"}
+{"pattern": "mcculloch", "inside": "TX"}
+{"pattern": "mccurtain", "inside": "OK"}
+{"pattern": "mcdonald", "inside": "MO"}
+{"pattern": "mcdonough", "inside": "IL"}
+{"pattern": "mcdowell", "inside": "NC WV"}
+{"pattern": "mcduffie", "inside": "GA"}
+{"pattern": "mchenry", "inside": "IL ND"}
+{"pattern": "mcintosh", "inside": "GA ND OK"}
+{"pattern": "mckean", "inside": "PA"}
+{"pattern": "mckenzie", "inside": "ND"}
+{"pattern": "mckinley", "inside": "NM"}
+{"pattern": "mclean", "inside": "IL KY ND"}
+{"pattern": "mclennan", "inside": "TX"}
+{"pattern": "mcleod", "inside": "MN"}
+{"pattern": "mcminn", "inside": "TN"}
+{"pattern": "mcmullen", "inside": "TX"}
+{"pattern": "mcnairy", "inside": "TN"}
+{"pattern": "mcpherson", "inside": "KS NE SD"}
+{"pattern": "meade", "inside": "KS KY SD"}
+{"pattern": "meagher", "inside": "MT"}
+{"pattern": "mecklenburg", "inside": "NC VA"}
+{"pattern": "mecosta", "inside": "MI"}
+{"pattern": "medina", "inside": "OH TX"}
+{"pattern": "meeker", "inside": "MN"}
+{"pattern": "meigs", "inside": "OH TN"}
+{"pattern": "mellette", "inside": "SD"}
+{"pattern": "menard", "inside": "IL TX"}
+{"pattern": "mendocino", "inside": "CA"}
+{"pattern": "menifee", "inside": "KY"}
+{"pattern": "menominee", "inside": "MI WI"}
+{"pattern": "merced", "inside": "CA"}
+{"pattern": "mercer", "inside": "IL KY MO NJ ND OH PA WV"}
+{"pattern": "meriwether", "inside": "GA"}
+{"pattern": "merrick", "inside": "NE"}
+{"pattern": "merrimack", "inside": "NH"}
+{"pattern": "mesa", "inside": "CO"}
+{"pattern": "metcalfe", "inside": "KY"}
+{"pattern": "miami", "inside": "IN KS OH"}
+{"pattern": "miami-dade", "inside": "FL"}
+{"pattern": "middlesex", "inside": "CT MA NJ VA"}
+{"pattern": "midland", "inside": "MI TX"}
+{"pattern": "mifflin", "inside": "PA"}
+{"pattern": "milam", "inside": "TX"}
+{"pattern": "millard", "inside": "UT"}
+{"pattern": "mille lacs", "inside": "MN"}
+{"pattern": "miller", "inside": "AR GA MO"}
+{"pattern": "mills", "inside": "IA TX"}
+{"pattern": "milwaukee", "inside": "WI"}
+{"pattern": "miner", "inside": "SD"}
+{"pattern": "mineral", "inside": "CO MT NV WV"}
+{"pattern": "mingo", "inside": "WV"}
+{"pattern": "minidoka", "inside": "ID"}
+{"pattern": "minnehaha", "inside": "SD"}
+{"pattern": "missaukee", "inside": "MI"}
+{"pattern": "missoula", "inside": "MT"}
+{"pattern": "mitchell", "inside": "GA IA KS NC TX"}
+{"pattern": "mobile", "inside": "AL"}
+{"pattern": "modoc", "inside": "CA"}
+{"pattern": "moffat", "inside": "CO"}
+{"pattern": "mohave", "inside": "AZ"}
+{"pattern": "moniteau", "inside": "MO"}
+{"pattern": "monmouth", "inside": "NJ"}
+{"pattern": "mono", "inside": "CA"}
+{"pattern": "monona", "inside": "IA"}
+{"pattern": "monongalia", "inside": "WV"}
+{"pattern": "monroe", "inside": "AL AR FL GA IL IN IA KY MI MS MO NY OH PA TN WV WI"}
+{"pattern": "montague", "inside": "TX"}
+{"pattern": "montcalm", "inside": "MI"}
+{"pattern": "monterey", "inside": "CA"}
+{"pattern": "montezuma", "inside": "CO"}
+{"pattern": "montgomery", "inside": "AL AR GA IL IN IA KS KY MD MS MO NY NC OH PA TN TX VA"}
+{"pattern": "montmorency", "inside": "MI"}
+{"pattern": "montour", "inside": "PA"}
+{"pattern": "montrose", "inside": "CO"}
+{"pattern": "moody", "inside": "SD"}
+{"pattern": "moore", "inside": "NC TN TX"}
+{"pattern": "mora", "inside": "NM"}
+{"pattern": "morehouse", "inside": "LA"}
+{"pattern": "morgan", "inside": "AL CO GA IL IN KY MO OH TN UT WV"}
+{"pattern": "morrill", "inside": "NE"}
+{"pattern": "morris", "inside": "KS NJ TX"}
+{"pattern": "morrison", "inside": "MN"}
+{"pattern": "morrow", "inside": "OH OR"}
+{"pattern": "morton", "inside": "KS ND"}
+{"pattern": "motley", "inside": "TX"}
+{"pattern": "moultrie", "inside": "IL"}
+{"pattern": "mountrail", "inside": "ND"}
+{"pattern": "mower", "inside": "MN"}
+{"pattern": "muhlenberg", "inside": "KY"}
+{"pattern": "multnomah", "inside": "OR"}
+{"pattern": "murray", "inside": "GA MN OK"}
+{"pattern": "muscatine", "inside": "IA"}
+{"pattern": "muscogee", "inside": "GA"}
+{"pattern": "muskegon", "inside": "MI"}
+{"pattern": "muskingum", "inside": "OH"}
+{"pattern": "muskogee", "inside": "OK"}
+{"pattern": "musselshell", "inside": "MT"}
+{"pattern": "nacogdoches", "inside": "TX"}
+{"pattern": "nance", "inside": "NE"}
+{"pattern": "nantucket", "inside": "MA"}
+{"pattern": "napa", "inside": "CA"}
+{"pattern": "nash", "inside": "NC"}
+{"pattern": "nassau", "inside": "FL NY"}
+{"pattern": "natchitoches", "inside": "LA"}
+{"pattern": "natrona", "inside": "WY"}
+{"pattern": "navajo", "inside": "AZ"}
+{"pattern": "navarro", "inside": "TX"}
+{"pattern": "nelson", "inside": "KY ND VA"}
+{"pattern": "nemaha", "inside": "KS NE"}
+{"pattern": "neosho", "inside": "KS"}
+{"pattern": "neshoba", "inside": "MS"}
+{"pattern": "ness", "inside": "KS"}
+{"pattern": "new castle", "inside": "DE"}
+{"pattern": "new hanover", "inside": "NC"}
+{"pattern": "new haven", "inside": "CT"}
+{"pattern": "new kent", "inside": "VA"}
+{"pattern": "new london", "inside": "CT"}
+{"pattern": "new madrid", "inside": "MO"}
+{"pattern": "newaygo", "inside": "MI"}
+{"pattern": "newberry", "inside": "SC"}
+{"pattern": "newport", "inside": "RI"}
+{"pattern": "newport news", "inside": "VA"}
+{"pattern": "newton", "inside": "AR GA IN MS MO TX"}
+{"pattern": "nez perce", "inside": "ID"}
+{"pattern": "niagara", "inside": "NY"}
+{"pattern": "nicholas", "inside": "KY WV"}
+{"pattern": "nicollet", "inside": "MN"}
+{"pattern": "niobrara", "inside": "WY"}
+{"pattern": "noble", "inside": "IN OH OK"}
+{"pattern": "nobles", "inside": "MN"}
+{"pattern": "nodaway", "inside": "MO"}
+{"pattern": "nolan", "inside": "TX"}
+{"pattern": "nome", "inside": "AK"}
+{"pattern": "norfolk", "inside": "MA VA"}
+{"pattern": "norman", "inside": "MN"}
+{"pattern": "north slope", "inside": "AK"}
+{"pattern": "northampton", "inside": "NC PA VA"}
+{"pattern": "northumberland", "inside": "PA VA"}
+{"pattern": "northwest arctic", "inside": "AK"}
+{"pattern": "norton", "inside": "KS VA"}
+{"pattern": "nottoway", "inside": "VA"}
+{"pattern": "nowata", "inside": "OK"}
+{"pattern": "noxubee", "inside": "MS"}
+{"pattern": "nuckolls", "inside": "NE"}
+{"pattern": "nueces", "inside": "TX"}
+{"pattern": "nye", "inside": "NV"}
+{"pattern": "o'brien", "inside": "IA"}
+{"pattern": "oakland", "inside": "MI"}
+{"pattern": "obion", "inside": "TN"}
+{"pattern": "obrien", "inside": "IA"}
+{"pattern": "ocean", "inside": "NJ"}
+{"pattern": "oceana", "inside": "MI"}
+{"pattern": "ochiltree", "inside": "TX"}
+{"pattern": "oconee", "inside": "GA SC"}
+{"pattern": "oconto", "inside": "WI"}
+{"pattern": "ogemaw", "inside": "MI"}
+{"pattern": "ogle", "inside": "IL"}
+{"pattern": "oglethorpe", "inside": "GA"}
+{"pattern": "okaloosa", "inside": "FL"}
+{"pattern": "okanogan", "inside": "WA"}
+{"pattern": "okeechobee", "inside": "FL"}
+{"pattern": "okfuskee", "inside": "OK"}
+{"pattern": "okmulgee", "inside": "OK"}
+{"pattern": "oktibbeha", "inside": "MS"}
+{"pattern": "oldham", "inside": "KY TX"}
+{"pattern": "oliver", "inside": "ND"}
+{"pattern": "olmsted", "inside": "MN"}
+{"pattern": "oneida", "inside": "ID NY WI"}
+{"pattern": "onondaga", "inside": "NY"}
+{"pattern": "onslow", "inside": "NC"}
+{"pattern": "ontario", "inside": "NY"}
+{"pattern": "ontonagon", "inside": "MI"}
+{"pattern": "orange", "inside": "CA FL IN NY NC TX VT VA"}
+{"pattern": "orangeburg", "inside": "SC"}
+{"pattern": "orleans", "inside": "LA NY VT"}
+{"pattern": "osage", "inside": "KS MO OK"}
+{"pattern": "osborne", "inside": "KS"}
+{"pattern": "osceola", "inside": "FL IA MI"}
+{"pattern": "oscoda", "inside": "MI"}
+{"pattern": "oswego", "inside": "NY"}
+{"pattern": "otero", "inside": "CO NM"}
+{"pattern": "otoe", "inside": "NE"}
+{"pattern": "otsego", "inside": "MI NY"}
+{"pattern": "ottawa", "inside": "KS MI OH OK"}
+{"pattern": "otter tail", "inside": "MN"}
+{"pattern": "ouachita", "inside": "AR LA"}
+{"pattern": "ouray", "inside": "CO"}
+{"pattern": "outagamie", "inside": "WI"}
+{"pattern": "overton", "inside": "TN"}
+{"pattern": "owen", "inside": "IN KY"}
+{"pattern": "owsley", "inside": "KY"}
+{"pattern": "owyhee", "inside": "ID"}
+{"pattern": "oxford", "inside": "ME"}
+{"pattern": "ozark", "inside": "MO"}
+{"pattern": "ozaukee", "inside": "WI"}
+{"pattern": "pacific", "inside": "WA"}
+{"pattern": "page", "inside": "IA VA"}
+{"pattern": "palm beach", "inside": "FL"}
+{"pattern": "palo alto", "inside": "IA"}
+{"pattern": "palo pinto", "inside": "TX"}
+{"pattern": "pamlico", "inside": "NC"}
+{"pattern": "panola", "inside": "MS TX"}
+{"pattern": "park", "inside": "CO MT WY"}
+{"pattern": "parke", "inside": "IN"}
+{"pattern": "parker", "inside": "TX"}
+{"pattern": "parmer", "inside": "TX"}
+{"pattern": "pasco", "inside": "FL"}
+{"pattern": "pasquotank", "inside": "NC"}
+{"pattern": "passaic", "inside": "NJ"}
+{"pattern": "patrick", "inside": "VA"}
+{"pattern": "paulding", "inside": "GA OH"}
+{"pattern": "pawnee", "inside": "KS NE OK"}
+{"pattern": "payette", "inside": "ID"}
+{"pattern": "payne", "inside": "OK"}
+{"pattern": "peach", "inside": "GA"}
+{"pattern": "pearl river", "inside": "MS"}
+{"pattern": "pecos", "inside": "TX"}
+{"pattern": "pembina", "inside": "ND"}
+{"pattern": "pemiscot", "inside": "MO"}
+{"pattern": "pend oreille", "inside": "WA"}
+{"pattern": "pender", "inside": "NC"}
+{"pattern": "pendleton", "inside": "KY WV"}
+{"pattern": "pennington", "inside": "MN SD"}
+{"pattern": "penobscot", "inside": "ME"}
+{"pattern": "peoria", "inside": "IL"}
+{"pattern": "pepin", "inside": "WI"}
+{"pattern": "perkins", "inside": "NE SD"}
+{"pattern": "perquimans", "inside": "NC"}
+{"pattern": "perry", "inside": "AL AR IL IN KY MS MO OH PA TN"}
+{"pattern": "pershing", "inside": "NV"}
+{"pattern": "person", "inside": "NC"}
+{"pattern": "petersburg", "inside": "AK VA"}
+{"pattern": "petroleum", "inside": "MT"}
+{"pattern": "pettis", "inside": "MO"}
+{"pattern": "phelps", "inside": "MO NE"}
+{"pattern": "philadelphia", "inside": "PA"}
+{"pattern": "phillips", "inside": "AR CO KS MT"}
+{"pattern": "piatt", "inside": "IL"}
+{"pattern": "pickaway", "inside": "OH"}
+{"pattern": "pickens", "inside": "AL GA SC"}
+{"pattern": "pickett", "inside": "TN"}
+{"pattern": "pierce", "inside": "GA NE ND WA WI"}
+{"pattern": "pike", "inside": "AL AR GA IL IN KY MS MO OH PA"}
+{"pattern": "pima", "inside": "AZ"}
+{"pattern": "pinal", "inside": "AZ"}
+{"pattern": "pine", "inside": "MN"}
+{"pattern": "pinellas", "inside": "FL"}
+{"pattern": "pipestone", "inside": "MN"}
+{"pattern": "piscataquis", "inside": "ME"}
+{"pattern": "pitkin", "inside": "CO"}
+{"pattern": "pitt", "inside": "NC"}
+{"pattern": "pittsburg", "inside": "OK"}
+{"pattern": "pittsylvania", "inside": "VA"}
+{"pattern": "piute", "inside": "UT"}
+{"pattern": "placer", "inside": "CA"}
+{"pattern": "plaquemines", "inside": "LA"}
+{"pattern": "platte", "inside": "MO NE WY"}
+{"pattern": "pleasants", "inside": "WV"}
+{"pattern": "plumas", "inside": "CA"}
+{"pattern": "plymouth", "inside": "IA MA"}
+{"pattern": "pocahontas", "inside": "IA WV"}
+{"pattern": "poinsett", "inside": "AR"}
+{"pattern": "pointe coupee", "inside": "LA"}
+{"pattern": "polk", "inside": "AR FL GA IA MN MO NE NC OR TN TX WI"}
+{"pattern": "pondera", "inside": "MT"}
+{"pattern": "pontotoc", "inside": "MS OK"}
+{"pattern": "pope", "inside": "AR IL MN"}
+{"pattern": "poquoson", "inside": "VA"}
+{"pattern": "portage", "inside": "OH WI"}
+{"pattern": "porter", "inside": "IN"}
+{"pattern": "portsmouth", "inside": "VA"}
+{"pattern": "posey", "inside": "IN"}
+{"pattern": "pottawatomie", "inside": "KS OK"}
+{"pattern": "pottawattamie", "inside": "IA"}
+{"pattern": "potter", "inside": "PA SD TX"}
+{"pattern": "powder river", "inside": "MT"}
+{"pattern": "powell", "inside": "KY MT"}
+{"pattern": "power", "inside": "ID"}
+{"pattern": "poweshiek", "inside": "IA"}
+{"pattern": "powhatan", "inside": "VA"}
+{"pattern": "prairie", "inside": "AR MT"}
+{"pattern": "pratt", "inside": "KS"}
+{"pattern": "preble", "inside": "OH"}
+{"pattern": "prentiss", "inside": "MS"}
+{"pattern": "presidio", "inside": "TX"}
+{"pattern": "presque isle", "inside": "MI"}
+{"pattern": "preston", "inside": "WV"}
+{"pattern": "price", "inside": "WI"}
+{"pattern": "prince edward", "inside": "VA"}
+{"pattern": "prince george", "inside": "VA"}
+{"pattern": "prince george's", "inside": "MD"}
+{"pattern": "prince georges", "inside": "MD"}
+{"pattern": "prince of wales-hyder", "inside": "AK"}
+{"pattern": "prince william", "inside": "VA"}
+{"pattern": "providence", "inside": "RI"}
+{"pattern": "prowers", "inside": "CO"}
+{"pattern": "pueblo", "inside": "CO"}
+{"pattern": "pulaski", "inside": "AR GA IL IN KY MO VA"}
+{"pattern": "pushmataha", "inside": "OK"}
+{"pattern": "putnam", "inside": "FL GA IL IN MO NY OH TN WV"}
+{"pattern": "quay", "inside": "NM"}
+{"pattern": "queen anne's", "inside": "MD"}
+{"pattern": "queen annes", "inside": "MD"}
+{"pattern": "queens", "inside": "NY"}
+{"pattern": "quitman", "inside": "GA MS"}
+{"pattern": "rabun", "inside": "GA"}
+{"pattern": "racine", "inside": "WI"}
+{"pattern": "radford", "inside": "VA"}
+{"pattern": "rains", "inside": "TX"}
+{"pattern": "raleigh", "inside": "WV"}
+{"pattern": "ralls", "inside": "MO"}
+{"pattern": "ramsey", "inside": "MN ND"}
+{"pattern": "randall", "inside": "TX"}
+{"pattern": "randolph", "inside": "AL AR GA IL IN MO NC WV"}
+{"pattern": "rankin", "inside": "MS"}
+{"pattern": "ransom", "inside": "ND"}
+{"pattern": "rapides", "inside": "LA"}
+{"pattern": "rappahannock", "inside": "VA"}
+{"pattern": "ravalli", "inside": "MT"}
+{"pattern": "rawlins", "inside": "KS"}
+{"pattern": "ray", "inside": "MO"}
+{"pattern": "reagan", "inside": "TX"}
+{"pattern": "real", "inside": "TX"}
+{"pattern": "red lake", "inside": "MN"}
+{"pattern": "red river", "inside": "LA TX"}
+{"pattern": "red willow", "inside": "NE"}
+{"pattern": "redwood", "inside": "MN"}
+{"pattern": "reeves", "inside": "TX"}
+{"pattern": "refugio", "inside": "TX"}
+{"pattern": "reno", "inside": "KS"}
+{"pattern": "rensselaer", "inside": "NY"}
+{"pattern": "renville", "inside": "MN ND"}
+{"pattern": "republic", "inside": "KS"}
+{"pattern": "reynolds", "inside": "MO"}
+{"pattern": "rhea", "inside": "TN"}
+{"pattern": "rice", "inside": "KS MN"}
+{"pattern": "rich", "inside": "UT"}
+{"pattern": "richardson", "inside": "NE"}
+{"pattern": "richland", "inside": "IL LA MT ND OH SC WI"}
+{"pattern": "richmond", "inside": "GA NY NC VA VA"}
+{"pattern": "riley", "inside": "KS"}
+{"pattern": "ringgold", "inside": "IA"}
+{"pattern": "rio arriba", "inside": "NM"}
+{"pattern": "rio blanco", "inside": "CO"}
+{"pattern": "rio grande", "inside": "CO"}
+{"pattern": "ripley", "inside": "IN MO"}
+{"pattern": "ritchie", "inside": "WV"}
+{"pattern": "riverside", "inside": "CA"}
+{"pattern": "roane", "inside": "TN WV"}
+{"pattern": "roanoke", "inside": "VA VA"}
+{"pattern": "roberts", "inside": "SD TX"}
+{"pattern": "robertson", "inside": "KY TN TX"}
+{"pattern": "robeson", "inside": "NC"}
+{"pattern": "rock", "inside": "MN NE WI"}
+{"pattern": "rock island", "inside": "IL"}
+{"pattern": "rockbridge", "inside": "VA"}
+{"pattern": "rockcastle", "inside": "KY"}
+{"pattern": "rockdale", "inside": "GA"}
+{"pattern": "rockingham", "inside": "NH NC VA"}
+{"pattern": "rockland", "inside": "NY"}
+{"pattern": "rockwall", "inside": "TX"}
+{"pattern": "roger mills", "inside": "OK"}
+{"pattern": "rogers", "inside": "OK"}
+{"pattern": "rolette", "inside": "ND"}
+{"pattern": "rooks", "inside": "KS"}
+{"pattern": "roosevelt", "inside": "MT NM"}
+{"pattern": "roscommon", "inside": "MI"}
+{"pattern": "roseau", "inside": "MN"}
+{"pattern": "rosebud", "inside": "MT"}
+{"pattern": "ross", "inside": "OH"}
+{"pattern": "routt", "inside": "CO"}
+{"pattern": "rowan", "inside": "KY NC"}
+{"pattern": "runnels", "inside": "TX"}
+{"pattern": "rush", "inside": "IN KS"}
+{"pattern": "rusk", "inside": "TX WI"}
+{"pattern": "russell", "inside": "AL KS KY VA"}
+{"pattern": "rutherford", "inside": "NC TN"}
+{"pattern": "rutland", "inside": "VT"}
+{"pattern": "sabine", "inside": "LA TX"}
+{"pattern": "sac", "inside": "IA"}
+{"pattern": "sacramento", "inside": "CA"}
+{"pattern": "sagadahoc", "inside": "ME"}
+{"pattern": "saginaw", "inside": "MI"}
+{"pattern": "saguache", "inside": "CO"}
+{"pattern": "salem", "inside": "NJ VA"}
+{"pattern": "saline", "inside": "AR IL KS MO NE"}
+{"pattern": "salt lake", "inside": "UT"}
+{"pattern": "saluda", "inside": "SC"}
+{"pattern": "sampson", "inside": "NC"}
+{"pattern": "san augustine", "inside": "TX"}
+{"pattern": "san benito", "inside": "CA"}
+{"pattern": "san bernardino", "inside": "CA"}
+{"pattern": "san diego", "inside": "CA"}
+{"pattern": "san francisco", "inside": "CA"}
+{"pattern": "san jacinto", "inside": "TX"}
+{"pattern": "san joaquin", "inside": "CA"}
+{"pattern": "san juan", "inside": "CO NM UT WA"}
+{"pattern": "san luis obispo", "inside": "CA"}
+{"pattern": "san mateo", "inside": "CA"}
+{"pattern": "san miguel", "inside": "CO NM"}
+{"pattern": "san patricio", "inside": "TX"}
+{"pattern": "san saba", "inside": "TX"}
+{"pattern": "sanborn", "inside": "SD"}
+{"pattern": "sanders", "inside": "MT"}
+{"pattern": "sandoval", "inside": "NM"}
+{"pattern": "sandusky", "inside": "OH"}
+{"pattern": "sangamon", "inside": "IL"}
+{"pattern": "sanilac", "inside": "MI"}
+{"pattern": "sanpete", "inside": "UT"}
+{"pattern": "santa barbara", "inside": "CA"}
+{"pattern": "santa clara", "inside": "CA"}
+{"pattern": "santa cruz", "inside": "AZ CA"}
+{"pattern": "santa fe", "inside": "NM"}
+{"pattern": "santa rosa", "inside": "FL"}
+{"pattern": "sarasota", "inside": "FL"}
+{"pattern": "saratoga", "inside": "NY"}
+{"pattern": "sargent", "inside": "ND"}
+{"pattern": "sarpy", "inside": "NE"}
+{"pattern": "sauk", "inside": "WI"}
+{"pattern": "saunders", "inside": "NE"}
+{"pattern": "sawyer", "inside": "WI"}
+{"pattern": "schenectady", "inside": "NY"}
+{"pattern": "schleicher", "inside": "TX"}
+{"pattern": "schley", "inside": "GA"}
+{"pattern": "schoharie", "inside": "NY"}
+{"pattern": "schoolcraft", "inside": "MI"}
+{"pattern": "schuyler", "inside": "IL MO NY"}
+{"pattern": "schuylkill", "inside": "PA"}
+{"pattern": "scioto", "inside": "OH"}
+{"pattern": "scotland", "inside": "MO NC"}
+{"pattern": "scott", "inside": "AR IL IN IA KS KY MN MS MO TN VA"}
+{"pattern": "scotts bluff", "inside": "NE"}
+{"pattern": "screven", "inside": "GA"}
+{"pattern": "scurry", "inside": "TX"}
+{"pattern": "searcy", "inside": "AR"}
+{"pattern": "sebastian", "inside": "AR"}
+{"pattern": "sedgwick", "inside": "CO KS"}
+{"pattern": "seminole", "inside": "FL GA OK"}
+{"pattern": "seneca", "inside": "NY OH"}
+{"pattern": "sequatchie", "inside": "TN"}
+{"pattern": "sequoyah", "inside": "OK"}
+{"pattern": "sevier", "inside": "AR TN UT"}
+{"pattern": "seward", "inside": "KS NE"}
+{"pattern": "shackelford", "inside": "TX"}
+{"pattern": "shannon", "inside": "MO SD"}
+{"pattern": "sharkey", "inside": "MS"}
+{"pattern": "sharp", "inside": "AR"}
+{"pattern": "shasta", "inside": "CA"}
+{"pattern": "shawano", "inside": "WI"}
+{"pattern": "shawnee", "inside": "KS"}
+{"pattern": "sheboygan", "inside": "WI"}
+{"pattern": "shelby", "inside": "AL IL IN IA KY MO OH TN TX"}
+{"pattern": "shenandoah", "inside": "VA"}
+{"pattern": "sherburne", "inside": "MN"}
+{"pattern": "sheridan", "inside": "KS MT NE ND WY"}
+{"pattern": "sherman", "inside": "KS NE OR TX"}
+{"pattern": "shiawassee", "inside": "MI"}
+{"pattern": "shoshone", "inside": "ID"}
+{"pattern": "sibley", "inside": "MN"}
+{"pattern": "sierra", "inside": "CA NM"}
+{"pattern": "silver bow", "inside": "MT"}
+{"pattern": "simpson", "inside": "KY MS"}
+{"pattern": "sioux", "inside": "IA NE ND"}
+{"pattern": "siskiyou", "inside": "CA"}
+{"pattern": "sitka", "inside": "AK"}
+{"pattern": "skagit", "inside": "WA"}
+{"pattern": "skagway", "inside": "AK"}
+{"pattern": "skamania", "inside": "WA"}
+{"pattern": "slope", "inside": "ND"}
+{"pattern": "smith", "inside": "KS MS TN TX"}
+{"pattern": "smyth", "inside": "VA"}
+{"pattern": "snohomish", "inside": "WA"}
+{"pattern": "snyder", "inside": "PA"}
+{"pattern": "socorro", "inside": "NM"}
+{"pattern": "solano", "inside": "CA"}
+{"pattern": "somerset", "inside": "ME MD NJ PA"}
+{"pattern": "somervell", "inside": "TX"}
+{"pattern": "sonoma", "inside": "CA"}
+{"pattern": "south boston", "inside": "VA"}
+{"pattern": "southampton", "inside": "VA"}
+{"pattern": "southeast fairbanks", "inside": "AK"}
+{"pattern": "spalding", "inside": "GA"}
+{"pattern": "spartanburg", "inside": "SC"}
+{"pattern": "spencer", "inside": "IN KY"}
+{"pattern": "spink", "inside": "SD"}
+{"pattern": "spokane", "inside": "WA"}
+{"pattern": "spotsylvania", "inside": "VA"}
+{"pattern": "st marys", "inside": "MD"}
+{"pattern": "st. bernard", "inside": "LA"}
+{"pattern": "st. charles", "inside": "LA MO"}
+{"pattern": "st. clair", "inside": "AL IL MI MO"}
+{"pattern": "st. croix", "inside": "WI"}
+{"pattern": "st. francis", "inside": "AR"}
+{"pattern": "st. francois", "inside": "MO"}
+{"pattern": "st. helena", "inside": "LA"}
+{"pattern": "st. james", "inside": "LA"}
+{"pattern": "st. john the baptist", "inside": "LA"}
+{"pattern": "st. johns", "inside": "FL"}
+{"pattern": "st. joseph", "inside": "IN MI"}
+{"pattern": "st. landry", "inside": "LA"}
+{"pattern": "st. lawrence", "inside": "NY"}
+{"pattern": "st. louis", "inside": "MN MO"}
+{"pattern": "st. louis city", "inside": "MO"}
+{"pattern": "st. lucie", "inside": "FL"}
+{"pattern": "st. martin", "inside": "LA"}
+{"pattern": "st. mary", "inside": "LA"}
+{"pattern": "st. mary's", "inside": "MD"}
+{"pattern": "st. marys", "inside": "MD"}
+{"pattern": "st. tammany", "inside": "LA"}
+{"pattern": "stafford", "inside": "KS VA"}
+{"pattern": "stanislaus", "inside": "CA"}
+{"pattern": "stanley", "inside": "SD"}
+{"pattern": "stanly", "inside": "NC"}
+{"pattern": "stanton", "inside": "KS NE"}
+{"pattern": "stark", "inside": "IL ND OH"}
+{"pattern": "starke", "inside": "IN"}
+{"pattern": "starr", "inside": "TX"}
+{"pattern": "staunton", "inside": "VA"}
+{"pattern": "ste. genevieve", "inside": "MO"}
+{"pattern": "stearns", "inside": "MN"}
+{"pattern": "steele", "inside": "MN ND"}
+{"pattern": "stephens", "inside": "GA OK TX"}
+{"pattern": "stephenson", "inside": "IL"}
+{"pattern": "sterling", "inside": "TX"}
+{"pattern": "steuben", "inside": "IN NY"}
+{"pattern": "stevens", "inside": "KS MN WA"}
+{"pattern": "stewart", "inside": "GA TN"}
+{"pattern": "stillwater", "inside": "MT"}
+{"pattern": "stoddard", "inside": "MO"}
+{"pattern": "stokes", "inside": "NC"}
+{"pattern": "stone", "inside": "AR MS MO"}
+{"pattern": "stonewall", "inside": "TX"}
+{"pattern": "storey", "inside": "NV"}
+{"pattern": "story", "inside": "IA"}
+{"pattern": "strafford", "inside": "NH"}
+{"pattern": "stutsman", "inside": "ND"}
+{"pattern": "sublette", "inside": "WY"}
+{"pattern": "suffolk", "inside": "MA NY VA"}
+{"pattern": "sullivan", "inside": "IN MO NH NY PA TN"}
+{"pattern": "sully", "inside": "SD"}
+{"pattern": "summers", "inside": "WV"}
+{"pattern": "summit", "inside": "CO OH UT"}
+{"pattern": "sumner", "inside": "KS TN"}
+{"pattern": "sumter", "inside": "AL FL GA SC"}
+{"pattern": "sunflower", "inside": "MS"}
+{"pattern": "surry", "inside": "NC VA"}
+{"pattern": "susquehanna", "inside": "PA"}
+{"pattern": "sussex", "inside": "DE NJ VA"}
+{"pattern": "sutter", "inside": "CA"}
+{"pattern": "sutton", "inside": "TX"}
+{"pattern": "suwannee", "inside": "FL"}
+{"pattern": "swain", "inside": "NC"}
+{"pattern": "sweet grass", "inside": "MT"}
+{"pattern": "sweetwater", "inside": "WY"}
+{"pattern": "swift", "inside": "MN"}
+{"pattern": "swisher", "inside": "TX"}
+{"pattern": "switzerland", "inside": "IN"}
+{"pattern": "talbot", "inside": "GA MD"}
+{"pattern": "taliaferro", "inside": "GA"}
+{"pattern": "talladega", "inside": "AL"}
+{"pattern": "tallahatchie", "inside": "MS"}
+{"pattern": "tallapoosa", "inside": "AL"}
+{"pattern": "tama", "inside": "IA"}
+{"pattern": "taney", "inside": "MO"}
+{"pattern": "tangipahoa", "inside": "LA"}
+{"pattern": "taos", "inside": "NM"}
+{"pattern": "tarrant", "inside": "TX"}
+{"pattern": "tate", "inside": "MS"}
+{"pattern": "tattnall", "inside": "GA"}
+{"pattern": "taylor", "inside": "FL GA IA KY TX WV WI"}
+{"pattern": "tazewell", "inside": "IL VA"}
+{"pattern": "tehama", "inside": "CA"}
+{"pattern": "telfair", "inside": "GA"}
+{"pattern": "teller", "inside": "CO"}
+{"pattern": "tensas", "inside": "LA"}
+{"pattern": "terrebonne", "inside": "LA"}
+{"pattern": "terrell", "inside": "GA TX"}
+{"pattern": "terry", "inside": "TX"}
+{"pattern": "teton", "inside": "ID MT WY"}
+{"pattern": "thayer", "inside": "NE"}
+{"pattern": "thomas", "inside": "GA KS NE"}
+{"pattern": "throckmorton", "inside": "TX"}
+{"pattern": "thurston", "inside": "NE WA"}
+{"pattern": "tift", "inside": "GA"}
+{"pattern": "tillamook", "inside": "OR"}
+{"pattern": "tillman", "inside": "OK"}
+{"pattern": "tioga", "inside": "NY PA"}
+{"pattern": "tippah", "inside": "MS"}
+{"pattern": "tippecanoe", "inside": "IN"}
+{"pattern": "tipton", "inside": "IN TN"}
+{"pattern": "tishomingo", "inside": "MS"}
+{"pattern": "titus", "inside": "TX"}
+{"pattern": "todd", "inside": "KY MN SD"}
+{"pattern": "tolland", "inside": "CT"}
+{"pattern": "tom green", "inside": "TX"}
+{"pattern": "tompkins", "inside": "NY"}
+{"pattern": "tooele", "inside": "UT"}
+{"pattern": "toole", "inside": "MT"}
+{"pattern": "toombs", "inside": "GA"}
+{"pattern": "torrance", "inside": "NM"}
+{"pattern": "towner", "inside": "ND"}
+{"pattern": "towns", "inside": "GA"}
+{"pattern": "traill", "inside": "ND"}
+{"pattern": "transylvania", "inside": "NC"}
+{"pattern": "traverse", "inside": "MN"}
+{"pattern": "travis", "inside": "TX"}
+{"pattern": "treasure", "inside": "MT"}
+{"pattern": "trego", "inside": "KS"}
+{"pattern": "trempealeau", "inside": "WI"}
+{"pattern": "treutlen", "inside": "GA"}
+{"pattern": "trigg", "inside": "KY"}
+{"pattern": "trimble", "inside": "KY"}
+{"pattern": "trinity", "inside": "CA TX"}
+{"pattern": "tripp", "inside": "SD"}
+{"pattern": "troup", "inside": "GA"}
+{"pattern": "trousdale", "inside": "TN"}
+{"pattern": "trumbull", "inside": "OH"}
+{"pattern": "tucker", "inside": "WV"}
+{"pattern": "tulare", "inside": "CA"}
+{"pattern": "tulsa", "inside": "OK"}
+{"pattern": "tunica", "inside": "MS"}
+{"pattern": "tuolumne", "inside": "CA"}
+{"pattern": "turner", "inside": "GA SD"}
+{"pattern": "tuscaloosa", "inside": "AL"}
+{"pattern": "tuscarawas", "inside": "OH"}
+{"pattern": "tuscola", "inside": "MI"}
+{"pattern": "twiggs", "inside": "GA"}
+{"pattern": "twin falls", "inside": "ID"}
+{"pattern": "tyler", "inside": "TX WV"}
+{"pattern": "tyrrell", "inside": "NC"}
+{"pattern": "uinta", "inside": "WY"}
+{"pattern": "uintah", "inside": "UT"}
+{"pattern": "ulster", "inside": "NY"}
+{"pattern": "umatilla", "inside": "OR"}
+{"pattern": "unicoi", "inside": "TN"}
+{"pattern": "union", "inside": "AR FL GA IL IN IA KY LA MS NJ NM NC OH OR PA SC SD TN"}
+{"pattern": "upshur", "inside": "TX WV"}
+{"pattern": "upson", "inside": "GA"}
+{"pattern": "upton", "inside": "TX"}
+{"pattern": "uvalde", "inside": "TX"}
+{"pattern": "val verde", "inside": "TX"}
+{"pattern": "valdez-cordova", "inside": "AK"}
+{"pattern": "valencia", "inside": "NM"}
+{"pattern": "valley", "inside": "ID MT NE"}
+{"pattern": "van buren", "inside": "AR IA MI TN"}
+{"pattern": "van wert", "inside": "OH"}
+{"pattern": "van zandt", "inside": "TX"}
+{"pattern": "vance", "inside": "NC"}
+{"pattern": "vanderburgh", "inside": "IN"}
+{"pattern": "venango", "inside": "PA"}
+{"pattern": "ventura", "inside": "CA"}
+{"pattern": "vermilion", "inside": "IL LA"}
+{"pattern": "vermillion", "inside": "IN"}
+{"pattern": "vernon", "inside": "LA MO WI"}
+{"pattern": "victoria", "inside": "TX"}
+{"pattern": "vigo", "inside": "IN"}
+{"pattern": "vilas", "inside": "WI"}
+{"pattern": "vinton", "inside": "OH"}
+{"pattern": "virginia beach", "inside": "VA"}
+{"pattern": "volusia", "inside": "FL"}
+{"pattern": "wabash", "inside": "IL IN"}
+{"pattern": "wabasha", "inside": "MN"}
+{"pattern": "wabaunsee", "inside": "KS"}
+{"pattern": "wade hampton", "inside": "AK"}
+{"pattern": "wadena", "inside": "MN"}
+{"pattern": "wagoner", "inside": "OK"}
+{"pattern": "wahkiakum", "inside": "WA"}
+{"pattern": "wake", "inside": "NC"}
+{"pattern": "wakulla", "inside": "FL"}
+{"pattern": "waldo", "inside": "ME"}
+{"pattern": "walker", "inside": "AL GA TX"}
+{"pattern": "walla walla", "inside": "WA"}
+{"pattern": "wallace", "inside": "KS"}
+{"pattern": "waller", "inside": "TX"}
+{"pattern": "wallowa", "inside": "OR"}
+{"pattern": "walsh", "inside": "ND"}
+{"pattern": "walthall", "inside": "MS"}
+{"pattern": "walton", "inside": "FL GA"}
+{"pattern": "walworth", "inside": "SD WI"}
+{"pattern": "wapello", "inside": "IA"}
+{"pattern": "ward", "inside": "ND TX"}
+{"pattern": "ware", "inside": "GA"}
+{"pattern": "warren", "inside": "GA IL IN IA KY MS MO NJ NY NC OH PA TN VA"}
+{"pattern": "warrick", "inside": "IN"}
+{"pattern": "wasatch", "inside": "UT"}
+{"pattern": "wasco", "inside": "OR"}
+{"pattern": "waseca", "inside": "MN"}
+{"pattern": "washakie", "inside": "WY"}
+{"pattern": "washburn", "inside": "WI"}
+{"pattern": "washita", "inside": "OK"}
+{"pattern": "washoe", "inside": "NV"}
+{"pattern": "washtenaw", "inside": "MI"}
+{"pattern": "watauga", "inside": "NC"}
+{"pattern": "watonwan", "inside": "MN"}
+{"pattern": "waukesha", "inside": "WI"}
+{"pattern": "waupaca", "inside": "WI"}
+{"pattern": "waushara", "inside": "WI"}
+{"pattern": "wayne", "inside": "GA IL IN IA KY MI MS MO NE NY NC OH PA TN UT WV"}
+{"pattern": "waynesboro", "inside": "VA"}
+{"pattern": "weakley", "inside": "TN"}
+{"pattern": "webb", "inside": "TX"}
+{"pattern": "weber", "inside": "UT"}
+{"pattern": "webster", "inside": "GA IA KY LA MS MO NE WV"}
+{"pattern": "weld", "inside": "CO"}
+{"pattern": "wells", "inside": "IN ND"}
+{"pattern": "west baton rouge", "inside": "LA"}
+{"pattern": "west carroll", "inside": "LA"}
+{"pattern": "west feliciana", "inside": "LA"}
+{"pattern": "westchester", "inside": "NY"}
+{"pattern": "westmoreland", "inside": "PA VA"}
+{"pattern": "weston", "inside": "WY"}
+{"pattern": "wetzel", "inside": "WV"}
+{"pattern": "wexford", "inside": "MI"}
+{"pattern": "wharton", "inside": "TX"}
+{"pattern": "whatcom", "inside": "WA"}
+{"pattern": "wheatland", "inside": "MT"}
+{"pattern": "wheeler", "inside": "GA NE OR TX"}
+{"pattern": "white", "inside": "AR GA IL IN TN"}
+{"pattern": "white pine", "inside": "NV"}
+{"pattern": "whiteside", "inside": "IL"}
+{"pattern": "whitfield", "inside": "GA"}
+{"pattern": "whitley", "inside": "IN KY"}
+{"pattern": "whitman", "inside": "WA"}
+{"pattern": "wibaux", "inside": "MT"}
+{"pattern": "wichita", "inside": "KS TX"}
+{"pattern": "wicomico", "inside": "MD"}
+{"pattern": "wilbarger", "inside": "TX"}
+{"pattern": "wilcox", "inside": "AL GA"}
+{"pattern": "wilkes", "inside": "GA NC"}
+{"pattern": "wilkin", "inside": "MN"}
+{"pattern": "wilkinson", "inside": "GA MS"}
+{"pattern": "will", "inside": "IL"}
+{"pattern": "willacy", "inside": "TX"}
+{"pattern": "williams", "inside": "ND OH"}
+{"pattern": "williamsburg", "inside": "SC VA"}
+{"pattern": "williamson", "inside": "IL TN TX"}
+{"pattern": "wilson", "inside": "KS NC TN TX"}
+{"pattern": "winchester", "inside": "VA"}
+{"pattern": "windham", "inside": "CT VT"}
+{"pattern": "windsor", "inside": "VT"}
+{"pattern": "winkler", "inside": "TX"}
+{"pattern": "winn", "inside": "LA"}
+{"pattern": "winnebago", "inside": "IL IA WI"}
+{"pattern": "winneshiek", "inside": "IA"}
+{"pattern": "winona", "inside": "MN"}
+{"pattern": "winston", "inside": "AL MS"}
+{"pattern": "wirt", "inside": "WV"}
+{"pattern": "wise", "inside": "TX VA"}
+{"pattern": "wolfe", "inside": "KY"}
+{"pattern": "wood", "inside": "OH TX WV WI"}
+{"pattern": "woodbury", "inside": "IA"}
+{"pattern": "woodford", "inside": "IL KY"}
+{"pattern": "woodruff", "inside": "AR"}
+{"pattern": "woods", "inside": "OK"}
+{"pattern": "woodson", "inside": "KS"}
+{"pattern": "woodward", "inside": "OK"}
+{"pattern": "worcester", "inside": "MD MA"}
+{"pattern": "worth", "inside": "GA IA MO"}
+{"pattern": "wrangell", "inside": "AK"}
+{"pattern": "wright", "inside": "IA MN MO"}
+{"pattern": "wyandot", "inside": "OH"}
+{"pattern": "wyandotte", "inside": "KS"}
+{"pattern": "wythe", "inside": "VA"}
+{"pattern": "yadkin", "inside": "NC"}
+{"pattern": "yakima", "inside": "WA"}
+{"pattern": "yakutat", "inside": "AK"}
+{"pattern": "yalobusha", "inside": "MS"}
+{"pattern": "yamhill", "inside": "OR"}
+{"pattern": "yancey", "inside": "NC"}
+{"pattern": "yankton", "inside": "SD"}
+{"pattern": "yates", "inside": "NY"}
+{"pattern": "yavapai", "inside": "AZ"}
+{"pattern": "yazoo", "inside": "MS"}
+{"pattern": "yell", "inside": "AR"}
+{"pattern": "yellow medicine", "inside": "MN"}
+{"pattern": "yellowstone", "inside": "MT"}
+{"pattern": "yellowstone national park", "inside": "MT"}
+{"pattern": "yoakum", "inside": "TX"}
+{"pattern": "yolo", "inside": "CA"}
+{"pattern": "york", "inside": "ME NE PA SC VA"}
+{"pattern": "young", "inside": "TX"}
+{"pattern": "yuba", "inside": "CA"}
+{"pattern": "yukon-koyukuk", "inside": "AK"}
+{"pattern": "yuma", "inside": "AZ CO"}
+{"pattern": "zapata", "inside": "TX"}
+{"pattern": "zavala", "inside": "TX"}
+{"pattern": "AK", "postal": "AK"}
+{"pattern": "AL", "postal": "AL"}
+{"pattern": "ala.", "postal": "AL"}
+{"pattern": "alabama", "postal": "AL"}
+{"pattern": "alas.", "postal": "AK"}
+{"pattern": "alaska", "postal": "AK"}
+{"pattern": "alsk.", "postal": "AK"}
+{"pattern": "AR", "postal": "AR"}
+{"pattern": "ar.t.", "postal": "AR"}
+{"pattern": "ariz.", "postal": "AZ"}
+{"pattern": "arizona", "postal": "AZ"}
+{"pattern": "ark", "postal": "AR"}
+{"pattern": "ark.", "postal": "AR"}
+{"pattern": "c.f.", "postal": "CA"}
+{"pattern": "c.l.", "postal": "CO"}
+{"pattern": "CA", "postal": "CA"}
+{"pattern": "cal.", "postal": "CA"}
+{"pattern": "calif.", "postal": "CA"}
+{"pattern": "california", "postal": "CA"}
+{"pattern": "CO", "postal": "CO"}
+{"pattern": "col.", "postal": "CO"}
+{"pattern": "colo.", "postal": "CO"}
+{"pattern": "conn.", "postal": "CT"}
+{"pattern": "connecticut", "postal": "CT"}
+{"pattern": "CT", "postal": "CT"}
+{"pattern": "d.c.", "postal": "DC"}
+{"pattern": "d.l.", "postal": "DE"}
+{"pattern": "DC", "postal": "DC"}
+{"pattern": "DE", "postal": "DE"}
+{"pattern": "del.", "postal": "DE"}
+{"pattern": "district of columbia", "postal": "DC"}
+{"pattern": "FL", "postal": "FL"}
+{"pattern": "fla.", "postal": "FL"}
+{"pattern": "flor.", "postal": "FL"}
+{"pattern": "florida", "postal": "FL"}
+{"pattern": "GA", "postal": "GA"}
+{"pattern": "ga.", "postal": "GA"}
+{"pattern": "geo.", "postal": "GA"}
+{"pattern": "georgia", "postal": "GA"}
+{"pattern": "h.a.", "postal": "HI"}
+{"pattern": "haw.", "postal": "HI"}
+{"pattern": "HI", "postal": "HI"}
+{"pattern": "IA", "postal": "IA"}
+{"pattern": "ID", "postal": "ID"}
+{"pattern": "ida.", "postal": "ID"}
+{"pattern": "IL", "postal": "IL"}
+{"pattern": "ill.", "postal": "IL"}
+{"pattern": "illinois", "postal": "IL"}
+{"pattern": "ills.", "postal": "IL"}
+{"pattern": "IN", "postal": "IN"}
+{"pattern": "ind.", "postal": "IN"}
+{"pattern": "ioa.", "postal": "IA"}
+{"pattern": "k.a.", "postal": "KS"}
+{"pattern": "kan.", "postal": "KS"}
+{"pattern": "kans.", "postal": "KS"}
+{"pattern": "kansas", "postal": "KS"}
+{"pattern": "ken.", "postal": "KY"}
+{"pattern": "kent.", "postal": "KY"}
+{"pattern": "kentucky", "postal": "KY"}
+{"pattern": "KS", "postal": "KS"}
+{"pattern": "KY", "postal": "KY"}
+{"pattern": "ky.", "postal": "KY"}
+{"pattern": "LA", "postal": "LA"}
+{"pattern": "louisiana", "postal": "LA"}
+{"pattern": "m.c.", "postal": "MI"}
+{"pattern": "MA", "postal": "MA"}
+{"pattern": "maine", "postal": "ME"}
+{"pattern": "mar.", "postal": "MD"}
+{"pattern": "mary.", "postal": "MD"}
+{"pattern": "maryland", "postal": "MD"}
+{"pattern": "mass.", "postal": "MA"}
+{"pattern": "massachusetts", "postal": "MA"}
+{"pattern": "MD", "postal": "MD"}
+{"pattern": "md.", "postal": "MD"}
+{"pattern": "ME", "postal": "ME"}
+{"pattern": "MI", "postal": "MI"}
+{"pattern": "mich.", "postal": "MI"}
+{"pattern": "michigan", "postal": "MI"}
+{"pattern": "minn.", "postal": "MN"}
+{"pattern": "minnesota", "postal": "MN"}
+{"pattern": "miss.", "postal": "MS"}
+{"pattern": "missouri", "postal": "MO"}
+{"pattern": "MN", "postal": "MN"}
+{"pattern": "mn.", "postal": "MN"}
+{"pattern": "MO", "postal": "MO"}
+{"pattern": "mo.", "postal": "MO"}
+{"pattern": "mont.", "postal": "MT"}
+{"pattern": "montana", "postal": "MT"}
+{"pattern": "MS", "postal": "MS"}
+{"pattern": "MT", "postal": "MT"}
+{"pattern": "n. car.", "postal": "NC"}
+{"pattern": "n. dak.", "postal": "ND"}
+{"pattern": "n. j.", "postal": "NJ"}
+{"pattern": "n. jersey", "postal": "NJ"}
+{"pattern": "n. mex.", "postal": "NM"}
+{"pattern": "n. y.", "postal": "NY"}
+{"pattern": "n. york", "postal": "NY"}
+{"pattern": "n.b.", "postal": "NE"}
+{"pattern": "NC", "postal": "NC"}
+{"pattern": "ND", "postal": "ND"}
+{"pattern": "NE", "postal": "NE"}
+{"pattern": "neb.", "postal": "NE"}
+{"pattern": "nebr.", "postal": "NE"}
+{"pattern": "nebraska", "postal": "NE"}
+{"pattern": "nev.", "postal": "NV"}
+{"pattern": "new hampshire", "postal": "NH"}
+{"pattern": "new jersey", "postal": "NJ"}
+{"pattern": "new m.", "postal": "NM"}
+{"pattern": "new mexico", "postal": "NM"}
+{"pattern": "NH", "postal": "NH"}
+{"pattern": "NJ", "postal": "NJ"}
+{"pattern": "NM", "postal": "NM"}
+{"pattern": "no. dak.", "postal": "ND"}
+{"pattern": "north carolina", "postal": "NC"}
+{"pattern": "north dakota", "postal": "ND"}
+{"pattern": "NV", "postal": "NV"}
+{"pattern": "NY", "postal": "NY"}
+{"pattern": "OH", "postal": "OH"}
+{"pattern": "OK", "postal": "OK"}
+{"pattern": "okla.", "postal": "OK"}
+{"pattern": "OR", "postal": "OR"}
+{"pattern": "ore.", "postal": "OR"}
+{"pattern": "oreg.", "postal": "OR"}
+{"pattern": "p.p.", "postal": "RI"}
+{"pattern": "PA", "postal": "PA"}
+{"pattern": "pa.", "postal": "PA"}
+{"pattern": "penn.", "postal": "PA"}
+{"pattern": "penna.", "postal": "PA"}
+{"pattern": "pennsylvania", "postal": "PA"}
+{"pattern": "r.isl.", "postal": "RI"}
+{"pattern": "rhode island", "postal": "RI"}
+{"pattern": "RI", "postal": "RI"}
+{"pattern": "s. car.", "postal": "SC"}
+{"pattern": "s. dak.", "postal": "SD"}
+{"pattern": "SC", "postal": "SC"}
+{"pattern": "SD", "postal": "SD"}
+{"pattern": "so. dak.", "postal": "SD"}
+{"pattern": "south carolina", "postal": "SC"}
+{"pattern": "south dakota", "postal": "SD"}
+{"pattern": "tenn.", "postal": "TN"}
+{"pattern": "tennessee", "postal": "TN"}
+{"pattern": "tex.", "postal": "TX"}
+{"pattern": "TN", "postal": "TN"}
+{"pattern": "TX", "postal": "TX"}
+{"pattern": "UT", "postal": "UT"}
+{"pattern": "VA", "postal": "VA"}
+{"pattern": "vermont", "postal": "VT"}
+{"pattern": "virg.", "postal": "VA"}
+{"pattern": "virginia", "postal": "VA"}
+{"pattern": "VT", "postal": "VT"}
+{"pattern": "w. va.", "postal": "WV"}
+{"pattern": "w. vir.", "postal": "WV"}
+{"pattern": "w. virg.", "postal": "WV"}
+{"pattern": "w.n.", "postal": "WA"}
+{"pattern": "w.s.", "postal": "WI"}
+{"pattern": "WA", "postal": "WA"}
+{"pattern": "wash.", "postal": "WA"}
+{"pattern": "wash. d.c.", "postal": "DC"}
+{"pattern": "west virginia", "postal": "WV"}
+{"pattern": "WI", "postal": "WI"}
+{"pattern": "wis.", "postal": "WI"}
+{"pattern": "wisc.", "postal": "WI"}
+{"pattern": "wisconsin", "postal": "WI"}
+{"pattern": "WV", "postal": "WV"}
+{"pattern": "WY", "postal": "WY"}
+{"pattern": "wyo.", "postal": "WY"}
+{"pattern": "arkansas", "inside": "AR", "postal": "AR"}
+{"pattern": "colorado", "inside": "TX", "postal": "CO"}
+{"pattern": "delaware", "inside": "IN IA NY OH OK PA", "postal": "DE"}
+{"pattern": "hawaii", "inside": "HI", "postal": "HI"}
+{"pattern": "idaho", "inside": "ID", "postal": "ID"}
+{"pattern": "indiana", "inside": "PA", "postal": "IN"}
+{"pattern": "iowa", "inside": "IA WI", "postal": "IA"}
+{"pattern": "mississippi", "inside": "AR MO", "postal": "MS"}
+{"pattern": "nevada", "inside": "AR CA", "postal": "NV"}
+{"pattern": "new york", "inside": "NY", "postal": "NY"}
+{"pattern": "ohio", "inside": "IN KY WV", "postal": "OH"}
+{"pattern": "oklahoma", "inside": "OK", "postal": "OK"}
+{"pattern": "oregon", "inside": "MO", "postal": "OR"}
+{"pattern": "texas", "inside": "MO OK", "postal": "TX"}
+{"pattern": "utah", "inside": "UT", "postal": "UT"}
+{"pattern": "washington", "inside": "AL AR CO FL GA ID IL IN IA KS KY LA ME MD MN MS MO NE NY NC OH OK OR PA RI TN TX UT VT VA WI", "postal": "WA"}
+{"pattern": "wyoming", "inside": "NY PA WV", "postal": "WY"}
+{"pattern": "american samoa", "postal": "AS"}
+{"pattern": "AS", "postal": "AS"}
+{"pattern": "asm", "postal": "AS"}
+{"pattern": "c.m.", "postal": "MP"}
+{"pattern": "c.n.m.i.", "postal": "MP"}
+{"pattern": "GU", "postal": "GU"}
+{"pattern": "guam", "postal": "GU"}
+{"pattern": "gum", "postal": "GU"}
+{"pattern": "m.n.p.", "postal": "MP"}
+{"pattern": "marshall islands", "postal": "MH"}
+{"pattern": "MH", "postal": "MH"}
+{"pattern": "minor outlying islands", "postal": "UM"}
+{"pattern": "MP", "postal": "MP"}
+{"pattern": "northern mariana islands", "postal": "MP"}
+{"pattern": "PR", "postal": "PR"}
+{"pattern": "pri", "postal": "PR"}
+{"pattern": "puerto rico", "postal": "PR"}
+{"pattern": "pur.", "postal": "PR"}
+{"pattern": "u.s.v.i.", "postal": "VI"}
+{"pattern": "UM", "postal": "UM"}
+{"pattern": "v.i.", "postal": "VI"}
+{"pattern": "v.i.r.", "postal": "VI"}
+{"pattern": "VI", "postal": "VI"}
+{"pattern": "virgin islands", "postal": "VI"}

@@ -48,8 +48,7 @@ class BasePipelineBuilder:
         self.nlp.add_pipe(TERM_PIPE, name=name, config=config, **kwargs)
 
     def _add_traits(self, *, name, config, **kwargs):
-        patterns = [p.compile() for p in config["patterns"]]
-        config["patterns"] = Compiler.as_dicts(patterns)
+        config["patterns"] = Compiler.as_dicts(config["patterns"])
         self.nlp.add_pipe(ADD_TRAITS, name=name, config=config, **kwargs)
 
     def _merge_entities(self, *, name, **kwargs):

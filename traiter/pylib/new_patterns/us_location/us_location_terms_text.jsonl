@@ -1,0 +1,57 @@
+{"label":"us_state","pattern":"AK","id":"Alaska"}
+{"label":"us_state","pattern":"AL","id":"Alabama"}
+{"label":"us_state","pattern":"AR","id":"Arkansas"}
+{"label":"us_state","pattern":"CA","id":"California"}
+{"label":"us_state","pattern":"CO","id":"Colorado"}
+{"label":"us_state","pattern":"CT","id":"Connecticut"}
+{"label":"us_state","pattern":"DC","id":"District of Columbia"}
+{"label":"us_state","pattern":"DE","id":"Delaware"}
+{"label":"us_state","pattern":"FL","id":"Florida"}
+{"label":"us_state","pattern":"GA","id":"Georgia"}
+{"label":"us_state","pattern":"HI","id":"Hawaii"}
+{"label":"us_state","pattern":"IA","id":"Iowa"}
+{"label":"us_state","pattern":"ID","id":"Idaho"}
+{"label":"us_state","pattern":"IL","id":"Illinois"}
+{"label":"us_state","pattern":"IN","id":"Indiana"}
+{"label":"us_state","pattern":"KS","id":"Kansas"}
+{"label":"us_state","pattern":"KY","id":"Kentucky"}
+{"label":"us_state","pattern":"LA","id":"Louisiana"}
+{"label":"us_state","pattern":"MA","id":"Massachusetts"}
+{"label":"us_state","pattern":"MD","id":"Maryland"}
+{"label":"us_state","pattern":"ME","id":"Maine"}
+{"label":"us_state","pattern":"MI","id":"Michigan"}
+{"label":"us_state","pattern":"MN","id":"Minnesota"}
+{"label":"us_state","pattern":"MO","id":"Missouri"}
+{"label":"us_state","pattern":"MS","id":"Mississippi"}
+{"label":"us_state","pattern":"MT","id":"Montana"}
+{"label":"us_state","pattern":"NC","id":"North Carolina"}
+{"label":"us_state","pattern":"ND","id":"North Dakota"}
+{"label":"us_state","pattern":"NE","id":"Nebraska"}
+{"label":"us_state","pattern":"NH","id":"New Hampshire"}
+{"label":"us_state","pattern":"NJ","id":"New Jersey"}
+{"label":"us_state","pattern":"NM","id":"New Mexico"}
+{"label":"us_state","pattern":"NV","id":"Nevada"}
+{"label":"us_state","pattern":"NY","id":"New York"}
+{"label":"us_state","pattern":"OH","id":"Ohio"}
+{"label":"us_state","pattern":"OK","id":"Oklahoma"}
+{"label":"us_state","pattern":"OR","id":"Oregon"}
+{"label":"us_state","pattern":"PA","id":"Pennsylvania"}
+{"label":"us_state","pattern":"RI","id":"Rhode Island"}
+{"label":"us_state","pattern":"SC","id":"South Carolina"}
+{"label":"us_state","pattern":"SD","id":"South Dakota"}
+{"label":"us_state","pattern":"TN","id":"Tennessee"}
+{"label":"us_state","pattern":"TX","id":"Texas"}
+{"label":"us_state","pattern":"UT","id":"Utah"}
+{"label":"us_state","pattern":"VA","id":"Virginia"}
+{"label":"us_state","pattern":"VT","id":"Vermont"}
+{"label":"us_state","pattern":"WA","id":"Washington"}
+{"label":"us_state","pattern":"WI","id":"Wisconsin"}
+{"label":"us_state","pattern":"WV","id":"West Virginia"}
+{"label":"us_state","pattern":"WY","id":"Wyoming"}
+{"label":"us_territory","pattern":"AS","id":"American Samoa"}
+{"label":"us_territory","pattern":"GU","id":"Guam"}
+{"label":"us_territory","pattern":"MH","id":"Marshall Islands"}
+{"label":"us_territory","pattern":"MP","id":"Northern Mariana Islands"}
+{"label":"us_territory","pattern":"PR","id":"Puerto Rico"}
+{"label":"us_territory","pattern":"UM","id":"U.S. Minor Outlying Islands"}
+{"label":"us_territory","pattern":"VI","id":"Virgin Islands"}

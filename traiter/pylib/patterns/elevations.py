@@ -4,7 +4,7 @@ from spacy.util import registry
 
 from . import common
 from .. import util
-from ..matcher_patterns import MatcherPatterns
+from ..pattern_compilers.matcher import Compiler
 from ..vocabulary.terms import TERMS
 
 _LABEL_ENDER = r"[:=;,.]"
@@ -23,8 +23,8 @@ _FACTORS_CM = TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
 _FACTORS_M = {k: v / 100.0 for k, v in _FACTORS_CM.items()}  # Convert value to meters
 
 # ####################################################################################
-ELEVATIONS = MatcherPatterns(
-    name="elevation",
+ELEVATIONS = Compiler(
+    label="elevation",
     on_match="traiter_elevation_v1",
     decoder=_DECODER,
     patterns=[
@@ -52,8 +52,8 @@ def on_elevation_match(ent):
 
 
 # ####################################################################################
-ELEVATION_RANGES = MatcherPatterns(
-    name="elevation_range",
+ELEVATION_RANGES = Compiler(
+    label="elevation_range",
     on_match="traiter_elevation_range_v1",
     decoder=_DECODER,
     patterns=[

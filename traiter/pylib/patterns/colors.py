@@ -5,7 +5,7 @@ from spacy import registry
 from . import common
 from .. import actions
 from .. import const
-from ..matcher_patterns import MatcherPatterns
+from ..pattern_compilers.matcher import Compiler
 from ..vocabulary.terms import TERMS
 
 _MULTIPLE_DASHES = ["\\" + c for c in const.DASH_CHAR]
@@ -14,8 +14,8 @@ _SKIP = const.DASH + common.MISSING
 
 _REMOVE = TERMS.pattern_dict("remove")
 
-COLORS = MatcherPatterns(
-    name="color",
+COLORS = Compiler(
+    label="color",
     on_match="plant_color_v1",
     decoder=common.PATTERNS
     | {

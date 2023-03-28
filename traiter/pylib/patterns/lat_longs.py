@@ -3,7 +3,7 @@ import re
 from spacy.util import registry
 
 from .. import util
-from ..matcher_patterns import MatcherPatterns
+from ..pattern_compilers.matcher import Compiler
 from ..vocabulary.terms import TERMS
 
 _SYM = r"""°"”“'`‘´’"""
@@ -47,8 +47,8 @@ _FACTORS_CM = TERMS.pattern_dict("factor_cm", float)  # Convert value to cm
 _FACTORS_M = {k: v / 100.0 for k, v in _FACTORS_CM.items()}  # Convert value to meters
 
 # ###################################################################################
-LAT_LONGS = MatcherPatterns(
-    name="lat_long",
+LAT_LONGS = Compiler(
+    label="lat_long",
     on_match="digi_leap_lat_long_v1",
     decoder=_DECODER,
     patterns=[
@@ -88,8 +88,8 @@ def on_lat_long_match(ent):
 
 
 # ####################################################################################
-LAT_LONG_UNCERTAIN = MatcherPatterns(
-    name="lat_long_uncertain",
+LAT_LONG_UNCERTAIN = Compiler(
+    label="lat_long_uncertain",
     on_match="digi_leap_lat_long_uncertain_v1",
     decoder=_DECODER,
     patterns=[
