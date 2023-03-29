@@ -71,7 +71,7 @@ def pipe(nlp: Language, **kwargs):
 
 # ###############################################################################
 FACTORS_CM = trait_util.term_data(UNITS_CSV, "factor_cm", float)  # Convert values to cm
-FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}  # Convert values to km
+FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}  # Convert values to meters
 
 LAT_LONG_REPLACE = trait_util.term_data(LAT_LONG_CSV, "replace")
 
