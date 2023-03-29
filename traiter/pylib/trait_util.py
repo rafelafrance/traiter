@@ -3,8 +3,6 @@ from pathlib import Path
 from typing import Any
 from typing import Iterable
 
-from .. import const
-
 
 def term_data(csv_path: Path, field: str, type_=None) -> dict[str, Any]:
     type_ = type_ if type_ else str

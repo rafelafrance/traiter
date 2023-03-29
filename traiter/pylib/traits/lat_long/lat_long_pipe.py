@@ -2,9 +2,9 @@ import re
 
 from spacy import Language
 
-from .. import add
-from .. import trait_util
+from ... import add_pipe as add
 from ... import const
+from ... import trait_util
 from ... import util
 from .lat_long_compilers import FLOAT_RE
 from .lat_long_compilers import PUNCT

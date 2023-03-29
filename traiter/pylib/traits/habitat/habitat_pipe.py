@@ -1,7 +1,7 @@
 from spacy import Language
 
-from .. import add
-from .. import trait_util
+from ... import add_pipe as add
+from ... import trait_util
 from ...const import TRAIT_DIR
 
 HABITAT_FUNC = "habitat_data"

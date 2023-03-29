@@ -1,8 +1,8 @@
 from spacy import Language
 
-from .. import add
-from .. import trait_util
+from ... import add_pipe as add
 from ... import const
+from ... import trait_util
 
 COLOR_FUNC = "color_data"
 

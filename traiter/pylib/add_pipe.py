@@ -2,9 +2,9 @@ from pathlib import Path
 
 from spacy import Language
 
-from ..pipes import debug
-from ..pipes import delete
-from ..pipes import term_update
+from .pipes import debug
+from .pipes import delete
+from .pipes import term_update
 
 
 def term_pipe(
