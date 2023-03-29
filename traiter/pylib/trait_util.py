@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 from typing import Any
 from typing import Iterable
@@ -27,3 +28,9 @@ def labels_to_remove(
     keeps = keeps if isinstance(keeps, Iterable) else [keeps]
     labels_ = [lb for lb in get_labels(csv_paths) if lb not in keeps]
     return labels_
+
+
+def get_patterns(jsonl_path: Path) -> list[dict]:
+    with open(jsonl_path) as jsonl_file:
+        lines = [json.loads(ln) for ln in jsonl_file.readlines()]
+    return lines

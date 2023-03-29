@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
+import logging
 import textwrap
-from dataclasses import dataclass
 from pathlib import Path
 
 from pylib import log
@@ -13,30 +13,34 @@ from pylib.traits.lat_long import lat_long_compilers as lat_long
 from spacy.lang.en import English
 
 
-@dataclass
 class Matchers:
-    name: str
-    dir: str
-    matchers: list
+    def __init__(self, name, matchers, dir_=None):
+        self.name = name
+        self.matchers = matchers if isinstance(matchers, list) else [matchers]
+        self.dir = dir_ if dir_ else name
 
 
 def main():
     log.started()
 
     all_matchers = [
-        Matchers("color", "color", [color.COLOR]),
-        Matchers("date", "date", [dates.DATE, dates.MISSING_DAYS]),
-        Matchers(
-            "elevation", "elevation", [elevation.ELEVATION, elevation.ELEVATION_RANGE]
-        ),
-        Matchers("habitat", "habitat", [habitat.HABITATS, habitat.NOT_HABITATS]),
-        Matchers("lat_long", "lat_long", [lat_long.LAT_LONG]),
-        Matchers("lat_long_uncertain", "lat_long", [lat_long.LAT_LONG_UNCERTAIN]),
+        Matchers("color", color.COMPILERS),
+        Matchers("date", dates.COMPILERS),
+        Matchers("elevation", elevation.COMPILERS),
+        Matchers("habitat", habitat.COMPILERS),
+        # We want to break these out in to separate pattern sets
+        Matchers("lat_long", [lat_long.LAT_LONG]),
+        Matchers("lat_long_uncertain", [lat_long.LAT_LONG_UNCERTAIN], "lat_long"),
     ]
 
     args = parse_args()
 
     for matchers in all_matchers:
+        if args.trait and matchers.dir != args.trait:
+            continue
+
+        logging.info(f"Compiling {matchers.name}")
+
         patterns = []
         for matcher in matchers.matchers:
             for pattern in matcher.patterns:
@@ -74,6 +78,8 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="""Save the term JSONL files to this directory.""",
     )
+
+    arg_parser.add_argument("--trait", help="Only compile patterns for this trait.")
 
     return arg_parser.parse_args()
 

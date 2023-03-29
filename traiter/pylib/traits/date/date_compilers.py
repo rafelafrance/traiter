@@ -49,3 +49,5 @@ MISSING_DAYS = Compiler(
         "label? :? 99 / 9999",
     ],
 )
+
+COMPILERS = [DATE, MISSING_DAYS]

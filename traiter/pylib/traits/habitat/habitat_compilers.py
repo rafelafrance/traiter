@@ -29,3 +29,5 @@ NOT_HABITATS = Compiler(
         "           habitat bad_suffix",
     ],
 )
+
+COMPILERS = [HABITATS, NOT_HABITATS]

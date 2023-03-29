@@ -64,3 +64,5 @@ LAT_LONG_UNCERTAIN = Compiler(
         "lat_long+ ,? uncert? ,? [+]? 99 m",
     ],
 )
+
+COMPILERS = [LAT_LONG, LAT_LONG_UNCERTAIN]

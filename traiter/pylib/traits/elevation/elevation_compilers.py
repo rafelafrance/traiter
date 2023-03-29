@@ -34,3 +34,5 @@ ELEVATION_RANGE = Compiler(
         "label :? 99 - 99 m",
     ],
 )
+
+COMPILERS = [ELEVATION, ELEVATION_RANGE]

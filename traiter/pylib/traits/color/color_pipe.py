@@ -1,39 +1,42 @@
+from pathlib import Path
+
 from spacy import Language
 
 from ... import add_pipe as add
 from ... import const
 from ... import trait_util
 
-COLOR_FUNC = "color_data"
+HERE = Path(__file__).parent
+TRAIT = HERE.stem
 
-HERE = const.TRAIT_DIR / "color"
-COLOR_CSV = HERE / "color.csv"
+FUNC = f"{TRAIT}_func"
+CSV = HERE / f"{TRAIT}.csv"
 
 
 def pipe(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
         prev = add.term_pipe(
             nlp,
-            name="color_terms",
+            name=f"{TRAIT}_terms",
             attr="lower",
-            path=HERE / "color_terms_lower.jsonl",
+            path=HERE / f"{TRAIT}_terms_lower.jsonl",
             **kwargs,
         )
 
     prev = add.ruler_pipe(
         nlp,
-        name="color_patterns",
-        path=HERE / "color_patterns.jsonl",
+        name=f"{TRAIT}_patterns",
+        path=HERE / f"{TRAIT}_patterns.jsonl",
         after=prev,
         overwrite_ents=True,
     )
 
-    prev = add.data_pipe(nlp, COLOR_FUNC, after=prev)
+    prev = add.data_pipe(nlp, FUNC, after=prev)
 
     prev = add.cleanup_pipe(
         nlp,
-        name="color_cleanup",
-        remove=trait_util.labels_to_remove(COLOR_CSV, "color"),
+        name=f"{TRAIT}_cleanup",
+        remove=trait_util.labels_to_remove(CSV, TRAIT),
         after=prev,
     )
 
@@ -41,18 +44,18 @@ def pipe(nlp: Language, **kwargs):
 
 
 # ###############################################################################
-COLOR_REPLACE = trait_util.term_data(COLOR_CSV, "replace")
-COLOR_REMOVE = trait_util.term_data(COLOR_CSV, "remove", int)
+REPLACE = trait_util.term_data(CSV, "replace")
+REMOVE = trait_util.term_data(CSV, "remove", int)
 
 FIX_DASHES = ["\\" + c for c in const.DASH_CHAR]
 FIX_DASHES = "".join(FIX_DASHES)
 FIX_DASHES = rf"[{FIX_DASHES}]{{2,}}|[{FIX_DASHES}]$"
 
 
-@Language.component(COLOR_FUNC)
-def color_data(doc):
-    for ent in [e for e in doc.ents if e.label_ == "color"]:
-        color_parts = []
+@Language.component(FUNC)
+def data_func(doc):
+    for ent in [e for e in doc.ents if e.label_ == TRAIT]:
+        frags = []
 
         for token in ent:
             # Skip anything that is not a term
@@ -60,7 +63,7 @@ def color_data(doc):
                 continue
 
             # Skip terms marked for removal
-            if COLOR_REMOVE.get(token.lower_):
+            if REMOVE.get(token.lower_):
                 continue
 
             # Skip names like "Brown"
@@ -76,14 +79,14 @@ def color_data(doc):
                 ent._.data["missing"] = True
                 continue
 
-            replace = COLOR_REPLACE.get(token.lower_, token.lower_)
+            replace = REPLACE.get(token.lower_, token.lower_)
 
             # Skip duplicate colors within the entity
-            if replace not in color_parts:
-                color_parts.append(replace)
+            if replace not in frags:
+                frags.append(replace)
 
         # Build the color
-        value = "-".join(color_parts)
-        ent._.data["color"] = COLOR_REPLACE.get(value, value)
+        value = "-".join(frags)
+        ent._.data["color"] = REPLACE.get(value, value)
 
     return doc

@@ -1,6 +1,5 @@
 from spacy import Language
 
-
 FINSH = "finish_terms"
 
 

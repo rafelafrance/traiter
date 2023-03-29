@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import csv
+import logging
 import textwrap
 from pathlib import Path
 
@@ -14,6 +15,11 @@ def main():
     args = parse_args()
 
     for path in sorted(args.traits_dir.glob("**/*.csv")):
+        if args.trait and path.stem != args.trait:
+            continue
+
+        logging.info(f"Compiling {path.stem}")
+
         with open(path) as term_file:
             reader = csv.DictReader(term_file)
             terms = list(reader)
@@ -59,6 +65,8 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="""Holds CSV input files and JSONL output files.""",
     )
+
+    arg_parser.add_argument("--trait", help="Only compile patterns for this trait.")
 
     return arg_parser.parse_args()
 

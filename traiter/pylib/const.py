@@ -5,14 +5,9 @@ from spacy.lang.char_classes import HYPHENS
 from spacy.lang.char_classes import LIST_HYPHENS
 from spacy.lang.char_classes import LIST_QUOTES
 
-from . import traits
-
 # ###################################################################################
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
-
-# ###################################################################################
-TRAIT_DIR = Path(traits.__file__).parent
 
 # ###################################################################################
 LOWER_SHAPES = set(""" xxxxx xxxx xxx xx x. xx. x """.split())
@@ -25,7 +20,6 @@ NAME_SHAPES = list(TITLE_SHAPES) + list(UPPER_SHAPES)
 
 TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
 NEVER = 9999
-0000000
 REVERSE_WEIGHTS = {k: v * 2 for k, v in TOKEN_WEIGHTS.items()}
 REVERSE_WEIGHTS[";"] = NEVER
 REVERSE_WEIGHTS["."] = NEVER

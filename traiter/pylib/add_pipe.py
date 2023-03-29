@@ -4,6 +4,7 @@ from spacy import Language
 
 from .pipes import debug
 from .pipes import delete
+from .pipes import link
 from .pipes import term_update
 
 
@@ -63,3 +64,33 @@ def debug_tokens(nlp: Language, message: str = "", **kwargs) -> str:
 
 def debug_ents(nlp: Language, message: str = "", **kwargs) -> str:
     return debug.ents(nlp, message, **kwargs)
+
+
+def link_pipe(
+    nlp,
+    patterns,
+    *,
+    name,
+    parents,
+    children,
+    weights=None,
+    reverse_weights=None,
+    max_links=None,
+    differ=None,
+    **kwargs,
+) -> str:
+    config = {
+        "patterns": patterns,
+        "parents": parents,
+        "children": children,
+    }
+    if weights is not None:
+        config["weights"] = weights
+    if reverse_weights is not None:
+        config["reverse_weights"] = reverse_weights
+    if max_links is not None:
+        config["max_links"] = max_links
+    if differ is not None:
+        config["differ"] = differ
+    nlp.add_pipe(link.LINK_TRAITS, name=name, config=config, **kwargs)
+    return name

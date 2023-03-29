@@ -81,9 +81,9 @@ class LinkTraits:
         self,
         nlp: Language,
         name: str,
+        patterns: list[dict],
         parents: list[str],
         children: list[str],
-        patterns: list[dict],
         weights: dict[str, int] = None,  # Token weights for scoring distances
         reverse_weights: dict[str, int] = None,  # Weights for scoring backwards
         max_links: int = NO_LIMIT,  # Max times to link to a parent trait
@@ -91,6 +91,7 @@ class LinkTraits:
     ):
         self.nlp = nlp
         self.name = name
+        self.patterns = patterns
         self.parents = parents
         self.parent_set = set(parents)
         self.children = children
@@ -107,8 +108,8 @@ class LinkTraits:
     @staticmethod
     def build_matcher(nlp, patterns):
         matcher = Matcher(nlp.vocab)
-        for pat in patterns:
-            matcher.add(pat["label"], pat["patterns"])
+        for pattern in patterns:
+            matcher.add(pattern["label"], [pattern["pattern"]])
         return matcher
 
     def __call__(self, doc: Doc) -> Doc:

@@ -27,8 +27,6 @@ def pipeline():
     nlp.add_pipe(SENTENCES)
     nlp.add_pipe(FINSH)
 
-    # pipes.debug_tokens()  # #########################################
-
     # for name in nlp.pipe_names:
     #     print(name)
 

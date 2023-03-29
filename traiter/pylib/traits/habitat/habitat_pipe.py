@@ -1,39 +1,41 @@
+from pathlib import Path
+
 from spacy import Language
 
 from ... import add_pipe as add
 from ... import trait_util
-from ...const import TRAIT_DIR
 
-HABITAT_FUNC = "habitat_data"
+HERE = Path(__file__).parent
+TRAIT = HERE.stem
 
-HERE = TRAIT_DIR / "habitat"
-HABITAT_CSV = HERE / "habitat.csv"
+FUNC = f"{TRAIT}_func"
+CSV = HERE / f"{TRAIT}.csv"
 
 
 def pipe(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
         prev = add.ruler_pipe(
             nlp,
-            name="habitat_lower",
+            name=f"{TRAIT}_lower",
             attr="lower",
-            path=HERE / "habitat_terms_lower.jsonl",
+            path=HERE / f"{TRAIT}_terms_lower.jsonl",
             **kwargs,
         )
 
     prev = add.ruler_pipe(
         nlp,
-        name="habitat_patterns",
-        path=HERE / "habitat_patterns.jsonl",
+        name=f"{TRAIT}_patterns",
+        path=HERE / f"{TRAIT}_patterns.jsonl",
         after=prev,
         overwrite_ents=True,
     )
 
-    prev = add.data_pipe(nlp, HABITAT_FUNC, after=prev)
+    prev = add.data_pipe(nlp, FUNC, after=prev)
 
     prev = add.cleanup_pipe(
         nlp,
         name="habitat_cleanup",
-        remove=trait_util.labels_to_remove(HABITAT_CSV, "habitat"),
+        remove=trait_util.labels_to_remove(CSV, TRAIT),
         after=prev,
     )
 
@@ -41,18 +43,18 @@ def pipe(nlp: Language, **kwargs):
 
 
 # ###############################################################################
-HABITAT_REPLACE = trait_util.term_data(HABITAT_CSV, "replace")
+REPLACE = trait_util.term_data(CSV, "replace")
 
 
-@Language.component(HABITAT_FUNC)
-def habitat_data(doc):
-    for ent in [e for e in doc.ents if e.label_ == "habitat"]:
-        habitat_parts = []
+@Language.component(FUNC)
+def data_func(doc):
+    for ent in [e for e in doc.ents if e.label_ == TRAIT]:
+        frags = []
 
         for token in ent:
-            replaced = HABITAT_REPLACE.get(token.lower_, token.lower_)
-            habitat_parts.append(replaced)
+            replaced = REPLACE.get(token.lower_, token.lower_)
+            frags.append(replaced)
 
-        ent._.data["habitat"] = " ".join(habitat_parts)
+        ent._.data["habitat"] = " ".join(frags)
 
     return doc

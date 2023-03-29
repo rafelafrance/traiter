@@ -15,3 +15,5 @@ COLOR = Compiler(
         "missing? color_words+ to color_words+ color_term+ -* color_words*",
     ],
 )
+
+COMPILERS = [COLOR]
