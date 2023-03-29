@@ -3,8 +3,10 @@
 The default Spacy tokenizer works great for model-based parsing but sometimes causes
 complications for rule-based parsers.
 """
+import csv
 import re
 import string
+from pathlib import Path
 from typing import Optional
 
 from spacy.lang.char_classes import ALPHA
@@ -17,8 +19,8 @@ from spacy.util import compile_infix_regex
 from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
-from junk.vocabulary import terms
-from traiter.pylib import const as t_const
+from . import const as t_const
+from .traits import us_location
 
 BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]
 
@@ -79,8 +81,6 @@ ABBREVS = """
     """.split()
 ABBREVS += [f"{c}." for c in string.ascii_uppercase]
 
-STATES = [t["pattern"] for t in terms.ADMIN_UNIT_TERMS.pick("us_state")]
-
 
 def append_prefix_regex(nlp: Language, prefixes: Optional[list[str]] = None):
     prefixes = prefixes if prefixes else []
@@ -118,16 +118,25 @@ def remove_special_case(nlp: Language, remove: list[str]):
         nlp.tokenizer.add_special_case(text, [{ORTH: text}])
 
 
+def get_states():
+    dir_ = Path(us_location.__file__).parent
+    with open(dir_ / "us_location.csv") as in_file:
+        reader = csv.DictReader(in_file)
+        states = {t["pattern"] for t in reader if t["label"] == "us_state"}
+    return states
+
+
 def setup_tokenizer(nlp):
     append_prefix_regex(nlp, _PREFIX)
     append_infix_regex(nlp, _INFIX)
     append_suffix_regex(nlp, _SUFFIX)
     append_abbrevs(nlp, ABBREVS)
     # Remove patterns that interfere with parses
+    states = get_states()
     removes = []
     for rule in nlp.tokenizer.rules:
         if re.search(r"\d", rule) and not re.search(r"m\.?$", rule):
             removes.append(rule)
-        if rule.lower() in STATES:
+        if rule.lower() in states:
             removes.append(rule)
     remove_special_case(nlp, removes)

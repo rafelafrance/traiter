@@ -1,9 +1,13 @@
 from spacy import Language
 
 from .. import add
-from junk.common import PATTERN_DIR
+from .. import trait_util
+from ...const import TRAIT_DIR
 
-HERE = PATTERN_DIR / "habitat"
+HABITAT_FUNC = "habitat_data"
+
+HERE = TRAIT_DIR / "habitat"
+HABITAT_CSV = HERE / "habitat.csv"
 
 
 def pipe(nlp: Language, **kwargs):
@@ -23,11 +27,32 @@ def pipe(nlp: Language, **kwargs):
         after=prev,
         overwrite_ents=True,
     )
+
+    prev = add.data_pipe(nlp, HABITAT_FUNC, after=prev)
+
     prev = add.cleanup_pipe(
         nlp,
         name="habitat_cleanup",
-        cleanup=["habitat_term", "habitat_prefix", "habitat_suffix", "not_habitat"],
+        remove=trait_util.labels_to_remove(HABITAT_CSV, "habitat"),
         after=prev,
     )
 
     return prev
+
+
+# ###############################################################################
+HABITAT_REPLACE = trait_util.term_data(HABITAT_CSV, "replace")
+
+
+@Language.component(HABITAT_FUNC)
+def habitat_data(doc):
+    for ent in [e for e in doc.ents if e.label_ == "habitat"]:
+        habitat_parts = []
+
+        for token in ent:
+            replaced = HABITAT_REPLACE.get(token.lower_, token.lower_)
+            habitat_parts.append(replaced)
+
+        ent._.data["habitat"] = " ".join(habitat_parts)
+
+    return doc

@@ -163,3 +163,10 @@
 {"label":"habitat_term","pattern":"woodland"}
 {"label":"habitat_term","pattern":"woodlands"}
 {"label":"habitat_term","pattern":"woods"}
+{"label":"bad_prefix","pattern":"national"}
+{"label":"bad_prefix","pattern":"botanical"}
+{"label":"bad_suffix","pattern":"road"}
+{"label":"bad_suffix","pattern":"villa"}
+{"label":"bad_suffix","pattern":"street"}
+{"label":"bad_suffix","pattern":"sec"}
+{"label":"bad_suffix","pattern":"sec."}

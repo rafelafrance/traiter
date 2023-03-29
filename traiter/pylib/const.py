@@ -1,31 +1,49 @@
-"""Shared constants."""
+import string
 from pathlib import Path
 
-import regex as re
 from spacy.lang.char_classes import HYPHENS
 from spacy.lang.char_classes import LIST_HYPHENS
 from spacy.lang.char_classes import LIST_QUOTES
 
+from . import traits
+
+# ###################################################################################
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
 
-RE_FLAGS = re.VERBOSE | re.IGNORECASE
+# ###################################################################################
+TRAIT_DIR = Path(traits.__file__).parent
 
+# ###################################################################################
 LOWER_SHAPES = set(""" xxxxx xxxx xxx xx x. xx. x """.split())
 TITLE_SHAPES = set(""" Xxxxx Xxxx Xxx Xx X. Xx. X """.split())
 UPPER_SHAPES = set(""" XXXXX XXXX XXX XX X. XX. X """.split())
 NAME_SHAPES = list(TITLE_SHAPES) + list(UPPER_SHAPES)
 
+# ###################################################################################
+# Punctuation penalties when linking traits
+
 TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
+NEVER = 9999
+0000000
 REVERSE_WEIGHTS = {k: v * 2 for k, v in TOKEN_WEIGHTS.items()}
-REVERSE_WEIGHTS[";"] = 9999
-REVERSE_WEIGHTS["."] = 9999
+REVERSE_WEIGHTS[";"] = NEVER
+REVERSE_WEIGHTS["."] = NEVER
+
+TOKEN_WEIGHTS = {
+    ",": 2,
+    ";": 5,
+    ".": NEVER,
+}
+
+# ###################################################################################
+# For importing taxa from an ITIS DB
 
 ITIS_SPECIES_ID = 220
 
-BATCH_SIZE = 1_000_000  # How many records to work with at a time
-
+# ###################################################################################
 # Useful character classes
+
 CLOSE = "  ) ] ".split()
 COLON = " : ".split()
 COMMA = " , ".split()
@@ -40,7 +58,7 @@ SEMICOLON = " ; ".split()
 SLASH = " / ".split()
 Q_MARK = " ? ".split()
 QUOTE = LIST_QUOTES
-LETTERS = list("abcdefghijklmnopqrstuvwxyz")
+LETTERS = list(string.ascii_lowercase)
 
 TEMP = ["\\" + x for x in CLOSE]
 CLOSE_RE = rf'[{"".join(TEMP)}]'
@@ -56,11 +74,3 @@ INT_RE = r"(\d+)"
 
 FLOAT_TOKEN_RE = f"^{FLOAT_RE}$"
 INT_TOKEN_RE = f"^{INT_RE}$"
-
-# Punctuation penalties when linking traits
-NEVER = 9999
-TOKEN_WEIGHTS = {
-    ",": 2,
-    ";": 5,
-    ".": NEVER,
-}

@@ -21,11 +21,19 @@ _Pattern = str | list[str], list[list[dict[str, Any]]]
 
 
 class Compiler:
-    def __init__(self, label: str, *, patterns: _Pattern, decoder: dict[str, dict]):
+    def __init__(
+        self,
+        label: str,
+        *,
+        patterns: _Pattern,
+        decoder: dict[str, dict],
+        id: str = "",
+    ):
         self.label = label
         self.patterns = patterns
         patterns2 = as_list(patterns)
         self.patterns = self.compile(patterns2, decoder)
+        self.id = id
 
     @staticmethod
     def compile(

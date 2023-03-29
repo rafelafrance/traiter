@@ -1,18 +1,19 @@
 from ... import const
-from traiter.pylib.matcher_compiler import Compiler
+from ...matcher_compiler import Compiler
 
-_LABEL_ENDER = r"[:=;,.]"
-_UNITS = ["metric_length", "imperial_length"]
-_FLOAT_RE = r"^(\d[\d,.]+)$"
+LABEL_ENDER = r"[:=;,.]"
+UNITS = ["metric_length", "imperial_length"]
+FLOAT_RE = r"^(\d[\d,.]+)$"
 
 _DECODER = {
     "(": {"TEXT": {"IN": const.OPEN}},
     ")": {"TEXT": {"IN": const.CLOSE}},
+    "-": {"LOWER": {"IN": const.DASH}, "OP": "+"},
     "/": {"TEXT": {"IN": const.SLASH}},
-    "99": {"TEXT": {"REGEX": _FLOAT_RE}},
-    ":": {"TEXT": {"REGEX": f"^{_LABEL_ENDER}+$"}},
+    "99": {"TEXT": {"REGEX": FLOAT_RE}},
+    ":": {"TEXT": {"REGEX": f"^{LABEL_ENDER}+$"}},
     "label": {"ENT_TYPE": "elev_label"},
-    "m": {"ENT_TYPE": {"IN": _UNITS}},
+    "m": {"ENT_TYPE": {"IN": UNITS}},
 }
 
 ELEVATION = Compiler(
@@ -26,7 +27,8 @@ ELEVATION = Compiler(
 )
 
 ELEVATION_RANGE = Compiler(
-    label="elevation_range",
+    label="elevation",
+    id="elevation_range",
     decoder=_DECODER,
     patterns=[
         "label :? 99 - 99 m",

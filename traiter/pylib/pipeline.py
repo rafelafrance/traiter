@@ -1,7 +1,8 @@
 import spacy
-from spacy.tokens import Span
 
 from . import tokenizer
+from .pipes import extensions
+from .pipes.finish import FINSH
 from .pipes.sentence import SENTENCES
 from .traits.color import color_pipe
 from .traits.date import date_pipe
@@ -11,10 +12,9 @@ from .traits.lat_long import lat_long_pipe
 
 
 def pipeline():
-    Span.set_extension("data", default={})
+    extensions.add_extensions()
 
-    nlp = spacy.load("en_core_web_sm", exclude="ner")
-    nlp.remove_pipe("parser")
+    nlp = spacy.load("en_core_web_sm", exclude=["ner", "parser"])
 
     tokenizer.setup_tokenizer(nlp)
 
@@ -25,6 +25,7 @@ def pipeline():
     lat_long_pipe.pipe(nlp)
 
     nlp.add_pipe(SENTENCES)
+    nlp.add_pipe(FINSH)
 
     # pipes.debug_tokens()  # #########################################
 

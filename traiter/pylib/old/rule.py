@@ -10,8 +10,9 @@ from typing import Pattern
 from typing import Union
 
 import regex
+import regex as re
 
-from ..const import RE_FLAGS
+RE_FLAGS = re.VERBOSE | re.IGNORECASE
 
 TOKEN = 0
 SIZE = 4

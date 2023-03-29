@@ -48,12 +48,12 @@ class DebugTokens:
     def __call__(self, doc):
         print("=" * 80)
         print(f"{self.name}: {self.message}")
-        print(f'{"entity type":<20} {"dep":10} {"pos":6} {"cached label":<20} token')
-        print(f'{"-----------":<20} {"---":10} {"---":6} {"------------":<20} -----')
+        print(f'{"entity type":<20} {"dep":10} {"pos":6} {"term":<20} token')
+        print(f'{"-----------":<20} {"---":10} {"---":6} {"----":<20} -----')
         for token in doc:
             print(
                 f"{token.ent_type_:<20} {token.dep_:10} {token.pos_:6} "
-                f"{token._.cached_label:<20} {token}"
+                f"{token._.term:<20} {token}"
             )
         print()
         return doc

@@ -1,9 +1,5 @@
 from ... import const
-from traiter.pylib.matcher_compiler import Compiler
-
-_MISSING = """
-    no without missing lack lacking except excepting not rarely obsolete
-    """.split()
+from ...matcher_compiler import Compiler
 
 COLOR = Compiler(
     label="color",
@@ -11,7 +7,7 @@ COLOR = Compiler(
         "-": {"TEXT": {"IN": const.DASH}, "OP": "+"},
         "color_term": {"ENT_TYPE": "color_term"},
         "color_words": {"ENT_TYPE": {"IN": ["color_term", "color_mod"]}},
-        "missing": {"LOWER": {"IN": _MISSING}},
+        "missing": {"ENT_TYPE": "color_missing"},
         "to": {"POS": {"IN": ["AUX"]}},
     },
     patterns=[

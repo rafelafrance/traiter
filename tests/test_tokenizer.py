@@ -6,9 +6,9 @@ from traiter.pylib import tokenizer
 
 class TestTokenizer(unittest.TestCase):
     def test_remove_special_case_01(self):
-        special = [r for r in PIPELINE.nlp.tokenizer.rules if r == "Jan."]
+        special = [r for r in PIPELINE.tokenizer.rules if r == "Jan."]
         self.assertEqual(special, ["Jan."])
 
-        tokenizer.remove_special_case(PIPELINE.nlp, ["Jan."])
-        special = [r for r in PIPELINE.nlp.tokenizer.rules if r == "Jan."]
+        tokenizer.remove_special_case(PIPELINE, ["Jan."])
+        special = [r for r in PIPELINE.tokenizer.rules if r == "Jan."]
         self.assertEqual(special, [])

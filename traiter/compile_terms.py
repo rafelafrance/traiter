@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-import shutil
 import textwrap
 from pathlib import Path
 
@@ -14,7 +13,7 @@ def main():
 
     args = parse_args()
 
-    for path in args.traits_dir.glob("**/*.csv"):
+    for path in sorted(args.traits_dir.glob("**/*.csv")):
         with open(path) as term_file:
             reader = csv.DictReader(term_file)
             terms = list(reader)
@@ -31,19 +30,17 @@ def main():
             else:
                 text.append(pattern)
 
-        dir_ = args.traits_dir / path.stem
-
         if lower:
             nlp = English()
             ruler = nlp.add_pipe("entity_ruler")
             ruler.add_patterns(lower)
-            ruler.to_disk(dir_ / f"{path.stem}_terms_lower.jsonl")
+            ruler.to_disk(path.parent / f"{path.stem}_terms_lower.jsonl")
 
         if text:
             nlp = English()
             ruler = nlp.add_pipe("entity_ruler")
             ruler.add_patterns(text)
-            ruler.to_disk(dir_ / f"{path.stem}_terms_text.jsonl")
+            ruler.to_disk(path.parent / f"{path.stem}_terms_text.jsonl")
 
     log.finished()
 

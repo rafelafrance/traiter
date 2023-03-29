@@ -1,18 +1,17 @@
-from traiter.pylib.matcher_compiler import Compiler
+from ...matcher_compiler import Compiler
 
-_SEP = "[.,;/_'-]"
-_LABEL_ENDER = "[:=]"
-_LABELS = """ date """.split()
+SEP = ".,;/_'-"
+LABEL_ENDER = "[:=]"
 
 _DECODER = {
-    "-": {"TEXT": {"REGEX": f"^{_SEP}+$"}},
+    "-": {"TEXT": {"REGEX": f"^[{SEP}]+$"}},
     "/": {"TEXT": {"REGEX": r"^/$"}},
     "99": {"TEXT": {"REGEX": r"^\d\d?$"}},
-    "99-99": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+\d\d$"}},
-    "99-9999": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+[12]\d\d\d$"}},
+    "99-99": {"TEXT": {"REGEX": rf"^\d\d?[{SEP}]+\d\d$"}},
+    "99-9999": {"TEXT": {"REGEX": rf"^\d\d?[{SEP}]+[12]\d\d\d$"}},
     "9999": {"TEXT": {"REGEX": r"^[12]\d{3}$"}},
-    ":": {"TEXT": {"REGEX": f"^{_LABEL_ENDER}+$"}},
-    "label": {"LOWER": {"IN": _LABELS}},
+    ":": {"TEXT": {"REGEX": f"^{LABEL_ENDER}+$"}},
+    "label": {"ENT_TYPE": "date_label"},
     "month": {"ENT_TYPE": "month"},
     # "99-99-9999": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+\d\d?{_SEP}+[12]\d\d\d$"}},
     # "9999-99-99": {"TEXT": {"REGEX": rf"^[12]\d\d\d?{_SEP}+\d\d?{_SEP}+\d\d?$"}},
@@ -40,8 +39,9 @@ DATE = Compiler(
 )
 
 MISSING_DAYS = Compiler(
-    label="short_date",
+    label="date",
     decoder=_DECODER,
+    id="short_date",
     patterns=[
         "label? :? 9999  -* month",
         "label? :? month -* 9999",

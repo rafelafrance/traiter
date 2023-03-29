@@ -25,10 +25,20 @@ class DeleteTraits:
         entities = []
 
         for ent in doc.ents:
+            if ent._.reject:
+                self.clear_tokens(ent)
+                continue
+
             if ent.label_ in self.delete:
+                self.clear_tokens(ent)
                 continue
 
             entities.append(ent)
 
         doc.set_ents(entities)
         return doc
+
+    @staticmethod
+    def clear_tokens(ent):
+        for token in ent:
+            token._.term = ""
