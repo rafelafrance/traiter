@@ -6,20 +6,11 @@ DELETE_TRAITS = "traiter_delete_traits_v3"
 
 @Language.factory(DELETE_TRAITS)
 class DeleteTraits:
-    """Delete partial or unwanted traits.
-
-    Traits are built up in layers and sometimes a partial traits in lower layers are
-    not used in an upper layer. This will cause noisy output, so delete them.
-    Note: This deletes the entity/span not its tokens.
-
-    delete: Is a list of traits that get deleted.
-    """
-
     def __init__(self, nlp: Language, name: str, delete: list[str] = None):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.delete = delete if delete else []
+        self.delete = delete if delete else []  # List of traits to delete
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
@@ -41,4 +32,6 @@ class DeleteTraits:
     @staticmethod
     def clear_tokens(ent):
         for token in ent:
+            token._.data = {}
+            token._.flag = ""
             token._.term = ""

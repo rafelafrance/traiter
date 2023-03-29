@@ -81,7 +81,7 @@ def lat_long_data(doc):
     for ent in [e for e in doc.ents if e.label_ == "lat_long"]:
         parts = []
         for token in ent:
-            token._.info = 1
+            token._.flag = "lat_long"
             if token._.term == "lat_long_label":
                 continue
             if token._.term == "datum":
@@ -90,8 +90,13 @@ def lat_long_data(doc):
             else:
                 text = token.text.upper() if len(token.text) == 1 else token.text
                 parts.append(text)
-        ent._.data["lat_long"] = build_lat_long(parts)
-        ent[0]._.data = ent._.data
+
+        lat_long = " ".join(parts)
+        lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
+        lat_long = re.sub(rf"(-)\s", r"\1", lat_long)
+        ent._.data["lat_long"] = lat_long
+
+        ent[0]._.data = ent._.data  # Save in case there is uncertainty in the lat/long
     return doc
 
 
@@ -105,7 +110,7 @@ def on_lat_long_uncertain_match(doc):
         for token in ent:
             if token._.data:
                 ent._.data = token._.data
-            elif token._.info:
+            elif token._.flag:
                 continue
             elif token._.term in ["metric_length", "imperial_length"]:
                 units = LAT_LONG_REPLACE.get(token.lower_, token.lower_)
@@ -114,10 +119,3 @@ def on_lat_long_uncertain_match(doc):
         factor = FACTORS_M[units]
         ent._.data["uncertainty"] = round(value * factor, 3)
     return doc
-
-
-def build_lat_long(parts):
-    lat_long = " ".join(parts)
-    lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
-    lat_long = re.sub(rf"(-)\s", r"\1", lat_long)
-    return lat_long
