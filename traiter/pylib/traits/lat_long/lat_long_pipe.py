@@ -6,9 +6,10 @@ from .. import add
 from .. import trait_util
 from ... import const
 from ... import util
-from ...pipes import debug
 from .lat_long_compilers import FLOAT_RE
 from .lat_long_compilers import PUNCT
+
+# from ...pipes import debug
 
 LAT_LONG_FUNC = "lat_long_func"
 LAT_LONG_UNCERTAIN_FUNC = "lat_long_uncertain_func"
@@ -80,17 +81,17 @@ def lat_long_data(doc):
     for ent in [e for e in doc.ents if e.label_ == "lat_long"]:
         parts = []
         for token in ent:
+            token._.info = 1
             if token._.term == "lat_long_label":
                 continue
             if token._.term == "datum":
                 datum = LAT_LONG_REPLACE.get(token.lower_, token.text)
                 ent._.data["datum"] = datum
-                token._.cache = {"datum": datum}
             else:
                 text = token.text.upper() if len(token.text) == 1 else token.text
                 parts.append(text)
-                token._.cache = {"lat_long": text}
         ent._.data["lat_long"] = build_lat_long(parts)
+        ent[0]._.data = ent._.data
     return doc
 
 
@@ -100,20 +101,18 @@ def on_lat_long_uncertain_match(doc):
         if ent.label_ != "lat_long" or ent.id_ != "lat_long_uncertain":
             continue
         units = ""
-        parts = []
         value = 0.0
         for token in ent:
-            if part := token._.cache.get("lat_long"):
-                parts.append(part)
-            elif datum := token._.cache.get("datum"):
-                ent._.data["datum"] = datum
+            if token._.data:
+                ent._.data = token._.data
+            elif token._.info:
+                continue
             elif token._.term in ["metric_length", "imperial_length"]:
                 units = LAT_LONG_REPLACE.get(token.lower_, token.lower_)
             elif re.match(FLOAT_RE, token.text):
                 value = util.to_positive_float(token.text)
         factor = FACTORS_M[units]
         ent._.data["uncertainty"] = round(value * factor, 3)
-        ent._.data["lat_long"] = build_lat_long(parts)
     return doc
 
 

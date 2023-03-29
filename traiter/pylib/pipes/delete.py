@@ -15,17 +15,17 @@ class DeleteTraits:
     delete: Is a list of traits that get deleted.
     """
 
-    def __init__(self, nlp: Language, name: str, delete: list[str]):
+    def __init__(self, nlp: Language, name: str, delete: list[str] = None):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.delete = delete
+        self.delete = delete if delete else []
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            if ent._.reject:
+            if ent._.delete:
                 self.clear_tokens(ent)
                 continue
 

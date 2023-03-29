@@ -92,7 +92,7 @@ def date_data(doc):
         try:
             date_ = parser.parse(text).date()
         except (parser.ParserError, IllegalMonthError):
-            ent._.reject = True
+            ent._.delete = True
             return
 
         # Handle missing centuries like: May 22, 08

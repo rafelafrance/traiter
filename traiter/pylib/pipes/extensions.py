@@ -3,7 +3,8 @@ from spacy.tokens import Token
 
 
 def add_extensions():
+    Span.set_extension("delete", default=False)
     Span.set_extension("data", default={})
-    Span.set_extension("reject", default=False)
+    Token.set_extension("data", default={})
     Token.set_extension("term", default="")
-    Token.set_extension("cache", default={})
+    Token.set_extension("info", default=0)
