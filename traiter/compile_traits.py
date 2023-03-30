@@ -5,6 +5,7 @@ import logging
 import textwrap
 from pathlib import Path
 
+from pylib import pipeline
 from pylib.traits.color import color_compilers as color
 from pylib.traits.date import date_compilers as dates
 from pylib.traits.elevation import elevation_compilers as elevation
@@ -36,10 +37,12 @@ ALL_MATCHERS = [
 def main():
     log.started()
 
-    args = parse_args()
+    pipeline.pipeline()
 
-    compile_terms(args)
-    compile_patterns(args)
+    # args = parse_args()
+
+    # compile_terms(args)
+    # compile_patterns(args)
 
     log.finished()
 

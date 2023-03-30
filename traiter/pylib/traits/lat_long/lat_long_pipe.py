@@ -28,16 +28,11 @@ def pipe(nlp: Language, **kwargs):
             nlp,
             name=f"{TRAIT}_lower",
             attr="lower",
-            path=HERE / f"{TRAIT}_terms_lower.jsonl",
+            path=[
+                HERE / f"{TRAIT}_terms_lower.jsonl",
+                UNITS_DIR / f"{UNITS}_terms_lower.jsonl",
+            ],
             **kwargs,
-        )
-
-        prev = add.term_pipe(
-            nlp,
-            name=f"{TRAIT}_units",
-            attr="lower",
-            path=UNITS_DIR / f"{UNITS}_terms_lower.jsonl",
-            after=prev,
         )
 
     prev = add.ruler_pipe(

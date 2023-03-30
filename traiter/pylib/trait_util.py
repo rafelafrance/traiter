@@ -34,3 +34,10 @@ def get_patterns(jsonl_path: Path) -> list[dict]:
     with open(jsonl_path) as jsonl_file:
         lines = [json.loads(ln) for ln in jsonl_file.readlines()]
     return lines
+
+
+def concat_patterns(jsonl_paths: Iterable[Path]) -> list[dict]:
+    rules = []
+    for path in jsonl_paths:
+        rules += get_patterns(path)
+    return rules

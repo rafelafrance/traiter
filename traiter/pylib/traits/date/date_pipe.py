@@ -27,21 +27,16 @@ def pipe(nlp: Language, **kwargs):
             nlp,
             name=f"{TRAIT}_terms",
             attr="lower",
-            path=HERE / f"{TRAIT}_terms_lower.jsonl",
+            path=[
+                HERE / f"{TRAIT}_terms_lower.jsonl",
+                MONTH / "month_terms_lower.jsonl",
+            ],
             **kwargs,
         )
 
         prev = add.term_pipe(
             nlp,
-            name="date_month",
-            attr="lower",
-            path=MONTH / "month_terms_lower.jsonl",
-            after=prev,
-        )
-
-        prev = add.term_pipe(
-            nlp,
-            name="month_text",
+            name="date_month_text",
             attr="text",
             path=MONTH / "month_terms_text.jsonl",
             after=prev,

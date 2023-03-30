@@ -1,5 +1,6 @@
 import spacy
 
+from . import const
 from . import tokenizer
 from .pipes import extensions
 from .pipes.finish import FINSH
@@ -26,6 +27,8 @@ def pipeline():
 
     nlp.add_pipe(SENTENCES)
     nlp.add_pipe(FINSH)
+
+    nlp.to_disk(const.DATA_DIR / "traiter_model")
 
     # for name in nlp.pipe_names:
     #     print(name)

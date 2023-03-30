@@ -1,7 +1,9 @@
 from pathlib import Path
+from typing import Iterable
 
 from spacy import Language
 
+from . import trait_util
 from .pipes import debug
 from .pipes import delete
 from .pipes import link
@@ -12,7 +14,7 @@ def term_pipe(
     nlp,
     *,
     name: str,
-    path: Path,
+    path: Path | list[Path] = None,
     attr=None,
     overwrite_ents=False,
     validate=True,
@@ -23,7 +25,18 @@ def term_pipe(
         "overwrite_ents": overwrite_ents,
         "phrase_matcher_attr": attr,
     }
-    nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs).from_disk(path)
+
+    ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
+
+    path = path if isinstance(path, Iterable) else [path]
+    for a_path in path:
+        ruler.from_disk(a_path)
+    # if not isinstance(path, Iterable):
+    #     ruler.from_disk(path)
+    # else:
+    #     patterns = trait_util.concat_patterns(path)
+    #     ruler.add_patterns(patterns)
+
     update_name = f"{name}_update"
     nlp.add_pipe(term_update.TERM_UPDATE, name=update_name, after=name)
     return update_name
