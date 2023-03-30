@@ -104,19 +104,31 @@ def data_func(doc):
 @Language.component(FUNC_UNCERTAIN)
 def data_func_uncertain(doc):
     for ent in doc.ents:
+        # Is this a lat/long with uncertainty?
         if ent.label_ != "lat_long" or ent.id_ != "lat_long_uncertain":
             continue
+
         units = ""
         value = 0.0
         for token in ent:
+            # Get the data from the original parse
             if token._.data:
                 ent._.data = token._.data
+
+            # Already parse
             elif token._.flag:
                 continue
+
+            # Get the uncertainty units
             elif token._.term in ["metric_length", "imperial_length"]:
                 units = REPLACE.get(token.lower_, token.lower_)
+
+            # Get the uncertainty value
             elif re.match(FLOAT_RE, token.text):
                 value = util.to_positive_float(token.text)
+
+        # Convert the values to meters
         factor = FACTORS_M[units]
+
         ent._.data["uncertainty"] = round(value * factor, 3)
     return doc

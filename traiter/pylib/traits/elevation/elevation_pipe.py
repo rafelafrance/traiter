@@ -50,7 +50,7 @@ def pipe(nlp: Language, **kwargs):
 
     prev = add.cleanup_pipe(
         nlp,
-        name="elev_cleanup",
+        name=f"{TRAIT}_cleanup",
         remove=trait_util.labels_to_remove([CSV, UNITS_CSV], TRAIT),
         after=prev,
     )
@@ -88,6 +88,8 @@ def data_func(doc):
 
         factor = FACTORS_M[units]
         ent._.data["elevation"] = round(values[0] * factor, 3)
+
+        # Handle a elevation range
         if expected_values_len == 2:
             ent._.data["elevation_high"] = round(values[1] * factor, 3)
 

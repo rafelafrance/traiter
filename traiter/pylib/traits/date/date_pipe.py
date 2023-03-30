@@ -59,7 +59,7 @@ def pipe(nlp: Language, **kwargs):
 
     prev = add.cleanup_pipe(
         nlp,
-        name="date_cleanup",
+        name=f"{TRAIT}_cleanup",
         remove=trait_util.labels_to_remove([CSV, MONTH_CSV], TRAIT),
         after=prev,
     )
@@ -102,6 +102,7 @@ def data_func(doc):
 
         ent._.data["date"] = date_.isoformat()[:10]
 
+        # If this is a date without a day then truncate the output
         if ent.id_ == "short_date":
             ent._.data["missing_day"] = True
             ent._.data["date"] = date_.isoformat()[:7]

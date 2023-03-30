@@ -11,8 +11,6 @@ NUM_PLUS = r"^(±|\+|-)?[\d,]+\.?\d*$"
 PLUS = r"^(±|\+|-)+$"
 MINUS = r"^[-]$"
 
-UNITS = ["metric_length", "imperial_length"]
-
 DECODER = {
     ",": {"TEXT": {"REGEX": r"^[,;._:]$"}},
     "label": {"ENT_TYPE": "lat_long_label"},
@@ -28,7 +26,7 @@ DECODER = {
     "90N": {"LOWER": {"REGEX": rf"^{_90}[ns]$"}},
     "60'60": {"LOWER": {"REGEX": rf"^{_60}[{SYM}]{_60}[{SYM}]$"}},
     "60'60N": {"LOWER": {"REGEX": rf"^{_60}[{SYM}]{_60}[{SYM}][nesw]$"}},
-    "m": {"ENT_TYPE": {"IN": UNITS}},
+    "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
     "99": {"TEXT": {"REGEX": FLOAT_RE}},
     "+99": {"TEXT": {"REGEX": NUM_PLUS}},
     "uncert": {"ENT_TYPE": "uncertain_label"},
@@ -36,6 +34,8 @@ DECODER = {
     "[+]": {"TEXT": {"REGEX": PLUS}},
     "[-]": {"TEXT": {"REGEX": PLUS}},
 }
+
+# These compilers are for different pipes and are compiled and loaded separately
 
 LAT_LONG = Compiler(
     label="lat_long",
@@ -64,5 +64,3 @@ LAT_LONG_UNCERTAIN = Compiler(
         "lat_long+ ,? uncert? ,? [+]? 99 m",
     ],
 )
-
-COMPILERS = [LAT_LONG, LAT_LONG_UNCERTAIN]

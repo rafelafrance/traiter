@@ -47,10 +47,6 @@ def pipe(nlp: Language, **kwargs):
 REPLACE = trait_util.term_data(CSV, "replace")
 REMOVE = trait_util.term_data(CSV, "remove", int)
 
-FIX_DASHES = ["\\" + c for c in const.DASH_CHAR]
-FIX_DASHES = "".join(FIX_DASHES)
-FIX_DASHES = rf"[{FIX_DASHES}]{{2,}}|[{FIX_DASHES}]$"
-
 
 @Language.component(FUNC)
 def data_func(doc):
@@ -79,14 +75,14 @@ def data_func(doc):
                 ent._.data["missing"] = True
                 continue
 
-            replace = REPLACE.get(token.lower_, token.lower_)
+            frag = REPLACE.get(token.lower_, token.lower_)
 
             # Skip duplicate colors within the entity
-            if replace not in frags:
-                frags.append(replace)
+            if frag not in frags:
+                frags.append(frag)
 
         # Build the color
         value = "-".join(frags)
-        ent._.data["color"] = REPLACE.get(value, value)
+        ent._.data[TRAIT] = REPLACE.get(value, value)
 
     return doc

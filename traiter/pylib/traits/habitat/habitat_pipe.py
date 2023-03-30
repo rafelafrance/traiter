@@ -34,7 +34,7 @@ def pipe(nlp: Language, **kwargs):
 
     prev = add.cleanup_pipe(
         nlp,
-        name="habitat_cleanup",
+        name=f"{TRAIT}_cleanup",
         remove=trait_util.labels_to_remove(CSV, TRAIT),
         after=prev,
     )
@@ -49,12 +49,6 @@ REPLACE = trait_util.term_data(CSV, "replace")
 @Language.component(FUNC)
 def data_func(doc):
     for ent in [e for e in doc.ents if e.label_ == TRAIT]:
-        frags = []
-
-        for token in ent:
-            replaced = REPLACE.get(token.lower_, token.lower_)
-            frags.append(replaced)
-
-        ent._.data["habitat"] = " ".join(frags)
-
+        frags = [REPLACE.get(t.lower_, t.lower_) for t in ent]
+        ent._.data[TRAIT] = " ".join(frags)
     return doc

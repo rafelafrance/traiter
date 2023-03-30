@@ -3,7 +3,7 @@ from ...matcher_compiler import Compiler
 SEP = ".,;/_'-"
 LABEL_ENDER = "[:=]"
 
-_DECODER = {
+DECODER = {
     "-": {"TEXT": {"REGEX": f"^[{SEP}]+$"}},
     "/": {"TEXT": {"REGEX": r"^/$"}},
     "99": {"TEXT": {"REGEX": r"^\d\d?$"}},
@@ -19,35 +19,34 @@ _DECODER = {
     # "month-99-9999": {"LOWER": {"REGEX": rf"^[a-z]+{_SEP}+\d\d?{_SEP}+[12]\d\d\d$"}},
 }
 
-DATE = Compiler(
-    label="date",
-    decoder=_DECODER,
-    patterns=[
-        "label? :? 99    -* month -* 99",
-        "label? :? 99    -* month -* 9999",
-        "label? :? 9999  -* month -* 99",
-        "label? :? 99    -  99    -  99",
-        "label? :? 99    -  99    -  9999",
-        "label? :? month -* 99    -* 9999",
-        "label? :? 9999  -  99    -  99",
-        "label? :? month -* 99-9999",
-        "label? :? month -* 99-99",
-        # "label? :? month -* 99 -* 9999",
-        # "label? :? 99-99-9999",
-        # "label? :? 99-99-99",
-    ],
-)
-
-MISSING_DAYS = Compiler(
-    label="date",
-    decoder=_DECODER,
-    id="short_date",
-    patterns=[
-        "label? :? 9999  -* month",
-        "label? :? month -* 9999",
-        "label? :? 99-9999",
-        "label? :? 99 / 9999",
-    ],
-)
-
-COMPILERS = [DATE, MISSING_DAYS]
+COMPILERS = [
+    Compiler(
+        label="date",
+        decoder=DECODER,
+        patterns=[
+            "label? :? 99    -* month -* 99",
+            "label? :? 99    -* month -* 9999",
+            "label? :? 9999  -* month -* 99",
+            "label? :? 99    -  99    -  99",
+            "label? :? 99    -  99    -  9999",
+            "label? :? month -* 99    -* 9999",
+            "label? :? 9999  -  99    -  99",
+            "label? :? month -* 99-9999",
+            "label? :? month -* 99-99",
+            # "label? :? month -* 99 -* 9999",
+            # "label? :? 99-99-9999",
+            # "label? :? 99-99-99",
+        ],
+    ),
+    Compiler(
+        label="date",
+        decoder=DECODER,
+        id="short_date",
+        patterns=[
+            "label? :? 9999  -* month",
+            "label? :? month -* 9999",
+            "label? :? 99-9999",
+            "label? :? 99 / 9999",
+        ],
+    ),
+]
