@@ -9,6 +9,8 @@ from spacy.lang.char_classes import LIST_QUOTES
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
 
+MODEL_PATH = DATA_DIR / "traiter_model"
+
 # ###################################################################################
 LOWER_SHAPES = """ xxxxx xxxx xxx xx x. xx. x """.split()
 TITLE_SHAPES = """ Xxxxx Xxxx Xxx Xx X. Xx. X """.split()

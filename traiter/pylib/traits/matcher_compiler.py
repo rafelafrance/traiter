@@ -22,7 +22,7 @@ class Compiler:
         self.id = id
         self.raw_patterns = patterns
         self.decoder = decoder
-        self.patterns = None
+        self.patterns = []
 
     def compile(self, force=False) -> None:
         """Convert raw patterns strings to spacy matcher pattern arrays."""

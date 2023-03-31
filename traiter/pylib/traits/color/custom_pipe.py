@@ -4,7 +4,7 @@ from spacy import Language
 
 from ..base_custom_pipe import BaseCustomPipe
 
-CUSTOM_PIPE = "color_pipe"
+CUSTOM_PIPE = "color_custom_pipe"
 
 
 @Language.factory(CUSTOM_PIPE)

@@ -9,7 +9,7 @@ from spacy import Language
 
 from ..base_custom_pipe import BaseCustomPipe
 
-CUSTOM_PIPE = "date_pipe"
+CUSTOM_PIPE = "date_custom_pipe"
 
 
 @Language.factory(CUSTOM_PIPE)

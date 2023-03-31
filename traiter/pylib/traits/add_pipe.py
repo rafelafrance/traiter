@@ -4,11 +4,11 @@ from typing import Iterable
 
 from spacy import Language
 
-from .matcher_compiler import Compiler
-from .pipes import debug
-from .pipes import delete
-from .pipes import link
-from .pipes import term_update
+from ..pipes import debug
+from ..pipes import delete
+from ..pipes import link
+from ..pipes import term_update
+from traiter.pylib.traits.matcher_compiler import Compiler
 
 
 def term_pipe(
@@ -32,7 +32,7 @@ def term_pipe(
                     "label": term["label"],
                     "pattern": term["pattern"],
                 }
-                if term.lower().get("attr", "lower") == "lower":
+                if term.get("attr", "lower") == "lower":
                     lower.append(pattern)
                 else:
                     text.append(pattern)
@@ -54,7 +54,7 @@ def term_pipe(
     # Add exact text matches to a phrase pipe
     config["phrase_matcher_attr"] = "TEXT"
     if text:
-        name = f"{name}_text"
+        name = name.replace("_lower", "_text")
         kwargs = kwargs if not prev else {"after": prev}
         ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
         ruler.add_patterns(text)

@@ -1,4 +1,4 @@
-from ...matcher_compiler import Compiler
+from traiter.pylib.traits.matcher_compiler import Compiler
 
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"{SYM},;._"

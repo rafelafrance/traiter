@@ -2,9 +2,9 @@ from pathlib import Path
 
 from spacy import Language
 
-from ... import add_pipe as add
+from .. import add_pipe as add
+from .. import trait_util
 from ... import const
-from ... import trait_util
 from .custom_pipe import CUSTOM_PIPE
 from .pattern_compilers import COMPILERS
 

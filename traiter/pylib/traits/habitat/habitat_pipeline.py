@@ -2,8 +2,8 @@ from pathlib import Path
 
 from spacy import Language
 
-from ... import add_pipe as add
-from ... import trait_util
+from .. import add_pipe as add
+from .. import trait_util
 from .custom_pipe import CUSTOM_PIPE
 from .pattern_compilers import COMPILERS
 
@@ -15,7 +15,7 @@ CSV = HERE / f"{TRAIT}.csv"
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.ruler_pipe(nlp, name=f"{TRAIT}_terms", path=CSV, **kwargs)
+        prev = add.term_pipe(nlp, name=f"{TRAIT}_terms", path=CSV, **kwargs)
 
     prev = add.ruler_pipe(
         nlp,

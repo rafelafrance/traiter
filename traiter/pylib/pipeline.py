@@ -31,3 +31,9 @@ def build(model_path=None):
         nlp.to_disk(model_path)
 
     return nlp
+
+
+def load(model_path):
+    extensions.add_extensions()
+    nlp = spacy.load(model_path)
+    return nlp

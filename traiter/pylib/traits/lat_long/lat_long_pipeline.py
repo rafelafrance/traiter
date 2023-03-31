@@ -2,8 +2,8 @@ from pathlib import Path
 
 from spacy import Language
 
-from ... import add_pipe as add
-from ... import trait_util
+from .. import add_pipe as add
+from .. import trait_util
 from .custom_pipe import CUSTOM_PIPE
 from .custom_pipe import CUSTOM_PIPE_UNCERTAIN
 from .pattern_compilers import LAT_LONG
@@ -23,7 +23,6 @@ def build(nlp: Language, **kwargs):
         prev = add.term_pipe(
             nlp,
             name=f"{TRAIT}_terms",
-            attr="lower",
             path=[CSV, UNITS_CSV],
             **kwargs,
         )
@@ -36,7 +35,10 @@ def build(nlp: Language, **kwargs):
         after=prev,
     )
 
-    config = {"trait": TRAIT, "replace": trait_util.term_data(CSV, "replace")}
+    config = {
+        "trait": TRAIT,
+        "replace": trait_util.term_data(CSV, "replace"),
+    }
     prev = add.custom_pipe(nlp, CUSTOM_PIPE, config=config, after=prev)
 
     prev = add.ruler_pipe(
@@ -49,7 +51,7 @@ def build(nlp: Language, **kwargs):
 
     factors_cm = trait_util.term_data(UNITS_CSV, "factor_cm", float)
     config = {
-        "trait": "lat_long_uncertain",
+        "id": "lat_long_uncertain",
         "replace": trait_util.term_data(CSV, "replace"),
         "factors_m": {k: v / 100.0 for k, v in factors_cm.items()},  # Convert to meters
     }

@@ -8,8 +8,8 @@ from traiter.pylib.traits.base_custom_pipe import BaseCustomPipe
 from traiter.pylib.traits.lat_long.pattern_compilers import FLOAT_RE
 from traiter.pylib.traits.lat_long.pattern_compilers import PUNCT
 
-CUSTOM_PIPE = "lat_long_pipe"
-CUSTOM_PIPE_UNCERTAIN = "lat_long_uncertain_pipe"
+CUSTOM_PIPE = "lat_long_custom_pipe"
+CUSTOM_PIPE_UNCERTAIN = "lat_long_uncertain_custom_pipe"
 
 
 @Language.factory(CUSTOM_PIPE)
@@ -44,12 +44,12 @@ class LatLongPipe(BaseCustomPipe):
 @Language.factory(CUSTOM_PIPE_UNCERTAIN)
 @dataclass()
 class LatLongPipeUncertain(BaseCustomPipe):
-    trait: str
+    id: str
     replace: dict[str, str]
     factors_m: dict[str, float]
 
     def __call__(self, doc):
-        for ent in [e for e in doc.ents if e.label_ == self.trait]:
+        for ent in [e for e in doc.ents if e.id_ == self.id]:
             units = ""
             value = 0.0
             for token in ent:

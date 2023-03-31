@@ -6,7 +6,7 @@ from spacy import Language
 from ..base_custom_pipe import BaseCustomPipe
 from traiter.pylib import util
 
-CUSTOM_PIPE = "elevation_pipe"
+CUSTOM_PIPE = "elevation_custom_pipe"
 
 
 @Language.factory(CUSTOM_PIPE)
@@ -17,10 +17,10 @@ class ElevationPipe(BaseCustomPipe):
     units_replace: dict[str, str]
     units_labels: list[str]
     factors_m: dict[str, float]
-    float_re: str
     dash: list[str]
 
     def __call__(self, doc):
+        float_re = r"^(\d[\d,.]+)$"
         for ent in [e for e in doc.ents if e.label_ == self.trait]:
             values = []
             units = ""
@@ -28,7 +28,7 @@ class ElevationPipe(BaseCustomPipe):
 
             for token in ent:
                 # Find numbers
-                if re.match(self.float_re, token.text) and len(values) < expected_len:
+                if re.match(float_re, token.text) and len(values) < expected_len:
                     values.append(util.to_positive_float(token.text))
 
                 # Find units

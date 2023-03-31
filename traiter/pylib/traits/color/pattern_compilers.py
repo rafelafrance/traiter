@@ -1,5 +1,5 @@
 from ... import const
-from ...matcher_compiler import Compiler
+from traiter.pylib.traits.matcher_compiler import Compiler
 
 COMPILERS = [
     Compiler(

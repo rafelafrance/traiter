@@ -18,8 +18,9 @@ class BaseCustomPipe:
         if not path.exists():
             path.mkdir()
         data_path = path / "data.json"
+        fields = {k: v for k, v in self.__dict__.items() if k not in ("nlp", "name")}
         with data_path.open("w", encoding="utf8") as data_file:
-            data_file.write(json.dumps(self.__dict__))
+            data_file.write(json.dumps(fields))
 
     def from_disk(self, path, exclude=tuple()):  # noqa
         data_path = Path(path) / "data.json"

@@ -2,9 +2,9 @@ from pathlib import Path
 
 from spacy import Language
 
-from ... import add_pipe as add
+from .. import add_pipe as add
+from .. import trait_util
 from ... import const
-from ... import trait_util
 from .custom_pipe import CUSTOM_PIPE
 from .pattern_compilers import COMPILERS
 from .pattern_compilers import FLOAT_RE
@@ -38,10 +38,9 @@ def build(nlp: Language, **kwargs):
     config = {
         "trait": TRAIT,
         "replace": trait_util.term_data(CSV, "replace"),
-        "unit_replace": trait_util.term_data(UNITS_CSV, "replace"),
+        "units_replace": trait_util.term_data(UNITS_CSV, "replace"),
         "units_labels": UNITS,
         "factors_m": {k: v / 100.0 for k, v in factors_cm.items()},  # Convert to meters
-        "float_re": FLOAT_RE,
         "dash": const.DASH,
     }
     prev = add.custom_pipe(nlp, CUSTOM_PIPE, config=config, after=prev)
