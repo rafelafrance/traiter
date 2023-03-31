@@ -1,5 +1,7 @@
+import json
 from collections import defaultdict
 from itertools import product
+from pathlib import Path
 
 from spacy.language import Language
 from spacy.matcher import Matcher
@@ -142,3 +144,18 @@ class LinkTraits:
                 match.child_ent._.data[match.parent_trait] = parent_trait
 
         return doc
+
+    def to_disk(self, path, exclude=tuple()):  # noqa
+        path = Path(path)
+        if not path.exists():
+            path.mkdir()
+        data_path = path / "data.json"
+        with data_path.open("w", encoding="utf8") as data_file:
+            data_file.write(json.dumps(self.__dict__))
+
+    def from_disk(self, path, exclude=tuple()):  # noqa
+        data_path = Path(path) / "data.json"
+        with data_path.open("r", encoding="utf8") as data_file:
+            data = json.load(data_file)
+            for key in data.keys():
+                self.__dict__[key] = data[key]

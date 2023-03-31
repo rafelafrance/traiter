@@ -1,9 +1,10 @@
+import csv
 from pathlib import Path
 from typing import Iterable
 
 from spacy import Language
 
-from . import trait_util
+from .matcher_compiler import Compiler
 from .pipes import debug
 from .pipes import delete
 from .pipes import link
@@ -15,49 +16,81 @@ def term_pipe(
     *,
     name: str,
     path: Path | list[Path] = None,
-    attr=None,
     overwrite_ents=False,
     validate=True,
     **kwargs,
 ) -> str:
+    # Gather the terms
+    csv_paths = path if isinstance(path, Iterable) else [path]
+    lower, text = [], []
+    for path in csv_paths:
+        with open(path) as term_file:
+            reader = csv.DictReader(term_file)
+            terms = list(reader)
+            for term in terms:
+                pattern = {
+                    "label": term["label"],
+                    "pattern": term["pattern"],
+                }
+                if term.lower().get("attr", "lower") == "lower":
+                    lower.append(pattern)
+                else:
+                    text.append(pattern)
+
+    prev = ""
+
+    # Add lower case matches to a phrase pipe
     config = {
         "validate": validate,
         "overwrite_ents": overwrite_ents,
-        "phrase_matcher_attr": attr,
+        "phrase_matcher_attr": "LOWER",
     }
+    if lower:
+        name = f"{name}_lower"
+        ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
+        ruler.add_patterns(lower)
+        prev = name
 
-    ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
+    # Add exact text matches to a phrase pipe
+    config["phrase_matcher_attr"] = "TEXT"
+    if text:
+        name = f"{name}_text"
+        kwargs = kwargs if not prev else {"after": prev}
+        ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
+        ruler.add_patterns(text)
+        prev = name
 
-    path = path if isinstance(path, Iterable) else [path]
-    for a_path in path:
-        ruler.from_disk(a_path)
-    # if not isinstance(path, Iterable):
-    #     ruler.from_disk(path)
-    # else:
-    #     patterns = trait_util.concat_patterns(path)
-    #     ruler.add_patterns(patterns)
-
-    update_name = f"{name}_update"
-    nlp.add_pipe(term_update.TERM_UPDATE, name=update_name, after=name)
-    return update_name
+    # Add a pipe for updating the term
+    name = f"{name}_update"
+    nlp.add_pipe(term_update.TERM_UPDATE, name=name, after=prev)
+    return name
 
 
 def ruler_pipe(
     nlp,
     *,
     name: str,
-    path: Path,
+    compiler: Compiler | list[Compiler],
     attr=None,
     overwrite_ents=False,
     validate=True,
     **kwargs,
 ) -> str:
+    compilers = compiler if isinstance(compiler, Iterable) else [compiler]
+    patterns = []
+    for compiler in compilers:
+        compiler.compile()
+        for pattern in compiler.patterns:
+            patterns.append(
+                {"label": compiler.label, "pattern": pattern, "id": compiler.id}
+            )
     config = {
         "validate": validate,
         "overwrite_ents": overwrite_ents,
         "phrase_matcher_attr": attr,
     }
-    nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs).from_disk(path)
+    ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
+    ruler.add_patterns(patterns)
     return name
 
 
@@ -66,8 +99,8 @@ def cleanup_pipe(nlp: Language, *, name: str, remove: list[str], **kwargs) -> st
     return name
 
 
-def data_pipe(nlp: Language, name: str, **kwargs) -> str:
-    nlp.add_pipe(name, **kwargs)
+def custom_pipe(nlp: Language, name: str, config: dict, **kwargs):
+    nlp.add_pipe(name, config=config, **kwargs)
     return name
 
 

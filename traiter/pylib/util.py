@@ -6,9 +6,7 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from typing import Any
 from typing import Generator
-from typing import Hashable
-from typing import Optional
-from typing import Union
+from typing import Iterable
 
 import ftfy
 import inflect
@@ -19,7 +17,7 @@ INFLECT = inflect.engine()
 
 @contextmanager
 def get_temp_dir(
-    prefix: str = "temp_", where: Optional[Union[str, Path]] = None, keep: bool = False
+    prefix: str = "temp_", where: str | Path | None = None, keep: bool = False
 ) -> Generator:
     """Handle creation and deletion of temporary directory."""
     if where and not os.path.exists(where):
@@ -39,10 +37,10 @@ def shorten(text: str) -> str:
     return " ".join(text.split())
 
 
-def flatten(nested: Any) -> list:
+def flatten(nested: Iterable) -> list:
     """Flatten an arbitrarily nested list."""
     flat = []
-    nested = nested if isinstance(nested, (list, tuple, set)) else [nested]
+    nested = nested if isinstance(nested, Iterable) else [nested]
     for item in nested:
         # if not isinstance(item, str) and hasattr(item, '__iter__'):
         if isinstance(item, (list, tuple, set)):
@@ -52,32 +50,12 @@ def flatten(nested: Any) -> list:
     return flat
 
 
-def squash(values: Union[list, set]) -> Any:
-    """Squash a list to a single value if its length is one."""
-    return list(values) if len(values) != 1 else values[0]
-
-
 def as_list(values: Any) -> list:
     """Convert values to a list."""
-    return list(values) if isinstance(values, (list, tuple, set)) else [values]
+    return list(values) if isinstance(values, Iterable) else [values]
 
 
-def as_set(values: Any) -> set:
-    """Convert values to a set."""
-    return set(values) if isinstance(values, (list, tuple, set)) else {values}
-
-
-def as_tuple(values: Any) -> tuple[Any, ...]:
-    """Convert values to a tuple."""
-    return tuple(values) if isinstance(values, (list, tuple, set)) else (values,)
-
-
-def as_member(values: Any) -> Hashable:
-    """Convert values to set members (hashable)."""
-    return tuple(values) if isinstance(values, (list, set)) else values
-
-
-def to_positive_float(value: str):
+def to_positive_float(value: str) -> float | None:
     """Convert the value to a float."""
     value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
@@ -86,7 +64,7 @@ def to_positive_float(value: str):
         return None
 
 
-def to_positive_int(value: str):
+def to_positive_int(value: str) -> int | None:
     """Convert the value to an integer."""
     value = re.sub(r"[^\d./]", "", value) if value else ""
     value = re.sub(r"\.$", "", value)
@@ -96,26 +74,10 @@ def to_positive_int(value: str):
         return None
 
 
-def camel_to_snake(name: str) -> str:
-    """Convert a camel case string to snake case."""
-    split = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
-    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", split).lower()
-
-
-def ordinal(i: str) -> str:
-    """Convert the digit to an ordinal value: 1->1st, 2->2nd, etc."""
-    return INFLECT.ordinal(i)
-
-
-def number_to_words(number: str) -> str:
-    """Convert the number or ordinal value into words."""
-    return INFLECT.number_to_words(number)
-
-
 def clean_text(
     text: str,
-    trans: Optional[dict[int, str]] = None,
-    replace: Optional[dict[str, str]] = None,
+    trans: dict[int, str] | None = None,
+    replace: dict[int, str] | None = None,
 ) -> str:
     """Clean text before trait extraction."""
     text = text if text else ""
@@ -137,13 +99,3 @@ def clean_text(
     text = re.sub(r"\p{Cc}+", " ", text)  # Remove control characters
 
     return text
-
-
-def xor(one: Any, two: Any) -> bool:
-    """Emulate a logical xor."""
-    return (one and not two) or (not one and two)
-
-
-def sign(x: Union[int, float]) -> int:
-    """Return the sign of a number (-1, 0, 1)."""
-    return 0 if x == 0 else (-1 if x < 0 else 1)

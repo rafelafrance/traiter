@@ -1,36 +1,33 @@
 import spacy
 
-from . import const
 from . import tokenizer
 from .pipes import extensions
 from .pipes.finish import FINSH
 from .pipes.sentence import SENTENCES
-from .traits.color import color_pipe
-from .traits.date import date_pipe
-from .traits.elevation import elevation_pipe
-from .traits.habitat import habitat_pipe
-from .traits.lat_long import lat_long_pipe
+from .traits.color import color_pipeline
+from .traits.date import date_pipeline
+from .traits.elevation import elevation_pipeline
+from .traits.habitat import habitat_pipeline
+from .traits.lat_long import lat_long_pipeline
 
 
-def pipeline():
+def build(model_path=None):
     extensions.add_extensions()
 
     nlp = spacy.load("en_core_web_sm", exclude=["ner", "parser"])
 
     tokenizer.setup_tokenizer(nlp)
 
-    color_pipe.pipe(nlp)
-    date_pipe.pipe(nlp)
-    elevation_pipe.pipe(nlp)
-    habitat_pipe.pipe(nlp)
-    lat_long_pipe.pipe(nlp)
+    color_pipeline.build(nlp)
+    date_pipeline.build(nlp)
+    elevation_pipeline.build(nlp)
+    habitat_pipeline.build(nlp)
+    lat_long_pipeline.build(nlp)
 
     nlp.add_pipe(SENTENCES)
     nlp.add_pipe(FINSH)
 
-    nlp.to_disk(const.DATA_DIR / "traiter_model")
-
-    # for name in nlp.pipe_names:
-    #     print(name)
+    if model_path:
+        nlp.to_disk(model_path)
 
     return nlp

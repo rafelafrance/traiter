@@ -1,8 +1,0 @@
-{"label":"habitat","pattern":[{"ENT_TYPE":"habitat_term","OP":"+"}]}
-{"label":"habitat","pattern":[{"ENT_TYPE":"habitat_prefix","OP":"+"},{"ENT_TYPE":"habitat_term","OP":"+"}]}
-{"label":"habitat","pattern":[{"ENT_TYPE":"habitat_prefix","OP":"+"},{"ENT_TYPE":"habitat_term","OP":"+"},{"ENT_TYPE":"habitat_suffix"}]}
-{"label":"habitat","pattern":[{"ENT_TYPE":"habitat_term","OP":"+"},{"ENT_TYPE":"habitat_suffix"}]}
-{"label":"habitat","pattern":[{"ENT_TYPE":"habitat_prefix","OP":"+"},{"ENT_TYPE":"habitat_suffix"}]}
-{"label":"not_habitat","pattern":[{"ENT_TYPE":"bad_prefix"},{"ENT_TYPE":"habitat_term"}]}
-{"label":"not_habitat","pattern":[{"ENT_TYPE":"bad_prefix"},{"ENT_TYPE":"habitat_term"},{"ENT_TYPE":"bad_suffix"}]}
-{"label":"not_habitat","pattern":[{"ENT_TYPE":"habitat_term"},{"ENT_TYPE":"bad_suffix"}]}

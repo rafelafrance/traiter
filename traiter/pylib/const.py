@@ -10,10 +10,10 @@ from spacy.lang.char_classes import LIST_QUOTES
 DATA_DIR = Path.cwd() / "data"
 
 # ###################################################################################
-LOWER_SHAPES = set(""" xxxxx xxxx xxx xx x. xx. x """.split())
-TITLE_SHAPES = set(""" Xxxxx Xxxx Xxx Xx X. Xx. X """.split())
-UPPER_SHAPES = set(""" XXXXX XXXX XXX XX X. XX. X """.split())
-NAME_SHAPES = list(TITLE_SHAPES) + list(UPPER_SHAPES)
+LOWER_SHAPES = """ xxxxx xxxx xxx xx x. xx. x """.split()
+TITLE_SHAPES = """ Xxxxx Xxxx Xxx Xx X. Xx. X """.split()
+UPPER_SHAPES = """ XXXXX XXXX XXX XX X. XX. X """.split()
+NAME_SHAPES = TITLE_SHAPES + UPPER_SHAPES
 
 # ###################################################################################
 # Punctuation penalties when linking traits

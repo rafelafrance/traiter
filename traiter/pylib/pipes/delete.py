@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from spacy.language import Language
 from spacy.tokens import Doc
 
@@ -28,6 +31,19 @@ class DeleteTraits:
 
         doc.set_ents(entities)
         return doc
+
+    def to_disk(self, path, exclude=tuple()):  # noqa
+        path = Path(path)
+        if not path.exists():
+            path.mkdir()
+        data_path = path / "data.json"
+        with data_path.open("w", encoding="utf8") as data_file:
+            data_file.write(json.dumps(self.delete))
+
+    def from_disk(self, path, exclude=tuple()):  # noqa
+        data_path = Path(path) / "data.json"
+        with data_path.open("r", encoding="utf8") as data_file:
+            self.delete = json.load(data_file)
 
     @staticmethod
     def clear_tokens(ent):
