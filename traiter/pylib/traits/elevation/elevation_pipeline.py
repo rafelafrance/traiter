@@ -7,7 +7,6 @@ from .. import trait_util
 from ... import const
 from .custom_pipe import CUSTOM_PIPE
 from .pattern_compilers import COMPILERS
-from .pattern_compilers import FLOAT_RE
 from .pattern_compilers import UNITS
 
 HERE = Path(__file__).parent
