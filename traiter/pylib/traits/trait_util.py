@@ -6,9 +6,14 @@ from typing import Iterable
 
 def term_data(csv_path: Path, field: str, type_=None) -> dict[str, Any]:
     type_ = type_ if type_ else str
+    data = {}
     with open(csv_path) as csv_file:
         reader = csv.DictReader(csv_file)
-        return {r["pattern"]: type_(r[field]) for r in reader if r.get(field)}
+        for row in reader:
+            value = row.get(field)
+            if value not in (None, ""):
+                data[row["pattern"]] = type_(value)
+    return data
 
 
 def get_labels(csv_paths: Path | Iterable[Path]) -> list[str]:

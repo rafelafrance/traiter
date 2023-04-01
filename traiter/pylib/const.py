@@ -40,7 +40,7 @@ ITIS_SPECIES_ID = 220
 # ###################################################################################
 # Useful character classes
 
-CLOSE = "  ) ] ".split()
+CLOSE = " ) ] ".split()
 COLON = " : ".split()
 COMMA = " , ".split()
 CROSS = " X x × ".split()

@@ -24,10 +24,10 @@ class Compiler:
         self.decoder = decoder
         self.patterns = []
 
-    def compile(self, force=False) -> None:
+    def compile(self, force=False):
         """Convert raw patterns strings to spacy matcher pattern arrays."""
-        if self.patterns and not force:
-            return
+        if self.patterns and force is False:
+            return self
 
         for string in self.raw_patterns:
             pattern_seq = []
@@ -51,3 +51,4 @@ class Compiler:
                     warn(f'No token pattern for "{key}" in "{string}"')
 
             self.patterns.append(pattern_seq)
+        return self

@@ -8,7 +8,7 @@ from ..pipes import debug
 from ..pipes import delete
 from ..pipes import link
 from ..pipes import term_update
-from traiter.pylib.traits.matcher_compiler import Compiler
+from traiter.pylib.traits.pattern_compiler import Compiler
 
 
 def term_pipe(
@@ -114,8 +114,8 @@ def debug_ents(nlp: Language, message: str = "", **kwargs) -> str:
 
 def link_pipe(
     nlp,
-    patterns,
     *,
+    compiler,
     name,
     parents,
     children,
@@ -125,6 +125,12 @@ def link_pipe(
     differ=None,
     **kwargs,
 ) -> str:
+    patterns = []
+    compiler.compile()
+    for pattern in compiler.patterns:
+        patterns.append(
+            {"label": compiler.label, "pattern": pattern, "id": compiler.id}
+        )
     config = {
         "patterns": patterns,
         "parents": parents,

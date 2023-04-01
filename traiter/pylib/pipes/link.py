@@ -150,8 +150,10 @@ class LinkTraits:
         if not path.exists():
             path.mkdir()
         data_path = path / "data.json"
-        with data_path.open("w", encoding="utf8") as data_file:
-            data_file.write(json.dumps(self.__dict__))
+        skip = ("nlp", "name", "matcher", "parent_set")
+        fields = {k: v for k, v in self.__dict__.items() if k not in skip}
+        with data_path.open("w") as data_file:
+            data_file.write(json.dumps(fields))
 
     def from_disk(self, path, exclude=tuple()):  # noqa
         data_path = Path(path) / "data.json"
@@ -159,3 +161,5 @@ class LinkTraits:
             data = json.load(data_file)
             for key in data.keys():
                 self.__dict__[key] = data[key]
+        self.matcher = self.build_matcher(self.nlp, self.patterns)
+        self.parent_set = set(self.parents)

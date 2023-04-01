@@ -33,11 +33,11 @@ DASHES = f"(?:{DASHES})+"
 OPENS = "|".join(re.escape(h) for h in t_const.OPEN if len(h) == 1)
 OPENS = f"(?:{OPENS})"
 
-_PREFIX = BREAKING + [DASHES + "(?=[0-9])"]
-_SUFFIX = BREAKING + [DASHES]
+PREFIX = BREAKING + [DASHES + "(?=[0-9])"]
+SUFFIX = BREAKING + [DASHES]
 
 
-_INFIX = [
+INFIX = [
     rf"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",  # word=word etc.
     r"""[\\\[\]()/:;’'"“”'+±_]""",  # Break on these characters
     DASHES,
@@ -127,9 +127,9 @@ def get_states():
 
 
 def setup_tokenizer(nlp):
-    append_prefix_regex(nlp, _PREFIX)
-    append_infix_regex(nlp, _INFIX)
-    append_suffix_regex(nlp, _SUFFIX)
+    append_prefix_regex(nlp, PREFIX)
+    append_infix_regex(nlp, INFIX)
+    append_suffix_regex(nlp, SUFFIX)
     append_abbrevs(nlp, ABBREVS)
     # Remove patterns that interfere with parses
     states = get_states()
