@@ -14,15 +14,12 @@ TRAIT = HERE.stem
 CSV = HERE / f"{TRAIT}.csv"
 MONTH_CSV = HERE.parent / "month" / "month.csv"
 
+ALL_CSVS = [CSV, MONTH_CSV]
+
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(
-            nlp,
-            name=f"{TRAIT}_terms",
-            path=[CSV, MONTH_CSV],
-            **kwargs,
-        )
+        prev = add.term_pipe(nlp, name=f"{TRAIT}_terms", path=ALL_CSVS, **kwargs)
 
     prev = add.ruler_pipe(
         nlp,
@@ -34,7 +31,7 @@ def build(nlp: Language, **kwargs):
 
     config = {
         "trait": TRAIT,
-        "replace": trait_util.term_data(CSV, "replace"),
+        "replace": trait_util.term_data(ALL_CSVS, "replace"),
         "sep": SEP,
     }
     prev = add.custom_pipe(nlp, CUSTOM_PIPE, config=config, after=prev)
@@ -42,7 +39,7 @@ def build(nlp: Language, **kwargs):
     prev = add.cleanup_pipe(
         nlp,
         name=f"{TRAIT}_cleanup",
-        remove=trait_util.labels_to_remove([CSV, MONTH_CSV], keep=TRAIT),
+        remove=trait_util.labels_to_remove(ALL_CSVS, keep=TRAIT),
         after=prev,
     )
 

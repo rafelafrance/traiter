@@ -31,7 +31,7 @@ class LatLongPipeUncertain(BaseCustomPipe):
                     continue
 
                 # Get the uncertainty units
-                elif token._.term in ["metric_length", "imperial_length"]:
+                elif token._.term in ("metric_length", "imperial_length"):
                     units = self.replace.get(token.lower_, token.lower_)
 
                 # Get the uncertainty value

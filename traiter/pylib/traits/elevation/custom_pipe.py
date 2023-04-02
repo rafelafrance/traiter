@@ -3,10 +3,12 @@ from dataclasses import dataclass
 
 from spacy import Language
 
+from ... import const
 from ..base_custom_pipe import BaseCustomPipe
 from traiter.pylib import util
 
 CUSTOM_PIPE = "elevation_custom_pipe"
+UNITS = ("metric_length", "imperial_length")
 
 
 @Language.factory(CUSTOM_PIPE)
@@ -14,13 +16,9 @@ CUSTOM_PIPE = "elevation_custom_pipe"
 class ElevationPipe(BaseCustomPipe):
     trait: str
     replace: dict[str, str]
-    units_replace: dict[str, str]
-    units_labels: list[str]
     factors_m: dict[str, float]
-    dash: list[str]
 
     def __call__(self, doc):
-        float_re = r"^(\d[\d,.]+)$"
         for ent in [e for e in doc.ents if e.label_ == self.trait]:
             values = []
             units = ""
@@ -28,15 +26,15 @@ class ElevationPipe(BaseCustomPipe):
 
             for token in ent:
                 # Find numbers
-                if re.match(float_re, token.text) and len(values) < expected_len:
+                if re.match(const.FLOAT_RE, token.text) and len(values) < expected_len:
                     values.append(util.to_positive_float(token.text))
 
                 # Find units
-                elif token._.term in self.units_labels and not units:
-                    units = self.units_replace.get(token.lower_, token.lower_)
+                elif token._.term in UNITS and not units:
+                    units = self.replace.get(token.lower_, token.lower_)
 
                 # If there's a dash it's a range
-                elif token.text in self.dash:
+                elif token.text in const.DASH:
                     expected_len = 2
 
             ent._.data["units"] = "m"

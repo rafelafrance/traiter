@@ -17,15 +17,12 @@ CSV = HERE / f"{TRAIT}.csv"
 UNITS_DIR = HERE.parent / "units"
 UNITS_CSV = UNITS_DIR / "units_length.csv"
 
+ALL_CSVS = [CSV, UNITS_CSV]
+
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(
-            nlp,
-            name=f"{TRAIT}_terms",
-            path=[CSV, UNITS_CSV],
-            **kwargs,
-        )
+        prev = add.term_pipe(nlp, name=f"{TRAIT}_terms", path=ALL_CSVS, **kwargs)
 
     prev = add.ruler_pipe(
         nlp,
@@ -52,7 +49,7 @@ def build(nlp: Language, **kwargs):
     factors_cm = trait_util.term_data(UNITS_CSV, "factor_cm", float)
     config = {
         "id": "lat_long_uncertain",
-        "replace": trait_util.term_data(CSV, "replace"),
+        "replace": trait_util.term_data(ALL_CSVS, "replace"),
         "factors_m": {k: v / 100.0 for k, v in factors_cm.items()},  # Convert to meters
     }
     prev = add.custom_pipe(nlp, CUSTOM_PIPE_UNCERTAIN, config=config, after=prev)
@@ -60,7 +57,7 @@ def build(nlp: Language, **kwargs):
     prev = add.cleanup_pipe(
         nlp,
         name=f"{TRAIT}_cleanup",
-        remove=trait_util.labels_to_remove([CSV, UNITS_CSV], keep=TRAIT),
+        remove=trait_util.labels_to_remove(ALL_CSVS, keep=TRAIT),
         after=prev,
     )
 

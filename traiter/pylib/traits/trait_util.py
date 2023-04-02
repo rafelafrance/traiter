@@ -4,15 +4,19 @@ from typing import Any
 from typing import Iterable
 
 
-def term_data(csv_path: Path, field: str, type_=None) -> dict[str, Any]:
+def term_data(
+    csv_path: Path | Iterable[Path], field: str, type_=None
+) -> dict[str, Any]:
+    paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
     type_ = type_ if type_ else str
     data = {}
-    with open(csv_path) as csv_file:
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            value = row.get(field)
-            if value not in (None, ""):
-                data[row["pattern"]] = type_(value)
+    for path in paths:
+        with open(path) as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                value = row.get(field)
+                if value not in (None, ""):
+                    data[row["pattern"]] = type_(value)
     return data
 
 
