@@ -39,6 +39,7 @@ class ElevationPipe(BaseCustomPipe):
                 elif token.text in self.dash:
                     expected_len = 2
 
+            ent._.data["units"] = "m"
             factor = self.factors_m[units]
             ent._.data["elevation"] = round(values[0] * factor, 3)
 

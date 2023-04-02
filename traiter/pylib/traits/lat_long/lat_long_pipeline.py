@@ -5,7 +5,7 @@ from spacy import Language
 from .. import add_pipe as add
 from .. import trait_util
 from .custom_pipe import CUSTOM_PIPE
-from .custom_pipe import CUSTOM_PIPE_UNCERTAIN
+from .custom_pipe_untertain import CUSTOM_PIPE_UNCERTAIN
 from .pattern_compilers import LAT_LONG
 from .pattern_compilers import LAT_LONG_UNCERTAIN
 

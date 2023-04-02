@@ -48,7 +48,13 @@ class TestLatLongPatterns(unittest.TestCase):
                     "start": 0,
                     "end": 28,
                 },
-                {"elevation": 1217.0, "trait": "elevation", "start": 29, "end": 40},
+                {
+                    "elevation": 1217.0,
+                    "trait": "elevation",
+                    "start": 29,
+                    "end": 40,
+                    "units": "m",
+                },
             ],
         )
 
@@ -62,6 +68,7 @@ class TestLatLongPatterns(unittest.TestCase):
                     "trait": "lat_long",
                     "start": 24,
                     "end": 55,
+                    "units": "m",
                 }
             ],
         )
@@ -76,6 +83,7 @@ class TestLatLongPatterns(unittest.TestCase):
                     "trait": "lat_long",
                     "start": 0,
                     "end": 47,
+                    "units": "m",
                 }
             ],
         )
