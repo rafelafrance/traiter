@@ -29,8 +29,6 @@ REVERSE_WEIGHTS["."] = 9999
 
 ITIS_SPECIES_ID = 220
 
-BATCH_SIZE = 1_000_000  # How many records to work with at a time
-
 # Useful character classes
 CLOSE = "  ) ] ".split()
 COLON = " : ".split()
