@@ -13,13 +13,9 @@ DECODER = {
     ":": {"TEXT": {"REGEX": f"^{LABEL_ENDER}+$"}},
     "label": {"ENT_TYPE": "date_label"},
     "month": {"ENT_TYPE": "month"},
-    # "99-99-9999": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+\d\d?{_SEP}+[12]\d\d\d$"}},
-    # "9999-99-99": {"TEXT": {"REGEX": rf"^[12]\d\d\d?{_SEP}+\d\d?{_SEP}+\d\d?$"}},
-    # "99-99-99": {"TEXT": {"REGEX": rf"^\d\d?{_SEP}+\d\d?{_SEP}+\d\d$"}},
-    # "month-99-9999": {"LOWER": {"REGEX": rf"^[a-z]+{_SEP}+\d\d?{_SEP}+[12]\d\d\d$"}},
 }
 
-COMPILERS = [
+DATE_COMPILERS = [
     Compiler(
         label="date",
         decoder=DECODER,
@@ -33,9 +29,6 @@ COMPILERS = [
             "label? :? 9999  -  99    -  99",
             "label? :? month -* 99-9999",
             "label? :? month -* 99-99",
-            # "label? :? month -* 99 -* 9999",
-            # "label? :? 99-99-9999",
-            # "label? :? 99-99-99",
         ],
     ),
     Compiler(

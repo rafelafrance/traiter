@@ -16,7 +16,7 @@ DECODER = {
     "m": {"ENT_TYPE": {"IN": UNITS}},
 }
 
-COMPILERS = [
+ELEVATION_COMPILERS = [
     Compiler(
         label="elevation",
         decoder=DECODER,

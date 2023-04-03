@@ -5,20 +5,19 @@ from spacy import Language
 
 from traiter.pylib import util
 from traiter.pylib.traits.base_custom_pipe import BaseCustomPipe
-from traiter.pylib.traits.lat_long.pattern_compilers import FLOAT_RE
+from traiter.pylib.traits.lat_long.lat_long_pattern_compilers import FLOAT_RE
 
-CUSTOM_PIPE_UNCERTAIN = "lat_long_uncertain_custom_pipe"
+LAT_LONG_CUSTOM_PIPE_UNCERTAIN = "lat_long_uncertain_custom_pipe"
 
 
-@Language.factory(CUSTOM_PIPE_UNCERTAIN)
+@Language.factory(LAT_LONG_CUSTOM_PIPE_UNCERTAIN)
 @dataclass()
 class LatLongPipeUncertain(BaseCustomPipe):
-    id: str
     replace: dict[str, str]
     factors_m: dict[str, float]
 
     def __call__(self, doc):
-        for ent in [e for e in doc.ents if e.id_ == self.id]:
+        for ent in [e for e in doc.ents if e.id_ == "lat_long_uncertain"]:
             units = ""
             value = 0.0
             for token in ent:

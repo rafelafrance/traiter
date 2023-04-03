@@ -4,41 +4,34 @@ from spacy import Language
 
 from .. import add_pipe as add
 from .. import trait_util
-from ... import const
-from .custom_pipe import CUSTOM_PIPE
-from .pattern_compilers import COMPILERS
+from .color_custom_pipe import COLOR_CUSTOM_PIPE
+from .color_pattern_compilers import COLOR_COMPILERS
 
-HERE = Path(__file__).parent
-TRAIT = HERE.stem
-
-CSV = HERE / f"{TRAIT}.csv"
+CSV = Path(__file__).parent / "color_terms.csv"
 
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(nlp, name=f"{TRAIT}_terms", path=CSV, **kwargs)
+        prev = add.term_pipe(nlp, name="color_terms", path=CSV, **kwargs)
 
     prev = add.ruler_pipe(
         nlp,
-        name=f"{TRAIT}_patterns",
-        compiler=COMPILERS,
+        name="color_patterns",
+        compiler=COLOR_COMPILERS,
         overwrite_ents=True,
         after=prev,
     )
 
     config = {
-        "trait": TRAIT,
         "replace": trait_util.term_data(CSV, "replace"),
         "remove": trait_util.term_data(CSV, "remove", int),
-        "title_shapes": const.TITLE_SHAPES,
-        "dash_char": const.DASH_CHAR,
     }
-    prev = add.custom_pipe(nlp, CUSTOM_PIPE, config=config, after=prev)
+    prev = add.custom_pipe(nlp, COLOR_CUSTOM_PIPE, config=config, after=prev)
 
     prev = add.cleanup_pipe(
         nlp,
-        name=f"{TRAIT}_cleanup",
-        remove=trait_util.labels_to_remove(CSV, keep=TRAIT),
+        name="color_cleanup",
+        remove=trait_util.labels_to_remove(CSV, keep="color"),
         after=prev,
     )
 

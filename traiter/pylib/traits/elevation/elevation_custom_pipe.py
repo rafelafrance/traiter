@@ -7,19 +7,18 @@ from ... import const
 from ..base_custom_pipe import BaseCustomPipe
 from traiter.pylib import util
 
-CUSTOM_PIPE = "elevation_custom_pipe"
+ELEVATION_CUSTOM_PIPE = "elevation_custom_pipe"
 UNITS = ("metric_length", "imperial_length")
 
 
-@Language.factory(CUSTOM_PIPE)
+@Language.factory(ELEVATION_CUSTOM_PIPE)
 @dataclass()
 class ElevationPipe(BaseCustomPipe):
-    trait: str
     replace: dict[str, str]
     factors_m: dict[str, float]
 
     def __call__(self, doc):
-        for ent in [e for e in doc.ents if e.label_ == self.trait]:
+        for ent in [e for e in doc.ents if e.label_ == "elevation"]:
             values = []
             units = ""
             expected_len = 1

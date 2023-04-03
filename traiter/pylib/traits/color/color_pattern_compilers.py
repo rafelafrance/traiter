@@ -1,7 +1,7 @@
 from ... import const
 from traiter.pylib.traits.pattern_compiler import Compiler
 
-COMPILERS = [
+COLOR_COMPILERS = [
     Compiler(
         label="color",
         decoder={

@@ -9,7 +9,7 @@ DECODER = {
 }
 
 
-COMPILERS = [
+HABITAT_COMPILERS = [
     Compiler(
         label="habitat",
         decoder=DECODER,

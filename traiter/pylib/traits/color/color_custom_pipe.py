@@ -2,22 +2,20 @@ from dataclasses import dataclass
 
 from spacy import Language
 
+from ... import const
 from ..base_custom_pipe import BaseCustomPipe
 
-CUSTOM_PIPE = "color_custom_pipe"
+COLOR_CUSTOM_PIPE = "color_custom_pipe"
 
 
-@Language.factory(CUSTOM_PIPE)
+@Language.factory(COLOR_CUSTOM_PIPE)
 @dataclass()
 class ColorPipe(BaseCustomPipe):
-    trait: str
     replace: dict[str, str]
     remove: dict[str, int]
-    title_shapes: list[str]
-    dash_char: list[str]
 
     def __call__(self, doc):
-        for ent in [e for e in doc.ents if e.label_ == self.trait]:
+        for ent in [e for e in doc.ents if e.label_ == "color"]:
             frags = []
 
             for token in ent:
@@ -30,11 +28,11 @@ class ColorPipe(BaseCustomPipe):
                     continue
 
                 # Skip names like "Brown"
-                if token._.term == "color_term" and token.shape_ in self.title_shapes:
+                if token._.term == "color_term" and token.shape_ in const.TITLE_SHAPES:
                     continue
 
                 # Skip dashes
-                if token.text in self.dash_char:
+                if token.text in const.DASH:
                     continue
 
                 # Color is noted as missing
@@ -50,6 +48,6 @@ class ColorPipe(BaseCustomPipe):
 
             # Build the color
             value = "-".join(frags)
-            ent._.data[self.trait] = self.replace.get(value, value)
+            ent._.data["color"] = self.replace.get(value, value)
 
         return doc
