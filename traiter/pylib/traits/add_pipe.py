@@ -62,7 +62,8 @@ def term_pipe(
 
     # Add a pipe for updating the term
     name = f"{name}_update"
-    nlp.add_pipe(term_update.TERM_UPDATE, name=name, after=prev)
+    config = {"overwrite": overwrite_ents}
+    nlp.add_pipe(term_update.TERM_UPDATE, name=name, config=config, after=prev)
     return name
 
 
@@ -104,12 +105,12 @@ def custom_pipe(nlp: Language, name: str, config: dict, **kwargs):
     return name
 
 
-def debug_tokens(nlp: Language, message: str = "", **kwargs) -> str:
-    return debug.tokens(nlp, message, **kwargs)
+def debug_tokens(nlp: Language, **kwargs) -> str:
+    return debug.tokens(nlp, **kwargs)
 
 
-def debug_ents(nlp: Language, message: str = "", **kwargs) -> str:
-    return debug.ents(nlp, message, **kwargs)
+def debug_ents(nlp: Language, **kwargs) -> str:
+    return debug.ents(nlp, **kwargs)
 
 
 def link_pipe(

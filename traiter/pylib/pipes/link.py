@@ -6,6 +6,7 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
+from spacy.tokens import Span
 
 from .. import util
 
@@ -21,9 +22,13 @@ class LinkMatch:
         self.doc = doc
         self.weights = weights
         self.parents = parents
-        self.child_idx, self.parent_idx = self.get_indices()
-        self.child_ent = self.get_ent_from_token(self.child_idx)
-        self.parent_ent = self.get_ent_from_token(self.parent_idx)
+
+        self.child_idx = None
+        self.parent_idx = None
+        self.child_ent: Span | None = None
+        self.parent_ent: Span | None = None
+        self.get_parent_child()
+
         self.child_trait = self.child_ent._.data["trait"]
         self.parent_trait = self.parent_ent._.data["trait"]
         self.reverse_weights = reverse_weights
@@ -38,31 +43,69 @@ class LinkMatch:
     def get_ent_from_token(self, token_idx):
         return next(e for e in self.doc.ents if e.start <= token_idx < e.end)
 
-    def get_indices(self):
-        child_idx, parent_idx = self.span.start, self.span.end - 1
+    def get_parent_child(self):
+        child, parent = self.span.start, self.span.end - 1
         if self.span[0].ent_type_ in self.parents:
-            child_idx, parent_idx = parent_idx, child_idx
-        return child_idx, parent_idx
+            child, parent = parent, child
+
+        self.child_ent = self.get_ent_from_token(child)
+        self.parent_ent = self.get_ent_from_token(parent)
+
+        self.child_idx = self.child_ent.start
+        self.parent_idx = self.parent_ent.start
+
+    def get_inner_indexes(self):
+        if self.parent_idx < self.child_idx:
+            start, end = self.parent_ent.end, self.child_ent.start
+        else:
+            start, end = self.child_ent.end, self.parent_ent.start
+        return start, end
 
     def weighted_distance(self):
+        """Calculate the weighted distance between the parent and child.
+
+        Weights may differ if the parent or child comes first in the doc.
+        If the parent comes before the child it's forwards.
+
+        Weight:
+            Each entity counts as 1
+            Each token value is looked up in the weights table and that value is added
+        """
+        # Are we counting tokens weights forwards or backwards
         weights = self.weights
         if self.parent_idx > self.child_idx:
             weights = self.reverse_weights
-        return sum(
-            weights.get(self.doc[i].lower_, 1)
-            for i in range(self.span.start, self.span.end)
-        )
+
+        distance = 0
+        start, end = self.get_inner_indexes()
+
+        # Count entities inbetween the parent and child
+        ent_indexes = set()
+        for ent in self.span.ents:
+            if ent.start >= start and ent.end <= end:
+                distance += 1
+            ent_indexes |= set(range(ent.start, ent.end))
+
+        # Get token values between the parent and child that are not in entities
+        for i in range(start, end):
+            if i not in ent_indexes:
+                distance += weights.get(self.doc[i].lower_, 1)
+
+        return distance
 
 
 # ####################################################################################
 class LinkCount:
+    """How many times have we seen a parent/child combination."""
+
     def __init__(self, differ: list[str], max_count: int):
         self.differ = differ
         self.max_count = max_count
         self.seen: dict[tuple, int] = defaultdict(int)
 
     def all_values(self, ent):
-        return [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+        values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+        return values
 
     def seen_too_much(self, ent):
         """Check if we've seen this link type (parent to trait) too many times."""
@@ -116,11 +159,18 @@ class LinkTraits:
 
     def __call__(self, doc: Doc) -> Doc:
         matches = self.matcher(doc, as_spans=True)
-        matches = [
-            LinkMatch(m, self.weights, doc, self.parents, self.reverse_weights)
-            for m in matches
-        ]
-        matches = sorted(matches)
+
+        # Filter the matches
+        link_matches = {}
+        for match in matches:
+            link = LinkMatch(
+                match, self.weights, doc, self.parents, self.reverse_weights
+            )
+            child_start = link.child_ent.start
+            parent_start = link.parent_ent.start
+            link_matches[(child_start, parent_start)] = link
+
+        matches = sorted(link_matches.values())
 
         parent_link_count = defaultdict(lambda: LinkCount(self.differ, self.max_links))
 
@@ -128,11 +178,11 @@ class LinkTraits:
             if len(match) <= 1:
                 continue
 
-            # See if this trait is already linked
+            # Is this trait already linked
             if set(match.child_ent._.data.keys()) & self.parent_set:
                 continue
 
-            # See if the parent link limit is exceeded
+            # Is the parent's link limit exceeded
             link_count = parent_link_count[match.parent_idx, match.child_trait]
             if link_count.seen_too_much(match.child_ent):
                 continue

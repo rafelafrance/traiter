@@ -37,7 +37,7 @@ def shorten(text: str) -> str:
     return " ".join(text.split())
 
 
-def flatten(nested: Iterable) -> list:
+def flatten(nested: list) -> list:
     """Flatten an arbitrarily nested list."""
     flat = []
     nested = nested if isinstance(nested, Iterable) else [nested]
@@ -52,7 +52,7 @@ def flatten(nested: Iterable) -> list:
 
 def as_list(values: Any) -> list:
     """Convert values to a list."""
-    return list(values) if isinstance(values, Iterable) else [values]
+    return list(values) if isinstance(values, (list, tuple, set)) else [values]
 
 
 def to_positive_float(value: str) -> float | None:
