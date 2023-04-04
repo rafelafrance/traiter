@@ -36,3 +36,22 @@ def labels_to_remove(
     keep = keep if isinstance(keep, Iterable) else [keep]
     labels_ = [lb for lb in get_labels(csv_paths) if lb not in keep]
     return labels_
+
+
+def read_terms(csv_path: Path | Iterable[Path]):
+    csv_paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
+    lower, text = [], []
+    for csv_path in csv_paths:
+        with open(csv_path) as term_file:
+            reader = csv.DictReader(term_file)
+            terms = list(reader)
+            for term in terms:
+                pattern = {
+                    "label": term["label"],
+                    "pattern": term["pattern"],
+                }
+                if term.get("attr", "lower") == "lower":
+                    lower.append(pattern)
+                else:
+                    text.append(pattern)
+    return lower, text

@@ -1,4 +1,3 @@
-import csv
 from pathlib import Path
 from typing import Iterable
 
@@ -8,6 +7,7 @@ from ..pipes import debug
 from ..pipes import delete
 from ..pipes import link
 from ..pipes import term_update
+from .trait_util import read_terms
 from traiter.pylib.traits.pattern_compiler import Compiler
 
 
@@ -21,21 +21,7 @@ def term_pipe(
     **kwargs,
 ) -> str:
     # Gather the terms
-    csv_paths = path if isinstance(path, Iterable) else [path]
-    lower, text = [], []
-    for path in csv_paths:
-        with open(path) as term_file:
-            reader = csv.DictReader(term_file)
-            terms = list(reader)
-            for term in terms:
-                pattern = {
-                    "label": term["label"],
-                    "pattern": term["pattern"],
-                }
-                if term.get("attr", "lower") == "lower":
-                    lower.append(pattern)
-                else:
-                    text.append(pattern)
+    lower, text = read_terms(path)
 
     prev = ""
 
