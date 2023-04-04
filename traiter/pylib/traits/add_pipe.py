@@ -100,7 +100,8 @@ def cleanup_pipe(nlp: Language, *, name: str, remove: list[str], **kwargs) -> st
     return name
 
 
-def custom_pipe(nlp: Language, name: str, config: dict, **kwargs):
+def custom_pipe(nlp: Language, name: str, config: dict = None, **kwargs):
+    config = config if config else {}
     nlp.add_pipe(name, config=config, **kwargs)
     return name
 
