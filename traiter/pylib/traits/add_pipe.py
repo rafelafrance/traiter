@@ -20,8 +20,19 @@ def term_pipe(
     validate=True,
     **kwargs,
 ) -> str:
-    # Gather the terms
-    lower, text = read_terms(path)
+    lower, text = [], []
+    paths = path if isinstance(path, Iterable) else [path]
+    for path in paths:
+        terms = read_terms(path)
+        for term in terms:
+            pattern = {
+                "label": term.get("label", path.stem),
+                "pattern": term["pattern"],
+            }
+            if term.get("attr", "lower") == "lower":
+                lower.append(pattern)
+            else:
+                text.append(pattern)
 
     prev = ""
 
