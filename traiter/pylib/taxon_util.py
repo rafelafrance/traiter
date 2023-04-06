@@ -3,16 +3,20 @@
 Taxon traits are build up from these two as well as other terms like ranks and names.
 """
 from collections import defaultdict
+from pathlib import Path
+from typing import Iterable
+
+from .traits import trait_util
 
 
-def abbreviate_binomials(binomials: list[dict], singles_only=True):
+def abbreviate_binomials(binomials: list[dict], single_expanded_name=True):
     """Create a mapping from binomial terms to abbreviated binomials.
 
     Example: "C. lupus"  -> {"Canis lupus", "Cartoonus lupus"}
          or: "D. Duckus" -> {"Daffyus Duckus"}
 
-    singles_only prunes this mapping to only known mappings. So in the example above
-    only "D. Duckus" would be returned.
+    single_expanded_name prunes this mapping to only mappings with a single expanded
+    name. So, in the example above only "D. Duckus" would be returned.
     """
     abbrevs = defaultdict(set)
 
@@ -21,10 +25,15 @@ def abbreviate_binomials(binomials: list[dict], singles_only=True):
         abbrev = abbreviate(pattern)
         abbrevs[abbrev].add(pattern.split()[0])
 
-    if singles_only:
+    if single_expanded_name:
         abbrevs = {k: v.pop().title() for k, v in abbrevs.items() if len(v) == 1}
 
     return abbrevs
+
+
+def abbrev_binomial_term(csv_path: Path | Iterable[Path]):
+    terms = trait_util.read_terms(csv_path)
+    return abbreviate_binomials(terms)
 
 
 def abbreviate(pattern):

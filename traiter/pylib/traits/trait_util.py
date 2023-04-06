@@ -22,15 +22,19 @@ def term_data(
     return data
 
 
-def get_labels(csv_paths: Path | Iterable[Path]) -> list[str]:
+def get_labels(
+    csv_paths: Path | Iterable[Path], default_labels: dict[str, str] = None
+) -> list[str]:
     csv_paths = csv_paths if isinstance(csv_paths, Iterable) else [csv_paths]
+    default_labels = default_labels if default_labels else {}
     labels = set()
     for path in csv_paths:
         terms = read_terms(path)
         try:
             labels |= {t["label"] for t in terms}
         except KeyError:
-            labels.add(path.stem)
+            if lb := default_labels.get(path.stem):
+                labels.add(lb)
     return sorted(labels)
 
 

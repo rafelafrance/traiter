@@ -18,21 +18,21 @@ def term_pipe(
     path: Path | list[Path] = None,
     overwrite_ents=False,
     validate=True,
+    default_labels: dict[str, str] = None,
     **kwargs,
 ) -> str:
+    default_labels = default_labels if default_labels else {}
     lower, text = [], []
     paths = path if isinstance(path, Iterable) else [path]
     for path in paths:
         terms = read_terms(path)
         for term in terms:
-            pattern = {
-                "label": term.get("label", path.stem),
-                "pattern": term["pattern"],
-            }
-            if term.get("attr", "lower") == "lower":
-                lower.append(pattern)
-            else:
-                text.append(pattern)
+            if lb := term.get("label", default_labels.get(path.stem)):
+                pattern = {"label": lb, "pattern": term["pattern"]}
+                if term.get("attr", "lower") == "lower":
+                    lower.append(pattern)
+                else:
+                    text.append(pattern)
 
     prev = ""
 
