@@ -55,6 +55,7 @@ class DebugEntities:
         print("=" * 80)
         for ent in doc.ents:
             print(f"{ent.label_:<20} {ent}")
+            print(f'{" " * 20} delete={ent._.delete}')
             print(f'{" " * 20} {ent._.data}\n')
         print()
         return doc

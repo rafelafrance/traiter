@@ -6,6 +6,7 @@ from spacy import Language
 from ..pipes import debug
 from ..pipes import delete
 from ..pipes import link
+from ..pipes import merge_selected
 from ..pipes import term_update
 from .trait_util import read_terms
 from traiter.pylib.traits.pattern_compiler import Compiler
@@ -37,13 +38,14 @@ def term_pipe(
     prev = ""
 
     # Add lower case matches to a phrase pipe
+    base_name = name
     config = {
         "validate": validate,
         "overwrite_ents": overwrite_ents,
         "phrase_matcher_attr": "LOWER",
     }
     if lower:
-        name = f"{name}_lower"
+        name = f"{base_name}_lower"
         ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
         ruler.add_patterns(lower)
         prev = name
@@ -51,14 +53,14 @@ def term_pipe(
     # Add exact text matches to a phrase pipe
     config["phrase_matcher_attr"] = "TEXT"
     if text:
-        name = name.replace("_lower", "_text")
+        name = f"{base_name}_text"
         kwargs = kwargs if not prev else {"after": prev}
         ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
         ruler.add_patterns(text)
         prev = name
 
     # Add a pipe for updating the term
-    name = f"{name}_update"
+    name = f"{base_name}_update"
     config = {"overwrite": overwrite_ents}
     nlp.add_pipe(term_update.TERM_UPDATE, name=name, config=config, after=prev)
     return name
@@ -97,9 +99,19 @@ def cleanup_pipe(nlp: Language, *, name: str, remove: list[str], **kwargs) -> st
     return name
 
 
-def custom_pipe(nlp: Language, name: str, config: dict = None, **kwargs):
+def custom_pipe(
+    nlp: Language, registered: str, name: str = "", config: dict = None, **kwargs
+):
     config = config if config else {}
-    nlp.add_pipe(name, config=config, **kwargs)
+    name = name if name else registered
+    nlp.add_pipe(registered, name=name, config=config, **kwargs)
+    return name
+
+
+def merge_selected_ents(nlp: Language, *, name: str, labels: str | list[str], **kwargs):
+    labels = [labels] if isinstance(labels, str) else labels
+    config = {"labels": labels}
+    nlp.add_pipe(merge_selected.MERGE_SELECTED, name=name, config=config, **kwargs)
     return name
 
 
