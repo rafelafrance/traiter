@@ -50,16 +50,16 @@ def lat_long_uncertain_match(ent):
     value = 0.0
     for token in ent:
         # Get the data from the original parse
-        if token._.data:
+        if trait_util.has_data(token):
             ent._.data = token._.data
-
-        # Already parse
-        elif token._.flag:
-            continue
 
         # Get the uncertainty units
         elif token._.term in ("metric_length", "imperial_length"):
             unit = REPLACE.get(token.lower_, token.lower_)
+
+        # Already parse
+        elif token._.flag:
+            continue
 
         # Get the uncertainty value
         elif re.match(const.FLOAT_RE, token.text):

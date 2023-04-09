@@ -5,6 +5,8 @@ from typing import Any
 from typing import Iterable
 from zipfile import ZipFile
 
+from spacy.tokens import Token
+
 
 def term_data(
     csv_path: Path | Iterable[Path], field: str, type_=None
@@ -59,3 +61,7 @@ def read_terms(csv_path: Path | Iterable[Path]):
                 reader = csv.DictReader(term_file)
                 terms = list(reader)
     return terms
+
+
+def has_data(token: Token):
+    return len(token._.data) > 3

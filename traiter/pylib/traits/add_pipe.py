@@ -8,9 +8,9 @@ from ..pipes import add
 from ..pipes import debug
 from ..pipes import delete
 from ..pipes import link
-from ..pipes import term_update
+from ..pipes import phrase
+from .pattern_compiler import Compiler
 from .trait_util import read_terms
-from traiter.pylib.traits.pattern_compiler import Compiler
 
 
 def term_pipe(
@@ -18,7 +18,6 @@ def term_pipe(
     *,
     name: str,
     path: Path | list[Path] = None,
-    overwrite_ents=False,
     default_labels: dict[str, str] = None,
     **kwargs,
 ) -> str:
@@ -27,14 +26,17 @@ def term_pipe(
 
     # Gather terms and make sure they have the needed fields
     by_attr = defaultdict(list)
+    replaces = defaultdict(dict)
 
     for path in paths:
         terms = read_terms(path)
         for term in terms:
-            if lb := term.get("label", default_labels.get(path.stem)):
-                pattern = {"label": lb, "pattern": term["pattern"]}
-                attr = term.get("attr", "lower").upper()
-                by_attr[attr].append(pattern)
+            label = term.get("label", default_labels.get(path.stem))
+            pattern = {"label": label, "pattern": term["pattern"]}
+            attr = term.get("attr", "lower").upper()
+            by_attr[attr].append(pattern)
+            if replace := term.get("replace"):
+                replaces[attr][term["pattern"]] = replace
 
     # Add a pipe for each phrase matcher attribute
     prev = ""
@@ -43,19 +45,14 @@ def term_pipe(
     for attr, patterns in by_attr.items():
         name = f"{base_name}_{attr.lower()}"
         config = {
-            "validate": True,
-            "overwrite_ents": overwrite_ents,
-            "phrase_matcher_attr": attr,
+            "patterns": patterns,
+            "replace": replaces[attr],
+            "attr": attr,
         }
         kwargs = kwargs if not prev else {"after": prev}
-        ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
-        ruler.add_patterns(patterns)
+        nlp.add_pipe(phrase.PHRASE_PIPE, name=name, config=config, **kwargs)
         prev = name
 
-    # Add a pipe for updating the term
-    name = f"{base_name}_update"
-    config = {"overwrite": overwrite_ents}
-    nlp.add_pipe(term_update.TERM_UPDATE, name=name, config=config, after=prev)
     return name
 
 
@@ -89,33 +86,6 @@ def trait_pipe(
         "keep": keep,
     }
     nlp.add_pipe(add.ADD_TRAITS, name=name, config=config, **kwargs)
-    return name
-
-
-def ruler_pipe(
-    nlp,
-    *,
-    name: str,
-    compiler: Compiler | list[Compiler],
-    attr=None,
-    overwrite_ents=False,
-    **kwargs,
-) -> str:
-    compilers = compiler if isinstance(compiler, Iterable) else [compiler]
-    patterns = []
-    for compiler in compilers:
-        compiler.compile()
-        for pattern in compiler.patterns:
-            patterns.append(
-                {"label": compiler.label, "pattern": pattern, "id": compiler.id}
-            )
-    config = {
-        "validate": True,
-        "overwrite_ents": overwrite_ents,
-        "phrase_matcher_attr": attr,
-    }
-    ruler = nlp.add_pipe("entity_ruler", name=name, config=config, **kwargs)
-    ruler.add_patterns(patterns)
     return name
 
 
