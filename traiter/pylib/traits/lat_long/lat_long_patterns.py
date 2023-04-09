@@ -1,3 +1,5 @@
+from .lat_long_action import LAT_LONG_MATCH
+from .lat_long_action import LAT_LONG_UNCERTAIN_MATCH
 from traiter.pylib.traits.pattern_compiler import Compiler
 
 SYM = r"""°"”“'`‘´’"""
@@ -6,28 +8,28 @@ _180 = r"[-]?(1\d\d|\d\d?)([.,_;]\d+)?"
 _90 = r"[-]?([1-9]\d|\d)([.,_;]\d+)?"
 _60 = r"[-]?([1-6]\d|\d)([.,_;]\d+)?"
 
-FLOAT_RE = r"^([\d,]+\.?\d*)$"
-NUM_PLUS = r"^(±|\+|-)?[\d,]+\.?\d*$"
-PLUS = r"^(±|\+|-)+$"
-MINUS = r"^[-]$"
+FLOAT_RE = r"^([\d,]+\.?\d*)\Z"
+NUM_PLUS = r"^(±|\+|-)?[\d,]+\.?\d*\Z"
+PLUS = r"^(±|\+|-)+\Z"
+MINUS = r"^[-]\Z"
 
 
 def decoder():
     return {
-        ",": {"TEXT": {"REGEX": r"^[,;._:]$"}},
+        ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
         "label": {"ENT_TYPE": "lat_long_label"},
-        "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)$"""}},
-        "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)$"""}},
-        "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)$"""}},
-        "dir": {"LOWER": {"REGEX": r"""^[nesw]\.?$"""}},
-        "180": {"TEXT": {"REGEX": rf"""^{_180}$"""}},
-        "90": {"TEXT": {"REGEX": rf"""^{_90}$"""}},
-        "60": {"TEXT": {"REGEX": rf"""^{_60}$"""}},
+        "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)\Z"""}},
+        "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
+        "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
+        "dir": {"LOWER": {"REGEX": r"""^[nesw]\.?\Z"""}},
+        "180": {"TEXT": {"REGEX": rf"""^{_180}\Z"""}},
+        "90": {"TEXT": {"REGEX": rf"""^{_90}\Z"""}},
+        "60": {"TEXT": {"REGEX": rf"""^{_60}\Z"""}},
         "datum": {"ENT_TYPE": "datum"},
-        "180E": {"LOWER": {"REGEX": rf"^{_180}[ew]$"}},
-        "90N": {"LOWER": {"REGEX": rf"^{_90}[ns]$"}},
-        "60'60": {"LOWER": {"REGEX": rf"^{_60}[{SYM}]{_60}[{SYM}]$"}},
-        "60'60N": {"LOWER": {"REGEX": rf"^{_60}[{SYM}]{_60}[{SYM}][nesw]$"}},
+        "180E": {"LOWER": {"REGEX": rf"^{_180}[ew]\Z"}},
+        "90N": {"LOWER": {"REGEX": rf"^{_90}[ns]\Z"}},
+        "60'60": {"LOWER": {"REGEX": rf"^{_60}[{SYM}]{_60}[{SYM}]\Z"}},
+        "60'60N": {"LOWER": {"REGEX": rf"^{_60}[{SYM}]{_60}[{SYM}][nesw]\Z"}},
         "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
         "99": {"TEXT": {"REGEX": FLOAT_RE}},
         "+99": {"TEXT": {"REGEX": NUM_PLUS}},
@@ -41,6 +43,7 @@ def decoder():
 def lat_long_compilers():
     return Compiler(
         label="lat_long",
+        on_match=LAT_LONG_MATCH,
         decoder=decoder(),
         patterns=[
             "label? [-]? 180 deg? 60 min? 60 sec? dir ,? [-]? 180 deg? 60 min? 60 sec? dir datum?",
@@ -60,8 +63,9 @@ def lat_long_compilers():
 
 def lat_long_uncertain_compilers():
     return Compiler(
-        label="lat_long",
-        id="lat_long_uncertain",
+        label="lat_long_uncertain",
+        id="lat_long",
+        on_match=LAT_LONG_UNCERTAIN_MATCH,
         decoder=decoder(),
         patterns=[
             "lat_long+ ,? uncert? ,?     +99 m",

@@ -12,17 +12,19 @@ from warnings import warn
 class Compiler:
     def __init__(
         self,
-        label: str,
         *,
+        label: str,
         patterns: list[str],
         decoder: dict[str, dict],
+        on_match: str = None,
         id: str = "",  # noqa
     ):
         self.label = label
-        self.id = id
         self.raw_patterns = patterns
         self.decoder = decoder
+        self.on_match = on_match
         self.patterns = []
+        self.id = id
 
     def compile(self, force=False):
         """Convert raw patterns strings to spacy matcher pattern arrays."""

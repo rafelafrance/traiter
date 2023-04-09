@@ -3,7 +3,7 @@ from pathlib import Path
 
 from spacy.language import Language
 
-MERGE_SELECTED = "traiter_merge_selected_v1"
+MERGE_SELECTED = "merge_selected"
 
 
 @Language.factory(MERGE_SELECTED)

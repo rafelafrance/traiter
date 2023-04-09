@@ -10,7 +10,7 @@ from spacy.tokens import Span
 
 from .. import util
 
-LINK_TRAITS = "traiter_link_traits_v1"
+LINK_TRAITS = "link_traits"
 
 NO_LIMIT = 999_999
 

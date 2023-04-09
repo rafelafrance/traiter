@@ -1,8 +1,7 @@
 from spacy.language import Language
 
-DEBUG_TOKENS = "traiter_debug_tokens_v1"
-DEBUG_ENTITIES = "traiter_debug_entities_v1"
-DEBUG_MESSAGE = "traiter_debug_message_v1"
+DEBUG_TOKENS = "debug_tokens"
+DEBUG_ENTITIES = "debug_entities"
 
 # So we don't have to come up with new names all the time
 DEBUG_COUNT = 0  # Used to rename debug pipes
