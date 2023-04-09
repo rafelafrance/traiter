@@ -8,7 +8,7 @@ from spacy.language import Language
 from spacy.tokens import Doc
 
 
-SENTENCES = "traiter_sentences_v2"
+SENTENCES = "sentences"
 
 
 @Language.factory(SENTENCES)

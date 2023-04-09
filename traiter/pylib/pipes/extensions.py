@@ -2,19 +2,10 @@ from spacy.tokens import Span
 from spacy.tokens import Token
 
 
-def add():
-    if not Span.has_extension("data"):
-        Span.set_extension("data", default={})
-        Token.set_extension("data", default={})
+def add_extensions():
+    Span.set_extension("delete", default=False)
+    Span.set_extension("data", default={})
 
-    if not Span.has_extension("new_label"):
-        Span.set_extension("new_label", default="")
-        Token.set_extension("new_label", default="")
-
-    if not Span.has_extension("cached_label"):
-        Span.set_extension("cached_label", default="")
-        Token.set_extension("cached_label", default="")
-
-    if not Span.has_extension("delete"):
-        Span.set_extension("delete", default=False)
-        Token.set_extension("delete", default=False)
+    Token.set_extension("data", default={})
+    Token.set_extension("term", default="")
+    Token.set_extension("flag", default="")

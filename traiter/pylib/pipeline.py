@@ -1,24 +1,43 @@
-from .pipeline_builders.builder import PipelineBuilder
-from .vocabulary import terms
+import spacy
+
+from . import tokenizer
+from .pipes import extensions
+from .pipes.sentence import SENTENCES
+from .traits.color import color_pipeline
+from .traits.date import date_pipeline
+from .traits.elevation import elevation_pipeline
+from .traits.habitat import habitat_pipeline
+from .traits.lat_long import lat_long_pipeline
+
+# from .pipes import debug  # #########################
+# debug.tokens(nlp)  # ################################
 
 
-def pipeline():
-    pipes = PipelineBuilder(exclude="ner")
+def build(model_path=None):
+    extensions.add_extensions()
 
-    pipes.tokenizer()
+    nlp = spacy.load(
+        "en_core_web_sm",
+        exclude=["ner", "parser", "lemmatizer", "tok2vec", "attribute_ruler"],
+    )
 
-    pipes.add_terms(terms.TERMS)
+    tokenizer.setup_tokenizer(nlp)
 
-    pipes.colors()
-    pipes.dates()
-    pipes.elevations()
-    pipes.habitats()
-    pipes.lat_longs()
+    color_pipeline.build(nlp)
+    date_pipeline.build(nlp)
+    elevation_pipeline.build(nlp)
+    habitat_pipeline.build(nlp)
+    lat_long_pipeline.build(nlp)
 
-    pipes.delete_traits("delete_partial", keep_outputs=True)
+    nlp.add_pipe(SENTENCES)
 
-    pipes.sentences()
+    if model_path:
+        nlp.to_disk(model_path)
 
-    # pipes.debug_tokens()  # #########################################
+    return nlp
 
-    return pipes.build()
+
+def load(model_path):
+    extensions.add_extensions()
+    nlp = spacy.load(model_path)
+    return nlp

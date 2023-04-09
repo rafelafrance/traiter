@@ -1,7 +1,9 @@
-from traiter.pylib.pipeline import pipeline
+from traiter.pylib import pipeline
+from traiter.pylib.const import MODEL_PATH
 from traiter.pylib.util import shorten
 
-PIPELINE = pipeline()
+PIPELINE = pipeline.build(MODEL_PATH)
+# PIPELINE = pipeline.load(MODEL_PATH)
 
 
 def test(text: str) -> list[dict]:

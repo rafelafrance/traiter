@@ -1,70 +1,59 @@
-from typing import Any
+import json
+from pathlib import Path
 
-from spacy import registry
 from spacy.language import Language
 from spacy.tokens import Doc
 
-DELETE_TRAITS = "traiter_delete_traits_v2"
+DELETE_TRAITS = "delete_traits"
 
 
 @Language.factory(DELETE_TRAITS)
 class DeleteTraits:
-    """Delete partial or unwanted traits.
-
-    Traits are built up in layers and sometimes a partial trait in a lower layer is
-    not used in an upper layer. This will cause noisy output, so delete them.
-    Note: This deletes the entity/span not its tokens.
-
-    delete: Is a list of traits that get deleted. They're all considered to be
-        partially formed traits.
-
-    delete_when: Takes the name of a registered function (or a list of function names)
-        and deletes the trait if any of them return true. These functions take an
-        entity and return a boolean.
-    """
-
     def __init__(
-        self,
-        nlp: Language,
-        name: str,
-        delete: list[str] = None,
-        keep: list[str] = None,
-        delete_when: dict[str, Any] = None,
+        self, nlp: Language, name: str, delete: list[str] = None, clear: bool = True
     ):
         super().__init__()
         self.nlp = nlp
         self.name = name
-
-        self.delete = set(delete) if delete else set()
-        self.keep = set(keep) if keep else set()
-
-        delete_when = delete_when if delete_when else {}
-        self.delete_when = {}
-        for label, funcs in delete_when.items():
-            funcs = funcs if isinstance(funcs, list) else [funcs]
-            self.delete_when[label] = [registry.misc.get(f) for f in funcs]
+        self.delete = delete if delete else []  # List of traits to delete
+        self.clear = clear
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            label = ent.label_
-
-            if self.keep and label not in self.keep:
-                continue
-
             if ent._.delete:
+                self.clear_tokens(ent)
                 continue
 
-            if label in self.delete:
-                continue
-
-            if self.delete_when and any(
-                f(ent) for f in self.delete_when.get(label, [])
-            ):
+            if ent.label_ in self.delete:
+                self.clear_tokens(ent)
                 continue
 
             entities.append(ent)
 
         doc.set_ents(entities)
         return doc
+
+    def clear_tokens(self, ent):
+        if self.clear:
+            for token in ent:
+                token._.data = {}
+                token._.flag = ""
+                token._.term = ""
+
+    def to_disk(self, path, exclude=tuple()):  # noqa
+        path = Path(path)
+        if not path.exists():
+            path.mkdir()
+        data_path = path / "data.json"
+        fields = {k: v for k, v in self.__dict__.items() if k not in ("nlp", "name")}
+        with data_path.open("w", encoding="utf8") as data_file:
+            data_file.write(json.dumps(fields))
+
+    def from_disk(self, path, exclude=tuple()):  # noqa
+        data_path = Path(path) / "data.json"
+        with data_path.open("r", encoding="utf8") as data_file:
+            data = json.load(data_file)
+            for key in data.keys():
+                self.__dict__[key] = data[key]

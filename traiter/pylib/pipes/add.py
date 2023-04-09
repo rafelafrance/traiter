@@ -1,5 +1,6 @@
+import json
+from pathlib import Path
 from typing import Any
-from typing import Optional
 
 from spacy import registry
 from spacy.language import Language
@@ -7,48 +8,46 @@ from spacy.matcher import Matcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
 
-from . import extensions
-from ..actions import RejectMatch
+from traiter.pylib.pipes.reject_match import RejectMatch
 
-ADD_TRAITS = "traiter_add_traits_v1"
+ADD_TRAITS = "add_traits"
 
 
 @Language.factory(ADD_TRAITS)
 class AddTraits:
-    """Perform actions to fill user defined fields for traits."""
-
     def __init__(
         self,
         nlp: Language,
         name: str,
-        patterns: list[dict],
-        keep: Optional[list[str]] = None,  # Don't overwrite these entities
+        patterns: dict[str, list[list[dict[str, Any]]]],
+        dispatch: dict[str, str] = None,
+        keep: list[str] = None,  # Don't overwrite these entities
+        relabel: dict[str, str] = None,
     ):
-        extensions.add()
-
         self.nlp = nlp
         self.name = name
+        self.patterns = patterns
+        self.dispatch = dispatch
         self.keep = keep if keep else []
+        self.relabel = relabel if relabel else {}
 
-        self.dispatch = self.build_dispatch_table(patterns)
-        self.matcher = self.build_matcher(keep, nlp, patterns)
+        self.dispatch_table = self.build_dispatch_table()
+        self.matcher = self.build_matcher()
 
-    @staticmethod
-    def build_dispatch_table(patterns):
-        # Get the on_match registered functions for the patterns
-        return {
-            p["label"]: registry.misc.get(on)
-            for p in patterns
-            if (on := p.get("on_match"))
-        }
+    def build_dispatch_table(self):
+        dispatch_table = {}
+        if self.dispatch:
+            for label, registered in self.dispatch.items():
+                if func := registry.misc.get(registered):
+                    dispatch_table[label] = func
+        return dispatch_table
 
-    @staticmethod
-    def build_matcher(keep, nlp, patterns):
-        matcher = Matcher(nlp.vocab)
-        greedy = None if keep else "LONGEST"  # Don't match too much if keeping traits
-        for pat in patterns:
-            label = pat["label"]
-            matcher.add(label, pat["patterns"], greedy=greedy)
+    def build_matcher(self):
+        matcher = Matcher(self.nlp.vocab, validate=True)
+        # Don't match too much if we are keeping traits
+        greedy = None if self.keep else "LONGEST"
+        for label, patterns in self.patterns.items():
+            matcher.add(label, patterns, greedy=greedy)
         return matcher
 
     def __call__(self, doc: Doc) -> Doc:
@@ -70,17 +69,15 @@ class AddTraits:
             if ent_tokens & used_tokens:
                 continue
 
-            if action := self.dispatch.get(label):
+            if action := self.dispatch_table.get(label):
                 try:
                     action(ent)
                 except RejectMatch:
                     continue
 
-                self.cache_old_labels(ent)
+            used_tokens |= ent_tokens
 
-                label = self.relabel_entity(ent, label)
-
-            used_tokens.update(range(ent.start, ent.end))
+            label = self.relabel_entity(ent, label)
 
             ent._.data["trait"] = label
             ent._.data["start"] = ent.start_char
@@ -91,11 +88,6 @@ class AddTraits:
 
         doc.set_ents(sorted(entities, key=lambda s: s.start))
         return doc
-
-    @staticmethod
-    def cache_old_labels(ent):
-        for token in ent:
-            token._.cached_label = token.ent_type_
 
     @staticmethod
     def add_untouched_entities(doc, entities, used_tokens):
@@ -121,17 +113,35 @@ class AddTraits:
         for ent in doc.ents:
             if ent.label_ in self.keep:
                 ent_tokens = set(range(ent.start, ent.end))
-                used_tokens.update(ent_tokens)
+                used_tokens |= ent_tokens
                 entities.append(ent)
 
     def relabel_entity(self, ent, old_label):
-        """Relabel an entity."""
         label = old_label
 
-        if new_label := ent._.new_label:
+        if new_label := self.relabel.get(old_label):
             if new_label not in self.nlp.vocab.strings:
                 self.nlp.vocab.strings.add(new_label)
             ent.label = self.nlp.vocab.strings[new_label]
             label = new_label
 
         return label
+
+    def to_disk(self, path, exclude=tuple()):  # noqa
+        path = Path(path)
+        if not path.exists():
+            path.mkdir()
+        data_path = path / "data.json"
+        skips = ("nlp", "name", "dispatch_table", "matcher")
+        fields = {k: v for k, v in self.__dict__.items() if k not in skips}
+        with data_path.open("w", encoding="utf8") as data_file:
+            data_file.write(json.dumps(fields))
+
+    def from_disk(self, path, exclude=tuple()):  # noqa
+        data_path = Path(path) / "data.json"
+        with data_path.open("r", encoding="utf8") as data_file:
+            data = json.load(data_file)
+            for key in data.keys():
+                self.__dict__[key] = data[key]
+            self.matcher = self.build_matcher()
+            self.dispatch_table = self.build_dispatch_table()
