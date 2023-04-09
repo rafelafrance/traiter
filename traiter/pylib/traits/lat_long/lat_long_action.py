@@ -3,8 +3,8 @@ from pathlib import Path
 
 from spacy import registry
 
+from .. import terms
 from .. import trait_util
-from .. import units
 from ... import const
 from ... import util
 
@@ -12,7 +12,7 @@ LAT_LONG_MATCH = "lat_long_match"
 LAT_LONG_UNCERTAIN_MATCH = "lat_long_uncertain_match"
 
 LAT_LONG_CSV = Path(__file__).parent / "lat_long_terms.csv"
-UNIT_CSV = Path(units.__file__).parent / "unit_length_terms.csv"
+UNIT_CSV = Path(terms.__file__).parent / "unit_length_terms.csv"
 
 REPLACE = trait_util.term_data([UNIT_CSV, LAT_LONG_CSV], "replace")
 FACTORS_CM = trait_util.term_data(UNIT_CSV, "factor_cm", float)

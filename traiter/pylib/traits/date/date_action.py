@@ -7,7 +7,7 @@ from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from spacy import registry
 
-from .. import month
+from .. import terms
 from .. import trait_util
 from ...pipes import reject_match
 
@@ -15,7 +15,7 @@ DATE_MATCH = "date_match"
 SHORT_DATE_MATCH = "short_date_match"
 
 DATE_CSV = Path(__file__).parent / "date_terms.csv"
-MONTH_CSV = Path(month.__file__).parent / "month_terms.csv"
+MONTH_CSV = Path(terms.__file__).parent / "month_terms.csv"
 
 REPLACE = trait_util.term_data(MONTH_CSV, "replace")
 SEP = ".,;/_'-"

@@ -20,7 +20,7 @@ from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
 from . import const as t_const
-from .traits import us_location
+from .traits import terms
 
 BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]
 
@@ -119,8 +119,7 @@ def remove_special_case(nlp: Language, remove: list[str]):
 
 
 def get_states():
-    dir_ = Path(us_location.__file__).parent
-    with open(dir_ / "us_location_terms.csv") as in_file:
+    with open(Path(terms.__file__).parent / "us_location_terms.csv") as in_file:
         reader = csv.DictReader(in_file)
         states = {t["pattern"] for t in reader if t["label"] == "us_state"}
     return states
