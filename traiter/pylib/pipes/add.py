@@ -119,7 +119,9 @@ class AddTraits:
     def relabel_entity(self, ent, old_label):
         label = old_label
 
-        if new_label := self.relabel.get(old_label):
+        new_label = self.relabel.get(old_label)
+        new_label = ent._.relabel if ent._.relabel else new_label
+        if new_label:
             if new_label not in self.nlp.vocab.strings:
                 self.nlp.vocab.strings.add(new_label)
             ent.label = self.nlp.vocab.strings[new_label]

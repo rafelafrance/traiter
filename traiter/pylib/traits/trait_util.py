@@ -35,8 +35,8 @@ def get_labels(
         try:
             labels |= {t["label"] for t in terms}
         except KeyError:
-            if lb := default_labels.get(path.stem):
-                labels.add(lb)
+            if label := default_labels.get(path.stem):
+                labels.add(label)
     return sorted(labels)
 
 
