@@ -7,6 +7,7 @@ from .. import terms
 from .. import trait_util
 from ... import const
 from ... import util
+from ...pipes.reject_match import RejectMatch
 
 LAT_LONG_MATCH = "lat_long_match"
 LAT_LONG_UNCERTAIN_MATCH = "lat_long_uncertain_match"
@@ -42,6 +43,7 @@ def lat_long_match(ent):
     ent._.data["lat_long"] = lat_long
 
     ent[0]._.data = ent._.data  # Save for uncertainty in the lat/long
+    ent[0]._.flag = "lat_long_data"
 
 
 @registry.misc(LAT_LONG_UNCERTAIN_MATCH)
@@ -50,7 +52,7 @@ def lat_long_uncertain_match(ent):
     value = 0.0
     for token in ent:
         # Get the data from the original parse
-        if trait_util.has_data(token):
+        if token._.flag == "lat_long_data":
             ent._.data = token._.data
 
         # Get the uncertainty units
@@ -64,6 +66,9 @@ def lat_long_uncertain_match(ent):
         # Get the uncertainty value
         elif re.match(const.FLOAT_RE, token.text):
             value = util.to_positive_float(token.text)
+
+    if not unit:
+        raise RejectMatch()
 
     # Convert the values to meters
     ent._.data["units"] = "m"

@@ -72,7 +72,7 @@ class PhrasePipe:
             ent._.data["end"] = ent.end_char
             entities.append(ent)
 
-        doc.set_ents(sorted(entities, key=lambda s: s.start))
+        doc.ents = sorted(entities, key=lambda s: s.start)
 
         return doc
 
