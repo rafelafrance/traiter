@@ -1,9 +1,9 @@
 from traiter.pylib import pipeline
 from traiter.pylib.util import shorten
 
-# from traiter.pylib.const import MODEL_PATH
-
 PIPELINE = pipeline.build()
+
+# from traiter.pylib.const import MODEL_PATH
 # PIPELINE = pipeline.build(MODEL_PATH)
 # PIPELINE = pipeline.load(MODEL_PATH)
 
