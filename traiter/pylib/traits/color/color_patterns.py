@@ -10,14 +10,14 @@ def color_patterns():
             on_match=act.COLOR_MATCH,
             decoder={
                 "-": {"TEXT": {"IN": const.DASH}},
-                "color_term": {"ENT_TYPE": "color_term"},
-                "color_words": {"ENT_TYPE": {"IN": ["color_term", "color_mod"]}},
+                "color": {"ENT_TYPE": "color"},
+                "color_words": {"ENT_TYPE": {"IN": ["color", "color_mod"]}},
                 "missing": {"ENT_TYPE": "color_missing"},
                 "to": {"POS": {"IN": ["AUX"]}},
             },
             patterns=[
-                "missing? color_words* -* color_term+ -* color_words*",
-                "missing? color_words+ to color_words+ color_term+ -* color_words*",
+                "missing? color_words* -* color+ -* color_words*",
+                "missing? color_words+ to color_words+ color+ -* color_words*",
             ],
         ),
     ]

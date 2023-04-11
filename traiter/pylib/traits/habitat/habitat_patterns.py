@@ -5,7 +5,7 @@ from traiter.pylib.traits.pattern_compiler import Compiler
 
 def habitat_compilers():
     decoder = {
-        "habitat": {"ENT_TYPE": "habitat_term"},
+        "habitat": {"ENT_TYPE": "habitat"},
         "prefix": {"ENT_TYPE": "habitat_prefix"},
         "suffix": {"ENT_TYPE": "habitat_suffix"},
         "bad_prefix": {"ENT_TYPE": "bad_prefix"},

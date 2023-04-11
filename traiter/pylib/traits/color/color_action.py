@@ -27,7 +27,7 @@ def color_match(ent):
             continue
 
         # Skip names like "Brown"
-        if token._.term == "color_term" and token.shape_ in const.TITLE_SHAPES:
+        if token._.term == "color" and token.shape_ in const.TITLE_SHAPES:
             continue
 
         # Skip dashes

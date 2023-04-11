@@ -1,4 +1,103 @@
 label,pattern,replace
+bad_prefix,botanical,
+bad_prefix,national,
+bad_suffix,road,
+bad_suffix,sec,
+bad_suffix,sec.,
+bad_suffix,street,
+bad_suffix,villa,
+habitat,afrotropic,
+habitat,alvar,
+habitat,bog,
+habitat,bogs,bog
+habitat,bosque,
+habitat,canebrake,
+habitat,canebreak,canebrake
+habitat,canyon,
+habitat,canyons,canyon
+habitat,chaparral,
+habitat,coast,
+habitat,desert,
+habitat,deserts,desert
+habitat,dry wash,
+habitat,ecotone,
+habitat,fell field,fellfield
+habitat,fell fields,fellfield
+habitat,fellfield,
+habitat,fellfields,fellfield
+habitat,fen,
+habitat,fens,fen
+habitat,field,
+habitat,fields,field
+habitat,floodplain,
+habitat,floodplains,floodplain
+habitat,forest,
+habitat,forests,forest
+habitat,glade,
+habitat,glades,glade
+habitat,grassland,
+habitat,grasslands,grassland
+habitat,heath,
+habitat,heathland,
+habitat,heathlands,heathland
+habitat,hemiboreal,
+habitat,herbfield,
+habitat,herbfields,herbfield
+habitat,lake,
+habitat,lakes,lake
+habitat,mangrove swamp,
+habitat,mangrove swamps,mangrove swamp
+habitat,marsh,
+habitat,marshes,marsh
+habitat,meadow,
+habitat,meadows,meadow
+habitat,mire,
+habitat,mires,mire
+habitat,moor,
+habitat,moorland,
+habitat,moors,moor
+habitat,nearctic,
+habitat,paleartic,
+habitat,plain,
+habitat,plains,plain
+habitat,pond,
+habitat,ponds,pond
+habitat,pool,
+habitat,pools,pool
+habitat,rain forest,
+habitat,rain forests,rain forest
+habitat,river,
+habitat,rivers,river
+habitat,salt marsh,
+habitat,salt marshes,salt marsh
+habitat,savanna,
+habitat,savannas,savanna
+habitat,scrub,
+habitat,scrubland,
+habitat,scrublands,scrubland
+habitat,shrub swamp,
+habitat,shrub swamps,shrub swamp
+habitat,shrubland,
+habitat,shrublands,shrubland
+habitat,steppe,
+habitat,steppes,steppe
+habitat,stream,
+habitat,streams,stream
+habitat,swamp,
+habitat,swamps,swamp
+habitat,taiga,
+habitat,timberline,
+habitat,tree line,
+habitat,tugay,
+habitat,tundra,
+habitat,urban,
+habitat,wetland,
+habitat,wetlands,wetland
+habitat,wildwood,
+habitat,wildwoods,
+habitat,woodland,
+habitat,woodlands,woodland
+habitat,woods,
 habitat_prefix,afro-alpine,
 habitat_prefix,alpine,
 habitat_prefix,altimontane,
@@ -72,102 +171,3 @@ habitat_suffix,landscape,
 habitat_suffix,landscapes,landscape
 habitat_suffix,zone,
 habitat_suffix,zones,zone
-habitat_term,afrotropic,
-habitat_term,alvar,
-habitat_term,bog,
-habitat_term,bogs,bog
-habitat_term,bosque,
-habitat_term,canebrake,
-habitat_term,canebreak,canebrake
-habitat_term,canyon,
-habitat_term,canyons,canyon
-habitat_term,chaparral,
-habitat_term,coast,
-habitat_term,desert,
-habitat_term,deserts,desert
-habitat_term,dry wash,
-habitat_term,ecotone,
-habitat_term,fell field,fellfield
-habitat_term,fell fields,fellfield
-habitat_term,fellfield,
-habitat_term,fellfields,fellfield
-habitat_term,fen,
-habitat_term,fens,fen
-habitat_term,field,
-habitat_term,fields,field
-habitat_term,floodplain,
-habitat_term,floodplains,floodplain
-habitat_term,forest,
-habitat_term,forests,forest
-habitat_term,glade,
-habitat_term,glades,glade
-habitat_term,grassland,
-habitat_term,grasslands,grassland
-habitat_term,heath,
-habitat_term,heathland,
-habitat_term,heathlands,heathland
-habitat_term,hemiboreal,
-habitat_term,herbfield,
-habitat_term,herbfields,herbfield
-habitat_term,lake,
-habitat_term,lakes,lake
-habitat_term,mangrove swamp,
-habitat_term,mangrove swamps,mangrove swamp
-habitat_term,marsh,
-habitat_term,marshes,marsh
-habitat_term,meadow,
-habitat_term,meadows,meadow
-habitat_term,mire,
-habitat_term,mires,mire
-habitat_term,moor,
-habitat_term,moorland,
-habitat_term,moors,moor
-habitat_term,nearctic,
-habitat_term,paleartic,
-habitat_term,plain,
-habitat_term,plains,plain
-habitat_term,pond,
-habitat_term,ponds,pond
-habitat_term,pool,
-habitat_term,pools,pool
-habitat_term,rain forest,
-habitat_term,rain forests,rain forest
-habitat_term,river,
-habitat_term,rivers,river
-habitat_term,salt marsh,
-habitat_term,salt marshes,salt marsh
-habitat_term,savanna,
-habitat_term,savannas,savanna
-habitat_term,scrub,
-habitat_term,scrubland,
-habitat_term,scrublands,scrubland
-habitat_term,shrub swamp,
-habitat_term,shrub swamps,shrub swamp
-habitat_term,shrubland,
-habitat_term,shrublands,shrubland
-habitat_term,steppe,
-habitat_term,steppes,steppe
-habitat_term,stream,
-habitat_term,streams,stream
-habitat_term,swamp,
-habitat_term,swamps,swamp
-habitat_term,taiga,
-habitat_term,timberline,
-habitat_term,tree line,
-habitat_term,tugay,
-habitat_term,tundra,
-habitat_term,urban,
-habitat_term,wetland,
-habitat_term,wetlands,wetland
-habitat_term,wildwood,
-habitat_term,wildwoods,
-habitat_term,woodland,
-habitat_term,woodlands,woodland
-habitat_term,woods,
-bad_prefix,national,
-bad_prefix,botanical,
-bad_suffix,road,
-bad_suffix,villa,
-bad_suffix,street,
-bad_suffix,sec,
-bad_suffix,sec.,
