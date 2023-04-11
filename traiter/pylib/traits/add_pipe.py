@@ -9,6 +9,7 @@ from ..pipes import debug
 from ..pipes import delete
 from ..pipes import link
 from ..pipes import phrase
+from ..pipes.merge_selected import MERGE_SELECTED
 from .pattern_compiler import Compiler
 from .trait_util import read_terms
 
@@ -62,9 +63,11 @@ def trait_pipe(
     name: str,
     compiler: Compiler | list[Compiler],
     keep: list[str] = None,
+    merge: list[str] = None,
     **kwargs,
 ) -> str:
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
+    merge = merge if merge else []
     patterns = defaultdict(list)
     dispatch = {}
     relabel = {}
@@ -86,6 +89,13 @@ def trait_pipe(
         "keep": keep,
     }
     nlp.add_pipe(add.ADD_TRAITS, name=name, config=config, **kwargs)
+
+    if merge:
+        prev = name
+        name = f"{name}_merge"
+        config = {"labels": merge}
+        nlp.add_pipe(MERGE_SELECTED, name=name, config=config, after=prev)
+
     return name
 
 

@@ -55,6 +55,7 @@ class PhrasePipe:
 
         for ent in matches:
             label = ent.label_
+            texts = []
 
             ent_tokens = set(range(ent.start, ent.end))
             if ent_tokens & used_tokens:
@@ -64,9 +65,12 @@ class PhrasePipe:
                 token._.term = label
                 text = self.replace.get(token.lower_, token.text)
                 token._.data[label] = text
+                texts.append(text)
 
             used_tokens |= ent_tokens
 
+            text = " ".join(texts)
+            ent._.data[label] = self.replace.get(text, text)
             ent._.data["trait"] = label
             ent._.data["start"] = ent.start_char
             ent._.data["end"] = ent.end_char
