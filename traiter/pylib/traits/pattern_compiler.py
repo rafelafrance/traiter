@@ -35,12 +35,14 @@ class Compiler:
                 token = self.decoder.get(key)
 
                 if token is None:
-                    if key[-1] in "?*+!" and (token := self.decoder.get(key[:-1])):
+                    token = self.decoder.get(key[:-1])
+                    if key[-1] in "?*+!" and token is not None:
                         token = copy.copy(token)
                         token["OP"] = key[-1]
 
                     elif key[-1] == "}" and (match := re.search(r"{[\d,]+}$", key)):
-                        if token := self.decoder.get(key[: match.start()]):
+                        token = self.decoder.get(key[: match.start()])
+                        if token is not None:
                             token = copy.copy(token)
                             token["OP"] = match.group()
 
@@ -50,4 +52,5 @@ class Compiler:
                     warn(f'No token pattern for "{key}" in "{string}"')
 
             self.patterns.append(pattern_seq)
+
         return self
