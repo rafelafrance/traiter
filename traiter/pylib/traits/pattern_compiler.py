@@ -4,8 +4,8 @@ In an effort to make patterns more readable I've created simple compilers that t
 hopefully, readable strings and convert them to spacy patterns using a dictionary and
 some simple rules.
 """
+import copy
 import re
-from copy import deepcopy
 from warnings import warn
 
 
@@ -26,28 +26,25 @@ class Compiler:
         self.patterns = []
         self.id = id
 
-    def compile(self, force=False):
+    def compile(self):
         """Convert raw patterns strings to spacy matcher pattern arrays."""
-        if self.patterns and force is False:
-            return self
-
         for string in self.raw_patterns:
             pattern_seq = []
 
             for key in string.split():
-                token = deepcopy(self.decoder.get(key))
-                op = key[-1]
+                token = self.decoder.get(key)
 
-                if not token and op in "?*+!":
-                    token = deepcopy(self.decoder.get(key[:-1]))
-                    token["OP"] = op
-                elif not token and op == "}":
-                    if match := re.search(r"{[\d,]+}$", key):
-                        op = match.group()
-                        token = deepcopy(self.decoder.get(key[: match.start()]))
-                        token["OP"] = op
+                if token is None:
+                    if key[-1] in "?*+!" and (token := self.decoder.get(key[:-1])):
+                        token = copy.copy(token)
+                        token["OP"] = key[-1]
 
-                if token:
+                    elif key[-1] == "}" and (match := re.search(r"{[\d,]+}$", key)):
+                        if token := self.decoder.get(key[: match.start()]):
+                            token = copy.copy(token)
+                            token["OP"] = match.group()
+
+                if token is not None:
                     pattern_seq.append(token)
                 else:
                     warn(f'No token pattern for "{key}" in "{string}"')

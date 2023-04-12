@@ -13,12 +13,11 @@ def term_data(
     type_ = type_ if type_ else str
     data = {}
     for path in paths:
-        with open(path) as csv_file:
-            reader = csv.DictReader(csv_file)
-            for row in reader:
-                value = row.get(field)
-                if value not in (None, ""):
-                    data[row["pattern"]] = type_(value)
+        terms = read_terms(path)
+        for term in terms:
+            value = term.get(field)
+            if value not in (None, ""):
+                data[term["pattern"]] = type_(value)
     return data
 
 

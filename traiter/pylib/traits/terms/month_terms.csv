@@ -69,7 +69,12 @@ month,Oct.,text,October
 month,Oct,text,October
 month,OCT.,text,October
 month,OCT,text,October
+month,0ct,text,October
+month,0ct.,text,October
+month,0CT,text,October
+month,0CT.,text,October
 month,october,lower,October
+month,0ctober,lower,October
 month,sep.,text,September
 month,sep,text,September
 month,Sep.,text,September
