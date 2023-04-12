@@ -22,6 +22,7 @@ class AddTraits:
         patterns: dict[str, list[list[dict[str, Any]]]],
         dispatch: dict[str, str] = None,
         keep: list[str] = None,  # Don't overwrite these entities
+        overwrite: list[str] = None,  # Only overwrite these entities
         relabel: dict[str, str] = None,
     ):
         self.nlp = nlp
@@ -29,6 +30,7 @@ class AddTraits:
         self.patterns = patterns
         self.dispatch = dispatch
         self.keep = keep if keep else []
+        self.overwrite = overwrite if overwrite else []
         self.relabel = relabel if relabel else {}
 
         self.dispatch_table = self.build_dispatch_table()
@@ -45,7 +47,7 @@ class AddTraits:
     def build_matcher(self):
         matcher = Matcher(self.nlp.vocab, validate=True)
         # Don't match too much if we are keeping traits
-        greedy = None if self.keep else "LONGEST"
+        greedy = None if self.keep or self.overwrite else "LONGEST"
         for label, patterns in self.patterns.items():
             matcher.add(label, patterns, greedy=greedy)
         return matcher
@@ -55,6 +57,10 @@ class AddTraits:
         used_tokens: set[Any] = set()
 
         matches = self.matcher(doc, as_spans=True)
+
+        if self.overwrite:
+            self.keep_unflagged_entities(doc, entities, used_tokens)
+            matches = self.remove_overlapping_matches(matches, used_tokens)
 
         if self.keep:
             self.keep_flagged_entities(doc, entities, used_tokens)
@@ -112,6 +118,13 @@ class AddTraits:
     def keep_flagged_entities(self, doc, entities, used_tokens):
         for ent in doc.ents:
             if ent.label_ in self.keep:
+                ent_tokens = set(range(ent.start, ent.end))
+                used_tokens |= ent_tokens
+                entities.append(ent)
+
+    def keep_unflagged_entities(self, doc, entities, used_tokens):
+        for ent in doc.ents:
+            if ent.label_ not in self.overwrite:
                 ent_tokens = set(range(ent.start, ent.end))
                 used_tokens |= ent_tokens
                 entities.append(ent)

@@ -39,10 +39,12 @@ def get_labels(
 
 
 def labels_to_remove(
-    csv_paths: Path | Iterable[Path], *, keep: str | Iterable[str]
+    csv_paths: Path | Iterable[Path], *, keep: str | Iterable[str] | None = None
 ) -> list[str]:
-    keep = keep if isinstance(keep, Iterable) else [keep]
-    labels = [lb for lb in get_labels(csv_paths) if lb not in keep]
+    labels = get_labels(csv_paths)
+    if keep:
+        keep = keep if isinstance(keep, Iterable) else [keep]
+        labels = [lb for lb in labels if lb not in keep]
     return labels
 
 

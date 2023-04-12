@@ -63,6 +63,7 @@ def trait_pipe(
     name: str,
     compiler: Compiler | list[Compiler],
     keep: list[str] = None,
+    overwrite: list[str] = None,
     merge: list[str] = None,
     **kwargs,
 ) -> str:
@@ -87,6 +88,7 @@ def trait_pipe(
         "dispatch": dispatch,
         "relabel": relabel,
         "keep": keep,
+        "overwrite": overwrite,
     }
     nlp.add_pipe(add.ADD_TRAITS, name=name, config=config, **kwargs)
 
