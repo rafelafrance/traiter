@@ -3,7 +3,7 @@ from pathlib import Path
 from spacy import registry
 
 from .. import trait_util
-from ... import const
+from traiter.pylib import const
 
 COLOR_MATCH = "color_match"
 

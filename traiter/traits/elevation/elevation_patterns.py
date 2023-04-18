@@ -1,6 +1,6 @@
-from ... import const
 from .elevation_action import ELEVATION_MATCH
-from traiter.pylib.traits.pattern_compiler import Compiler
+from traiter.pylib import const
+from traiter.traits.pattern_compiler import Compiler
 
 LABEL_ENDER = r"[:=;,.]"
 UNITS = ["metric_length", "imperial_length"]

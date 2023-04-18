@@ -8,7 +8,7 @@ from spacy.matcher import Matcher
 from spacy.tokens import Doc
 from spacy.tokens import Span
 
-from .. import util
+from traiter.pylib import util
 
 LINK_TRAITS = "link_traits"
 

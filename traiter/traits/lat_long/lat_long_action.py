@@ -5,9 +5,9 @@ from spacy import registry
 
 from .. import terms
 from .. import trait_util
-from ... import const
-from ... import util
-from ...pipes.reject_match import RejectMatch
+from traiter.pipes.reject_match import RejectMatch
+from traiter.pylib import const
+from traiter.pylib import util
 
 LAT_LONG_MATCH = "lat_long_match"
 LAT_LONG_UNCERTAIN_MATCH = "lat_long_uncertain_match"

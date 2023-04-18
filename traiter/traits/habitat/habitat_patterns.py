@@ -1,6 +1,6 @@
 from . import habitat_action as act
-from ...pipes.reject_match import REJECT_MATCH
-from traiter.pylib.traits.pattern_compiler import Compiler
+from traiter.pipes.reject_match import REJECT_MATCH
+from traiter.traits.pattern_compiler import Compiler
 
 
 def habitat_compilers():

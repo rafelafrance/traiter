@@ -1,6 +1,6 @@
 from .lat_long_action import LAT_LONG_MATCH
 from .lat_long_action import LAT_LONG_UNCERTAIN_MATCH
-from traiter.pylib.traits.pattern_compiler import Compiler
+from traiter.traits.pattern_compiler import Compiler
 
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"{SYM},;._"

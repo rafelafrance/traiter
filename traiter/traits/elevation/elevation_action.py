@@ -5,7 +5,7 @@ from spacy import registry
 
 from .. import terms
 from .. import trait_util
-from ... import const
+from traiter.pylib import const
 from traiter.pylib import util
 
 ELEVATION_MATCH = "elevation_match"

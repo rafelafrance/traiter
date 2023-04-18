@@ -4,14 +4,14 @@ from typing import Iterable
 
 from spacy import Language
 
-from ..pipes import add
-from ..pipes import debug
-from ..pipes import delete
-from ..pipes import link
-from ..pipes import phrase
-from ..pipes.merge_selected import MERGE_SELECTED
 from .pattern_compiler import Compiler
 from .trait_util import read_terms
+from traiter.pipes import add
+from traiter.pipes import debug
+from traiter.pipes import delete
+from traiter.pipes import link
+from traiter.pipes import phrase
+from traiter.pipes.merge_selected import MERGE_SELECTED
 
 
 def term_pipe(

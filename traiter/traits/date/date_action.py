@@ -9,7 +9,7 @@ from spacy import registry
 
 from .. import terms
 from .. import trait_util
-from ...pipes import reject_match
+from traiter.pipes import reject_match
 
 DATE_MATCH = "date_match"
 SHORT_DATE_MATCH = "short_date_match"
