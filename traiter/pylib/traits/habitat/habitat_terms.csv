@@ -1,11 +1,11 @@
 label,pattern,replace
-bad_prefix,botanical,
-bad_prefix,national,
-bad_suffix,road,
-bad_suffix,sec,
-bad_suffix,sec.,
-bad_suffix,street,
-bad_suffix,villa,
+bad_habitat,botanical,
+bad_habitat,national,
+bad_habitat,road,
+bad_habitat,sec,
+bad_habitat,sec.,
+bad_habitat,street,
+bad_habitat,villa,
 habitat,afrotropic,
 habitat,alvar,
 habitat,bog,
@@ -21,6 +21,7 @@ habitat,desert,
 habitat,deserts,desert
 habitat,dry wash,
 habitat,ecotone,
+habitat,edge of forest,
 habitat,fell field,fellfield
 habitat,fell fields,fellfield
 habitat,fellfield,
@@ -33,6 +34,8 @@ habitat,floodplain,
 habitat,floodplains,floodplain
 habitat,forest,
 habitat,forests,forest
+habitat,forests margin,forest
+habitat,forests margins,forest
 habitat,glade,
 habitat,glades,glade
 habitat,grassland,
@@ -128,6 +131,7 @@ habitat_prefix,littoral,
 habitat_prefix,lowland,
 habitat_prefix,mediolittoral,
 habitat_prefix,mediterranean,
+habitat_prefix,mesic,
 habitat_prefix,mid-Montane,
 habitat_prefix,midlittoral,
 habitat_prefix,montane,

@@ -7,9 +7,9 @@ from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from spacy import registry
 
-from traiter.pipes import reject_match
-from traiter.traits import terms
-from traiter.traits import trait_util
+from traiter.pylib.pipes import reject_match
+from traiter.pylib.traits import terms
+from traiter.pylib.traits import trait_util
 
 DATE_MATCH = "date_match"
 SHORT_DATE_MATCH = "short_date_match"

@@ -1,13 +1,13 @@
 import spacy
 
-from traiter.pipes import extensions
-from traiter.pipes import sentence
-from traiter.pipes import tokenizer
-from traiter.traits.color import color_pipeline
-from traiter.traits.date import date_pipeline
-from traiter.traits.elevation import elevation_pipeline
-from traiter.traits.habitat import habitat_pipeline
-from traiter.traits.lat_long import lat_long_pipeline
+from traiter.pylib.pipes import extensions
+from traiter.pylib.pipes import sentence
+from traiter.pylib.pipes import tokenizer
+from traiter.pylib.traits.color import color_pipeline
+from traiter.pylib.traits.date import date_pipeline
+from traiter.pylib.traits.elevation import elevation_pipeline
+from traiter.pylib.traits.habitat import habitat_pipeline
+from traiter.pylib.traits.lat_long import lat_long_pipeline
 
 
 # from .pipes import debug  # #########################

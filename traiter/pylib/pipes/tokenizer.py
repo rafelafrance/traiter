@@ -20,7 +20,7 @@ from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
 from traiter.pylib import const as t_const
-from traiter.traits import terms
+from traiter.pylib.traits import terms
 
 BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]
 

@@ -127,3 +127,17 @@ class TestLatLongPatterns(unittest.TestCase):
                 }
             ],
         )
+
+    def test_lat_long_09(self):
+        self.assertEqual(
+            test("""Lat: 41.01102 Long: -75.485306 (WGS-84)"""),
+            [
+                {
+                    "datum": "WGS84",
+                    "lat_long": """Lat: 41.01102 Long: -75.485306""",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 39,
+                }
+            ],
+        )

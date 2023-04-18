@@ -6,12 +6,12 @@ from spacy import Language
 
 from .pattern_compiler import Compiler
 from .trait_util import read_terms
-from traiter.pipes import add
-from traiter.pipes import debug
-from traiter.pipes import delete
-from traiter.pipes import link
-from traiter.pipes import phrase
-from traiter.pipes.merge_selected import MERGE_SELECTED
+from traiter.pylib.pipes import add
+from traiter.pylib.pipes import debug
+from traiter.pylib.pipes import delete
+from traiter.pylib.pipes import link
+from traiter.pylib.pipes import phrase
+from traiter.pylib.pipes.merge_selected import MERGE_SELECTED
 
 
 def term_pipe(

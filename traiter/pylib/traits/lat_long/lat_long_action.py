@@ -3,11 +3,11 @@ from pathlib import Path
 
 from spacy import registry
 
-from traiter.pipes.reject_match import RejectMatch
 from traiter.pylib import const
 from traiter.pylib import util
-from traiter.traits import terms
-from traiter.traits import trait_util
+from traiter.pylib.pipes.reject_match import RejectMatch
+from traiter.pylib.traits import terms
+from traiter.pylib.traits import trait_util
 
 LAT_LONG_MATCH = "lat_long_match"
 LAT_LONG_UNCERTAIN_MATCH = "lat_long_uncertain_match"
@@ -26,13 +26,19 @@ FLOAT_RE = r"^([\d,]+\.?\d*)$"
 @registry.misc(LAT_LONG_MATCH)
 def lat_long_match(ent):
     frags = []
+    datum = []
     for token in ent:
         token._.flag = "lat_long"
+
         if token._.term == "lat_long_label":
             continue
+
+        if token.text in const.OPEN + const.CLOSE:
+            continue
+
         if token._.term == "datum":
-            datum = REPLACE.get(token.lower_, token.text)
-            ent._.data["datum"] = datum
+            datum.append(token.lower_)
+
         else:
             text = token.text.upper() if len(token.text) == 1 else token.text
             frags.append(text)
@@ -40,7 +46,12 @@ def lat_long_match(ent):
     lat_long = " ".join(frags)
     lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
     lat_long = re.sub(r"(-)\s", r"\1", lat_long)
+    lat_long = re.sub(r"\s(:)", r"\1", lat_long)
     ent._.data["lat_long"] = lat_long
+
+    if datum:
+        datum = "".join(datum)
+        ent._.data["datum"] = REPLACE.get(datum, datum)
 
     ent[0]._.data = ent._.data  # Save for uncertainty in the lat/long
     ent[0]._.flag = "lat_long_data"

@@ -1,6 +1,6 @@
 from . import habitat_action as act
-from traiter.pipes.reject_match import REJECT_MATCH
-from traiter.traits.pattern_compiler import Compiler
+from traiter.pylib.pipes.reject_match import REJECT_MATCH
+from traiter.pylib.traits.pattern_compiler import Compiler
 
 
 def habitat_compilers():
@@ -8,8 +8,7 @@ def habitat_compilers():
         "habitat": {"ENT_TYPE": "habitat"},
         "prefix": {"ENT_TYPE": "habitat_prefix"},
         "suffix": {"ENT_TYPE": "habitat_suffix"},
-        "bad_prefix": {"ENT_TYPE": "bad_prefix"},
-        "bad_suffix": {"ENT_TYPE": "bad_suffix"},
+        "bad": {"ENT_TYPE": "bad_habitat"},
     }
 
     return [
@@ -30,9 +29,9 @@ def habitat_compilers():
             decoder=decoder,
             on_match=REJECT_MATCH,
             patterns=[
-                "bad_prefix habitat",
-                "bad_prefix habitat bad_suffix",
-                "           habitat bad_suffix",
+                "bad habitat",
+                "bad habitat bad",
+                "    habitat bad",
             ],
         ),
     ]

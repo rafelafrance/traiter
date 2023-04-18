@@ -1,6 +1,6 @@
-from .lat_long_action import LAT_LONG_MATCH
-from .lat_long_action import LAT_LONG_UNCERTAIN_MATCH
-from traiter.traits.pattern_compiler import Compiler
+from . import lat_long_action as act
+from ... import const
+from ..pattern_compiler import Compiler
 
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"{SYM},;._"
@@ -17,6 +17,9 @@ MINUS = r"^[-]\Z"
 def decoder():
     return {
         ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
+        "(": {"TEXT": {"IN": const.OPEN}},
+        ")": {"TEXT": {"IN": const.CLOSE}},
+        "key": {"ENT_TYPE": "lat_long_key"},
         "label": {"ENT_TYPE": "lat_long_label"},
         "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)\Z"""}},
         "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
@@ -43,20 +46,23 @@ def decoder():
 def lat_long_compilers():
     return Compiler(
         label="lat_long",
-        on_match=LAT_LONG_MATCH,
+        on_match=act.LAT_LONG_MATCH,
         decoder=decoder(),
         patterns=[
-            "label? [-]? 180 deg? 60 min? 60 sec? dir ,? [-]? 180 deg? 60 min? 60 sec? dir datum?",
-            "label? [-]? 180 deg? 60 min?         dir ,? [-]? 180 deg? 60 min?         dir datum?",
-            "label? [-]? 180E                         ,? [-]? 90N                          datum?",
-            "label? [-]? 90N                          ,? [-]? 180E                         datum?",
-            "label? [-]? 180 deg? 60'60  dir          ,? [-]? 180 deg? 60'60           dir datum?",
-            "label? [-]? 180 deg? 60'60N              ,? [-]? 180 deg? 60'60N              datum?",
-            "label? [-]? 180 deg? dir                 ,? [-]? 180 deg?                 dir datum?",
-            "label? dir [-]? 180 deg? 60 min? 60 sec? ,? dir [-]? 180 deg? 60 min? 60 sec? datum?",
-            "label? dir [-]? 180 deg? 60 min?         ,? dir [-]? 180 deg? 60 min?         datum?",
-            "label? dir [-]? 180 deg? 60'60           ,? dir [-]? 180 deg? 60'60           datum?",
-            "label? dir [-]? 180 deg?                 ,? dir [-]? 180 deg?                 datum?",
+            "label? [-]? 180 deg? 60 min? 60 sec? dir ,? [-]? 180 deg? 60 min? 60 sec? dir datum*",
+            "label? [-]? 180 deg? 60 min?         dir ,? [-]? 180 deg? 60 min?         dir datum*",
+            "label? [-]? 180E                         ,? [-]? 90N                          datum*",
+            "label? [-]? 90N                          ,? [-]? 180E                         datum*",
+            "label? [-]? 180 deg? 60'60  dir          ,? [-]? 180 deg? 60'60           dir datum*",
+            "label? [-]? 180 deg? 60'60N              ,? [-]? 180 deg? 60'60N              datum*",
+            "label? [-]? 180 deg? dir                 ,? [-]? 180 deg?                 dir datum*",
+            "label? dir [-]? 180 deg? 60 min? 60 sec? ,? dir [-]? 180 deg? 60 min? 60 sec? datum*",
+            "label? dir [-]? 180 deg? 60 min?         ,? dir [-]? 180 deg? 60 min?         datum*",
+            "label? dir [-]? 180 deg? 60'60           ,? dir [-]? 180 deg? 60'60           datum*",
+            "label? dir [-]? 180 deg?                 ,? dir [-]? 180 deg?                 datum*",
+            "key ,? [-]? 90 key ,? [-]? 90",
+            "key ,? [-]? 90 key ,? [-]? 90 ( datum+ )",
+            "key ,? [-]? 90 key ,? [-]? 90   datum+",
         ],
     )
 
@@ -65,7 +71,7 @@ def lat_long_uncertain_compilers():
     return Compiler(
         label="lat_long_uncertain",
         id="lat_long",
-        on_match=LAT_LONG_UNCERTAIN_MATCH,
+        on_match=act.LAT_LONG_UNCERTAIN_MATCH,
         decoder=decoder(),
         patterns=[
             "lat_long+ ,? uncert? ,?     +99 m",

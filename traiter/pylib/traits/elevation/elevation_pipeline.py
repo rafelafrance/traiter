@@ -1,12 +1,11 @@
 from spacy import Language
 
-from .elevation_action import ELEVATION_CSV
-from .elevation_action import UNIT_CSV
-from .elevation_patterns import elevation_compilers
-from traiter.traits import add_pipe as add
-from traiter.traits import trait_util
+from . import elevation_action as act
+from . import elevation_patterns as pat
+from .. import add_pipe as add
+from .. import trait_util
 
-ALL_CSVS = [ELEVATION_CSV, UNIT_CSV]
+ALL_CSVS = [act.ELEVATION_CSV, act.UNIT_CSV]
 
 
 def build(nlp: Language, **kwargs):
@@ -16,7 +15,7 @@ def build(nlp: Language, **kwargs):
     prev = add.trait_pipe(
         nlp,
         name="elevation_patterns",
-        compiler=elevation_compilers(),
+        compiler=pat.elevation_compilers(),
         after=prev,
     )
 

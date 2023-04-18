@@ -1,6 +1,6 @@
-from .elevation_action import ELEVATION_MATCH
+from . import elevation_action as act
 from traiter.pylib import const
-from traiter.traits.pattern_compiler import Compiler
+from traiter.pylib.traits.pattern_compiler import Compiler
 
 LABEL_ENDER = r"[:=;,.]"
 UNITS = ["metric_length", "imperial_length"]
@@ -25,7 +25,7 @@ def elevation_compilers():
         Compiler(
             label="elevation",
             decoder=decoder,
-            on_match=ELEVATION_MATCH,
+            on_match=act.ELEVATION_MATCH,
             patterns=[
                 "label :? 99 m",
                 "label :? 99 m ( 99 m )",
@@ -35,7 +35,7 @@ def elevation_compilers():
         Compiler(
             label="elevation_range",
             id="elevation",
-            on_match=ELEVATION_MATCH,
+            on_match=act.ELEVATION_MATCH,
             decoder=decoder,
             patterns=[
                 "label :? 99 -/to 99 m",

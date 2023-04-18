@@ -1,31 +1,30 @@
 from spacy import Language
 
-from .lat_long_action import LAT_LONG_CSV
-from .lat_long_action import UNIT_CSV
-from .lat_long_patterns import lat_long_compilers
-from .lat_long_patterns import lat_long_uncertain_compilers
-from traiter.traits import add_pipe as add
-from traiter.traits import trait_util
+from . import lat_long_action as act
+from . import lat_long_patterns as pat
+from .. import add_pipe as add
+from .. import trait_util
 
-
-ALL_CSVS = [LAT_LONG_CSV, UNIT_CSV]
+ALL_CSVS = [act.LAT_LONG_CSV, act.UNIT_CSV]
 
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
         prev = add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
 
+    # prev = add.debug_tokens(nlp, after=prev)  # ##################################
+
     prev = add.trait_pipe(
         nlp,
         name="lat_long_patterns",
-        compiler=lat_long_compilers(),
+        compiler=pat.lat_long_compilers(),
         after=prev,
     )
 
     prev = add.trait_pipe(
         nlp,
         name="lat_long_uncertain_patterns",
-        compiler=lat_long_uncertain_compilers(),
+        compiler=pat.lat_long_uncertain_compilers(),
         after=prev,
     )
 
