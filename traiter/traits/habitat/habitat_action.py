@@ -2,7 +2,7 @@ from pathlib import Path
 
 from spacy import registry
 
-from .. import trait_util
+from traiter.traits import trait_util
 
 HABITAT_MATCH = "habitat_match"
 

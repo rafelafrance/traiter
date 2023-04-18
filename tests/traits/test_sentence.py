@@ -70,9 +70,3 @@ class TestSentence(unittest.TestCase):
         doc = PIPELINE(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 1)
-
-    # def test_sentencizer_10(self):
-    #     text = shorten("""(Ord Mountains 7.5’ Q.: 34°41'32"N, 116°49'25"W, +1000m) """)
-    #     doc = PIPELINE(text)
-    #     sents = list(doc.sents)
-    #     self.assertEqual(len(sents), 1)

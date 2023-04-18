@@ -1,5 +1,5 @@
 from . import date_action as act
-from ..pattern_compiler import Compiler
+from traiter.traits.pattern_compiler import Compiler
 
 SEP = ".,;/_'-"
 

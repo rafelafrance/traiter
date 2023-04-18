@@ -3,11 +3,11 @@ from pathlib import Path
 
 from spacy import registry
 
-from .. import terms
-from .. import trait_util
 from traiter.pipes.reject_match import RejectMatch
 from traiter.pylib import const
 from traiter.pylib import util
+from traiter.traits import terms
+from traiter.traits import trait_util
 
 LAT_LONG_MATCH = "lat_long_match"
 LAT_LONG_UNCERTAIN_MATCH = "lat_long_uncertain_match"
@@ -39,7 +39,7 @@ def lat_long_match(ent):
 
     lat_long = " ".join(frags)
     lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
-    lat_long = re.sub(rf"(-)\s", r"\1", lat_long)
+    lat_long = re.sub(r"(-)\s", r"\1", lat_long)
     ent._.data["lat_long"] = lat_long
 
     ent[0]._.data = ent._.data  # Save for uncertainty in the lat/long

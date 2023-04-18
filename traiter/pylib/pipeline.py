@@ -1,13 +1,13 @@
 import spacy
 
-from . import tokenizer
-from ..pipes import extensions
-from ..traits.elevation import elevation_pipeline
-from ..traits.habitat import habitat_pipeline
-from ..traits.lat_long import lat_long_pipeline
-from traiter.pipes.sentence import SENTENCES
+from traiter.pipes import extensions
+from traiter.pipes import sentence
+from traiter.pipes import tokenizer
 from traiter.traits.color import color_pipeline
 from traiter.traits.date import date_pipeline
+from traiter.traits.elevation import elevation_pipeline
+from traiter.traits.habitat import habitat_pipeline
+from traiter.traits.lat_long import lat_long_pipeline
 
 
 # from .pipes import debug  # #########################
@@ -30,7 +30,7 @@ def build(model_path=None):
     habitat_pipeline.build(nlp)
     lat_long_pipeline.build(nlp)
 
-    nlp.add_pipe(SENTENCES)
+    nlp.add_pipe(sentence.SENTENCES)
 
     if model_path:
         nlp.to_disk(model_path)

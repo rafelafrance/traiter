@@ -1,9 +1,9 @@
 from spacy import Language
 
-from .. import add_pipe as add
-from .. import trait_util
 from .color_action import COLOR_CSV
 from .color_patterns import color_patterns
+from traiter.traits import add_pipe as add
+from traiter.traits import trait_util
 
 
 def build(nlp: Language, **kwargs):

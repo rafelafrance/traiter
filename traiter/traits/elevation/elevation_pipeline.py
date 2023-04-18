@@ -1,17 +1,17 @@
 from spacy import Language
 
-from .. import add_pipe as add
-from .. import trait_util
 from .elevation_action import ELEVATION_CSV
 from .elevation_action import UNIT_CSV
 from .elevation_patterns import elevation_compilers
+from traiter.traits import add_pipe as add
+from traiter.traits import trait_util
 
 ALL_CSVS = [ELEVATION_CSV, UNIT_CSV]
 
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(nlp, name=f"elevation_terms", path=ALL_CSVS, **kwargs)
+        prev = add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS, **kwargs)
 
     prev = add.trait_pipe(
         nlp,

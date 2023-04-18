@@ -177,7 +177,7 @@ class TestDate(unittest.TestCase):
         )
 
     def test_date_13(self):
-        """It skips a list of numbers.."""
+        """It skips a list of numbers."""
         self.assertEqual(
             test("2 8 10"),
             [],

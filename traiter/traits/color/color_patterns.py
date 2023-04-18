@@ -1,6 +1,6 @@
 from . import color_action as act
-from ..pattern_compiler import Compiler
 from traiter.pylib import const
+from traiter.traits.pattern_compiler import Compiler
 
 
 def color_patterns():

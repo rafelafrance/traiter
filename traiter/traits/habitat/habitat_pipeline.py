@@ -1,9 +1,9 @@
 from spacy import Language
 
-from .. import add_pipe as add
-from .. import trait_util
 from .habitat_action import HABITAT_CSV
 from .habitat_patterns import habitat_compilers
+from traiter.traits import add_pipe as add
+from traiter.traits import trait_util
 
 
 def build(nlp: Language, **kwargs):

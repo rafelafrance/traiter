@@ -1,11 +1,11 @@
 from spacy import Language
 
-from .. import add_pipe as add
-from .. import trait_util
 from .lat_long_action import LAT_LONG_CSV
 from .lat_long_action import UNIT_CSV
 from .lat_long_patterns import lat_long_compilers
 from .lat_long_patterns import lat_long_uncertain_compilers
+from traiter.traits import add_pipe as add
+from traiter.traits import trait_util
 
 
 ALL_CSVS = [LAT_LONG_CSV, UNIT_CSV]

@@ -3,10 +3,10 @@ from pathlib import Path
 
 from spacy import registry
 
-from .. import terms
-from .. import trait_util
 from traiter.pylib import const
 from traiter.pylib import util
+from traiter.traits import terms
+from traiter.traits import trait_util
 
 ELEVATION_MATCH = "elevation_match"
 
