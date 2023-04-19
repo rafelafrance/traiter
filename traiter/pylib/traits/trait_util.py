@@ -22,7 +22,7 @@ def term_data(
 
 
 def get_labels(
-    csv_paths: Path | Iterable[Path], default_labels: dict[str, str] = None
+    csv_paths: Path | Iterable[Path], default_labels: dict[str, str] | None = None
 ) -> list[str]:
     csv_paths = csv_paths if isinstance(csv_paths, Iterable) else [csv_paths]
     default_labels = default_labels if default_labels else {}
@@ -47,8 +47,9 @@ def labels_to_remove(
     return labels
 
 
-def read_terms(csv_path: Path | Iterable[Path]):
+def read_terms(csv_path: Path | Iterable[Path]) -> list[dict]:
     paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
+    terms = []
     for path in paths:
         if path.suffix == ".zip":
             with ZipFile(path) as zippy:

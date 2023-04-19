@@ -23,11 +23,15 @@ class LinkMatch:
         self.weights = weights
         self.parents = parents
 
-        self.child_idx = None
-        self.parent_idx = None
-        self.child_ent: Span | None = None
-        self.parent_ent: Span | None = None
-        self.get_parent_child()
+        child, parent = self.span.start, self.span.end - 1
+        if self.span[0].ent_type_ in self.parents:
+            child, parent = parent, child
+
+        self.child_ent = self.get_ent_from_token(child)
+        self.parent_ent = self.get_ent_from_token(parent)
+
+        self.child_idx = self.child_ent.start
+        self.parent_idx = self.parent_ent.start
 
         self.child_trait = self.child_ent._.data["trait"]
         self.parent_trait = self.parent_ent._.data["trait"]
@@ -42,17 +46,6 @@ class LinkMatch:
 
     def get_ent_from_token(self, token_idx):
         return next(e for e in self.doc.ents if e.start <= token_idx < e.end)
-
-    def get_parent_child(self):
-        child, parent = self.span.start, self.span.end - 1
-        if self.span[0].ent_type_ in self.parents:
-            child, parent = parent, child
-
-        self.child_ent = self.get_ent_from_token(child)
-        self.parent_ent = self.get_ent_from_token(parent)
-
-        self.child_idx = self.child_ent.start
-        self.parent_idx = self.parent_ent.start
 
     def get_inner_indexes(self):
         if self.parent_idx < self.child_idx:
@@ -129,10 +122,10 @@ class LinkTraits:
         patterns: list[dict],
         parents: list[str],
         children: list[str],
-        weights: dict[str, int] = None,  # Token weights for scoring distances
-        reverse_weights: dict[str, int] = None,  # Weights for scoring backwards
+        weights: dict[str, int] | None = None,  # Token weights for scoring distances
+        reverse_weights: dict[str, int] | None = None,  # Weights for scoring backwards
         max_links: int = NO_LIMIT,  # Max times to link to a parent trait
-        differ: list[str] = None,
+        differ: list[str] | None = None,
     ):
         self.nlp = nlp
         self.name = name

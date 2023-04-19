@@ -1,4 +1,4 @@
-from spacy import Language
+from spacy.language import Language
 
 from . import lat_long_action as act
 from . import lat_long_patterns as pat

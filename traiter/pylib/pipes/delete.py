@@ -10,7 +10,11 @@ DELETE_TRAITS = "delete_traits"
 @Language.factory(DELETE_TRAITS)
 class DeleteTraits:
     def __init__(
-        self, nlp: Language, name: str, delete: list[str] = None, clear: bool = True
+        self,
+        nlp: Language,
+        name: str,
+        delete: list[str] | None = None,
+        clear: bool = True,
     ):
         super().__init__()
         self.nlp = nlp

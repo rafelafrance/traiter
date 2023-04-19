@@ -2,11 +2,11 @@ import json
 from pathlib import Path
 from typing import Any
 
-from spacy import registry
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
+from spacy.util import registry
 
 from traiter.pylib.pipes.reject_match import RejectMatch
 
@@ -20,10 +20,10 @@ class AddTraits:
         nlp: Language,
         name: str,
         patterns: dict[str, list[list[dict[str, Any]]]],
-        dispatch: dict[str, str] = None,
-        keep: list[str] = None,  # Don't overwrite these entities
-        overwrite: list[str] = None,  # Only overwrite these entities
-        relabel: dict[str, str] = None,
+        dispatch: dict[str, str] | None = None,
+        keep: list[str] | None = None,  # Don't overwrite these entities
+        overwrite: list[str] | None = None,  # Only overwrite these entities
+        relabel: dict[str, str] | None = None,
     ):
         self.nlp = nlp
         self.name = name

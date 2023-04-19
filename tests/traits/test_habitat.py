@@ -1,6 +1,6 @@
 import unittest
 
-from tests.setup import test
+from ..setup import test
 
 
 class TestHabitat(unittest.TestCase):
@@ -28,4 +28,10 @@ class TestHabitat(unittest.TestCase):
                     "end": 14,
                 }
             ],
+        )
+
+    def test_habitat_03(self):
+        self.assertEqual(
+            test("""Arizona Desert Botanical Garden"""),
+            [],
         )

@@ -1,4 +1,4 @@
-from spacy import Language
+from spacy.language import Language
 
 from . import color_action as act
 from . import color_patterns as pat

@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-from spacy import registry
+from spacy.util import registry
 
 from traiter.pylib import const
 from traiter.pylib import util

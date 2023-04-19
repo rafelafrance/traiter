@@ -1,4 +1,3 @@
-"""Misc. utilities shared between client Traiters."""
 import os
 from contextlib import contextmanager
 from pathlib import Path
@@ -6,7 +5,6 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from typing import Any
 from typing import Generator
-from typing import Iterable
 
 import ftfy
 import inflect
@@ -40,11 +38,9 @@ def shorten(text: str) -> str:
 def flatten(nested: list) -> list:
     """Flatten an arbitrarily nested list."""
     flat = []
-    nested = nested if isinstance(nested, Iterable) else [nested]
     for item in nested:
-        # if not isinstance(item, str) and hasattr(item, '__iter__'):
         if isinstance(item, (list, tuple, set)):
-            flat.extend(flatten(item))
+            flat.extend(flatten(list(item)))
         else:
             flat.append(item)
     return flat
@@ -85,6 +81,7 @@ def clean_text(
     # Handle uncommon mojibake
     if trans:
         text = text.translate(trans)
+
     if replace:
         for old, new in replace.items():
             text = text.replace(old, new)

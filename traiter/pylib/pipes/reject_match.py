@@ -1,5 +1,5 @@
-from spacy import registry
 from spacy.tokens import Span
+from spacy.util import registry
 
 REJECT_MATCH = "reject_match"
 

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-from spacy import registry
+from spacy.util import registry
 
 from traiter.pylib.pipes import reject_match
 from traiter.pylib.traits import terms

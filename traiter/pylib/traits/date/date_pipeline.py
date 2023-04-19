@@ -1,4 +1,4 @@
-from spacy import Language
+from spacy.language import Language
 
 from . import date_action as act
 from . import date_patterns as pat

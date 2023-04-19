@@ -1,4 +1,4 @@
-from spacy import Language
+from spacy.language import Language
 
 from . import elevation_action as act
 from . import elevation_patterns as pat

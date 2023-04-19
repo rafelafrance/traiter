@@ -19,7 +19,7 @@ class PhrasePipe:
         name: str,
         patterns: list[dict],
         attr: str = "lower",
-        replace: dict[str, str] = None,
+        replace: dict[str, str] | None = None,
     ):
         self.nlp = nlp
         self.name = name
@@ -76,7 +76,7 @@ class PhrasePipe:
             ent._.data["end"] = ent.end_char
             entities.append(ent)
 
-        doc.ents = sorted(entities, key=lambda s: s.start)
+        doc.set_ents(sorted(entities, key=lambda s: s.start))
 
         return doc
 

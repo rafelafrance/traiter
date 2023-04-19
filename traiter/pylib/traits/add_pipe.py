@@ -2,7 +2,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
-from spacy import Language
+from spacy.language import Language
 
 from .pattern_compiler import Compiler
 from .trait_util import read_terms
@@ -18,8 +18,8 @@ def term_pipe(
     nlp,
     *,
     name: str,
-    path: Path | list[Path] = None,
-    default_labels: dict[str, str] = None,
+    path: Path | list[Path],
+    default_labels: dict[str, str] | None = None,
     **kwargs,
 ) -> str:
     default_labels = default_labels if default_labels else {}
@@ -61,10 +61,10 @@ def trait_pipe(
     nlp,
     *,
     name: str,
-    compiler: Compiler | list[Compiler],
-    keep: list[str] = None,
-    overwrite: list[str] = None,
-    merge: list[str] = None,
+    compiler: list[Compiler] | Compiler,
+    keep: list[str] | None = None,
+    overwrite: list[str] | None = None,
+    merge: list[str] | None = None,
     **kwargs,
 ) -> str:
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
@@ -73,15 +73,15 @@ def trait_pipe(
     dispatch = {}
     relabel = {}
 
-    for compiler in compilers:
-        compiler.compile()
-        patterns[compiler.label] += compiler.patterns
+    for comp in compilers:
+        comp.compile()
+        patterns[comp.label] += comp.patterns
 
-        if compiler.on_match:
-            dispatch[compiler.label] = compiler.on_match
+        if comp.on_match:
+            dispatch[comp.label] = comp.on_match
 
-        if compiler.id:
-            relabel[compiler.label] = compiler.id
+        if comp.id:
+            relabel[comp.label] = comp.id
 
     config = {
         "patterns": patterns,
@@ -107,7 +107,7 @@ def cleanup_pipe(nlp: Language, *, name: str, remove: list[str], **kwargs) -> st
 
 
 def custom_pipe(
-    nlp: Language, registered: str, name: str = "", config: dict = None, **kwargs
+    nlp: Language, registered: str, name: str = "", config: dict | None = None, **kwargs
 ):
     config = config if config else {}
     name = name if name else registered
