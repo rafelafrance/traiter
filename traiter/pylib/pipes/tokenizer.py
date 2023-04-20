@@ -19,19 +19,12 @@ from spacy.util import compile_infix_regex
 from spacy.util import compile_prefix_regex
 from spacy.util import compile_suffix_regex
 
-from traiter.pylib import const as t_const
 from traiter.pylib.traits import terms
 
 BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]
 
-CLOSES = "|".join(re.escape(h) for h in t_const.CLOSE if len(h) == 1)
-CLOSES = f"(?:{CLOSES})"
-
 DASHES = "|".join(re.escape(h) for h in LIST_HYPHENS if len(h) == 1)
 DASHES = f"(?:{DASHES})+"
-
-OPENS = "|".join(re.escape(h) for h in t_const.OPEN if len(h) == 1)
-OPENS = f"(?:{OPENS})"
 
 PREFIX = BREAKING + [DASHES + "(?=[0-9])"]
 SUFFIX = BREAKING + [DASHES]
@@ -41,7 +34,6 @@ INFIX = [
     rf"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",  # word=word etc.
     r"""[\\\[\]()/:;’'"“”'+±_]""",  # Break on these characters
     DASHES,
-    rf"(?<=\d)[{ALPHA}]+",
 ]
 
 # Abbreviations commonly found in treatments relating to plants
