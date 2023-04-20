@@ -29,9 +29,8 @@ DASHES = f"(?:{DASHES})+"
 PREFIX = BREAKING + [DASHES + "(?=[0-9])"]
 SUFFIX = BREAKING + [DASHES]
 
-
 INFIX = [
-    rf"(?<=[{ALPHA}0-9])[:<>=/+](?=[{ALPHA}])",  # word=word etc.
+    rf"(?<=[{ALPHA}0-9])[.:<>=/+](?=[{ALPHA}])",  # word=word etc.
     r"""[\\\[\]()/:;’'"“”'+±_]""",  # Break on these characters
     DASHES,
 ]

@@ -1,5 +1,7 @@
 label,pattern,replace
 bad_habitat,botanical,
+bad_habitat,county,
+bad_habitat,long,
 bad_habitat,national,
 bad_habitat,road,
 bad_habitat,sec,
@@ -33,6 +35,8 @@ habitat_term,fields,field
 habitat_term,floodplain,
 habitat_term,floodplains,floodplain
 habitat_term,forest,
+habitat_term,forest margin,forest
+habitat_term,forest margins,forest
 habitat_term,forests,forest
 habitat_term,forests margin,forest
 habitat_term,forests margins,forest

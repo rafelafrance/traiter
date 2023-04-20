@@ -1,7 +1,7 @@
 from . import date_action as act
 from traiter.pylib.traits.pattern_compiler import Compiler
 
-SEP = ".,;/_'-"
+SEP = "(.,;/_'-"
 
 
 def date_patterns():
