@@ -122,10 +122,10 @@ class LinkTraits:
         patterns: list[dict],
         parents: list[str],
         children: list[str],
-        weights: dict[str, int] | None = None,  # Token weights for scoring distances
-        reverse_weights: dict[str, int] | None = None,  # Weights for scoring backwards
+        weights: dict[str, int] = None,  # Token weights for scoring distances
+        reverse_weights: dict[str, int] = None,  # Weights for scoring backwards
         max_links: int = NO_LIMIT,  # Max times to link to a parent trait
-        differ: list[str] | None = None,
+        differ: list[str] = None,
     ):
         self.nlp = nlp
         self.name = name

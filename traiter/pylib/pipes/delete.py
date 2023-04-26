@@ -13,7 +13,7 @@ class DeleteTraits:
         self,
         nlp: Language,
         name: str,
-        delete: list[str] | None = None,
+        delete: list[str] = None,
         clear: bool = True,
     ):
         super().__init__()

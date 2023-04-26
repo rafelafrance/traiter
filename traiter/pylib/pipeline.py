@@ -19,18 +19,18 @@ def build(model_path=None):
 
     nlp = spacy.load(
         "en_core_web_sm",
-        exclude=["ner", "parser", "lemmatizer", "tok2vec", "attribute_ruler"],
+        exclude=["ner", "lemmatizer", "tok2vec"],
     )
 
     tokenizer.setup_tokenizer(nlp)
+
+    nlp.add_pipe(sentence.SENTENCES, before="parser")
 
     color_pipeline.build(nlp)
     date_pipeline.build(nlp)
     elevation_pipeline.build(nlp)
     habitat_pipeline.build(nlp)
     lat_long_pipeline.build(nlp)
-
-    nlp.add_pipe(sentence.SENTENCES)
 
     if model_path:
         nlp.to_disk(model_path)

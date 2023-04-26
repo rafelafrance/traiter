@@ -20,10 +20,10 @@ class AddTraits:
         nlp: Language,
         name: str,
         patterns: dict[str, list[list[dict[str, Any]]]],
-        dispatch: dict[str, str] | None = None,
-        keep: list[str] | None = None,  # Don't overwrite these entities
-        overwrite: list[str] | None = None,  # Only overwrite these entities
-        relabel: dict[str, str] | None = None,
+        dispatch: dict[str, str] = None,
+        keep: list[str] = None,  # Don't overwrite these entities
+        overwrite: list[str] = None,  # Only overwrite these entities
+        relabel: dict[str, str] = None,
     ):
         self.nlp = nlp
         self.name = name
@@ -58,14 +58,13 @@ class AddTraits:
 
         matches = self.matcher(doc, as_spans=True)
 
-        if self.overwrite:
-            self.keep_unflagged_entities(doc, entities, used_tokens)
-            matches = self.remove_overlapping_matches(matches, used_tokens)
-
         if self.keep:
             self.keep_flagged_entities(doc, entities, used_tokens)
-            matches = self.remove_overlapping_matches(matches, used_tokens)
 
+        if self.overwrite:
+            self.keep_unflagged_entities(doc, entities, used_tokens)
+
+        matches = self.remove_overlapping_matches(matches, used_tokens)
         matches = filter_spans(matches)
 
         for ent in matches:
@@ -108,12 +107,11 @@ class AddTraits:
         """Remove any matches that overlap with an entity we kept."""
         filtered_matches = []
         for match in matches:
-            match_tokens = set(range(match.start, match.end))
-            if match_tokens & used_tokens:
+            ent_tokens = set(range(match.start, match.end))
+            if ent_tokens & used_tokens:
                 continue
             filtered_matches.append(match)
-        matches = filtered_matches
-        return matches
+        return filtered_matches
 
     def keep_flagged_entities(self, doc, entities, used_tokens):
         for ent in doc.ents:
@@ -124,8 +122,8 @@ class AddTraits:
 
     def keep_unflagged_entities(self, doc, entities, used_tokens):
         for ent in doc.ents:
-            if ent.label_ not in self.overwrite:
-                ent_tokens = set(range(ent.start, ent.end))
+            ent_tokens = set(range(ent.start, ent.end))
+            if ent.label_ not in self.overwrite and used_tokens.isdisjoint(ent_tokens):
                 used_tokens |= ent_tokens
                 entities.append(ent)
 

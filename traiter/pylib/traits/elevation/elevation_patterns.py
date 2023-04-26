@@ -27,9 +27,9 @@ def elevation_compilers():
             decoder=decoder,
             on_match=act.ELEVATION_MATCH,
             patterns=[
-                "label :? 99 m",
-                "label :? 99 m ( 99 m )",
-                "label :? 99 m / 99 m",
+                "label+ :? 99 m",
+                "label+ :? 99 m ( 99 m )",
+                "label+ :? 99 m / 99 m",
             ],
         ),
         Compiler(
@@ -38,7 +38,7 @@ def elevation_compilers():
             on_match=act.ELEVATION_MATCH,
             decoder=decoder,
             patterns=[
-                "label :? 99 -/to 99 m",
+                "label+ :? 99 -/to 99 m",
             ],
         ),
     ]

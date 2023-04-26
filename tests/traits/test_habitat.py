@@ -35,3 +35,24 @@ class TestHabitat(unittest.TestCase):
             test("""Arizona Desert Botanical Garden"""),
             [],
         )
+
+    def test_habitat_04(self):
+        self.assertEqual(
+            test(
+                """
+                park. Habitat: Boggy woodland with a sparce canopy dominated by
+                blackgum and larch, and nice herbaceous openings. With:
+                """
+            ),
+            [
+                {
+                    "trait": "habitat",
+                    "habitat": (
+                        "Boggy woodland with a sparce canopy dominated by "
+                        "blackgum and larch, and nice herbaceous openings."
+                    ),
+                    "start": 6,
+                    "end": 113,
+                },
+            ],
+        )

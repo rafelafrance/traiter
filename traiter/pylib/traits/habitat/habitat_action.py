@@ -5,6 +5,7 @@ from spacy.util import registry
 from traiter.pylib.traits import trait_util
 
 HABITAT_MATCH = "habitat_match"
+LABELED_HABITAT_MATCH = "labeld_habitat_match"
 
 HABITAT_CSV = Path(__file__).parent / "habitat_terms.csv"
 
@@ -25,3 +26,12 @@ def habitat_match(ent):
         del ent._.data["habitat_term"]
 
     ent._.data["habitat"] = " ".join(frags)
+
+
+@registry.misc(LABELED_HABITAT_MATCH)
+def labeled_habitat_match(ent):
+    i = 0
+    for i, token in enumerate(ent):
+        if token._.term != "habitat_label":
+            break
+    ent._.data["habitat"] = ent[i:].text

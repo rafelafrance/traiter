@@ -33,6 +33,7 @@ INFIX = [
     rf"(?<=[{ALPHA}0-9])[.:<>=/+](?=[{ALPHA}])",  # word=word etc.
     r"""[\\\[\]()/:;’'"“”'+±_]""",  # Break on these characters
     DASHES,
+    rf"(?<=\d)[{ALPHA}]+",  # Digit to letters like: 8m
 ]
 
 # Abbreviations commonly found in treatments relating to plants
@@ -125,7 +126,7 @@ def setup_tokenizer(nlp):
     states = get_states()
     removes = []
     for rule in nlp.tokenizer.rules:
-        if re.search(r"\d", rule) and not re.search(r"m\.?$", rule):
+        if re.search(r"\d", rule):
             removes.append(rule)
         if rule.lower() in states:
             removes.append(rule)

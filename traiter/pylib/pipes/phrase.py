@@ -19,7 +19,7 @@ class PhrasePipe:
         name: str,
         patterns: list[dict],
         attr: str = "lower",
-        replace: dict[str, str] | None = None,
+        replace: dict[str, str] = None,
     ):
         self.nlp = nlp
         self.name = name

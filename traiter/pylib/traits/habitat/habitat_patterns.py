@@ -5,10 +5,12 @@ from traiter.pylib.traits.pattern_compiler import Compiler
 
 def habitat_compilers():
     decoder = {
-        "habitat": {"ENT_TYPE": "habitat_term"},
-        "prefix": {"ENT_TYPE": "habitat_prefix"},
-        "suffix": {"ENT_TYPE": "habitat_suffix"},
         "bad": {"ENT_TYPE": "bad_habitat"},
+        "habitat": {"ENT_TYPE": "habitat_term"},
+        "label": {"ENT_TYPE": "habitat_label"},
+        "prefix": {"ENT_TYPE": "habitat_prefix"},
+        "sent": {"IS_SENT_START": False},
+        "suffix": {"ENT_TYPE": "habitat_suffix"},
     }
 
     return [
@@ -22,6 +24,15 @@ def habitat_compilers():
                 "prefix+ habitat+ suffix+",
                 "        habitat+ suffix+",
                 "prefix+          suffix+",
+            ],
+        ),
+        Compiler(
+            label="labeled_habitat",
+            id="habitat",
+            on_match=act.LABELED_HABITAT_MATCH,
+            decoder=decoder,
+            patterns=[
+                "label+ sent+",
             ],
         ),
         Compiler(
