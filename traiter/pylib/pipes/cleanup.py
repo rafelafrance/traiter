@@ -4,33 +4,29 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.tokens import Doc
 
-DELETE_TRAITS = "delete_traits"
+CLEANUP_TRAITS = "cleanup_traits"
 
 
-@Language.factory(DELETE_TRAITS)
-class DeleteTraits:
+@Language.factory(CLEANUP_TRAITS)
+class CleanupTraits:
     def __init__(
         self,
         nlp: Language,
         name: str,
-        delete: list[str] = None,
+        keep: list[str] = None,  # List of trait labels to keep
         clear: bool = True,
     ):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.delete = delete if delete else []  # List of traits to delete
+        self.keep = keep if keep else []
         self.clear = clear
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            if ent._.delete:
-                self.clear_tokens(ent)
-                continue
-
-            if ent.label_ in self.delete:
+            if ent._.delete or ent.label_ not in self.keep:
                 self.clear_tokens(ent)
                 continue
 

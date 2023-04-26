@@ -8,6 +8,7 @@ def color_patterns():
         Compiler(
             label="color",
             on_match=act.COLOR_MATCH,
+            keep="color",
             decoder={
                 "-": {"TEXT": {"IN": const.DASH}},
                 "color": {"ENT_TYPE": "color"},

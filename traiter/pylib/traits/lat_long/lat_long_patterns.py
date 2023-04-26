@@ -47,6 +47,7 @@ def lat_long_compilers():
     return Compiler(
         label="lat_long",
         on_match=act.LAT_LONG_MATCH,
+        keep="lat_long",
         decoder=decoder(),
         patterns=[
             "label? [-]? 180 deg? 60 min? 60 sec? dir ,? [-]? 180 deg? 60 min? 60 sec? dir datum*",
@@ -72,6 +73,7 @@ def lat_long_uncertain_compilers():
         label="lat_long_uncertain",
         id="lat_long",
         on_match=act.LAT_LONG_UNCERTAIN_MATCH,
+        keep=["lat_long"],
         decoder=decoder(),
         patterns=[
             "lat_long+ ,? uncert? ,?     +99 m",

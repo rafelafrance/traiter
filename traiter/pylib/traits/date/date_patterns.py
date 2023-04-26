@@ -20,8 +20,9 @@ def date_patterns():
     return [
         Compiler(
             label="date",
-            decoder=decoder,
             on_match=act.DATE_MATCH,
+            keep="date",
+            decoder=decoder,
             patterns=[
                 "label? :? 99    -* month -* 99",
                 "label? :? 99    -* month -* 9999",
@@ -37,8 +38,9 @@ def date_patterns():
         Compiler(
             label="short_date",
             id="date",
-            decoder=decoder,
             on_match=act.SHORT_DATE_MATCH,
+            keep="date",
+            decoder=decoder,
             patterns=[
                 "label? :? 9999  -* month",
                 "label? :? month -* 9999",

@@ -9,6 +9,27 @@ import re
 from warnings import warn
 
 
+class CompilerAccumulator:
+    def __init__(self):
+        self._keep = {}
+
+    @property
+    def keep(self) -> list[str]:
+        return list(self._keep.keys())
+
+    @keep.setter
+    def keep(self, labels: str | list[str]):
+        labels = labels if isinstance(labels, list) else [labels]
+        self._keep |= {lb: 1 for lb in labels}
+
+    def delete(self, labels: str | list[str]):
+        labels = labels if isinstance(labels, list) else [labels]
+        self._keep = {lb: 1 for lb in self._keep if lb not in labels}
+
+
+ACCUMULATOR = CompilerAccumulator()
+
+
 class Compiler:
     def __init__(
         self,
@@ -18,6 +39,7 @@ class Compiler:
         decoder: dict[str, dict],
         on_match: str | None = None,
         id: str = "",  # noqa
+        keep: str | list[str] = None,  # Keep track of traits we want to keep
     ):
         self.label = label
         self.raw_patterns = patterns
@@ -25,6 +47,8 @@ class Compiler:
         self.on_match = on_match
         self.patterns = []
         self.id = id
+        self.keep = keep if keep else []
+        ACCUMULATOR.keep = self.keep
 
     def compile(self):
         """Convert raw patterns strings to spacy matcher pattern arrays."""

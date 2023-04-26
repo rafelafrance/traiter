@@ -3,7 +3,6 @@ from spacy.language import Language
 from . import color_action as act
 from . import color_patterns as pat
 from .. import add_pipe as add
-from .. import trait_util
 
 
 def build(nlp: Language, **kwargs):
@@ -17,11 +16,6 @@ def build(nlp: Language, **kwargs):
         after=prev,
     )
 
-    prev = add.cleanup_pipe(
-        nlp,
-        name="color_cleanup",
-        remove=trait_util.labels_to_remove(act.COLOR_CSV, keep="color"),
-        after=prev,
-    )
+    prev = add.cleanup_pipe(nlp, name="color_cleanup", after=prev)
 
     return prev

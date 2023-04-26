@@ -141,3 +141,18 @@ class TestLatLongPatterns(unittest.TestCase):
                 }
             ],
         )
+
+    # def test_lat_long_10(self):
+    #     """It handles a lat/long range"""
+    #     self.assertEqual(
+    #         test("""Lat. 13.5° - 14°55'S Long. 60.2° - 61°50'W."""),
+    #         [
+    #             {
+    #                 "datum": "WGS84",
+    #                 "lat_long": """Lat: 41.01102 Long: -75.485306""",
+    #                 "trait": "lat_long",
+    #                 "start": 0,
+    #                 "end": 39,
+    #             }
+    #         ],
+    #     )

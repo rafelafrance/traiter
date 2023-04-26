@@ -18,6 +18,7 @@ def habitat_compilers():
             label="habitat",
             on_match=act.HABITAT_MATCH,
             decoder=decoder,
+            keep="habitat",
             patterns=[
                 "        habitat+",
                 "prefix+ habitat+",
@@ -31,6 +32,7 @@ def habitat_compilers():
             id="habitat",
             on_match=act.LABELED_HABITAT_MATCH,
             decoder=decoder,
+            keep="habitat",
             patterns=[
                 "label+ sent+",
             ],

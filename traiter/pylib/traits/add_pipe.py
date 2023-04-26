@@ -4,11 +4,12 @@ from typing import Iterable
 
 from spacy.language import Language
 
+from .pattern_compiler import ACCUMULATOR
 from .pattern_compiler import Compiler
 from .trait_util import read_terms
 from traiter.pylib.pipes import add
+from traiter.pylib.pipes import cleanup
 from traiter.pylib.pipes import debug
-from traiter.pylib.pipes import delete
 from traiter.pylib.pipes import link
 from traiter.pylib.pipes import phrase
 from traiter.pylib.pipes.merge_selected import MERGE_SELECTED
@@ -101,8 +102,14 @@ def trait_pipe(
     return name
 
 
-def cleanup_pipe(nlp: Language, *, name: str, remove: list[str], **kwargs) -> str:
-    nlp.add_pipe(delete.DELETE_TRAITS, name=name, config={"delete": remove}, **kwargs)
+def cleanup_pipe(nlp: Language, *, name: str, delete=None, **kwargs) -> str:
+    if delete:
+        delete = delete if isinstance(delete, list) else [delete]
+        ACCUMULATOR.delete(delete)
+
+    config = {"keep": ACCUMULATOR.keep}
+    nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config, **kwargs)
+
     return name
 
 

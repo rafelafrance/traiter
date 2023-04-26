@@ -3,7 +3,6 @@ from spacy.language import Language
 from . import lat_long_action as act
 from . import lat_long_patterns as pat
 from .. import add_pipe as add
-from .. import trait_util
 
 ALL_CSVS = [act.LAT_LONG_CSV, act.UNIT_CSV]
 
@@ -28,11 +27,6 @@ def build(nlp: Language, **kwargs):
         after=prev,
     )
 
-    prev = add.cleanup_pipe(
-        nlp,
-        name="lat_long_cleanup",
-        remove=trait_util.labels_to_remove(ALL_CSVS, keep="lat_long"),
-        after=prev,
-    )
+    prev = add.cleanup_pipe(nlp, name="lat_long_cleanup", after=prev)
 
     return prev
