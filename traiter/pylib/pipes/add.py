@@ -60,13 +60,6 @@ class AddTraits:
 
         entities, used_tokens = self.filter_entities(doc)
 
-        # used_tokens = set()
-        # if self.keep:
-        #     self.keep_flagged_entities(doc, entities, used_tokens)
-        #
-        # if self.overwrite:
-        #     self.keep_unflagged_entities(doc, entities, used_tokens)
-
         matches = self.remove_overlapping_matches(matches, used_tokens)
         matches = filter_spans(matches)
 
@@ -127,20 +120,6 @@ class AddTraits:
                 used_tokens |= ent_tokens
                 entities.append(ent)
         return entities, used_tokens
-
-    def keep_flagged_entities(self, doc, entities, used_tokens):
-        for ent in doc.ents:
-            if ent.label_ in self.keep:
-                ent_tokens = set(range(ent.start, ent.end))
-                used_tokens |= ent_tokens
-                entities.append(ent)
-
-    def keep_unflagged_entities(self, doc, entities, used_tokens):
-        for ent in doc.ents:
-            ent_tokens = set(range(ent.start, ent.end))
-            if ent.label_ not in self.overwrite and used_tokens.isdisjoint(ent_tokens):
-                used_tokens |= ent_tokens
-                entities.append(ent)
 
     def relabel_entity(self, ent, old_label):
         label = old_label
