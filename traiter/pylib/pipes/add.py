@@ -58,11 +58,14 @@ class AddTraits:
 
         matches = self.matcher(doc, as_spans=True)
 
-        if self.keep:
-            self.keep_flagged_entities(doc, entities, used_tokens)
+        entities, used_tokens = self.filter_entities(doc)
 
-        if self.overwrite:
-            self.keep_unflagged_entities(doc, entities, used_tokens)
+        # used_tokens = set()
+        # if self.keep:
+        #     self.keep_flagged_entities(doc, entities, used_tokens)
+        #
+        # if self.overwrite:
+        #     self.keep_unflagged_entities(doc, entities, used_tokens)
 
         matches = self.remove_overlapping_matches(matches, used_tokens)
         matches = filter_spans(matches)
@@ -91,7 +94,7 @@ class AddTraits:
 
         self.add_untouched_entities(doc, entities, used_tokens)
 
-        doc.set_ents(sorted(entities, key=lambda s: s.start))
+        doc.set_ents(sorted(entities, key=lambda e: e.start))
         return doc
 
     @staticmethod
@@ -112,6 +115,18 @@ class AddTraits:
                 continue
             filtered_matches.append(match)
         return filtered_matches
+
+    def filter_entities(self, doc):
+        used_tokens: set[Any] = set()
+        entities = []
+        for ent in doc.ents:
+            if ent.label_ in self.overwrite or ent.label_ not in self.keep:
+                continue
+            if ent.label_ in self.keep:
+                ent_tokens = set(range(ent.start, ent.end))
+                used_tokens |= ent_tokens
+                entities.append(ent)
+        return entities, used_tokens
 
     def keep_flagged_entities(self, doc, entities, used_tokens):
         for ent in doc.ents:

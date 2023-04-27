@@ -18,4 +18,6 @@ def build(nlp: Language, **kwargs):
 
     prev = add.cleanup_pipe(nlp, name="color_cleanup", after=prev)
 
+    # prev = add.debug_tokens(nlp, after=prev)  # ###########################
+
     return prev

@@ -1,4 +1,10 @@
 label,pattern,attr,replace,inside,postal
+country,usa,lower,USA,,
+country,u.s.a,lower,USA,,
+country,united states,lower,USA,,
+country,united states of america,lower,USA,,
+country,us of a,lower,USA,,
+country,u.s. of a,lower,USA,,
 county_label,co,text,county,,
 county_label,co.,text,county,,
 county_label,Co,text,county,,
