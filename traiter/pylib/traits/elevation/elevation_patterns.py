@@ -17,6 +17,8 @@ def elevation_compilers():
         "/": {"TEXT": {"IN": const.SLASH}},
         "99": {"TEXT": {"REGEX": FLOAT_RE}},
         ":": {"TEXT": {"REGEX": rf"^{LABEL_ENDER}+\Z"}},
+        ",": {"TEXT": {"REGEX": rf"^{LABEL_ENDER}+\Z"}},
+        "about": {"ENT_TYPE": "about"},
         "label": {"ENT_TYPE": "elev_label"},
         "m": {"ENT_TYPE": {"IN": UNITS}},
     }
@@ -28,9 +30,9 @@ def elevation_compilers():
             on_match=act.ELEVATION_MATCH,
             keep="elevation",
             patterns=[
-                "label+ :? 99 m",
-                "label+ :? 99 m ( 99 m )",
-                "label+ :? 99 m / 99 m",
+                "label+ :? about? ,? 99 m",
+                "label+ :? about? ,? 99 m ( 99 m )",
+                "label+ :? about? ,? 99 m / 99 m",
             ],
         ),
         Compiler(

@@ -24,6 +24,7 @@ SEP = ".,;/_'-"
 @registry.misc(DATE_MATCH)
 def date_match(ent):
     frags = []
+    century_adjust = False
 
     for token in ent:
         # Get the numeric parts
@@ -46,9 +47,13 @@ def date_match(ent):
     # Handle missing centuries like: May 22, 08
     if date_ > date.today():
         date_ -= relativedelta(years=100)
-        ent._.data["century_adjust"] = True
+        century_adjust = True
 
-    ent._.data["date"] = date_.isoformat()[:10]
+    ent._.data = {
+        "date": date_.isoformat()[:10],
+    }
+    if century_adjust:
+        ent._.data["century_adjust"] = True
 
 
 @registry.misc(SHORT_DATE_MATCH)

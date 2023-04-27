@@ -48,7 +48,8 @@ def lat_long_match(ent):
     lat_long = re.sub(r"(-)\s", r"\1", lat_long)
     lat_long = re.sub(r"\s(:)", r"\1", lat_long)
     lat_long = re.sub(r"(?<=\d)([NESWnesw])", r" \1", lat_long)
-    ent._.data["lat_long"] = lat_long
+
+    ent._.data = {"lat_long": lat_long}
 
     if datum:
         datum = "".join(datum)

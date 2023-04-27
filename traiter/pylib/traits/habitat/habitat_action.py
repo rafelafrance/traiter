@@ -19,13 +19,7 @@ def habitat_match(ent):
     for token in ent:
         frags.append(REPLACE.get(token.lower_, token.lower_))
 
-        if "habitat_term" in token._.data:
-            del token._.data["habitat_term"]
-
-    if "habitat_term" in ent._.data:
-        del ent._.data["habitat_term"]
-
-    ent._.data["habitat"] = " ".join(frags)
+    ent._.data = {"habitat": " ".join(frags)}
 
 
 @registry.misc(LABELED_HABITAT_MATCH)
@@ -34,4 +28,4 @@ def labeled_habitat_match(ent):
     for i, token in enumerate(ent):
         if token._.term != "habitat_label":
             break
-    ent._.data["habitat"] = ent[i:].text
+    ent._.data = {"habitat": ent[i:].text}

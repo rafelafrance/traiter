@@ -142,7 +142,20 @@ class TestLatLongPatterns(unittest.TestCase):
             ],
         )
 
-    # def test_lat_long_10(self):
+    def test_lat_long_10(self):
+        self.assertEqual(
+            test("""Lat.: 36° 21'"N Long.: 112° 40'"W"""),
+            [
+                {
+                    "lat_long": """Lat.: 36° 21'" N Long.: 112° 40'" W""",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 33,
+                }
+            ],
+        )
+
+    # def test_lat_long_11(self):
     #     """It handles a lat/long range"""
     #     self.assertEqual(
     #         test("""Lat. 13.5° - 14°55'S Long. 60.2° - 61°50'W."""),

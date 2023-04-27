@@ -72,3 +72,18 @@ class TestElevation(unittest.TestCase):
                 },
             ],
         )
+
+    def test_elevation_06(self):
+        self.assertEqual(
+            test("""Elev. ca, 200 m."""),
+            [
+                {
+                    "trait": "elevation",
+                    "elevation": 200.0,
+                    "units": "m",
+                    "about": True,
+                    "start": 0,
+                    "end": 16,
+                },
+            ],
+        )

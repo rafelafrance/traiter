@@ -16,6 +16,7 @@ REMOVE = trait_util.term_data(COLOR_CSV, "remove", int)
 @registry.misc(COLOR_MATCH)
 def color_match(ent):
     frags = []
+    missing = False
 
     for token in ent:
         # Skip anything that is not a term
@@ -36,7 +37,7 @@ def color_match(ent):
 
         # Color is noted as missing
         if token._.term == "color_missing":
-            ent._.data["missing"] = True
+            missing = True
             continue
 
         frag = REPLACE.get(token.lower_, token.lower_)
@@ -47,4 +48,8 @@ def color_match(ent):
 
     # Build the color
     value = "-".join(frags)
-    ent._.data["color"] = REPLACE.get(value, value)
+    ent._.data = {
+        "color": REPLACE.get(value, value),
+    }
+    if missing:
+        ent._.data["missing"] = True
