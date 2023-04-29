@@ -207,7 +207,7 @@ def parse_args() -> argparse.Namespace:
         "--min-freq",
         type=int,
         metavar="N",
-        default=10,
+        default=100,
         help="""A word must be seen this many times to make it into the DB.""",
     )
 

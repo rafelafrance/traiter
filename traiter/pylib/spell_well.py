@@ -12,7 +12,7 @@ from .const import DATA_DIR
 
 
 class SpellWell:
-    def __init__(self, vocab_db=None, min_freq=5, min_len=3, vocab_freq=10):
+    def __init__(self, vocab_db=None, min_freq=100, min_len=3, vocab_freq=10):
         self.min_len = min_len
         self.min_freq = min_freq
         self.vocab_freq = vocab_freq
