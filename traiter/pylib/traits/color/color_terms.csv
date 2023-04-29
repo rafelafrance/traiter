@@ -1,12 +1,12 @@
 label,pattern,replace,remove
-color,amber,black,
+color,amber,yellow,
 color,black,black,
 color,blackish,black,
 color,blue,blue,
 color,blueish,blue,
 color,bluish,blue,
-color,bronze,bronze,
-color,bronzy,bronze,
+color,bronze,brown,
+color,bronzy,brown,
 color,brown,brown,
 color,brownish,brown,
 color,castaneous,brown,
@@ -94,8 +94,9 @@ color_mod,bull’s-eye,bulls-eye,
 color_mod,bulls-eye,bulls-eye,
 color_mod,dark,dark,1
 color_mod,darker,darker,1
-color_mod,dot,dot,
+color_mod,dot,dots,
 color_mod,dots,dots,
+color_mod,dotted,dots,
 color_mod,dull,dull,1
 color_mod,duller,duller,1
 color_mod,dusky,dusky,1

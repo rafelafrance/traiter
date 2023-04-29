@@ -2,11 +2,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from spacy import util
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
-from spacy.util import filter_spans
-from spacy.util import registry
 
 from traiter.pylib.pipes.reject_match import RejectMatch
 
@@ -40,28 +39,25 @@ class AddTraits:
         dispatch_table = {}
         if self.dispatch:
             for label, registered in self.dispatch.items():
-                if func := registry.misc.get(registered):
+                if func := util.registry.misc.get(registered):
                     dispatch_table[label] = func
         return dispatch_table
 
     def build_matcher(self):
         matcher = Matcher(self.nlp.vocab, validate=True)
-        # Don't match too much if we are keeping traits
-        greedy = None if self.keep or self.overwrite else "LONGEST"
+        # Can't be greedy if we are keeping traits in the middle of a match
+        greedy = None if self.keep else "LONGEST"
         for label, patterns in self.patterns.items():
             matcher.add(label, patterns, greedy=greedy)
         return matcher
 
     def __call__(self, doc: Doc) -> Doc:
-        entities = []
-        used_tokens: set[Any] = set()
-
         matches = self.matcher(doc, as_spans=True)
 
         entities, used_tokens = self.filter_entities(doc)
 
         matches = self.remove_overlapping_matches(matches, used_tokens)
-        matches = filter_spans(matches)
+        matches = util.filter_spans(matches)
 
         for ent in matches:
             label = ent.label_
