@@ -34,27 +34,15 @@ FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
+        add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
 
-    prev = add.trait_pipe(
-        nlp,
-        name="lat_long_patterns",
-        compiler=lat_long_compilers(),
-        after=prev,
+    add.trait_pipe(nlp, name="lat_long_patterns", compiler=lat_long_patterns())
+
+    add.trait_pipe(
+        nlp, name="lat_long_uncert_patterns", compiler=lat_long_uncert_patterns()
     )
 
-    # prev = add.debug_tokens(nlp, after=prev)  # ##################################
-
-    prev = add.trait_pipe(
-        nlp,
-        name="lat_long_uncertain_patterns",
-        compiler=lat_long_uncertain_compilers(),
-        after=prev,
-    )
-
-    prev = add.cleanup_pipe(nlp, name="lat_long_cleanup", after=prev)
-
-    return prev
+    add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
 
 def decoder():
@@ -82,7 +70,7 @@ def decoder():
     }
 
 
-def lat_long_compilers():
+def lat_long_patterns():
     return Compiler(
         label="lat_long",
         on_match="lat_long_match",
@@ -105,7 +93,7 @@ def lat_long_compilers():
     )
 
 
-def lat_long_uncertain_compilers():
+def lat_long_uncert_patterns():
     return Compiler(
         label="lat_long_uncertain",
         id="lat_long",

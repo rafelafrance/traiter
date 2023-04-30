@@ -22,20 +22,11 @@ REPLACE = trait_util.term_data(MONTH_CSV, "replace")
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(
-            nlp, name="date_terms", path=[DATE_CSV, MONTH_CSV], **kwargs
-        )
+        add.term_pipe(nlp, name="date_terms", path=[DATE_CSV, MONTH_CSV], **kwargs)
 
-    prev = add.trait_pipe(
-        nlp,
-        name="date_patterns",
-        compiler=date_patterns(),
-        after=prev,
-    )
+    add.trait_pipe(nlp, name="date_patterns", compiler=date_patterns())
 
-    prev = add.cleanup_pipe(nlp, name="date_cleanup", after=prev)
-
-    return prev
+    add.cleanup_pipe(nlp, name="date_cleanup")
 
 
 def date_patterns():

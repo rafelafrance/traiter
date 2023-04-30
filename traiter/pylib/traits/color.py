@@ -16,20 +16,11 @@ REMOVE = trait_util.term_data(COLOR_CSV, "remove", int)
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(nlp, name="color_terms", path=COLOR_CSV, **kwargs)
+        add.term_pipe(nlp, name="color_terms", path=COLOR_CSV, **kwargs)
 
-    prev = add.trait_pipe(
-        nlp,
-        name="color_patterns",
-        compiler=color_patterns(),
-        after=prev,
-    )
+    add.trait_pipe(nlp, name="color_patterns", compiler=color_patterns())
 
-    prev = add.cleanup_pipe(nlp, name="color_cleanup", after=prev)
-
-    # prev = add.debug_tokens(nlp, after=prev)  # ###########################
-
-    return prev
+    add.cleanup_pipe(nlp, name="color_cleanup")
 
 
 def color_patterns():

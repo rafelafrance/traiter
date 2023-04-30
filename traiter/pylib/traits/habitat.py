@@ -15,20 +15,11 @@ REPLACE = trait_util.term_data(HABITAT_CSV, "replace")
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV, **kwargs)
+        add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV, **kwargs)
 
-    # prev = add.debug_tokens(nlp, after=prev)  # ##############################
+    add.trait_pipe(nlp, name="habitat_patterns", compiler=habitat_compilers())
 
-    prev = add.trait_pipe(
-        nlp,
-        name="habitat_patterns",
-        compiler=habitat_compilers(),
-        after=prev,
-    )
-
-    prev = add.cleanup_pipe(nlp, name="habitat_cleanup", after=prev)
-
-    return prev
+    add.cleanup_pipe(nlp, name="habitat_cleanup")
 
 
 def habitat_compilers():

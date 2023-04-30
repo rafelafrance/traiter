@@ -26,20 +26,11 @@ FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 def build(nlp: Language, **kwargs):
     with nlp.select_pipes(enable="tokenizer"):
-        prev = add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS, **kwargs)
+        add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS, **kwargs)
 
-    prev = add.trait_pipe(
-        nlp,
-        name="elevation_patterns",
-        compiler=elevation_compilers(),
-        after=prev,
-    )
+    add.trait_pipe(nlp, name="elevation_patterns", compiler=elevation_compilers())
 
-    # prev = add.debug_tokens(nlp, after=prev)  # #############################
-
-    prev = add.cleanup_pipe(nlp, name="elevation_cleanup", after=prev)
-
-    return prev
+    add.cleanup_pipe(nlp, name="elevation_cleanup")
 
 
 def elevation_compilers():

@@ -7,11 +7,11 @@ from spacy.language import Language
 from .pattern_compiler import ACCUMULATOR
 from .pattern_compiler import Compiler
 from .trait_util import read_terms
-from traiter.pylib.pipes import add
 from traiter.pylib.pipes import cleanup
 from traiter.pylib.pipes import debug
 from traiter.pylib.pipes import link
 from traiter.pylib.pipes import phrase
+from traiter.pylib.pipes import trait
 from traiter.pylib.pipes.merge_selected import MERGE_SELECTED
 
 
@@ -21,8 +21,7 @@ def term_pipe(
     name: str,
     path: Path | list[Path],
     default_labels: dict[str, str] | None = None,
-    **kwargs,
-) -> str:
+):
     default_labels = default_labels if default_labels else {}
     paths = path if isinstance(path, Iterable) else [path]
 
@@ -41,21 +40,14 @@ def term_pipe(
                 replaces[attr][term["pattern"]] = replace
 
     # Add a pipe for each phrase matcher attribute
-    prev = ""
-    base_name = name
-
     for attr, patterns in by_attr.items():
-        name = f"{base_name}_{attr.lower()}"
+        name = f"{name}_{attr.lower()}"
         config = {
             "patterns": patterns,
             "replace": replaces[attr],
             "attr": attr,
         }
-        kwargs = kwargs if not prev else {"after": prev}
-        nlp.add_pipe(phrase.PHRASE_PIPE, name=name, config=config, **kwargs)
-        prev = name
-
-    return name
+        nlp.add_pipe(phrase.PHRASE_PIPE, name=name, config=config)
 
 
 def trait_pipe(
@@ -66,8 +58,7 @@ def trait_pipe(
     keep: list[str] | None = None,
     overwrite: list[str] | None = None,
     merge: list[str] | None = None,
-    **kwargs,
-) -> str:
+):
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     merge = merge if merge else []
     patterns = defaultdict(list)
@@ -91,43 +82,37 @@ def trait_pipe(
         "keep": keep,
         "overwrite": overwrite,
     }
-    nlp.add_pipe(add.ADD_TRAITS, name=name, config=config, **kwargs)
+    nlp.add_pipe(trait.ADD_TRAITS, name=name, config=config)
 
     if merge:
-        prev = name
         name = f"{name}_merge"
         config = {"labels": merge}
-        nlp.add_pipe(MERGE_SELECTED, name=name, config=config, after=prev)
-
-    return name
+        nlp.add_pipe(MERGE_SELECTED, name=name, config=config)
 
 
-def cleanup_pipe(nlp: Language, *, name: str, delete=None, **kwargs) -> str:
+def cleanup_pipe(nlp: Language, *, name: str, delete=None):
     if delete:
         delete = delete if isinstance(delete, list) else [delete]
         ACCUMULATOR.delete(delete)
 
     config = {"keep": ACCUMULATOR.keep}
-    nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config, **kwargs)
-
-    return name
+    nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config)
 
 
 def custom_pipe(
-    nlp: Language, registered: str, name: str = "", config: dict | None = None, **kwargs
+    nlp: Language, registered: str, name: str = "", config: dict | None = None
 ):
     config = config if config else {}
     name = name if name else registered
-    nlp.add_pipe(registered, name=name, config=config, **kwargs)
-    return name
+    nlp.add_pipe(registered, name=name, config=config)
 
 
-def debug_tokens(nlp: Language, **kwargs) -> str:
-    return debug.tokens(nlp, **kwargs)
+def debug_tokens(nlp: Language):
+    debug.tokens(nlp)
 
 
-def debug_ents(nlp: Language, **kwargs) -> str:
-    return debug.ents(nlp, **kwargs)
+def debug_ents(nlp: Language):
+    debug.ents(nlp)
 
 
 def link_pipe(
@@ -141,8 +126,7 @@ def link_pipe(
     reverse_weights=None,
     max_links=None,
     differ=None,
-    **kwargs,
-) -> str:
+):
     patterns = []
     compiler.compile()
     for pattern in compiler.patterns:
@@ -162,5 +146,4 @@ def link_pipe(
         config["max_links"] = max_links
     if differ is not None:
         config["differ"] = differ
-    nlp.add_pipe(link.LINK_TRAITS, name=name, config=config, **kwargs)
-    return name
+    nlp.add_pipe(link.LINK_TRAITS, name=name, config=config)
