@@ -3,11 +3,11 @@ import spacy
 from traiter.pylib.pipes import extensions
 from traiter.pylib.pipes import sentence
 from traiter.pylib.pipes import tokenizer
-from traiter.pylib.traits.color import color_pipeline
-from traiter.pylib.traits.date import date_pipeline
-from traiter.pylib.traits.elevation import elevation_pipeline
-from traiter.pylib.traits.habitat import habitat_pipeline
-from traiter.pylib.traits.lat_long import lat_long_pipeline
+from traiter.pylib.traits import color
+from traiter.pylib.traits import date_
+from traiter.pylib.traits import elevation
+from traiter.pylib.traits import habitat
+from traiter.pylib.traits import lat_long
 
 
 # from .pipes import debug  # #########################
@@ -26,11 +26,11 @@ def build(model_path=None):
 
     nlp.add_pipe(sentence.SENTENCES, before="parser")
 
-    color_pipeline.build(nlp)
-    date_pipeline.build(nlp)
-    elevation_pipeline.build(nlp)
-    habitat_pipeline.build(nlp)
-    lat_long_pipeline.build(nlp)
+    color.build(nlp)
+    date_.build(nlp)
+    elevation.build(nlp)
+    habitat.build(nlp)
+    lat_long.build(nlp)
 
     if model_path:
         nlp.to_disk(model_path)

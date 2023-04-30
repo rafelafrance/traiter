@@ -6,7 +6,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
-from traiter.pylib.traits import trait_util
+from traiter.pylib import trait_util
 
 
 def abbreviate_binomials(binomials: list[dict], single_expanded_name=True):

@@ -44,7 +44,7 @@ class AddTraits:
         return dispatch_table
 
     def build_matcher(self):
-        matcher = Matcher(self.nlp.vocab, validate=True)
+        matcher = Matcher(self.nlp.vocab)
         # Can't be greedy if we are keeping traits in the middle of a match
         greedy = None if self.keep else "LONGEST"
         for label, patterns in self.patterns.items():

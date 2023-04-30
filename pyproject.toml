@@ -104,3 +104,30 @@ reportGeneralTypeIssues = "none"
 reportMissingImports = false
 
 [tool.ruff]
+line-length = 88
+extend-select = [
+    "BLE",
+    "C4",
+    "D",
+    "E",
+    "ERA",
+    "I",
+    "ISC",
+    "N",
+    "NPY",
+    "PD",
+    "PGH",
+    "Q",
+    "RET",
+    "RSE",
+    "RUF",
+    "S",
+    "SIM",
+    "T20",
+    "TCH",
+    "TID",
+    "UP",
+    "YTT",
+]
+show-fixes = true
+ignore = ["D10", "D203", "D213", "ERA001", "PD901", "RET504", "RUF001", "TID252"]
