@@ -8,24 +8,21 @@ from dateutil.relativedelta import relativedelta
 from spacy.language import Language
 from spacy.util import registry
 
-from .. import add_pipe as add
-from traiter.pylib import trait_util
+from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
+from traiter.pylib.pipes import add
 from traiter.pylib.pipes import reject_match
 
 DATE_CSV = Path(__file__).parent / "terms" / "date_terms.csv"
 MONTH_CSV = Path(__file__).parent / "terms" / "month_terms.csv"
 
 SEP = "(.,;/_'-"
-REPLACE = trait_util.term_data(MONTH_CSV, "replace")
+REPLACE = term_util.term_data(MONTH_CSV, "replace")
 
 
 def build(nlp: Language, **kwargs):
-    with nlp.select_pipes(enable="tokenizer"):
-        add.term_pipe(nlp, name="date_terms", path=[DATE_CSV, MONTH_CSV], **kwargs)
-
+    add.term_pipe(nlp, name="date_terms", path=[DATE_CSV, MONTH_CSV], **kwargs)
     add.trait_pipe(nlp, name="date_patterns", compiler=date_patterns())
-
     add.cleanup_pipe(nlp, name="date_cleanup")
 
 

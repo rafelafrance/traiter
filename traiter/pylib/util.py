@@ -1,49 +1,12 @@
-import os
-from contextlib import contextmanager
-from pathlib import Path
-from shutil import rmtree
-from tempfile import mkdtemp
 from typing import Any
-from typing import Generator
 
 import ftfy
-import inflect
 import regex as re
-
-INFLECT = inflect.engine()
-
-
-@contextmanager
-def get_temp_dir(
-    prefix: str = "temp_", where: str | Path | None = None, keep: bool = False
-) -> Generator:
-    """Handle creation and deletion of temporary directory."""
-    if where and not os.path.exists(where):
-        os.mkdir(where)
-
-    temp_dir = mkdtemp(prefix=prefix, dir=where)
-
-    try:
-        yield temp_dir
-    finally:
-        if not keep or not where:
-            rmtree(temp_dir)
 
 
 def shorten(text: str) -> str:
     """Collapse whitespace in a string."""
     return " ".join(text.split())
-
-
-def flatten(nested: list) -> list:
-    """Flatten an arbitrarily nested list."""
-    flat = []
-    for item in nested:
-        if isinstance(item, (list, tuple, set)):
-            flat.extend(flatten(list(item)))
-        else:
-            flat.append(item)
-    return flat
 
 
 def as_list(values: Any) -> list:

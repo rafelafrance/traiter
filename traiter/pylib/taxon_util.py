@@ -6,7 +6,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable
 
-from traiter.pylib import trait_util
+from traiter.pylib import term_util
 
 
 def abbreviate_binomials(binomials: list[dict], single_expanded_name=True):
@@ -32,7 +32,7 @@ def abbreviate_binomials(binomials: list[dict], single_expanded_name=True):
 
 
 def abbrev_binomial_term(csv_path: Path | Iterable[Path]):
-    terms = trait_util.read_terms(csv_path)
+    terms = term_util.read_terms(csv_path)
     return abbreviate_binomials(terms)
 
 

@@ -4,11 +4,11 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import add_pipe as add
 from traiter.pylib import const
-from traiter.pylib import trait_util
+from traiter.pylib import term_util
 from traiter.pylib import util
 from traiter.pylib.pattern_compiler import Compiler
+from traiter.pylib.pipes import add
 
 LABEL_ENDER = r"[:=;,.]"
 FLOAT_RE = r"^(\d[\d,.]+)\Z"
@@ -19,17 +19,14 @@ UNIT_CSV = Path(__file__).parent / "terms" / "unit_length_terms.csv"
 ABOUT_CSV = Path(__file__).parent / "terms" / "about.csv"
 ALL_CSVS = [ELEVATION_CSV, UNIT_CSV, ABOUT_CSV]
 
-REPLACE = trait_util.term_data([UNIT_CSV, ELEVATION_CSV], "replace")
-FACTORS_CM = trait_util.term_data(UNIT_CSV, "factor_cm", float)
+REPLACE = term_util.term_data([UNIT_CSV, ELEVATION_CSV], "replace")
+FACTORS_CM = term_util.term_data(UNIT_CSV, "factor_cm", float)
 FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 
 def build(nlp: Language, **kwargs):
-    with nlp.select_pipes(enable="tokenizer"):
-        add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS, **kwargs)
-
+    add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS, **kwargs)
     add.trait_pipe(nlp, name="elevation_patterns", compiler=elevation_compilers())
-
     add.cleanup_pipe(nlp, name="elevation_cleanup")
 
 

@@ -3,23 +3,20 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import add_pipe as add
 from traiter.pylib import const
-from traiter.pylib import trait_util
+from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
+from traiter.pylib.pipes import add
 
 COLOR_CSV = Path(__file__).parent / "terms" / "color_terms.csv"
 
-REPLACE = trait_util.term_data(COLOR_CSV, "replace")
-REMOVE = trait_util.term_data(COLOR_CSV, "remove", int)
+REPLACE = term_util.term_data(COLOR_CSV, "replace")
+REMOVE = term_util.term_data(COLOR_CSV, "remove", int)
 
 
 def build(nlp: Language, **kwargs):
-    with nlp.select_pipes(enable="tokenizer"):
-        add.term_pipe(nlp, name="color_terms", path=COLOR_CSV, **kwargs)
-
+    add.term_pipe(nlp, name="color_terms", path=COLOR_CSV, **kwargs)
     add.trait_pipe(nlp, name="color_patterns", compiler=color_patterns())
-
     add.cleanup_pipe(nlp, name="color_cleanup")
 
 

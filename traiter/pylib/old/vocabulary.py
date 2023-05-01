@@ -11,7 +11,7 @@ from .rule import replacer
 from .rule import Rule
 from .rule import Rules
 from .rule import term
-from traiter.pylib.util import flatten
+from .util import flatten
 
 FIRST = re_rule.FIRST
 SECOND = re_rule.SECOND

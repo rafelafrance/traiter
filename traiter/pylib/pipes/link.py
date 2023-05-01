@@ -6,7 +6,6 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
-from spacy.tokens import Span
 
 from traiter.pylib import util
 

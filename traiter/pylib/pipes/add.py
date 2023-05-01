@@ -4,15 +4,15 @@ from typing import Iterable
 
 from spacy.language import Language
 
-from .pattern_compiler import ACCUMULATOR
-from .pattern_compiler import Compiler
-from .trait_util import read_terms
+from traiter.pylib.pattern_compiler import ACCUMULATOR
+from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import cleanup
 from traiter.pylib.pipes import debug
 from traiter.pylib.pipes import link
 from traiter.pylib.pipes import phrase
 from traiter.pylib.pipes import trait
 from traiter.pylib.pipes.merge_selected import MERGE_SELECTED
+from traiter.pylib.term_util import read_terms
 
 
 def term_pipe(
@@ -40,14 +40,15 @@ def term_pipe(
                 replaces[attr][term["pattern"]] = replace
 
     # Add a pipe for each phrase matcher attribute
-    for attr, patterns in by_attr.items():
-        name = f"{name}_{attr.lower()}"
-        config = {
-            "patterns": patterns,
-            "replace": replaces[attr],
-            "attr": attr,
-        }
-        nlp.add_pipe(phrase.PHRASE_PIPE, name=name, config=config)
+    with nlp.select_pipes(enable="tokenizer"):
+        for attr, patterns in by_attr.items():
+            name = f"{name}_{attr.lower()}"
+            config = {
+                "patterns": patterns,
+                "replace": replaces[attr],
+                "attr": attr,
+            }
+            nlp.add_pipe(phrase.PHRASE_PIPE, name=name, config=config)
 
 
 def trait_pipe(

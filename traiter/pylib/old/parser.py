@@ -11,7 +11,7 @@ from .rule import RuleType
 from .rule import SIZE
 from .token import Token
 from .token import Tokens
-from traiter.pylib.util import flatten
+from .util import flatten
 
 RulesInput = Union[Rules, List[Rules]]
 

@@ -4,11 +4,11 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import add_pipe as add
 from traiter.pylib import const
-from traiter.pylib import trait_util
+from traiter.pylib import term_util
 from traiter.pylib import util
 from traiter.pylib.pattern_compiler import Compiler
+from traiter.pylib.pipes import add
 from traiter.pylib.pipes.reject_match import RejectMatch
 
 SYM = r"""°"”“'`‘´’"""
@@ -27,21 +27,17 @@ LAT_LONG_CSV = Path(__file__).parent / "terms" / "lat_long_terms.csv"
 UNIT_CSV = Path(__file__).parent / "terms" / "unit_length_terms.csv"
 ALL_CSVS = [LAT_LONG_CSV, UNIT_CSV]
 
-REPLACE = trait_util.term_data([UNIT_CSV, LAT_LONG_CSV], "replace")
-FACTORS_CM = trait_util.term_data(UNIT_CSV, "factor_cm", float)
+REPLACE = term_util.term_data([UNIT_CSV, LAT_LONG_CSV], "replace")
+FACTORS_CM = term_util.term_data(UNIT_CSV, "factor_cm", float)
 FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 
 def build(nlp: Language, **kwargs):
-    with nlp.select_pipes(enable="tokenizer"):
-        add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
-
+    add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
     add.trait_pipe(nlp, name="lat_long_patterns", compiler=lat_long_patterns())
-
     add.trait_pipe(
         nlp, name="lat_long_uncert_patterns", compiler=lat_long_uncert_patterns()
     )
-
     add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
 

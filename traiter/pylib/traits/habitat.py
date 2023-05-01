@@ -3,22 +3,19 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import add_pipe as add
-from traiter.pylib import trait_util
+from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
+from traiter.pylib.pipes import add
 from traiter.pylib.pipes.reject_match import REJECT_MATCH
 
 HABITAT_CSV = Path(__file__).parent / "terms" / "habitat_terms.csv"
 
-REPLACE = trait_util.term_data(HABITAT_CSV, "replace")
+REPLACE = term_util.term_data(HABITAT_CSV, "replace")
 
 
 def build(nlp: Language, **kwargs):
-    with nlp.select_pipes(enable="tokenizer"):
-        add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV, **kwargs)
-
+    add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV, **kwargs)
     add.trait_pipe(nlp, name="habitat_patterns", compiler=habitat_compilers())
-
     add.cleanup_pipe(nlp, name="habitat_cleanup")
 
 
