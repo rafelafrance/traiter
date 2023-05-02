@@ -4,15 +4,15 @@ from typing import Iterable
 
 from spacy.language import Language
 
+from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import ACCUMULATOR
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import cleanup
 from traiter.pylib.pipes import debug
 from traiter.pylib.pipes import link
+from traiter.pylib.pipes import merge_selected
 from traiter.pylib.pipes import phrase
 from traiter.pylib.pipes import trait
-from traiter.pylib.pipes.merge_selected import MERGE_SELECTED
-from traiter.pylib.term_util import read_terms
 
 
 def term_pipe(
@@ -30,7 +30,7 @@ def term_pipe(
     replaces = defaultdict(dict)
 
     for path in paths:
-        terms = read_terms(path)
+        terms = term_util.read_terms(path)
         for term in terms:
             label = term.get("label", default_labels.get(path.stem))
             pattern = {"label": label, "pattern": term["pattern"]}
@@ -60,6 +60,7 @@ def trait_pipe(
     overwrite: list[str] | None = None,
     merge: list[str] | None = None,
 ):
+    keep = keep if keep is not None else ACCUMULATOR.keep
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     merge = merge if merge else []
     patterns = defaultdict(list)
@@ -88,7 +89,7 @@ def trait_pipe(
     if merge:
         name = f"{name}_merge"
         config = {"labels": merge}
-        nlp.add_pipe(MERGE_SELECTED, name=name, config=config)
+        nlp.add_pipe(merge_selected.MERGE_SELECTED, name=name, config=config)
 
 
 def cleanup_pipe(nlp: Language, *, name: str, delete=None):

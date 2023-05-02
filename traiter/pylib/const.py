@@ -15,7 +15,9 @@ MODEL_PATH = DATA_DIR / "traiter_model"
 LOWER_SHAPES = """ xxxxx xxxx xxx xx x. xx. x """.split()
 TITLE_SHAPES = """ Xxxxx Xxxx Xxx Xx X. Xx. X """.split()
 UPPER_SHAPES = """ XXXXX XXXX XXX XX X. XX. X """.split()
-NAME_SHAPES = TITLE_SHAPES + UPPER_SHAPES
+MAC_SHAPES = """   XxXxx XxXx XxxXx """.split()
+O_SHAPES = """     X'Xxx X'Xx """.split()
+NAME_SHAPES = TITLE_SHAPES + UPPER_SHAPES + MAC_SHAPES + O_SHAPES
 
 # ###################################################################################
 # Punctuation penalties when linking traits

@@ -36,7 +36,10 @@ def build(nlp: Language, **kwargs):
     add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
     add.trait_pipe(nlp, name="lat_long_patterns", compiler=lat_long_patterns())
     add.trait_pipe(
-        nlp, name="lat_long_uncert_patterns", compiler=lat_long_uncert_patterns()
+        nlp,
+        name="lat_long_uncert_patterns",
+        overwrite=["lat_long"],
+        compiler=lat_long_uncert_patterns(),
     )
     add.cleanup_pipe(nlp, name="lat_long_cleanup")
 

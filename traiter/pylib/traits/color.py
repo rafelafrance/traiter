@@ -28,8 +28,8 @@ def color_patterns():
             keep="color",
             decoder={
                 "-": {"TEXT": {"IN": const.DASH}},
-                "color": {"ENT_TYPE": "color"},
-                "color_words": {"ENT_TYPE": {"IN": ["color", "color_mod"]}},
+                "color": {"ENT_TYPE": "color_term"},
+                "color_words": {"ENT_TYPE": {"IN": ["color_term", "color_mod"]}},
                 "missing": {"ENT_TYPE": "color_missing"},
                 "to": {"POS": {"IN": ["AUX"]}},
             },
