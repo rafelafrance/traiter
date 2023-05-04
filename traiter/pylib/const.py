@@ -12,12 +12,18 @@ DATA_DIR = Path.cwd() / "data"
 MODEL_PATH = DATA_DIR / "traiter_model"
 
 # ###################################################################################
-LOWER_SHAPES = """ xxxxx xxxx xxx xx x. xx. x """.split()
+LOWER_SHAPES = """  xxxx      xxx xx x. xx. x """.split()
 TITLE_SHAPES = """ Xxxxx Xxxx Xxx Xx X. Xx. X """.split()
-UPPER_SHAPES = """ XXXXX XXXX XXX XX X. XX. X """.split()
-MAC_SHAPES = """   XxXxx XxXx XxxXx """.split()
-O_SHAPES = """     X'Xxx X'Xx """.split()
-NAME_SHAPES = TITLE_SHAPES + UPPER_SHAPES + MAC_SHAPES + O_SHAPES
+UPPER_SHAPES = """ XXXX       XXX XX X. XX. X """.split()
+
+O_SHAPES = """   X'Xxxxx   X'Xxxx   X'Xxx   X'Xx """.split()
+O2_SHAPES = """  Xx'Xxxxx  Xx'Xxxx  Xx'Xxx  Xx'Xx """.split()
+DEL_SHAPES = """ Xxx'Xxxxx Xxx'Xxxx Xxx'Xxx Xxx'Xx """.split()
+MC_SHAPES = """  XxXxxxx   XxXxxx   XxXxx   XxXx """.split()
+MAC_SHAPES = """ XxxXxxxx  XxxXxxx  XxxXxx  XxxXx """.split()
+
+NAME_SHAPES = TITLE_SHAPES + UPPER_SHAPES + MC_SHAPES + MAC_SHAPES + O_SHAPES
+NAME_SHAPES += O2_SHAPES + DEL_SHAPES
 
 # ###################################################################################
 # Punctuation penalties when linking traits

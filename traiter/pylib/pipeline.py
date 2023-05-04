@@ -9,9 +9,6 @@ from traiter.pylib.traits import elevation
 from traiter.pylib.traits import habitat
 from traiter.pylib.traits import lat_long
 
-# from .pipes import debug  # #########################
-# debug.tokens(nlp)  # ################################
-
 
 def build(model_path=None):
     extensions.add_extensions()

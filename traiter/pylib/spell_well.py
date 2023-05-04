@@ -42,16 +42,18 @@ class SpellWell:
         except sqlite3.OperationalError as err:
             logging.error(err)
 
-    def correct(self, word: str) -> str:
+    def correct(self, word: str, dist=1) -> str:
         if not word:
             return ""
 
         if hit := (self.best([word], 0) or self.best([word], 1)):
             return hit
 
-        all_deletes = deletes1(word) | deletes2(word)
+        all_deletes = deletes1(word)
+        if dist > 1:
+            all_deletes |= deletes2(word)
 
-        if hit := self.best(list(all_deletes), 1):
+        if hit := self.best(list(all_deletes), dist):
             return hit
 
         return word

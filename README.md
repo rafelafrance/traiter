@@ -40,16 +40,19 @@ Some literature mined:
 ![parsing example](assets/anoplura_rules.png)
 
 ## Install
-You will need to have Python3.10+ installed, as well as pip, a package manager for Python.
+You will need GIT to clone this repository. You will also need to have Python3.10+ installed, as well as pip, a package manager for Python.
 You can install the requirements into your python environment like so:
 ```bash
 git clone https://github.com/rafelafrance/traiter.git
-cd traiter
-make install
+cd /path/to/traiter
+python3 -m pip install .
+python3 -m spacy download en_core_web_sm
 ```
 
+**I recommend using a virtual environment but that is not required.**
+
 ## Run
-This repository is a library for other Traiter projects and is not run directly.
+This repository is a library for other Traiter projects and is not run directly. Well it could be, but it's not really designed for it.
 
 ## Tests
 You can run the tests like so:
