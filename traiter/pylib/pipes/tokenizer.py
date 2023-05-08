@@ -31,6 +31,7 @@ SUFFIX = BREAKING + [DASHES]
 
 INFIX = [
     rf"(?<=[{ALPHA}0-9])[.:<>=/+](?=[{ALPHA}])",  # word=word etc.
+    rf"(?<=[{ALPHA}])[.:<>=/+](?=[{ALPHA}0-9])",  # word=word etc.
     r"""[\\\[\]()/:;’'"“”'+±_]""",  # Break on these characters
     DASHES,
     rf"(?<=\d)[{ALPHA}]+",  # Digit to letters like: 8m
@@ -129,5 +130,7 @@ def setup_tokenizer(nlp):
         if re.search(r"\d", rule):
             removes.append(rule)
         if rule.lower() in states:
+            removes.append(rule)
+        if rule in ("'s", "'S"):
             removes.append(rule)
     remove_special_case(nlp, removes)

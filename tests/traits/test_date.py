@@ -252,3 +252,17 @@ class TestDate(unittest.TestCase):
                 },
             ],
         )
+
+    def test_date_19(self):
+        self.assertEqual(
+            test("Date: 10.Oct.70"),
+            [
+                {
+                    "century_adjust": True,
+                    "date": "1970-10-10",
+                    "trait": "date",
+                    "start": 0,
+                    "end": 15,
+                },
+            ],
+        )

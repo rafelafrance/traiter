@@ -1,0 +1,11 @@
+label,pattern
+trs_label,trs
+trs_label,trs:
+sec_label,sec
+sec_label,sec.
+sec_label,sec:
+sec_label,sect
+sec_label,sect.
+sec_label,sect:
+sec_label,section
+sec_label,section:

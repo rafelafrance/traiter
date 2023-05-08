@@ -14,10 +14,6 @@ from traiter.pylib.pipes.reject_match import RejectMatch
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"""{SYM},;._"""
 
-_180 = r"[-]?(1\d\d|\d\d?)([.,_;]\d+)?"
-_90 = r"[-]?([1-9]\d|\d)([.,_;]\d+)?"
-_60 = r"[-]?([1-6]\d|\d)([.,_;]\d+)?"
-
 FLOAT_RE = r"^([\d,]+\.?\d*)\Z"
 NUM_PLUS = r"^(±|\+|-)?[\d,]+\.?\d*\Z"
 PLUS = r"^(±|\+|-)+\Z"
@@ -41,6 +37,7 @@ def build(nlp: Language, **kwargs):
         overwrite=["lat_long"],
         compiler=lat_long_uncert_patterns(),
     )
+    # add.debug_tokens(nlp)  # #######################################
     add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
 
@@ -54,10 +51,7 @@ def decoder():
         "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)\Z"""}},
         "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
         "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
-        "dir": {"LOWER": {"REGEX": r"""^[nesw]\.?\Z"""}},
-        "180": {"TEXT": {"REGEX": rf"""^{_180}\Z"""}},
-        "90": {"TEXT": {"REGEX": rf"""^{_90}\Z"""}},
-        "60": {"TEXT": {"REGEX": rf"""^{_60}\Z"""}},
+        "dir": {"LOWER": {"REGEX": r"""^'?[nesw]\.?\Z"""}},
         "datum": {"ENT_TYPE": "datum"},
         "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
         "99": {"TEXT": {"REGEX": FLOAT_RE}},
@@ -76,18 +70,24 @@ def lat_long_patterns():
         keep="lat_long",
         decoder=decoder(),
         patterns=[
-            "label? [-]? 180 deg*                 dir ,* [-]? 180 deg*                 dir datum*",
-            "label? [-]? 180 deg* 60 min*         dir ,* [-]? 180 deg* 60 min*         dir datum*",
-            "label? [-]? 180 deg* 60 min* 60 sec* dir ,* [-]? 180 deg* 60 min* 60 sec* dir datum*",
-            "label? dir [-]? 180 deg*                 ,* dir [-]? 180 deg*                 datum*",
-            "label? dir [-]? 180 deg* 60 min* 60 sec* ,* dir [-]? 180 deg* 60 min* 60 sec* datum*",
-            "label? dir [-]? 180 deg* 60 min*         ,* dir [-]? 180 deg* 60 min*         datum*",
-            "key ,* [-]? 90                           ,* key ,* [-]? 90",
-            "key ,* [-]? 90                           ,* key ,* [-]? 90 ( datum+ )",
-            "key ,* [-]? 90                           ,* key ,* [-]? 90   datum+",
-            "key ,* [-]? 180 deg*                 dir ,* key ,* [-]? 180 deg*                 dir datum*",
-            "key ,* [-]? 180 deg* 60 min*         dir ,* key ,* [-]? 180 deg* 60 min*         dir datum*",
-            "key ,* [-]? 180 deg* 60 min* 60 sec* dir ,* key ,* [-]? 180 deg* 60 min* 60 sec* dir datum*",
+            (
+                "label? [-]? 99 deg* 99? min* 99? sec* dir  ,* "
+                "       [-]? 99 deg* 99? min* 99? sec* dir  (? datum* )?"
+            ),
+            (
+                "label? dir [-]? 99 deg* 99? min* 99? sec* ,* "
+                "       dir [-]? 99 deg* 99? min* 99? sec* (? datum* )?"
+            ),
+            (
+                "key ,* [-]? 99 deg* 99? min* 99? sec* dir? ,* "
+                "key ,* [-]? 99 deg* 99? min* 99? sec* dir? (? datum* )?"
+            ),
+            (
+                "key ,* [-]? 99 deg* 99? min* 99? sec* dir? [-] "
+                "99 deg* 99? min* 99? sec* dir? ,* "
+                "key ,* [-]? 99 deg* 99? min* 99? sec* dir? [-] "
+                "99 deg* 99? min* 99? sec* dir? (? datum* )?"
+            ),
         ],
     )
 
@@ -100,8 +100,8 @@ def lat_long_uncert_patterns():
         keep=["lat_long"],
         decoder=decoder(),
         patterns=[
-            "lat_long+ ,? uncert? ,?     +99 m",
-            "lat_long+ ,? uncert? ,? [+]? 99 m",
+            "lat_long+ ,? uncert? ,?     +99 m (? datum* )?",
+            "lat_long+ ,? uncert? ,? [+]? 99 m (? datum* )?",
         ],
     )
 
@@ -128,7 +128,6 @@ def lat_long_match(ent):
 
     lat_long = " ".join(frags)
     lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
-    lat_long = re.sub(r"(-)\s", r"\1", lat_long)
     lat_long = re.sub(r"\s(:)", r"\1", lat_long)
     lat_long = re.sub(r"(?<=\d)([NESWnesw])", r" \1", lat_long)
 
@@ -146,6 +145,8 @@ def lat_long_match(ent):
 def lat_long_uncertain_match(ent):
     unit = ""
     value = 0.0
+    datum = []
+
     for token in ent:
         # Get the data from the original parse
         if token._.flag == "lat_long_data":
@@ -163,6 +164,10 @@ def lat_long_uncertain_match(ent):
         elif re.match(const.FLOAT_RE, token.text):
             value = util.to_positive_float(token.text)
 
+        # Pick up a trailing datum
+        if token._.term == "datum":
+            datum.append(token.lower_)
+
     if not unit:
         raise RejectMatch
 
@@ -170,3 +175,7 @@ def lat_long_uncertain_match(ent):
     ent._.data["units"] = "m"
     factor = FACTORS_M[unit]
     ent._.data["uncertainty"] = round(value * factor, 3)
+
+    if datum:
+        datum = "".join(datum)
+        ent._.data["datum"] = REPLACE.get(datum, datum)

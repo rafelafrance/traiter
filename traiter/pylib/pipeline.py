@@ -8,6 +8,7 @@ from traiter.pylib.traits import date_
 from traiter.pylib.traits import elevation
 from traiter.pylib.traits import habitat
 from traiter.pylib.traits import lat_long
+from traiter.pylib.traits import trs
 
 
 def build(model_path=None):
@@ -27,6 +28,7 @@ def build(model_path=None):
     elevation.build(nlp)
     habitat.build(nlp)
     lat_long.build(nlp)
+    trs.build(nlp)
 
     if model_path:
         nlp.to_disk(model_path)

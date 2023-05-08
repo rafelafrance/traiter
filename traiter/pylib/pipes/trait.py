@@ -123,9 +123,7 @@ class AddTraits:
         new_label = self.relabel.get(old_label)
         new_label = ent._.relabel if ent._.relabel else new_label
         if new_label:
-            if new_label not in self.nlp.vocab.strings:
-                self.nlp.vocab.strings.add(new_label)
-            ent.label = self.nlp.vocab.strings[new_label]
+            relabel_entity(ent, new_label)
             label = new_label
 
         return label
@@ -148,3 +146,9 @@ class AddTraits:
                 self.__dict__[key] = data[key]
             self.matcher = self.build_matcher()
             self.dispatch_table = self.build_dispatch_table()
+
+
+def relabel_entity(ent, new_label):
+    if new_label not in ent.doc.vocab.strings:
+        ent.doc.vocab.strings.add(new_label)
+    ent.label = ent.doc.vocab.strings[new_label]
