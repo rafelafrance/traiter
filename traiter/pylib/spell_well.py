@@ -60,7 +60,7 @@ class SpellWell:
 
     def best(self, words, dist: int) -> str:
         q_marks = ", ".join(["?"] * len(words))
-        args = words + [dist]
+        args = [*words, dist]
         sql = f"""select word, dist, freq
                     from spells
                    where miss in ({q_marks})

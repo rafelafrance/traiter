@@ -1,8 +1,8 @@
 import csv
+from collections.abc import Iterable
 from io import TextIOWrapper
 from pathlib import Path
 from typing import Any
-from typing import Iterable
 from zipfile import ZipFile
 
 
@@ -52,10 +52,9 @@ def read_terms(csv_path: Path | Iterable[Path]) -> list[dict]:
     terms = []
     for path in paths:
         if path.suffix == ".zip":
-            with ZipFile(path) as zippy:
-                with zippy.open(f"{path.stem}.csv") as in_csv:
-                    reader = csv.DictReader(TextIOWrapper(in_csv, "utf-8"))
-                    terms = list(reader)
+            with ZipFile(path) as zippy, zippy.open(f"{path.stem}.csv") as in_csv:
+                reader = csv.DictReader(TextIOWrapper(in_csv, "utf-8"))
+                terms = list(reader)
         else:
             with open(path) as term_file:
                 reader = csv.DictReader(term_file)

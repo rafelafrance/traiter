@@ -52,7 +52,7 @@ CLOSE = " ) ] ".split()
 COLON = " : ".split()
 COMMA = " , ".split()
 CROSS = " X x × ".split()
-# DASH = ' – - –– -- '.split()
+# DASH = ' - - -- -- '.split()
 DASH = LIST_HYPHENS
 DOT = " . ".split()
 EQ = " = ".split()

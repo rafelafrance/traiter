@@ -24,8 +24,8 @@ FACTORS_CM = term_util.term_data(UNIT_CSV, "factor_cm", float)
 FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 
-def build(nlp: Language, **kwargs):
-    add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS, **kwargs)
+def build(nlp: Language):
+    add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS)
     add.trait_pipe(nlp, name="elevation_patterns", compiler=elevation_compilers())
     add.cleanup_pipe(nlp, name="elevation_cleanup")
 

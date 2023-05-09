@@ -28,8 +28,8 @@ FACTORS_CM = term_util.term_data(UNIT_CSV, "factor_cm", float)
 FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 
-def build(nlp: Language, **kwargs):
-    add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS, **kwargs)
+def build(nlp: Language):
+    add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS)
     add.trait_pipe(nlp, name="lat_long_patterns", compiler=lat_long_patterns())
     add.trait_pipe(
         nlp,
@@ -53,6 +53,7 @@ def decoder():
         "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
         "dir": {"LOWER": {"REGEX": r"""^'?[nesw]\.?\Z"""}},
         "datum": {"ENT_TYPE": "datum"},
+        "datum_label": {"ENT_TYPE": "datum_label"},
         "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
         "99": {"TEXT": {"REGEX": FLOAT_RE}},
         "+99": {"TEXT": {"REGEX": NUM_PLUS}},
@@ -100,8 +101,8 @@ def lat_long_uncert_patterns():
         keep=["lat_long"],
         decoder=decoder(),
         patterns=[
-            "lat_long+ ,? uncert? ,?     +99 m (? datum* )?",
-            "lat_long+ ,? uncert? ,? [+]? 99 m (? datum* )?",
+            "lat_long+ ,? uncert? ,?     +99 m ,* datum_label* ,* (? datum* )?",
+            "lat_long+ ,? uncert? ,? [+]? 99 m ,* datum_label* ,* (? datum* )?",
         ],
     )
 
@@ -143,8 +144,8 @@ def lat_long_match(ent):
 
 @registry.misc("lat_long_uncertain_match")
 def lat_long_uncertain_match(ent):
-    unit = ""
     value = 0.0
+    unit = []
     datum = []
 
     for token in ent:
@@ -154,24 +155,26 @@ def lat_long_uncertain_match(ent):
 
         # Get the uncertainty units
         elif token._.term in ("metric_length", "imperial_length"):
-            unit = REPLACE.get(token.lower_, token.lower_)
+            unit.append(token.lower_)
 
         # Already parse
         elif token._.flag:
             continue
 
-        # Get the uncertainty value
-        elif re.match(const.FLOAT_RE, token.text):
-            value = util.to_positive_float(token.text)
-
         # Pick up a trailing datum
         if token._.term == "datum":
             datum.append(token.lower_)
+
+        # Get the uncertainty value
+        elif re.match(const.FLOAT_RE, token.text):
+            value = util.to_positive_float(token.text)
 
     if not unit:
         raise RejectMatch
 
     # Convert the values to meters
+    unit = "".join(unit)
+    unit = REPLACE.get(unit, unit)
     ent._.data["units"] = "m"
     factor = FACTORS_M[unit]
     ent._.data["uncertainty"] = round(value * factor, 3)

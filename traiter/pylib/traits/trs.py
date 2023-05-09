@@ -12,8 +12,8 @@ from traiter.pylib.pipes import reject_match
 TRS_CSV = Path(__file__).parent / "terms" / "trs_terms.csv"
 
 
-def build(nlp: Language, **kwargs):
-    add.term_pipe(nlp, name="trs_terms", path=TRS_CSV, **kwargs)
+def build(nlp: Language):
+    add.term_pipe(nlp, name="trs_terms", path=TRS_CSV)
     add.trait_pipe(nlp, name="trs_part_patterns", compiler=trs_part_patterns())
     add.trait_pipe(nlp, name="trs_patterns", compiler=trs_patterns())
     # add.debug_tokens(nlp)  # ########################################
@@ -26,6 +26,7 @@ def trs_part_patterns():
         "post": {"LOWER": {"REGEX": r"^[nesw]$"}},
         "pre": {"LOWER": {"REGEX": r"^[neswtr]{1,2}\d*$"}},
         "/": {"TEXT": {"IN": const.SLASH}},
+        ",": {"TEXT": {"IN": const.COMMA}},
     }
 
     return Compiler(
@@ -33,9 +34,9 @@ def trs_part_patterns():
         decoder=decoder,
         on_match="trs_part",
         patterns=[
-            " pre ",
-            " pre /? 99 ",
-            " pre /? post ",
+            " pre         ,?",
+            " pre /? 99   ,?",
+            " pre /? post ,? ",
         ],
     )
 

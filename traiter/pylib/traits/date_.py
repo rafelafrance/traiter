@@ -20,8 +20,8 @@ SEP = "(.,;/_'-"
 REPLACE = term_util.term_data(MONTH_CSV, "replace")
 
 
-def build(nlp: Language, **kwargs):
-    add.term_pipe(nlp, name="date_terms", path=[DATE_CSV, MONTH_CSV], **kwargs)
+def build(nlp: Language):
+    add.term_pipe(nlp, name="date_terms", path=[DATE_CSV, MONTH_CSV])
     add.trait_pipe(nlp, name="date_patterns", compiler=date_patterns())
     add.cleanup_pipe(nlp, name="date_cleanup")
 

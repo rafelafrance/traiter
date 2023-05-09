@@ -14,8 +14,8 @@ REPLACE = term_util.term_data(COLOR_CSV, "replace")
 REMOVE = term_util.term_data(COLOR_CSV, "remove", int)
 
 
-def build(nlp: Language, **kwargs):
-    add.term_pipe(nlp, name="color_terms", path=COLOR_CSV, **kwargs)
+def build(nlp: Language):
+    add.term_pipe(nlp, name="color_terms", path=COLOR_CSV)
     add.trait_pipe(nlp, name="color_patterns", compiler=color_patterns())
     add.cleanup_pipe(nlp, name="color_cleanup")
 

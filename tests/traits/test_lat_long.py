@@ -164,14 +164,14 @@ class TestLatLongPatterns(unittest.TestCase):
                     "uncertainty": 365.76,
                     "trait": "lat_long",
                     "start": 0,
-                    "end": 31,
+                    "end": 33,
                     "units": "m",
                 }
             ],
         )
 
     def test_lat_long_12(self):
-        """It handles a lat/long range"""
+        """It handles a lat/long range."""
         self.assertEqual(
             test("""Lat. 13.5° - 14°55'S Long. 60.2° - 61°50'W."""),
             [
@@ -180,6 +180,22 @@ class TestLatLongPatterns(unittest.TestCase):
                     "trait": "lat_long",
                     "start": 0,
                     "end": 43,
+                }
+            ],
+        )
+
+    def test_lat_long_13(self):
+        self.assertEqual(
+            test("""45.01701° N, 118.15694° W Uncertainty: 50 m.; Datum: WGS 84;"""),
+            [
+                {
+                    "lat_long": "45.01701° N, 118.15694° W",
+                    "uncertainty": 50.0,
+                    "datum": "WGS84",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 59,
+                    "units": "m",
                 }
             ],
         )

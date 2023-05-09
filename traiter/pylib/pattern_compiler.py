@@ -38,7 +38,7 @@ class Compiler:
         patterns: list[str],
         decoder: dict[str, dict],
         on_match: str | None = None,
-        id: str = "",  # noqa
+        id: str = "",
         keep: str | list[str] = None,  # Keep track of traits we want to keep
     ):
         self.label = label

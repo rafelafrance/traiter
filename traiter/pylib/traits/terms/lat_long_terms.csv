@@ -31,6 +31,7 @@ datum,wgs60,WGS60
 datum,wgs66,WGS66
 datum,wgs72,WGS72
 datum,wgs84,WGS84
+datum_label,datum,
 lat_long_key,lat,
 lat_long_key,lng,
 lat_long_key,lon,

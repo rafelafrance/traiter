@@ -11,7 +11,7 @@ def shorten(text: str) -> str:
 
 def as_list(values: Any) -> list:
     """Convert values to a list."""
-    return list(values) if isinstance(values, (list, tuple, set)) else [values]
+    return list(values) if isinstance(values, list | tuple | set) else [values]
 
 
 def to_positive_float(value: str) -> float | None:

@@ -3,8 +3,8 @@
 Taxon traits are build up from these two as well as other terms like ranks and names.
 """
 from collections import defaultdict
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from traiter.pylib import term_util
 
@@ -39,5 +39,5 @@ def abbrev_binomial_term(csv_path: Path | Iterable[Path]):
 def abbreviate(pattern):
     genus, *parts = pattern.split()
     abbrev = genus[0].upper() + "."
-    abbrev = " ".join([abbrev] + parts)
+    abbrev = " ".join([abbrev, *parts])
     return abbrev

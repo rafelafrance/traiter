@@ -42,3 +42,16 @@ class TestTownshipRangeSectionPatterns(unittest.TestCase):
                 },
             ],
         )
+
+    def test_trs_04(self):
+        self.assertEqual(
+            test("""T22N, R27E, S36."""),
+            [
+                {
+                    "trs": "T22N, R27E, S36",
+                    "trait": "trs",
+                    "start": 0,
+                    "end": 15,
+                },
+            ],
+        )

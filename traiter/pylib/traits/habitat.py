@@ -13,8 +13,8 @@ HABITAT_CSV = Path(__file__).parent / "terms" / "habitat_terms.csv"
 REPLACE = term_util.term_data(HABITAT_CSV, "replace")
 
 
-def build(nlp: Language, **kwargs):
-    add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV, **kwargs)
+def build(nlp: Language):
+    add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV)
     add.trait_pipe(nlp, name="habitat_patterns", compiler=habitat_compilers())
     add.cleanup_pipe(nlp, name="habitat_cleanup")
 
