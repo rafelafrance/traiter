@@ -120,7 +120,7 @@ class TestLatLongPatterns(unittest.TestCase):
             test("""33° 53' 31.0" N, -111° 56' 59.9" W"""),
             [
                 {
-                    "lat_long": """33° 53' 31.0" N, - 111° 56' 59.9" W""",
+                    "lat_long": """33° 53' 31.0" N, -111° 56' 59.9" W""",
                     "trait": "lat_long",
                     "start": 0,
                     "end": 34,
@@ -134,7 +134,7 @@ class TestLatLongPatterns(unittest.TestCase):
             [
                 {
                     "datum": "WGS84",
-                    "lat_long": """Lat: 41.01102 Long: - 75.485306""",
+                    "lat_long": """Lat: 41.01102 Long: -75.485306""",
                     "trait": "lat_long",
                     "start": 0,
                     "end": 39,
@@ -176,7 +176,7 @@ class TestLatLongPatterns(unittest.TestCase):
             test("""Lat. 13.5° - 14°55'S Long. 60.2° - 61°50'W."""),
             [
                 {
-                    "lat_long": """Lat. 13.5° - 14° 55'S Long. 60.2° - 61° 50' W.""",
+                    "lat_long": """Lat. 13.5° -14° 55'S Long. 60.2° -61° 50' W.""",
                     "trait": "lat_long",
                     "start": 0,
                     "end": 43,
@@ -196,6 +196,45 @@ class TestLatLongPatterns(unittest.TestCase):
                     "start": 0,
                     "end": 59,
                     "units": "m",
+                }
+            ],
+        )
+
+    def test_lat_long_14(self):
+        self.assertEqual(
+            test("""12s 359602E 3718689N"""),
+            [
+                {
+                    "lat_long": "12 S 359602 E 3718689 N",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 20,
+                }
+            ],
+        )
+
+    def test_lat_long_15(self):
+        self.assertEqual(
+            test("""N41° 50.046’ W087° 54.172’."""),
+            [
+                {
+                    "lat_long": "N41° 50.046’ W087° 54.172’",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 26,
+                }
+            ],
+        )
+
+    def test_lat_long_16(self):
+        self.assertEqual(
+            test("""27.409578°, -80.397773°"""),
+            [
+                {
+                    "lat_long": "27.409578°, -80.397773°",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 23,
                 }
             ],
         )

@@ -6,8 +6,7 @@ from spacy.util import registry
 
 from traiter.pylib import const
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.pylib.pipes import add
-from traiter.pylib.pipes import reject_match
+from traiter.pylib.pipes import add, reject_match
 
 TRS_CSV = Path(__file__).parent / "terms" / "trs_terms.csv"
 
@@ -22,11 +21,11 @@ def build(nlp: Language):
 
 def trs_part_patterns():
     decoder = {
+        ",": {"TEXT": {"IN": const.COMMA}},
+        "/": {"TEXT": {"IN": const.SLASH}},
         "99": {"LOWER": {"REGEX": r"^\d{1,2}$"}},
         "post": {"LOWER": {"REGEX": r"^[nesw]$"}},
-        "pre": {"LOWER": {"REGEX": r"^[neswtr]{1,2}\d*$"}},
-        "/": {"TEXT": {"IN": const.SLASH}},
-        ",": {"TEXT": {"IN": const.COMMA}},
+        "pre": {"LOWER": {"REGEX": r"^[neswrst]{1,2}\d*$"}},
     }
 
     return Compiler(
@@ -56,9 +55,10 @@ def trs_patterns():
         on_match="trs",
         decoder=decoder,
         patterns=[
-            " trs_label* trs+ ",
+            " trs_label* trs+",
             " trs_label* trs+ sec_label 99",
             " trs_label* trs+ sec_label 99 ,? 99",
+            " trs_label* sec_label 99 ,? trs+",
         ],
     )
 
@@ -97,4 +97,5 @@ def trs(ent):
 
     frags = " ".join(frags)
     frags = re.sub(r"\s([,:])", r"\1", frags)
+    frags = re.sub(r",$", "", frags)
     ent._.data = {"trs": frags}

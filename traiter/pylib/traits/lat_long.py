@@ -4,9 +4,7 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import const
-from traiter.pylib import term_util
-from traiter.pylib import util
+from traiter.pylib import const, term_util, util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 from traiter.pylib.pipes.reject_match import RejectMatch
@@ -14,7 +12,7 @@ from traiter.pylib.pipes.reject_match import RejectMatch
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"""{SYM},;._"""
 
-FLOAT_RE = r"^([\d,]+\.?\d*)\Z"
+FLOAT_RE = r"([\d,]+\.?\d*)"
 NUM_PLUS = r"^(±|\+|-)?[\d,]+\.?\d*\Z"
 PLUS = r"^(±|\+|-)+\Z"
 MINUS = r"^[-]\Z"
@@ -52,10 +50,11 @@ def decoder():
         "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
         "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
         "dir": {"LOWER": {"REGEX": r"""^'?[nesw]\.?\Z"""}},
+        "dir99": {"LOWER": {"REGEX": rf"""^[nesw]{FLOAT_RE}\Z"""}},
         "datum": {"ENT_TYPE": "datum"},
         "datum_label": {"ENT_TYPE": "datum_label"},
         "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
-        "99": {"TEXT": {"REGEX": FLOAT_RE}},
+        "99": {"TEXT": {"REGEX": rf"^{FLOAT_RE}$"}},
         "+99": {"TEXT": {"REGEX": NUM_PLUS}},
         "uncert": {"ENT_TYPE": "uncertain_label"},
         "lat_long": {"ENT_TYPE": "lat_long"},
@@ -71,6 +70,10 @@ def lat_long_patterns():
         keep="lat_long",
         decoder=decoder(),
         patterns=[
+            (
+                "label? [-]? 99 deg 99? min* 99? sec* ,* "
+                "       [-]? 99 deg 99? min* 99? sec* (? datum* )?"
+            ),
             (
                 "label? [-]? 99 deg* 99? min* 99? sec* dir  ,* "
                 "       [-]? 99 deg* 99? min* 99? sec* dir  (? datum* )?"
@@ -88,6 +91,15 @@ def lat_long_patterns():
                 "99 deg* 99? min* 99? sec* dir? ,* "
                 "key ,* [-]? 99 deg* 99? min* 99? sec* dir? [-] "
                 "99 deg* 99? min* 99? sec* dir? (? datum* )?"
+            ),
+            (
+                "label? dir99 deg* 99? min* 99? sec* ,* "
+                "       dir99 deg* 99? min* 99? sec* (? datum* )?"
+            ),
+            (
+                "label? [-]? 99 deg* 99? min* 99? sec* dir  ,* "
+                "       [-]? 99 deg* 99? min* 99? sec* dir  ,* "
+                "       [-]? 99 deg* 99? min* 99? sec* dir  (? datum* )?"
             ),
         ],
     )
@@ -131,6 +143,7 @@ def lat_long_match(ent):
     lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
     lat_long = re.sub(r"\s(:)", r"\1", lat_long)
     lat_long = re.sub(r"(?<=\d)([NESWnesw])", r" \1", lat_long)
+    lat_long = re.sub(r"-\s(?=\d)", r"-", lat_long)
 
     ent._.data = {"lat_long": lat_long}
 

@@ -55,3 +55,29 @@ class TestTownshipRangeSectionPatterns(unittest.TestCase):
                 },
             ],
         )
+
+    def test_trs_05(self):
+        self.assertEqual(
+            test("""Lehigh Acres T44S, R26E, S25, NEZ Shallow water"""),
+            [
+                {
+                    "trs": "T44S, R26E, S25",
+                    "trait": "trs",
+                    "start": 13,
+                    "end": 29,
+                },
+            ],
+        )
+
+    def test_trs_06(self):
+        self.assertEqual(
+            test("""Sec 20, T33N, R7E,"""),
+            [
+                {
+                    "trs": "sec 20, T33N, R7E",
+                    "trait": "trs",
+                    "start": 0,
+                    "end": 18,
+                },
+            ],
+        )
