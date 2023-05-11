@@ -47,20 +47,33 @@ def trs_patterns():
         "sec_label": {"ENT_TYPE": "sec_label"},
         "trs_label": {"ENT_TYPE": "trs_label"},
         "trs": {"ENT_TYPE": "trs_part"},
+        "not_trs": {"ENT_TYPE": "not_trs"},
     }
 
-    return Compiler(
-        label="trs",
-        keep="trs",
-        on_match="trs",
-        decoder=decoder,
-        patterns=[
-            " trs_label* trs+",
-            " trs_label* trs+ sec_label 99",
-            " trs_label* trs+ sec_label 99 ,? 99",
-            " trs_label* sec_label 99 ,? trs+",
-        ],
-    )
+    return [
+        Compiler(
+            label="trs",
+            keep="trs",
+            on_match="trs",
+            decoder=decoder,
+            patterns=[
+                " trs_label* trs+",
+                " trs_label* trs+ sec_label+ 99",
+                " trs_label* trs+ sec_label+ 99 ,? 99",
+                " trs_label* sec_label+ 99 ,? trs+",
+            ],
+        ),
+        Compiler(
+            label="not_trs",
+            on_match=reject_match.REJECT_MATCH,
+            decoder=decoder,
+            patterns=[
+                "        trs+ not_trs",
+                "not_trs trs+ not_trs",
+                "not_trs trs+",
+            ],
+        ),
+    ]
 
 
 @registry.misc("trs_part")
@@ -83,6 +96,7 @@ def trs(ent):
     frags = []
 
     for token in ent:
+
         if token._.flag == "trs_data":
             frags.append(token._.data["trs_part"])
 
@@ -92,10 +106,10 @@ def trs(ent):
         elif re.match(r"^(\d+|,)$", token.text):
             frags.append(token.text)
 
-        elif token.ent_type_ == "sec_label":
+        elif token._.term == "sec_label":
             frags.append(token.lower_)
 
     frags = " ".join(frags)
-    frags = re.sub(r"\s([,:])", r"\1", frags)
+    frags = re.sub(r"\s([.,:])", r"\1", frags)
     frags = re.sub(r",$", "", frags)
     ent._.data = {"trs": frags}

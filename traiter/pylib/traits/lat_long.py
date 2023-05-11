@@ -29,13 +29,13 @@ FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 def build(nlp: Language):
     add.term_pipe(nlp, name="lat_long_terms", path=ALL_CSVS)
     add.trait_pipe(nlp, name="lat_long_patterns", compiler=lat_long_patterns())
+    # add.debug_tokens(nlp)  # #######################################
     add.trait_pipe(
         nlp,
         name="lat_long_uncert_patterns",
         overwrite=["lat_long"],
         compiler=lat_long_uncert_patterns(),
     )
-    # add.debug_tokens(nlp)  # #######################################
     add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
 

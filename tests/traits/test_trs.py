@@ -81,3 +81,22 @@ class TestTownshipRangeSectionPatterns(unittest.TestCase):
                 },
             ],
         )
+
+    def test_trs_07(self):
+        self.assertEqual(
+            test("""NW 32nd Avenue"""),
+            [],
+        )
+
+    def test_trs_08(self):
+        self.assertEqual(
+            test("""Sec.33 T37N,"""),
+            [
+                {
+                    "trs": "sec. 33 T37N",
+                    "trait": "trs",
+                    "start": 0,
+                    "end": 12,
+                },
+            ],
+        )

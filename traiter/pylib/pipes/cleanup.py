@@ -42,7 +42,7 @@ class CleanupTraits:
                 token._.flag = ""
                 token._.term = ""
 
-    def to_disk(self, path, exclude=tuple()):  # noqa
+    def to_disk(self, path, exclude=None):
         path = Path(path)
         if not path.exists():
             path.mkdir()
@@ -51,9 +51,9 @@ class CleanupTraits:
         with data_path.open("w", encoding="utf8") as data_file:
             data_file.write(json.dumps(fields))
 
-    def from_disk(self, path, exclude=tuple()):  # noqa
+    def from_disk(self, path, exclude=None):
         data_path = Path(path) / "data.json"
         with data_path.open("r", encoding="utf8") as data_file:
             data = json.load(data_file)
-            for key in data.keys():
+            for key in data:
                 self.__dict__[key] = data[key]

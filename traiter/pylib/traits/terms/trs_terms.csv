@@ -9,3 +9,6 @@ sec_label,sect.
 sec_label,sect:
 sec_label,section
 sec_label,section:
+not_trs,nd
+not_trs,st
+not_trs,rd

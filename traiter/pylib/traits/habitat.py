@@ -12,6 +12,8 @@ HABITAT_CSV = Path(__file__).parent / "terms" / "habitat_terms.csv"
 
 REPLACE = term_util.term_data(HABITAT_CSV, "replace")
 
+SEP = "/,-"
+
 
 def build(nlp: Language):
     add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV)
@@ -26,6 +28,7 @@ def habitat_compilers():
         "label": {"ENT_TYPE": "habitat_label"},
         "prefix": {"ENT_TYPE": "habitat_prefix"},
         "sent": {"IS_SENT_START": False},
+        "sep": {"LOWER": {"REGEX": fr"[{SEP}]"}},
         "suffix": {"ENT_TYPE": "habitat_suffix"},
     }
 
@@ -37,10 +40,10 @@ def habitat_compilers():
             keep="habitat",
             patterns=[
                 "        habitat+",
-                "prefix+ habitat+",
-                "prefix+ habitat+ suffix+",
-                "        habitat+ suffix+",
-                "prefix+          suffix+",
+                "prefix+ sep? prefix* habitat+",
+                "prefix+ sep? prefix* habitat+ suffix+",
+                "        sep? prefix* habitat+ suffix+",
+                "prefix+ sep? prefix*          suffix+",
             ],
         ),
         Compiler(
@@ -71,7 +74,8 @@ def habitat_match(ent):
     frags = []
 
     for token in ent:
-        frags.append(REPLACE.get(token.lower_, token.lower_))
+        if token.text not in SEP:
+            frags.append(REPLACE.get(token.lower_, token.lower_))
 
     ent._.data = {"habitat": " ".join(frags)}
 

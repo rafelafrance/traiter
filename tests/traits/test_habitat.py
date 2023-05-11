@@ -56,3 +56,18 @@ class TestHabitat(unittest.TestCase):
                 },
             ],
         )
+
+    def test_habitat_05(self):
+        self.assertEqual(
+            test(
+                """Riparian/desert scrub."""
+            ),
+            [
+                {
+                    "trait": "habitat",
+                    "habitat": "riparian desert scrub",
+                    "start": 0,
+                    "end": 21,
+                },
+            ],
+        )
