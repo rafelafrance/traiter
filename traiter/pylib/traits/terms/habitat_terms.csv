@@ -1,7 +1,10 @@
 label,pattern,replace
 bad_habitat,botanical,
 bad_habitat,by,
+bad_habitat,co,
+bad_habitat,co.,
 bad_habitat,county,
+bad_habitat,falls,
 bad_habitat,long,
 bad_habitat,national,
 bad_habitat,road,

@@ -11,8 +11,8 @@ from traiter.pylib.pipes import add, reject_match
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"""{SYM},;._"""
 
-FLOAT_RE = r"(\d{1,3}\.?\d*)"
-FLOAT_PLUS = r"^(±|\+|-)?\d{1,3}\.?\d*\Z"
+FLOAT_RE = r"\d+(\.\d+)?"
+FLOAT_LL = r"\d{1,3}(\.\d+)?"
 
 PLUS = r"^(±|\+|-)+\Z"
 MINUS = r"^[-]\Z"
@@ -24,6 +24,8 @@ ALL_CSVS = [GEOCOORDINATES_CSV, UNIT_CSV]
 REPLACE = term_util.term_data([UNIT_CSV, GEOCOORDINATES_CSV], "replace")
 FACTORS_CM = term_util.term_data(UNIT_CSV, "factor_cm", float)
 FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
+
+DIR = """((north|east|south|west)(ing)?|[nesw])"""
 
 
 def build(nlp: Language):
@@ -44,30 +46,35 @@ def build(nlp: Language):
 
 def geocoordinate_patterns():
     decoder = {
-        ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
         "(": {"TEXT": {"IN": const.OPEN}},
         ")": {"TEXT": {"IN": const.CLOSE}},
+        "+99.0": {"TEXT": {"REGEX": r"^(±|\+|-)?\d{1,3}(\.\d+)?\Z"}},
+        ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
         "/": {"TEXT": {"IN": const.SLASH}},
-        "key": {"ENT_TYPE": "lat_long_key"},
-        "label": {"ENT_TYPE": "lat_long_label"},
-        "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)\Z"""}},
-        "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
-        "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
-        "dir": {"LOWER": {"REGEX": r"""^'?[nesw]\.?\Z"""}},
-        "dir99.0": {"LOWER": {"REGEX": rf"""^[nesw]{FLOAT_RE}\Z"""}},
-        "datum": {"ENT_TYPE": "datum"},
-        "datum_label": {"ENT_TYPE": "datum_label"},
-        "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
         "99": {"LOWER": {"REGEX": r"^\d{1,2}$"}},
-        "99.0": {"TEXT": {"REGEX": rf"^{FLOAT_RE}$"}},
-        "+99.0": {"TEXT": {"REGEX": FLOAT_PLUS}},
-        "uncert": {"ENT_TYPE": "uncertain_label"},
-        "lat_long": {"ENT_TYPE": "lat_long"},
+        "9999": {"LOWER": {"REGEX": r"^\d+$"}},
+        "99.0": {"TEXT": {"REGEX": rf"^{FLOAT_LL}$"}},
         "[+]": {"TEXT": {"REGEX": PLUS}},
         "[-]": {"TEXT": {"REGEX": PLUS}},
+        "datum": {"ENT_TYPE": "datum"},
+        "datum_label": {"ENT_TYPE": "datum_label"},
+        "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)\Z"""}},
+        "dir": {"LOWER": {"REGEX": r"""^'?[nesw]\.?\Z"""}},
+        "dir99.0": {"LOWER": {"REGEX": rf"""^[nesw]{FLOAT_LL}\Z"""}},
+        "key": {"ENT_TYPE": "lat_long_key"},
+        "label": {"ENT_TYPE": "lat_long_label"},
+        "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
+        "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
+        "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
+        "sect": {"LOWER": {"REGEX": r"""^(section|sec\.?|s)$"""}},
         "trs_post": {"LOWER": {"REGEX": r"^[nesw]$"}},
         "trs_pre": {"LOWER": {"REGEX": r"^[neswrst]{1,2}\d*$"}},
+        "uaa": {"LOWER": {"REGEX": r"^u[a-z]{1,2}$"}},
+        "uncert": {"ENT_TYPE": "uncertain_label"},
+        "utm_dir": {"LOWER": {"REGEX": rf"""^{DIR}\Z"""}},
+        "utm_label": {"ENT_TYPE": "utm_label"},
     }
+
     return [
         Compiler(
             label="lat_long",
@@ -76,15 +83,15 @@ def geocoordinate_patterns():
             decoder=decoder,
             patterns=[
                 (
-                    "label? [-]? 99.0 deg 99.0? min* 99.0? sec* ,* "
+                    "label* [-]? 99.0 deg 99.0? min* 99.0? sec* ,* "
                     "       [-]? 99.0 deg 99.0? min* 99.0? sec* (? datum* )?"
                 ),
                 (
-                    "label? [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* "
+                    "label* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* "
                     "       [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  (? datum* )?"
                 ),
                 (
-                    "label? dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* "
+                    "label* dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* "
                     "       dir [-]? 99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
                 (
@@ -98,24 +105,30 @@ def geocoordinate_patterns():
                     "99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
                 ),
                 (
-                    "label? dir99.0 deg* 99.0? min* 99.0? sec* ,* "
+                    "label* dir99.0 deg* 99.0? min* 99.0? sec* ,* "
                     "       dir99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
-                (
-                    "label? [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* "
-                    "       [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* "
-                    "       [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  (? datum* )?"
-                ),
-            ],
+             ],
         ),
         Compiler(
             label="trs_part",
+            keep="trs",
             decoder=decoder,
             on_match="trs_part",
             patterns=[
                 " trs_pre         ,?",
                 " trs_pre /? 99   ,?",
                 " trs_pre /? trs_post ,? ",
+            ],
+        ),
+        Compiler(
+            label="utm",
+            keep="utm",
+            decoder=decoder,
+            on_match="utm_match",
+            patterns=[
+                "utm_label* 99 sect ,* 9999 utm_dir? ,* 9999 utm_dir? (? datum* )?",
+                "99 uaa 9999",
             ],
         ),
     ]
@@ -130,7 +143,7 @@ def geocoordinate_plus_patterns():
         "datum_label": {"ENT_TYPE": "datum_label"},
         "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
         "99.0": {"TEXT": {"REGEX": rf"^{FLOAT_RE}$"}},
-        "+99.0": {"TEXT": {"REGEX": FLOAT_PLUS}},
+        "+99.0": {"TEXT": {"REGEX": r"^(±|\+|-)?\d+(\.\d+)?\Z"}},
         "uncert": {"ENT_TYPE": "uncertain_label"},
         "lat_long": {"ENT_TYPE": "lat_long"},
         "[+]": {"TEXT": {"REGEX": PLUS}},
@@ -156,7 +169,7 @@ def geocoordinate_plus_patterns():
         Compiler(
             label="trs",
             keep="trs",
-            on_match="trs",
+            on_match="trs_match",
             decoder=decoder,
             patterns=[
                 " trs_label* trs+",
@@ -198,12 +211,7 @@ def lat_long_match(ent):
             text = token.text.upper() if len(token.text) == 1 else token.text
             frags.append(text)
 
-    lat_long = " ".join(frags)
-    lat_long = re.sub(rf"\s([{PUNCT}])", r"\1", lat_long)
-    lat_long = re.sub(r"\s(:)", r"\1", lat_long)
-    lat_long = re.sub(r"(?<=\d)([NESWnesw])", r" \1", lat_long)
-    lat_long = re.sub(r"-\s(?=\d)", r"-", lat_long)
-
+    lat_long = format_coords(frags)
     ent._.data = {"lat_long": lat_long}
 
     if datum:
@@ -272,25 +280,42 @@ def trs_part(ent):
     ent[0]._.flag = "trs_data"
 
 
-@registry.misc("trs")
-def trs(ent):
+@registry.misc("trs_match")
+def trs_match(ent):
+    ent._.data = {"trs": "present"}
+
+
+@registry.misc("utm_match")
+def utm_match(ent):
     frags = []
+    datum = []
 
     for token in ent:
-
-        if token._.flag == "trs_data":
-            frags.append(token._.data["trs_part"])
-
-        elif token._.flag == "trs_part":
+        if token._.term == "utm_label":
             continue
 
-        elif re.match(r"^(\d+|,)$", token.text):
-            frags.append(token.text)
+        if token.text in const.OPEN + const.CLOSE:
+            continue
 
-        elif token._.term == "sec_label":
-            frags.append(token.lower_)
+        if token._.term == "datum":
+            datum.append(token.lower_)
 
-    frags = " ".join(frags)
-    frags = re.sub(r"\s([.,:])", r"\1", frags)
-    frags = re.sub(r"[,.]$", "", frags)
-    ent._.data = {"trs": frags}
+        else:
+            text = token.text.upper() if len(token.text) == 1 else token.text
+            frags.append(text)
+
+    utm = format_coords(frags)
+    ent._.data = {"utm": utm}
+
+    if datum:
+        datum = "".join(datum)
+        ent._.data["datum"] = REPLACE.get(datum, datum)
+
+
+def format_coords(frags):
+    coords = " ".join(frags)
+    coords = re.sub(rf"\s([{PUNCT}])", r"\1", coords)
+    coords = re.sub(r"\s(:)", r"\1", coords)
+    coords = re.sub(r"(?<=\d)([NESWnesw])", r" \1", coords)
+    coords = re.sub(r"-\s(?=\d)", r"-", coords)
+    return coords

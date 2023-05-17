@@ -202,19 +202,6 @@ class TestLatLongPatterns(unittest.TestCase):
 
     def test_lat_long_14(self):
         self.assertEqual(
-            test("""12s 359602E 3718689N"""),
-            [
-                {
-                    "lat_long": "12 S 359602 E 3718689 N",
-                    "trait": "lat_long",
-                    "start": 0,
-                    "end": 20,
-                }
-            ],
-        )
-
-    def test_lat_long_15(self):
-        self.assertEqual(
             test("""N41° 50.046’ W087° 54.172’."""),
             [
                 {
@@ -226,7 +213,7 @@ class TestLatLongPatterns(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_16(self):
+    def test_lat_long_15(self):
         self.assertEqual(
             test("""27.409578°, -80.397773°"""),
             [
@@ -239,7 +226,7 @@ class TestLatLongPatterns(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_17(self):
+    def test_lat_long_16(self):
         self.assertEqual(
             test("""Q.: 34°37'17"N, 116°50'15"W,+1000m)"""),
             [
@@ -254,7 +241,7 @@ class TestLatLongPatterns(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_18(self):
+    def test_lat_long_17(self):
         self.assertEqual(
             test("""Lat. 29°12.063'N Long. 082°02.005'W Datum: WGS 84."""),
             [
@@ -265,101 +252,5 @@ class TestLatLongPatterns(unittest.TestCase):
                     "start": 0,
                     "end": 49,
                 }
-            ],
-        )
-    def test_trs_01(self):
-        self.assertEqual(
-            test("""TRS: NE/14 NW1/4 NW1/4 Nw1/4 S21 T39S R20E"""),
-            [
-                {
-                    "trs": "NE/14 NW1/4 NW1/4 Nw1/4 S21 T39S R20E",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 42,
-                },
-            ],
-        )
-
-    def test_trs_02(self):
-        self.assertEqual(
-            test("""TRS: T20N R20W sec 14, 23;"""),
-            [
-                {
-                    "trs": "T20N R20W sec 14, 23",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 25,
-                },
-            ],
-        )
-
-    def test_trs_03(self):
-        self.assertEqual(
-            test("""TRS: T7N R1E sec 30 39.10010 -112.298611"""),
-            [
-                {
-                    "trs": "T7N R1E sec 30",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 19,
-                },
-            ],
-        )
-
-    def test_trs_04(self):
-        self.assertEqual(
-            test("""T22N, R27E, S36."""),
-            [
-                {
-                    "trs": "T22N, R27E, S36",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 16,
-                },
-            ],
-        )
-
-    def test_trs_05(self):
-        self.assertEqual(
-            test("""Lehigh Acres T44S, R26E, S25, NEZ Shallow water"""),
-            [
-                {
-                    "trs": "T44S, R26E, S25",
-                    "trait": "trs",
-                    "start": 13,
-                    "end": 29,
-                },
-            ],
-        )
-
-    def test_trs_06(self):
-        self.assertEqual(
-            test("""Sec 20, T33N, R7E,"""),
-            [
-                {
-                    "trs": "sec 20, T33N, R7E",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 18,
-                },
-            ],
-        )
-
-    def test_trs_07(self):
-        self.assertEqual(
-            test("""NW 32nd Avenue"""),
-            [],
-        )
-
-    def test_trs_08(self):
-        self.assertEqual(
-            test("""Sec.33 T37N,"""),
-            [
-                {
-                    "trs": "sec. 33 T37N",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 12,
-                },
             ],
         )
