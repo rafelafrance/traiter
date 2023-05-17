@@ -50,18 +50,18 @@ def date_patterns():
             keep="date",
             decoder=decoder,
             patterns=[
-                "label? :? 99    -* month -* 99",
-                "label? :? 99    -* month -* 9999",
-                "label? :? 9999  -* month -* 99",
-                "label? :? 99    -* roman -* 99",
-                "label? :? 99    -* roman -* 9999",
-                "label? :? 9999  -* roman -* 99",
-                "label? :? 99    -  99    -  99",
-                "label? :? 99    -  99    -  9999",
-                "label? :? month -* 99    -* 9999",
-                "label? :? 9999  -  99    -  99",
-                "label? :? month -* 99-9999",
-                "label? :? month -* 99-99",
+                "label? :? 99     -* month -* 99",
+                "label? :? 99     -* month -* 9999",
+                "label? :? 9999   -* month -* 99",
+                "label? :? 99     -* roman -* 99",
+                "label? :? 99     -* roman -* 9999",
+                "label? :? 9999   -* roman -* 99",
+                "label? :? 99     -  99    -  99",
+                "label? :? 99     -  99    -  9999",
+                "label? :? month+ -* 99    -* 9999",
+                "label? :? 9999   -  99    -  99",
+                "label? :? month+ -* 99-9999",
+                "label? :? month+ -* 99-99",
             ],
         ),
         Compiler(
@@ -71,8 +71,8 @@ def date_patterns():
             keep="date",
             decoder=decoder,
             patterns=[
-                "label? :? 9999  -* month",
-                "label? :? month -* 9999",
+                "label? :? 9999   -* month",
+                "label? :? month+ -* 9999",
                 "label? :? 99-9999",
                 "label? :? 99 / 9999",
             ],
@@ -95,7 +95,8 @@ def date_match(ent):
 
         # Get a month name
         elif token._.term in ("month", "roman"):
-            frags.append(REPLACE.get(token.lower_, token.lower_))
+            month = REPLACE.get(token.text, REPLACE.get(token.lower_, token.lower_))
+            frags.append(month)
 
     # Try to parse the date
     text = " ".join(frags)

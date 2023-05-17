@@ -4,9 +4,7 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import const
-from traiter.pylib import term_util
-from traiter.pylib import util
+from traiter.pylib import const, term_util, util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 
@@ -16,7 +14,7 @@ UNITS = ["metric_length", "imperial_length"]
 
 ELEVATION_CSV = Path(__file__).parent / "terms" / "elevation_terms.csv"
 UNIT_CSV = Path(__file__).parent / "terms" / "unit_length_terms.csv"
-ABOUT_CSV = Path(__file__).parent / "terms" / "about.csv"
+ABOUT_CSV = Path(__file__).parent / "terms" / "about_terms.csv"
 ALL_CSVS = [ELEVATION_CSV, UNIT_CSV, ABOUT_CSV]
 
 REPLACE = term_util.term_data([UNIT_CSV, ELEVATION_CSV], "replace")

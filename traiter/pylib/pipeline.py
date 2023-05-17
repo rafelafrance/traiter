@@ -1,14 +1,7 @@
 import spacy
 
-from traiter.pylib.pipes import extensions
-from traiter.pylib.pipes import sentence
-from traiter.pylib.pipes import tokenizer
-from traiter.pylib.traits import color
-from traiter.pylib.traits import date_
-from traiter.pylib.traits import elevation
-from traiter.pylib.traits import habitat
-from traiter.pylib.traits import lat_long
-from traiter.pylib.traits import trs
+from traiter.pylib.pipes import extensions, sentence, tokenizer
+from traiter.pylib.traits import color, date_, elevation, geocoordinates, habitat
 
 
 def build(model_path=None):
@@ -27,8 +20,7 @@ def build(model_path=None):
     date_.build(nlp)
     elevation.build(nlp)
     habitat.build(nlp)
-    lat_long.build(nlp)
-    trs.build(nlp)
+    geocoordinates.build(nlp)
 
     if model_path:
         nlp.to_disk(model_path)

@@ -41,6 +41,8 @@ month,Jul,text,July
 month,JUL.,text,July
 month,JUL,text,July
 month,july,lower,July
+month,Juan,text,June
+month,Juan.,text,June
 month,jun.,text,June
 month,jun,text,June
 month,Jun.,text,June
@@ -87,4 +89,6 @@ month,Sept.,text,September
 month,Sept,text,September
 month,SEPT.,text,September
 month,SEPT,text,September
+month,SOFT,text,September
+month,SOFT.,text,September
 month,september,lower,September
