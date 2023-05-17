@@ -282,6 +282,28 @@ def trs_part(ent):
 
 @registry.misc("trs_match")
 def trs_match(ent):
+    frags = []
+
+    for token in ent:
+
+        if token._.flag == "trs_data":
+            frags.append(token._.data["trs_part"])
+
+        elif token._.flag == "trs_part":
+            continue
+
+        elif re.match(r"^(\d+|,)$", token.text):
+            frags.append(token.text)
+
+        elif token._.term == "sec_label":
+            frags.append(token.lower_)
+
+    trs = " ".join(frags)
+    trs = re.sub(r"\s([.,:])", r"\1", trs)
+    trs = re.sub(r",$", "", trs)
+    if len(trs.split()) < 2:
+        raise reject_match.RejectMatch
+
     ent._.data = {"trs": "present"}
 
 
