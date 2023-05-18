@@ -88,6 +88,9 @@ class SpellWell:
         hit = self.cxn.execute(sql, (word,)).fetchone()
         return hit[0] if hit else 0
 
+    def vocab_to_set(self) -> set[str]:
+        return {r[0] for r in self.cxn.execute("select word from vocab")}
+
     def hits(self, text: str) -> int:
         """Count the number of words in the text that are in our corpus.
 

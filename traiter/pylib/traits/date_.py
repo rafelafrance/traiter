@@ -72,7 +72,9 @@ def date_patterns():
             decoder=decoder,
             patterns=[
                 "label? :? 9999   -* month",
+                "label? :? 9999   -* roman",
                 "label? :? month+ -* 9999",
+                "label? :? roman+ -* 9999",
                 "label? :? 99-9999",
                 "label? :? 99 / 9999",
             ],

@@ -9,8 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 import regex as re
-from pylib import log
-from pylib import spell_well
+from pylib import log, spell_well
 from tqdm import tqdm
 
 CHUNK = 1_000_000
@@ -105,19 +104,31 @@ def insert_misspellings(freq, spell_well_db, deletes):
             batch.append((word, word, 0, count))
             hits.add(word)
 
-        for delete in [w for w in spell_well.deletes1(word) if len(w) > 1]:
+        for delete in [w for w in spell_well.deletes1(word) if keep(word, w)]:
             if delete not in hits:
                 batch.append((delete, word, 1, count))
                 hits.add(delete)
 
         if deletes > 1:
-            for delete in [w for w in spell_well.deletes2(word) if len(w) > 1]:
+            for delete in [w for w in spell_well.deletes2(word) if keep(word, w)]:
                 if delete not in hits:
                     batch.append((delete, word, 2, count))
                     hits.add(delete)
 
     with sqlite3.connect(spell_well_db) as cxn:
         cxn.executemany(INSERT_MISSPELLINGS, batch)
+
+
+def keep(word: str, delete: str):
+    if len(delete) < 1:
+        return False
+    if word.istitle() and not delete.istitle():
+        return False
+    if word.islower() and not delete.islower():
+        return False
+    if word.isupper() and not delete.isupper():
+        return False
+    return True
 
 
 def insert_vocab(freq, spell_well_db, delete_db):
@@ -152,25 +163,25 @@ def get_freq(idigbio_zip):
     return freq
 
 
-def explore(idigbio_zip):
-    with zipfile.ZipFile(idigbio_zip) as zippy:
-        names = zippy.namelist()
-        for name in names:
-            print(name)
-
-        with zippy.open("occurrence.csv") as in_file:
-            headers = in_file.readline()
-        headers = [h.decode().strip() for h in sorted(headers.split(b","))]
-        print("=" * 80)
-        for header in headers:
-            print(header)
-
-        with zippy.open("occurrence_raw.csv") as in_file:
-            headers = in_file.readline()
-        headers = [h.decode().strip() for h in sorted(headers.split(b","))]
-        print("=" * 80)
-        for header in headers:
-            print(header)
+# def explore(idigbio_zip):
+#     with zipfile.ZipFile(idigbio_zip) as zippy:
+#         names = zippy.namelist()
+#         for name in names:
+#             print(name)
+#
+#         with zippy.open("occurrence.csv") as in_file:
+#             headers = in_file.readline()
+#         headers = [h.decode().strip() for h in sorted(headers.split(b","))]
+#         print("=" * 80)
+#         for header in headers:
+#             print(header)
+#
+#         with zippy.open("occurrence_raw.csv") as in_file:
+#             headers = in_file.readline()
+#         headers = [h.decode().strip() for h in sorted(headers.split(b","))]
+#         print("=" * 80)
+#         for header in headers:
+#             print(header)
 
 
 def parse_args() -> argparse.Namespace:
@@ -208,7 +219,8 @@ def parse_args() -> argparse.Namespace:
         type=int,
         metavar="N",
         default=100,
-        help="""A word must be seen this many times to make it into the DB.""",
+        help="""A word must be seen this many times to make it into the DB.
+            (default: %(default)s)""",
     )
 
     arg_parser.add_argument(
@@ -216,15 +228,14 @@ def parse_args() -> argparse.Namespace:
         type=int,
         metavar="LEN",
         default=3,
-        help="""A word must long to make it into the DB.""",
+        help="""A word must long to make it into the DB. (default: %(default)s)""",
     )
 
     arg_parser.add_argument(
         "--deletes",
         choices=[1, 2],
-        metavar="LEN",
         default=1,
-        help="""How many deletes to record.""",
+        help="""How many deletes to record. (default: %(default)s)""",
     )
 
     return arg_parser.parse_args()
