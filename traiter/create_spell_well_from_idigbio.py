@@ -163,25 +163,25 @@ def get_freq(idigbio_zip):
     return freq
 
 
-# def explore(idigbio_zip):
-#     with zipfile.ZipFile(idigbio_zip) as zippy:
-#         names = zippy.namelist()
-#         for name in names:
-#             print(name)
-#
-#         with zippy.open("occurrence.csv") as in_file:
-#             headers = in_file.readline()
-#         headers = [h.decode().strip() for h in sorted(headers.split(b","))]
-#         print("=" * 80)
-#         for header in headers:
-#             print(header)
-#
-#         with zippy.open("occurrence_raw.csv") as in_file:
-#             headers = in_file.readline()
-#         headers = [h.decode().strip() for h in sorted(headers.split(b","))]
-#         print("=" * 80)
-#         for header in headers:
-#             print(header)
+def explore(idigbio_zip):
+    with zipfile.ZipFile(idigbio_zip) as zippy:
+        names = zippy.namelist()
+        for name in names:
+            print(name)
+
+        with zippy.open("occurrence.csv") as in_file:
+            headers = in_file.readline()
+        headers = [h.decode().strip() for h in sorted(headers.split(b","))]
+        print("=" * 80)
+        for header in headers:
+            print(header)
+
+        with zippy.open("occurrence_raw.csv") as in_file:
+            headers = in_file.readline()
+        headers = [h.decode().strip() for h in sorted(headers.split(b","))]
+        print("=" * 80)
+        for header in headers:
+            print(header)
 
 
 def parse_args() -> argparse.Namespace:

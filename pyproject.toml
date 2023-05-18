@@ -130,4 +130,4 @@ extend-select = [
     "YTT",
 ]
 show-fixes = true
-ignore = ["D10", "D203", "D213", "ERA001", "PD901", "RET504", "RUF001", "S608", "SIM117", "TID252"]
+ignore = ["D10", "D203", "D213", "ERA001", "PD901", "RET504", "RUF001", "S608", "SIM117", "T201", "TID252"]
