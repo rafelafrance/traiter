@@ -63,7 +63,7 @@ def elevation_compilers():
             decoder=decoder,
             keep="elevation",
             patterns=[
-                "label+ :? 99 -/to 99 m",
+                "label+ :? about? ,? 99 -/to 99 m",
             ],
         ),
     ]
