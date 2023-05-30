@@ -32,7 +32,7 @@ def abbreviate_binomials(binomials: list[dict], single_expanded_name=True):
     return abbrevs
 
 
-def abbrev_binomial_term(csv_path: Union[Path | Iterable[Path]]):
+def abbrev_binomial_term(csv_path: Union[Path, Iterable[Path]]):
     terms = term_util.read_terms(csv_path)
     return abbreviate_binomials(terms)
 
