@@ -2,12 +2,12 @@ import csv
 from collections.abc import Iterable
 from io import TextIOWrapper
 from pathlib import Path
-from typing import Any
+from typing import Any, Union
 from zipfile import ZipFile
 
 
 def term_data(
-    csv_path: Path | Iterable[Path], field: str, type_=None
+    csv_path: Union[Path, Iterable[Path]], field: str, type_=None
 ) -> dict[str, Any]:
     paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
     type_ = type_ if type_ else str
@@ -22,7 +22,8 @@ def term_data(
 
 
 def get_labels(
-    csv_paths: Path | Iterable[Path], default_labels: dict[str, str] | None = None
+    csv_paths: Union[Path, Iterable[Path]],
+    default_labels: Union[dict[str, str], None] = None
 ) -> list[str]:
     csv_paths = csv_paths if isinstance(csv_paths, Iterable) else [csv_paths]
     default_labels = default_labels if default_labels else {}
@@ -38,7 +39,9 @@ def get_labels(
 
 
 def labels_to_remove(
-    csv_paths: Path | Iterable[Path], *, keep: str | Iterable[str] | None = None
+    csv_paths: Union[Path, Iterable[Path]],
+    *,
+    keep: Union[str, Iterable[str], None] = None
 ) -> list[str]:
     labels = get_labels(csv_paths)
     if keep:
@@ -47,7 +50,7 @@ def labels_to_remove(
     return labels
 
 
-def read_terms(csv_path: Path | Iterable[Path]) -> list[dict]:
+def read_terms(csv_path: Union[Path, Iterable[Path]]) -> list[dict]:
     paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
     terms = []
     for path in paths:

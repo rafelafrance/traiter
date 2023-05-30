@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 
 import ftfy
 import regex as re
@@ -11,10 +11,10 @@ def shorten(text: str) -> str:
 
 def as_list(values: Any) -> list:
     """Convert values to a list."""
-    return list(values) if isinstance(values, list | tuple | set) else [values]
+    return list(values) if isinstance(values, (list, tuple, set)) else [values]
 
 
-def to_positive_float(value: str) -> float | None:
+def to_positive_float(value: str) -> Union[float, None]:
     """Convert the value to a float."""
     value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
@@ -23,7 +23,7 @@ def to_positive_float(value: str) -> float | None:
         return None
 
 
-def to_positive_int(value: str) -> int | None:
+def to_positive_int(value: str) -> Union[int, None]:
     """Convert the value to an integer."""
     value = re.sub(r"[^\d./]", "", value) if value else ""
     value = re.sub(r"\.$", "", value)
@@ -35,8 +35,8 @@ def to_positive_int(value: str) -> int | None:
 
 def clean_text(
     text: str,
-    trans: dict[int, str] | None = None,
-    replace: dict[int, str] | None = None,
+    trans: Union[dict[int, str], None] = None,
+    replace: Union[dict[int, str], None] = None,
 ) -> str:
     """Clean text before trait extraction."""
     text = text if text else ""

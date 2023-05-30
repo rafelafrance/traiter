@@ -8,7 +8,7 @@ version = "1.0.1"
 description = "Rule-based parsers for mining text from research papers"
 license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "ftfy",
     "regex",

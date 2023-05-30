@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # import tomllib
 from distutils.core import setup
-from setuptools import find_packages
 
+from setuptools import find_packages
 
 # def read_pyproject():
 #     with open("pyproject.toml", "rb") as in_file:
@@ -46,6 +46,6 @@ setup(
     long_description=readme(),
     license=license_(),
     url="https://github.com/rafelafrance/traiter",
-    python_requires=">=3.10",
+    python_requires=">=3.9",
     scripts=[],
 )

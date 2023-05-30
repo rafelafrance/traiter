@@ -6,6 +6,7 @@ some simple rules.
 """
 import copy
 import re
+from typing import Union
 from warnings import warn
 
 
@@ -18,11 +19,11 @@ class CompilerAccumulator:
         return list(self._keep.keys())
 
     @keep.setter
-    def keep(self, labels: str | list[str]):
+    def keep(self, labels: Union[str, list[str]]):
         labels = labels if isinstance(labels, list) else [labels]
         self._keep |= {lb: 1 for lb in labels}
 
-    def delete(self, labels: str | list[str]):
+    def delete(self, labels: Union[str, list[str]]):
         labels = labels if isinstance(labels, list) else [labels]
         self._keep = {lb: 1 for lb in self._keep if lb not in labels}
 
@@ -37,9 +38,9 @@ class Compiler:
         label: str,
         patterns: list[str],
         decoder: dict[str, dict],
-        on_match: str | None = None,
+        on_match: Union[str, None] = None,
         id: str = "",
-        keep: str | list[str] = None,  # Keep track of traits we want to keep
+        keep: Union[str, list[str]] = None,  # Keep track of traits we want to keep
     ):
         self.label = label
         self.raw_patterns = patterns
