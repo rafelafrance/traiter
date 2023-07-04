@@ -1,12 +1,12 @@
-from spacy.tokens import Span
-from spacy.tokens import Token
+from spacy.tokens import Span, Token
 
 
 def add_extensions():
-    Span.set_extension("delete", default=False)
-    Span.set_extension("relabel", default="")
-    Span.set_extension("data", default={})
+    if not Span.has_extension("delete"):
+        Span.set_extension("delete", default=False)
+        Span.set_extension("relabel", default="")
+        Span.set_extension("data", default={})
 
-    Token.set_extension("data", default={})
-    Token.set_extension("term", default="")
-    Token.set_extension("flag", default="")
+        Token.set_extension("data", default={})
+        Token.set_extension("term", default="")
+        Token.set_extension("flag", default="")
