@@ -57,9 +57,9 @@ def read_terms(csv_path: Union[Path, Iterable[Path]]) -> list[dict]:
         if path.suffix == ".zip":
             with ZipFile(path) as zippy, zippy.open(f"{path.stem}.csv") as in_csv:
                 reader = csv.DictReader(TextIOWrapper(in_csv, "utf-8"))
-                terms = list(reader)
+                terms += list(reader)
         else:
             with open(path) as term_file:
                 reader = csv.DictReader(term_file)
-                terms = list(reader)
+                terms += list(reader)
     return terms
