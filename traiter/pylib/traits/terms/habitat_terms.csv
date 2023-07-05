@@ -183,11 +183,14 @@ habitat_prefix,upland,
 habitat_prefix,upland,
 habitat_prefix,urban,
 habitat_prefix,vernal,
+habitat_prefix,volcanic,
 habitat_prefix,wet,
 habitat_prefix,xeric,
 habitat_suffix,ecosystem,
 habitat_suffix,ecosystems,ecosystem
 habitat_suffix,landscape,
 habitat_suffix,landscapes,landscape
+habitat_suffix,slope,
+habitat_suffix,slopes,slope
 habitat_suffix,zone,
 habitat_suffix,zones,zone

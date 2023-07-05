@@ -8,6 +8,14 @@ imperial_length,in .,in,2.54
 imperial_length,in.,in,2.54
 imperial_length,inch,in,2.54
 imperial_length,inches,in,2.54
+imperial_length,yard,yd,91.44
+imperial_length,yards,yd,91.44
+imperial_length,yd,yd,91.44
+imperial_length,yd.,yd,91.44
+imperial_length,yd .,yd,91.44
+imperial_length,yds,yd,91.44
+imperial_length,yds.,yd,91.44
+imperial_length,yds .,yd,91.44
 metric_length,centimeters,cm,1
 metric_length,cm,cm,1
 metric_length,cm .,cm,1

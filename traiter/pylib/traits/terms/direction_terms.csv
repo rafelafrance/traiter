@@ -7,6 +7,18 @@ dir,ne,NE
 dir,nw,NW
 dir,se,SE
 dir,sw,SW
+dir,e.,E
+dir,n.,N
+dir,s.,S
+dir,w.,W
+dir,n.e.,NE
+dir,n.w.,NW
+dir,s.e.,SE
+dir,s.w.,SW
+dir,n. e.,NE
+dir,n. w.,NW
+dir,s. e.,SE
+dir,s. w.,SW
 dir,ene,ENE
 dir,ese,ESE
 dir,nne,NNE
