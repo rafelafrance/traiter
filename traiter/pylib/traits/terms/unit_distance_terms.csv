@@ -9,3 +9,4 @@ metric_dist,kilometers,km,100000
 metric_dist,km,km,100000
 metric_dist,km .,km,100000
 metric_dist,km.,km,100000
+metric_dist,kms,km,100000
