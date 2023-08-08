@@ -99,6 +99,10 @@ def geocoordinate_patterns():
                     "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
                 ),
                 (
+                    "[-]? 99.0 deg* 99.0? min* 99.0? sec* dir? key ,* "
+                    "[-]? 99.0 deg* 99.0? min* 99.0? sec* dir? key ,* (? datum* )?"
+                ),
+                (
                     "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] "
                     "99.0 deg* 99.0? min* 99.0? sec* dir? ,* "
                     "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] "

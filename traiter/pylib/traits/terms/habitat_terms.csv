@@ -12,112 +12,11 @@ bad_habitat,sec,
 bad_habitat,sec.,
 bad_habitat,street,
 bad_habitat,villa,
-habitat_label,habitat:,
 habitat_label,habitat description,
 habitat_label,habitat description:,
-habitat_term,afrotropic,
-habitat_term,alvar,
-habitat_term,bog,
-habitat_term,bogs,bog
-habitat_term,bosque,
-habitat_term,canebrake,
-habitat_term,canebreak,canebrake
-habitat_term,canyon,
-habitat_term,canyons,canyon
-habitat_term,chaparral,
-habitat_term,coast,
-habitat_term,desert,
-habitat_term,deserts,desert
-habitat_term,dry wash,
-habitat_term,ecotone,
-habitat_term,edge of forest,
-habitat_term,fell field,fellfield
-habitat_term,fell fields,fellfield
-habitat_term,fellfield,
-habitat_term,fellfields,fellfield
-habitat_term,fen,
-habitat_term,fens,fen
-habitat_term,field,
-habitat_term,fields,field
-habitat_term,floodplain,
-habitat_term,floodplains,floodplain
-habitat_term,forest,
-habitat_term,forest margin,forest
-habitat_term,forest margins,forest
-habitat_term,forests,forest
-habitat_term,forests margin,forest
-habitat_term,forests margins,forest
-habitat_term,glade,
-habitat_term,glades,glade
-habitat_term,grassland,
-habitat_term,grasslands,grassland
-habitat_term,heath,
-habitat_term,heathland,
-habitat_term,heathlands,heathland
-habitat_term,hemiboreal,
-habitat_term,herbfield,
-habitat_term,herbfields,herbfield
-habitat_term,lake,
-habitat_term,lakes,lake
-habitat_term,mangrove swamp,
-habitat_term,mangrove swamps,mangrove swamp
-habitat_term,marsh,
-habitat_term,marshes,marsh
-habitat_term,meadow,
-habitat_term,meadows,meadow
-habitat_term,mire,
-habitat_term,mires,mire
-habitat_term,moor,
-habitat_term,moorland,
-habitat_term,moors,moor
-habitat_term,nearctic,
-habitat_term,paleartic,
-habitat_term,plain,
-habitat_term,plains,plain
-habitat_term,pond,
-habitat_term,ponds,pond
-habitat_term,pool,
-habitat_term,pools,pool
-habitat_term,rain forest,
-habitat_term,rain forests,rain forest
-habitat_term,rainforest,rain forest
-habitat_term,rainforests,rain forest
-habitat_term,rain-forest,rain forest
-habitat_term,rain-forests,rain forest
-habitat_term,river,
-habitat_term,rivers,river
-habitat_term,sagebrush,
-habitat_term,salt marsh,
-habitat_term,salt marshes,salt marsh
-habitat_term,savanna,
-habitat_term,savannas,savanna
-habitat_term,scrub,
-habitat_term,scrubland,
-habitat_term,scrublands,scrubland
-habitat_term,shrub swamp,
-habitat_term,shrub swamps,shrub swamp
-habitat_term,shrubland,
-habitat_term,shrublands,shrubland
-habitat_term,steppe,
-habitat_term,steppes,steppe
-habitat_term,stream,
-habitat_term,streams,stream
-habitat_term,swamp,
-habitat_term,swamps,swamp
-habitat_term,taiga,
-habitat_term,timberline,
-habitat_term,tree line,
-habitat_term,tugay,
-habitat_term,tundra,
-habitat_term,urban,
-habitat_term,wetland,
-habitat_term,wetlands,wetland
-habitat_term,wildwood,
-habitat_term,wildwoods,
-habitat_term,woodland,
-habitat_term,woodlands,woodland
-habitat_term,woods,
+habitat_label,habitat:,
 habitat_prefix,afro-alpine,
+habitat_prefix,alluvial,
 habitat_prefix,alpine,
 habitat_prefix,altimontane,
 habitat_prefix,arid,
@@ -167,9 +66,12 @@ habitat_prefix,planar,
 habitat_prefix,polar,
 habitat_prefix,riparian,
 habitat_prefix,rocky,
+habitat_prefix,sandy,
 habitat_prefix,seasonal,
 habitat_prefix,semi-arid,
 habitat_prefix,semideciduous,
+habitat_prefix,shaded,
+habitat_prefix,shady,
 habitat_prefix,sonoran,
 habitat_prefix,subalpine,
 habitat_prefix,subartic,
@@ -192,9 +94,122 @@ habitat_prefix,wet,
 habitat_prefix,xeric,
 habitat_suffix,ecosystem,
 habitat_suffix,ecosystems,ecosystem
+habitat_suffix,flat,
+habitat_suffix,flats,
 habitat_suffix,landscape,
 habitat_suffix,landscapes,landscape
 habitat_suffix,slope,
 habitat_suffix,slopes,slope
 habitat_suffix,zone,
 habitat_suffix,zones,zone
+habitat_term,afrotropic,
+habitat_term,alvar,
+habitat_term,bajada,
+habitat_term,bog,
+habitat_term,bogs,bog
+habitat_term,bosque,
+habitat_term,brush,
+habitat_term,bush,
+habitat_term,canebrake,
+habitat_term,canebreak,canebrake
+habitat_term,canyon,
+habitat_term,canyons,canyon
+habitat_term,chaparral,
+habitat_term,clay,
+habitat_term,coast,
+habitat_term,desert,
+habitat_term,deserts,desert
+habitat_term,dry wash,
+habitat_term,ecotone,
+habitat_term,edge of forest,
+habitat_term,fell field,fellfield
+habitat_term,fell fields,fellfield
+habitat_term,fellfield,
+habitat_term,fellfields,fellfield
+habitat_term,fen,
+habitat_term,fens,fen
+habitat_term,field,
+habitat_term,fields,field
+habitat_term,floodplain,
+habitat_term,floodplains,floodplain
+habitat_term,forest margin,forest
+habitat_term,forest margins,forest
+habitat_term,forest,
+habitat_term,forests margin,forest
+habitat_term,forests margins,forest
+habitat_term,forests,forest
+habitat_term,glade,
+habitat_term,glades,glade
+habitat_term,grassland,
+habitat_term,grasslands,grassland
+habitat_term,heath,
+habitat_term,heathland,
+habitat_term,heathlands,heathland
+habitat_term,hemiboreal,
+habitat_term,herbfield,
+habitat_term,herbfields,herbfield
+habitat_term,lake,
+habitat_term,lakes,lake
+habitat_term,mangrove swamp,
+habitat_term,mangrove swamps,mangrove swamp
+habitat_term,marsh,
+habitat_term,marshes,marsh
+habitat_term,meadow,
+habitat_term,meadows,meadow
+habitat_term,mire,
+habitat_term,mires,mire
+habitat_term,moor,
+habitat_term,moorland,
+habitat_term,moors,moor
+habitat_term,nearctic,
+habitat_term,open woodland,
+habitat_term,open woodlands,
+habitat_term,paleartic,
+habitat_term,plain,
+habitat_term,plains,plain
+habitat_term,pond,
+habitat_term,ponds,pond
+habitat_term,pool,
+habitat_term,pools,pool
+habitat_term,rain forest,
+habitat_term,rain forests,rain forest
+habitat_term,rain-forest,rain forest
+habitat_term,rain-forests,rain forest
+habitat_term,rainforest,rain forest
+habitat_term,rainforests,rain forest
+habitat_term,river,
+habitat_term,rivers,river
+habitat_term,sagebrush,
+habitat_term,salt flat,
+habitat_term,salt flats,salt flat
+habitat_term,salt marsh,
+habitat_term,salt marshes,salt marsh
+habitat_term,savanna,
+habitat_term,savannas,savanna
+habitat_term,scrub,
+habitat_term,scrubland,
+habitat_term,scrublands,scrubland
+habitat_term,shrub swamp,
+habitat_term,shrub swamps,shrub swamp
+habitat_term,shrubland,
+habitat_term,shrublands,shrubland
+habitat_term,soil,
+habitat_term,steppe,
+habitat_term,steppes,steppe
+habitat_term,stream,
+habitat_term,streams,stream
+habitat_term,swamp,
+habitat_term,swamps,swamp
+habitat_term,taiga,
+habitat_term,timberline,
+habitat_term,tree line,
+habitat_term,tugay,
+habitat_term,tundra,
+habitat_term,urban,
+habitat_term,wetland,
+habitat_term,wetlands,wetland
+habitat_term,wildwood,
+habitat_term,wildwoods,
+habitat_term,woodland,
+habitat_term,woodlands,woodland
+habitat_term,woods,

@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from spacy import util
 from spacy.language import Language
@@ -19,10 +19,10 @@ class AddTraits:
         nlp: Language,
         name: str,
         patterns: dict[str, list[list[dict[str, Any]]]],
-        dispatch: dict[str, str] = None,
-        keep: list[str] = None,  # Don't overwrite these entities
-        overwrite: list[str] = None,  # Only overwrite these entities
-        relabel: dict[str, str] = None,
+        dispatch: Optional[dict[str, str]] = None,
+        keep: Optional[list[str]] = None,  # Don't overwrite these entities
+        overwrite: Optional[list[str]] = None,  # Only overwrite these entities
+        relabel: Optional[dict[str, str]] = None,
     ):
         self.nlp = nlp
         self.name = name
@@ -128,7 +128,7 @@ class AddTraits:
 
         return label
 
-    def to_disk(self, path, exclude=tuple()):  # noqa
+    def to_disk(self, path, exclude=()):
         path = Path(path)
         if not path.exists():
             path.mkdir()
@@ -138,11 +138,11 @@ class AddTraits:
         with data_path.open("w", encoding="utf8") as data_file:
             data_file.write(json.dumps(fields))
 
-    def from_disk(self, path, exclude=tuple()):  # noqa
+    def from_disk(self, path, exclude=()):
         data_path = Path(path) / "data.json"
         with data_path.open("r", encoding="utf8") as data_file:
             data = json.load(data_file)
-            for key in data.keys():
+            for key in data:
                 self.__dict__[key] = data[key]
             self.matcher = self.build_matcher()
             self.dispatch_table = self.build_dispatch_table()

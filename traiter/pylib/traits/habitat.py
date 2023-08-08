@@ -17,7 +17,11 @@ SEP = "/,-"
 
 def build(nlp: Language):
     add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV)
+
+    # add.debug_tokens(nlp)  # ##########################################
     add.trait_pipe(nlp, name="habitat_patterns", compiler=habitat_compilers())
+
+    # add.debug_tokens(nlp)  # ##########################################
     add.cleanup_pipe(nlp, name="habitat_cleanup")
 
 
@@ -41,9 +45,9 @@ def habitat_compilers():
             patterns=[
                 "        habitat+",
                 "prefix+ sep? prefix* habitat+",
-                "prefix+ sep? prefix* habitat+ suffix+",
-                "        sep? prefix* habitat+ suffix+",
-                "prefix+ sep? prefix*          suffix+",
+                "prefix+ sep? prefix* habitat+ sep? suffix+",
+                "        sep? prefix* habitat+ sep? suffix+",
+                "prefix+ sep? prefix*          sep? suffix+",
             ],
         ),
         Compiler(
