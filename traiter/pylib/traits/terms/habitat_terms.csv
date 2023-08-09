@@ -42,10 +42,12 @@ habitat_prefix,foothill,
 habitat_prefix,fresh water,
 habitat_prefix,fresh-water,
 habitat_prefix,giant,
+habitat_prefix,joshua tree,
 habitat_prefix,intertidal,
 habitat_prefix,litoral,littoral
 habitat_prefix,littoral,
 habitat_prefix,lowland,
+habitat_prefix,madrean,
 habitat_prefix,mediolittoral,
 habitat_prefix,mediterranean,
 habitat_prefix,mesic,
@@ -150,6 +152,7 @@ habitat_term,herbfield,
 habitat_term,herbfields,herbfield
 habitat_term,lake,
 habitat_term,lakes,lake
+habitat_term,madrean oak,
 habitat_term,mangrove swamp,
 habitat_term,mangrove swamps,mangrove swamp
 habitat_term,marsh,
@@ -162,6 +165,8 @@ habitat_term,moor,
 habitat_term,moorland,
 habitat_term,moors,moor
 habitat_term,nearctic,
+habitat_term,open grassland,
+habitat_term,open grasslands,
 habitat_term,open woodland,
 habitat_term,open woodlands,
 habitat_term,paleartic,
@@ -171,6 +176,8 @@ habitat_term,pond,
 habitat_term,ponds,pond
 habitat_term,pool,
 habitat_term,pools,pool
+habitat_term,pinyon-juniper,pinyon-juniper
+habitat_term,pinyon - juniper,pinyon-juniper
 habitat_term,rain forest,
 habitat_term,rain forests,rain forest
 habitat_term,rain-forest,rain forest
