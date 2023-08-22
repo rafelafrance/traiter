@@ -94,6 +94,7 @@ habitat_prefix,vernal,
 habitat_prefix,volcanic,
 habitat_prefix,wet,
 habitat_prefix,xeric,
+habitat_suffix,corridor,
 habitat_suffix,ecosystem,
 habitat_suffix,ecosystems,ecosystem
 habitat_suffix,flat,
