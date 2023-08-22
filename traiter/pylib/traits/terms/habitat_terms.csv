@@ -42,6 +42,7 @@ habitat_prefix,foothill,
 habitat_prefix,fresh water,
 habitat_prefix,fresh-water,
 habitat_prefix,giant,
+habitat_prefix,hardwood,
 habitat_prefix,joshua tree,
 habitat_prefix,intertidal,
 habitat_prefix,litoral,littoral
@@ -62,6 +63,7 @@ habitat_prefix,nemoral,
 habitat_prefix,neotropical,
 habitat_prefix,neritic,
 habitat_prefix,nival,
+habitat_prefix,open hardwood,
 habitat_prefix,peat,
 habitat_prefix,pelagic,
 habitat_prefix,planar,
@@ -145,6 +147,7 @@ habitat_term,glade,
 habitat_term,glades,glade
 habitat_term,grassland,
 habitat_term,grasslands,grassland
+habitat_term,hammock,
 habitat_term,heath,
 habitat_term,heathland,
 habitat_term,heathlands,heathland

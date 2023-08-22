@@ -14,7 +14,7 @@ PUNCT = f"""{SYM},;._"""
 FLOAT_RE = r"\d+(\.\d+)?"
 FLOAT_LL = r"\d{1,3}(\.\d+)?"
 
-PLUS = r"^(±|\+|-)+\Z"
+PLUS = r"^(±|\+|-|\+-|-\+)+\Z"
 MINUS = r"^[-]\Z"
 
 GEOCOORDINATES_CSV = Path(__file__).parent / "terms" / "geocoordinate_terms.csv"
@@ -112,7 +112,7 @@ def geocoordinate_patterns():
                     "label* dir99.0 deg* 99.0? min* 99.0? sec* ,* "
                     "       dir99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
-             ],
+            ],
         ),
         Compiler(
             label="trs_part",
@@ -167,7 +167,7 @@ def geocoordinate_plus_patterns():
             patterns=[
                 "lat_long+                              datum_label+ ,* (? datum+ )?",
                 "lat_long+ ,? uncert? ,?     +99.0 m ,* datum_label* ,* (? datum* )?",
-                "lat_long+ ,? uncert? ,? [+]? 99.0 m ,* datum_label* ,* (? datum* )?",
+                "lat_long+ ,? uncert? ,? [+]* 99.0 m ,* datum_label* ,* (? datum* )?",
             ],
         ),
         Compiler(
@@ -289,7 +289,6 @@ def trs_match(ent):
     frags = []
 
     for token in ent:
-
         if token._.flag == "trs_data":
             frags.append(token._.data["trs_part"])
 

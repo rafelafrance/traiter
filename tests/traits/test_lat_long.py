@@ -254,3 +254,18 @@ class TestLatLongPatterns(unittest.TestCase):
                 }
             ],
         )
+
+    def test_lat_long_18(self):
+        self.assertEqual(
+            test("""34° 29' 09.4" N 111° 46' 18.9" W +-50 meters"""),
+            [
+                {
+                    "lat_long": """34° 29' 09.4" N 111° 46' 18.9" W""",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 44,
+                    "units": "m",
+                    "uncertainty": 50.0,
+                }
+            ],
+        )
