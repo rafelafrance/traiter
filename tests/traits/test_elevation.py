@@ -110,3 +110,17 @@ class TestElevation(unittest.TestCase):
         self.assertEqual(traits[0]["units"], "m")
         self.assertAlmostEqual(traits[0]["elevation"], 140.208)
         self.assertAlmostEqual(traits[0]["elevation_high"], 143.256)
+
+    def test_elevation_09(self):
+        self.assertEqual(
+            test("""elev: 737m. (2417 ft.)"""),
+            [
+                {
+                    "trait": "elevation",
+                    "elevation": 737.0,
+                    "units": "m",
+                    "start": 0,
+                    "end": 22,
+                },
+            ],
+        )

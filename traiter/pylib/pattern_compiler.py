@@ -6,7 +6,7 @@ some simple rules.
 """
 import copy
 import re
-from typing import Union
+from typing import Optional, Union
 from warnings import warn
 
 
@@ -40,7 +40,7 @@ class Compiler:
         decoder: dict[str, dict],
         on_match: Union[str, None] = None,
         id: str = "",
-        keep: Union[str, list[str]] = None,  # Keep track of traits we want to keep
+        keep: Optional[Union[str, list[str]]] = None,  # Traits we want to keep
     ):
         self.label = label
         self.raw_patterns = patterns

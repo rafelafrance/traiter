@@ -24,6 +24,7 @@ FACTORS_M = {k: v / 100.0 for k, v in FACTORS_CM.items()}
 
 def build(nlp: Language):
     add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS)
+    # add.debug_tokens(nlp)  # #######################################
     add.trait_pipe(nlp, name="elevation_patterns", compiler=elevation_compilers())
     add.cleanup_pipe(nlp, name="elevation_cleanup")
 
@@ -50,9 +51,9 @@ def elevation_compilers():
             keep="elevation",
             patterns=[
                 "label+ :? about? ,? 99 m",
-                "label+ :? about? ,? 99 m ( 99 m )",
+                "label+ :? about? ,? 99 m ( 99 m ,? )",
                 "label+ :? about? ,? 99 m / 99 m",
-                "          about? ,? 99 m ( 99 m )",
+                "          about? ,? 99 m ( 99 m ,? )",
                 "          about? ,? 99 m / 99 m",
             ],
         ),
