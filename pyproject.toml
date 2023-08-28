@@ -8,7 +8,7 @@ version = "1.0.1"
 description = "Rule-based parsers for mining text from research papers"
 license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
     "ftfy",
     "regex",
@@ -98,36 +98,3 @@ disable = [
     "too-few-public-methods",           # "R0903"
     "too-many-arguments",               # "R0913"
 ]
-
-[tool.pyright]
-reportGeneralTypeIssues = "none"
-reportMissingImports = false
-
-[tool.ruff]
-line-length = 88
-extend-select = [
-    "BLE",
-    "C4",
-    "D",
-    "E",
-    "ERA",
-    "I",
-    "ISC",
-    "N",
-    "NPY",
-    "PD",
-    "PGH",
-    "Q",
-    "RET",
-    "RSE",
-    "RUF",
-    "S",
-    "SIM",
-    "T20",
-    "TCH",
-    "TID",
-    "UP",
-    "YTT",
-]
-show-fixes = true
-ignore = ["D10", "D203", "D213", "ERA001", "PD901", "RET504", "RUF001", "S608", "SIM117", "T201", "TID252"]

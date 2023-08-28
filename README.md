@@ -40,7 +40,7 @@ Some literature mined:
 ![parsing example](assets/anoplura_rules.png)
 
 ## Install
-You will need GIT to clone this repository. You will also need to have Python3.10+ installed, as well as pip, a package manager for Python.
+You will need GIT to clone this repository. You will also need to have Python3.11+ installed, as well as pip, a package manager for Python.
 You can install the requirements into your python environment like so:
 ```bash
 git clone https://github.com/rafelafrance/traiter.git
