@@ -5,40 +5,37 @@ https://seekstorm.com/blog/1000x-spelling-correction/
 """
 import logging
 import sqlite3
+from pathlib import Path
 
+import pandas as pd
 import regex as re
 
-from .const import DATA_DIR
+from .traits import terms
 
 
 class SpellWell:
-    def __init__(self, vocab_db=None, min_freq=100, min_len=3, vocab_freq=10):
+    def __init__(self, min_freq=100, min_len=3):
         self.min_len = min_len
         self.min_freq = min_freq
-        self.vocab_freq = vocab_freq
-        self.vocab_db = vocab_db if vocab_db else DATA_DIR / "spell_well.sqlite"
         self.cxn = sqlite3.connect(":memory:")
         self.db_to_memory()
 
     def db_to_memory(self):
-        create1 = """
-            create table spells as
-            select * from aux.misspellings where freq >= ? and length(miss) >= ?;
-            """
-        create2 = """
-            create table vocab as
-            select * from aux.vocab where freq >= ?;
-            """
+        df = pd.read_csv(Path(terms.__file__).parent / "misspellings.zip")
+        df = df.loc[df["freq"] >= self.min_freq]
+        df = df.loc[df["miss"].str.len() >= self.min_len]
+        df.to_sql("spells", self.cxn)
+
+        df = pd.read_csv(Path(terms.__file__).parent / "vocab.zip")
+        df = df.loc[df["freq"] >= self.min_freq]
+        df.to_sql("vocab", self.cxn)
+
         indexes = """
             create index spells_miss on spells (miss);
             create index vocab_word on vocab (word);
             """
         try:
-            self.cxn.execute(f"attach database '{self.vocab_db}' as aux")
-            self.cxn.execute(create1, (self.min_freq, self.min_len))
-            self.cxn.execute(create2, (self.vocab_freq,))
             self.cxn.executescript(indexes)
-            self.cxn.execute("detach database aux")
         except sqlite3.OperationalError as err:
             logging.error(err)
 

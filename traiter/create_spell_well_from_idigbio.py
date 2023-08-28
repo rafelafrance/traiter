@@ -10,6 +10,7 @@ from pathlib import Path
 import pandas as pd
 import regex as re
 from pylib import log, spell_well
+from pylib.traits import terms
 from tqdm import tqdm
 
 CHUNK = 1_000_000
@@ -84,7 +85,22 @@ def main():
     insert_vocab(freq, args.spell_well_db, args.delete_db)
     insert_misspellings(freq, args.spell_well_db, args.deletes)
 
+    write_csv(args.spell_well_db)
+
     log.finished()
+
+
+def write_csv(spell_well_db):
+    with sqlite3.connect(spell_well_db) as cxn:
+        logging.info("Exporting misspellings")
+        df = pd.read_sql("select * from misspellings", cxn)
+        path = Path(terms.__file__).parent / "misspellings.zip"
+        df.to_csv(path, index=False)
+
+        logging.info("Exporting vocab")
+        df = pd.read_sql("select * from vocab.", cxn)
+        path = Path(terms.__file__).parent / "vocab.zip"
+        df.to_csv(path, index=False)
 
 
 def filter_freq(freq, min_freq, min_len):
