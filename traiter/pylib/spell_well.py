@@ -10,8 +10,6 @@ from pathlib import Path
 import pandas as pd
 import regex as re
 
-from .traits import terms
-
 
 class SpellWell:
     def __init__(self, min_freq=100, min_len=3):
@@ -21,12 +19,13 @@ class SpellWell:
         self.db_to_memory()
 
     def db_to_memory(self):
-        df = pd.read_csv(Path(terms.__file__).parent / "misspellings.zip")
+        path = Path(__file__).parent / "traits" / "terms"
+        df = pd.read_csv(path / "misspellings.zip")
         df = df.loc[df["freq"] >= self.min_freq]
         df = df.loc[df["miss"].str.len() >= self.min_len]
         df.to_sql("spells", self.cxn)
 
-        df = pd.read_csv(Path(terms.__file__).parent / "vocab.zip")
+        df = pd.read_csv(path / "vocab.zip")
         df = df.loc[df["freq"] >= self.min_freq]
         df.to_sql("vocab", self.cxn)
 
@@ -86,7 +85,7 @@ class SpellWell:
         return hit[0] if hit else 0
 
     def vocab_to_set(self) -> set[str]:
-        return {r[0] for r in self.cxn.execute("select word from vocab")}
+        return {r[0] for r in self.cxn.execute("select word from vocab") if r[0]}
 
     def hits(self, text: str) -> int:
         """Count the number of words in the text that are in our corpus.
