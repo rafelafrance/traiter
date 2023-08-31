@@ -9,6 +9,13 @@ def shorten(text: str) -> str:
     return " ".join(text.split())
 
 
+def compress(text: str) -> str:
+    """Collapse whitespace in a string but keep lines."""
+    text = [" ".join(ln.split()) for ln in text.splitlines()]
+    text = "\n".join(ln for ln in text if ln)
+    return text
+
+
 def as_list(values: Any) -> list:
     """Convert values to a list."""
     return list(values) if isinstance(values, (list, tuple, set)) else [values]
@@ -49,7 +56,7 @@ def clean_text(
         for old, new in replace.items():
             text = text.replace(old, new)
 
-    text = " ".join(text.split())  # Space normalize
+    text = shorten(text)  # Space normalize
 
     # Join hyphenated words when they are at the end of a line
     text = re.sub(r"([a-z])-\s+([a-z])", r"\1\2", text, flags=re.IGNORECASE)

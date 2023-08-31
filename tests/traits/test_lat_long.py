@@ -1,6 +1,6 @@
 import unittest
 
-from tests.setup import test
+from tests.setup import compress_test, test
 
 
 class TestLatLongPatterns(unittest.TestCase):
@@ -266,6 +266,23 @@ class TestLatLongPatterns(unittest.TestCase):
                     "end": 44,
                     "units": "m",
                     "uncertainty": 50.0,
+                }
+            ],
+        )
+
+    def test_lat_long_19(self):
+        self.assertEqual(
+            compress_test(
+                """40.104905N,
+                79.324561W NAD83."""
+            ),
+            [
+                {
+                    "lat_long": """40.104905 N, 79.324561 W""",
+                    "datum": "NAD83",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 28,
                 }
             ],
         )

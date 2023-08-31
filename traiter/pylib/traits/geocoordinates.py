@@ -67,6 +67,7 @@ def geocoordinate_patterns():
         "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
         "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
         "sect": {"LOWER": {"REGEX": r"""^(section|sec\.?|s)$"""}},
+        "sp": {"IS_SPACE": True},
         "trs_post": {"LOWER": {"REGEX": r"^[nesw]$"}},
         "trs_pre": {"LOWER": {"REGEX": r"^[neswrst]{1,2}\d*$"}},
         "uaa": {"LOWER": {"REGEX": r"^u[a-z]{1,2}$"}},
@@ -83,33 +84,33 @@ def geocoordinate_patterns():
             decoder=decoder,
             patterns=[
                 (
-                    "label* [-]? 99.0 deg 99.0? min* 99.0? sec* ,* "
+                    "label* [-]? 99.0 deg 99.0? min* 99.0? sec* ,* sp? "
                     "       [-]? 99.0 deg 99.0? min* 99.0? sec* (? datum* )?"
                 ),
                 (
-                    "label* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* "
+                    "label* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* sp? "
                     "       [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  (? datum* )?"
                 ),
                 (
-                    "label* dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* "
+                    "label* dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
                     "       dir [-]? 99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
                 (
-                    "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* "
+                    "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* sp? "
                     "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
                 ),
                 (
-                    "[-]? 99.0 deg* 99.0? min* 99.0? sec* dir? key ,* "
+                    "[-]? 99.0 deg* 99.0? min* 99.0? sec* dir? key ,* sp? "
                     "[-]? 99.0 deg* 99.0? min* 99.0? sec* dir? key ,* (? datum* )?"
                 ),
                 (
-                    "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] "
-                    "99.0 deg* 99.0? min* 99.0? sec* dir? ,* "
-                    "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] "
+                    "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] sp? "
+                    "99.0 deg* 99.0? min* 99.0? sec* dir? ,*  sp? "
+                    "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] sp? "
                     "99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
                 ),
                 (
-                    "label* dir99.0 deg* 99.0? min* 99.0? sec* ,* "
+                    "label* dir99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
                     "       dir99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
             ],
@@ -343,4 +344,5 @@ def format_coords(frags):
     coords = re.sub(r"\s(:)", r"\1", coords)
     coords = re.sub(r"(?<=\d)([NESWnesw])", r" \1", coords)
     coords = re.sub(r"-\s(?=\d)", r"-", coords)
+    coords = " ".join(coords.split())
     return coords
