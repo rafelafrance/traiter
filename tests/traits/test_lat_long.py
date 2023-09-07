@@ -286,3 +286,33 @@ class TestLatLongPatterns(unittest.TestCase):
                 }
             ],
         )
+
+    def test_lat_long_20(self):
+        self.assertEqual(
+            compress_test("""35°50-52'S 71°10-20'W 750-900 m"""),
+            [
+                {
+                    "lat_long": """35° 50 -52'S 71° 10 -20' W""",
+                    "uncertainty": 900.0,
+                    "units": "m",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 31,
+                }
+            ],
+        )
+
+    def test_lat_long_21(self):
+        self.assertEqual(
+            compress_test("""33.65517 -111.84455 619 Meters"""),
+            [
+                {
+                    "lat_long": """33.65517 -111.84455""",
+                    "uncertainty": 619.0,
+                    "units": "m",
+                    "trait": "lat_long",
+                    "start": 0,
+                    "end": 30,
+                }
+            ],
+        )

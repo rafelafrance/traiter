@@ -26,6 +26,7 @@ def build(nlp: Language):
     add.term_pipe(nlp, name="elevation_terms", path=ALL_CSVS)
     # add.debug_tokens(nlp)  # #######################################
     add.trait_pipe(nlp, name="elevation_patterns", compiler=elevation_compilers())
+    # add.debug_tokens(nlp)  # #######################################
     add.cleanup_pipe(nlp, name="elevation_cleanup")
 
 
@@ -41,6 +42,7 @@ def elevation_compilers():
         "about": {"ENT_TYPE": "about"},
         "label": {"ENT_TYPE": "elev_label"},
         "m": {"ENT_TYPE": {"IN": UNITS}},
+        "sp": {"IS_SPACE": True},
     }
 
     return [
@@ -50,11 +52,11 @@ def elevation_compilers():
             on_match="elevation_match",
             keep="elevation",
             patterns=[
-                "label+ :? about? ,? 99 m",
-                "label+ :? about? ,? 99 m ( 99 m ,? )",
-                "label+ :? about? ,? 99 m / 99 m",
-                "          about? ,? 99 m ( 99 m ,? )",
-                "          about? ,? 99 m / 99 m",
+                "label+ :? sp? about? ,? 99 m",
+                "label+ :? sp? about? ,? 99 m ( 99 m ,? )",
+                "label+ :? sp? about? ,? 99 m / 99 m",
+                "              about? ,? 99 m ( 99 m ,? )",
+                "              about? ,? 99 m / 99 m",
             ],
         ),
         Compiler(
@@ -64,7 +66,7 @@ def elevation_compilers():
             decoder=decoder,
             keep="elevation",
             patterns=[
-                "label+ :? about? ,? 99 -/to 99 m",
+                "label+ :? sp? about? ,? 99 -/to 99 m",
             ],
         ),
     ]

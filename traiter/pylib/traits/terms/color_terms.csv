@@ -105,6 +105,7 @@ color_mod,faintly,faintly,1
 color_mod,gloss,gloss,
 color_mod,glossed,glossed,
 color_mod,glossy,glossy,
+color_mod,in color,,1
 color_mod,light,light,1
 color_mod,lighter,lighter,1
 color_mod,line,line,

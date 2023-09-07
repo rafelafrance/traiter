@@ -34,11 +34,12 @@ class TestTRSPatterns(unittest.TestCase):
         self.assertEqual(
             test("""TRS: T7N R1E sec 30 39.10010 -112.298611"""),
             [
+                {"trs": "present", "trait": "trs", "start": 0, "end": 19},
                 {
-                    "trs": "present",
-                    "trait": "trs",
-                    "start": 0,
-                    "end": 19,
+                    "lat_long": "39.10010 -112.298611",
+                    "trait": "lat_long",
+                    "start": 20,
+                    "end": 40,
                 },
             ],
         )

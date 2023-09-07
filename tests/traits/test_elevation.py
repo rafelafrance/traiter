@@ -1,6 +1,6 @@
 import unittest
 
-from tests.setup import test
+from tests.setup import compress_test, test
 
 
 class TestElevation(unittest.TestCase):
@@ -121,6 +121,25 @@ class TestElevation(unittest.TestCase):
                     "units": "m",
                     "start": 0,
                     "end": 22,
+                },
+            ],
+        )
+
+    def test_elevation_10(self):
+        self.assertEqual(
+            compress_test(
+                """Elev.
+                1400- 1500 m.
+                """
+            ),
+            [
+                {
+                    "trait": "elevation",
+                    "elevation": 1400.0,
+                    "elevation_high": 1500.0,
+                    "units": "m",
+                    "start": 0,
+                    "end": 19,
                 },
             ],
         )

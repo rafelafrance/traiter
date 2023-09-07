@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "traiter"
 version = "1.1.0"
 description = "Rule-based parsers for mining text from research papers"
+readme = "README.md"
 license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
 requires-python = ">=3.11"

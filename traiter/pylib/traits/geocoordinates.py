@@ -51,21 +51,24 @@ def geocoordinate_patterns():
         "+99.0": {"TEXT": {"REGEX": r"^(±|\+|-)?\d{1,3}(\.\d+)?\Z"}},
         ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
         "/": {"TEXT": {"IN": const.SLASH}},
+        "-": {"TEXT": {"IN": const.DASH}},
+        "'s": {"LOWER": "'s"},
         "99": {"LOWER": {"REGEX": r"^\d{1,2}$"}},
         "9999": {"LOWER": {"REGEX": r"^\d+$"}},
         "99.0": {"TEXT": {"REGEX": rf"^{FLOAT_LL}$"}},
+        "99.99": {"TEXT": {"REGEX": r"^\d+\.\d{2,}$"}},
         "[+]": {"TEXT": {"REGEX": PLUS}},
         "[-]": {"TEXT": {"REGEX": PLUS}},
         "datum": {"ENT_TYPE": "datum"},
         "datum_label": {"ENT_TYPE": "datum_label"},
-        "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?)\Z"""}},
+        "deg": {"LOWER": {"REGEX": rf"""^([{SYM}]|degrees?|deg\.?|d)\Z"""}},
         "dir": {"LOWER": {"REGEX": r"""^'?[nesw]\.?\Z"""}},
         "dir99.0": {"LOWER": {"REGEX": rf"""^[nesw]{FLOAT_LL}\Z"""}},
         "key": {"ENT_TYPE": "lat_long_key"},
         "label": {"ENT_TYPE": "lat_long_label"},
         "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
-        "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?)\Z"""}},
-        "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?)\Z"""}},
+        "min": {"LOWER": {"REGEX": rf"""^([{SYM}]|minutes?|min\.?|m)\Z"""}},
+        "sec": {"LOWER": {"REGEX": rf"""^([{SYM}]|seconds?|sec\.?|s)\Z"""}},
         "sect": {"LOWER": {"REGEX": r"""^(section|sec\.?|s)$"""}},
         "sp": {"IS_SPACE": True},
         "trs_post": {"LOWER": {"REGEX": r"^[nesw]$"}},
@@ -84,16 +87,16 @@ def geocoordinate_patterns():
             decoder=decoder,
             patterns=[
                 (
-                    "label* [-]? 99.0 deg 99.0? min* 99.0? sec* ,* sp? "
-                    "       [-]? 99.0 deg 99.0? min* 99.0? sec* (? datum* )?"
+                    "label* sp? [-]? 99.0 deg 99.0? min* 99.0? sec* ,* sp? "
+                    "           [-]? 99.0 deg 99.0? min* 99.0? sec* (? datum* )?"
                 ),
                 (
-                    "label* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* sp? "
-                    "       [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  (? datum* )?"
+                    "label* sp? [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* sp? "
+                    "           [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  (? datum* )?"
                 ),
                 (
-                    "label* dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
-                    "       dir [-]? 99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
+                    "label* sp? dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
+                    "           dir [-]? 99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
                 (
                     "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* sp? "
@@ -110,9 +113,18 @@ def geocoordinate_patterns():
                     "99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
                 ),
                 (
-                    "label* dir99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
-                    "       dir99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
+                    "label* sp? dir99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
+                    "           dir99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
                 ),
+                (
+                    "label* sp? [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? ,* sp? "
+                    "          [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? (? datum* )?"
+                ),
+                (
+                    "label* sp? [-]? 99.0 deg 99.0? min* -? 99.0? 's ,* sp? "
+                    "          [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? (? datum* )?"
+                ),
+                "label* sp? [-]? 99.99 dir? ,* sp? [-]? 99.99 dir? (? datum* )?",
             ],
         ),
         Compiler(
@@ -141,6 +153,7 @@ def geocoordinate_patterns():
 
 def geocoordinate_plus_patterns():
     decoder = {
+        "-": {"TEXT": {"IN": const.DASH}},
         ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
         "(": {"TEXT": {"IN": const.OPEN}},
         ")": {"TEXT": {"IN": const.CLOSE}},
@@ -169,6 +182,10 @@ def geocoordinate_plus_patterns():
                 "lat_long+                              datum_label+ ,* (? datum+ )?",
                 "lat_long+ ,? uncert? ,?     +99.0 m ,* datum_label* ,* (? datum* )?",
                 "lat_long+ ,? uncert? ,? [+]* 99.0 m ,* datum_label* ,* (? datum* )?",
+                (
+                    "lat_long+ ,? uncert? ,? [+]* 99.0 - 99.0 m ,* "
+                    "datum_label* ,* (? datum* )?"
+                ),
             ],
         ),
         Compiler(
@@ -247,7 +264,7 @@ def lat_long_uncertain_match(ent):
             continue
 
         # Pick up a trailing datum
-        if token._.term == "datum":
+        elif token._.term == "datum":
             datum.append(token.lower_)
 
         # Get the uncertainty value

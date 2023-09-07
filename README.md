@@ -11,7 +11,7 @@
   - The goal is still to use the output of the hybrid model as training data for a model that brings you ever closer to the sought after end-to-end model.
 
 ## Traiter
-This is the base Traiter information extraction/data mining library used by all client Traiter projects, it contains **no runnable code** itself.
+This is the base Traiter information extraction/data mining library used by all client Traiter projects.
 
 Some literature mined:
 - PDFs containing research papers of descriptions of species.

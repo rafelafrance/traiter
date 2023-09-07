@@ -14,11 +14,6 @@ def read_pyproject():
 SETTINGS = read_pyproject()
 
 
-def readme():
-    with open("README.md") as in_file:
-        return in_file.read()
-
-
 def license_():
     with open("LICENSE") as in_file:
         return in_file.read()
@@ -31,7 +26,7 @@ setup(
     install_requires=SETTINGS["project"]["dependencies"],
     include_package_data=True,
     description=SETTINGS["project"]["description"],
-    long_description=readme(),
+    long_description=SETTINGS["project"]["readme"],
     license=license_(),
     url="https://github.com/rafelafrance/traiter",
     python_requires=">=3.11",

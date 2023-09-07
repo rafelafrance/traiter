@@ -3,8 +3,7 @@ from pathlib import Path
 from spacy.language import Language
 from spacy.util import registry
 
-from traiter.pylib import const
-from traiter.pylib import term_util
+from traiter.pylib import const, term_util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 
@@ -16,7 +15,9 @@ REMOVE = term_util.term_data(COLOR_CSV, "remove", int)
 
 def build(nlp: Language):
     add.term_pipe(nlp, name="color_terms", path=COLOR_CSV)
+    # add.debug_tokens(nlp)  # ##############################################
     add.trait_pipe(nlp, name="color_patterns", compiler=color_patterns())
+    # add.debug_tokens(nlp)  # ##############################################
     add.cleanup_pipe(nlp, name="color_cleanup")
 
 
