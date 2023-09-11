@@ -28,11 +28,11 @@ def build(nlp: Language):
 def habitat_compilers():
     decoder = {
         "bad": {"ENT_TYPE": "bad_habitat"},
+        "not_eol": {"LOWER": {"REGEX": r"^[^\n\r;.]+$"}},
         "habitat": {"ENT_TYPE": "habitat_term"},
         "label": {"ENT_TYPE": "habitat_label"},
         "prefix": {"ENT_TYPE": "habitat_prefix"},
-        "sent": {"IS_SENT_START": False},
-        "sep": {"LOWER": {"REGEX": fr"[{SEP}]"}},
+        "sep": {"LOWER": {"REGEX": rf"[{SEP}]"}},
         "suffix": {"ENT_TYPE": "habitat_suffix"},
     }
 
@@ -57,7 +57,7 @@ def habitat_compilers():
             decoder=decoder,
             keep="habitat",
             patterns=[
-                "label+ sent+",
+                "label+ not_eol+",
             ],
         ),
         Compiler(

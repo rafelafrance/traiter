@@ -49,10 +49,10 @@ class TestHabitat(unittest.TestCase):
                     "trait": "habitat",
                     "habitat": (
                         "Boggy woodland with a sparce canopy dominated by "
-                        "blackgum and larch, and nice herbaceous openings."
+                        "blackgum and larch, and nice herbaceous openings"
                     ),
                     "start": 6,
-                    "end": 113,
+                    "end": 112,
                 },
             ],
         )
