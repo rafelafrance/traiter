@@ -8,6 +8,8 @@ from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 from traiter.pylib.pipes.reject_match import REJECT_MATCH
 
+from .base import Base
+
 HABITAT_CSV = Path(__file__).parent / "terms" / "habitat_terms.csv"
 
 REPLACE = term_util.term_data(HABITAT_CSV, "replace")
@@ -17,18 +19,14 @@ SEP = "/,-"
 
 def build(nlp: Language):
     add.term_pipe(nlp, name="habitat_terms", path=HABITAT_CSV)
-
-    # add.debug_tokens(nlp)  # ##########################################
     add.trait_pipe(nlp, name="habitat_patterns", compiler=habitat_compilers())
-
-    # add.debug_tokens(nlp)  # ##########################################
     add.cleanup_pipe(nlp, name="habitat_cleanup")
 
 
 def habitat_compilers():
     decoder = {
         "bad": {"ENT_TYPE": "bad_habitat"},
-        "not_eol": {"LOWER": {"REGEX": r"^[^\n\r;.]+$"}},
+        "not_eol": {"LOWER": {"REGEX": r"^[^;.]+$"}},
         "habitat": {"ENT_TYPE": "habitat_term"},
         "label": {"ENT_TYPE": "habitat_label"},
         "prefix": {"ENT_TYPE": "habitat_prefix"},
@@ -39,7 +37,7 @@ def habitat_compilers():
     return [
         Compiler(
             label="habitat",
-            on_match="habitat_match",
+            on_match="habitat_trait",
             decoder=decoder,
             keep="habitat",
             patterns=[
@@ -53,7 +51,7 @@ def habitat_compilers():
         Compiler(
             label="labeled_habitat",
             id="habitat",
-            on_match="labeled_habitat_match",
+            on_match="labeled_habitat",
             decoder=decoder,
             keep="habitat",
             patterns=[
@@ -73,21 +71,36 @@ def habitat_compilers():
     ]
 
 
-@registry.misc("habitat_match")
-def habitat_match(ent):
-    frags = []
+class Habitat(Base):
+    @classmethod
+    def from_ent(cls, ent, **kwargs):
+        frags = []
 
-    for token in ent:
-        if token.text not in SEP:
-            frags.append(REPLACE.get(token.lower_, token.lower_))
+        for token in ent:
+            if token.text not in SEP:
+                frags.append(REPLACE.get(token.lower_, token.lower_))
 
-    ent._.data = {"habitat": " ".join(frags)}
+        habitat = " ".join(frags)
+
+        return super().from_ent(ent, habitat=habitat)
+
+    @classmethod
+    def labeled_match(cls, ent):
+        i = 0
+        for i, token in enumerate(ent):
+            if token._.term != "habitat_label":
+                break
+        habitat = " ".join(ent[i:].text.split())
+        trait = super().from_ent(ent, habitat=habitat)
+        trait.trait = "habitat"
+        return trait
 
 
-@registry.misc("labeled_habitat_match")
-def labeled_habitat_match(ent):
-    i = 0
-    for i, token in enumerate(ent):
-        if token._.term != "habitat_label":
-            break
-    ent._.data = {"habitat": ent[i:].text}
+@registry.misc("habitat_trait")
+def habitat_trait(ent):
+    return Habitat.from_ent(ent)
+
+
+@registry.misc("labeled_habitat")
+def labeled_habitat(ent):
+    return Habitat.labeled_match(ent)

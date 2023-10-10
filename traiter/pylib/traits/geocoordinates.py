@@ -8,6 +8,8 @@ from traiter.pylib import const, term_util, util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
+from .base import Base
+
 SYM = r"""°"”“'`‘´’"""
 PUNCT = f"""{SYM},;._"""
 
@@ -33,14 +35,12 @@ def build(nlp: Language):
     add.trait_pipe(
         nlp, name="geocoordinate_patterns", compiler=geocoordinate_patterns()
     )
-    # add.debug_tokens(nlp)  # #######################################
     add.trait_pipe(
         nlp,
         name="geocoordinate_plus_patterns",
         overwrite=["lat_long"],
         compiler=geocoordinate_plus_patterns(),
     )
-    # add.debug_tokens(nlp)  # #######################################
     add.cleanup_pipe(nlp, name="geocoordinate_cleanup")
 
 
@@ -82,7 +82,7 @@ def geocoordinate_patterns():
     return [
         Compiler(
             label="lat_long",
-            on_match="lat_long_match",
+            on_match="lat_long_trait",
             keep="lat_long",
             decoder=decoder,
             patterns=[
@@ -142,7 +142,7 @@ def geocoordinate_patterns():
             label="utm",
             keep="utm",
             decoder=decoder,
-            on_match="utm_match",
+            on_match="utm_trait",
             patterns=[
                 "utm_label* 99 sect ,* 9999 utm_dir? ,* 9999 utm_dir? (? datum* )?",
                 "99 uaa 9999",
@@ -175,7 +175,7 @@ def geocoordinate_plus_patterns():
         Compiler(
             label="lat_long_uncertain",
             id="lat_long",
-            on_match="lat_long_uncertain_match",
+            on_match="lat_long_uncertain",
             keep=["lat_long"],
             decoder=decoder,
             patterns=[
@@ -191,7 +191,7 @@ def geocoordinate_plus_patterns():
         Compiler(
             label="trs",
             keep="trs",
-            on_match="trs_match",
+            on_match="trs_trait",
             decoder=decoder,
             patterns=[
                 " trs_label* trs+",
@@ -213,148 +213,6 @@ def geocoordinate_plus_patterns():
     ]
 
 
-@registry.misc("lat_long_match")
-def lat_long_match(ent):
-    frags = []
-    datum = []
-    for token in ent:
-        token._.flag = "lat_long"
-
-        if token._.term == "lat_long_label":
-            continue
-
-        if token.text in const.OPEN + const.CLOSE:
-            continue
-
-        if token._.term == "datum":
-            datum.append(token.lower_)
-
-        else:
-            text = token.text.upper() if len(token.text) == 1 else token.text
-            frags.append(text)
-
-    lat_long = format_coords(frags)
-    ent._.data = {"lat_long": lat_long}
-
-    if datum:
-        datum = "".join(datum)
-        ent._.data["datum"] = REPLACE.get(datum, datum)
-
-    ent[0]._.data = ent._.data  # Save for uncertainty in the lat/long
-    ent[0]._.flag = "lat_long_data"
-
-
-@registry.misc("lat_long_uncertain_match")
-def lat_long_uncertain_match(ent):
-    value = 0.0
-    unit = []
-    datum = []
-
-    for token in ent:
-        # Get the data from the original parse
-        if token._.flag == "lat_long_data":
-            ent._.data = token._.data
-
-        # Get the uncertainty units
-        elif token._.term in ("metric_length", "imperial_length"):
-            unit.append(token.lower_)
-
-        # Already parse
-        elif token._.flag:
-            continue
-
-        # Pick up a trailing datum
-        elif token._.term == "datum":
-            datum.append(token.lower_)
-
-        # Get the uncertainty value
-        elif re.match(const.FLOAT_RE, token.text):
-            value = util.to_positive_float(token.text)
-
-    if value and not unit:
-        raise reject_match.RejectMatch
-
-    # Convert the values to meters
-    if value:
-        unit = "".join(unit)
-        unit = REPLACE.get(unit, unit)
-        ent._.data["units"] = "m"
-        factor = FACTORS_M[unit]
-        ent._.data["uncertainty"] = round(value * factor, 3)
-
-    if datum:
-        datum = "".join(datum)
-        ent._.data["datum"] = REPLACE.get(datum, datum)
-
-
-@registry.misc("trs_part")
-def trs_part(ent):
-    # Enforce a minimum length
-    if len(ent.text) < 3:
-        raise reject_match.RejectMatch
-
-    ent._.data["trs_part"] = ent.text
-
-    for token in ent:
-        token._.flag = "trs_part"
-
-    ent[0]._.data = ent._.data
-    ent[0]._.flag = "trs_data"
-
-
-@registry.misc("trs_match")
-def trs_match(ent):
-    frags = []
-
-    for token in ent:
-        if token._.flag == "trs_data":
-            frags.append(token._.data["trs_part"])
-
-        elif token._.flag == "trs_part":
-            continue
-
-        elif re.match(r"^(\d+|,)$", token.text):
-            frags.append(token.text)
-
-        elif token._.term == "sec_label":
-            frags.append(token.lower_)
-
-    trs = " ".join(frags)
-    trs = re.sub(r"\s([.,:])", r"\1", trs)
-    trs = re.sub(r",$", "", trs)
-    if len(trs.split()) < 2:
-        raise reject_match.RejectMatch
-
-    ent._.data = {"trs": "present"}
-
-
-@registry.misc("utm_match")
-def utm_match(ent):
-    frags = []
-    datum = []
-
-    for token in ent:
-        if token._.term == "utm_label":
-            continue
-
-        if token.text in const.OPEN + const.CLOSE:
-            continue
-
-        if token._.term == "datum":
-            datum.append(token.lower_)
-
-        else:
-            text = token.text.upper() if len(token.text) == 1 else token.text
-            frags.append(text)
-
-    utm = format_coords(frags)
-    ent._.data = {"utm": utm}
-
-    if datum:
-        datum = "".join(datum)
-        ent._.data["datum"] = REPLACE.get(datum, datum)
-
-
 def format_coords(frags):
     coords = " ".join(frags)
     coords = re.sub(rf"\s([{PUNCT}])", r"\1", coords)
@@ -363,3 +221,187 @@ def format_coords(frags):
     coords = re.sub(r"-\s(?=\d)", r"-", coords)
     coords = " ".join(coords.split())
     return coords
+
+
+class LatLong(Base):
+    @classmethod
+    def from_ent(cls, ent, **kwargs):
+        frags = []
+        datum = []
+        for token in ent:
+            token._.flag = "lat_long"
+
+            if token._.term == "lat_long_label":
+                continue
+
+            if token.text in const.OPEN + const.CLOSE:
+                continue
+
+            if token._.term == "datum":
+                datum.append(token.lower_)
+
+            else:
+                text = token.text.upper() if len(token.text) == 1 else token.text
+                frags.append(text)
+
+        lat_long = format_coords(frags)
+
+        if datum:
+            datum = "".join(datum)
+            datum = REPLACE.get(datum, datum)
+        else:
+            datum = None
+
+        ent[0]._.flag = "lat_long_data"
+
+        trait = super().from_ent(ent, lat_long=lat_long, datum=datum)
+        ent[0]._.trait = trait  # Save for uncertainty in the lat/long
+        return trait
+
+    @classmethod
+    def lat_long_uncertain(cls, ent):
+        value = 0.0
+        unit = []
+        datum = []
+        kwargs = {}
+
+        for token in ent:
+            # Get the data from the original parse
+            if token._.flag == "lat_long_data":
+                kwargs = token._.trait.as_dict()
+                for key in ("trait", "start", "end"):
+                    del kwargs[key]
+
+            # Get the uncertainty units
+            elif token._.term in ("metric_length", "imperial_length"):
+                unit.append(token.lower_)
+
+            # Already parsed
+            elif token._.flag:
+                continue
+
+            # Pick up a trailing datum
+            elif token._.term == "datum":
+                datum.append(token.lower_)
+
+            # Get the uncertainty value
+            elif re.match(const.FLOAT_RE, token.text):
+                value = util.to_positive_float(token.text)
+
+        if value and not unit:
+            raise reject_match.RejectMatch
+
+        # Convert the values to meters
+        if value:
+            unit = "".join(unit)
+            unit = REPLACE.get(unit, unit)
+            kwargs["units"] = "m"
+            factor = FACTORS_M[unit]
+            kwargs["uncertainty"] = round(value * factor, 3)
+        else:
+            kwargs["units"] = None
+            kwargs["uncertainty"] = None
+
+        datum = "".join(datum)
+        kwargs["datum"] = REPLACE.get(datum, datum) if datum else None
+
+        trait = super().from_ent(ent, **kwargs)
+        trait.trait = "lat_long"
+        return trait
+
+
+class TRS(Base):
+    @classmethod
+    def trs_part(cls, ent):
+        # Enforce a minimum length
+        if len(ent.text) < 3:
+            raise reject_match.RejectMatch
+
+        trait = super().from_ent(ent, trs_part=ent.text)
+
+        for token in ent:
+            token._.flag = "trs_part"
+
+        ent[0]._.trait = trait
+        ent[0]._.flag = "trs_data"
+
+        return trait
+
+    @classmethod
+    def from_ent(cls, ent, **kwargs):
+        frags = []
+
+        for token in ent:
+            if token._.flag == "trs_data":
+                frags.append(token._.trait.trs_part)
+
+            elif token._.flag == "trs_part":
+                continue
+
+            elif re.match(r"^(\d+|,)$", token.text):
+                frags.append(token.text)
+
+            elif token._.term == "sec_label":
+                frags.append(token.lower_)
+
+        trs = " ".join(frags)
+        trs = re.sub(r"\s([.,:])", r"\1", trs)
+        trs = re.sub(r",$", "", trs)
+        if len(trs.split()) < 2:
+            raise reject_match.RejectMatch
+
+        return super().from_ent(ent, trs="present")
+
+
+class UTM(Base):
+    @classmethod
+    def from_ent(cls, ent, **kwargs):
+        frags = []
+        datum = []
+
+        for token in ent:
+            if token._.term == "utm_label":
+                continue
+
+            if token.text in const.OPEN + const.CLOSE:
+                continue
+
+            if token._.term == "datum":
+                datum.append(token.lower_)
+
+            else:
+                text = token.text.upper() if len(token.text) == 1 else token.text
+                frags.append(text)
+
+        if datum:
+            datum = "".join(datum)
+            datum = REPLACE.get(datum, datum)
+        else:
+            datum = None
+
+        return super().from_ent(ent, utm=format_coords(frags), datum=datum)
+
+
+@registry.misc("lat_long_trait")
+def lat_long_trait(ent):
+    return LatLong.from_ent(ent)
+
+
+@registry.misc("lat_long_uncertain")
+def lat_long_uncertain(ent):
+    return LatLong.lat_long_uncertain(ent)
+
+
+@registry.misc("trs_part")
+def trs_part(ent):
+    return TRS.trs_part(ent)
+
+
+@registry.misc("trs_trait")
+def trs_trait(ent):
+    return TRS.from_ent(ent)
+
+
+@registry.misc("utm_trait")
+def utm_trait(ent):
+    return UTM.from_ent(ent)

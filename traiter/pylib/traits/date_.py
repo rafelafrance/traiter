@@ -12,6 +12,8 @@ from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
+from .base import Base
+
 DATE_CSV = Path(__file__).parent / "terms" / "date_terms.csv"
 MONTH_CSV = Path(__file__).parent / "terms" / "month_terms.csv"
 NUMERIC_CSV = Path(__file__).parent / "terms" / "numeric_terms.csv"
@@ -46,7 +48,7 @@ def date_patterns():
     return [
         Compiler(
             label="date",
-            on_match="date_match",
+            on_match="date_trait",
             keep="date",
             decoder=decoder,
             patterns=[
@@ -67,7 +69,7 @@ def date_patterns():
         Compiler(
             label="short_date",
             id="date",
-            on_match="missing_day_match",
+            on_match="short_date_trait",
             keep="date",
             decoder=decoder,
             patterns=[
@@ -82,45 +84,56 @@ def date_patterns():
     ]
 
 
-@registry.misc("date_match")
+class Date(Base):
+    @classmethod
+    def from_ent(cls, ent, **kwargs):
+        frags = []
+        century_adjust = None
+
+        for token in ent:
+            # Get the numeric parts
+            if re.match(rf"^[\d{SEP}]+$", token.text):
+                parts = [p for p in re.split(rf"[{SEP}]+", token.text) if p]
+                if parts:
+                    frags += parts
+
+            # Get a month name
+            elif token._.term in ("month", "roman"):
+                month = REPLACE.get(token.text, REPLACE.get(token.lower_, token.lower_))
+                frags.append(month)
+
+        # Try to parse the date
+        text = " ".join(frags)
+        try:
+            date_ = parser.parse(text).date()
+        except (parser.ParserError, IllegalMonthError):
+            raise reject_match.RejectMatch
+
+        # Handle missing centuries like: May 22, 08
+        if date_ > date.today():
+            date_ -= relativedelta(years=100)
+            century_adjust = True
+
+        date_ = date_.isoformat()[:10]
+
+        return super().from_ent(
+            ent, date=date_, century_adjust=century_adjust, missing_day=None
+        )
+
+    @classmethod
+    def short_date(cls, ent, **kwargs):
+        date_ = Date.from_ent(ent)
+        date_.trait = "date"
+        date_.missing_day = True
+        date_.date = date_.date[:7]
+        return date_
+
+
+@registry.misc("date_trait")
 def date_match(ent):
-    frags = []
-    century_adjust = False
-
-    for token in ent:
-
-        # Get the numeric parts
-        if re.match(rf"^[\d{SEP}]+$", token.text):
-            parts = [p for p in re.split(rf"[{SEP}]+", token.text) if p]
-            if parts:
-                frags += parts
-
-        # Get a month name
-        elif token._.term in ("month", "roman"):
-            month = REPLACE.get(token.text, REPLACE.get(token.lower_, token.lower_))
-            frags.append(month)
-
-    # Try to parse the date
-    text = " ".join(frags)
-    try:
-        date_ = parser.parse(text).date()
-    except (parser.ParserError, IllegalMonthError):
-        raise reject_match.RejectMatch
-
-    # Handle missing centuries like: May 22, 08
-    if date_ > date.today():
-        date_ -= relativedelta(years=100)
-        century_adjust = True
-
-    ent._.data = {
-        "date": date_.isoformat()[:10],
-    }
-    if century_adjust:
-        ent._.data["century_adjust"] = True
+    return Date.from_ent(ent)
 
 
-@registry.misc("missing_day_match")
-def missing_day_match(ent):
-    date_match(ent)
-    ent._.data["missing_day"] = True
-    ent._.data["date"] = ent._.data["date"][:7]
+@registry.misc("short_date_trait")
+def short_date_trait(ent):
+    return Date.short_date(ent)

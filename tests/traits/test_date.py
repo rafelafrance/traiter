@@ -4,6 +4,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from tests.setup import test
+from traiter.pylib.traits.date_ import Date
 
 
 class TestDate(unittest.TestCase):
@@ -12,12 +13,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("""11 May 2004"""),
             [
-                {
-                    "date": "2004-05-11",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 11,
-                },
+                Date(
+                    date="2004-05-11",
+                    trait="date",
+                    start=0,
+                    end=11,
+                ),
             ],
         )
 
@@ -26,12 +27,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("11 may 04"),
             [
-                {
-                    "date": "2004-05-11",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 9,
-                },
+                Date(
+                    date="2004-05-11",
+                    trait="date",
+                    start=0,
+                    end=9,
+                ),
             ],
         )
 
@@ -44,13 +45,13 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test(tomorrow),
             [
-                {
-                    "date": expect,
-                    "century_adjust": True,
-                    "trait": "date",
-                    "start": 0,
-                    "end": 9,
-                },
+                Date(
+                    date=expect,
+                    century_adjust=True,
+                    trait="date",
+                    start=0,
+                    end=9,
+                ),
             ],
         )
 
@@ -59,12 +60,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("No.: 113,306 Date: 8 October 1989"),
             [
-                {
-                    "date": "1989-10-08",
-                    "trait": "date",
-                    "start": 13,
-                    "end": 33,
-                },
+                Date(
+                    date="1989-10-08",
+                    trait="date",
+                    start=13,
+                    end=33,
+                ),
             ],
         )
 
@@ -73,12 +74,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("11-0297 10/20/2011"),
             [
-                {
-                    "date": "2011-10-20",
-                    "trait": "date",
-                    "start": 8,
-                    "end": 18,
-                },
+                Date(
+                    date="2011-10-20",
+                    trait="date",
+                    start=8,
+                    end=18,
+                ),
             ],
         )
 
@@ -87,12 +88,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("Collected by D, M, MOORE — Date AUG-_11,1968"),
             [
-                {
-                    "date": "1968-08-11",
-                    "trait": "date",
-                    "start": 27,
-                    "end": 44,
-                },
+                Date(
+                    date="1968-08-11",
+                    trait="date",
+                    start=27,
+                    end=44,
+                ),
             ],
         )
 
@@ -101,12 +102,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("""Date 8/20/75"""),
             [
-                {
-                    "date": "1975-08-20",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 12,
-                },
+                Date(
+                    date="1975-08-20",
+                    trait="date",
+                    start=0,
+                    end=12,
+                ),
             ],
         )
 
@@ -115,13 +116,13 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             test("Andrew Jenkins 631 2/2010"),
             [
-                {
-                    "date": "2010-02",
-                    "missing_day": True,
-                    "trait": "date",
-                    "start": 19,
-                    "end": 25,
-                },
+                Date(
+                    date="2010-02",
+                    missing_day=True,
+                    trait="date",
+                    start=19,
+                    end=25,
+                ),
             ],
         )
 
@@ -135,160 +136,145 @@ class TestDate(unittest.TestCase):
     def test_date_10(self):
         """It handles a bad month."""
         self.assertEqual(
-            test("May have elevation: 1347.22 m (4420 N) - 1359-40 m (4460 Ny"),
+            test("June, 1992"),
             [
-                {
-                    "elevation": 1347.22,
-                    "end": 29,
-                    "start": 9,
-                    "trait": "elevation",
-                    "units": "m",
-                }
+                Date(
+                    date="1992-06",
+                    trait="date",
+                    missing_day=True,
+                    start=0,
+                    end=10,
+                ),
             ],
         )
 
     def test_date_11(self):
-        """It handles a bad month."""
-        self.assertEqual(
-            test("June, 1992"),
-            [
-                {
-                    "date": "1992-06",
-                    "trait": "date",
-                    "missing_day": True,
-                    "start": 0,
-                    "end": 10,
-                },
-            ],
-        )
-
-    def test_date_12(self):
         """It handles an abbreviated month."""
         self.assertEqual(
             test("14 Jan. 1987"),
             [
-                {
-                    "date": "1987-01-14",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 12,
-                },
+                Date(
+                    date="1987-01-14",
+                    trait="date",
+                    start=0,
+                    end=12,
+                ),
             ],
         )
 
-    def test_date_13(self):
+    def test_date_12(self):
         """It skips a list of numbers."""
         self.assertEqual(
             test("2 8 10"),
             [],
         )
 
-    def test_date_14(self):
+    def test_date_13(self):
         """It allows the 'yy notation."""
         self.assertEqual(
             test("Date: 6/30 '66"),
             [
-                {
-                    "century_adjust": True,
-                    "date": "1966-06-30",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 14,
-                }
+                Date(
+                    century_adjust=True,
+                    date="1966-06-30",
+                    trait="date",
+                    start=0,
+                    end=14,
+                )
+            ],
+        )
+
+    def test_date_14(self):
+        """It handles an abbreviated month."""
+        self.assertEqual(
+            test("14 jan. 1987"),
+            [
+                Date(
+                    date="1987-01-14",
+                    trait="date",
+                    start=0,
+                    end=12,
+                ),
             ],
         )
 
     def test_date_15(self):
         """It handles an abbreviated month."""
         self.assertEqual(
-            test("14 jan. 1987"),
+            test("14 JAN. 1987"),
             [
-                {
-                    "date": "1987-01-14",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 12,
-                },
+                Date(
+                    date="1987-01-14",
+                    trait="date",
+                    start=0,
+                    end=12,
+                ),
             ],
         )
 
     def test_date_16(self):
-        """It handles an abbreviated month."""
-        self.assertEqual(
-            test("14 JAN. 1987"),
-            [
-                {
-                    "date": "1987-01-14",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 12,
-                },
-            ],
-        )
-
-    def test_date_17(self):
         """It handles month first."""
         self.assertEqual(
             test("W May 19, 1998 HR1998-01"),
             [
-                {
-                    "date": "1998-05-19",
-                    "trait": "date",
-                    "start": 2,
-                    "end": 14,
-                },
+                Date(
+                    date="1998-05-19",
+                    trait="date",
+                    start=2,
+                    end=14,
+                ),
+            ],
+        )
+
+    def test_date_17(self):
+        self.assertEqual(
+            test("5/26/03,"),
+            [
+                Date(
+                    date="2003-05-26",
+                    trait="date",
+                    start=0,
+                    end=7,
+                ),
             ],
         )
 
     def test_date_18(self):
         self.assertEqual(
-            test("5/26/03,"),
+            test("Date: 10.Oct.70"),
             [
-                {
-                    "date": "2003-05-26",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 7,
-                },
+                Date(
+                    century_adjust=True,
+                    date="1970-10-10",
+                    trait="date",
+                    start=0,
+                    end=15,
+                ),
             ],
         )
 
     def test_date_19(self):
         self.assertEqual(
-            test("Date: 10.Oct.70"),
+            test("Date 30-VII-1977"),
             [
-                {
-                    "century_adjust": True,
-                    "date": "1970-10-10",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 15,
-                },
+                Date(
+                    date="1977-07-30",
+                    trait="date",
+                    start=0,
+                    end=16,
+                ),
             ],
         )
 
     def test_date_20(self):
         self.assertEqual(
-            test("Date 30-VII-1977"),
-            [
-                {
-                    "date": "1977-07-30",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 16,
-                },
-            ],
-        )
-
-    def test_date_21(self):
-        self.assertEqual(
             test("SOFT. 3, 1899."),
             [
-                {
-                    "date": "1899-09-03",
-                    "trait": "date",
-                    "start": 0,
-                    "end": 13,
-                },
+                Date(
+                    date="1899-09-03",
+                    trait="date",
+                    start=0,
+                    end=13,
+                ),
             ],
         )

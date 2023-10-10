@@ -68,7 +68,8 @@ class AddTraits:
 
             if action := self.dispatch_table.get(label):
                 try:
-                    action(ent)
+                    # action(ent)
+                    ent._.trait = action(ent)
                 except RejectMatch:
                     continue
 
@@ -128,7 +129,7 @@ class AddTraits:
 
         return label
 
-    def to_disk(self, path, exclude=()):
+    def to_disk(self, path, _exclude=()):
         path = Path(path)
         if not path.exists():
             path.mkdir()
@@ -138,7 +139,7 @@ class AddTraits:
         with data_path.open("w", encoding="utf8") as data_file:
             data_file.write(json.dumps(fields))
 
-    def from_disk(self, path, exclude=()):
+    def from_disk(self, path, _exclude=()):
         data_path = Path(path) / "data.json"
         with data_path.open("r", encoding="utf8") as data_file:
             data = json.load(data_file)

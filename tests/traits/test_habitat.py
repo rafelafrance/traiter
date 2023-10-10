@@ -1,5 +1,7 @@
 import unittest
 
+from traiter.pylib.traits.habitat import Habitat
+
 from ..setup import test
 
 
@@ -8,12 +10,12 @@ class TestHabitat(unittest.TestCase):
         self.assertEqual(
             test("""riparian forest"""),
             [
-                {
-                    "trait": "habitat",
-                    "habitat": "riparian forest",
-                    "start": 0,
-                    "end": 15,
-                },
+                Habitat(
+                    trait="habitat",
+                    habitat="riparian forest",
+                    start=0,
+                    end=15,
+                ),
             ],
         )
 
@@ -21,12 +23,12 @@ class TestHabitat(unittest.TestCase):
         self.assertEqual(
             test("""subalpine zone"""),
             [
-                {
-                    "trait": "habitat",
-                    "habitat": "subalpine zone",
-                    "start": 0,
-                    "end": 14,
-                }
+                Habitat(
+                    trait="habitat",
+                    habitat="subalpine zone",
+                    start=0,
+                    end=14,
+                )
             ],
         )
 
@@ -45,15 +47,15 @@ class TestHabitat(unittest.TestCase):
                 """
             ),
             [
-                {
-                    "trait": "habitat",
-                    "habitat": (
+                Habitat(
+                    trait="habitat",
+                    habitat=(
                         "Boggy woodland with a sparce canopy dominated by "
                         "blackgum and larch, and nice herbaceous openings"
                     ),
-                    "start": 6,
-                    "end": 112,
-                },
+                    start=6,
+                    end=112,
+                ),
             ],
         )
 
@@ -61,11 +63,11 @@ class TestHabitat(unittest.TestCase):
         self.assertEqual(
             test("""Riparian/desert scrub."""),
             [
-                {
-                    "trait": "habitat",
-                    "habitat": "riparian desert scrub",
-                    "start": 0,
-                    "end": 21,
-                },
+                Habitat(
+                    trait="habitat",
+                    habitat="riparian desert scrub",
+                    start=0,
+                    end=21,
+                ),
             ],
         )

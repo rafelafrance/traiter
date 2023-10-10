@@ -1,6 +1,7 @@
 import unittest
 
 from tests.setup import test
+from traiter.pylib.traits.geocoordinates import UTM
 
 
 class TestUTMPatterns(unittest.TestCase):
@@ -8,12 +9,12 @@ class TestUTMPatterns(unittest.TestCase):
         self.assertEqual(
             test("""UTM: 12s 359602E 3718689N"""),
             [
-                {
-                    "utm": "12 S 359602 E 3718689 N",
-                    "trait": "utm",
-                    "start": 0,
-                    "end": 25,
-                }
+                UTM(
+                    utm="12 S 359602 E 3718689 N",
+                    trait="utm",
+                    start=0,
+                    end=25,
+                )
             ],
         )
 
@@ -21,11 +22,11 @@ class TestUTMPatterns(unittest.TestCase):
         self.assertEqual(
             test("""11UQF056380"""),
             [
-                {
-                    "utm": "11 UQF 056380",
-                    "trait": "utm",
-                    "start": 0,
-                    "end": 11,
-                }
+                UTM(
+                    utm="11 UQF 056380",
+                    trait="utm",
+                    start=0,
+                    end=11,
+                )
             ],
         )
