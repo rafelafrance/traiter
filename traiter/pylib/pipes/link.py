@@ -32,8 +32,8 @@ class LinkMatch:
         self.child_idx = self.child_ent.start
         self.parent_idx = self.parent_ent.start
 
-        self.child_trait = self.child_ent._.data["trait"]
-        self.parent_trait = self.parent_ent._.data["trait"]
+        # self.child_trait = self.child_ent._.data["trait"]
+        # self.parent_trait = self.parent_ent._.data["trait"]
         self.reverse_weights = reverse_weights
         self.distance = self.weighted_distance()
 
@@ -96,7 +96,8 @@ class LinkCount:
         self.seen: dict[tuple, int] = defaultdict(int)
 
     def all_values(self, ent):
-        values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+        # values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
+        values = []
         return values
 
     def seen_too_much(self, ent):
@@ -171,8 +172,8 @@ class LinkTraits:
                 continue
 
             # Is this trait already linked
-            if set(match.child_ent._.data.keys()) & self.parent_set:
-                continue
+            # if set(match.child_ent._.data.keys()) & self.parent_set:
+            #     continue
 
             # Is the parent's link limit exceeded
             link_count = parent_link_count[match.parent_idx, match.child_trait]
@@ -181,9 +182,9 @@ class LinkTraits:
             link_count.update_seen(match.child_ent)
 
             # Update the child entity
-            if match.parent_trait in match.parent_ent._.data:
-                parent_trait = match.parent_ent._.data[match.parent_trait]
-                match.child_ent._.data[match.parent_trait] = parent_trait
+            # if match.parent_trait in match.parent_ent._.data:
+            #     parent_trait = match.parent_ent._.data[match.parent_trait]
+            #     match.child_ent._.data[match.parent_trait] = parent_trait
 
         return doc
 

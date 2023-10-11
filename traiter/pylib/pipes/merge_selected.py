@@ -17,25 +17,12 @@ class MergeSelected:
         with doc.retokenize() as retokenizer:
             for ent in [e for e in doc.ents if e.label_ in self.labels]:
                 label = ent.label_
-                data = ent._.data
+                trait = ent._.trait
                 attrs = {
                     "ENT_TYPE": label,
                     "ENT_IOB": 3,
                     "POS": ent.root.pos_,
-                    "_": {"data": data},
+                    "_": {"trait": trait},
                 }
                 retokenizer.merge(ent, attrs=attrs)
         return doc
-
-    def to_disk(self, path, exclude=tuple()):  # noqa
-        path = Path(path)
-        if not path.exists():
-            path.mkdir()
-        data_path = path / "data.json"
-        with data_path.open("w", encoding="utf8") as data_file:
-            data_file.write(json.dumps(self.labels))
-
-    def from_disk(self, path, exclude=tuple()):  # noqa
-        data_path = Path(path) / "data.json"
-        with data_path.open("r", encoding="utf8") as data_file:
-            self.labels = json.load(data_file)

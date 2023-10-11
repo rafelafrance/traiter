@@ -1,12 +1,9 @@
-import json
 from collections import defaultdict
-from pathlib import Path
 
 from spacy.language import Language
 from spacy.matcher import PhraseMatcher
 from spacy.tokens import Doc
 from spacy.util import filter_spans
-
 
 PHRASE_PIPE = "phrase_pipe"
 
@@ -64,36 +61,12 @@ class PhrasePipe:
             for token in ent:
                 token._.term = label
                 text = self.replace.get(token.lower_, token.text)
-                token._.data[label] = text
                 texts.append(text)
 
             used_tokens |= ent_tokens
 
-            text = " ".join(texts)
-            ent._.data[label] = self.replace.get(text, text)
-            ent._.data["trait"] = label
-            ent._.data["start"] = ent.start_char
-            ent._.data["end"] = ent.end_char
             entities.append(ent)
 
         doc.set_ents(sorted(entities, key=lambda s: s.start))
 
         return doc
-
-    def to_disk(self, path, exclude=tuple()):  # noqa
-        path = Path(path)
-        if not path.exists():
-            path.mkdir()
-        data_path = path / "data.json"
-        skips = ("nlp", "name", "matcher")
-        fields = {k: v for k, v in self.__dict__.items() if k not in skips}
-        with data_path.open("w", encoding="utf8") as data_file:
-            data_file.write(json.dumps(fields))
-
-    def from_disk(self, path, exclude=tuple()):  # noqa
-        data_path = Path(path) / "data.json"
-        with data_path.open("r", encoding="utf8") as data_file:
-            data = json.load(data_file)
-            for key in data.keys():
-                self.__dict__[key] = data[key]
-            self.matcher = self.build_matcher()

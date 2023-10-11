@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 from typing import Any, Optional
 
 from spacy import util
@@ -68,18 +66,14 @@ class AddTraits:
 
             if action := self.dispatch_table.get(label):
                 try:
-                    # action(ent)
                     ent._.trait = action(ent)
                 except RejectMatch:
                     continue
 
             used_tokens |= ent_tokens
 
-            label = self.relabel_entity(ent, label)
+            self.relabel_entity(ent, label)
 
-            ent._.data["trait"] = label
-            ent._.data["start"] = ent.start_char
-            ent._.data["end"] = ent.end_char
             entities.append(ent)
 
         self.add_untouched_entities(doc, entities, used_tokens)
@@ -128,25 +122,6 @@ class AddTraits:
             label = new_label
 
         return label
-
-    def to_disk(self, path, _exclude=()):
-        path = Path(path)
-        if not path.exists():
-            path.mkdir()
-        data_path = path / "data.json"
-        skips = ("nlp", "name", "dispatch_table", "matcher")
-        fields = {k: v for k, v in self.__dict__.items() if k not in skips}
-        with data_path.open("w", encoding="utf8") as data_file:
-            data_file.write(json.dumps(fields))
-
-    def from_disk(self, path, _exclude=()):
-        data_path = Path(path) / "data.json"
-        with data_path.open("r", encoding="utf8") as data_file:
-            data = json.load(data_file)
-            for key in data:
-                self.__dict__[key] = data[key]
-            self.matcher = self.build_matcher()
-            self.dispatch_table = self.build_dispatch_table()
 
 
 def relabel_entity(ent, new_label):
