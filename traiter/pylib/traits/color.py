@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 from spacy.language import Language
@@ -42,9 +43,13 @@ def color_patterns():
     ]
 
 
+@dataclass
 class Color(Base):
+    color: str = None
+    missing: bool = None
+
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def color_trait(cls, ent):
         missing = None
         frags = []
         for token in ent:
@@ -72,4 +77,4 @@ class Color(Base):
 
 @registry.misc("color_trait")
 def color_trait(ent):
-    return Color.from_ent(ent)
+    return Color.color_trait(ent)

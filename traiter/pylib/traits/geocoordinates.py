@@ -1,4 +1,5 @@
 import re
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from spacy.language import Language
@@ -131,7 +132,7 @@ def geocoordinate_patterns():
             label="trs_part",
             keep="trs",
             decoder=decoder,
-            on_match="trs_part",
+            on_match="get_trs_part",
             patterns=[
                 " trs_pre         ,?",
                 " trs_pre /? 99   ,?",
@@ -223,9 +224,15 @@ def format_coords(frags):
     return coords
 
 
+@dataclass
 class LatLong(Base):
+    lat_long: str = None
+    datum: str = None
+    units: str = None
+    uncertainty: float = None
+
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def lat_long_trait(cls, ent):
         frags = []
         datum = []
         for token in ent:
@@ -268,9 +275,7 @@ class LatLong(Base):
         for token in ent:
             # Get the data from the original parse
             if token._.flag == "lat_long_data":
-                kwargs = token._.trait.as_dict()
-                for key in ("trait", "start", "end"):
-                    del kwargs[key]
+                kwargs = asdict(token._.trait)
 
             # Get the uncertainty units
             elif token._.term in ("metric_length", "imperial_length"):
@@ -310,9 +315,13 @@ class LatLong(Base):
         return trait
 
 
+@dataclass
 class TRS(Base):
+    trs: str = None
+    trs_part: str = None
+
     @classmethod
-    def trs_part(cls, ent):
+    def get_trs_part(cls, ent):
         # Enforce a minimum length
         if len(ent.text) < 3:
             raise reject_match.RejectMatch
@@ -328,7 +337,7 @@ class TRS(Base):
         return trait
 
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def trs_trait(cls, ent):
         frags = []
 
         for token in ent:
@@ -353,7 +362,11 @@ class TRS(Base):
         return super().from_ent(ent, trs="present")
 
 
+@dataclass
 class UTM(Base):
+    utm: str = None
+    datum: str = None
+
     @classmethod
     def from_ent(cls, ent, **kwargs):
         frags = []
@@ -384,7 +397,7 @@ class UTM(Base):
 
 @registry.misc("lat_long_trait")
 def lat_long_trait(ent):
-    return LatLong.from_ent(ent)
+    return LatLong.lat_long_trait(ent)
 
 
 @registry.misc("lat_long_uncertain")
@@ -392,14 +405,14 @@ def lat_long_uncertain(ent):
     return LatLong.lat_long_uncertain(ent)
 
 
-@registry.misc("trs_part")
-def trs_part(ent):
-    return TRS.trs_part(ent)
+@registry.misc("get_trs_part")
+def get_trs_part(ent):
+    return TRS.get_trs_part(ent)
 
 
 @registry.misc("trs_trait")
 def trs_trait(ent):
-    return TRS.from_ent(ent)
+    return TRS.trs_trait(ent)
 
 
 @registry.misc("utm_trait")

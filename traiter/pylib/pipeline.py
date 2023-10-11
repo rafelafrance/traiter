@@ -4,7 +4,7 @@ from traiter.pylib.pipes import extensions, sentence, tokenizer
 from traiter.pylib.traits import color, date_, elevation, geocoordinates, habitat
 
 
-def build(model_path=None):
+def build():
     extensions.add_extensions()
 
     nlp = spacy.load(
@@ -22,13 +22,4 @@ def build(model_path=None):
     habitat.build(nlp)
     geocoordinates.build(nlp)
 
-    if model_path:
-        nlp.to_disk(model_path)
-
-    return nlp
-
-
-def load(model_path):
-    extensions.add_extensions()
-    nlp = spacy.load(model_path)
     return nlp

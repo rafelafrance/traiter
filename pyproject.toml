@@ -39,6 +39,9 @@ py-modules = []
 [tool.pycodestyle]
 ignore = "E402"
 
+[tool.isort]
+profile = "black"
+
 [tool.black]
 line-length = 88
 target_version = ["py310"]

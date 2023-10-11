@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 from spacy.language import Language
@@ -71,9 +72,12 @@ def habitat_compilers():
     ]
 
 
+@dataclass
 class Habitat(Base):
+    habitat: str = None
+
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def habitat_trait(cls, ent):
         frags = []
 
         for token in ent:
@@ -98,7 +102,7 @@ class Habitat(Base):
 
 @registry.misc("habitat_trait")
 def habitat_trait(ent):
-    return Habitat.from_ent(ent)
+    return Habitat.habitat_trait(ent)
 
 
 @registry.misc("labeled_habitat")

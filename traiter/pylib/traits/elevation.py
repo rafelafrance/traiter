@@ -1,4 +1,5 @@
 import re
+from dataclasses import dataclass
 from pathlib import Path
 
 from spacy.language import Language
@@ -61,9 +62,15 @@ def elevation_compilers():
     ]
 
 
+@dataclass
 class Elevation(Base):
+    elevation: float = None
+    elevation_high: float = None
+    units: str = None
+    about: bool = None
+
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def elevation_trait(cls, ent):
         values = []
         units_ = ""
         expected_len = 1
@@ -102,4 +109,4 @@ class Elevation(Base):
 
 @registry.misc("elevation_trait")
 def elevation_trait(ent):
-    return Elevation.from_ent(ent)
+    return Elevation.elevation_trait(ent)

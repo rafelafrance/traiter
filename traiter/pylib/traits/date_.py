@@ -1,5 +1,6 @@
 import re
 from calendar import IllegalMonthError
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
@@ -84,9 +85,14 @@ def date_patterns():
     ]
 
 
+@dataclass
 class Date(Base):
+    date: str = None
+    century_adjust: bool = None
+    missing_day: bool = None
+
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def date_trait(cls, ent):
         frags = []
         century_adjust = None
 
@@ -121,8 +127,8 @@ class Date(Base):
         )
 
     @classmethod
-    def short_date(cls, ent, **kwargs):
-        date_ = Date.from_ent(ent)
+    def short_date(cls, ent):
+        date_ = Date.date_trait(ent)
         date_.trait = "date"
         date_.missing_day = True
         date_.date = date_.date[:7]
@@ -131,7 +137,7 @@ class Date(Base):
 
 @registry.misc("date_trait")
 def date_match(ent):
-    return Date.from_ent(ent)
+    return Date.date_trait(ent)
 
 
 @registry.misc("short_date_trait")
