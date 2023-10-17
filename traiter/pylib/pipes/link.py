@@ -1,13 +1,10 @@
-import json
 from collections import defaultdict
+from dataclasses import asdict
 from itertools import product
-from pathlib import Path
 
 from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc
-
-from traiter.pylib import util
 
 LINK_TRAITS = "link_traits"
 
@@ -32,8 +29,8 @@ class LinkMatch:
         self.child_idx = self.child_ent.start
         self.parent_idx = self.parent_ent.start
 
-        # self.child_trait = self.child_ent._.data["trait"]
-        # self.parent_trait = self.parent_ent._.data["trait"]
+        self.child_trait = self.child_ent._.trait.trait
+        self.parent_trait = self.parent_ent._.trait.trait
         self.reverse_weights = reverse_weights
         self.distance = self.weighted_distance()
 
@@ -96,8 +93,7 @@ class LinkCount:
         self.seen: dict[tuple, int] = defaultdict(int)
 
     def all_values(self, ent):
-        # values = [v for d in self.differ if (v := util.as_list(ent._.data.get(d, [])))]
-        values = []
+        values = [v for d in self.differ if (v := getattr(ent, d), None) is not None]
         return values
 
     def seen_too_much(self, ent):
@@ -156,13 +152,16 @@ class LinkTraits:
         # Filter the matches
         link_matches = {}
         for match in matches:
-            link = LinkMatch(
+            link_match = LinkMatch(
                 match, self.weights, doc, self.parents, self.reverse_weights
             )
-            child_start = link.child_ent.start
-            parent_start = link.parent_ent.start
-            link_matches[(child_start, parent_start)] = link
+            # Matches work by tokens, but I want to match entities, so I only keep
+            # matches by entity and filter excess token matches.
+            child_start = link_match.child_ent.start
+            parent_start = link_match.parent_ent.start
+            link_matches[(child_start, parent_start)] = link_match
 
+        # Sort matches by distance and get rid of no longer needed key
         matches = sorted(link_matches.values())
 
         parent_link_count = defaultdict(lambda: LinkCount(self.differ, self.max_links))
@@ -171,9 +170,12 @@ class LinkTraits:
             if len(match) <= 1:
                 continue
 
-            # Is this trait already linked
-            # if set(match.child_ent._.data.keys()) & self.parent_set:
-            #     continue
+            # Is this trait already linked? Linked = field value is not none
+            child_set = {
+                k for k, v in asdict(match.child_ent._.trait).items() if v is not None
+            }
+            if child_set & self.parent_set:
+                continue
 
             # Is the parent's link limit exceeded
             link_count = parent_link_count[match.parent_idx, match.child_trait]
@@ -182,27 +184,8 @@ class LinkTraits:
             link_count.update_seen(match.child_ent)
 
             # Update the child entity
-            # if match.parent_trait in match.parent_ent._.data:
-            #     parent_trait = match.parent_ent._.data[match.parent_trait]
-            #     match.child_ent._.data[match.parent_trait] = parent_trait
+            if hasattr(match.parent_ent._.trait, match.parent_trait):
+                parent_trait = getattr(match.parent_ent._.trait, match.parent_trait)
+                setattr(match.child_ent._.trait, match.parent_trait, parent_trait)
 
         return doc
-
-    def to_disk(self, path, exclude=tuple()):  # noqa
-        path = Path(path)
-        if not path.exists():
-            path.mkdir()
-        data_path = path / "data.json"
-        skip = ("nlp", "name", "matcher", "parent_set")
-        fields = {k: v for k, v in self.__dict__.items() if k not in skip}
-        with data_path.open("w") as data_file:
-            data_file.write(json.dumps(fields))
-
-    def from_disk(self, path, exclude=tuple()):  # noqa
-        data_path = Path(path) / "data.json"
-        with data_path.open("r", encoding="utf8") as data_file:
-            data = json.load(data_file)
-            for key in data.keys():
-                self.__dict__[key] = data[key]
-        self.matcher = self.build_matcher(self.nlp, self.patterns)
-        self.parent_set = set(self.parents)

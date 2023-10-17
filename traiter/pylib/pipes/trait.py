@@ -120,6 +120,7 @@ class AddTraits:
         if new_label:
             relabel_entity(ent, new_label)
             label = new_label
+            ent._.trait.trait = new_label
 
         return label
 

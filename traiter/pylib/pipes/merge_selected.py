@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 from spacy.language import Language
 
 MERGE_SELECTED = "merge_selected"
