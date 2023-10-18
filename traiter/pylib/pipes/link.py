@@ -93,7 +93,9 @@ class LinkCount:
         self.seen: dict[tuple, int] = defaultdict(int)
 
     def all_values(self, ent):
-        values = [v for d in self.differ if (v := getattr(ent, d), None) is not None]
+        values = [
+            v for d in self.differ if (v := getattr(ent._.trait, d, None)) is not None
+        ]
         return values
 
     def seen_too_much(self, ent):

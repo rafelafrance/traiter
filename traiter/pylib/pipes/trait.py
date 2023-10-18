@@ -125,7 +125,10 @@ class AddTraits:
         return label
 
 
-def relabel_entity(ent, new_label):
+def relabel_entity(ent, new_label, relabel_tokens=False):
     if new_label not in ent.doc.vocab.strings:
         ent.doc.vocab.strings.add(new_label)
     ent.label = ent.doc.vocab.strings[new_label]
+    if relabel_tokens:
+        for token in ent:
+            token.ent_type = ent.doc.vocab.strings[new_label]

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 
 @dataclass
@@ -13,3 +13,6 @@ class Base:
         kwargs["start"] = ent.start_char
         kwargs["end"] = ent.end_char
         return cls(**kwargs)
+
+    def as_dict(self):
+        return {k: v for k, v in asdict(self).items() if v is not None}
