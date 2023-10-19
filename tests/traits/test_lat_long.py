@@ -2,11 +2,11 @@ import unittest
 
 from tests.setup import test
 from traiter.pylib.traits.elevation import Elevation
-from traiter.pylib.traits.geocoordinates import LatLong
 from traiter.pylib.traits.habitat import Habitat
+from traiter.pylib.traits.lat_long import LatLong
 
 
-class TestLatLongPatterns(unittest.TestCase):
+class TestLatLong(unittest.TestCase):
     def test_lat_long_01(self):
         self.assertEqual(
             test("""Grassland, GPS 30° 49’ 27’ N, 99" 15' 22 W May"""),

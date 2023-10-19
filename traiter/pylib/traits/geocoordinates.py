@@ -224,7 +224,6 @@ def format_coords(frags):
     return coords
 
 
-@dataclass
 class LatLong(Base):
     lat_long: str = None
     datum: str = None
@@ -315,7 +314,6 @@ class LatLong(Base):
         return trait
 
 
-@dataclass
 class TRS(Base):
     trs: str = None
     trs_part: str = None
@@ -362,7 +360,6 @@ class TRS(Base):
         return super().from_ent(ent, trs="present")
 
 
-@dataclass
 class UTM(Base):
     utm: str = None
     datum: str = None

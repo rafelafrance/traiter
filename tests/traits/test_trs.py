@@ -1,7 +1,8 @@
 import unittest
 
 from tests.setup import test
-from traiter.pylib.traits.geocoordinates import TRS, LatLong
+from traiter.pylib.traits.lat_long import LatLong
+from traiter.pylib.traits.trs import TRS
 
 
 class TestTRSPatterns(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 
 from tests.setup import test
-from traiter.pylib.traits.geocoordinates import UTM
+from traiter.pylib.traits.utm import UTM
 
 
 class TestUTMPatterns(unittest.TestCase):

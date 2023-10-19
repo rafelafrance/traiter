@@ -6,6 +6,7 @@ from traiter.pylib.traits.color import Color
 
 class TestColor(unittest.TestCase):
     def test_color_01(self):
+        self.maxDiff = None
         self.assertEqual(
             test(
                 """hypanthium green or greenish yellow,

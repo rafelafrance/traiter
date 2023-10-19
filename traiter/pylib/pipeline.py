@@ -1,7 +1,13 @@
 import spacy
 
 from traiter.pylib.pipes import extensions, sentence, tokenizer
-from traiter.pylib.traits import color, date_, elevation, geocoordinates, habitat
+from traiter.pylib.traits.color import Color
+from traiter.pylib.traits.date_ import Date
+from traiter.pylib.traits.elevation import Elevation
+from traiter.pylib.traits.habitat import Habitat
+from traiter.pylib.traits.lat_long import LatLong
+from traiter.pylib.traits.trs import TRS
+from traiter.pylib.traits.utm import UTM
 
 
 def build():
@@ -16,10 +22,12 @@ def build():
 
     nlp.add_pipe(sentence.SENTENCES, before="parser")
 
-    color.build(nlp)
-    date_.build(nlp)
-    elevation.build(nlp)
-    habitat.build(nlp)
-    geocoordinates.build(nlp)
+    Color.pipe(nlp)
+    Date.pipe(nlp)
+    Elevation.pipe(nlp)
+    LatLong.pipe(nlp)
+    Habitat.pipe(nlp)
+    TRS.pipe(nlp)
+    UTM.pipe(nlp)
 
     return nlp
