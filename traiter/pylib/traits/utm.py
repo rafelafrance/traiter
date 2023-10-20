@@ -1,5 +1,7 @@
 import re
+from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
@@ -11,30 +13,21 @@ from traiter.pylib.pipes import add
 from .base import Base
 
 
+@dataclass
 class UTM(Base):
-    sym = r"""°"”“'`‘´’"""
-    punct = f"""{sym},;._"""
+    # ############## Class Vars #####################################################
+    sym: ClassVar[str] = r"""°"”“'`‘´’"""
+    punct: ClassVar[str] = f"""{sym},;._"""
+    datum_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "datum_terms.csv"
+    utm_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "utm_terms.csv"
+    unit_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_length_terms.csv"
+    all_csvs: ClassVar[list[Path]] = [utm_csv, datum_csv, unit_csv]
+    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
+    dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
+    # #######################################################################
 
-    datum_csv = Path(__file__).parent / "terms" / "datum_terms.csv"
-    utm_csv = Path(__file__).parent / "terms" / "utm_terms.csv"
-    unit_csv = Path(__file__).parent / "terms" / "unit_length_terms.csv"
-    all_csvs = [utm_csv, datum_csv, unit_csv]
-
-    replace = term_util.term_data([unit_csv, utm_csv], "replace")
-
-    dir_ = """((north|east|south|west)(ing)?|[nesw])"""
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        utm: str = None,
-        datum: str = None,
-    ):
-        super().__init__(trait, start, end)
-        self.utm = utm
-        self.datum = datum
+    utm: str = None
+    datum: str = None
 
     @classmethod
     def pipe(cls, nlp: Language):

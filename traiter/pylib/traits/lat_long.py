@@ -1,5 +1,7 @@
 import re
+from dataclasses import asdict, dataclass
 from pathlib import Path
+from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
@@ -11,42 +13,35 @@ from traiter.pylib.pipes import add, reject_match
 from .base import Base
 
 
+@dataclass
 class LatLong(Base):
-    sym = r"""°"”“'`‘´’"""
-    punct = f"""{sym},;._"""
+    # ############## Class Vars #####################################################
+    sym: ClassVar[str] = r"""°"”“'`‘´’"""
+    punct: ClassVar[str] = f"""{sym},;._"""
+    float_re: ClassVar[str] = r"\d+(\.\d+)?"
+    float_ll: ClassVar[str] = r"\d{1,3}(\.\d+)?"
+    plus: ClassVar[str] = r"^(±|\+|-|\+-|-\+)+\Z"
+    minus: ClassVar[str] = r"^[-]\Z"
+    datum_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "datum_terms.csv"
+    lat_long_csv: ClassVar[Path] = (
+        Path(__file__).parent / "terms" / "lat_long_terms.csv"
+    )
+    unit_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_length_terms.csv"
+    all_csvs: ClassVar[list[Path]] = [lat_long_csv, unit_csv, datum_csv]
+    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
+    factors_cm: ClassVar[dict[str, float]] = term_util.term_data(
+        unit_csv, "factor_cm", float
+    )
+    factors_m: ClassVar[dict[str, float]] = {
+        k: v / 100.0 for k, v in factors_cm.items()
+    }
+    dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
+    # #######################################################################
 
-    float_re = r"\d+(\.\d+)?"
-    float_ll = r"\d{1,3}(\.\d+)?"
-
-    plus = r"^(±|\+|-|\+-|-\+)+\Z"
-    minus = r"^[-]\Z"
-
-    datum_csv = Path(__file__).parent / "terms" / "datum_terms.csv"
-    lat_long_csv = Path(__file__).parent / "terms" / "lat_long_terms.csv"
-    unit_csv = Path(__file__).parent / "terms" / "unit_length_terms.csv"
-    all_csvs = [lat_long_csv, unit_csv, datum_csv]
-
-    replace = term_util.term_data(all_csvs, "replace")
-    factors_cm = term_util.term_data(unit_csv, "factor_cm", float)
-    factors_m = {k: v / 100.0 for k, v in factors_cm.items()}
-
-    dir_ = """((north|east|south|west)(ing)?|[nesw])"""
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        lat_long: str = None,
-        datum: str = None,
-        units: str = None,
-        uncertainty: float = None,
-    ):
-        super().__init__(trait, start, end)
-        self.lat_long = lat_long
-        self.datum = datum
-        self.units = units
-        self.uncertainty = uncertainty
+    lat_long: str = None
+    datum: str = None
+    units: str = None
+    uncertainty: float = None
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -234,7 +229,7 @@ class LatLong(Base):
         for token in ent:
             # Get the data from the original parse
             if token._.flag == "lat_long_data":
-                kwargs = cls.as_dict(token._.trait)
+                kwargs = asdict(token._.trait)
 
             # Get the uncertainty units
             elif token._.term in ("metric_length", "imperial_length"):

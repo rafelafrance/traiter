@@ -1,5 +1,7 @@
 import re
+from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
@@ -11,23 +13,16 @@ from traiter.pylib.pipes import add, reject_match
 from .base import Base
 
 
+@dataclass
 class TRS(Base):
-    trs_csv = Path(__file__).parent / "terms" / "trs_terms.csv"
-    replace = term_util.term_data([trs_csv], "replace")
+    # ############## Class Vars #####################################################
+    trs_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "trs_terms.csv"
+    replace: ClassVar[dict[str, str]] = term_util.term_data([trs_csv], "replace")
+    dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
+    # #######################################################################
 
-    dir_ = """((north|east|south|west)(ing)?|[nesw])"""
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        trs: str = None,
-        trs_part: str = None,
-    ):
-        super().__init__(trait, start, end)
-        self.trs = trs
-        self.trs_part = trs_part
+    trs: str = None
+    trs_part: str = None
 
     @classmethod
     def pipe(cls, nlp: Language):

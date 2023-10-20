@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
@@ -10,23 +12,16 @@ from traiter.pylib.pipes import add
 from .base import Base
 
 
+@dataclass
 class Color(Base):
-    color_csv = Path(__file__).parent / "terms" / "color_terms.csv"
+    # ############## Class Vars #####################################################
+    color_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "color_terms.csv"
+    replace: ClassVar[dict[str, str]] = term_util.term_data(color_csv, "replace")
+    remove: ClassVar[dict[str, int]] = term_util.term_data(color_csv, "remove", int)
+    # #######################################################################
 
-    replace = term_util.term_data(color_csv, "replace")
-    remove = term_util.term_data(color_csv, "remove", int)
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        color: str = None,
-        missing: bool = None,
-    ):
-        super().__init__(trait, start, end)
-        self.color = color
-        self.missing = missing
+    color: str = None
+    missing: bool = None
 
     @classmethod
     def pipe(cls, nlp: Language):

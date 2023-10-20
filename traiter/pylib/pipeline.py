@@ -13,10 +13,7 @@ from traiter.pylib.traits.utm import UTM
 def build():
     extensions.add_extensions()
 
-    nlp = spacy.load(
-        "en_core_web_sm",
-        exclude=["ner", "lemmatizer", "tok2vec"],
-    )
+    nlp = spacy.load("en_core_web_sm", exclude=["ner", "lemmatizer", "tok2vec"])
 
     tokenizer.setup_tokenizer(nlp)
 

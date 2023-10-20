@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
@@ -11,21 +13,15 @@ from traiter.pylib.pipes.reject_match import REJECT_MATCH
 from .base import Base
 
 
+@dataclass
 class Habitat(Base):
-    habitat_csv = Path(__file__).parent / "terms" / "habitat_terms.csv"
-    replace = term_util.term_data(habitat_csv, "replace")
+    # ############## Class Vars #####################################################
+    habitat_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "habitat_terms.csv"
+    replace: ClassVar[dict[str, str]] = term_util.term_data(habitat_csv, "replace")
+    sep: ClassVar[str] = "/,-"
+    # #######################################################################
 
-    sep = "/,-"
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        habitat: str = None,
-    ):
-        super().__init__(trait, start, end)
-        self.habitat = habitat
+    habitat: str = None
 
     @classmethod
     def pipe(cls, nlp: Language):

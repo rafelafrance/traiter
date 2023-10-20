@@ -1,5 +1,7 @@
 import re
+from dataclasses import dataclass
 from pathlib import Path
+from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
@@ -11,34 +13,31 @@ from traiter.pylib.pipes import add
 from .base import Base
 
 
+@dataclass
 class Elevation(Base):
-    float_re = r"^(\d[\d,.]+)\Z"
-    units = ["metric_length", "imperial_length"]
+    # ############## Class Vars #####################################################
+    float_re: ClassVar[str] = r"^(\d[\d,.]+)\Z"
+    all_units: ClassVar[list[str]] = ["metric_length", "imperial_length"]
+    elevation_csv: ClassVar[Path] = (
+        Path(__file__).parent / "terms" / "elevation_terms.csv"
+    )
+    unit_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_length_terms.csv"
+    about_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "about_terms.csv"
+    all_csvs: ClassVar[list[Path]] = [elevation_csv, unit_csv, about_csv]
 
-    elevation_csv = Path(__file__).parent / "terms" / "elevation_terms.csv"
-    unit_csv = Path(__file__).parent / "terms" / "unit_length_terms.csv"
-    about_csv = Path(__file__).parent / "terms" / "about_terms.csv"
-    all_csvs = [elevation_csv, unit_csv, about_csv]
+    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
+    factors_cm: ClassVar[dict[str, float]] = term_util.term_data(
+        unit_csv, "factor_cm", float
+    )
+    factors_m: ClassVar[dict[str, float]] = {
+        k: v / 100.0 for k, v in factors_cm.items()
+    }
+    # #######################################################################
 
-    replace = term_util.term_data([unit_csv, elevation_csv], "replace")
-    factors_cm = term_util.term_data(unit_csv, "factor_cm", float)
-    factors_m = {k: v / 100.0 for k, v in factors_cm.items()}
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        elevation: float = None,
-        elevation_high: float = None,
-        units: str = None,
-        about: bool = None,
-    ):
-        super().__init__(trait, start, end)
-        self.elevation = elevation
-        self.elevation_high = elevation_high
-        self.units = units
-        self.about = about
+    elevation: float = None
+    elevation_high: float = None
+    units: str = None
+    about: bool = None
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -66,7 +65,7 @@ class Elevation(Base):
                     ",": {"TEXT": {"REGEX": rf"^{label_ender}+\Z"}},
                     "about": {"ENT_TYPE": "about"},
                     "label": {"ENT_TYPE": "elev_label"},
-                    "m": {"ENT_TYPE": {"IN": cls.units}},
+                    "m": {"ENT_TYPE": {"IN": cls.all_units}},
                     "sp": {"IS_SPACE": True},
                 },
                 patterns=[
@@ -94,7 +93,7 @@ class Elevation(Base):
                 values.append(util.to_positive_float(token.text))
 
             # Find units
-            elif token._.term in cls.units and not units_:
+            elif token._.term in cls.all_units and not units_:
                 units_ = cls.replace.get(token.lower_, token.lower_)
 
             elif token._.term == "about":
@@ -107,14 +106,14 @@ class Elevation(Base):
         factor = cls.factors_m[units_]
 
         elevation = round(values[0] * factor, 3)
-        units = "m"
+        units_ = "m"
 
         # Handle an elevation range
         if expected_len == 2:
             hi = round(values[1] * factor, 3)
 
         return super().from_ent(
-            ent, elevation=elevation, elevation_high=hi, units=units, about=about
+            ent, elevation=elevation, elevation_high=hi, units=units_, about=about
         )
 
 

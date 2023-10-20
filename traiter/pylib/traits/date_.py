@@ -1,7 +1,9 @@
 import re
 from calendar import IllegalMonthError
+from dataclasses import dataclass
 from datetime import date as dt
 from pathlib import Path
+from typing import ClassVar
 
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
@@ -15,29 +17,20 @@ from traiter.pylib.pipes import add, reject_match
 from .base import Base
 
 
+@dataclass
 class Date(Base):
-    date_csv = Path(__file__).parent / "terms" / "date_terms.csv"
-    month_csv = Path(__file__).parent / "terms" / "month_terms.csv"
-    numeric_csv = Path(__file__).parent / "terms" / "numeric_terms.csv"
-    all_csvs = [date_csv, month_csv, numeric_csv]
+    # ############## Class Vars #####################################################
+    date_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "date_terms.csv"
+    month_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "month_terms.csv"
+    numeric_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "numeric_terms.csv"
+    all_csvs: ClassVar[list[Path]] = [date_csv, month_csv, numeric_csv]
+    sep: ClassVar[str] = "(.,;/_'-"
+    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
+    # #######################################################################
 
-    sep = "(.,;/_'-"
-
-    replace = term_util.term_data(all_csvs, "replace")
-
-    def __init__(
-        self,
-        trait: str = None,
-        start: int = None,
-        end: int = None,
-        date: str = None,
-        century_adjust: bool = None,
-        missing_day: bool = None,
-    ):
-        super().__init__(trait, start, end)
-        self.date = date
-        self.century_adjust = century_adjust
-        self.missing_day = missing_day
+    date: str = None
+    century_adjust: bool = None
+    missing_day: bool = None
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -59,7 +52,6 @@ class Date(Base):
             "month": {"ENT_TYPE": "month"},
             "roman": {"ENT_TYPE": "roman"},
         }
-
         return [
             Compiler(
                 label="date",
