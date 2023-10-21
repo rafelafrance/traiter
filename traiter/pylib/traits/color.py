@@ -14,11 +14,11 @@ from .base import Base
 
 @dataclass
 class Color(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     color_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "color_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.term_data(color_csv, "replace")
     remove: ClassVar[dict[str, int]] = term_util.term_data(color_csv, "remove", int)
-    # #######################################################################
+    # ---------------------
 
     color: str = None
     missing: bool = None

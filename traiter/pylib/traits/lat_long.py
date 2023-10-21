@@ -15,7 +15,7 @@ from .base import Base
 
 @dataclass
 class LatLong(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     sym: ClassVar[str] = r"""°"”“'`‘´’"""
     punct: ClassVar[str] = f"""{sym},;._"""
     float_re: ClassVar[str] = r"\d+(\.\d+)?"
@@ -36,7 +36,7 @@ class LatLong(Base):
         k: v / 100.0 for k, v in factors_cm.items()
     }
     dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
-    # #######################################################################
+    # ---------------------
 
     lat_long: str = None
     datum: str = None

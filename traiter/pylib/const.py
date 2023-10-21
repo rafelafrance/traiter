@@ -3,13 +3,13 @@ from pathlib import Path
 
 from spacy.lang.char_classes import HYPHENS, LIST_HYPHENS, LIST_QUOTES
 
-# ###################################################################################
+# ---------------------
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
 
 MODEL_PATH = DATA_DIR / "traiter_model"
 
-# ###################################################################################
+# ---------------------
 UPPER_SHAPES = """ XXXX       XXX XX X. XX. X """.split()
 LOWER_SHAPES = """  xxxx  xxx  xx    x. xx. x """.split()
 
@@ -26,7 +26,7 @@ NAME_SHAPES = TITLE_SHAPES + MC_SHAPES + MAC_SHAPES + O_SHAPES + O2_SHAPES + DEL
 NAME_SHAPES += MAC4_SHAPES + MAC5_SHAPES
 NAME_AND_UPPER = NAME_SHAPES + UPPER_SHAPES
 
-# ###################################################################################
+# ---------------------
 # Punctuation penalties when linking traits
 
 TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
@@ -41,12 +41,12 @@ TOKEN_WEIGHTS = {
     ".": NEVER,
 }
 
-# ###################################################################################
+# ---------------------
 # For importing taxa from an ITIS DB
 
 ITIS_SPECIES_ID = 220
 
-# ###################################################################################
+# ---------------------
 # Useful character classes
 
 CLOSE = " ) ] ".split()

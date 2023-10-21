@@ -15,11 +15,11 @@ from .base import Base
 
 @dataclass
 class Habitat(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     habitat_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "habitat_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.term_data(habitat_csv, "replace")
     sep: ClassVar[str] = "/,-"
-    # #######################################################################
+    # ---------------------
 
     habitat: str = None
 

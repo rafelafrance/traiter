@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from spacy.language import Language
 
@@ -8,6 +8,9 @@ class Base:
     trait: str = None
     start: int = None
     end: int = None
+
+    def clean_dict(self):
+        return {k: v for k, v in asdict(self).items() if v is not None}
 
     @classmethod
     def from_ent(cls, ent, **kwargs):

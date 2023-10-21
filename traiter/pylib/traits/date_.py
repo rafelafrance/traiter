@@ -19,14 +19,14 @@ from .base import Base
 
 @dataclass
 class Date(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     date_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "date_terms.csv"
     month_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "month_terms.csv"
     numeric_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "numeric_terms.csv"
     all_csvs: ClassVar[list[Path]] = [date_csv, month_csv, numeric_csv]
     sep: ClassVar[str] = "(.,;/_'-"
     replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
-    # #######################################################################
+    # ---------------------
 
     date: str = None
     century_adjust: bool = None

@@ -15,7 +15,7 @@ from .base import Base
 
 @dataclass
 class Elevation(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     float_re: ClassVar[str] = r"^(\d[\d,.]+)\Z"
     all_units: ClassVar[list[str]] = ["metric_length", "imperial_length"]
     elevation_csv: ClassVar[Path] = (
@@ -32,7 +32,7 @@ class Elevation(Base):
     factors_m: ClassVar[dict[str, float]] = {
         k: v / 100.0 for k, v in factors_cm.items()
     }
-    # #######################################################################
+    # ---------------------
 
     elevation: float = None
     elevation_high: float = None

@@ -15,7 +15,7 @@ from .base import Base
 
 @dataclass
 class UTM(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     sym: ClassVar[str] = r"""°"”“'`‘´’"""
     punct: ClassVar[str] = f"""{sym},;._"""
     datum_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "datum_terms.csv"
@@ -24,7 +24,7 @@ class UTM(Base):
     all_csvs: ClassVar[list[Path]] = [utm_csv, datum_csv, unit_csv]
     replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
     dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
-    # #######################################################################
+    # ---------------------
 
     utm: str = None
     datum: str = None

@@ -11,7 +11,7 @@ LINK_TRAITS = "link_traits"
 NO_LIMIT = 999_999
 
 
-# ####################################################################################
+# ---------------------
 class LinkMatch:
     def __init__(self, span, weights, doc, parents, reverse_weights):
         self.span = span
@@ -83,7 +83,7 @@ class LinkMatch:
         return distance
 
 
-# ####################################################################################
+# ---------------------
 class LinkCount:
     """How many times have we seen a parent/child combination."""
 
@@ -110,7 +110,7 @@ class LinkCount:
             self.seen[key] += 1
 
 
-# ####################################################################################
+# ---------------------
 @Language.factory(LINK_TRAITS)
 class LinkTraits:
     def __init__(

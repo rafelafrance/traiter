@@ -15,11 +15,11 @@ from .base import Base
 
 @dataclass
 class TRS(Base):
-    # ############## Class Vars #####################################################
+    # Class vars ----------
     trs_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "trs_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.term_data([trs_csv], "replace")
     dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
-    # #######################################################################
+    # ---------------------
 
     trs: str = None
     trs_part: str = None
