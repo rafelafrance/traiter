@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traiter"
-version = "2.0.0"
+version = "2.1.0"
 description = "Rule-based parsers for mining text from research papers"
 readme = "README.md"
 license = {file = "LICENSE"}
