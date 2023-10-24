@@ -72,7 +72,7 @@ class AddTraits:
 
             used_tokens |= ent_tokens
 
-            self.relabel_entity(ent, label)
+            self.relabel_ent(ent, label)
 
             entities.append(ent)
 
@@ -112,7 +112,7 @@ class AddTraits:
                 entities.append(ent)
         return entities, used_tokens
 
-    def relabel_entity(self, ent, old_label):
+    def relabel_ent(self, ent, old_label):
         label = old_label
 
         new_label = self.relabel.get(old_label)

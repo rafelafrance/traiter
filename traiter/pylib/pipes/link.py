@@ -92,21 +92,22 @@ class LinkCount:
         self.max_count = max_count
         self.seen: dict[tuple, int] = defaultdict(int)
 
-    def all_values(self, ent):
-        values = [
-            v for d in self.differ if (v := getattr(ent._.trait, d, None)) is not None
-        ]
-        return values
+    def products(self, ent):
+        values = []
+        for d in self.differ:
+            v = getattr(ent._.trait, d, None)
+            values.append(v if isinstance(v, (list, tuple)) else [v])
+
+        prods = product(*values)
+        return prods
 
     def seen_too_much(self, ent):
         """Check if we've seen this link type (parent to trait) too many times."""
-        return any(
-            self.seen[k] >= self.max_count for k in product(*self.all_values(ent))
-        )
+        return any(self.seen[k] >= self.max_count for k in self.products(ent))
 
     def update_seen(self, ent):
         """Update the already seen values for each field."""
-        for key in product(*self.all_values(ent)):
+        for key in self.products(ent):
             self.seen[key] += 1
 
 
@@ -164,22 +165,24 @@ class LinkTraits:
             link_matches[(child_start, parent_start)] = link_match
 
         # Sort matches by distance and get rid of no longer needed key
-        matches = sorted(link_matches.values())
+        link_matches = sorted(link_matches.values())
 
         parent_link_count = defaultdict(lambda: LinkCount(self.differ, self.max_links))
 
-        for match in matches:
+        for match in link_matches:
+            # Linking to itself is not allowed
             if len(match) <= 1:
                 continue
 
-            # Is this trait already linked? Linked = field value is not none
+            # Is the child trait field already linked to another parent
             child_set = {
                 k for k, v in asdict(match.child_ent._.trait).items() if v is not None
             }
             if child_set & self.parent_set:
                 continue
 
-            # Is the parent's link limit exceeded
+            # Is the parent's link limit exceeded. For example, we only allow a seed
+            # to have one size range but many colors
             link_count = parent_link_count[match.parent_idx, match.child_trait]
             if link_count.seen_too_much(match.child_ent):
                 continue
@@ -187,7 +190,7 @@ class LinkTraits:
 
             # Update the child entity
             if hasattr(match.parent_ent._.trait, match.parent_trait):
-                parent_trait = getattr(match.parent_ent._.trait, match.parent_trait)
-                setattr(match.child_ent._.trait, match.parent_trait, parent_trait)
+                parent_value = getattr(match.parent_ent._.trait, match.parent_trait)
+                setattr(match.child_ent._.trait, match.parent_trait, parent_value)
 
         return doc

@@ -278,3 +278,9 @@ class TestDate(unittest.TestCase):
                 ),
             ],
         )
+
+    def test_date_21(self):
+        self.assertEqual(
+            test("± 4 x 3 mm."),
+            [],
+        )

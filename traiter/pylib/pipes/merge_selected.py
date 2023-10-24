@@ -13,13 +13,11 @@ class MergeSelected:
     def __call__(self, doc):
         with doc.retokenize() as retokenizer:
             for ent in [e for e in doc.ents if e.label_ in self.labels]:
-                label = ent.label_
-                trait = ent._.trait
                 attrs = {
-                    "ENT_TYPE": label,
+                    "ENT_TYPE": ent.label_,
                     "ENT_IOB": 3,
                     "POS": ent.root.pos_,
-                    "_": {"trait": trait},
+                    "_": {"trait": ent._.trait},
                 }
                 retokenizer.merge(ent, attrs=attrs)
         return doc
