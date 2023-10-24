@@ -43,7 +43,7 @@ def to_positive_int(value: str) -> Union[int, None]:
 def clean_text(
     text: str,
     trans: Union[dict[int, str], None] = None,
-    replace: Union[dict[int, str], None] = None,
+    replace: Union[dict[str, str], None] = None,
 ) -> str:
     """Clean text before trait extraction."""
     text = text if text else ""

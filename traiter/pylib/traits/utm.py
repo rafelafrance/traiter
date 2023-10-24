@@ -29,6 +29,9 @@ class UTM(Base):
     utm: str = None
     datum: str = None
 
+    def dwc(self, ent):
+        return {"dynamicProperties": {"verbatimUTM": ent.text}}
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="utm_terms", path=cls.all_csvs)

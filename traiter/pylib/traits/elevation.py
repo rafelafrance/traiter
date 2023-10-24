@@ -39,6 +39,15 @@ class Elevation(Base):
     units: str = None
     about: bool = None
 
+    def dwc(self, ent):
+        values = {
+            "minimumElevationInMeters": self.elevation,
+            "verbatimElevation": ent.text,
+        }
+        if self.elevation_high is not None:
+            values["maximumElevationInMeters"] = self.elevation_high
+        return values
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="elevation_terms", path=cls.all_csvs)

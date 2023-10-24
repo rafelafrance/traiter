@@ -24,6 +24,9 @@ class TRS(Base):
     trs: str = None
     trs_part: str = None
 
+    def dwc(self, ent):
+        return {"dynamicProperties": {"verbatimTRS": ent.text}}
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="trs_terms", path=cls.trs_csv)

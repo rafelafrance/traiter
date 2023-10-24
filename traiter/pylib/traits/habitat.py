@@ -23,6 +23,9 @@ class Habitat(Base):
 
     habitat: str = None
 
+    def dwc(self, ent):
+        return {"habitat": self.habitat}
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="habitat_terms", path=cls.habitat_csv)

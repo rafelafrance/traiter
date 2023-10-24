@@ -9,9 +9,6 @@ class Base:
     start: int = None
     end: int = None
 
-    def clean_dict(self):
-        return {k: v for k, v in asdict(self).items() if v is not None}
-
     @classmethod
     def from_ent(cls, ent, **kwargs):
         kwargs["trait"] = ent.label_
@@ -22,3 +19,9 @@ class Base:
     @classmethod
     def pipe(cls, nlp: Language):
         raise NotImplementedError
+
+    def clean_dict(self):
+        return {k: v for k, v in asdict(self).items() if v is not None}
+
+    def dwc(self, ent):
+        return {"dynamicProperties": self.clean_dict()}

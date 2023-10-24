@@ -43,6 +43,14 @@ class LatLong(Base):
     units: str = None
     uncertainty: float = None
 
+    def dwc(self, ent):
+        values = {"verbatimCoordinates": ent.text}
+        if self.datum is not None:
+            values["geodeticDatum"] = self.datum
+        if self.uncertainty is not None:
+            values["coordinateUncertaintyInMeters"] = self.uncertainty
+        return values
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="lat_long_terms", path=cls.all_csvs)

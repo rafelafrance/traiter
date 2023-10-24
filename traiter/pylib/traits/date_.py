@@ -32,6 +32,9 @@ class Date(Base):
     century_adjust: bool = None
     missing_day: bool = None
 
+    def dwc(self, ent):
+        return {"eventDate": self.date}
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="date_terms", path=cls.all_csvs)
