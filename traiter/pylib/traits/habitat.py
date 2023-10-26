@@ -23,8 +23,8 @@ class Habitat(Base):
 
     habitat: str = None
 
-    def dwc(self, ent):
-        return {"habitat": self.habitat}
+    def to_dwc(self, dwc, ent):
+        dwc.add(habitat=self.habitat)
 
     @classmethod
     def pipe(cls, nlp: Language):

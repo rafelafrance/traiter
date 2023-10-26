@@ -23,9 +23,10 @@ class Color(Base):
     color: str = None
     missing: bool = None
 
-    def dwc(self, ent):
+    def to_dwc(self, dwc, ent):
         key = "missingColor" if self.missing else "color"
-        return {"dynamicProperties": {key: self.color}}
+        kwargs = {key: self.color}
+        dwc.add_dyn(**kwargs)
 
     @classmethod
     def pipe(cls, nlp: Language):

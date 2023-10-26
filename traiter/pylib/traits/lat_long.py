@@ -43,13 +43,12 @@ class LatLong(Base):
     units: str = None
     uncertainty: float = None
 
-    def dwc(self, ent):
-        values = {"verbatimCoordinates": ent.text}
-        if self.datum is not None:
-            values["geodeticDatum"] = self.datum
-        if self.uncertainty is not None:
-            values["coordinateUncertaintyInMeters"] = self.uncertainty
-        return values
+    def to_dwc(self, dwc, ent):
+        dwc.add(
+            verbatimCoordinates=ent.text,
+            geodeticDatum=self.datum,
+            coordinateUncertaintyInMeters=self.uncertainty,
+        )
 
     @classmethod
     def pipe(cls, nlp: Language):

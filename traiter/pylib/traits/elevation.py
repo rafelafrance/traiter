@@ -39,14 +39,12 @@ class Elevation(Base):
     units: str = None
     about: bool = None
 
-    def dwc(self, ent):
-        values = {
-            "minimumElevationInMeters": self.elevation,
-            "verbatimElevation": ent.text,
-        }
-        if self.elevation_high is not None:
-            values["maximumElevationInMeters"] = self.elevation_high
-        return values
+    def to_dwc(self, dwc, ent):
+        dwc.add(
+            verbatimElevation=ent.text,
+            minimumElevationInMeters=self.elevation,
+            maximumElevationInMeters=self.elevation_high,
+        )
 
     @classmethod
     def pipe(cls, nlp: Language):

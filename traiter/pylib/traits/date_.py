@@ -32,8 +32,8 @@ class Date(Base):
     century_adjust: bool = None
     missing_day: bool = None
 
-    def dwc(self, ent):
-        return {"eventDate": self.date}
+    def to_dwc(self, dwc, ent):
+        dwc.add(eventDate=self.date)
 
     @classmethod
     def pipe(cls, nlp: Language):

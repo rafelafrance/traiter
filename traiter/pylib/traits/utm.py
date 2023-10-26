@@ -29,8 +29,8 @@ class UTM(Base):
     utm: str = None
     datum: str = None
 
-    def dwc(self, ent):
-        return {"dynamicProperties": {"verbatimUTM": ent.text}}
+    def to_dwc(self, dwc, ent):
+        dwc.add_dyn(verbatimUTM=ent.text, UTMDatum=self.datum)
 
     @classmethod
     def pipe(cls, nlp: Language):

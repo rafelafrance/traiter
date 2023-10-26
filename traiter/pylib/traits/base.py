@@ -2,6 +2,8 @@ from dataclasses import asdict, dataclass
 
 from spacy.language import Language
 
+from ..darwin_core import DarwinCore
+
 
 @dataclass
 class Base:
@@ -20,8 +22,8 @@ class Base:
     def pipe(cls, nlp: Language):
         raise NotImplementedError
 
-    def clean_dict(self):
+    def clean_dict(self) -> dict:
         return {k: v for k, v in asdict(self).items() if v is not None}
 
-    def dwc(self, ent):
-        return {"dynamicProperties": self.clean_dict()}
+    def to_dwc(self, dwc: DarwinCore, _ent) -> None:
+        dwc.add_dyn(**self.clean_dict())

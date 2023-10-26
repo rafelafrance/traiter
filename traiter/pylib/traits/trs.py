@@ -24,8 +24,8 @@ class TRS(Base):
     trs: str = None
     trs_part: str = None
 
-    def dwc(self, ent):
-        return {"dynamicProperties": {"verbatimTRS": ent.text}}
+    def to_dwc(self, dwc, ent):
+        dwc.add_dyn(verbatimTRS=ent.text)
 
     @classmethod
     def pipe(cls, nlp: Language):
