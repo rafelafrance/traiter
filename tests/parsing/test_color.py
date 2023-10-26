@@ -1,14 +1,13 @@
 import unittest
 
-from tests.setup import test
+from tests.setup import parse
 from traiter.pylib.traits.color import Color
 
 
 class TestColor(unittest.TestCase):
     def test_color_01(self):
-        self.maxDiff = None
         self.assertEqual(
-            test(
+            parse(
                 """hypanthium green or greenish yellow,
                 usually not purple-spotted, rarely purple-spotted distally.
                 """
@@ -45,7 +44,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_02(self):
         self.assertEqual(
-            test("hypanthium straw-colored to sulphur-yellow or golden-yellow."),
+            parse("hypanthium straw-colored to sulphur-yellow or golden-yellow."),
             [
                 Color(
                     color="yellow",
@@ -70,7 +69,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_03(self):
         self.assertEqual(
-            test("sepals erect, green- or red-tipped."),
+            parse("sepals erect, green- or red-tipped."),
             [
                 Color(
                     color="green",
@@ -89,7 +88,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_04(self):
         self.assertEqual(
-            test("petals white, cream, or pale green [orange to yellow]."),
+            parse("petals white, cream, or pale green [orange to yellow]."),
             [
                 Color(
                     color="white",
@@ -128,7 +127,7 @@ class TestColor(unittest.TestCase):
         """It handles pattern notations within colors."""
         self.maxDiff = None
         self.assertEqual(
-            test(
+            parse(
                 """
                 petals distinct, white to cream, greenish yellow,
                 maturing yellowish or pale brown, commonly mottled or with
@@ -183,7 +182,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_06(self):
         self.assertEqual(
-            test(
+            parse(
                 """
                 Petals distinct, white to cream, greenish white,
                 or yellowish green, or yellowish, usually green-throated
@@ -238,7 +237,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_07(self):
         self.assertEqual(
-            test("calyx yellow"),
+            parse("calyx yellow"),
             [
                 Color(
                     color="yellow",
@@ -251,7 +250,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_08(self):
         self.assertEqual(
-            test("corolla yellow"),
+            parse("corolla yellow"),
             [
                 Color(
                     color="yellow",
@@ -264,7 +263,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_09(self):
         self.assertEqual(
-            test("flower yellow"),
+            parse("flower yellow"),
             [
                 Color(
                     color="yellow",
@@ -277,7 +276,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_10(self):
         self.assertEqual(
-            test("hypanthium yellow"),
+            parse("hypanthium yellow"),
             [
                 Color(
                     color="yellow",
@@ -290,7 +289,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_11(self):
         self.assertEqual(
-            test("petal pale sulfur-yellow."),
+            parse("petal pale sulfur-yellow."),
             [
                 Color(
                     color="yellow",
@@ -303,7 +302,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_12(self):
         self.assertEqual(
-            test("sepal yellow"),
+            parse("sepal yellow"),
             [
                 Color(
                     color="yellow",
@@ -316,7 +315,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_13(self):
         self.assertEqual(
-            test("Leaves acaulescent or nearly so, with white hairs."),
+            parse("Leaves acaulescent or nearly so, with white hairs."),
             [
                 Color(
                     color="white",
@@ -329,7 +328,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_14(self):
         self.assertEqual(
-            test("leaflets surfaces rather densely spotted with blackish dots"),
+            parse("leaflets surfaces rather densely spotted with blackish dots"),
             [
                 Color(
                     color="black-dots",
@@ -342,7 +341,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_15(self):
         self.assertEqual(
-            test("Petals purplish in life, whitish yellowish when dry;"),
+            parse("Petals purplish in life, whitish yellowish when dry;"),
             [
                 Color(
                     color="purple",
@@ -361,7 +360,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_16(self):
         self.assertEqual(
-            test("Petals red or golden yellowish"),
+            parse("Petals red or golden yellowish"),
             [
                 Color(
                     color="red",
@@ -380,7 +379,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_17(self):
         self.assertEqual(
-            test("twigs: young growth green or reddish-tinged."),
+            parse("twigs: young growth green or reddish-tinged."),
             [
                 Color(
                     color="green",
@@ -399,7 +398,7 @@ class TestColor(unittest.TestCase):
 
     def test_color_18(self):
         self.assertEqual(
-            test(
+            parse(
                 """stipules, the young stems and lf-axes hispid with stout, partly
                 confluent or branched, yellowish setae"""
             ),
@@ -416,7 +415,7 @@ class TestColor(unittest.TestCase):
     def test_color_19(self):
         """It does not repeat colors."""
         self.assertEqual(
-            test("""petals clear lemon yellow."""),
+            parse("""petals clear lemon yellow."""),
             [
                 Color(
                     color="yellow",

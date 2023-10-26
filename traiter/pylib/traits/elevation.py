@@ -45,6 +45,8 @@ class Elevation(Base):
             minimumElevationInMeters=self.elevation,
             maximumElevationInMeters=self.elevation_high,
         )
+        about = "uncertain" if self.about else None
+        dwc.add_dyn(elevationUncertain=about)
 
     @classmethod
     def pipe(cls, nlp: Language):

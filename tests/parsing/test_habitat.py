@@ -2,13 +2,13 @@ import unittest
 
 from traiter.pylib.traits.habitat import Habitat
 
-from ..setup import test
+from ..setup import parse
 
 
 class TestHabitat(unittest.TestCase):
     def test_habitat_01(self):
         self.assertEqual(
-            test("""riparian forest"""),
+            parse("""riparian forest"""),
             [
                 Habitat(
                     trait="habitat",
@@ -21,7 +21,7 @@ class TestHabitat(unittest.TestCase):
 
     def test_habitat_02(self):
         self.assertEqual(
-            test("""subalpine zone"""),
+            parse("""subalpine zone"""),
             [
                 Habitat(
                     trait="habitat",
@@ -34,13 +34,13 @@ class TestHabitat(unittest.TestCase):
 
     def test_habitat_03(self):
         self.assertEqual(
-            test("""Arizona Desert Botanical Garden"""),
+            parse("""Arizona Desert Botanical Garden"""),
             [],
         )
 
     def test_habitat_04(self):
         self.assertEqual(
-            test(
+            parse(
                 """
                 park. Habitat: Boggy woodland with a sparce canopy dominated by
                 blackgum and larch, and nice herbaceous openings. With:
@@ -61,7 +61,7 @@ class TestHabitat(unittest.TestCase):
 
     def test_habitat_05(self):
         self.assertEqual(
-            test("""Riparian/desert scrub."""),
+            parse("""Riparian/desert scrub."""),
             [
                 Habitat(
                     trait="habitat",

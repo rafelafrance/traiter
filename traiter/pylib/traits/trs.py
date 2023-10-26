@@ -25,7 +25,7 @@ class TRS(Base):
     trs_part: str = None
 
     def to_dwc(self, dwc, ent):
-        dwc.add_dyn(verbatimTRS=ent.text)
+        dwc.add_dyn(TRSPresent=self.trs)
 
     @classmethod
     def pipe(cls, nlp: Language):
