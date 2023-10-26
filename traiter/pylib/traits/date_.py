@@ -33,6 +33,7 @@ class Date(Base):
     missing_day: bool = None
 
     def to_dwc(self, dwc, ent):
+        dwc.new_rec()
         dwc.add(eventDate=self.date)
 
     @classmethod

@@ -25,6 +25,7 @@ class TRS(Base):
     trs_part: str = None
 
     def to_dwc(self, dwc, ent):
+        dwc.new_rec()
         dwc.add_dyn(TRSPresent=self.trs)
 
     @classmethod

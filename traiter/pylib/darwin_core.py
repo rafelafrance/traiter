@@ -1,22 +1,24 @@
-from copy import copy
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any
 
 
 @dataclass
 class DarwinCore:
-    props: dict[str, Any] = field(default_factory=dict)
-    dyn_props: dict[str, Any] = field(default_factory=dict)
+    props: list[dict[str, Any]] = field(default_factory=list)
 
-    def add(self, **kwargs) -> None:
+    def new_rec(self):
+        self.props.append({"dynamicProperties": {}})
+
+    def add(self, idx=-1, **kwargs) -> None:
         for key, value in kwargs.items():
             if value is not None:
-                self.props[key] = value
+                self.props[idx][key] = value
 
-    def add_dyn(self, **kwargs) -> None:
+    def add_dyn(self, idx=-1, **kwargs) -> None:
         for key, value in kwargs.items():
             if value is not None:
-                self.dyn_props[key] = value
+                self.props[idx]["dynamicProperties"][key] = value
 
     # Examples: femaleFlowerPistolShape or stemSizeInCentimeters
     @staticmethod
@@ -29,8 +31,8 @@ class DarwinCore:
         key = "".join(key)
         return key
 
-    def to_dict(self) -> dict:
-        props = copy(self.props)
-        if self.dyn_props:
-            props["dynamicProperties"] = copy(self.dyn_props)
+    def to_dict(self, idx=0) -> dict:
+        props = deepcopy(self.props[idx])
+        if not props["dynamicProperties"]:
+            del props["dynamicProperties"]
         return props

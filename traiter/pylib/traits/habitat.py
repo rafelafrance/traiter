@@ -24,6 +24,7 @@ class Habitat(Base):
     habitat: str = None
 
     def to_dwc(self, dwc, ent):
+        dwc.new_rec()
         dwc.add(habitat=self.habitat)
 
     @classmethod

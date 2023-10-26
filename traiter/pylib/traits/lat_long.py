@@ -44,6 +44,7 @@ class LatLong(Base):
     uncertainty: float = None
 
     def to_dwc(self, dwc, ent):
+        dwc.new_rec()
         dwc.add(
             verbatimCoordinates=ent.text,
             geodeticDatum=self.datum,

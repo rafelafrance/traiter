@@ -40,6 +40,7 @@ class Elevation(Base):
     about: bool = None
 
     def to_dwc(self, dwc, ent):
+        dwc.new_rec()
         dwc.add(
             verbatimElevation=ent.text,
             minimumElevationInMeters=self.elevation,

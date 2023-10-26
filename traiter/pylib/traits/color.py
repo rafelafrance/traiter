@@ -24,6 +24,7 @@ class Color(Base):
     missing: bool = None
 
     def to_dwc(self, dwc, ent):
+        dwc.new_rec()
         key = "missingColor" if self.missing else "color"
         kwargs = {key: self.color}
         dwc.add_dyn(**kwargs)
