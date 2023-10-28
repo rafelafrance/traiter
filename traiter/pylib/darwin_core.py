@@ -59,8 +59,11 @@ class DarwinCore:
         for rec in self.recs:
             dwc_rec = Etree.SubElement(doc, "SimpleDarwinRecord")
             for tag, text in rec.items():
-                if tag == "dynamicProperties" and text:
-                    text = json.dumps(text)
+                if tag == "dynamicProperties":
+                    if text:
+                        text = json.dumps(text)
+                    else:
+                        continue
                 sub = Etree.SubElement(dwc_rec, "dwc:" + tag)
                 sub.text = text
 
