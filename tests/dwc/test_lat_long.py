@@ -12,7 +12,8 @@ class TestLatLong(unittest.TestCase):
         ent = to_ent(LABEL, "floodplain wetland. " + verb)
         dwc = ent._.trait.to_dwc(ent)
         self.assertEqual(
-            dwc.to_dict(), {"verbatimCoordinates": verb, "geodeticDatum": "NAD83"}
+            dwc.to_dict(),
+            {"dwc:verbatimCoordinates": verb, "dwc:geodeticDatum": "NAD83"},
         )
 
     def test_lat_long_dwc_02(self):
@@ -22,7 +23,7 @@ class TestLatLong(unittest.TestCase):
         self.assertEqual(
             dwc.to_dict(),
             {
-                "verbatimCoordinates": verb,
-                "coordinateUncertaintyInMeters": 100.0,
+                "dwc:verbatimCoordinates": verb,
+                "dwc:coordinateUncertaintyInMeters": 100.0,
             },
         )

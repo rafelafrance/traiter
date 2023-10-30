@@ -12,8 +12,8 @@ class TestElevation(unittest.TestCase):
         self.assertEqual(
             dwc.to_dict(),
             {
-                "verbatimElevation": "Elev: 782m. (2566 ft)",
-                "minimumElevationInMeters": 782.0,
+                "dwc:verbatimElevation": "Elev: 782m. (2566 ft)",
+                "dwc:minimumElevationInMeters": 782.0,
             },
         )
 
@@ -23,9 +23,9 @@ class TestElevation(unittest.TestCase):
         self.assertEqual(
             dwc.to_dict(),
             {
-                "verbatimElevation": "Elev. ca. 460 - 470 m",
-                "minimumElevationInMeters": 460.0,
-                "maximumElevationInMeters": 470.0,
-                "dynamicProperties": {"elevationUncertain": "uncertain"},
+                "dwc:verbatimElevation": "Elev. ca. 460 - 470 m",
+                "dwc:minimumElevationInMeters": 460.0,
+                "dwc:maximumElevationInMeters": 470.0,
+                "dwc:dynamicProperties": {"elevationUncertain": "uncertain"},
             },
         )

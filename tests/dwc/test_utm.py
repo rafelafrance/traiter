@@ -12,5 +12,5 @@ class TestUTM(unittest.TestCase):
         dwc = ent._.trait.to_dwc(ent)
         self.assertEqual(
             dwc.to_dict(),
-            {"dynamicProperties": {"verbatimUTM": verb}},
+            {"dwc:dynamicProperties": {"verbatimUTM": verb}},
         )

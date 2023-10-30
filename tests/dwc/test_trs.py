@@ -11,5 +11,5 @@ class TestTRS(unittest.TestCase):
         dwc = ent._.trait.to_dwc(ent)
         self.assertEqual(
             dwc.to_dict(),
-            {"dynamicProperties": {"TRSPresent": "present"}},
+            {"dwc:dynamicProperties": {"TRSPresent": "present"}},
         )

@@ -1,24 +1,23 @@
-# import json
-# import xml.etree.ElementTree as Etree
-from copy import deepcopy
+import json
+import xml.etree.ElementTree as Etree
 from dataclasses import dataclass, field
 from typing import Any
 
 
 @dataclass
 class DarwinCore:
-    fields: dict[str, Any] = field(default_factory=lambda: {"dynamicProperties": {}})
+    props: dict[str, Any] = field(default_factory=lambda: {"dwc:dynamicProperties": {}})
 
     def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None:
-                self.fields[key] = value
+                self.props["dwc:" + key] = value
         return self
 
     def add_dyn(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None:
-                self.fields["dynamicProperties"][key] = value
+                self.props["dwc:dynamicProperties"][key] = value
         return self
 
     @staticmethod
@@ -33,37 +32,32 @@ class DarwinCore:
 
     def to_dict(self) -> dict:
         """Convert a single record to a dict for testing."""
-        props = deepcopy(self.fields)
-        if not props["dynamicProperties"]:
-            del props["dynamicProperties"]
+        props = {k: v for k, v in self.props.items()}
+
+        if not props["dwc:dynamicProperties"]:
+            del props["dwc:dynamicProperties"]
         return props
 
-    # def to_json(self):
-    #     fields = [self.to_dict(i) for i in range(len(self.fields))]
-    #     return json.dumps(fields)
-    #
-    # def to_jsonl(self):
-    #     fields = [self.to_dict(i) for i in range(len(self.fields))]
-    #     return [json.dumps(r) + "\n" for r in fields]
-    #
-    # def to_xml(self) -> bytes:
-    #     ns = {
-    #         "xmlns": "http://rs.tdwg.org/dwc/xsd/simpledarwincore/",
-    #         "xmlns:dc": "http://purl.org/dc/terms/",
-    #         "xmlns:dwc": "http://rs.tdwg.org/dwc/terms/",
-    #         "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-    #     }
-    #     doc = Etree.Element("SimpleDarwinRecordSet", attrib=ns)
-    #
-    #     for rec in self.fields:
-    #         dwc_rec = Etree.SubElement(doc, "SimpleDarwinRecord")
-    #         for tag, text in rec.items():
-    #             if tag == "dynamicProperties":
-    #                 if text:
-    #                     text = json.dumps(text)
-    #                 else:
-    #                     continue
-    #             sub = Etree.SubElement(dwc_rec, "dwc:" + tag)
-    #             sub.text = text
-    #
-    #     return Etree.tostring(doc, "utf-8")
+    @staticmethod
+    def to_xml(records: list["DarwinCore"]) -> bytes:
+        ns = {
+            "xmlns": "http://rs.tdwg.org/dwc/xsd/simpledarwincore/",
+            "xmlns:dc": "http://purl.org/dc/terms/",
+            "xmlns:dwc": "http://rs.tdwg.org/dwc/terms/",
+            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+        }
+        doc = Etree.Element("SimpleDarwinRecordSet")
+        doc.attrib = ns
+
+        for rec in records:
+            dwc_rec = Etree.SubElement(doc, "SimpleDarwinRecord")
+            for tag, text in rec.props.items():
+                if tag == "dynamicProperties":
+                    if text:
+                        text = json.dumps(text)
+                    else:
+                        continue
+                sub = Etree.SubElement(dwc_rec, tag)
+                sub.text = text
+
+        return Etree.tostring(doc, "utf-8")
