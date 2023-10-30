@@ -18,7 +18,7 @@ from traiter.pylib.pipes import add, reject_match
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class Date(Base):
     # Class vars ----------
     date_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "date_terms.csv"
@@ -33,7 +33,7 @@ class Date(Base):
     century_adjust: bool = None
     missing_day: bool = None
 
-    def to_dwc(self, ent) -> DarwinCore:
+    def to_dwc(self) -> DarwinCore:
         return DarwinCore().add(eventDate=self.date)
 
     @classmethod

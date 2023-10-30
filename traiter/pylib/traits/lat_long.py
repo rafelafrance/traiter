@@ -14,7 +14,7 @@ from traiter.pylib.pipes import add, reject_match
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class LatLong(Base):
     # Class vars ----------
     sym: ClassVar[str] = r"""°"”“'`‘´’"""
@@ -44,12 +44,16 @@ class LatLong(Base):
     units: str = None
     uncertainty: float = None
 
-    def to_dwc(self, ent) -> DarwinCore:
+    def to_dwc(self) -> DarwinCore:
         return DarwinCore().add(
-            verbatimCoordinates=ent.text,
+            verbatimCoordinates=self._text,
             geodeticDatum=self.datum,
             coordinateUncertaintyInMeters=self.uncertainty,
         )
+
+    @property
+    def key(self):
+        return "verbatimCoordinates"
 
     @classmethod
     def pipe(cls, nlp: Language):

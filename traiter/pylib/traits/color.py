@@ -13,7 +13,7 @@ from traiter.pylib.pipes import add
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class Color(Base):
     # Class vars ----------
     color_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "color_terms.csv"
@@ -24,12 +24,12 @@ class Color(Base):
     color: str = None
     missing: bool = None
 
-    def to_dwc(self, ent) -> DarwinCore:
-        dwc = DarwinCore()
-        key = "missingColor" if self.missing else "color"
-        kwargs = {key: self.color}
-        dwc.add_dyn(**kwargs)
-        return dwc
+    def to_dwc(self) -> DarwinCore:
+        return DarwinCore().add_dyn(**{self.key: self.color})
+
+    @property
+    def key(self):
+        return "missingColor" if self.missing else "color"
 
     @classmethod
     def pipe(cls, nlp: Language):

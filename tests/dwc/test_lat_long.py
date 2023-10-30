@@ -10,7 +10,7 @@ class TestLatLong(unittest.TestCase):
     def test_lat_long_dwc_01(self):
         verb = "40.104905N, 79.324561W NAD83"
         ent = to_ent(LABEL, "floodplain wetland. " + verb)
-        dwc = ent._.trait.to_dwc(ent)
+        dwc = ent._.trait.to_dwc()
         self.assertEqual(
             dwc.to_dict(),
             {"dwc:verbatimCoordinates": verb, "dwc:geodeticDatum": "NAD83"},
@@ -19,7 +19,7 @@ class TestLatLong(unittest.TestCase):
     def test_lat_long_dwc_02(self):
         verb = "43.963272° N, 113.446226° W Uncertainty: 100 m."
         ent = to_ent(LABEL, verb)
-        dwc = ent._.trait.to_dwc(ent)
+        dwc = ent._.trait.to_dwc()
         self.assertEqual(
             dwc.to_dict(),
             {

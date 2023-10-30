@@ -14,7 +14,7 @@ from traiter.pylib.pipes import add
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class Elevation(Base):
     # Class vars ----------
     float_re: ClassVar[str] = r"^(\d[\d,.]+)\Z"
@@ -40,16 +40,20 @@ class Elevation(Base):
     units: str = None
     about: bool = None
 
-    def to_dwc(self, ent) -> DarwinCore:
+    def to_dwc(self) -> DarwinCore:
         dwc = DarwinCore()
         dwc.add(
-            verbatimElevation=ent.text,
+            verbatimElevation=self._text,
             minimumElevationInMeters=self.elevation,
             maximumElevationInMeters=self.elevation_high,
         )
         about = "uncertain" if self.about else None
         dwc.add_dyn(elevationUncertain=about)
         return dwc
+
+    @property
+    def key(self):
+        return "verbatimElevation"
 
     @classmethod
     def pipe(cls, nlp: Language):

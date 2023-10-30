@@ -14,7 +14,7 @@ from traiter.pylib.pipes import add, reject_match
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class TRS(Base):
     # Class vars ----------
     trs_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "trs_terms.csv"
@@ -23,10 +23,14 @@ class TRS(Base):
     # ---------------------
 
     trs: str = None
-    trs_part: str = None
+    _trs_part: str = None
 
-    def to_dwc(self, ent) -> DarwinCore:
+    def to_dwc(self) -> DarwinCore:
         return DarwinCore().add_dyn(TRSPresent=self.trs)
+
+    @property
+    def key(self):
+        return "TRSPresent"
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -108,7 +112,7 @@ class TRS(Base):
         if len(ent.text) < 3:
             raise reject_match.RejectMatch
 
-        trait = super().from_ent(ent, trs_part=ent.text)
+        trait = super().from_ent(ent, _trs_part=ent.text)
 
         for token in ent:
             token._.flag = "trs_part"
@@ -124,7 +128,7 @@ class TRS(Base):
 
         for token in ent:
             if token._.flag == "trs_data":
-                frags.append(token._.trait.trs_part)
+                frags.append(token._.trait._trs_part)
 
             elif token._.flag == "trs_part":
                 continue

@@ -14,7 +14,7 @@ from traiter.pylib.pipes import add
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class UTM(Base):
     # Class vars ----------
     sym: ClassVar[str] = r"""°"”“'`‘´’"""
@@ -30,8 +30,12 @@ class UTM(Base):
     utm: str = None
     datum: str = None
 
-    def to_dwc(self, ent) -> DarwinCore:
-        return DarwinCore().add_dyn(verbatimUTM=ent.text, UTMDatum=self.datum)
+    def to_dwc(self) -> DarwinCore:
+        return DarwinCore().add_dyn(verbatimUTM=self._text, UTMDatum=self.datum)
+
+    @property
+    def key(self):
+        return "verbatimUTM"
 
     @classmethod
     def pipe(cls, nlp: Language):

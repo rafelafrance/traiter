@@ -14,7 +14,7 @@ from traiter.pylib.pipes.reject_match import REJECT_MATCH
 from .base import Base
 
 
-@dataclass
+@dataclass(eq=False)
 class Habitat(Base):
     # Class vars ----------
     habitat_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "habitat_terms.csv"
@@ -24,7 +24,7 @@ class Habitat(Base):
 
     habitat: str = None
 
-    def to_dwc(self, ent) -> DarwinCore:
+    def to_dwc(self) -> DarwinCore:
         return DarwinCore().add(habitat=self.habitat)
 
     @classmethod
