@@ -75,7 +75,7 @@ class Elevation(Base):
                     "99": {"TEXT": {"REGEX": cls.float_re}},
                     ":": {"TEXT": {"REGEX": rf"^{label_ender}+\Z"}},
                     ",": {"TEXT": {"REGEX": rf"^{label_ender}+\Z"}},
-                    "about": {"ENT_TYPE": "about"},
+                    "about": {"ENT_TYPE": "about_term"},
                     "label": {"ENT_TYPE": "elev_label"},
                     "m": {"ENT_TYPE": {"IN": cls.all_units}},
                     "sp": {"IS_SPACE": True},
@@ -108,7 +108,7 @@ class Elevation(Base):
             elif token._.term in cls.all_units and not units_:
                 units_ = cls.replace.get(token.lower_, token.lower_)
 
-            elif token._.term == "about":
+            elif token._.term == "about_term":
                 about = True
 
             # If there's a dash it's a range

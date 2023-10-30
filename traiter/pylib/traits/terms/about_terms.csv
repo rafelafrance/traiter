@@ -1,8 +1,8 @@
 label,pattern
-about,+-
-about,-+
-about,about
-about,approx
-about,approximate
-about,ca
-about,±
+about_term,+-
+about_term,-+
+about_term,about
+about_term,approx
+about_term,approximate
+about_term,ca
+about_term,±
