@@ -6,6 +6,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pylib import term_util
+from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 from traiter.pylib.pipes.reject_match import REJECT_MATCH
@@ -23,9 +24,8 @@ class Habitat(Base):
 
     habitat: str = None
 
-    def to_dwc(self, dwc, ent):
-        dwc.new_rec()
-        dwc.add(habitat=self.habitat)
+    def to_dwc(self, ent) -> DarwinCore:
+        return DarwinCore().add(habitat=self.habitat)
 
     @classmethod
     def pipe(cls, nlp: Language):

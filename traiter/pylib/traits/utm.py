@@ -7,6 +7,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pylib import const, term_util
+from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 
@@ -29,9 +30,8 @@ class UTM(Base):
     utm: str = None
     datum: str = None
 
-    def to_dwc(self, dwc, ent):
-        dwc.new_rec()
-        dwc.add_dyn(verbatimUTM=ent.text, UTMDatum=self.datum)
+    def to_dwc(self, ent) -> DarwinCore:
+        return DarwinCore().add_dyn(verbatimUTM=ent.text, UTMDatum=self.datum)
 
     @classmethod
     def pipe(cls, nlp: Language):

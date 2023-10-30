@@ -7,6 +7,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pylib import const, term_util
+from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
@@ -24,9 +25,8 @@ class TRS(Base):
     trs: str = None
     trs_part: str = None
 
-    def to_dwc(self, dwc, ent):
-        dwc.new_rec()
-        dwc.add_dyn(TRSPresent=self.trs)
+    def to_dwc(self, ent) -> DarwinCore:
+        return DarwinCore().add_dyn(TRSPresent=self.trs)
 
     @classmethod
     def pipe(cls, nlp: Language):

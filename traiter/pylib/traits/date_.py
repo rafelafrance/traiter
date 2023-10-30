@@ -11,6 +11,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pylib import term_util
+from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
@@ -32,9 +33,8 @@ class Date(Base):
     century_adjust: bool = None
     missing_day: bool = None
 
-    def to_dwc(self, dwc, ent):
-        dwc.new_rec()
-        dwc.add(eventDate=self.date)
+    def to_dwc(self, ent) -> DarwinCore:
+        return DarwinCore().add(eventDate=self.date)
 
     @classmethod
     def pipe(cls, nlp: Language):

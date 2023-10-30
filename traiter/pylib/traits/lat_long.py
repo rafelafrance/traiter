@@ -7,6 +7,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pylib import const, term_util, util
+from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
@@ -43,9 +44,8 @@ class LatLong(Base):
     units: str = None
     uncertainty: float = None
 
-    def to_dwc(self, dwc, ent):
-        dwc.new_rec()
-        dwc.add(
+    def to_dwc(self, ent) -> DarwinCore:
+        return DarwinCore().add(
             verbatimCoordinates=ent.text,
             geodeticDatum=self.datum,
             coordinateUncertaintyInMeters=self.uncertainty,

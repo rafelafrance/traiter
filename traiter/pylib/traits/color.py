@@ -6,6 +6,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pylib import const, term_util
+from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 
@@ -23,11 +24,12 @@ class Color(Base):
     color: str = None
     missing: bool = None
 
-    def to_dwc(self, dwc, ent):
-        dwc.new_rec()
+    def to_dwc(self, ent) -> DarwinCore:
+        dwc = DarwinCore()
         key = "missingColor" if self.missing else "color"
         kwargs = {key: self.color}
         dwc.add_dyn(**kwargs)
+        return dwc
 
     @classmethod
     def pipe(cls, nlp: Language):

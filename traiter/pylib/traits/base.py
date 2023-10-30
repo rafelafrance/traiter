@@ -18,12 +18,12 @@ class Base:
         kwargs["end"] = ent.end_char
         return cls(**kwargs)
 
+    def clean_dict(self) -> dict:
+        return {k: v for k, v in asdict(self).items() if v is not None}
+
     @classmethod
     def pipe(cls, nlp: Language):
         raise NotImplementedError
 
-    def clean_dict(self) -> dict:
-        return {k: v for k, v in asdict(self).items() if v is not None}
-
-    def to_dwc(self, dwc: DarwinCore, _ent) -> None:
-        dwc.add_dyn(**self.clean_dict())
+    def to_dwc(self, ent) -> DarwinCore:
+        raise NotImplementedError
