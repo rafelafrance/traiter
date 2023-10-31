@@ -45,4 +45,5 @@ class Base:
 
     @property
     def key(self):
-        return self.key_builder(*self.trait.split("_"))
+        k = self.key_builder(*self.trait.split("_"))
+        return DarwinCore.ns(k)

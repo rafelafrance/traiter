@@ -53,7 +53,7 @@ class LatLong(Base):
 
     @property
     def key(self):
-        return "verbatimCoordinates"
+        return DarwinCore.ns("verbatimCoordinates")
 
     @classmethod
     def pipe(cls, nlp: Language):

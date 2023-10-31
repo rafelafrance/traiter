@@ -53,7 +53,7 @@ class Elevation(Base):
 
     @property
     def key(self):
-        return "verbatimElevation"
+        return DarwinCore.ns("verbatimElevation")
 
     @classmethod
     def pipe(cls, nlp: Language):

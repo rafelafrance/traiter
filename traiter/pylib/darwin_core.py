@@ -3,22 +3,33 @@ import xml.etree.ElementTree as Etree
 from dataclasses import dataclass, field
 from typing import Any
 
+DYN = "dwc:dynamicProperties"
+NS = "dwc:"
+
 
 @dataclass
 class DarwinCore:
-    props: dict[str, Any] = field(default_factory=lambda: {"dwc:dynamicProperties": {}})
+    props: dict[str, Any] = field(default_factory=lambda: {DYN: {}})
 
     def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None:
-                self.props["dwc:" + key] = value
+                self.props[self.ns(key)] = value
         return self
 
     def add_dyn(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None:
-                self.props["dwc:dynamicProperties"][key] = value
+                self.props[DYN][key] = value
         return self
+
+    @staticmethod
+    def ns(name):
+        return NS + name
+
+    def items(self):
+        yield from {k: v for k, v in self.props.items() if k != DYN}.items()
+        yield from self.props[DYN].items()
 
     @staticmethod
     def key(*args, prepend: str = None) -> str:
@@ -34,25 +45,26 @@ class DarwinCore:
         """Convert a single record to a dict for testing."""
         props = {k: v for k, v in self.props.items()}
 
-        if not props["dwc:dynamicProperties"]:
-            del props["dwc:dynamicProperties"]
+        if not props[DYN]:
+            del props[DYN]
         return props
 
     @staticmethod
     def to_xml(records: list["DarwinCore"]) -> bytes:
-        ns = {
-            "xmlns": "http://rs.tdwg.org/dwc/xsd/simpledarwincore/",
-            "xmlns:dc": "http://purl.org/dc/terms/",
-            "xmlns:dwc": "http://rs.tdwg.org/dwc/terms/",
-            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-        }
-        doc = Etree.Element("SimpleDarwinRecordSet")
-        doc.attrib = ns
+        doc = Etree.Element(
+            "SimpleDarwinRecordSet",
+            attrib={
+                "xmlns": "http://rs.tdwg.org/dwc/xsd/simpledarwincore/",
+                "xmlns:dc": "http://purl.org/dc/terms/",
+                "xmlns:dwc": "http://rs.tdwg.org/dwc/terms/",
+                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+            },
+        )
 
         for rec in records:
             dwc_rec = Etree.SubElement(doc, "SimpleDarwinRecord")
             for tag, text in rec.props.items():
-                if tag == "dynamicProperties":
+                if tag == DYN:
                     if text:
                         text = json.dumps(text)
                     else:
