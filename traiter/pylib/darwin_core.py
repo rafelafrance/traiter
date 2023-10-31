@@ -42,9 +42,7 @@ class DarwinCore:
         return key
 
     def to_dict(self) -> dict:
-        """Convert a single record to a dict for testing."""
         props = {k: v for k, v in self.props.items()}
-
         if not props[DYN]:
             del props[DYN]
         return props
