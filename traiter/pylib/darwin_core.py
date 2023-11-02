@@ -42,7 +42,7 @@ class DarwinCore:
         return key
 
     def to_dict(self) -> dict:
-        props = {k: v for k, v in self.props.items()}
+        props = {k: v for k, v in self.props.items() if v is not None}
         if not props[DYN]:
             del props[DYN]
         return props
