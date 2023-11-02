@@ -9,15 +9,17 @@ NS = "dwc:"
 
 @dataclass
 class DarwinCore:
-    props: dict[str, Any] = field(default_factory=lambda: {DYN: {}})
+    props: dict[str, Any] = field(default_factory=dict)
 
-    def add(self, **kwargs) -> "DarwinCore":
+    def add(self, **kwargs) -> "DarwinCore":  # Return self for chaining
         for key, value in kwargs.items():
             if value is not None:
                 self.props[self.ns(key)] = value
         return self
 
-    def add_dyn(self, **kwargs) -> "DarwinCore":
+    def add_dyn(self, **kwargs) -> "DarwinCore":  # Return self for chaining
+        if DYN not in self.props:
+            self.props[DYN] = {}
         for key, value in kwargs.items():
             if value is not None:
                 self.props[DYN][key] = value
@@ -29,7 +31,8 @@ class DarwinCore:
 
     def items(self):
         yield from {k: v for k, v in self.props.items() if k != DYN}.items()
-        yield from self.props[DYN].items()
+        if self.props[DYN]:
+            yield from self.props[DYN].items()
 
     @staticmethod
     def key(*args, prepend: str = None) -> str:
@@ -42,10 +45,7 @@ class DarwinCore:
         return key
 
     def to_dict(self) -> dict:
-        props = {k: v for k, v in self.props.items() if v is not None}
-        if not props[DYN]:
-            del props[DYN]
-        return props
+        return {k: v for k, v in self.props.items() if v is not None}
 
     @staticmethod
     def to_xml(records: list["DarwinCore"]) -> bytes:
@@ -62,11 +62,8 @@ class DarwinCore:
         for rec in records:
             dwc_rec = Etree.SubElement(doc, "SimpleDarwinRecord")
             for tag, text in rec.props.items():
-                if tag == DYN:
-                    if text:
-                        text = json.dumps(text)
-                    else:
-                        continue
+                if not isinstance(text, str):
+                    text = json.dumps(text)
                 sub = Etree.SubElement(dwc_rec, tag)
                 sub.text = text
 

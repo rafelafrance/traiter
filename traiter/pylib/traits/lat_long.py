@@ -44,8 +44,8 @@ class LatLong(Base):
     units: str = None
     uncertainty: float = None
 
-    def to_dwc(self) -> DarwinCore:
-        return DarwinCore().add(
+    def to_dwc(self, dwc) -> None:
+        dwc.add(
             verbatimCoordinates=self._text,
             geodeticDatum=self.datum,
             coordinateUncertaintyInMeters=self.uncertainty,

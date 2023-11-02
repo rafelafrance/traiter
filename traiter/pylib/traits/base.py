@@ -30,7 +30,7 @@ class Base:
     def pipe(cls, nlp: Language):
         raise NotImplementedError
 
-    def to_dwc(self) -> DarwinCore:
+    def to_dwc(self, dwc) -> None:
         raise NotImplementedError
 
     @staticmethod

@@ -24,8 +24,8 @@ class Color(Base):
     color: str = None
     missing: bool = None
 
-    def to_dwc(self) -> DarwinCore:
-        return DarwinCore().add_dyn(**{self.key: self.color})
+    def to_dwc(self, dwc) -> None:
+        dwc.add_dyn(**{self.key: self.color})
 
     @property
     def key(self):

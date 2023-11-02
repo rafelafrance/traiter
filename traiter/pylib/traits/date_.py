@@ -33,8 +33,8 @@ class Date(Base):
     century_adjust: bool = None
     missing_day: bool = None
 
-    def to_dwc(self) -> DarwinCore:
-        return DarwinCore().add(eventDate=self.date)
+    def to_dwc(self, dwc) -> None:
+        dwc.add(eventDate=self.date)
 
     @classmethod
     def pipe(cls, nlp: Language):

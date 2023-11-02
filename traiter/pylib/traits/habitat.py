@@ -24,8 +24,8 @@ class Habitat(Base):
 
     habitat: str = None
 
-    def to_dwc(self) -> DarwinCore:
-        return DarwinCore().add(habitat=self.habitat)
+    def to_dwc(self, dwc) -> None:
+        dwc.add(habitat=self.habitat)
 
     @classmethod
     def pipe(cls, nlp: Language):

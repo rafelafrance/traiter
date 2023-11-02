@@ -40,8 +40,7 @@ class Elevation(Base):
     units: str = None
     about: bool = None
 
-    def to_dwc(self) -> DarwinCore:
-        dwc = DarwinCore()
+    def to_dwc(self, dwc) -> None:
         dwc.add(
             verbatimElevation=self._text,
             minimumElevationInMeters=self.elevation,
@@ -49,7 +48,6 @@ class Elevation(Base):
         )
         about = "uncertain" if self.about else None
         dwc.add_dyn(elevationUncertain=about)
-        return dwc
 
     @property
     def key(self):

@@ -25,8 +25,8 @@ class TRS(Base):
     trs: str = None
     _trs_part: str = None
 
-    def to_dwc(self) -> DarwinCore:
-        return DarwinCore().add_dyn(TRSPresent=self.trs)
+    def to_dwc(self, dwc) -> None:
+        dwc.add_dyn(TRSPresent=self.trs)
 
     @property
     def key(self):
