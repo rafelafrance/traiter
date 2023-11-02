@@ -1,28 +1,48 @@
-import json
-import xml.etree.ElementTree as Etree
+from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
 
 DYN = "dwc:dynamicProperties"
 NS = "dwc:"
+SEP = " | "
 
 
 @dataclass
 class DarwinCore:
-    props: dict[str, Any] = field(default_factory=dict)
+    props: dict[str, Any] = field(default_factory=lambda: defaultdict(list))
+    dyn_props: dict[str, Any] = field(default_factory=lambda: defaultdict(list))
 
-    def add(self, **kwargs) -> "DarwinCore":  # Return self for chaining
+    def to_dict(self) -> dict:
+        out = {}
+
+        for key, values in self.props.items():
+            out[key] = self.convert_value_list(key, values)
+
+        if self.dyn_props:
+            out[DYN] = {}
+            for key, values in self.dyn_props.items():
+                out[DYN][key] = self.convert_value_list(key, values)
+
+        return out
+
+    @staticmethod
+    def convert_value_list(key, values):
+        if all(isinstance(v, str) for v in values):
+            return SEP.join(values)
+        elif len(values) == 1:
+            return values[0]
+        raise ValueError(f"Field: {key} has bad values")
+
+    def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None:
-                self.props[self.ns(key)] = value
+                self.props[self.ns(key)].append(value)
         return self
 
-    def add_dyn(self, **kwargs) -> "DarwinCore":  # Return self for chaining
-        if DYN not in self.props:
-            self.props[DYN] = {}
+    def add_dyn(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None:
-                self.props[DYN][key] = value
+                self.dyn_props[key].append(value)
         return self
 
     @staticmethod
@@ -43,28 +63,3 @@ class DarwinCore:
         key[0] = key[0].lower()
         key = "".join(key)
         return key
-
-    def to_dict(self) -> dict:
-        return {k: v for k, v in self.props.items() if v is not None}
-
-    @staticmethod
-    def to_xml(records: list["DarwinCore"]) -> bytes:
-        doc = Etree.Element(
-            "SimpleDarwinRecordSet",
-            attrib={
-                "xmlns": "http://rs.tdwg.org/dwc/xsd/simpledarwincore/",
-                "xmlns:dc": "http://purl.org/dc/terms/",
-                "xmlns:dwc": "http://rs.tdwg.org/dwc/terms/",
-                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-            },
-        )
-
-        for rec in records:
-            dwc_rec = Etree.SubElement(doc, "SimpleDarwinRecord")
-            for tag, text in rec.props.items():
-                if not isinstance(text, str):
-                    text = json.dumps(text)
-                sub = Etree.SubElement(dwc_rec, tag)
-                sub.text = text
-
-        return Etree.tostring(doc, "utf-8")
