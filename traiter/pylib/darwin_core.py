@@ -29,9 +29,11 @@ class DarwinCore:
     def convert_value_list(key, values):
         if all(isinstance(v, str) for v in values):
             return SEP.join(values)
+        elif all(isinstance(v, tuple) for v in values):
+            return SEP.join(f'"{i[0]}":"{i[1]}"' for i in values)
         elif len(values) == 1:
             return values[0]
-        raise ValueError(f"Field: {key} has bad values")
+        raise ValueError(f"Field: {key} has mixed value types")
 
     def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
