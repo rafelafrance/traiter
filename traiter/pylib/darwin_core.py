@@ -40,10 +40,10 @@ class DarwinCore:
             return SEP.join(values)
 
         if all(isinstance(f, float) for f in values):
-            return values
+            return values if len(values) > 1 else values[0]
 
         if all(isinstance(f, int) for f in values):
-            return values
+            return values if len(values) > 1 else values[0]
 
         if all(isinstance(v, dict) for v in values):
             return SEP.join(json.dumps(v) for v in values)
