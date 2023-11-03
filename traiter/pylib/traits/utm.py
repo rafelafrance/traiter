@@ -10,6 +10,7 @@ from traiter.pylib import const, term_util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 
+from ..darwin_core import DarwinCore
 from .base import Base
 
 
@@ -29,8 +30,8 @@ class UTM(Base):
     utm: str = None
     datum: str = None
 
-    def to_dwc(self, dwc) -> None:
-        dwc.add_dyn(verbatimUTM=self._text, UTMDatum=self.datum)
+    def to_dwc(self, dwc) -> DarwinCore:
+        return dwc.add_dyn(verbatimUTM=self._text, UTMDatum=self.datum)
 
     @property
     def key(self):

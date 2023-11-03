@@ -21,7 +21,6 @@ def to_dwc(label: str, text: str):
     for ent in doc.ents:
         if ent.label_ == label:
             dwc = DarwinCore()
-            ent._.trait.to_dwc(dwc)
-            return dwc.to_dict()
+            return ent._.trait.to_dwc(dwc).to_dict()
 
     return {}

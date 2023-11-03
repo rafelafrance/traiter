@@ -10,6 +10,7 @@ from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 from traiter.pylib.pipes.reject_match import REJECT_MATCH
 
+from ..darwin_core import DarwinCore
 from .base import Base
 
 
@@ -23,8 +24,8 @@ class Habitat(Base):
 
     habitat: str = None
 
-    def to_dwc(self, dwc) -> None:
-        dwc.add(habitat=self.habitat)
+    def to_dwc(self, dwc) -> DarwinCore:
+        return dwc.add(habitat=self.habitat)
 
     @classmethod
     def pipe(cls, nlp: Language):

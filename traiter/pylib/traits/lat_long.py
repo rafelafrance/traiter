@@ -11,6 +11,7 @@ from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
+from ..darwin_core import DarwinCore
 from .base import Base
 
 
@@ -44,8 +45,8 @@ class LatLong(Base):
     units: str = None
     uncertainty: float = None
 
-    def to_dwc(self, dwc) -> None:
-        dwc.add(
+    def to_dwc(self, dwc) -> DarwinCore:
+        return dwc.add(
             verbatimCoordinates=self._text,
             geodeticDatum=self.datum,
             coordinateUncertaintyInMeters=self.uncertainty,

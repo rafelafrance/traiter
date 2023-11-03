@@ -9,6 +9,7 @@ from traiter.pylib import const, term_util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
 
+from ..darwin_core import DarwinCore
 from .base import Base
 
 
@@ -23,8 +24,8 @@ class Color(Base):
     color: str = None
     missing: bool = None
 
-    def to_dwc(self, dwc) -> None:
-        dwc.add_dyn(**{self.key: self.color})
+    def to_dwc(self, dwc) -> DarwinCore:
+        return dwc.add_dyn(**{self.key: self.color})
 
     @property
     def key(self):
