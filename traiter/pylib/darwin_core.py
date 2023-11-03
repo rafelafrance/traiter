@@ -1,3 +1,4 @@
+import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
@@ -27,13 +28,27 @@ class DarwinCore:
 
     @staticmethod
     def convert_value_list(key, values):
+        flat = []
+        for value in values:
+            if isinstance(value, list):
+                flat += value
+            else:
+                flat.append(value)
+        values = flat
+
         if all(isinstance(v, str) for v in values):
             return SEP.join(values)
-        elif all(isinstance(v, tuple) for v in values):
-            return SEP.join(f'"{i[0]}":"{i[1]}"' for i in values)
-        elif len(values) == 1:
-            return values[0]
-        raise ValueError(f"Field: {key} has mixed value types")
+
+        if all(isinstance(f, float) for f in values):
+            return values
+
+        if all(isinstance(f, int) for f in values):
+            return values
+
+        if all(isinstance(v, dict) for v in values):
+            return SEP.join(json.dumps(v) for v in values)
+
+        raise ValueError(f"Field: {key} has mixed value types: {values=}")
 
     def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
@@ -46,6 +61,11 @@ class DarwinCore:
             if value is not None:
                 self.dyn_props[key].append(value)
         return self
+
+    @staticmethod
+    def format_dict(value: dict) -> dict:
+        """Format a dict value by removing None values and quoting strings."""
+        return {k: v for k, v in value.items() if v is not None}
 
     @staticmethod
     def ns(name):
