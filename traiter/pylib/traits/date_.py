@@ -36,6 +36,10 @@ class Date(Base):
     def to_dwc(self, dwc) -> DarwinCore:
         return dwc.add(eventDate=self.date)
 
+    @property
+    def key(self):
+        return DarwinCore.ns("eventDate")
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="date_terms", path=cls.all_csvs)

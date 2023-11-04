@@ -11,7 +11,6 @@ from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add, reject_match
 
-from ..darwin_core import DarwinCore
 from .base import Base
 
 

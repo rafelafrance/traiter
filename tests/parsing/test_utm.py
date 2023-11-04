@@ -16,3 +16,9 @@ class TestUTMPatterns(unittest.TestCase):
             parse("""11UQF056380"""),
             [UTM(utm="11 UQF 056380", trait="utm", start=0, end=11)],
         )
+
+    def test_utm_03(self):
+        self.assertEqual(
+            parse("""UTM 127 59000 E 4179660 N"""),
+            [UTM(utm="127 59000 E 4179660 N", trait="utm", start=0, end=25)],
+        )

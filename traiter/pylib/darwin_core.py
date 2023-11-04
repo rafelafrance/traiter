@@ -1,4 +1,3 @@
-import json
 from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any
@@ -48,15 +47,15 @@ class DarwinCore:
         if all(isinstance(v, dict) for v in values):
             new_list = []
             for val in values:
-                new = ", ".join(f"{k}: {v}" for k, v in val.items())
+                new = " ~ ".join(f"{k}: {v}" for k, v in val.items())
                 new_list.append(new)
-            return SEP.join(json.dumps(v) for v in new_list)
+            return SEP.join(new_list)
 
         raise ValueError(f"Field: {key} has mixed value types: {values=}")
 
     def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
-            key = self.ns(key)
+            key = key if key.startswith(NS) else self.ns(key)
             if value is not None and value not in self.props[key]:
                 self.props[key].append(value)
         return self

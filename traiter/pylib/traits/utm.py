@@ -49,7 +49,7 @@ class UTM(Base):
             "(": {"TEXT": {"IN": const.OPEN}},
             ")": {"TEXT": {"IN": const.CLOSE}},
             ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
-            "99": {"LOWER": {"REGEX": r"^\d{1,2}$"}},
+            "99": {"LOWER": {"REGEX": r"^\d{1,3}$"}},
             "9999": {"LOWER": {"REGEX": r"^\d+$"}},
             "datum": {"ENT_TYPE": "datum"},
             "datum_label": {"ENT_TYPE": "datum_label"},
@@ -67,6 +67,7 @@ class UTM(Base):
                 on_match="utm_trait",
                 patterns=[
                     "utm_label* 99 sect ,* 9999 utm_dir? ,* 9999 utm_dir? (? datum* )?",
+                    "utm_label+ 99 ,* 9999 utm_dir? ,* 9999 utm_dir? (? datum* )?",
                     "99 uaa 9999",
                 ],
             ),

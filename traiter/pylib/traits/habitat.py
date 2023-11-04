@@ -27,6 +27,10 @@ class Habitat(Base):
     def to_dwc(self, dwc) -> DarwinCore:
         return dwc.add(habitat=self.habitat)
 
+    @property
+    def key(self):
+        return DarwinCore.ns("habitat")
+
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="habitat_terms", path=cls.habitat_csv)
