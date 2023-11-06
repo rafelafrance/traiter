@@ -5,6 +5,7 @@ from typing import Any
 DYN = "dwc:dynamicProperties"
 NS = "dwc:"
 SEP = " | "
+FIELD_SEP = " ~ "
 
 
 @dataclass
@@ -47,7 +48,7 @@ class DarwinCore:
         if all(isinstance(v, dict) for v in values):
             new_list = []
             for val in values:
-                new = " ~ ".join(f"{k}: {v}" for k, v in val.items())
+                new = FIELD_SEP.join(f"{k}: {v}" for k, v in val.items())
                 new_list.append(new)
             return SEP.join(new_list)
 

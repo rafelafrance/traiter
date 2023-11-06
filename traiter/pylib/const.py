@@ -29,13 +29,15 @@ NAME_AND_UPPER = NAME_SHAPES + UPPER_SHAPES
 # ---------------------
 # Punctuation penalties when linking traits
 
-TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
 NEVER = 9999
+
+TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
+
 REVERSE_WEIGHTS = {k: v * 2 for k, v in TOKEN_WEIGHTS.items()}
 REVERSE_WEIGHTS[";"] = NEVER
 REVERSE_WEIGHTS["."] = NEVER
 
-TOKEN_WEIGHTS = {
+TOKEN_WEIGHTS |= {
     ",": 2,
     ";": 5,
     ".": NEVER,
