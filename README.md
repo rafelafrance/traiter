@@ -2,7 +2,7 @@
 
 -- ~~If you can get away with it, you may want to try an end-to-end machine learning approach.~~
 
-I just spent a substantial effort on a using machine learning model and I was completely wrong about the relative usefulness of rule-based and machine learning approaches to information extraction. Both have their strengths and weaknesses I am now convinced that for the next few years you will either need to use a hybrid approach or maybe a heavily trained custom model. Machine learning can do well (when not confabulating) with longer phrase traits like locality and habitat. Rule-based traits well (excepting false positives) with smaller traits and with linking traits. Both can be used as a check on the other.
+I just spent a substantial effort on a using machine learning model and I was completely wrong about the relative usefulness of rule-based and machine learning approaches to information extraction. Both have their strengths and weaknesses. I am now convinced that for the next few years you will either need to use a hybrid approach or maybe a heavily trained custom model. Machine learning can do well (when not confabulating) with longer phrase traits like locality and habitat. Rule-based traits well (excepting false positives) with smaller traits and with linking traits. Both can be used as a check on the other.
 
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects.
