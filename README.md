@@ -1,14 +1,8 @@
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
-![STOP!](assets/StopSign.SVG) Rule-based parsing can be tricky, labor-intensive, error prone, and tedious. -- When using rules, homonyms become evil. -- If you can get away with it, you may want to try an end-to-end machine learning approach. Having said that, there are some uses for rule-based parsing:
+-- ~~If you can get away with it, you may want to try an end-to-end machine learning approach.~~
 
-- You can use rules to build training data for your models.
-- You can use some hand-crafted rule output as input for the automatic generation of other rules.
-- Sometimes existing models can't handle jargon, shorthand notation, and unique (condensed) sentence structures, and you're not really parsing that much data. The "one-off" excuse never really holds because it's never just one, is it.
-- You can use a hybrid model/rule-based approach. I have found this to be quite productive.
-  - For instance, you can let a model find names (PERSON entities) in a document, then you can use those names as input for rules that identify people with certain roles (collector, determiner, etc.).
-  - I almost always use models for finding parts of speech and sentence structure which I then use as rule input.
-  - The goal is still to use the output of the hybrid model as training data for a model that brings you ever closer to the sought after end-to-end model.
+I just spent a substantial effort on a using machine learning model and I was completely wrong about the relative usefulness of rule-based and machine learning approaches to information extraction. Both have their strengths and weaknesses I am now convinced that for the next few years you will either need to use a hybrid approach or maybe a heavily trained custom model. Machine learning can do well (when not confabulating) with longer phrase traits like locality and habitat. Rule-based traits well (excepting false positives) with smaller traits and with linking traits. Both can be used as a check on the other.
 
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects.
