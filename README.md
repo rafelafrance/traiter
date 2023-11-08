@@ -2,7 +2,7 @@
 
 -- ~~If you can get away with it, you may want to try an end-to-end machine learning approach.~~
 
-I just spent a substantial effort on a using machine learning model and I was completely wrong about the relative usefulness of rule-based and machine learning approaches to information extraction. Both have their strengths and weaknesses. I am now convinced that for the next few years you will either need to use a hybrid approach or maybe a heavily trained custom model. Machine learning can do well (when not confabulating) with longer phrase traits like locality and habitat. Rule-based traits well (excepting false positives) with smaller traits and with linking traits. Both can be used as a check on the other.
+I just spent a substantial effort on using a machine learning model, and I was completely wrong about the relative usefulness of rule-based and machine learning approaches for information extraction. Both have their strengths and weaknesses. I am now convinced that for the next few years you will need either a hybrid approach or maybe a custom model that is not generative; i.e. not ChatGPT.
 
 ## Traiter
 This is the base Traiter information extraction/data mining library used by all client Traiter projects.
@@ -21,7 +21,7 @@ Some literature mined:
 ## SpaCy Entities vs Traits:
 - **A trait is just an annotated spaCy entity.** That is we're treating traits (aka attributes) as if they were their own entity. This has the advantage in that we can use named entity recognition (NER) techniques on them. We can also use standard entity link methods for linking traits to entities.
 - There may (or not) be several layers of entities and traits. For instance, a plant SPECIES (a top-level entity) may have FLOWERs (a secondary or sub-entity) and those FLOWERs will have a set of characteristic COLORs (a trait).
-- We leverage normal spaCy entities to build traits. Sometimes we will also use spaCy's NER entities as building block traits. (See below.)
+- We leverage normal spaCy entities to build traits. Sometimes we will also use spaCy's NER entities as building block traits.
 
 ## Parsing strategy
 1. Have experts identify relevant terms and target traits.
@@ -43,10 +43,10 @@ python3 -m pip install .
 python3 -m spacy download en_core_web_sm
 ```
 
-**I recommend using a virtual environment but that is not required.**
+**I recommend using a virtual environment but it's not required.**
 
 ## Run
-This repository is a library for other Traiter projects and is not run directly. Well it could be, but it's not really designed for it.
+This repository is a library for other Traiter projects and is not designed to be run directly.
 
 ## Tests
 You can run the tests like so:
