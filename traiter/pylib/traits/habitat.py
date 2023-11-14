@@ -52,7 +52,7 @@ class Habitat(Base):
         return [
             Compiler(
                 label="habitat",
-                on_match="habitat_trait",
+                on_match="habitat_match",
                 decoder=decoder,
                 keep="habitat",
                 patterns=[
@@ -86,7 +86,7 @@ class Habitat(Base):
         ]
 
     @classmethod
-    def habitat_trait(cls, ent):
+    def habitat_match(cls, ent):
         frags = []
 
         for token in ent:
@@ -109,9 +109,9 @@ class Habitat(Base):
         return trait
 
 
-@registry.misc("habitat_trait")
-def habitat_trait(ent):
-    return Habitat.habitat_trait(ent)
+@registry.misc("habitat_match")
+def habitat_match(ent):
+    return Habitat.habitat_match(ent)
 
 
 @registry.misc("labeled_habitat")

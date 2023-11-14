@@ -63,7 +63,7 @@ class Date(Base):
         return [
             Compiler(
                 label="date",
-                on_match="date_trait",
+                on_match="date_match",
                 keep="date",
                 decoder=decoder,
                 patterns=[
@@ -97,7 +97,7 @@ class Date(Base):
         ]
 
     @classmethod
-    def date_trait(cls, ent):
+    def date_match(cls, ent):
         frags = []
         century_adjust = None
 
@@ -135,16 +135,16 @@ class Date(Base):
 
     @classmethod
     def short_date(cls, ent):
-        date_ = Date.date_trait(ent)
+        date_ = Date.date_match(ent)
         date_.trait = "date"
         date_.missing_day = True
         date_.date = date_.date[:7]
         return date_
 
 
-@registry.misc("date_trait")
+@registry.misc("date_match")
 def date_match(ent):
-    return Date.date_trait(ent)
+    return Date.date_match(ent)
 
 
 @registry.misc("short_date_match")

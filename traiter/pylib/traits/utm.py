@@ -64,7 +64,7 @@ class UTM(Base):
                 label="utm",
                 keep="utm",
                 decoder=decoder,
-                on_match="utm_trait",
+                on_match="utm_match",
                 patterns=[
                     "utm_label* 99 sect ,* 9999 utm_dir? ,* 9999 utm_dir? (? datum* )?",
                     "utm_label+ 99 ,* 9999 utm_dir? ,* 9999 utm_dir? (? datum* )?",
@@ -111,6 +111,6 @@ class UTM(Base):
         return super().from_ent(ent, utm=cls.format_coords(frags), datum=datum)
 
 
-@registry.misc("utm_trait")
-def utm_trait(ent):
+@registry.misc("utm_match")
+def utm_match(ent):
     return UTM.from_ent(ent)

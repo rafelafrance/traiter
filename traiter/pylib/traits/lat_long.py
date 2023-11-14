@@ -100,7 +100,7 @@ class LatLong(Base):
         return [
             Compiler(
                 label="lat_long",
-                on_match="lat_long_trait",
+                on_match="lat_long_match",
                 keep="lat_long",
                 decoder=decoder,
                 patterns=[
@@ -198,7 +198,7 @@ class LatLong(Base):
         return coords
 
     @classmethod
-    def lat_long_trait(cls, ent):
+    def lat_long_match(cls, ent):
         frags = []
         datum = []
         for token in ent:
@@ -281,9 +281,9 @@ class LatLong(Base):
         return trait
 
 
-@registry.misc("lat_long_trait")
-def lat_long_trait(ent):
-    return LatLong.lat_long_trait(ent)
+@registry.misc("lat_long_match")
+def lat_long_match(ent):
+    return LatLong.lat_long_match(ent)
 
 
 @registry.misc("lat_long_uncertain")

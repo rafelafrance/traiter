@@ -42,7 +42,7 @@ class Color(Base):
         return [
             Compiler(
                 label="color",
-                on_match="color_trait",
+                on_match="color_match",
                 keep="color",
                 decoder={
                     "-": {"TEXT": {"IN": const.DASH}},
@@ -59,7 +59,7 @@ class Color(Base):
         ]
 
     @classmethod
-    def color_trait(cls, ent):
+    def color_match(cls, ent):
         missing = None
         frags = []
         for token in ent:
@@ -89,6 +89,6 @@ class Color(Base):
         return super().from_ent(ent, color=color, missing=missing)
 
 
-@registry.misc("color_trait")
-def color_trait(ent):
-    return Color.color_trait(ent)
+@registry.misc("color_match")
+def color_match(ent):
+    return Color.color_match(ent)
