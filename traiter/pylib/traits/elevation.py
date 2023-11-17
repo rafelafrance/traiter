@@ -51,7 +51,7 @@ class Elevation(Base):
 
     @property
     def key(self):
-        return DarwinCore.ns("verbatimElevation")
+        return DarwinCore.ns("elevation")
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -83,12 +83,12 @@ class Elevation(Base):
                     "sp": {"IS_SPACE": True},
                 },
                 patterns=[
-                    "label+ :? sp? about? ,? 99 m",
-                    "label+ :? sp? about? ,? 99 m ( 99 m ,? )",
-                    "label+ :? sp? about? ,? 99 m / 99 m",
-                    "              about? ,? 99 m ( 99 m ,? )",
-                    "              about? ,? 99 m / 99 m",
-                    "label+ :? sp? about? ,? 99 -/to 99 m",
+                    "label+ :? sp? about? ,? 99 sp? m",
+                    "label+ :? sp? about? ,? 99 sp? m sp? ( 99 m ,? )",
+                    "label+ :? sp? about? ,? 99 sp? m sp? / 99 m",
+                    "              about? ,? 99 sp? m sp? ( 99 m ,? )",
+                    "              about? ,? 99 sp? m sp? / 99 m",
+                    "label+ :? sp? about? ,? 99 sp? -/to sp? 99 sp? m",
                 ],
             ),
         ]
