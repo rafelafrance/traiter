@@ -1,13 +1,13 @@
 import spacy
 
 from traiter.pylib.pipes import extensions, sentence, tokenizer
-from traiter.pylib.traits.color import Color
-from traiter.pylib.traits.date_ import Date
-from traiter.pylib.traits.elevation import Elevation
-from traiter.pylib.traits.habitat import Habitat
-from traiter.pylib.traits.lat_long import LatLong
-from traiter.pylib.traits.trs import TRS
-from traiter.pylib.traits.utm import UTM
+from traiter.pylib.rules.color import Color
+from traiter.pylib.rules.date_ import Date
+from traiter.pylib.rules.elevation import Elevation
+from traiter.pylib.rules.habitat import Habitat
+from traiter.pylib.rules.lat_long import LatLong
+from traiter.pylib.rules.trs import TRS
+from traiter.pylib.rules.utm import UTM
 
 
 def build():

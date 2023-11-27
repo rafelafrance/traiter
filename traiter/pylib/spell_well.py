@@ -19,7 +19,7 @@ class SpellWell:
         self.db_to_memory()
 
     def db_to_memory(self):
-        path = Path(__file__).parent / "traits" / "terms"
+        path = Path(__file__).parent / "rules" / "terms"
         df = pd.read_csv(path / "misspellings.zip")
         df = df.loc[df["freq"] >= self.min_freq]
         df = df.loc[df["miss"].str.len() >= self.min_len]

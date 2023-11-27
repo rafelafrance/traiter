@@ -1,6 +1,6 @@
 import unittest
 
-from traiter.pylib.traits.habitat import Habitat
+from traiter.pylib.rules.habitat import Habitat
 
 from ..setup import parse
 

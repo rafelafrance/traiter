@@ -1,9 +1,9 @@
 import unittest
 
 from tests.setup import parse
-from traiter.pylib.traits.elevation import Elevation
-from traiter.pylib.traits.habitat import Habitat
-from traiter.pylib.traits.lat_long import LatLong
+from traiter.pylib.rules.elevation import Elevation
+from traiter.pylib.rules.habitat import Habitat
+from traiter.pylib.rules.lat_long import LatLong
 
 
 class TestLatLong(unittest.TestCase):
