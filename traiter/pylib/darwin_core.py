@@ -3,10 +3,16 @@ from dataclasses import dataclass, field
 from typing import Any
 
 DYN = "dwc:dynamicProperties"
+
 DWC = "dwc:"
 DC = "dc:"
+
 SEP = " | "
 FIELD_SEP = " ~ "
+
+DUBLIN = """
+    type modified language license rightsHolder accessRights bibliographicCitation
+    references location """.split()
 
 
 @dataclass
@@ -73,8 +79,9 @@ class DarwinCore:
         return {k: v for k, v in value.items() if v is not None}
 
     @staticmethod
-    def ns(name, namespace=DWC):
-        return namespace + name
+    def ns(name):
+        namespace = DC if name in DUBLIN else DWC
+        return name if name.startswith(namespace) else namespace + name
 
     def items(self):
         yield from {k: v for k, v in self.props.items() if k != DYN}.items()

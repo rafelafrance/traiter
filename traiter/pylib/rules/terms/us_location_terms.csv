@@ -2001,13 +2001,18 @@ us_state,mont.,lower,Montana,,MT
 us_state,montana,lower,Montana,,MT
 us_state,MS,text,Mississippi,,MS
 us_state,MT,text,Montana,,MT
+us_state,n. c.,lower,North Carolina,,NC
 us_state,n. car.,lower,North Carolina,,NC
+us_state,n. d.,lower,North Dakota,,ND
 us_state,n. dak.,lower,North Dakota,,ND
 us_state,n. j.,lower,New Jersey,,NJ
+us_state,n.j.,lower,New Jersey,,NJ
 us_state,n. jersey,lower,New Jersey,,NJ
+us_state,n. m.,lower,New Mexico,,NM
 us_state,n. mex.,lower,New Mexico,,NM
 us_state,n. y.,lower,New York,,NY
 us_state,n. york,lower,New York,,NY
+us_state,n. b.,lower,Nebraska,,NE
 us_state,n.b.,lower,Nebraska,,NE
 us_state,NC,text,North Carolina,,NC
 us_state,ND,text,North Dakota,,ND
@@ -2043,7 +2048,9 @@ us_state,pennsylvania,lower,Pennsylvania,,PA
 us_state,r.isl.,lower,Rhode Island,,RI
 us_state,rhode island,lower,Rhode Island,,RI
 us_state,RI,text,Rhode Island,,RI
+us_state,s. c.,lower,South Carolina,,SC
 us_state,s. car.,lower,South Carolina,,SC
+us_state,s. d.,lower,South Dakota,,SD
 us_state,s. dak.,lower,South Dakota,,SD
 us_state,SC,text,South Carolina,,SC
 us_state,SD,text,South Dakota,,SD
