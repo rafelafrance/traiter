@@ -3,7 +3,8 @@ from dataclasses import dataclass, field
 from typing import Any
 
 DYN = "dwc:dynamicProperties"
-NS = "dwc:"
+DWC = "dwc:"
+DC = "dc:"
 SEP = " | "
 FIELD_SEP = " ~ "
 
@@ -56,7 +57,7 @@ class DarwinCore:
 
     def add(self, **kwargs) -> "DarwinCore":
         for key, value in kwargs.items():
-            key = key if key.startswith(NS) else self.ns(key)
+            key = key if key.startswith(DWC) else self.ns(key)
             if value is not None and value not in self.props[key]:
                 self.props[key].append(value)
         return self
@@ -69,12 +70,11 @@ class DarwinCore:
 
     @staticmethod
     def format_dict(value: dict) -> dict:
-        """Format a dict value by removing None values and quoting strings."""
         return {k: v for k, v in value.items() if v is not None}
 
     @staticmethod
-    def ns(name):
-        return NS + name
+    def ns(name, namespace=DWC):
+        return namespace + name
 
     def items(self):
         yield from {k: v for k, v in self.props.items() if k != DYN}.items()
