@@ -284,3 +284,16 @@ class TestDate(unittest.TestCase):
             parse("± 4 x 3 mm."),
             [],
         )
+
+    def test_date_22(self):
+        self.assertEqual(
+            parse("20091 19 X 1998"),
+            [
+                Date(
+                    date="1998-10-19",
+                    trait="date",
+                    start=6,
+                    end=15,
+                ),
+            ],
+        )

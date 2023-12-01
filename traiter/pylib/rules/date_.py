@@ -34,7 +34,10 @@ class Date(Base):
     missing_day: bool = None
 
     def to_dwc(self, dwc) -> DarwinCore:
-        return dwc.add(eventDate=self.date)
+        return dwc.add(
+            eventDate=self.date,
+            verbatimEventDate=self._text,
+        )
 
     @property
     def key(self):
@@ -49,13 +52,13 @@ class Date(Base):
     @classmethod
     def date_patterns(cls):
         decoder = {
-            "-": {"TEXT": {"REGEX": rf"^[{cls.sep}]\Z"}},
-            "/": {"TEXT": {"REGEX": r"^/\Z"}},
-            "99": {"TEXT": {"REGEX": r"^\d\d?\Z"}},
-            "99-99": {"TEXT": {"REGEX": rf"^\d\d?[{cls.sep}]+\d\d\Z"}},
-            "99-9999": {"TEXT": {"REGEX": rf"^\d\d?[{cls.sep}]+[12]\d\d\d\Z"}},
-            "9999": {"TEXT": {"REGEX": r"^[12]\d{3}\Z"}},
-            ":": {"TEXT": {"REGEX": r"^[:=]+\Z"}},
+            "-": {"TEXT": {"REGEX": rf"^[{cls.sep}]$"}},
+            "/": {"TEXT": {"REGEX": r"^/$"}},
+            "99": {"TEXT": {"REGEX": r"^\d\d?$"}},
+            "99-99": {"TEXT": {"REGEX": rf"^\d\d?[{cls.sep}]+\d\d$"}},
+            "99-9999": {"TEXT": {"REGEX": rf"^\d\d?[{cls.sep}]+[12]\d\d\d$"}},
+            "9999": {"TEXT": {"REGEX": r"^[12]\d\d\d$"}},
+            ":": {"TEXT": {"REGEX": r"^[:=]+$"}},
             "label": {"ENT_TYPE": "date_label"},
             "month": {"ENT_TYPE": "month"},
             "roman": {"ENT_TYPE": "roman"},
@@ -71,8 +74,8 @@ class Date(Base):
                     "label? :? 99     -* month -* 9999",
                     "label? :? 9999   -* month -* 99",
                     "label  :? 99     -* roman -* 99",
-                    "label  :? 99     -* roman -* 9999",
-                    "label  :? 9999   -* roman -* 99",
+                    "label? :? 99     -* roman -* 9999",
+                    "label? :? 9999   -* roman -* 99",
                     "label? :? 99     -  99    -  99",
                     "label? :? 99     -  99    -  9999",
                     "label? :? month+ -* 99    -* 9999",

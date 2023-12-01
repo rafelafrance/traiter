@@ -24,11 +24,12 @@ class Elevation(Base):
     )
     unit_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_length_terms.csv"
     about_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "about_terms.csv"
-    all_csvs: ClassVar[list[Path]] = [elevation_csv, unit_csv, about_csv]
+    tic_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_tic_terms.csv"
+    all_csvs: ClassVar[list[Path]] = [elevation_csv, unit_csv, about_csv, tic_csv]
 
     replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
     factors_cm: ClassVar[dict[str, float]] = term_util.term_data(
-        unit_csv, "factor_cm", float
+        (unit_csv, tic_csv), "factor_cm", float
     )
     factors_m: ClassVar[dict[str, float]] = {
         k: v / 100.0 for k, v in factors_cm.items()

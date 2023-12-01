@@ -1,5 +1,7 @@
+import csv
 from collections import defaultdict
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 DYN = "dwc:dynamicProperties"
@@ -10,9 +12,28 @@ DC = "dc:"
 SEP = " | "
 FIELD_SEP = " ~ "
 
-DUBLIN = """
-    type modified language license rightsHolder accessRights bibliographicCitation
-    references location """.split()
+
+def read_dwc_terms():
+    core, dublin = {}, {}
+
+    path = Path(__file__).parent / "rules" / "terms" / "dwc_terms.csv"
+    with open(path) as f:
+        for row in csv.DictReader(f):
+            name = row["term_localName"]
+
+            if row["iri"].find("dublincore") > -1:
+                name = DC + name
+                dublin[name] = row
+
+            else:
+                name = DWC + name
+
+            core[name] = row
+
+    return core, dublin
+
+
+CORE, DUBLIN = read_dwc_terms()
 
 
 @dataclass
