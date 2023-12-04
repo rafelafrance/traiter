@@ -1,3 +1,4 @@
+import datetime
 import re
 from calendar import IllegalMonthError
 from dataclasses import dataclass
@@ -123,6 +124,9 @@ class Date(Base):
         try:
             date_ = parser.parse(text).date()
         except (parser.ParserError, IllegalMonthError):
+            raise reject_match.RejectMatch
+
+        if date_ > datetime.date.today():
             raise reject_match.RejectMatch
 
         # Handle missing centuries like: May 22, 08

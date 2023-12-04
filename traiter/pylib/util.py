@@ -16,24 +16,19 @@ def compress(text: str) -> str:
     return text
 
 
-def as_list(values: Any) -> list:
-    """Convert values to a list."""
-    return list(values) if isinstance(values, (list, tuple, set)) else [values]
-
-
-def to_positive_float(value: str) -> Union[float, None]:
-    """Convert the value to a float."""
-    value = re.sub(r"[^\d./]", "", value) if value else ""
+def to_positive_float(value: Any) -> float | None:
+    if isinstance(value, str):
+        value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
         return float(value)
     except ValueError:
         return None
 
 
-def to_positive_int(value: str) -> Union[int, None]:
-    """Convert the value to an integer."""
-    value = re.sub(r"[^\d./]", "", value) if value else ""
-    value = re.sub(r"\.$", "", value)
+def to_positive_int(value: Any) -> int | None:
+    if isinstance(value, str):
+        value = re.sub(r"[^\d./]", "", value) if value else ""
+        value = re.sub(r"\.$", "", value)
     try:
         return int(value)
     except ValueError:
