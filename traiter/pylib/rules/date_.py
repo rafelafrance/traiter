@@ -126,13 +126,13 @@ class Date(Base):
         except (parser.ParserError, IllegalMonthError):
             raise reject_match.RejectMatch
 
-        if date_ > datetime.date.today():
-            raise reject_match.RejectMatch
-
         # Handle missing centuries like: May 22, 08
         if date_ > dt.today():
             date_ -= relativedelta(years=100)
             century_adjust = True
+
+        if date_ > dt.today():
+            raise reject_match.RejectMatch
 
         date_ = date_.isoformat()[:10]
 
