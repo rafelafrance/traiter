@@ -20,6 +20,7 @@ def read_dwc_terms():
     with open(path) as f:
         for row in csv.DictReader(f):
             name = row["term_localName"]
+            name = name[0].lower() + name[1:]
 
             if row["iri"].find("dublincore") > -1:
                 name = DC + name

@@ -1,38 +1,54 @@
-from typing import Callable
+from pathlib import Path
+from typing import Any, Callable
+
+from traiter.pylib import term_util
+
+from ..rules import terms
 
 
 class Template:
-    def __init__(self):
-        self._actions = []
+    def __init__(self, *actions):
+        self._actions = [a.reconcile for a in actions]
 
     @property
-    def reconcile(self) -> list[Callable]:
+    def actions(self) -> list[Callable]:
         return self._actions
 
-    @reconcile.setter
-    def reconcile(self, actions: list[Callable]):
-        self._actions += actions
-
-
-TEMPLATE = Template()
+    def append(self, action):
+        self._actions.append(action.reconcile)
 
 
 class Base:
-    def __init__(self, *args):
-        TEMPLATE.reconcile = args
+    nil = "null none not provided not specified".casefold()
 
-    @staticmethod
-    def search(other, keys: list[str], default=None):
-        for key in keys:
-            if other.get(key):
-                return other[key]
+    unit_csv = Path(terms.__file__).parent / "unit_length_terms.csv"
+    tic_csv = Path(terms.__file__).parent / "unit_tic_terms.csv"
+    factors_cm = term_util.term_data((unit_csv, tic_csv), "factor_cm", float)
+    factors_m = {k: v / 100.0 for k, v in factors_cm.items()}
+    print("test")
+
+    @classmethod
+    def reconcile(
+        cls, traiter: dict[str, Any], other: dict[str, Any]
+    ) -> dict[str, str]:
+        raise NotImplementedError
+
+    @classmethod
+    def search(cls, other: dict[str, Any], aliases: list[str], default: Any = ""):
+        for alias in aliases:
+            if value := other.get(alias):
+                if isinstance(value, str) and value.casefold() in cls.nil:
+                    return default
+                return value
         return default
 
-    @staticmethod
-    def wildcard(other, pattern: str, default=None):
+    @classmethod
+    def wildcard(cls, other, pattern: str, default=""):
         pattern = pattern.casefold()
         for key in other.keys():
             folded = key.casefold()
+            if folded in cls.nil:
+                return default
             if folded.find(pattern) > -1:
                 return other[key]
         return default
