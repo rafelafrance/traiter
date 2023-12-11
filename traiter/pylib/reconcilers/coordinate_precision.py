@@ -5,7 +5,7 @@ from .base import Base
 
 class CoordinatePrecision(Base):
     label = "dwc:coordinatePrecision"
-    aliases = Base.case(label)
+    aliases = Base.get_aliases(label)
 
     @classmethod
     def reconcile(

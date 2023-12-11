@@ -5,7 +5,7 @@ from .base import Base
 
 class DecimalLongitude(Base):
     label = "dwc:decimalLongitude"
-    aliases = Base.case(label, "dwc:longitude dwc:verbatimLongitude")
+    aliases = Base.get_aliases(label, "dwc:longitude dwc:verbatimLongitude")
 
     @classmethod
     def reconcile(

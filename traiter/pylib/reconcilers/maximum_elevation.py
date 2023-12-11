@@ -7,7 +7,7 @@ from .base import Base
 
 class MaximumElevationInMeters(Base):
     label = "dwc:maximumElevationInMeters"
-    aliases = Base.case(
+    aliases = Base.get_aliases(
         label,
         """
         dwc:maxElevationInMeters dwc:maxElevationInFeet dwc:maximumElevationInFeet""",

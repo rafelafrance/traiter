@@ -5,7 +5,7 @@ from .base import Base
 
 class VerbatimCoordinates(Base):
     label = "dwc:verbatimCoordinates"
-    aliases = Base.case(label, "dwc:coordinates")
+    aliases = Base.get_aliases(label, "dwc:coordinates")
 
     @classmethod
     def reconcile(

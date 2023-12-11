@@ -25,7 +25,6 @@ class Base:
     tic_csv = Path(terms.__file__).parent / "unit_tic_terms.csv"
     factors_cm = term_util.term_data((unit_csv, tic_csv), "factor_cm", float)
     factors_m = {k: v / 100.0 for k, v in factors_cm.items()}
-    print("test")
 
     @classmethod
     def reconcile(
@@ -54,7 +53,7 @@ class Base:
         return default
 
     @staticmethod
-    def case(*args) -> list[str]:
+    def get_aliases(*args) -> list[str]:
         keys = " ".join(args).split()
         keys += [k.lower() for k in keys]
         return sorted(set(keys))

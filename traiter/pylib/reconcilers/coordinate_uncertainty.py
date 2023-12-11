@@ -6,7 +6,7 @@ from .base import Base
 
 class CoordinateUncertainty(Base):
     label = "dwc:coordinateUncertaintyInMeters"
-    aliases = Base.case(label, "")
+    aliases = Base.get_aliases(label, "")
 
     @classmethod
     def reconcile(

@@ -5,7 +5,7 @@ from .base import Base
 
 class GeodeticDatum(Base):
     label = "dwc:geodeticDatum"
-    aliases = Base.case(label, "datum")
+    aliases = Base.get_aliases(label, "datum")
 
     @classmethod
     def reconcile(

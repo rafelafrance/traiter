@@ -5,7 +5,7 @@ from .base import Base
 
 class Habitat(Base):
     label = "dwc:habitat"
-    aliases = Base.case(label)
+    aliases = Base.get_aliases(label)
 
     @classmethod
     def reconcile(cls, _: dict[str, Any], other: dict[str, Any]) -> dict[str, Any]:

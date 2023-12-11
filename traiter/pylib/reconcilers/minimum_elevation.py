@@ -7,7 +7,7 @@ from .base import Base
 
 class MinimumElevationInMeters(Base):
     label = "dwc:minimumElevationInMeters"
-    aliases = Base.case(
+    aliases = Base.get_aliases(
         label,
         """
         dwc:altitude dwc:decimalElevation dwc:elevation dwc:elevationInMeters

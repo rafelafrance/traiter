@@ -5,7 +5,7 @@ from .base import Base
 
 class VerbatimElevation(Base):
     label = "dwc:verbatimElevation"
-    aliases = Base.case(label)
+    aliases = Base.get_aliases(label)
 
     @classmethod
     def reconcile(

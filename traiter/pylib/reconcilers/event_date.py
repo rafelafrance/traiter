@@ -10,12 +10,12 @@ from .base import Base
 class EventDate(Base):
     label = "dwc:eventDate"
     verbatim_label = "dwc:verbatimEventDate"
-    aliases = Base.case(
+    aliases = Base.get_aliases(
         """
         dwc:collectionDate dwc:earliestDateCollected dwc:latestDateCollected
         dwc:date"""
     )
-    verbatim_aliases = Base.case(verbatim_label)
+    verbatim_aliases = Base.get_aliases(verbatim_label)
 
     @classmethod
     def reconcile(
