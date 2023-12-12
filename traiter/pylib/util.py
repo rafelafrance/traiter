@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any
 
 import ftfy
 import regex as re
@@ -21,7 +21,7 @@ def to_positive_float(value: Any) -> float | None:
         value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
         return float(value)
-    except ValueError:
+    except (ValueError, TypeError):
         return None
 
 
@@ -31,14 +31,14 @@ def to_positive_int(value: Any) -> int | None:
         value = re.sub(r"\.$", "", value)
     try:
         return int(value)
-    except ValueError:
+    except (ValueError, TypeError):
         return None
 
 
 def clean_text(
     text: str,
-    trans: Union[dict[int, str], None] = None,
-    replace: Union[dict[str, str], None] = None,
+    trans: dict[int, str] | None = None,
+    replace: dict[str, str] | None = None,
 ) -> str:
     """Clean text before trait extraction."""
     text = text if text else ""
