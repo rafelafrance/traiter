@@ -23,7 +23,7 @@ class MinimumElevationInMeters(Base):
 
         # Make sure what OpenAI returned is a string
         if o_val and not isinstance(o_val, (str, float, int)):
-            raise ValueError(f"BAD FORMAT in OpenAI output {o_val}")
+            raise ValueError(f"BAD FORMAT in OpenAI {cls.label} {o_val}")
 
         o_val = util.to_positive_float(o_val) if o_val is not None else o_val
 
@@ -32,6 +32,10 @@ class MinimumElevationInMeters(Base):
         # No match
         if not o_val:
             return {}
+
+        # Use the traiter version
+        if t_val and not o_val:
+            return {cls.label: t_val}
 
         # A simple match
         if o_val == t_val:

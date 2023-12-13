@@ -1,89 +1,137 @@
+import re
 from calendar import IllegalMonthError
+from collections import namedtuple
+from pathlib import Path
 from typing import Any
 
 from dateutil import parser
 
 from .. import darwin_core as dwc
+from .. import term_util
 from .base import Base
+
+TraiterDate = namedtuple("TraiterDate", "raw_date date raw_verb verb")
 
 
 class EventDate(Base):
     label = "dwc:eventDate"
     verbatim_label = "dwc:verbatimEventDate"
     aliases = Base.get_aliases(
+        label,
         """
         dwc:collectionDate dwc:earliestDateCollected dwc:latestDateCollected
-        dwc:date"""
+        dwc:date """,
     )
     verbatim_aliases = Base.get_aliases(verbatim_label)
+
+    date_csv = Path(__file__).parent.parent / "rules" / "terms" / "date_terms.csv"
+    patterns = term_util.term_data(date_csv, "pattern")
+    pattern = rf"( {'|'.join(patterns)} ) \s* [:=]* \s*"
+    clean_re = re.compile(pattern, flags=re.IGNORECASE | re.VERBOSE)
+
+    roman = {
+        "i": " January ",
+        "ii": " February ",
+        "iii": " March ",
+        "iv": " April ",
+        "v": " May ",
+        "vi": " June ",
+        "vii": " July ",
+        "viii": " August ",
+        "ix": " September ",
+        "x": " October ",
+        "xi": " November ",
+        "xii": " December ",
+    }
+    roman_re = re.compile(
+        rf"( \b {'|'.join(k for k in roman.keys())} \b )",
+        flags=re.IGNORECASE | re.VERBOSE,
+    )
 
     @classmethod
     def reconcile(
         cls, traiter: dict[str, Any], other: dict[str, Any]
     ) -> dict[str, Any]:
-        t_val = traiter.get(cls.label)
         o_val = cls.search(other, cls.aliases)
-        t_verbatim = traiter.get(cls.verbatim_label)
-        o_verbatim = cls.search(other, cls.verbatim_aliases)
+        t_val = traiter.get(cls.label, "")
+        t_verbatim = traiter.get(cls.verbatim_label, "")
 
-        # If OpenAI returns a dict see if we can use it
-        if o_val and isinstance(o_val, dict):
-            sub_keys = list(o_val.keys())
-            if all(k in sub_keys for k in ("year", "month", "day")):
-                new = f"{o_val['year']}-{o_val['month']}-{o_val['day']}"
-                try:
-                    new = parser.parse(new).date().isoformat()[:10]
-                    o_val = new
-                except (parser.ParserError, IllegalMonthError):
-                    raise ValueError(f"BAD FORMAT in OpenAI output {o_val}")
-            else:
-                raise ValueError(f"BAD FORMAT in OpenAI output {o_val}")
-
-        # Handle when OpenAI returns a list of dates
-        if o_val and isinstance(o_val, list) and t_val:
-            if any(v in t_val for v in o_val):
-                return {cls.label: dwc.SEP.join(o_val)}
-
-        # Traiter found an event date but GPT did not
-        if not o_val and t_val:
-            # Does it match any other date?
-            if cls.wildcard(other, "date"):
-                return {}
-            raise ValueError(f"MISSING in OpenAI output {cls.label} = {t_val}")
-
-        # Neither found an event date
-        if not o_val:
+        if not o_val or not t_val:
             return {}
 
-        # GPT found a date, and it matches a date in traiter or traiter did not find one
-        if not t_val or o_val == t_val or o_val in t_val:
-            obj = {cls.label: o_val}
-            if o_verbatim:
-                obj[cls.verbatim_label] = o_verbatim
-            elif t_verbatim:
-                obj[cls.verbatim_label] = t_verbatim
-            return obj
+        o_dates = cls.convert_openai_dates(o_val)
+        t_dates = cls.convert_traiter_dates(t_val, t_verbatim)
 
-        # GPT's date matches Traiter's verbatim date. Use traiter's version
-        if o_val == t_val:
-            return {
-                cls.label: t_val,
-                cls.verbatim_label: t_verbatim,
-            }
+        dates = []
+        for o_date in o_dates:
+            for t_date in t_dates:
+                if o_date == t_date.date or o_date == t_date.verb:
+                    dates.append(t_date)
 
-        # Try converting the OpenAI date
-        if o_val != t_val:
-            try:
-                new = parser.parse(o_val).date().isoformat()[:10]
-            except (parser.ParserError, IllegalMonthError):
-                raise ValueError(f"MISMATCH {cls.label}: {o_val} != {t_val}")
+        if not dates:
+            return {}
 
-            if new in t_val:
-                return {
-                    cls.label: t_val,
-                    cls.verbatim_label: t_verbatim,
-                }
+        return {
+            cls.label: dwc.SEP.join([d.raw_date for d in dates]),
+            cls.verbatim_label: dwc.SEP.join([d.raw_verb for d in dates]),
+        }
 
-            raise ValueError(f"MISMATCH {cls.label}: {o_val} != {t_val}")
+    @classmethod
+    def convert_openai_dates(cls, o_val):
+        """Convert OpenAI value(s) to a list of dates; it may be a proper date, a dict,
+        a list, or a verbatim date"""
+        # Put dates into list form
+        if o_val and isinstance(o_val, str):
+            date_list = [o_val]
 
-        raise ValueError(f"UNKNOWN error in {cls.label}")
+        elif o_val and isinstance(o_val, list):
+            date_list = [v for v in o_val if isinstance(v, str)]
+
+        elif o_val and isinstance(o_val, dict):
+            sub_keys = list(o_val.keys())
+            if all(k in sub_keys for k in ("year", "month", "day")):
+                date_list = [f"{o_val['year']}-{o_val['month']}-{o_val['day']}"]
+            else:
+                raise ValueError(f"BAD FORMAT in OpenAI {cls.label} {o_val}")
+
+        else:
+            raise ValueError(f"BAD FORMAT in OpenAI {cls.label} {o_val}")
+
+        # Convert the dates
+        try:
+            o_dates = []
+            for o_date in date_list:
+                dt = cls.roman_re.sub(cls.roman_replace, o_date)
+                dt = parser.parse(dt).date()
+                o_dates.append(dt)
+        except (parser.ParserError, IllegalMonthError):
+            raise ValueError(f"BAD FORMAT in OpenAI {cls.label} {o_val}")
+
+        return o_dates
+
+    @classmethod
+    def roman_replace(cls, match):
+        return cls.roman.get(match.group(0).lower())
+
+    @classmethod
+    def convert_traiter_dates(cls, t_val, t_verbatim):
+        t_dates = []
+        try:
+            raw_dates = t_val.split(dwc.SEP)
+            raw_verbs = [cls.clean_re.sub("", d) for d in t_verbatim.split(dwc.SEP)]
+
+            for raw_date, raw_verb in zip(raw_dates, raw_verbs):
+                verb = cls.roman_re.sub(cls.roman_replace, raw_verb)
+                verb = parser.parse(verb).date()
+
+                t_dates.append(
+                    TraiterDate(
+                        raw_date,
+                        parser.parse(raw_date).date(),
+                        raw_verb,
+                        verb,
+                    )
+                )
+        except (parser.ParserError, IllegalMonthError):
+            raise ValueError(f"BAD FORMAT in Traiter {cls.label} {t_val}")
+        return t_dates
