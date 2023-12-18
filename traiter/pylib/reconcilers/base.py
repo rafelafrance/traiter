@@ -28,7 +28,7 @@ class Base:
 
     @classmethod
     def reconcile(
-        cls, traiter: dict[str, Any], other: dict[str, Any]
+        cls, traiter: dict[str, Any], other: dict[str, Any], text: str
     ) -> dict[str, str]:
         raise NotImplementedError
 
@@ -54,6 +54,9 @@ class Base:
 
     @staticmethod
     def get_aliases(*args) -> list[str]:
-        keys = " ".join(args).split()
-        keys += [k.lower() for k in keys]
-        return sorted(set(keys))
+        old = " ".join(args).split()
+        keys = {}
+        for k in old:
+            keys[k] = 1
+            keys[k.lower()] = 1
+        return list(keys.keys())

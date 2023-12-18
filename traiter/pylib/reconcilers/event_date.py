@@ -50,7 +50,7 @@ class EventDate(Base):
 
     @classmethod
     def reconcile(
-        cls, traiter: dict[str, Any], other: dict[str, Any]
+        cls, traiter: dict[str, Any], other: dict[str, Any], text: str
     ) -> dict[str, Any]:
         o_val = cls.search(other, cls.aliases)
         t_val = traiter.get(cls.label, "")

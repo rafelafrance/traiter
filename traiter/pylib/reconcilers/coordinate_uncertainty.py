@@ -10,7 +10,7 @@ class CoordinateUncertainty(Base):
 
     @classmethod
     def reconcile(
-        cls, traiter: dict[str, Any], other: dict[str, Any]
+        cls, traiter: dict[str, Any], other: dict[str, Any], text: str
     ) -> dict[str, str]:
         o_val = cls.search(other, cls.aliases)
 

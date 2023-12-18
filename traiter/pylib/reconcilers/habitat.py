@@ -8,7 +8,9 @@ class Habitat(Base):
     aliases = Base.get_aliases(label)
 
     @classmethod
-    def reconcile(cls, _: dict[str, Any], other: dict[str, Any]) -> dict[str, Any]:
+    def reconcile(
+        cls, traiter: dict[str, Any], other: dict[str, Any], text: str
+    ) -> dict[str, Any]:
         if o_val := cls.search(other, cls.aliases):
             return {cls.label: o_val}
         return {}
