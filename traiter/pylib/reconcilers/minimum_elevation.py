@@ -38,7 +38,11 @@ class MinimumElevationInMeters(Base):
             return {cls.label: t_val}
 
         # A simple match
-        if o_val == t_val:
+        if (
+            isinstance(o_val, float)
+            and isinstance(t_val, float)
+            and round(o_val) == round(t_val)
+        ):
             return {cls.label: o_val}
 
         # Try matching on feet
