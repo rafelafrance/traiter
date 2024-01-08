@@ -1,7 +1,7 @@
 import unittest
 
 from tests.setup import parse
-from traiter.traiter.pylib.rules.color import Color
+from traiter.pylib.rules.color import Color
 
 
 class TestColor(unittest.TestCase):

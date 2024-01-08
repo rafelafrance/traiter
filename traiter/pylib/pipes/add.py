@@ -4,9 +4,9 @@ from pathlib import Path
 
 from spacy.language import Language
 
-from traiter.traiter.pylib import term_util
-from traiter.traiter.pylib.pattern_compiler import ACCUMULATOR, Compiler
-from traiter.traiter.pylib.pipes import (
+from traiter.pylib import term_util
+from traiter.pylib.pattern_compiler import ACCUMULATOR, Compiler
+from traiter.pylib.pipes import (
     cleanup,
     debug,
     link,

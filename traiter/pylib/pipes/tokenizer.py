@@ -14,7 +14,7 @@ from spacy.language import Language
 from spacy.symbols import ORTH
 from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
 
-from traiter.traiter.pylib.rules import terms
+from traiter.pylib.rules import terms
 
 BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]
 

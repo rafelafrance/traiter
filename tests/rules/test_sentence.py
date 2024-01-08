@@ -1,7 +1,7 @@
 import unittest
 
 from tests.setup import PIPELINE
-from traiter.traiter.pylib.util import shorten
+from traiter.pylib.util import shorten
 
 
 class TestSentence(unittest.TestCase):
