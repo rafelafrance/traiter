@@ -11,7 +11,6 @@ from pathlib import Path
 
 from spacy.lang.char_classes import ALPHA, LIST_HYPHENS, LIST_PUNCT, LIST_QUOTES
 from spacy.language import Language
-from spacy.symbols import ORTH
 from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
 
 from traiter.pylib.rules import terms
@@ -94,7 +93,7 @@ def append_infix_regex(nlp: Language, infixes: list[str] | None = None):
 
 def append_abbrevs(nlp: Language, abbrevs: list[str]):
     for abbrev in abbrevs:
-        nlp.tokenizer.add_special_case(abbrev, [{ORTH: abbrev}])
+        nlp.tokenizer.add_special_case(abbrev, [{"ORTH": abbrev}])
 
 
 def remove_special_case(nlp: Language, remove: list[str]):
@@ -103,10 +102,10 @@ def remove_special_case(nlp: Language, remove: list[str]):
 
     This is a workaround for when these special cases interfere with matcher rules.
     """
-    specials = [r for r in nlp.tokenizer.rules if r not in remove]
+    specials = (r for r in nlp.tokenizer.rules if r not in remove)
     nlp.tokenizer.rules = None
     for text in specials:
-        nlp.tokenizer.add_special_case(text, [{ORTH: text}])
+        nlp.tokenizer.add_special_case(text, [{"ORTH": text}])
 
 
 def get_states():

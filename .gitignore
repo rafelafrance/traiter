@@ -28,6 +28,7 @@ MANIFEST
 
 # Linters
 .pylintrc
+.ruff_cache/
 
 # Environment
 .env
@@ -39,7 +40,6 @@ venv/
 *.swp
 __pycache__
 .ipynb_checkpoints/
-.ruff_cache/
 
 # docs
 docs/old/
