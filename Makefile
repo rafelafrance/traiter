@@ -34,12 +34,12 @@ setup_subtrees:
 	git remote add -f common_utils https://github.com/rafelafrance/common_utils.git
 	git checkout -b upstream/util common_utils/main
 	git subtree split -q --squash --prefix=util --annotate='[util] ' --rejoin -b merging/util
-	git checkout main
+	git checkout master
 	git subtree add -q --squash --prefix=util merging/util
 
 fetch_subtrees:
 	git checkout upstream/util
 	git pull common_utils/main
 	git subtree split -q --squash --prefix=util --annotate='[util] ' --rejoin -b merging/util
-	git checkout main
+	git checkout master
 	git subtree merge -q --squash --prefix=util merging/util
