@@ -9,10 +9,11 @@ from pathlib import Path
 
 import pandas as pd
 import regex as re
+from pylib import spell_well
+from pylib.rules import terms
 from tqdm import tqdm
 
-from pylib import log, spell_well
-from pylib.rules import terms
+from util.pylib import log
 
 CHUNK = 1_000_000
 
