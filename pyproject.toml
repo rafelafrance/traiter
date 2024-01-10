@@ -11,10 +11,12 @@ license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
 requires-python = ">=3.11"
 dependencies = [
-    "regex",
+    "ftfy",
     "pandas",
     "python-dateutil",
+    "regex",
     "spacy",
+    "tomlkit",
     "tqdm",
 ]
 optional-dependencies.dev = [
@@ -24,6 +26,15 @@ optional-dependencies.dev = [
     "pre-commit-hooks",
     "python-lsp-server[all]",
     "ruff",
+]
+
+[tool.common_utils]
+base-dependencies = [
+    "regex",
+    "pandas",
+    "python-dateutil",
+    "spacy",
+    "tqdm",
 ]
 
 [tool.setuptools]
