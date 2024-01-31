@@ -21,7 +21,8 @@ dev: venv
 	source $(VENV)/bin/activate
 	$(PIP_INSTALL) -U pip setuptools wheel
 	$(PIP_INSTALL) -e .[dev]
-	$(PIP_INSTALL) -e ../../misc/common_utils
+	$(PIP_INSTALL) ../../misc/common_utils/dist/common_utils-0.0.1.tar.gz
+	#$(PIP_INSTALL) -e ../../misc/common_utils/dist/common_utils-0.0.1.tar.gz
 	$(SPACY_MODEL)
 	pre-commit install
 

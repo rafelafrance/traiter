@@ -18,13 +18,16 @@ dependencies = [
     "tqdm",
 ]
 optional-dependencies.dev = [
-    "ipython",
+    "build",
     "neovim",
     "pre-commit",
     "pre-commit-hooks",
     "python-lsp-server[all]",
     "ruff",
 ]
+
+[project.scripts]
+create_spell_well_from_idigbio = "traiter.create_spell_well_from_idigbio:main"
 
 [tool.setuptools]
 py-modules = []
