@@ -27,7 +27,7 @@ optional-dependencies.dev = [
 ]
 
 [project.scripts]
-create_spell_well_from_idigbio = "traiter.create_spell_well_from_idigbio:main"
+create-spell-well-from-idigbio = "traiter.create_spell_well_from_idigbio:main"
 
 [tool.setuptools]
 py-modules = []
