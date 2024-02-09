@@ -32,6 +32,11 @@ create-spell-well-from-idigbio = "traiter.create_spell_well_from_idigbio:main"
 [tool.setuptools]
 py-modules = []
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["traiter"]
+namespaces = false
+
 [tool.ruff]
 target-version = "py311"
 
