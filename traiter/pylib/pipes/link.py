@@ -197,4 +197,11 @@ class LinkTraits:
                 parent_value = getattr(match.parent_ent._.trait, match.parent_trait)
                 setattr(match.child_ent._.trait, match.parent_trait, parent_value)
 
+            # Update the distance from child to parent
+            dist_trait = f"_{match.parent_trait}_dist"
+            if hasattr(match.child_ent._.trait, dist_trait):
+                dist1 = abs(match.parent_ent.end - match.child_ent.start) + 1
+                dist2 = abs(match.child_ent.end - match.parent_ent.start) + 1
+                setattr(match.child_ent._.trait, dist_trait, min(dist1, dist2))
+
         return doc
