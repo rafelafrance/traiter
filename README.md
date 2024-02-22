@@ -51,9 +51,10 @@ python3 -m spacy download en_core_web_sm
 This repository is a library for other Traiter projects and is not designed to be run directly.
 
 ## Tests
-You can run the tests like so:
+
+There are tests which you can run like so:
 ```bash
-cd /my/path/to/traiter
-python -m unittest discover
+expor  MOCK_DATA=1; python -m unittest discover
 ```
-*Note that I only test code that is in this repository and not foreign model like ChatGPT.*
+
+Please `export MOCK_DATA=0` before you run any scripts on real data.
