@@ -54,7 +54,7 @@ This repository is a library for other Traiter projects and is not designed to b
 
 There are tests which you can run like so:
 ```bash
-export  MOCK_DATA=1; python -m unittest discover
+export MOCK_DATA=1; python -m unittest discover
 ```
 
 Please `export MOCK_DATA=0` before you run any scripts on real data.

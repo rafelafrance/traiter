@@ -62,12 +62,14 @@ class LatLong(Base):
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="lat_long_terms", path=cls.all_csvs)
         add.trait_pipe(nlp, name="lat_long_patterns", compiler=cls.lat_long_patterns())
+        # add.debug_tokens(nlp)  # #############################################
         add.trait_pipe(
             nlp,
             name="lat_long_plus_patterns",
             overwrite=["lat_long"],
             compiler=cls.lat_long_plus_patterns(),
         )
+        # add.debug_tokens(nlp)  # #############################################
         add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
     @classmethod
@@ -75,7 +77,7 @@ class LatLong(Base):
         decoder = {
             "(": {"TEXT": {"IN": const.OPEN}},
             ")": {"TEXT": {"IN": const.CLOSE}},
-            ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
+            ",": {"TEXT": {"REGEX": r"^[,;._:]$"}},
             "/": {"TEXT": {"IN": const.SLASH}},
             "-": {"TEXT": {"IN": const.DASH}},
             "'s": {"LOWER": "'s"},
@@ -109,21 +111,22 @@ class LatLong(Base):
                 patterns=[
                     (
                         "label* sp? [-]? 99.0 deg 99.0? min* 99.0? sec* ,* sp? "
-                        "           [-]? 99.0 deg 99.0? min* 99.0? sec* (? datum* )?"
+                        "           [-]? 99.0 deg 99.0? min* 99.0? sec* ,* (? datum* )?"
                     ),
                     (
                         "label* sp? [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* sp? "
-                        "           [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  "
+                        "           [-]? 99.0 deg* 99.0? min* 99.0? sec* dir  ,* "
                         "(? datum* )?"
                     ),
                     (
                         "label* sp? dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
-                        "           dir [-]? 99.0 deg* 99.0? min* 99.0? sec* "
+                        "           dir [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* "
                         "(? datum* )?"
                     ),
                     (
                         "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* sp? "
-                        "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
+                        "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* "
+                        "(? datum* )?"
                     ),
                     (
                         "[-]? 99.0 deg* 99.0? min* 99.0? sec* dir? key ,* sp? "
@@ -133,11 +136,11 @@ class LatLong(Base):
                         "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] sp? "
                         "99.0 deg* 99.0? min* 99.0? sec* dir? ,*  sp? "
                         "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? [-] sp? "
-                        "99.0 deg* 99.0? min* 99.0? sec* dir? (? datum* )?"
+                        "99.0 deg* 99.0? min* 99.0? sec* dir? ,* (? datum* )?"
                     ),
                     (
                         "label* sp? dir99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
-                        "           dir99.0 deg* 99.0? min* 99.0? sec* (? datum* )?"
+                        "           dir99.0 deg* 99.0? min* 99.0? sec* ,* (? datum* )?"
                     ),
                     (
                         "label* sp? [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? ,* sp? "
@@ -146,10 +149,10 @@ class LatLong(Base):
                     ),
                     (
                         "label* sp? [-]? 99.0 deg 99.0? min* -? 99.0? 's ,* sp? "
-                        "          [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? "
+                        "          [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? ,* "
                         "(? datum* )?"
                     ),
-                    "label* sp? [-]? 99.99 dir? ,* sp? [-]? 99.99 dir? (? datum* )?",
+                    "label* sp? [-]? 99.99 dir? ,* sp? [-]? 99.99 dir? ,* (? datum* )?",
                 ],
             ),
         ]
@@ -158,14 +161,14 @@ class LatLong(Base):
     def lat_long_plus_patterns(cls):
         decoder = {
             "-": {"TEXT": {"IN": const.DASH}},
-            ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
+            ",": {"TEXT": {"REGEX": r"^[,;._:]$"}},
             "(": {"TEXT": {"IN": const.OPEN}},
             ")": {"TEXT": {"IN": const.CLOSE}},
             "datum": {"ENT_TYPE": "datum"},
             "datum_label": {"ENT_TYPE": "datum_label"},
             "m": {"ENT_TYPE": {"IN": ["metric_length", "imperial_length"]}},
             "99.0": {"TEXT": {"REGEX": rf"^{cls.float_re}$"}},
-            "+99.0": {"TEXT": {"REGEX": r"^(±|\+|-)?\d+(\.\d+)?\Z"}},
+            "+99.0": {"TEXT": {"REGEX": r"^(±|\+|-)?\d+(\.\d+)?$"}},
             "uncert": {"ENT_TYPE": "uncertain_label"},
             "lat_long": {"ENT_TYPE": "lat_long"},
             "[+]": {"TEXT": {"REGEX": cls.plus}},
@@ -179,7 +182,7 @@ class LatLong(Base):
                 keep=["lat_long"],
                 decoder=decoder,
                 patterns=[
-                    "lat_long+                            datum_label+ ,* (? datum+ )?",
+                    "lat_long+                         ,* datum_label+ ,* (? datum+ )?",
                     "lat_long+ ,? uncert? ,?   +99.0 m ,* datum_label* ,* (? datum* )?",
                     (
                         "lat_long+ ,? uncert? ,? [+]* 99.0 m ,* "
@@ -200,6 +203,7 @@ class LatLong(Base):
         coords = re.sub(r"\s(:)", r"\1", coords)
         coords = re.sub(r"(?<=\d)([NESWnesw])", r" \1", coords)
         coords = re.sub(r"-\s(?=\d)", r"-", coords)
+        coords = re.sub(r"\s*[,;._:]\s*$", "", coords)
         return " ".join(coords.split())
 
     @classmethod

@@ -3,32 +3,23 @@
 .spyproject/
 .vscode/
 .idea/
-.mypy_cache/
+.~*
+*-journal
 
 # Distribution / packaging
-.Python
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
 lib/
 lib64/
 parts/
 sdist/
 var/
 wheels/
-pip-wheel-metadata/
-share/python-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
 # Linters
-.pylintrc
 .ruff_cache/
+.mypy_cache/
 
 # Environment
 .env
@@ -53,14 +44,3 @@ data/
 temp/
 *junk*
 old/
-
-# Test
-.pytest_cache/
-
-# Other code
-args/
-src/
-
-# Editor files
-.~*
-*-journal

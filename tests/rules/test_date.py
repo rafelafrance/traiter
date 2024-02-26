@@ -297,3 +297,16 @@ class TestDate(unittest.TestCase):
                 ),
             ],
         )
+
+    def test_date_23(self):
+        self.assertEqual(
+            parse("Date 9-IV-1977"),
+            [
+                Date(
+                    date="1977-04-09",
+                    trait="date",
+                    start=0,
+                    end=14,
+                ),
+            ],
+        )

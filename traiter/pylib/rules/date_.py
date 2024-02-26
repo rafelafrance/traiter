@@ -23,8 +23,7 @@ class Date(Base):
     # Class vars ----------
     date_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "date_terms.csv"
     month_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "month_terms.csv"
-    numeric_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "numeric_terms.csv"
-    all_csvs: ClassVar[list[Path]] = [date_csv, month_csv, numeric_csv]
+    all_csvs: ClassVar[list[Path]] = [date_csv, month_csv]
     sep: ClassVar[str] = "(.,;/_'-"
     replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
     # ---------------------
@@ -105,7 +104,7 @@ class Date(Base):
         century_adjust = None
 
         for token in ent:
-            # Get the numeric parts
+            # Get numeric parts, they're sometimes smashed together into 1 token
             if re.match(rf"^[\d{cls.sep}]+$", token.text):
                 parts = [p for p in re.split(rf"[{cls.sep}]+", token.text) if p]
                 if parts:

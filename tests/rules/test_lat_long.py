@@ -99,7 +99,7 @@ class TestLatLong(unittest.TestCase):
                     lat_long="""N 33 deg 27' 33", W 111 deg 56' 35\"""",
                     trait="lat_long",
                     start=0,
-                    end=35,
+                    end=36,
                 ),
             ],
         )
@@ -179,7 +179,7 @@ class TestLatLong(unittest.TestCase):
             parse("""Lat. 13.5° - 14°55'S Long. 60.2° - 61°50'W."""),
             [
                 LatLong(
-                    lat_long="""Lat. 13.5° -14° 55'S Long. 60.2° -61° 50' W.""",
+                    lat_long="""Lat. 13.5° -14° 55'S Long. 60.2° -61° 50' W""",
                     trait="lat_long",
                     start=0,
                     end=43,
@@ -211,7 +211,7 @@ class TestLatLong(unittest.TestCase):
                     lat_long="N41° 50.046’ W087° 54.172’",
                     trait="lat_long",
                     start=0,
-                    end=26,
+                    end=27,
                 ),
             ],
         )

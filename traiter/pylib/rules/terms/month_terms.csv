@@ -92,3 +92,15 @@ month,SEPT,text,September
 month,SOFT,text,September
 month,SOFT.,text,September
 month,september,lower,September
+roman,i,lower,January
+roman,ii,lower,February
+roman,iii,lower,March
+roman,iv,lower,April
+roman,ix,lower,September
+roman,v,lower,May
+roman,vi,lower,June
+roman,vii,lower,July
+roman,viii,lower,August
+roman,X,text,October
+roman,xi,lower,Novenber
+roman,xii,lower,December
