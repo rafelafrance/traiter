@@ -70,6 +70,7 @@ month,oct,text,October
 month,Oct.,text,October
 month,Oct,text,October
 month,OCT.,text,October
+month,OCt.,text,October
 month,OCT,text,October
 month,0ct,text,October
 month,0ct.,text,October
@@ -95,12 +96,19 @@ month,september,lower,September
 roman,i,lower,January
 roman,ii,lower,February
 roman,iii,lower,March
+roman,111,lower,March
 roman,iv,lower,April
+roman,1v,lower,April
 roman,ix,lower,September
 roman,v,lower,May
 roman,vi,lower,June
+roman,v1,lower,June
+roman,v11,lower,July
 roman,vii,lower,July
 roman,viii,lower,August
+roman,v111,lower,August
 roman,X,text,October
+roman,x1,lower,Novenber
 roman,xi,lower,Novenber
+roman,x11,lower,December
 roman,xii,lower,December

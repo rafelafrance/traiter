@@ -319,3 +319,16 @@ class TestLatLong(unittest.TestCase):
                 ),
             ],
         )
+
+    def test_lat_long_22(self):
+        self.assertEqual(
+            parse("""Lat: N 39' 50' 22" Long: W 121° 02' 45" """),
+            [
+                LatLong(
+                    lat_long="""Lat: N 39' 50' 22" Long: W 121° 02' 45\"""",
+                    trait="lat_long",
+                    start=0,
+                    end=39,
+                ),
+            ],
+        )

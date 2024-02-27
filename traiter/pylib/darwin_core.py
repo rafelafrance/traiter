@@ -45,13 +45,13 @@ class DarwinCore:
     def to_dict(self) -> dict:
         out = {}
 
-        for key, values in self.props.items():
-            out[key] = self.convert_value_list(key, values)
+        for key in sorted(self.props.keys()):
+            out[key] = self.convert_value_list(key, self.props[key])
 
         if self.dyn_props:
             out[DYN] = {}
-            for key, values in self.dyn_props.items():
-                out[DYN][key] = self.convert_value_list(key, values)
+            for key in sorted(self.dyn_props.keys()):
+                out[DYN][key] = self.convert_value_list(key, self.dyn_props[key])
 
         return out
 

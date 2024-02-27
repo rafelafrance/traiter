@@ -124,6 +124,11 @@ class LatLong(Base):
                         "(? datum* )?"
                     ),
                     (
+                        "key ,* dir? [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* sp? "
+                        "key ,* dir? [-]? 99.0 deg* 99.0? min* 99.0? sec* ,* "
+                        "(? datum* )?"
+                    ),
+                    (
                         "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* sp? "
                         "key ,* [-]? 99.0 deg* 99.0? min* 99.0? sec* dir? ,* "
                         "(? datum* )?"
