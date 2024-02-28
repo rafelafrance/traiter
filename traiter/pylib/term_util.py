@@ -40,6 +40,11 @@ def get_labels(
     return sorted(labels)
 
 
+def delete_terms(terms: list, patterns: list[str] | str) -> list:
+    patterns = patterns if isinstance(patterns, list) else patterns.split()
+    terms = [t for t in terms if t["pattern"] not in patterns]
+
+
 def labels_to_remove(
     csv_paths: Path | Iterable[Path],
     *,
