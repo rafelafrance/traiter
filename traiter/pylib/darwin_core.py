@@ -106,6 +106,10 @@ class DarwinCore:
         namespace = DC if name in DUBLIN else DWC
         return name if name.startswith(namespace) else namespace + name
 
+    @staticmethod
+    def remove_ns(label):
+        return label.split(":")[-1]
+
     def items(self):
         yield from {k: v for k, v in self.props.items() if k != DYN}.items()
         if self.props[DYN]:
