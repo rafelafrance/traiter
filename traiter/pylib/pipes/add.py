@@ -99,12 +99,12 @@ def trait_pipe(
         nlp.add_pipe(merge_selected.MERGE_SELECTED, name=name, config=config)
 
 
-def cleanup_pipe(nlp: Language, *, name: str, delete=None):
+def cleanup_pipe(nlp: Language, *, name: str, delete=None, clear=True):
     if delete:
         delete = delete if isinstance(delete, list) else [delete]
         ACCUMULATOR.delete(delete)
 
-    config = {"keep": ACCUMULATOR.keep}
+    config = {"keep": ACCUMULATOR.keep, "clear": clear}
     nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config)
 
 
