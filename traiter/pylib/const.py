@@ -1,7 +1,7 @@
 import string
 from pathlib import Path
 
-from spacy.lang.char_classes import HYPHENS, LIST_HYPHENS, LIST_QUOTES
+from spacy.lang.char_classes import HYPHENS, LIST_HYPHENS
 
 # ---------------------
 # This points to the client's data directory not to the data directory here
@@ -64,7 +64,11 @@ PLUS = " + ".split()
 SEMICOLON = " ; ".split()
 SLASH = " / ".split()
 Q_MARK = " ? ".split()
-QUOTE = LIST_QUOTES
+
+D_QUOTE = ' " ” “ '.split()
+S_QUOTE = " ' ` ‘ ´ ’ ".split()
+QUOTE = D_QUOTE + S_QUOTE
+
 LETTERS = list(string.ascii_lowercase)
 
 TEMP = ["\\" + x for x in CLOSE]
