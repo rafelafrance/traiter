@@ -11,7 +11,16 @@ elev_label,cc.
 elev_label,el
 elev_label,el.
 elev_label,elev
+elev_label,elev g.t.
+elev_label,elev g . t.
+elev_label,elev g . t .
 elev_label,elev.
+elev_label,elev. g.t.
+elev_label,elev. g . t.
+elev_label,elev. g . t .
 elev_label,elevation
+elev_label,elevation g.t.
+elev_label,elevation g . t.
+elev_label,elevation g . t .
 elev_label,pass
 elev_label,pass.

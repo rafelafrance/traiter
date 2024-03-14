@@ -8,6 +8,7 @@ from traiter.pylib.rules.habitat import Habitat
 from traiter.pylib.rules.lat_long import LatLong
 from traiter.pylib.rules.trs import TRS
 from traiter.pylib.rules.utm import UTM
+from traiter.pylib.rules.uuid import Uuid
 
 
 def build():
@@ -20,6 +21,7 @@ def build():
     nlp.add_pipe(sentence.SENTENCES, before="parser")
 
     Color.pipe(nlp)
+    Uuid.pipe(nlp)
     Date.pipe(nlp)
     Elevation.pipe(nlp)
     LatLong.pipe(nlp)

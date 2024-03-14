@@ -18,7 +18,7 @@ from .base import Base
 @dataclass(eq=False)
 class Elevation(Base):
     # Class vars ----------
-    float_re: ClassVar[str] = r"^(\d[\d,.]+)\Z"
+    float_re: ClassVar[str] = r"^(\d[\d,.]+)$"
     all_units: ClassVar[list[str]] = ["metric_length", "imperial_length"]
     elevation_csv: ClassVar[Path] = (
         Path(__file__).parent / "terms" / "elevation_terms.csv"
@@ -65,6 +65,7 @@ class Elevation(Base):
             name="elevation_patterns",
             compiler=cls.elevation_compilers(),
         )
+        # add.debug_tokens(nlp)  # ##########################################
         add.cleanup_pipe(nlp, name="elevation_cleanup")
 
     @classmethod
@@ -81,8 +82,8 @@ class Elevation(Base):
                     "-/to": {"LOWER": {"IN": [*const.DASH, "to", "_"]}, "OP": "+"},
                     "/": {"TEXT": {"IN": const.SLASH}},
                     "99": {"TEXT": {"REGEX": cls.float_re}},
-                    ":": {"TEXT": {"REGEX": rf"^{label_ender}+\Z"}},
-                    ",": {"TEXT": {"REGEX": rf"^{label_ender}+\Z"}},
+                    ":": {"TEXT": {"REGEX": rf"^{label_ender}+$"}},
+                    ",": {"TEXT": {"REGEX": rf"^{label_ender}+$"}},
                     "about": {"ENT_TYPE": "about_term"},
                     "label": {"ENT_TYPE": "elev_label"},
                     "m": {"ENT_TYPE": {"IN": cls.all_units}},
