@@ -18,7 +18,7 @@ from .base import Base
 class TRS(Base):
     # Class vars ----------
     trs_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "trs_terms.csv"
-    replace: ClassVar[dict[str, str]] = term_util.term_data([trs_csv], "replace")
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table([trs_csv], "replace")
     dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
     min_len: ClassVar[int] = 2
     # ---------------------

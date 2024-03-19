@@ -30,8 +30,8 @@ class LatLong(Base):
     )
     unit_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_length_terms.csv"
     all_csvs: ClassVar[list[Path]] = [lat_long_csv, unit_csv, datum_csv]
-    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
-    factors_cm: ClassVar[dict[str, float]] = term_util.term_data(
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table(all_csvs, "replace")
+    factors_cm: ClassVar[dict[str, float]] = term_util.look_up_table(
         unit_csv,
         "factor_cm",
         float,
@@ -149,12 +149,12 @@ class LatLong(Base):
                     ),
                     (
                         "label* sp? [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? ,* sp? "
-                        "          [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? "
+                        "           [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? "
                         "(? datum* )?"
                     ),
                     (
                         "label* sp? [-]? 99.0 deg 99.0? min* -? 99.0? 's ,* sp? "
-                        "          [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? ,* "
+                        "           [-]? 99.0 deg 99.0? min* -? 99.0? sec* dir? ,* "
                         "(? datum* )?"
                     ),
                     "label* sp? [-]? 99.99 dir? ,* sp? [-]? 99.99 dir? ,* (? datum* )?",
@@ -181,10 +181,9 @@ class LatLong(Base):
         }
         return [
             Compiler(
-                label="lat_long_uncertain",
-                id="lat_long",
-                on_match="lat_long_uncertain",
-                keep=["lat_long"],
+                label="lat_long",
+                on_match="lat_long_plus",
+                keep="lat_long",
                 decoder=decoder,
                 patterns=[
                     "lat_long+                         ,* datum_label+ ,* (? datum+ )?",
@@ -246,7 +245,7 @@ class LatLong(Base):
         return trait
 
     @classmethod
-    def lat_long_uncertain(cls, ent):
+    def lat_long_plus(cls, ent):
         value = 0.0
         unit = []
         datum = []
@@ -290,9 +289,7 @@ class LatLong(Base):
         datum = "".join(datum)
         kwargs["datum"] = cls.replace.get(datum, datum) if datum else None
 
-        trait = super().from_ent(ent, **kwargs)
-        trait.trait = "lat_long"
-        return trait
+        return LatLong.from_ent(ent, **kwargs)
 
 
 @registry.misc("lat_long_match")
@@ -300,6 +297,6 @@ def lat_long_match(ent):
     return LatLong.lat_long_match(ent)
 
 
-@registry.misc("lat_long_uncertain")
-def lat_long_uncertain(ent):
-    return LatLong.lat_long_uncertain(ent)
+@registry.misc("lat_long_plus")
+def lat_long_plus(ent):
+    return LatLong.lat_long_plus(ent)

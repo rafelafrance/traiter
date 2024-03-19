@@ -17,8 +17,8 @@ from .base import Base
 class Color(Base):
     # Class vars ----------
     color_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "color_terms.csv"
-    replace: ClassVar[dict[str, str]] = term_util.term_data(color_csv, "replace")
-    remove: ClassVar[dict[str, int]] = term_util.term_data(color_csv, "remove", int)
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table(color_csv, "replace")
+    remove: ClassVar[dict[str, int]] = term_util.look_up_table(color_csv, "remove", int)
     # ---------------------
 
     color: str = None

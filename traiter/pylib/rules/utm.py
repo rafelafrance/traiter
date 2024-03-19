@@ -23,7 +23,7 @@ class UTM(Base):
     utm_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "utm_terms.csv"
     unit_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_length_terms.csv"
     all_csvs: ClassVar[list[Path]] = [utm_csv, datum_csv, unit_csv]
-    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table(all_csvs, "replace")
     dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
     # ---------------------
 

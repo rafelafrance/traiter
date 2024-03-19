@@ -28,8 +28,8 @@ class Elevation(Base):
     tic_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "unit_tic_terms.csv"
     all_csvs: ClassVar[list[Path]] = [elevation_csv, unit_csv, about_csv, tic_csv]
 
-    replace: ClassVar[dict[str, str]] = term_util.term_data(all_csvs, "replace")
-    factors_cm: ClassVar[dict[str, float]] = term_util.term_data(
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table(all_csvs, "replace")
+    factors_cm: ClassVar[dict[str, float]] = term_util.look_up_table(
         (unit_csv, tic_csv),
         "factor_cm",
         float,

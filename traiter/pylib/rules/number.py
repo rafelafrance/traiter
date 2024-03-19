@@ -1,9 +1,12 @@
 import re
 from dataclasses import dataclass
+from pathlib import Path
+from typing import ClassVar
 
 from spacy import Language, registry
 
 from traiter.pylib import const as t_const
+from traiter.pylib import term_util
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
@@ -23,8 +26,16 @@ NUMBER_COUNT = 0  # Used to rename the Number pipe
 
 @dataclass(eq=False)
 class Number(Base):
+    # Class vars ----------
+    csv: ClassVar[Path] = Path(__file__).parent / "terms" / "numeric_terms.csv"
+    numeric_terms: ClassVar[list[dict]] = term_util.read_terms(csv)
+    words: ClassVar[list[dict]] = term_util.filter_labels(numeric_terms, "number_word")
+    replace: ClassVar[dict[str, str]] = term_util.term_patterns(words, "replace", int)
+    # ---------------------
+
     number: float = None
     is_fraction: bool = None
+    is_word: bool = None
 
     def to_dwc(self, dwc) -> DarwinCore:
         return dwc.add_dyn()
@@ -33,8 +44,14 @@ class Number(Base):
     def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):
         global NUMBER_COUNT
         NUMBER_COUNT += 1
+
         add.trait_pipe(
             nlp, name=f"fraction_{NUMBER_COUNT}", compiler=cls.fraction_patterns()
+        )
+        # add.debug_tokens(nlp)  # ###########################################
+
+        add.trait_pipe(
+            nlp, name=f"number_word_{NUMBER_COUNT}", compiler=cls.number_word_patterns()
         )
         # add.debug_tokens(nlp)  # ###########################################
 
@@ -62,6 +79,23 @@ class Number(Base):
                     " 99.0 ",
                     " 99 , 999.0 ",
                     " .99 ",
+                ],
+            ),
+        ]
+
+    @classmethod
+    def number_word_patterns(cls):
+        decoder = {
+            "word": {"ENT_TYPE": "number_word"},
+        }
+        return [
+            Compiler(
+                label="number",
+                keep="number",
+                on_match="number_word_match",
+                decoder=decoder,
+                patterns=[
+                    " word ",
                 ],
             ),
         ]
@@ -108,10 +142,27 @@ class Number(Base):
 
         return trait
 
+    @classmethod
+    def number_word_match(cls, ent):
+        word = ent.text.lower()
+        number = cls.replace.get(word)
+
+        trait = cls.from_ent(ent, number=number, is_word=True)
+
+        ent[0]._.trait = trait
+        ent[0]._.flag = "number"
+
+        return trait
+
 
 @registry.misc("number_match")
 def number_match(ent):
     return Number.number_match(ent)
+
+
+@registry.misc("number_word_match")
+def number_word_match(ent):
+    return Number.number_word_match(ent)
 
 
 @registry.misc("fract_match")

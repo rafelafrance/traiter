@@ -6,20 +6,30 @@ from typing import Any
 from zipfile import ZipFile
 
 
-def term_data(
+def look_up_table(
     csv_path: Path | Iterable[Path],
     field: str,
     type_=None,
 ) -> dict[str, Any]:
     paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
-    type_ = type_ if type_ else str
     data = {}
     for path in paths:
         terms = read_terms(path)
-        for term in terms:
-            value = term.get(field)
-            if value not in (None, ""):
-                data[term["pattern"]] = type_(value)
+        data |= term_patterns(terms, field, type_)
+    return data
+
+
+def term_patterns(
+    terms: list[dict[str, Any]],
+    field: str,
+    type_=None,
+) -> dict[str, Any]:
+    type_ = type_ if type_ else str
+    data = {}
+    for term in terms:
+        value = term.get(field)
+        if value not in (None, ""):
+            data[term["pattern"]] = type_(value)
     return data
 
 
@@ -43,6 +53,13 @@ def get_labels(
 def delete_terms(terms: list, patterns: list[str] | str) -> list:
     patterns = patterns if isinstance(patterns, list) else patterns.split()
     terms = [t for t in terms if t["pattern"] not in patterns]
+    return terms
+
+
+def filter_labels(terms: list, keep: list[str] | str) -> list:
+    keep = keep if isinstance(keep, list) else keep.split()
+    terms = [t for t in terms if t["label"] in keep]
+    return terms
 
 
 def labels_to_remove(

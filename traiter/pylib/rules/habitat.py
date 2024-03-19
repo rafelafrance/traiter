@@ -18,7 +18,7 @@ from .base import Base
 class Habitat(Base):
     # Class vars ----------
     habitat_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "habitat_terms.csv"
-    replace: ClassVar[dict[str, str]] = term_util.term_data(habitat_csv, "replace")
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table(habitat_csv, "replace")
     sep: ClassVar[str] = "/,-"
     # ---------------------
 
