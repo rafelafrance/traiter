@@ -21,16 +21,14 @@ DEC_RE: str = r"\.\d{1,3}"
 FACT_LEN = 2
 
 # This pipe is used multiple times
-NUMBER_COUNT = 0  # Used to rename the Number pipe
+UNIQUE = 0  # A tiebreaker used to rename the Number pipe
 
 
 @dataclass(eq=False)
 class Number(Base):
     # Class vars ----------
-    csv: ClassVar[Path] = Path(__file__).parent / "terms" / "numeric_terms.csv"
-    numeric_terms: ClassVar[list[dict]] = term_util.read_terms(csv)
-    words: ClassVar[list[dict]] = term_util.filter_labels(numeric_terms, "number_word")
-    replace: ClassVar[dict[str, str]] = term_util.term_patterns(words, "replace", int)
+    csv: ClassVar[Path] = Path(__file__).parent / "terms" / "number_word_terms.csv"
+    replace: ClassVar[dict[str, str]] = term_util.look_up_table(csv, "replace", int)
     # ---------------------
 
     number: float = None
@@ -42,22 +40,18 @@ class Number(Base):
 
     @classmethod
     def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):
-        global NUMBER_COUNT
-        NUMBER_COUNT += 1
+        global UNIQUE
+        UNIQUE += 1
+
+        add.term_pipe(nlp, name=f"number_terms_{UNIQUE}", path=cls.csv)
+
+        add.trait_pipe(nlp, name=f"fraction_{UNIQUE}", compiler=cls.fraction_patterns())
 
         add.trait_pipe(
-            nlp, name=f"fraction_{NUMBER_COUNT}", compiler=cls.fraction_patterns()
+            nlp, name=f"number_word_{UNIQUE}", compiler=cls.number_word_patterns()
         )
-        # add.debug_tokens(nlp)  # ###########################################
 
-        add.trait_pipe(
-            nlp, name=f"number_word_{NUMBER_COUNT}", compiler=cls.number_word_patterns()
-        )
-        # add.debug_tokens(nlp)  # ###########################################
-
-        add.trait_pipe(
-            nlp, name=f"number_{NUMBER_COUNT}", compiler=cls.number_patterns()
-        )
+        add.trait_pipe(nlp, name=f"number_{UNIQUE}", compiler=cls.number_patterns())
         # add.debug_tokens(nlp)  # ###########################################
 
     @classmethod
