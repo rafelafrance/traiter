@@ -4,18 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traiter"
-version = "2.2.1"
-description = "Rule-based parsers for mining text from research papers"
+version = "2.2.2"
+description = "Rule-based parsers for mining text from research sources"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
 requires-python = ">=3.11"
 dependencies = [
     "regex",
-    "pandas",
     "python-dateutil",
     "spacy",
-    "tqdm",
 ]
 optional-dependencies.dev = [
     "build",
@@ -27,7 +25,6 @@ optional-dependencies.dev = [
 ]
 
 [project.scripts]
-create-spell-well-from-idigbio = "traiter.create_spell_well_from_idigbio:main"
 
 [tool.setuptools]
 py-modules = []
