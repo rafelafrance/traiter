@@ -7,21 +7,23 @@ PYTHON=./$(VENV)/bin/$(PY_VER)
 PIP_INSTALL=$(PYTHON) -m pip install
 SPACY_MODEL=$(PYTHON) -m spacy download en_core_web_sm
 BASE=pip setuptools wheel
+ACTIVATE=. $(VENV)/bin/activate
 
 test:
+	$(ACTIVATE)
 	export MOCK_DATA=1
 	$(PYTHON) -m unittest discover
 	export MOCK_DATA=0
 
 install: venv
-	source $(VENV)/bin/activate
+	$(ACTIVATE)
 	$(PIP_INSTALL) -U $(BASE)
 	$(PIP_INSTALL) .
 	$(PIP_INSTALL) git+https://github.com/rafelafrance/common_utils.git@main#egg=common_utils
 	$(SPACY_MODEL)
 
 dev: venv
-	source $(VENV)/bin/activate
+	$(ACTIVATE)
 	$(PIP_INSTALL) -U $(BASE)
 	$(PIP_INSTALL) -e ../../misc/common_utils
 	$(PIP_INSTALL) -e .[dev]
