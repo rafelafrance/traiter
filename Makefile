@@ -9,7 +9,9 @@ SPACY_MODEL=$(PYTHON) -m spacy download en_core_web_sm
 BASE=pip setuptools wheel
 
 test:
+	export MOCK_DATA=1
 	$(PYTHON) -m unittest discover
+	export MOCK_DATA=0
 
 install: venv
 	source $(VENV)/bin/activate
