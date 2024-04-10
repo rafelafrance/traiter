@@ -41,11 +41,8 @@ You can install the requirements into your python environment like so:
 ```bash
 git clone https://github.com/rafelafrance/traiter.git
 cd /path/to/traiter
-python3 -m pip install .
-python3 -m spacy download en_core_web_sm
+make install
 ```
-
-*I recommend using a virtual environment but it's not required.*
 
 ## Run
 This repository is a library for other Traiter projects and is not designed to be run directly.
@@ -54,5 +51,5 @@ This repository is a library for other Traiter projects and is not designed to b
 
 There are tests which you can run like so:
 ```bash
-python -m unittest discover
+make test
 ```
