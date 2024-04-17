@@ -12,7 +12,6 @@ class TestTRSPatterns(unittest.TestCase):
             [
                 TRS(
                     trs="present",
-                    trait="trs",
                     start=0,
                     end=42,
                 ),
@@ -25,7 +24,6 @@ class TestTRSPatterns(unittest.TestCase):
             [
                 TRS(
                     trs="present",
-                    trait="trs",
                     start=0,
                     end=25,
                 ),
@@ -36,10 +34,9 @@ class TestTRSPatterns(unittest.TestCase):
         self.assertEqual(
             parse("""TRS: T7N R1E sec 30 39.10010 -112.298611"""),
             [
-                TRS(trs="present", trait="trs", start=0, end=19),
+                TRS(trs="present", start=0, end=19),
                 LatLong(
                     lat_long="39.10010 -112.298611",
-                    trait="lat_long",
                     start=20,
                     end=40,
                 ),
@@ -52,7 +49,6 @@ class TestTRSPatterns(unittest.TestCase):
             [
                 TRS(
                     trs="present",
-                    trait="trs",
                     start=0,
                     end=16,
                 ),
@@ -65,7 +61,6 @@ class TestTRSPatterns(unittest.TestCase):
             [
                 TRS(
                     trs="present",
-                    trait="trs",
                     start=13,
                     end=29,
                 ),
@@ -78,7 +73,6 @@ class TestTRSPatterns(unittest.TestCase):
             [
                 TRS(
                     trs="present",
-                    trait="trs",
                     start=0,
                     end=18,
                 ),
@@ -97,7 +91,6 @@ class TestTRSPatterns(unittest.TestCase):
             [
                 TRS(
                     trs="present",
-                    trait="trs",
                     start=0,
                     end=12,
                 ),

@@ -29,8 +29,8 @@ class LinkMatch:
         self.child_idx = self.child_ent.start
         self.parent_idx = self.parent_ent.start
 
-        self.child_trait = self.child_ent._.trait.trait
-        self.parent_trait = self.parent_ent._.trait.trait
+        self.child_trait = self.child_ent._.trait._trait
+        self.parent_trait = self.parent_ent._.trait._trait
         self.reverse_weights = reverse_weights
         self.distance = self.weighted_distance()
 

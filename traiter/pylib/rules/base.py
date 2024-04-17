@@ -7,9 +7,9 @@ from traiter.pylib.darwin_core import DarwinCore
 
 @dataclass(eq=False)
 class Base:
-    trait: str = None
     start: int = None
     end: int = None
+    _trait: str = None
     _text: str = None
 
     def __eq__(self, other):
@@ -17,9 +17,9 @@ class Base:
 
     @classmethod
     def from_ent(cls, ent, **kwargs):
-        kwargs["trait"] = ent.label_
         kwargs["start"] = ent.start_char
         kwargs["end"] = ent.end_char
+        kwargs["_trait"] = ent.label_
         kwargs["_text"] = ent.text
         return cls(**kwargs)
 
@@ -44,5 +44,5 @@ class Base:
 
     @property
     def key(self):
-        k = self.key_builder(*self.trait.split("_"))
+        k = self.key_builder(*self._trait.split("_"))
         return DarwinCore.ns(k)

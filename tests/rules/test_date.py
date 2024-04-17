@@ -15,7 +15,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="2004-05-11",
-                    trait="date",
                     start=0,
                     end=11,
                 ),
@@ -29,7 +28,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="2004-05-11",
-                    trait="date",
                     start=0,
                     end=9,
                 ),
@@ -48,7 +46,6 @@ class TestDate(unittest.TestCase):
                 Date(
                     date=expect,
                     century_adjust=True,
-                    trait="date",
                     start=0,
                     end=9,
                 ),
@@ -62,7 +59,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1989-10-08",
-                    trait="date",
                     start=13,
                     end=33,
                 ),
@@ -76,7 +72,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="2011-10-20",
-                    trait="date",
                     start=8,
                     end=18,
                 ),
@@ -90,7 +85,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1968-08-11",
-                    trait="date",
                     start=27,
                     end=44,
                 ),
@@ -104,7 +98,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1975-08-20",
-                    trait="date",
                     start=0,
                     end=12,
                 ),
@@ -119,7 +112,6 @@ class TestDate(unittest.TestCase):
                 Date(
                     date="2010-02",
                     missing_day=True,
-                    trait="date",
                     start=19,
                     end=25,
                 ),
@@ -140,7 +132,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1992-06",
-                    trait="date",
                     missing_day=True,
                     start=0,
                     end=10,
@@ -155,7 +146,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1987-01-14",
-                    trait="date",
                     start=0,
                     end=12,
                 ),
@@ -177,7 +167,6 @@ class TestDate(unittest.TestCase):
                 Date(
                     century_adjust=True,
                     date="1966-06-30",
-                    trait="date",
                     start=0,
                     end=14,
                 ),
@@ -191,7 +180,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1987-01-14",
-                    trait="date",
                     start=0,
                     end=12,
                 ),
@@ -205,7 +193,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1987-01-14",
-                    trait="date",
                     start=0,
                     end=12,
                 ),
@@ -219,7 +206,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1998-05-19",
-                    trait="date",
                     start=2,
                     end=14,
                 ),
@@ -232,7 +218,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="2003-05-26",
-                    trait="date",
                     start=0,
                     end=7,
                 ),
@@ -246,7 +231,6 @@ class TestDate(unittest.TestCase):
                 Date(
                     century_adjust=True,
                     date="1970-10-10",
-                    trait="date",
                     start=0,
                     end=15,
                 ),
@@ -259,7 +243,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1977-07-30",
-                    trait="date",
                     start=0,
                     end=16,
                 ),
@@ -272,7 +255,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1899-09-03",
-                    trait="date",
                     start=0,
                     end=13,
                 ),
@@ -291,7 +273,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1998-10-19",
-                    trait="date",
                     start=6,
                     end=15,
                 ),
@@ -304,7 +285,6 @@ class TestDate(unittest.TestCase):
             [
                 Date(
                     date="1977-04-09",
-                    trait="date",
                     start=0,
                     end=14,
                 ),

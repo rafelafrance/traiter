@@ -11,7 +11,6 @@ class TestElevation(unittest.TestCase):
             parse(""" Elevation: 1463m """),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=1463.0,
                     units="m",
                     start=0,
@@ -26,7 +25,6 @@ class TestElevation(unittest.TestCase):
             parse(""" Elev: 782m. (2566 ft) """),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=782.0,
                     units="m",
                     start=0,
@@ -38,7 +36,6 @@ class TestElevation(unittest.TestCase):
     def test_elevation_03(self):
         """It handles a range."""
         traits = parse(""" Elev. 9,500-9640 ft. """)
-        self.assertEqual(traits[0].trait, "elevation")
         self.assertEqual(traits[0].start, 0)
         self.assertEqual(traits[0].end, 19)
         self.assertEqual(traits[0].units, "m")
@@ -51,7 +48,6 @@ class TestElevation(unittest.TestCase):
             parse(""" alt., 250 m. """),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=250.0,
                     units="m",
                     start=0,
@@ -65,7 +61,6 @@ class TestElevation(unittest.TestCase):
             parse("""Alto.: 834m/2735ft."""),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=834.0,
                     units="m",
                     start=0,
@@ -79,7 +74,6 @@ class TestElevation(unittest.TestCase):
             parse("""Elev. ca, 200 m."""),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=200.0,
                     units="m",
                     about=True,
@@ -94,7 +88,6 @@ class TestElevation(unittest.TestCase):
             parse("""975m/3200ft"""),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=975.0,
                     units="m",
                     start=0,
@@ -105,7 +98,6 @@ class TestElevation(unittest.TestCase):
 
     def test_elevation_08(self):
         traits = parse("""Elev. ca. 460 - 470 ft""")
-        self.assertEqual(traits[0].trait, "elevation")
         self.assertEqual(traits[0].start, 0)
         self.assertEqual(traits[0].end, 22)
         self.assertEqual(traits[0].units, "m")
@@ -117,7 +109,6 @@ class TestElevation(unittest.TestCase):
             parse("""elev: 737m. (2417 ft.)"""),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=737.0,
                     units="m",
                     start=0,
@@ -135,7 +126,6 @@ class TestElevation(unittest.TestCase):
             ),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=1400.0,
                     elevation_high=1500.0,
                     units="m",
@@ -150,7 +140,6 @@ class TestElevation(unittest.TestCase):
             parse("""Elev 85’."""),
             [
                 Elevation(
-                    trait="elevation",
                     elevation=25.908,
                     units="m",
                     start=0,

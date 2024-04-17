@@ -10,7 +10,6 @@ class TestHabitat(unittest.TestCase):
             parse("""riparian forest"""),
             [
                 Habitat(
-                    trait="habitat",
                     habitat="riparian forest",
                     start=0,
                     end=15,
@@ -23,7 +22,6 @@ class TestHabitat(unittest.TestCase):
             parse("""subalpine zone"""),
             [
                 Habitat(
-                    trait="habitat",
                     habitat="subalpine zone",
                     start=0,
                     end=14,
@@ -47,7 +45,6 @@ class TestHabitat(unittest.TestCase):
             ),
             [
                 Habitat(
-                    trait="habitat",
                     habitat=(
                         "Boggy woodland with a sparce canopy dominated by "
                         "blackgum and larch, and nice herbaceous openings"
@@ -63,7 +60,6 @@ class TestHabitat(unittest.TestCase):
             parse("""Riparian/desert scrub."""),
             [
                 Habitat(
-                    trait="habitat",
                     habitat="riparian desert scrub",
                     start=0,
                     end=21,

@@ -15,27 +15,23 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="green",
-                    trait="color",
                     start=11,
                     end=16,
                 ),
                 Color(
                     color="green-yellow",
-                    trait="color",
                     start=20,
                     end=35,
                 ),
                 Color(
                     color="purple-spotted",
                     missing=True,
-                    trait="color",
                     start=45,
                     end=63,
                 ),
                 Color(
                     color="purple-spotted",
                     missing=True,
-                    trait="color",
                     start=65,
                     end=86,
                 ),
@@ -48,19 +44,16 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=11,
                     end=24,
                 ),
                 Color(
                     color="yellow",
-                    trait="color",
                     start=28,
                     end=42,
                 ),
                 Color(
                     color="yellow",
-                    trait="color",
                     start=46,
                     end=59,
                 ),
@@ -73,13 +66,11 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="green",
-                    trait="color",
                     start=14,
                     end=20,
                 ),
                 Color(
                     color="red-tipped",
-                    trait="color",
                     start=24,
                     end=34,
                 ),
@@ -92,31 +83,26 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="white",
-                    trait="color",
                     start=7,
                     end=12,
                 ),
                 Color(
                     color="white",
-                    trait="color",
                     start=14,
                     end=19,
                 ),
                 Color(
                     color="green",
-                    trait="color",
                     start=24,
                     end=34,
                 ),
                 Color(
                     color="orange",
-                    trait="color",
                     start=36,
                     end=42,
                 ),
                 Color(
                     color="yellow",
-                    trait="color",
                     start=46,
                     end=52,
                 ),
@@ -137,43 +123,36 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="white",
-                    trait="color",
                     start=17,
                     end=22,
                 ),
                 Color(
                     color="white",
-                    trait="color",
                     start=26,
                     end=31,
                 ),
                 Color(
                     color="green-yellow",
-                    trait="color",
                     start=33,
                     end=48,
                 ),
                 Color(
                     color="yellow",
-                    trait="color",
                     start=59,
                     end=68,
                 ),
                 Color(
                     color="brown",
-                    trait="color",
                     start=72,
                     end=82,
                 ),
                 Color(
                     color="green",
-                    trait="color",
                     start=109,
                     end=120,
                 ),
                 Color(
                     color="white-longitudinal-stripes",
-                    trait="color",
                     start=124,
                     end=150,
                 ),
@@ -192,43 +171,36 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="white",
-                    trait="color",
                     start=17,
                     end=22,
                 ),
                 Color(
                     color="white",
-                    trait="color",
                     start=26,
                     end=31,
                 ),
                 Color(
                     color="green-white",
-                    trait="color",
                     start=33,
                     end=47,
                 ),
                 Color(
                     color="yellow-green",
-                    trait="color",
                     start=52,
                     end=67,
                 ),
                 Color(
                     color="yellow",
-                    trait="color",
                     start=72,
                     end=81,
                 ),
                 Color(
                     color="green-throated",
-                    trait="color",
                     start=91,
                     end=105,
                 ),
                 Color(
                     color="green-lined",
-                    trait="color",
                     start=110,
                     end=129,
                 ),
@@ -241,7 +213,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=6,
                     end=12,
                 ),
@@ -254,7 +225,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=8,
                     end=14,
                 ),
@@ -267,7 +237,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=7,
                     end=13,
                 ),
@@ -280,7 +249,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=11,
                     end=17,
                 ),
@@ -293,7 +261,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=6,
                     end=24,
                 ),
@@ -306,7 +273,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=6,
                     end=12,
                 ),
@@ -319,7 +285,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="white",
-                    trait="color",
                     start=38,
                     end=43,
                 ),
@@ -332,7 +297,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="black-dots",
-                    trait="color",
                     start=46,
                     end=59,
                 ),
@@ -345,13 +309,11 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="purple",
-                    trait="color",
                     start=7,
                     end=15,
                 ),
                 Color(
                     color="white-yellow",
-                    trait="color",
                     start=25,
                     end=42,
                 ),
@@ -364,13 +326,11 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="red",
-                    trait="color",
                     start=7,
                     end=10,
                 ),
                 Color(
                     color="yellow",
-                    trait="color",
                     start=14,
                     end=30,
                 ),
@@ -383,13 +343,11 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="green",
-                    trait="color",
                     start=20,
                     end=25,
                 ),
                 Color(
                     color="red-tinged",
-                    trait="color",
                     start=29,
                     end=43,
                 ),
@@ -405,7 +363,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=87,
                     end=96,
                 ),
@@ -419,7 +376,6 @@ class TestColor(unittest.TestCase):
             [
                 Color(
                     color="yellow",
-                    trait="color",
                     start=13,
                     end=25,
                 ),
