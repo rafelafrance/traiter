@@ -103,7 +103,7 @@ class Habitat(Base):
                 break
         habitat = " ".join(ent[i:].text.split())
         trait = super().from_ent(ent, habitat=habitat)
-        trait.trait = "habitat"
+        trait._trait = "habitat"
         return trait
 
 
