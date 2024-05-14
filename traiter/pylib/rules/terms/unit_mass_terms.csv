@@ -15,3 +15,5 @@ metric_mass,gr,g,1
 metric_mass,grams,g,1
 metric_mass,kg,kg,1000
 metric_mass,kilograms,kg,1000
+metric_mass,milligrams,mg,0.001
+metric_mass,mg,mg,0.001
