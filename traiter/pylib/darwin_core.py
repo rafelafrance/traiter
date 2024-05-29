@@ -97,9 +97,20 @@ class DarwinCore:
                 self.dyn_props[key].append(value)
         return self
 
+    def flatten(self) -> dict[str, Any]:
+        props = self.props | self.dyn_props
+        return self.format_dict(props)
+
     @staticmethod
     def format_dict(value: dict) -> dict:
-        return {k: v for k, v in value.items() if v is not None}
+        formatted = {}
+        for key, val in value.items():
+            if val is None:
+                continue
+            if isinstance(val, list) and len(val) == 1:
+                val = val[0]
+            formatted[key] = val
+        return formatted
 
     @staticmethod
     def ns(name):
