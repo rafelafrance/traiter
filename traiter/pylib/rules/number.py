@@ -10,6 +10,7 @@ from traiter.pylib import term_util
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add
+from traiter.pylib.pipes.reject_match import RejectMatch
 from traiter.pylib.rules.base import Base
 from traiter.pylib.util import to_positive_float as as_float
 
@@ -124,6 +125,9 @@ class Number(Base):
     @classmethod
     def fract_match(cls, ent):
         numbers = [as_float(t.text) for t in ent if re.match(INT_RE, t.text)]
+
+        if numbers[-1] == 0:
+            raise RejectMatch
 
         number = numbers[-2] / numbers[-1]  # Calculate the fraction part
         # Add in the whole number part
