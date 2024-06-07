@@ -2,4 +2,4 @@ label,pattern,replace,factor_cm
 imperial_length,',ft,30.48
 imperial_length,’,ft,30.48
 imperial_length,"",ft,2.54
-imperial_length,in,in,2.54
+imperial_inches,in,in,2.54
