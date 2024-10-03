@@ -1,5 +1,5 @@
 label,pattern,replace
-trs_label,trs,
+dtrs_label,trs,
 trs_label,trs:,
 sec_label,sec,
 sec_label,sec.,

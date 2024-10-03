@@ -12,7 +12,6 @@ authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
 requires-python = ">=3.11"
 dependencies = [
     "regex",
-    "pandas",
     "python-dateutil",
     "spacy",
 ]
