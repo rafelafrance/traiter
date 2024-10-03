@@ -17,10 +17,10 @@ class Base:
 
     @classmethod
     def from_ent(cls, ent, **kwargs):
-        kwargs["start"] = ent.start_char
-        kwargs["end"] = ent.end_char
-        kwargs["_trait"] = ent.label_
-        kwargs["_text"] = ent.text
+        kwargs["start"] = kwargs["start"] if kwargs.get("start") else ent.start_char
+        kwargs["end"] = kwargs["end"] if kwargs.get("end") else ent.end_char
+        kwargs["_trait"] = kwargs["_trait"] if kwargs.get("_trait") else ent.label_
+        kwargs["_text"] = kwargs["_text"] if kwargs.get("_text") else ent.text
         return cls(**kwargs)
 
     def to_dict(self) -> dict:
