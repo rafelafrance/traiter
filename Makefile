@@ -5,7 +5,7 @@ VENV=.venv
 PY_VER=python3.11
 PYTHON=./$(VENV)/bin/$(PY_VER)
 PIP_INSTALL=$(PYTHON) -m pip install
-SPACY_MODEL=$(PYTHON) -m spacy download en_core_web_sm
+SPACY_MODEL=$(PYTHON) -m spacy download en_core_web_md
 
 test: activate
 	$(PYTHON) -m unittest discover
@@ -19,7 +19,6 @@ dev: venv activate base
 	$(PIP_INSTALL) -e ../../misc/common_utils
 	$(PIP_INSTALL) -e .[dev]
 	$(SPACY_MODEL)
-	pre-commit install
 
 activate:
 	. $(VENV)/bin/activate

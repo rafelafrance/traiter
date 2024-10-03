@@ -34,7 +34,7 @@ class TestSentence(unittest.TestCase):
     def test_sentencizer_05(self):
         text = shorten(
             """
-            Plants perennial (rhizomatous), usually glabrous, sometimes sparsely hairy.
+           Plants perennial (rhizomatous), usually glabrous, sometimes sparsely hairy.
             Stems [10–]30–70[–100] cm. Leaves: stipules lanceolate to oblong.
             """,
         )
