@@ -23,10 +23,6 @@ class Base:
         kwargs["_text"] = ent.text
         return cls(**kwargs)
 
-    @classmethod
-    def dummy_ent(cls, **kwargs):
-        return cls(**kwargs)
-
     def to_dict(self) -> dict:
         return {k: v for k, v in asdict(self).items() if v is not None and k[0] != "_"}
 

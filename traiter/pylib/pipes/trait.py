@@ -3,7 +3,7 @@ from typing import Any
 from spacy import util
 from spacy.language import Language
 from spacy.matcher import Matcher
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 
 from traiter.pylib.pipes.reject_match import RejectMatch
 
@@ -64,17 +64,29 @@ class AddTraits:
             if ent_tokens & used_tokens:
                 continue
 
+            traits = None
             if action := self.dispatch_table.get(label):
                 try:
-                    ent._.trait = action(ent)
+                    traits = action(ent)
                 except RejectMatch:
                     continue
 
             used_tokens |= ent_tokens
 
-            self.relabel_ent(ent, label)
-
-            entities.append(ent)
+            if isinstance(traits, list):
+                for trait in traits:
+                    sub_ent = Span(
+                        doc=ent.doc,
+                        start=trait._start_token,
+                        end=trait._end_token,
+                        label=trait._trait,
+                    )
+                    sub_ent._.trait = trait
+                    entities.append(sub_ent)
+            else:
+                ent._.trait = traits
+                self.relabel_ent(ent, label)
+                entities.append(ent)
 
         self.add_untouched_entities(doc, entities, used_tokens)
 
