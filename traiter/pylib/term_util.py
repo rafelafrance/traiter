@@ -83,7 +83,7 @@ def read_terms(csv_path: Path | Iterable[Path]) -> list[dict]:
                 reader = csv.DictReader(TextIOWrapper(in_csv, "utf-8"))
                 terms += list(reader)
         else:
-            with path.open() as term_file:
+            with path.open(encoding="utf8") as term_file:
                 reader = csv.DictReader(term_file)
                 terms += list(reader)
     return terms

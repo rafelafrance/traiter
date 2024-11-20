@@ -111,7 +111,7 @@ def remove_special_case(nlp: Language, remove: list[str]):
 
 def get_states():
     path = Path(terms.__file__).parent / "us_location_terms.csv"
-    with path.open() as in_file:
+    with path.open(encoding="utf8") as in_file:
         reader = csv.DictReader(in_file)
         return {t["pattern"] for t in reader if t["label"] == "us_state"}
 
