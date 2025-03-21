@@ -20,7 +20,6 @@ class Color(Base):
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(color_csv, "replace")
     remove: ClassVar[dict[str, int]] = term_util.look_up_table(color_csv, "remove", int)
     # ---------------------
-
     color: str = None
     missing: bool = None
 
@@ -34,6 +33,7 @@ class Color(Base):
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="color_terms", path=cls.color_csv)
+        # add.debug_tokens(nlp)  # ##################################################
         add.trait_pipe(nlp, name="color_patterns", compiler=cls.color_patterns())
         add.cleanup_pipe(nlp, name="color_cleanup")
 
