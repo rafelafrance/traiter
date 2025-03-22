@@ -5,9 +5,8 @@ from typing import ClassVar
 
 from spacy.language import Language
 from spacy.util import registry
-from util.pylib import util
 
-from traiter.pylib import const, term_util
+from traiter.pylib import const, term_util, util
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.pipes import add

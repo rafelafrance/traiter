@@ -11,6 +11,7 @@ license = {file = "LICENSE"}
 authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
 requires-python = ">=3.11"
 dependencies = [
+    "ftfy",
     "regex",
     "python-dateutil",
     "spacy",

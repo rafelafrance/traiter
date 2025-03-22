@@ -11,12 +11,10 @@ test: activate
 	$(PYTHON) -m unittest discover
 
 install: venv activate base
-	$(PIP_INSTALL) git+https://github.com/rafelafrance/common_utils.git@main#egg=common_utils
 	$(PIP_INSTALL) .
 	$(SPACY_MODEL)
 
 dev: venv activate base
-	$(PIP_INSTALL) -e ../../misc/common_utils
 	$(PIP_INSTALL) -e .[dev]
 	$(SPACY_MODEL)
 
