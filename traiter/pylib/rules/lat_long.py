@@ -68,7 +68,6 @@ class LatLong(Base):
             overwrite=["lat_long"],
             compiler=cls.lat_long_plus_patterns(),
         )
-        # add.debug_tokens(nlp)  # #############################################
         add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
     @classmethod
@@ -81,7 +80,6 @@ class LatLong(Base):
             "-": {"TEXT": {"IN": const.DASH}},
             "'s": {"LOWER": "'s"},
             "99": {"LOWER": {"REGEX": r"^\d{1,2}$"}},
-            "9999": {"LOWER": {"REGEX": r"^\d+$"}},
             "99.0": {"TEXT": {"REGEX": rf"^{cls.float_ll}$"}},
             "99.99": {"TEXT": {"REGEX": r"^\d+\.\d{2,}$"}},
             "[+]": {"TEXT": {"REGEX": cls.plus}},
@@ -102,6 +100,14 @@ class LatLong(Base):
         }
 
         return [
+            Compiler(
+                label="not_lat_long",
+                decoder=decoder,
+                on_match=reject_match.REJECT_MATCH,
+                patterns=[
+                    " 99.0 - 99.0 m ",
+                ],
+            ),
             Compiler(
                 label="lat_long",
                 on_match="lat_long_match",
