@@ -14,7 +14,7 @@ dependencies = [
     "ftfy",
     "regex",
     "python-dateutil",
-    "spacy[cuda11x]",
+    "spacy",  # "spacy[cuda11x]",
 ]
 optional-dependencies.dev = [
     "build",

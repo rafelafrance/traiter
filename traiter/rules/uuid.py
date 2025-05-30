@@ -6,7 +6,6 @@ from spacy import Language, registry
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import const as t_const
-from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
 
@@ -19,9 +18,6 @@ class Uuid(Base):
     # ---------------------
 
     uuid: str = None
-
-    def to_dwc(self, dwc) -> DarwinCore:
-        return dwc.add_dyn(UUID=self.uuid)
 
     @classmethod
     def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):
@@ -37,7 +33,6 @@ class Uuid(Base):
         return [
             Compiler(
                 label="uuid",
-                keep="uuid",
                 on_match="uuid_match",
                 decoder=decoder,
                 patterns=[

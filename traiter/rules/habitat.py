@@ -8,7 +8,6 @@ from spacy.util import registry
 from traiter.pipes import add
 from traiter.pipes.reject_match import REJECT_MATCH
 from traiter.pylib import term_util
-from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
 
@@ -22,13 +21,6 @@ class Habitat(Base):
     # ---------------------
 
     habitat: str = None
-
-    def to_dwc(self, dwc) -> DarwinCore:
-        return dwc.add(habitat=self.habitat)
-
-    @property
-    def key(self):
-        return DarwinCore.ns("habitat")
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -53,7 +45,6 @@ class Habitat(Base):
                 label="habitat",
                 on_match="habitat_match",
                 decoder=decoder,
-                keep="habitat",
                 patterns=[
                     "        habitat+",
                     "prefix+ sep? prefix* habitat+",
@@ -67,7 +58,6 @@ class Habitat(Base):
                 id="habitat",
                 on_match="labeled_habitat",
                 decoder=decoder,
-                keep="habitat",
                 patterns=[
                     "label+ not_eol+",
                 ],

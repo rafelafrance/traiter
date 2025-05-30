@@ -12,7 +12,6 @@ from spacy.util import registry
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import term_util
-from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
 
@@ -30,16 +29,6 @@ class Date(Base):
     date: str = None
     century_adjust: bool = None
     missing_day: bool = None
-
-    def to_dwc(self, dwc) -> DarwinCore:
-        return dwc.add(
-            eventDate=self.date,
-            verbatimEventDate=self._text,
-        )
-
-    @property
-    def key(self):
-        return DarwinCore.ns("eventDate")
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -65,7 +54,6 @@ class Date(Base):
             Compiler(
                 label="date",
                 on_match="date_match",
-                keep="date",
                 decoder=decoder,
                 patterns=[
                     "label? :? 99     -* month -* 99",
@@ -86,7 +74,6 @@ class Date(Base):
                 label="short_date",
                 id="date",
                 on_match="short_date_match",
-                keep="date",
                 decoder=decoder,
                 patterns=[
                     "label? :? 9999   -* month",

@@ -7,7 +7,6 @@ from spacy.util import registry
 
 from traiter.pipes import add
 from traiter.pylib import const, term_util
-from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
 
@@ -19,15 +18,9 @@ class Color(Base):
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(color_csv, "replace")
     remove: ClassVar[dict[str, int]] = term_util.look_up_table(color_csv, "remove", int)
     # ---------------------
+
     color: str = None
     missing: bool = None
-
-    def to_dwc(self, dwc) -> DarwinCore:
-        return dwc.add_dyn(**{self.key: self.color})
-
-    @property
-    def key(self):
-        return "missingColor" if self.missing else "color"
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -42,7 +35,6 @@ class Color(Base):
             Compiler(
                 label="color",
                 on_match="color_match",
-                keep="color",
                 decoder={
                     "-": {"TEXT": {"IN": const.DASH}},
                     "color": {"ENT_TYPE": "color_term"},

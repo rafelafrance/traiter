@@ -41,7 +41,7 @@ class Compiler:
         decoder: dict[str, dict],
         on_match: str | None = None,
         id: str = "",
-        keep: str | list[str] | None = None,  # Traits we want to keep
+        is_temp: bool = False,
     ):
         self.label = label
         self.raw_patterns = patterns
@@ -49,8 +49,9 @@ class Compiler:
         self.on_match = on_match
         self.patterns = []
         self.id = id
-        self.keep = keep if keep else []
-        ACCUMULATOR.keep = self.keep
+
+        if not is_temp:
+            ACCUMULATOR.keep = self.label
 
     def compile(self):
         """Convert raw patterns strings to spacy matcher pattern arrays."""

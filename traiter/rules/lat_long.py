@@ -8,7 +8,6 @@ from spacy.util import registry
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util, util
-from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
 
@@ -44,17 +43,6 @@ class LatLong(Base):
     datum: str = None
     units: str = None
     uncertainty: float = None
-
-    def to_dwc(self, dwc) -> DarwinCore:
-        return dwc.add(
-            verbatimCoordinates=self._text,
-            geodeticDatum=self.datum,
-            coordinateUncertaintyInMeters=self.uncertainty,
-        )
-
-    @property
-    def key(self):
-        return DarwinCore.ns("verbatimCoordinates")
 
     @classmethod
     def pipe(cls, nlp: Language):
@@ -110,7 +98,6 @@ class LatLong(Base):
             Compiler(
                 label="lat_long",
                 on_match="lat_long_match",
-                keep="lat_long",
                 decoder=decoder,
                 patterns=[
                     (
@@ -187,7 +174,6 @@ class LatLong(Base):
             Compiler(
                 label="lat_long",
                 on_match="lat_long_plus",
-                keep="lat_long",
                 decoder=decoder,
                 patterns=[
                     "lat_long+                         ,* datum_label+ ,* (? datum+ )?",

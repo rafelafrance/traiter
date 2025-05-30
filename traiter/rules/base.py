@@ -2,8 +2,6 @@ from dataclasses import asdict, dataclass
 
 from spacy.language import Language
 
-from traiter.pylib.darwin_core import DarwinCore
-
 
 @dataclass(eq=False)
 class Base:
@@ -29,20 +27,3 @@ class Base:
     @classmethod
     def pipe(cls, nlp: Language):
         raise NotImplementedError
-
-    def to_dwc(self, dwc) -> DarwinCore:
-        raise NotImplementedError
-
-    @staticmethod
-    def key_builder(*args, prepend: str | None = None) -> str:
-        key = [prepend] if prepend else []
-        key += list(args)
-        key = " ".join(key).replace("-", " ").split()
-        key = [k.title() for k in key]
-        key[0] = key[0].lower()
-        return "".join(key)
-
-    @property
-    def key(self):
-        k = self.key_builder(*self._trait.split("_"))
-        return DarwinCore.ns(k)

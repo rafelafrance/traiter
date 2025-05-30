@@ -8,7 +8,6 @@ from spacy.util import registry
 
 from traiter.pipes import add
 from traiter.pylib import const, term_util, util
-from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
 
@@ -42,19 +41,6 @@ class Elevation(Base):
     units: str = None
     about: bool = None
 
-    def to_dwc(self, dwc) -> DarwinCore:
-        dwc.add(
-            verbatimElevation=self._text,
-            minimumElevationInMeters=self.elevation,
-            maximumElevationInMeters=self.elevation_high,
-        )
-        about = "uncertain" if self.about else None
-        return dwc.add_dyn(elevationUncertain=about)
-
-    @property
-    def key(self):
-        return DarwinCore.ns("elevation")
-
     @classmethod
     def pipe(cls, nlp: Language):
         add.term_pipe(nlp, name="elevation_terms", path=cls.all_csvs)
@@ -73,7 +59,6 @@ class Elevation(Base):
             Compiler(
                 label="elevation",
                 on_match="elevation_match",
-                keep="elevation",
                 decoder={
                     "(": {"TEXT": {"IN": const.OPEN}},
                     ")": {"TEXT": {"IN": const.CLOSE}},
