@@ -4,7 +4,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from tests.setup import parse
-from traiter.pylib.rules.date_ import Date
+from traiter.rules.date_ import Date
 
 
 class TestDate(unittest.TestCase):

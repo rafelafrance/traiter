@@ -10,8 +10,7 @@ from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util, util
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
-
-from .base import Base
+from traiter.rules.base import Base
 
 
 @dataclass(eq=False)

@@ -1,8 +1,8 @@
 import unittest
 
 from tests.setup import parse
-from traiter.pylib.rules.date_ import Date
-from traiter.pylib.rules.uuid import Uuid
+from traiter.rules.date_ import Date
+from traiter.rules.uuid import Uuid
 
 
 class TestUuid(unittest.TestCase):

@@ -10,8 +10,8 @@ from traiter.pylib import const as t_const
 from traiter.pylib import term_util
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.pylib.rules.base import Base
 from traiter.pylib.util import to_positive_float as as_float
+from traiter.rules.base import Base
 
 FLOAT_RE: str = r"\d{1,4}(\.\d{,3})?"
 FLOAT3_RE: str = r"\d{3}(\.\d{,3})?"
