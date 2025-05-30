@@ -5,6 +5,7 @@ In an effort to make patterns more readable I've created simple compilers that t
 hopefully, readable strings and convert them to spacy patterns using a dictionary and
 some simple rules.
 """
+
 import copy
 import re
 from warnings import warn
@@ -21,7 +22,7 @@ class CompilerAccumulator:
     @keep.setter
     def keep(self, labels: str | list[str]):
         labels = labels if isinstance(labels, list) else [labels]
-        self._keep |= {lb: 1 for lb in labels}
+        self._keep |= dict.fromkeys(labels, 1)
 
     def delete(self, labels: str | list[str]):
         labels = labels if isinstance(labels, list) else [labels]

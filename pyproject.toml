@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traiter"
-version = "2.2.3"
+version = "3.0.0"
 description = "Rule-based parsers for mining text from research sources"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -14,7 +14,7 @@ dependencies = [
     "ftfy",
     "regex",
     "python-dateutil",
-    "spacy",
+    "spacy[cuda11x]",
 ]
 optional-dependencies.dev = [
     "build",
@@ -115,6 +115,7 @@ lint.ignore = [
     "RUF001",  # String contains ambiguous {}. Did you mean {}?
     "SIM114",  # Combine if branches using logical or operator
     "SIM117",  # Use a single with statement with multiple contexts instead of nested with statements
+    "SIM905",  # Consider using a list literal instead of `str.split`
     "SLF001",  # Private member accessed: {access}
     "T201",  # print found
 ]

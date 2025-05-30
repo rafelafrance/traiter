@@ -2,7 +2,7 @@
 .ONESHELL:
 
 VENV=.venv
-PY_VER=python3.11
+PY_VER=python3.12
 PYTHON=./$(VENV)/bin/$(PY_VER)
 PIP_INSTALL=$(PYTHON) -m pip install
 SPACY_MODEL=$(PYTHON) -m spacy download en_core_web_md

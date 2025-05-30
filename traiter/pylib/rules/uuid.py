@@ -4,10 +4,10 @@ from typing import ClassVar
 
 from spacy import Language, registry
 
+from traiter.pipes import add, reject_match
 from traiter.pylib import const as t_const
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.pylib.pipes import add, reject_match
 from traiter.pylib.rules.base import Base
 
 

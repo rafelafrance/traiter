@@ -1,6 +1,6 @@
 import spacy
 
-from traiter.pylib.pipes import extensions, sentence, tokenizer
+from traiter.pipes import extensions, sentence, tokenizer
 from traiter.pylib.rules.color import Color
 from traiter.pylib.rules.date_ import Date
 from traiter.pylib.rules.elevation import Elevation

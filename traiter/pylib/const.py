@@ -7,9 +7,9 @@ from spacy.lang.char_classes import HYPHENS, LIST_HYPHENS
 # This points to the client's data directory not to the data directory here
 DATA_DIR = Path.cwd() / "data"
 
-MODEL_PATH = DATA_DIR / "traiter_model"
-
 # ---------------------
+# Shapes for matching names
+
 UPPER_SHAPES = """ XXXX       XXX XX X. XX. X """.split()
 LOWER_SHAPES = """  xxxx  xxx  xx    x. xx. x """.split()
 
@@ -25,23 +25,6 @@ MAC5_SHAPES = """ XxxxxXxxxx  XxxxxXxxx  XxxxxXxx  XxxxxXx """.split()
 NAME_SHAPES = TITLE_SHAPES + MC_SHAPES + MAC_SHAPES + O_SHAPES + O2_SHAPES + DEL_SHAPES
 NAME_SHAPES += MAC4_SHAPES + MAC5_SHAPES
 NAME_AND_UPPER = NAME_SHAPES + UPPER_SHAPES
-
-# ---------------------
-# Punctuation penalties when linking traits
-
-NEVER = 9999
-
-TOKEN_WEIGHTS = {",": 3, ";": 7, ".": 7, "with": 10, "of": 7}
-
-REVERSE_WEIGHTS = {k: v * 2 for k, v in TOKEN_WEIGHTS.items()}
-REVERSE_WEIGHTS[";"] = NEVER
-REVERSE_WEIGHTS["."] = NEVER
-
-TOKEN_WEIGHTS |= {
-    ",": 2,
-    ";": 5,
-    ".": NEVER,
-}
 
 # ---------------------
 # For importing taxa from an ITIS DB
@@ -72,10 +55,10 @@ QUOTE = D_QUOTE + S_QUOTE
 LETTERS = list(string.ascii_lowercase)
 
 TEMP = ["\\" + x for x in CLOSE]
-CLOSE_RE = rf'[{"".join(TEMP)}]'
+CLOSE_RE = rf"[{''.join(TEMP)}]"
 
 TEMP = ["\\" + x for x in OPEN]
-OPEN_RE = rf'[{"".join(TEMP)}]'
+OPEN_RE = rf"[{''.join(TEMP)}]"
 
 DASH_RE = f"(?:{HYPHENS})"
 DASH_CHAR = [d for d in DASH if len(d) == 1]

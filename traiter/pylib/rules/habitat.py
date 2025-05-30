@@ -5,11 +5,11 @@ from typing import ClassVar
 from spacy.language import Language
 from spacy.util import registry
 
+from traiter.pipes import add
+from traiter.pipes.reject_match import REJECT_MATCH
 from traiter.pylib import term_util
 from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.pylib.pipes import add
-from traiter.pylib.pipes.reject_match import REJECT_MATCH
 
 from .base import Base
 

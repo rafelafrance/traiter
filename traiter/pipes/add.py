@@ -4,16 +4,9 @@ from pathlib import Path
 
 from spacy.language import Language
 
+from traiter.pipes import cleanup, debug, phrase, trait
 from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import ACCUMULATOR, Compiler
-from traiter.pylib.pipes import (
-    cleanup,
-    debug,
-    link,
-    merge_selected,
-    phrase,
-    trait,
-)
 
 
 def term_pipe(
@@ -34,12 +27,12 @@ def term_pipe(
     by_attr = defaultdict(list)
     replaces = defaultdict(dict)
 
-    for path in paths:
-        terms = term_util.read_terms(path)
+    for path_ in paths:
+        terms = term_util.read_terms(path_)
         for term in terms:
             if term["pattern"] in delete_patterns:
                 continue
-            label = term.get("label", default_labels.get(path.stem))
+            label = term.get("label", default_labels.get(path_.stem))
             pattern = {"label": label, "pattern": term["pattern"]}
             attr = term.get("attr", "lower").upper()
             by_attr[attr].append(pattern)
@@ -65,24 +58,22 @@ def trait_pipe(
     compiler: list[Compiler] | Compiler,
     keep: list[str] | None = None,
     overwrite: list[str] | None = None,
-    merge: list[str] | None = None,
 ):
     keep = keep if keep is not None else ACCUMULATOR.keep
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
-    merge = merge if merge else []
     patterns = defaultdict(list)
     dispatch = {}
     relabel = {}
 
-    for comp in compilers:
-        comp.compile()
-        patterns[comp.label] += comp.patterns
+    for compiler_ in compilers:
+        compiler_.compile()
+        patterns[compiler_.label] += compiler_.patterns
 
-        if comp.on_match:
-            dispatch[comp.label] = comp.on_match
+        if compiler_.on_match:
+            dispatch[compiler_.label] = compiler_.on_match
 
-        if comp.id:
-            relabel[comp.label] = comp.id
+        if compiler_.id:
+            relabel[compiler_.label] = compiler_.id
 
     config = {
         "patterns": patterns,
@@ -92,11 +83,6 @@ def trait_pipe(
         "overwrite": overwrite,
     }
     nlp.add_pipe(trait.ADD_TRAITS, name=name, config=config)
-
-    if merge:
-        name = f"{name}_merge"
-        config = {"labels": merge}
-        nlp.add_pipe(merge_selected.MERGE_SELECTED, name=name, config=config)
 
 
 def cleanup_pipe(nlp: Language, *, name: str, delete=None, clear=True):
@@ -125,36 +111,3 @@ def debug_tokens(nlp: Language):
 
 def debug_ents(nlp: Language):
     debug.ents(nlp)
-
-
-def link_pipe(
-    nlp,
-    *,
-    compiler,
-    name,
-    parents,
-    children,
-    weights=None,
-    reverse_weights=None,
-    max_links=None,
-    differ=None,
-):
-    compiler.compile()
-    patterns = [
-        {"label": compiler.label, "pattern": p, "id": compiler.id}
-        for p in compiler.patterns
-    ]
-    config = {
-        "patterns": patterns,
-        "parents": parents,
-        "children": children,
-    }
-    if weights is not None:
-        config["weights"] = weights
-    if reverse_weights is not None:
-        config["reverse_weights"] = reverse_weights
-    if max_links is not None:
-        config["max_links"] = max_links
-    if differ is not None:
-        config["differ"] = differ
-    nlp.add_pipe(link.LINK_TRAITS, name=name, config=config)
