@@ -27,9 +27,9 @@ class TestUuid(unittest.TestCase):
             ),
             [
                 Date(
+                    date="2014-10-29",
                     start=13,
                     end=23,
-                    date="2014-10-29",
                 ),
                 Uuid(
                     uuid="eeba8b10-040e-4477-a0a6-870102b56234",

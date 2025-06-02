@@ -97,7 +97,9 @@ class UTM(Base):
         else:
             datum = None
 
-        return super().from_ent(ent, utm=cls.format_coords(frags), datum=datum)
+        utm = cls.format_coords(frags)
+
+        return super().from_ent(ent, utm=utm, datum=datum)
 
 
 @registry.misc("utm_match")

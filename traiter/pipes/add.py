@@ -72,9 +72,6 @@ def trait_pipe(
         if compiler_.on_match:
             dispatch[compiler_.label] = compiler_.on_match
 
-        if compiler_.id:
-            relabel[compiler_.label] = compiler_.id
-
     config = {
         "patterns": patterns,
         "dispatch": dispatch,

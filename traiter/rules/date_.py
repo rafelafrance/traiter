@@ -72,7 +72,6 @@ class Date(Base):
             ),
             Compiler(
                 label="short_date",
-                id="date",
                 on_match="short_date_match",
                 decoder=decoder,
                 patterns=[

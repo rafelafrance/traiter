@@ -116,7 +116,7 @@ class Elevation(Base):
         if expected_len > 1:
             hi = round(values[1] * factor, 3)
 
-        return super().from_ent(
+        return cls.from_ent(
             ent,
             elevation=elevation,
             elevation_high=hi,

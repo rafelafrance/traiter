@@ -21,8 +21,8 @@ class Uuid(Base):
 
     @classmethod
     def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):
-        add.trait_pipe(nlp, name="uuid_patterns", compiler=cls.uuid_patterns())
         # add.debug_tokens(nlp)  # ###########################################
+        add.trait_pipe(nlp, name="uuid_patterns", compiler=cls.uuid_patterns())
 
     @classmethod
     def uuid_patterns(cls):
@@ -45,7 +45,7 @@ class Uuid(Base):
     def uuid_match(cls, ent):
         if not re.search(cls.whole, ent.text):
             raise reject_match.RejectMatch
-        return cls.from_ent(ent, uuid=ent.text)
+        return super().from_ent(ent, uuid=ent.text)
 
 
 @registry.misc("uuid_match")

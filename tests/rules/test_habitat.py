@@ -46,8 +46,8 @@ class TestHabitat(unittest.TestCase):
             [
                 Habitat(
                     habitat=(
-                        "Boggy woodland with a sparce canopy dominated by "
-                        "blackgum and larch, and nice herbaceous openings"
+                        "boggy woodland with a sparce canopy dominated by "
+                        "blackgum and larch and nice herbaceous openings"
                     ),
                     start=6,
                     end=112,

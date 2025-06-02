@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
@@ -54,8 +55,7 @@ class Habitat(Base):
                 ],
             ),
             Compiler(
-                label="labeled_habitat",
-                id="habitat",
+                label="habitat",
                 on_match="labeled_habitat",
                 decoder=decoder,
                 patterns=[
@@ -64,6 +64,7 @@ class Habitat(Base):
             ),
             Compiler(
                 label="not_habitat",
+                is_temp=True,
                 decoder=decoder,
                 on_match=REJECT_MATCH,
                 patterns=[
@@ -90,10 +91,10 @@ class Habitat(Base):
         for i, token in enumerate(ent):  # noqa: B007 unused-loop-control-variable
             if token._.term != "habitat_label":
                 break
-        habitat = " ".join(ent[i:].text.split())
-        trait = super().from_ent(ent, habitat=habitat)
-        trait._trait = "habitat"
-        return trait
+        parts = ent[i:].text.lower()
+        parts = re.sub(r"[/,-]", " ", parts)
+        habitat = " ".join(parts.split())
+        return super().from_ent(ent, habitat=habitat)
 
 
 @registry.misc("habitat_match")

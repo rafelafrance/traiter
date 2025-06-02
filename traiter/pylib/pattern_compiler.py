@@ -37,10 +37,9 @@ class Compiler:
         self,
         *,
         label: str,
-        patterns: list[str],
-        decoder: dict[str, dict],
         on_match: str | None = None,
-        id: str = "",
+        decoder: dict[str, dict],
+        patterns: list[str],
         is_temp: bool = False,
     ):
         self.label = label
@@ -48,7 +47,6 @@ class Compiler:
         self.decoder = decoder
         self.on_match = on_match
         self.patterns = []
-        self.id = id
 
         if not is_temp:
             ACCUMULATOR.keep = self.label
