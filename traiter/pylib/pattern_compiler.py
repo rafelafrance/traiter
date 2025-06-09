@@ -1,7 +1,7 @@
 """
 Compile strings to spacy matcher patterns.
 
-In an effort to make patterns more readable I've created simple compilers that take in,
+In an effort to make patterns more readable, I've created simple compilers that take in,
 hopefully, readable strings and convert them to spacy patterns using a dictionary and
 some simple rules.
 """

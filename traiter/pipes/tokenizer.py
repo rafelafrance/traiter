@@ -21,7 +21,7 @@ BREAKING = LIST_QUOTES + LIST_PUNCT + [r"[:\\/˂˃×.+’()\[\]±_]"]
 DASHES = "|".join(re.escape(h) for h in LIST_HYPHENS if len(h) == 1)
 DASHES = f"(?:{DASHES})+"
 
-PREFIX = [*BREAKING, DASHES + "(?=[0-9])"]
+PREFIX = [*BREAKING, DASHES + "(?=[0-9])", "x(?=[0-9])"]
 SUFFIX = [*BREAKING, DASHES]
 
 INFIX = [
