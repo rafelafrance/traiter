@@ -4,7 +4,7 @@ from pathlib import Path
 
 from spacy.language import Language
 
-from traiter.pipes import cleanup, debug, phrase, trait
+from traiter.pipes import cleanup, context, debug, phrase, trait
 from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import ACCUMULATOR, Compiler
 
@@ -80,6 +80,33 @@ def trait_pipe(
         "overwrite": overwrite,
     }
     nlp.add_pipe(trait.ADD_TRAITS, name=name, config=config)
+
+
+def context_pipe(
+    nlp,
+    *,
+    name: str,
+    compiler: list[Compiler] | Compiler,
+    context_: list[str] | None,
+):
+    compilers = compiler if isinstance(compiler, Iterable) else [compiler]
+    patterns = defaultdict(list)
+    dispatch = {}
+
+    for compiler_ in compilers:
+        compiler_.compile()
+        patterns[compiler_.label] += compiler_.patterns
+
+        if compiler_.on_match:
+            dispatch[compiler_.label] = compiler_.on_match
+
+    config = {
+        "patterns": patterns,
+        "dispatch": dispatch,
+        "keep": ACCUMULATOR.keep,
+        "context": context_,
+    }
+    nlp.add_pipe(context.CONTEXT_TRAITS, name=name, config=config)
 
 
 def cleanup_pipe(nlp: Language, *, name: str, delete=None, clear=True):

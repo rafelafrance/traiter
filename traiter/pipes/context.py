@@ -7,28 +7,24 @@ from spacy.tokens import Doc
 
 from traiter.pipes.reject_match import RejectMatch
 
-ADD_TRAITS = "add_traits"
+CONTEXT_TRAITS = "context_traits"
 
 
-@Language.factory(ADD_TRAITS)
-class AddTraits:
+@Language.factory(CONTEXT_TRAITS)
+class ContextTraits:
     def __init__(
         self,
         nlp: Language,
         name: str,
         patterns: dict[str, list[list[dict[str, Any]]]],
         dispatch: dict[str, str] | None = None,
-        keep: list[str] | None = None,  # Don't overwrite these entities
-        overwrite: list[str] | None = None,  # Only overwrite these entities
-        relabel: dict[str, str] | None = None,
+        context: list[str] | None = None,  # The trait is surrounded by these entities
     ):
         self.nlp = nlp
         self.name = name
         self.patterns = patterns
         self.dispatch = dispatch
-        self.keep = keep if keep else []
-        self.overwrite = overwrite if overwrite else []
-        self.relabel = relabel if relabel else {}
+        self.context = context if context else []
 
         self.dispatch_table = self.build_dispatch_table()
         self.matcher = self.build_matcher()
@@ -43,10 +39,8 @@ class AddTraits:
 
     def build_matcher(self):
         matcher = Matcher(self.nlp.vocab)
-        # Can't be greedy if we are keeping traits in the middle of a match
-        greedy = None if self.keep else "LONGEST"
         for label, patterns in self.patterns.items():
-            matcher.add(label, patterns, greedy=greedy)
+            matcher.add(label, patterns, greedy="LONGEST")
         return matcher
 
     def __call__(self, doc: Doc) -> Doc:
@@ -74,7 +68,6 @@ class AddTraits:
             used_tokens |= ent_tokens
 
             ent._.trait = trait
-            self.relabel_ent(ent, label)
             entities.append(ent)
 
         self.add_untouched_entities(doc, entities, used_tokens)
@@ -112,24 +105,3 @@ class AddTraits:
                 used_tokens |= ent_tokens
                 entities.append(ent)
         return entities, used_tokens
-
-    def relabel_ent(self, ent, old_label):
-        label = old_label
-
-        new_label = self.relabel.get(old_label)
-        new_label = ent._.relabel if ent._.relabel else new_label
-        if new_label:
-            relabel_entity(ent, new_label)
-            label = new_label
-            ent._.trait._trait = new_label
-
-        return label
-
-
-def relabel_entity(ent, new_label, *, relabel_tokens=False):
-    if new_label not in ent.doc.vocab.strings:
-        ent.doc.vocab.strings.add(new_label)
-    ent.label = ent.doc.vocab.strings[new_label]
-    if relabel_tokens:
-        for token in ent:
-            token.ent_type = ent.doc.vocab.strings[new_label]
