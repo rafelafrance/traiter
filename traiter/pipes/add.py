@@ -56,10 +56,8 @@ def trait_pipe(
     *,
     name: str,
     compiler: list[Compiler] | Compiler,
-    keep: list[str] | None = None,
     overwrite: list[str] | None = None,
 ):
-    keep = keep if keep is not None else ACCUMULATOR.keep
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     patterns = defaultdict(list)
     dispatch = {}
@@ -76,7 +74,7 @@ def trait_pipe(
         "patterns": patterns,
         "dispatch": dispatch,
         "relabel": relabel,
-        "keep": keep,
+        "keep": ACCUMULATOR.keep,
         "overwrite": overwrite,
     }
     nlp.add_pipe(trait.ADD_TRAITS, name=name, config=config)
@@ -87,7 +85,7 @@ def context_pipe(
     *,
     name: str,
     compiler: list[Compiler] | Compiler,
-    context_: list[str] | None,
+    overwrite: list[str] | None = None,
 ):
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     patterns = defaultdict(list)
@@ -103,8 +101,7 @@ def context_pipe(
     config = {
         "patterns": patterns,
         "dispatch": dispatch,
-        "keep": ACCUMULATOR.keep,
-        "context": context_,
+        "overwrite": overwrite,
     }
     nlp.add_pipe(context.CONTEXT_TRAITS, name=name, config=config)
 

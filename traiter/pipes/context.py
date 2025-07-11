@@ -1,9 +1,18 @@
+"""
+Match a trait defined by its surrounding traits without changing the surrounding traits.
+
+The normal trait matcher builds a new trait including all the tokens and subentities
+in the match. This pipe allows you to match a trait without snowballing all the other
+traits. It is based on traits so you the new trait must be a previous phrase or another
+trait match.
+"""
+
 from typing import Any
 
 from spacy import util
 from spacy.language import Language
 from spacy.matcher import Matcher
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 
 from traiter.pipes.reject_match import RejectMatch
 
@@ -18,13 +27,13 @@ class ContextTraits:
         name: str,
         patterns: dict[str, list[list[dict[str, Any]]]],
         dispatch: dict[str, str] | None = None,
-        context: list[str] | None = None,  # The trait is surrounded by these entities
+        overwrite: list[str] | None = None,
     ):
         self.nlp = nlp
         self.name = name
         self.patterns = patterns
         self.dispatch = dispatch
-        self.context = context if context else []
+        self.overwrite = overwrite
 
         self.dispatch_table = self.build_dispatch_table()
         self.matcher = self.build_matcher()
@@ -46,62 +55,38 @@ class ContextTraits:
     def __call__(self, doc: Doc) -> Doc:
         matches = self.matcher(doc, as_spans=True)
 
-        entities, used_tokens = self.filter_entities(doc)
-
-        matches = self.remove_overlapping_matches(matches, used_tokens)
         matches = util.filter_spans(matches)
+        if not matches:
+            return doc
 
-        for ent in matches:
-            label = ent.label_
+        ent = matches[0]
+        label = ent.label_
 
-            ent_tokens = set(range(ent.start, ent.end))
-            if ent_tokens & used_tokens:
-                continue
+        trait = None
+        if action := self.dispatch_table.get(label):
+            try:
+                trait = action(ent)
+            except RejectMatch:
+                return doc
 
-            trait = None
-            if action := self.dispatch_table.get(label):
-                try:
-                    trait = action(ent)
-                except RejectMatch:
-                    continue
+        start = 1e10
+        end = -1
+        for sub_ent in ent.ents:
+            if sub_ent.label_ in self.overwrite:
+                start = min(start, sub_ent.start)
+                end = max(end, sub_ent.end)
 
-            used_tokens |= ent_tokens
+        entities = [e for e in ent.ents if e.start < start or e.start >= end]
 
-            ent._.trait = trait
-            entities.append(ent)
+        new_ent = Span(doc=doc, start=start, end=end, label=label)
+        trait.start = new_ent.start_char
+        trait.end = new_ent.end_char
+        trait._text = new_ent.text
+        new_ent._.trait = trait
 
-        self.add_untouched_entities(doc, entities, used_tokens)
+        entities.append(new_ent)
 
-        doc.set_ents(sorted(entities, key=lambda e: e.start))
+        entities = sorted(entities, key=lambda e: e.start)
+        doc.set_ents(entities, default="unmodified")
+
         return doc
-
-    @staticmethod
-    def add_untouched_entities(doc, entities, used_tokens):
-        """Add entities that do not overlap with any of the matches."""
-        for ent in doc.ents:
-            ent_tokens = set(range(ent.start, ent.end))
-            if not ent_tokens & used_tokens:
-                entities.append(ent)
-
-    @staticmethod
-    def remove_overlapping_matches(matches, used_tokens):
-        """Remove any matches that overlap with an entity we kept."""
-        filtered_matches = []
-        for match in matches:
-            ent_tokens = set(range(match.start, match.end))
-            if ent_tokens & used_tokens:
-                continue
-            filtered_matches.append(match)
-        return filtered_matches
-
-    def filter_entities(self, doc):
-        used_tokens: set[Any] = set()
-        entities = []
-        for ent in doc.ents:
-            if ent.label_ in self.overwrite or ent.label_ not in self.keep:
-                continue
-            if ent.label_ in self.keep:
-                ent_tokens = set(range(ent.start, ent.end))
-                used_tokens |= ent_tokens
-                entities.append(ent)
-        return entities, used_tokens
