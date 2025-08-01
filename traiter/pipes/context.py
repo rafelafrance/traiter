@@ -59,32 +59,33 @@ class ContextTraits:
         if not matches:
             return doc
 
-        ent = matches[0]
-        label = ent.label_
+        entities = doc.ents
 
-        trait = None
-        if action := self.dispatch_table.get(label):
-            try:
-                trait = action(ent)
-            except RejectMatch:
-                return doc
+        for ent in matches:
+            label = ent.label_
 
-        start = 1e10
-        end = -1
-        for sub_ent in ent.ents:
-            if sub_ent.label_ in self.overwrite:
-                start = min(start, sub_ent.start)
-                end = max(end, sub_ent.end)
+            trait = None
+            if action := self.dispatch_table.get(label):
+                try:
+                    trait = action(ent)
+                except RejectMatch:
+                    return doc
 
-        entities = [e for e in ent.ents if e.start < start or e.start >= end]
+            start, end = 1e10, -1
+            for sub_ent in ent.ents:
+                if sub_ent.label_ in self.overwrite:
+                    start = min(start, sub_ent.start)
+                    end = max(end, sub_ent.end)
 
-        new_ent = Span(doc=doc, start=start, end=end, label=label)
-        trait.start = new_ent.start_char
-        trait.end = new_ent.end_char
-        trait._text = new_ent.text
-        new_ent._.trait = trait
+            entities = [e for e in entities if (e.start < start or e.start >= end)]
 
-        entities.append(new_ent)
+            new_ent = Span(doc=doc, start=start, end=end, label=label)
+            trait.start = new_ent.start_char
+            trait.end = new_ent.end_char
+            trait._text = new_ent.text
+            new_ent._.trait = trait
+
+            entities.append(new_ent)
 
         entities = sorted(entities, key=lambda e: e.start)
         doc.set_ents(entities, default="unmodified")
