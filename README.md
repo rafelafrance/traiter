@@ -1,5 +1,9 @@
 # The Traits Database Project![CI](https://github.com/rafelafrance/traiter/workflows/CI/badge.svg)
 
+These days this code is mainly used to:
+1. Gather training data for fine-tuning a large language model.
+2. Post-processing annotations gathered by a large language model.
+
 -- ~~If you can get away with it, you may want to try an end-to-end machine learning approach.~~
 
 I just spent a substantial effort on using a machine learning model, and I was wrong about the relative usefulness of rule-based and machine learning approaches for information extraction. Both have their strengths and weaknesses. I am now convinced that for the next couple of years you will need either a hybrid approach with, maybe, a custom model. However, I still do not recommend a rule only approach.

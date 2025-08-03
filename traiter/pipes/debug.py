@@ -34,8 +34,8 @@ class DebugTokens:
     def __call__(self, doc):
         print("=" * 80)
         print(self.name)
-        print(f"{'entity type':<20} {'flag':10} {'pos':6} token")
-        print(f"{'-----------':<20} {'----':10} {'---':6} -----")
+        print(f"{'entity type':<24} {'flag':10} {'pos':6} token")
+        print(f"{'-----------':<24} {'----':10} {'---':6} -----")
         for token in doc:
             print(
                 f"{token.ent_type_:<20} {token._.flag:10} {token.pos_:6} {token}",
