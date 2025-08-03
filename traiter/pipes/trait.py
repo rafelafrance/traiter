@@ -74,7 +74,6 @@ class AddTraits:
             used_tokens |= ent_tokens
 
             ent._.trait = trait
-            self.relabel_ent(ent, label)
             entities.append(ent)
 
         self.add_untouched_entities(doc, entities, used_tokens)
@@ -112,24 +111,3 @@ class AddTraits:
                 used_tokens |= ent_tokens
                 entities.append(ent)
         return entities, used_tokens
-
-    def relabel_ent(self, ent, old_label):
-        label = old_label
-
-        new_label = self.relabel.get(old_label)
-        new_label = ent._.relabel if ent._.relabel else new_label
-        if new_label:
-            relabel_entity(ent, new_label)
-            label = new_label
-            ent._.trait._trait = new_label
-
-        return label
-
-
-def relabel_entity(ent, new_label, *, relabel_tokens=False):
-    if new_label not in ent.doc.vocab.strings:
-        ent.doc.vocab.strings.add(new_label)
-    ent.label = ent.doc.vocab.strings[new_label]
-    if relabel_tokens:
-        for token in ent:
-            token.ent_type = ent.doc.vocab.strings[new_label]

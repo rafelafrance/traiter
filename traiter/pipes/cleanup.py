@@ -24,7 +24,7 @@ class CleanupTraits:
         entities = []
 
         for ent in doc.ents:
-            if ent._.delete or ent.label_ not in self.keep:
+            if ent.label_ not in self.keep:
                 self.clear_tokens(ent)
                 continue
 
@@ -40,5 +40,4 @@ class CleanupTraits:
             ent.label = ent.doc.vocab.strings[""]
             for token in ent:
                 token.ent_type = ent.doc.vocab.strings[""]
-                token._.flag = ""
                 token._.term = ""

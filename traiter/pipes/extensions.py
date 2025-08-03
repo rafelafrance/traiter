@@ -7,6 +7,4 @@ def add_extensions():
         Token.set_extension("term", default="")
         Token.set_extension("trait", default=None)
 
-        Span.set_extension("delete", default=False)
-        Span.set_extension("relabel", default="")
         Span.set_extension("trait", default=None)
