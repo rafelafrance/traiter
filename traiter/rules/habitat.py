@@ -89,7 +89,7 @@ class Habitat(Base):
     def labeled_match(cls, ent):
         i = 0
         for i, token in enumerate(ent):  # noqa: B007 unused-loop-control-variable
-            if token._.term != "habitat_label":
+            if token.ent_type_ != "habitat_label":
                 break
         parts = ent[i:].text.lower()
         parts = re.sub(r"[/,-]", " ", parts)

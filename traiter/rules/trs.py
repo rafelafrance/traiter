@@ -128,7 +128,7 @@ class TRS(Base):
             elif re.match(r"^(\d+|,)$", token.text):
                 frags.append(token.text)
 
-            elif token._.term == "sec_label":
+            elif token.ent_type_ == "sec_label":
                 frags.append(token.lower_)
 
         trs = " ".join(frags)

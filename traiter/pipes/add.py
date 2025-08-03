@@ -106,24 +106,13 @@ def context_pipe(
     nlp.add_pipe(context.CONTEXT_TRAITS, name=name, config=config)
 
 
-def cleanup_pipe(nlp: Language, *, name: str, delete=None, clear=True):
+def cleanup_pipe(nlp: Language, *, name: str, delete=None):
     if delete:
         delete = delete if isinstance(delete, list) else [delete]
         ACCUMULATOR.delete(delete)
 
-    config = {"keep": ACCUMULATOR.keep, "clear": clear}
+    config = {"keep": ACCUMULATOR.keep}
     nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config)
-
-
-def custom_pipe(
-    nlp: Language,
-    registered: str,
-    name: str = "",
-    config: dict | None = None,
-):
-    config = config if config else {}
-    name = name if name else registered
-    nlp.add_pipe(registered, name=name, config=config)
 
 
 def debug_tokens(nlp: Language):

@@ -207,13 +207,13 @@ class LatLong(Base):
         for token in ent:
             token._.flag = "lat_long"
 
-            if token._.term == "lat_long_label":
+            if token.ent_type_ == "lat_long_label":
                 continue
 
             if token.text in const.OPEN + const.CLOSE:
                 continue
 
-            if token._.term == "datum":
+            if token.ent_type_ == "datum":
                 datum.append(token.lower_)
 
             else:
@@ -247,7 +247,7 @@ class LatLong(Base):
                 kwargs = asdict(token._.trait)
 
             # Get the uncertainty units
-            elif token._.term in ("metric_length", "imperial_length"):
+            elif token.ent_type_ in ("metric_length", "imperial_length"):
                 unit.append(token.lower_)
 
             # Already parsed
@@ -255,7 +255,7 @@ class LatLong(Base):
                 continue
 
             # Pick up a trailing datum
-            elif token._.term == "datum":
+            elif token.ent_type_ == "datum":
                 datum.append(token.lower_)
 
             # Get the uncertainty value

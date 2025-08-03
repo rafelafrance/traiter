@@ -6,10 +6,10 @@ DELETE_COUNT = 0
 DELETE_TRAITS = "delete_traits"
 
 
-def pipe(nlp: Language, traits: list[str]):
+def pipe(nlp: Language, delete: list[str]):
     global DELETE_COUNT
     DELETE_COUNT += 1
-    config = {"traits": traits}
+    config = {"delete": delete}
     nlp.add_pipe(DELETE_TRAITS, name=f"{DELETE_TRAITS}_{DELETE_COUNT}", config=config)
 
 
@@ -19,18 +19,18 @@ class DeleteTraits:
         self,
         nlp: Language,
         name: str,
-        traits: list[str],
+        delete: list[str],  # List of traits to delete
     ):
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.traits = traits if traits else []  # List of traits to clean
+        self.delete = delete if delete else []
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            if ent.label_ in self.traits:
+            if ent.label_ in self.delete:
                 clean_tokens(ent)
                 continue
 
@@ -47,4 +47,3 @@ def clean_tokens(ent):
     for token in ent:
         token.ent_type = ent.doc.vocab.strings[""]
         token._.flag = ""
-        token._.term = ""

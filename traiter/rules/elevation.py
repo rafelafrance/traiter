@@ -97,10 +97,10 @@ class Elevation(Base):
                 values.append(util.to_positive_float(token.text))
 
             # Find units
-            elif token._.term in cls.all_units and not units_:
+            elif token.ent_type_ in cls.all_units and not units_:
                 units_ = cls.replace.get(token.lower_, token.lower_)
 
-            elif token._.term == "about_term":
+            elif token.ent_type_ == "about_term":
                 about = True
 
             # If there's a dash it's a range

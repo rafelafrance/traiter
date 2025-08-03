@@ -96,7 +96,7 @@ class Date(Base):
                     frags += parts
 
             # Get a month name
-            elif token._.term in ("month", "roman"):
+            elif token.ent_type_ in ("month", "roman"):
                 month = cls.replace.get(
                     token.text,
                     cls.replace.get(token.lower_, token.lower_),

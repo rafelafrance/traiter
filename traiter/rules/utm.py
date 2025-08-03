@@ -78,13 +78,13 @@ class UTM(Base):
         datum = []
 
         for token in ent:
-            if token._.term == "utm_label":
+            if token.ent_type_ == "utm_label":
                 continue
 
             if token.text in const.OPEN + const.CLOSE:
                 continue
 
-            if token._.term == "datum":
+            if token.ent_type_ == "datum":
                 datum.append(token.lower_)
 
             else:

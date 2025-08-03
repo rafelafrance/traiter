@@ -34,12 +34,11 @@ class DebugTokens:
     def __call__(self, doc):
         print("=" * 80)
         print(self.name)
-        print(f"{'entity type':<20} {'flag':10} {'pos':6} {'term':<20} token")
-        print(f"{'-----------':<20} {'----':10} {'---':6} {'----':<20} -----")
+        print(f"{'entity type':<20} {'flag':10} {'pos':6} token")
+        print(f"{'-----------':<20} {'----':10} {'---':6} -----")
         for token in doc:
             print(
-                f"{token.ent_type_:<20} {token._.flag:10} {token.pos_:6} "
-                f"{token._.term:<20} {token}",
+                f"{token.ent_type_:<20} {token._.flag:10} {token.pos_:6} {token}",
             )
         print()
         return doc
@@ -56,7 +55,6 @@ class DebugEntities:
         print(self.name)
         for ent in doc.ents:
             print(f"{ent.label_:<20} {ent}")
-            # print(f'{" " * 20} delete={ent._.delete}')
             print(f"{' ' * 20} {ent._.trait}\n")
         print()
         return doc

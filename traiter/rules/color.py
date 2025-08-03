@@ -56,14 +56,14 @@ class Color(Base):
         for token in ent:
             # Skip anything that is not a term or is flagged for removal
             if (
-                not token._.term
+                not token.ent_type_
                 or cls.remove.get(token.lower_)
                 or token.text in const.DASH
             ):
                 continue
 
             # Color is noted as missing
-            if token._.term == "color_missing":
+            if token.ent_type_ == "color_missing":
                 missing = True
                 continue
 
