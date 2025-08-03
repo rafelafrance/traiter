@@ -93,8 +93,6 @@ class Number(Base):
         number = as_float(ent.text)
         is_int = re.search(r"[.]", ent.text) is None
         trait = super().from_ent(ent, number=number, is_int=is_int)
-        ent[0]._.trait = trait
-        ent[0]._.flag = "number"
         return trait
 
     @classmethod
@@ -103,9 +101,6 @@ class Number(Base):
         number = cls.replace.get(word)
 
         trait = super().from_ent(ent, number=number, is_word=True)
-
-        ent[0]._.trait = trait
-        ent[0]._.flag = "number"
 
         return trait
 

@@ -1,6 +1,8 @@
 from spacy.language import Language
 from spacy.tokens import Doc
 
+from .pipe_util import clear_tokens
+
 DELETE_COUNT = 0
 
 DELETE_TRAITS = "delete_traits"
@@ -31,19 +33,10 @@ class DeleteTraits:
 
         for ent in doc.ents:
             if ent.label_ in self.delete:
-                clean_tokens(ent)
+                clear_tokens(ent)
                 continue
 
             entities.append(ent)
 
         doc.ents = entities
         return doc
-
-
-def clean_tokens(ent):
-    if "" not in ent.doc.vocab.strings:
-        ent.doc.vocab.strings.add("")
-    ent.label = ent.doc.vocab.strings[""]
-    for token in ent:
-        token.ent_type = ent.doc.vocab.strings[""]
-        token._.flag = ""

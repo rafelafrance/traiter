@@ -20,7 +20,6 @@ class AddTraits:
         dispatch: dict[str, str] | None = None,
         keep: list[str] | None = None,  # Don't overwrite these entities
         overwrite: list[str] | None = None,  # Only overwrite these entities
-        relabel: dict[str, str] | None = None,
     ):
         self.nlp = nlp
         self.name = name
@@ -28,7 +27,6 @@ class AddTraits:
         self.dispatch = dispatch
         self.keep = keep if keep else []
         self.overwrite = overwrite if overwrite else []
-        self.relabel = relabel if relabel else {}
 
         self.dispatch_table = self.build_dispatch_table()
         self.matcher = self.build_matcher()

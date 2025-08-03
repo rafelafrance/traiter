@@ -61,7 +61,6 @@ def trait_pipe(
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     patterns = defaultdict(list)
     dispatch = {}
-    relabel = {}
 
     for compiler_ in compilers:
         compiler_.compile()
@@ -73,7 +72,6 @@ def trait_pipe(
     config = {
         "patterns": patterns,
         "dispatch": dispatch,
-        "relabel": relabel,
         "keep": ACCUMULATOR.keep,
         "overwrite": overwrite,
     }
@@ -106,11 +104,7 @@ def context_pipe(
     nlp.add_pipe(context.CONTEXT_TRAITS, name=name, config=config)
 
 
-def cleanup_pipe(nlp: Language, *, name: str, delete=None):
-    if delete:
-        delete = delete if isinstance(delete, list) else [delete]
-        ACCUMULATOR.delete(delete)
-
+def cleanup_pipe(nlp: Language, *, name: str):
     config = {"keep": ACCUMULATOR.keep}
     nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config)
 

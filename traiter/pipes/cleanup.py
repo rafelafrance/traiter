@@ -1,6 +1,8 @@
 from spacy.language import Language
 from spacy.tokens import Doc
 
+from .pipe_util import clear_tokens
+
 CLEANUP_TRAITS = "cleanup_traits"
 
 
@@ -27,13 +29,5 @@ class CleanupTraits:
 
             entities.append(ent)
 
-        doc.set_ents(entities)
+        doc.ents = entities
         return doc
-
-
-def clear_tokens(ent):
-    if "" not in ent.doc.vocab.strings:
-        ent.doc.vocab.strings.add("")
-    ent.label = ent.doc.vocab.strings[""]
-    for token in ent:
-        token.ent_type = ent.doc.vocab.strings[""]
