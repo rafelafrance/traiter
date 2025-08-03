@@ -38,7 +38,7 @@ class DebugTokens:
         print(f"{'-----------':<24} {'----':10} {'---':6} -----")
         for token in doc:
             print(
-                f"{token.ent_type_:<20} {token._.flag:10} {token.pos_:6} {token}",
+                f"{token.ent_type_:<24} {token._.flag:10} {token.pos_:6} {token}",
             )
         print()
         return doc
