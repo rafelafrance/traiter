@@ -52,6 +52,39 @@ class ContextTraits:
             matcher.add(label, patterns, greedy="LONGEST")
         return matcher
 
+    def __call__new(self, doc: Doc) -> Doc:
+        matches = self.matcher(doc, as_spans=True)
+
+        matches = util.filter_spans(matches)
+        if not matches:
+            return doc
+
+        entities = doc.ents
+
+        for match in matches:
+            label = match.label_
+
+            traits = []
+            if action := self.dispatch_table.get(label):
+                try:
+                    traits = action(match)
+                    traits = traits if isinstance(traits, list) else [traits]
+                except RejectMatch:
+                    return doc
+
+            for trait in traits:
+                span = doc.char_span(trait.start, trait.end, label=trait._trait)
+                span._.trait = trait
+                entities = [
+                    e for e in entities if (e.start < span.start or e.start >= span.end)
+                ]
+                entities.append(span)
+
+        entities = sorted(entities, key=lambda e: e.start)
+        doc.set_ents(entities, default="unmodified")
+
+        return doc
+
     def __call__(self, doc: Doc) -> Doc:
         matches = self.matcher(doc, as_spans=True)
 

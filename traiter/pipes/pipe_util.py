@@ -5,3 +5,8 @@ def clear_tokens(ent):
     for token in ent:
         token.ent_type = ent.doc.vocab.strings[""]
         token._.flag = ""
+
+
+def intern_string(doc, string):
+    if string not in doc.vocab.strings:
+        doc.vocab.strings.add(string)
