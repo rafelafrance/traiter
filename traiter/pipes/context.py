@@ -52,7 +52,7 @@ class ContextTraits:
             matcher.add(label, patterns, greedy="LONGEST")
         return matcher
 
-    def __call__new(self, doc: Doc) -> Doc:
+    def __call__(self, doc: Doc) -> Doc:
         matches = self.matcher(doc, as_spans=True)
 
         matches = util.filter_spans(matches)
@@ -73,52 +73,24 @@ class ContextTraits:
                     return doc
 
             for trait in traits:
-                span = doc.char_span(trait.start, trait.end, label=trait._trait)
-                span._.trait = trait
+                sub_ents = [
+                    e
+                    for e in entities
+                    if e.label_ in self.overwrite
+                    and trait.start <= e.start_char < trait.end
+                ]
+                span = Span(
+                    doc, sub_ents[0].start, sub_ents[-1].end, label=match.label_
+                )
                 entities = [
-                    e for e in entities if (e.start < span.start or e.start >= span.end)
+                    e for e in entities if e.start < span.start or e.start >= span.end
                 ]
                 entities.append(span)
 
-        entities = sorted(entities, key=lambda e: e.start)
-        doc.set_ents(entities, default="unmodified")
-
-        return doc
-
-    def __call__(self, doc: Doc) -> Doc:
-        matches = self.matcher(doc, as_spans=True)
-
-        matches = util.filter_spans(matches)
-        if not matches:
-            return doc
-
-        entities = doc.ents
-
-        for ent in matches:
-            label = ent.label_
-
-            trait = None
-            if action := self.dispatch_table.get(label):
-                try:
-                    trait = action(ent)
-                except RejectMatch:
-                    return doc
-
-            start, end = 1e10, -1
-            for sub_ent in ent.ents:
-                if sub_ent.label_ in self.overwrite:
-                    start = min(start, sub_ent.start)
-                    end = max(end, sub_ent.end)
-
-            entities = [e for e in entities if (e.start < start or e.start >= end)]
-
-            new_ent = Span(doc=doc, start=start, end=end, label=label)
-            trait.start = new_ent.start_char
-            trait.end = new_ent.end_char
-            trait._text = new_ent.text
-            new_ent._.trait = trait
-
-            entities.append(new_ent)
+                trait.start = span.start_char
+                trait.end = span.end_char
+                trait._text = span.text
+                span._.trait = trait
 
         entities = sorted(entities, key=lambda e: e.start)
         doc.set_ents(entities, default="unmodified")
