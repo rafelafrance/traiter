@@ -90,6 +90,7 @@ class ContextTraits:
                 trait.start = span.start_char
                 trait.end = span.end_char
                 trait._text = span.text
+                trait._trait = match.label_
                 span._.trait = trait
 
         entities = sorted(entities, key=lambda e: e.start)
