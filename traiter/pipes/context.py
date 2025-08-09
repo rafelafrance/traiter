@@ -49,7 +49,7 @@ class ContextTraits:
     def build_matcher(self):
         matcher = Matcher(self.nlp.vocab)
         for label, patterns in self.patterns.items():
-            matcher.add(label, patterns, greedy="LONGEST")
+            matcher.add(label, patterns, greedy="FIRST")
         return matcher
 
     def __call__(self, doc: Doc) -> Doc:
@@ -58,42 +58,34 @@ class ContextTraits:
         matches = util.filter_spans(matches)
         if not matches:
             return doc
-
         entities = doc.ents
 
         for match in matches:
-            label = match.label_
-
-            traits = []
-            if action := self.dispatch_table.get(label):
+            trait = None
+            if action := self.dispatch_table.get(match.label_):
                 try:
-                    traits = action(match)
-                    traits = traits if isinstance(traits, list) else [traits]
+                    trait = action(match)
                 except RejectMatch:
                     return doc
 
-            for trait in traits:
-                sub_ents = [
-                    e
-                    for e in entities
-                    if e.label_ in self.overwrite
-                    and trait.start <= e.start_char < trait.end
-                ]
-                span = Span(
-                    doc, sub_ents[0].start, sub_ents[-1].end, label=match.label_
-                )
-                entities = [
-                    e for e in entities if e.start < span.start or e.start >= span.end
-                ]
-                entities.append(span)
+            sub_ents = [
+                e
+                for e in entities
+                if e.label_ in self.overwrite
+                and trait.start <= e.start_char < trait.end
+            ]
+            span = Span(doc, sub_ents[0].start, sub_ents[-1].end, label=match.label_)
+            entities = [
+                e for e in entities if e.start < span.start or e.start >= span.end
+            ]
+            entities.append(span)
 
-                trait.start = span.start_char
-                trait.end = span.end_char
-                trait._text = span.text
-                trait._trait = match.label_
-                span._.trait = trait
+            trait.start = span.start_char
+            trait.end = span.end_char
+            trait._text = span.text
+            trait._trait = match.label_
+            span._.trait = trait
 
         entities = sorted(entities, key=lambda e: e.start)
         doc.set_ents(entities, default="unmodified")
-
         return doc
