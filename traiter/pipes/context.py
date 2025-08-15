@@ -14,7 +14,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc, Span
 
-from traiter.pipes.reject_match import RejectMatch
+from traiter.pipes.reject_match import RejectMatch, SkipTraitCreation
 
 CONTEXT_TRAITS = "context_traits"
 
@@ -67,7 +67,10 @@ class ContextTraits:
                     trait = action(match)
                 except RejectMatch:
                     return doc
+                except SkipTraitCreation:
+                    continue
 
+            # Create a new trait
             sub_ents = [
                 e
                 for e in entities
