@@ -7,7 +7,7 @@ from spacy.language import Language
 from spacy.util import registry
 
 from traiter.pipes import add
-from traiter.pipes.reject_match import REJECT_MATCH
+from traiter.pipes.reject_match import SKIP_TRAIT_CREATION
 from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.rules.base import Base
@@ -66,7 +66,7 @@ class Habitat(Base):
                 label="not_habitat",
                 is_temp=True,
                 decoder=decoder,
-                on_match=REJECT_MATCH,
+                on_match=SKIP_TRAIT_CREATION,
                 patterns=[
                     "bad habitat+",
                     "bad habitat+ bad",

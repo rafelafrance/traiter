@@ -90,7 +90,7 @@ class LatLong(Base):
             Compiler(
                 label="not_lat_long",
                 decoder=decoder,
-                on_match=reject_match.REJECT_MATCH,
+                on_match=reject_match.SKIP_TRAIT_CREATION,
                 patterns=[
                     " 99.0 - 99.0 m ",
                 ],
@@ -263,7 +263,7 @@ class LatLong(Base):
                 value = util.to_positive_float(token.text)
 
         if value and not unit:
-            raise reject_match.RejectMatch
+            raise reject_match.SkipTraitCreation
 
         # Convert the values to meters
         if value:

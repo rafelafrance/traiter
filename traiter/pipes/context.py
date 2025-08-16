@@ -14,7 +14,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc, Span
 
-from traiter.pipes.reject_match import RejectMatch, SkipTraitCreation
+from traiter.pipes.reject_match import SkipTraitCreation
 
 CONTEXT_TRAITS = "context_traits"
 
@@ -65,8 +65,6 @@ class ContextTraits:
             if action := self.dispatch_table.get(match.label_):
                 try:
                     trait = action(match)
-                except RejectMatch:
-                    return doc
                 except SkipTraitCreation:
                     continue
 

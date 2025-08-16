@@ -88,7 +88,7 @@ class TRS(Base):
             Compiler(
                 label="not_trs",
                 is_temp=True,
-                on_match=reject_match.REJECT_MATCH,
+                on_match=reject_match.SKIP_TRAIT_CREATION,
                 decoder=decoder,
                 patterns=[
                     "        trs+ not_trs",
@@ -102,7 +102,7 @@ class TRS(Base):
     def trs_part_match(cls, ent):
         # Enforce a minimum length
         if len(ent.text) <= cls.min_len:
-            raise reject_match.RejectMatch
+            raise reject_match.SkipTraitCreation
 
         trait = super().from_ent(ent, _trs_part=ent.text)
 
@@ -135,7 +135,7 @@ class TRS(Base):
         trs = re.sub(r"\s([.,:])", r"\1", trs)
         trs = re.sub(r",$", "", trs)
         if len(trs.split()) < cls.min_len:
-            raise reject_match.RejectMatch
+            raise reject_match.SkipTraitCreation
 
         return super().from_ent(ent, trs="present")
 

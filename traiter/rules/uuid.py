@@ -44,7 +44,7 @@ class Uuid(Base):
     @classmethod
     def uuid_match(cls, ent):
         if not re.search(cls.whole, ent.text):
-            raise reject_match.RejectMatch
+            raise reject_match.SkipTraitCreation
         return super().from_ent(ent, uuid=ent.text)
 
 

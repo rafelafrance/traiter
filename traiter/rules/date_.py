@@ -108,7 +108,7 @@ class Date(Base):
         try:
             date_ = parser.parse(text).date()
         except (parser.ParserError, IllegalMonthError):
-            raise reject_match.RejectMatch from None
+            raise reject_match.SkipTraitCreation from None
 
         # Handle missing centuries like: May 22, 08
         if date_ > dt.today():
@@ -116,7 +116,7 @@ class Date(Base):
             century_adjust = True
 
         if date_ > dt.today():
-            raise reject_match.RejectMatch
+            raise reject_match.SkipTraitCreation
 
         date_ = date_.isoformat()[:10]
 
