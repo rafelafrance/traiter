@@ -5,10 +5,10 @@ from spacy.language import Language
 
 @dataclass(eq=False)
 class Base:
-    start: int = None
-    end: int = None
-    _trait: str = None
-    _text: str = None
+    start: int | None = None
+    end: int | None = None
+    _trait: str | None = None
+    _text: str | None = None
 
     def __eq__(self, other):
         return self.to_dict() == other.to_dict()

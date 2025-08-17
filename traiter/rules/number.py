@@ -30,10 +30,10 @@ class Number(Base):
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(csv, "replace", int)
     # ---------------------
 
-    number: float = None
-    is_fraction: bool = None
-    is_word: bool = None
-    is_int: bool = None
+    number: float | None = None
+    is_fraction: bool | None = None
+    is_word: bool | None = None
+    is_int: bool | None = None
 
     @classmethod
     def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):

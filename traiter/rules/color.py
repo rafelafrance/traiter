@@ -19,8 +19,8 @@ class Color(Base):
     remove: ClassVar[dict[str, int]] = term_util.look_up_table(color_csv, "remove", int)
     # ---------------------
 
-    color: str = None
-    missing: bool = None
+    color: str | None = None
+    missing: bool | None = None
 
     @classmethod
     def pipe(cls, nlp: Language):

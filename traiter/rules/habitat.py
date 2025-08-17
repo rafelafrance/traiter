@@ -21,7 +21,7 @@ class Habitat(Base):
     sep: ClassVar[str] = "/,-"
     # ---------------------
 
-    habitat: str = None
+    habitat: str | None = None
 
     @classmethod
     def pipe(cls, nlp: Language):

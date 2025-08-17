@@ -36,10 +36,10 @@ class Elevation(Base):
     }
     # ---------------------
 
-    elevation: float = None
-    elevation_high: float = None
-    units: str = None
-    about: bool = None
+    elevation: float | None = None
+    elevation_high: float | None = None
+    units: str | None = None
+    about: bool | None = None
 
     @classmethod
     def pipe(cls, nlp: Language):

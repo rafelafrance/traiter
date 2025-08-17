@@ -7,14 +7,14 @@ name = "traiter"
 version = "3.0.0"
 description = "Rule-based parsers for mining text from research sources"
 readme = "README.md"
-license = {file = "LICENSE"}
-authors = [{name="Raphael LaFrance", email="rafelafrance@proton.me"}]
-requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Raphael LaFrance", email = "rafelafrance@proton.me" }]
+requires-python = ">=3.13"
 dependencies = [
     "ftfy",
     "regex",
     "python-dateutil",
-    "spacy",  # "spacy[cuda11x]",
+    "spacy",           # "spacy[cuda11x]",
 ]
 optional-dependencies.dev = [
     "build",
@@ -36,11 +36,16 @@ include = ["traiter"]
 namespaces = false
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py313"
 
 show-fixes = true
 
-lint.select = [
+[tool.ruff.format]
+docstring-code-format = true
+
+
+[tool.ruff.lint]
+select = [
     "F",
     "E",
     "W",
@@ -53,7 +58,7 @@ lint.select = [
     "BLE",
     "FBT",
     "B",
-#    "A",
+    #    "A",
     "COM",
     "C4",
     "T10",
@@ -77,7 +82,7 @@ lint.select = [
     "TID",
     "TCH",
     "INT",
-#    "ARG",
+    #    "ARG",
     "PTH",
     "TD",
     "FIX",
@@ -88,34 +93,34 @@ lint.select = [
     "FLY",
     "NPY",
     "PERF",
-#    "FURB",
-#    "LOG",
+    #    "FURB",
+    #    "LOG",
     "RUF",
 ]
 
-lint.ignore = [
+ignore = [
     "COM812",  # Trailing comma missing
-    "D100",  # Missing docstring in public module
-    "D101",  # Missing docstring in public class
-    "D102",  # Missing docstring in public method
-    "D103",  # Missing docstring in public function
-    "D104",  # Missing docstring in public package
-    "D105",  # Missing docstring in public method
-    "D107",  # Missing docstring in public __init__
-    "D203",  # 1 blank line required before class docstring
-    "D212",  # Multi-line docstring summary should start at the first line
+    "D100",    # Missing docstring in public module
+    "D101",    # Missing docstring in public class
+    "D102",    # Missing docstring in public method
+    "D103",    # Missing docstring in public function
+    "D104",    # Missing docstring in public package
+    "D105",    # Missing docstring in public method
+    "D107",    # Missing docstring in public __init__
+    "D203",    # 1 blank line required before class docstring
+    "D212",    # Multi-line docstring summary should start at the first line
     "ISC001",  # Implicitly concatenated string literals on one line
-    "N818",  # Exception name {name} should be named with an Error suffix
-    "PD901",  # Avoid using the generic variable name df for DataFrames
-    "PLR0913",  # Too many arguments in function definition ({c_args} > {max_args})
-    "PLW2901",  # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
-    "PLW0603",  # Using the global statement to update {name} is discouraged
-    "PT009",  # Use a regular assert instead of unittest-style {assertion}
+    "N818",    # Exception name {name} should be named with an Error suffix
+    "PD901",   # Avoid using the generic variable name df for DataFrames
+    "PLR0913", # Too many arguments in function definition ({c_args} > {max_args})
+    "PLW2901", # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
+    "PLW0603", # Using the global statement to update {name} is discouraged
+    "PT009",   # Use a regular assert instead of unittest-style {assertion}
     "RET504",  # Unnecessary assignment to {name} before return statement
     "RUF001",  # String contains ambiguous {}. Did you mean {}?
     "SIM114",  # Combine if branches using logical or operator
     "SIM117",  # Use a single with statement with multiple contexts instead of nested with statements
     "SIM905",  # Consider using a list literal instead of `str.split`
     "SLF001",  # Private member accessed: {access}
-    "T201",  # print found
+    "T201",    # print found
 ]

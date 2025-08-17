@@ -17,7 +17,7 @@ class Uuid(Base):
     whole: ClassVar[str] = rf"^{hx}{{8}}-{hx}{{4}}-{hx}{{4}}-{hx}{{4}}-{hx}{{12}}$"
     # ---------------------
 
-    uuid: str = None
+    uuid: str | None = None
 
     @classmethod
     def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):

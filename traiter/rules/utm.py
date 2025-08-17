@@ -25,8 +25,8 @@ class UTM(Base):
     dir_: ClassVar[str] = """((north|east|south|west)(ing)?|[nesw])"""
     # ---------------------
 
-    utm: str = None
-    datum: str = None
+    utm: str | None = None
+    datum: str | None = None
 
     @classmethod
     def pipe(cls, nlp: Language):

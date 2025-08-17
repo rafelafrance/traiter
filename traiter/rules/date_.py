@@ -26,9 +26,9 @@ class Date(Base):
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(all_csvs, "replace")
     # ---------------------
 
-    date: str = None
-    century_adjust: bool = None
-    missing_day: bool = None
+    date: str | None = None
+    century_adjust: bool | None = None
+    missing_day: bool | None = None
 
     @classmethod
     def pipe(cls, nlp: Language):

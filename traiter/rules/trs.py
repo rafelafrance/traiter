@@ -21,8 +21,8 @@ class TRS(Base):
     min_len: ClassVar[int] = 2
     # ---------------------
 
-    trs: str = None
-    _trs_part: str = None
+    trs: str | None = None
+    _trs_part: str | None = None
 
     @classmethod
     def pipe(cls, nlp: Language):
