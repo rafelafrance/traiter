@@ -3,8 +3,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import ClassVar
 
-from spacy.language import Language
-from spacy.util import registry
+from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util, util
@@ -45,10 +45,9 @@ class LatLong(Base):
     uncertainty: float | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="lat_long_terms", path=cls.all_csvs)
         add.trait_pipe(nlp, name="lat_long_patterns", compiler=cls.lat_long_patterns())
-        # add.debug_tokens(nlp)  # #############################################
         add.trait_pipe(
             nlp,
             name="lat_long_plus_patterns",
@@ -58,7 +57,7 @@ class LatLong(Base):
         add.cleanup_pipe(nlp, name="lat_long_cleanup")
 
     @classmethod
-    def lat_long_patterns(cls):
+    def lat_long_patterns(cls) -> list[Compiler]:
         decoder = {
             "(": {"TEXT": {"IN": const.OPEN}},
             ")": {"TEXT": {"IN": const.CLOSE}},
@@ -154,7 +153,7 @@ class LatLong(Base):
         ]
 
     @classmethod
-    def lat_long_plus_patterns(cls):
+    def lat_long_plus_patterns(cls) -> list[Compiler]:
         decoder = {
             "-": {"TEXT": {"IN": const.DASH}},
             ",": {"TEXT": {"REGEX": r"^[,;._:]$"}},
@@ -191,7 +190,7 @@ class LatLong(Base):
         ]
 
     @classmethod
-    def format_coords(cls, frags):
+    def format_coords(cls, frags: list[str]) -> str:
         coords = " ".join(frags)
         coords = re.sub(rf"\s([{cls.punct}])", r"\1", coords)
         coords = re.sub(r"\s(:)", r"\1", coords)
@@ -201,7 +200,7 @@ class LatLong(Base):
         return " ".join(coords.split())
 
     @classmethod
-    def lat_long_match(cls, ent):
+    def lat_long_match(cls, ent: Span) -> "LatLong":
         frags = []
         datum = []
         for token in ent:
@@ -230,12 +229,12 @@ class LatLong(Base):
 
         ent[0]._.flag = "lat_long_data"
 
-        trait = super().from_ent(ent, lat_long=lat_long, datum=datum)
+        trait = cls.from_ent(ent, lat_long=lat_long, datum=datum)
         ent[0]._.trait = trait  # Save for uncertainty in the lat/long
         return trait
 
     @classmethod
-    def lat_long_plus(cls, ent):
+    def lat_long_plus(cls, ent: Span) -> "LatLong":
         value = 0.0
         unit = []
         datum = []
@@ -279,14 +278,14 @@ class LatLong(Base):
         datum = "".join(datum)
         kwargs["datum"] = cls.replace.get(datum, datum) if datum else None
 
-        return LatLong.from_ent(ent, **kwargs)
+        return cls.from_ent(ent, **kwargs)
 
 
 @registry.misc("lat_long_match")
-def lat_long_match(ent):
+def lat_long_match(ent: Span) -> LatLong:
     return LatLong.lat_long_match(ent)
 
 
 @registry.misc("lat_long_plus")
-def lat_long_plus(ent):
+def lat_long_plus(ent: Span) -> LatLong:
     return LatLong.lat_long_plus(ent)

@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
 
-from spacy.language import Language
-from spacy.util import registry
+from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add
 from traiter.pipes.reject_match import SKIP_TRAIT_CREATION
@@ -24,13 +24,13 @@ class Habitat(Base):
     habitat: str | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="habitat_terms", path=cls.habitat_csv)
         add.trait_pipe(nlp, name="habitat_patterns", compiler=cls.habitat_compilers())
         add.cleanup_pipe(nlp, name="habitat_cleanup")
 
     @classmethod
-    def habitat_compilers(cls):
+    def habitat_compilers(cls) -> list[Compiler]:
         decoder = {
             "bad": {"ENT_TYPE": "bad_habitat"},
             "not_eol": {"LOWER": {"REGEX": r"^[^;.]+$"}},
@@ -76,17 +76,17 @@ class Habitat(Base):
         ]
 
     @classmethod
-    def habitat_match(cls, ent):
+    def habitat_match(cls, ent: Span) -> "Habitat":
         frags = [
             cls.replace.get(t.lower_, t.lower_) for t in ent if t.text not in cls.sep
         ]
 
         habitat = " ".join(frags)
 
-        return super().from_ent(ent, habitat=habitat)
+        return cls.from_ent(ent, habitat=habitat)
 
     @classmethod
-    def labeled_match(cls, ent):
+    def labeled_match(cls, ent: Span) -> "Habitat":
         i = 0
         for i, token in enumerate(ent):  # noqa: B007 unused-loop-control-variable
             if token.ent_type_ != "habitat_label":
@@ -94,14 +94,14 @@ class Habitat(Base):
         parts = ent[i:].text.lower()
         parts = re.sub(r"[/,-]", " ", parts)
         habitat = " ".join(parts.split())
-        return super().from_ent(ent, habitat=habitat)
+        return cls.from_ent(ent, habitat=habitat)
 
 
 @registry.misc("habitat_match")
-def habitat_match(ent):
+def habitat_match(ent: Span) -> Habitat:
     return Habitat.habitat_match(ent)
 
 
 @registry.misc("labeled_habitat")
-def labeled_habitat(ent):
+def labeled_habitat(ent: Span) -> Habitat:
     return Habitat.labeled_match(ent)

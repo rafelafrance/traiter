@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
 
-from spacy.language import Language
-from spacy.util import registry
+from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util
@@ -25,7 +25,7 @@ class TRS(Base):
     _trs_part: str | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="trs_terms", path=cls.trs_csv)
         add.trait_pipe(nlp, name="trs_part_patterns", compiler=cls.trs_part_patterns())
         add.trait_pipe(
@@ -37,7 +37,7 @@ class TRS(Base):
         add.cleanup_pipe(nlp, name="geocoordinate_cleanup")
 
     @classmethod
-    def trs_part_patterns(cls):
+    def trs_part_patterns(cls) -> list[Compiler]:
         decoder = {
             "/": {"TEXT": {"IN": const.SLASH}},
             ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
@@ -64,7 +64,7 @@ class TRS(Base):
         ]
 
     @classmethod
-    def trs_patterns(cls):
+    def trs_patterns(cls) -> list[Compiler]:
         decoder = {
             "99": {"IS_DIGIT": True},
             ",": {"TEXT": {"REGEX": r"^[,;._:]\Z"}},
@@ -99,12 +99,12 @@ class TRS(Base):
         ]
 
     @classmethod
-    def trs_part_match(cls, ent):
+    def trs_part_match(cls, ent: Span) -> "TRS":
         # Enforce a minimum length
         if len(ent.text) <= cls.min_len:
             raise reject_match.SkipTraitCreation
 
-        trait = super().from_ent(ent, _trs_part=ent.text)
+        trait = cls.from_ent(ent, _trs_part=ent.text)
 
         for token in ent:
             token._.flag = "trs_part"
@@ -115,7 +115,7 @@ class TRS(Base):
         return trait
 
     @classmethod
-    def trs_match(cls, ent):
+    def trs_match(cls, ent: Span) -> "TRS":
         frags = []
 
         for token in ent:
@@ -137,14 +137,14 @@ class TRS(Base):
         if len(trs.split()) < cls.min_len:
             raise reject_match.SkipTraitCreation
 
-        return super().from_ent(ent, trs="present")
+        return cls.from_ent(ent, trs="present")
 
 
 @registry.misc("trs_part_match")
-def trs_part_match(ent):
+def trs_part_match(ent: Span) -> TRS:
     return TRS.trs_part_match(ent)
 
 
 @registry.misc("trs_match")
-def trs_match(ent):
+def trs_match(ent: Span) -> TRS:
     return TRS.trs_match(ent)

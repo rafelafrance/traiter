@@ -7,8 +7,8 @@ from typing import ClassVar
 
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-from spacy.language import Language
-from spacy.util import registry
+from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import term_util
@@ -31,13 +31,13 @@ class Date(Base):
     missing_day: bool | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="date_terms", path=cls.all_csvs)
         add.trait_pipe(nlp, name="date_patterns", compiler=cls.date_patterns())
         add.cleanup_pipe(nlp, name="date_cleanup")
 
     @classmethod
-    def date_patterns(cls):
+    def date_patterns(cls) -> list[Compiler]:
         decoder = {
             "-": {"TEXT": {"REGEX": rf"^[{cls.sep}]$"}},
             "/": {"TEXT": {"REGEX": r"^/$"}},
@@ -84,7 +84,7 @@ class Date(Base):
         ]
 
     @classmethod
-    def date_match(cls, ent):
+    def date_match(cls, ent: Span) -> "Date":
         frags = []
         century_adjust = None
 
@@ -120,7 +120,7 @@ class Date(Base):
 
         date_ = date_.isoformat()[:10]
 
-        return super().from_ent(
+        return cls.from_ent(
             ent,
             date=date_,
             century_adjust=century_adjust,
@@ -128,19 +128,19 @@ class Date(Base):
         )
 
     @classmethod
-    def short_date(cls, ent):
+    def short_date(cls, ent: Span) -> "Date":
         date_ = Date.date_match(ent)
-        date_.trait = "date"
+        date_._trait = "date"
         date_.missing_day = True
-        date_.date = date_.date[:7]
+        date_.date = date_.date[:7] if date_.date else None
         return date_
 
 
 @registry.misc("date_match")
-def date_match(ent):
+def date_match(ent: Span) -> Date:
     return Date.date_match(ent)
 
 
 @registry.misc("short_date_match")
-def short_date_match(ent):
+def short_date_match(ent: Span) -> Date:
     return Date.short_date(ent)

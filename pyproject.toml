@@ -34,60 +34,9 @@ docstring-code-format = true
 
 
 [tool.ruff.lint]
-select = [
-    "F",
-    "E",
-    "W",
-    "C90",
-    "I",
-    "N",
-    "D",
-    "UP",
-    "S",
-    "BLE",
-    "FBT",
-    "B",
-    # "A",
-    "COM",
-    "C4",
-    "T10",
-    "EM",
-    "EXE",
-    "FA",
-    "ISC",
-    "ICN",
-    "G",
-    "INP",
-    "PIE",
-    "T20",
-    "PYI",
-    "PT",
-    "Q",
-    "RSE",
-    "RET",
-    "SLF",
-    "SLOT",
-    "SIM",
-    "TID",
-    "TCH",
-    "INT",
-    # "ARG",
-    "PTH",
-    "TD",
-    "FIX",
-    "PD",
-    "PGH",
-    "PL",
-    "TRY",
-    "FLY",
-    "NPY",
-    "PERF",
-    # "FURB",
-    # "LOG",
-    "RUF",
-]
 
 ignore = [
+    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
     "COM812",  # Trailing comma missing
     "D100",    # Missing docstring in public module
     "D101",    # Missing docstring in public class

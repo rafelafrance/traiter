@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import ClassVar
 
 from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add
 from traiter.pylib import const as t_const
@@ -36,13 +37,11 @@ class Number(Base):
     is_int: bool | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language, _overwrite: list[str] | None = None):
+    def pipe(cls, nlp: Language, _overwrite: list[str] | None = None) -> None:
         global UNIQUE
         UNIQUE += 1
 
         add.term_pipe(nlp, name=f"number_terms_{UNIQUE}", path=cls.csv)
-
-        # add.debug_tokens(nlp)  # ###########################################
 
         add.trait_pipe(
             nlp, name=f"number_word_{UNIQUE}", compiler=cls.number_word_patterns()
@@ -51,7 +50,7 @@ class Number(Base):
         add.trait_pipe(nlp, name=f"number_{UNIQUE}", compiler=cls.number_patterns())
 
     @classmethod
-    def number_patterns(cls):
+    def number_patterns(cls) -> list[Compiler]:
         decoder = {
             ",": {"TEXT": {"IN": t_const.COMMA}},
             "99.0": {"LOWER": {"REGEX": f"^{FLOAT_RE}+$"}},
@@ -73,7 +72,7 @@ class Number(Base):
         ]
 
     @classmethod
-    def number_word_patterns(cls):
+    def number_word_patterns(cls) -> list[Compiler]:
         decoder = {
             "word": {"ENT_TYPE": "number_word"},
         }
@@ -89,27 +88,27 @@ class Number(Base):
         ]
 
     @classmethod
-    def number_match(cls, ent):
+    def number_match(cls, ent: Span) -> "Number":
         number = as_float(ent.text)
         is_int = re.search(r"[.]", ent.text) is None
-        trait = super().from_ent(ent, number=number, is_int=is_int)
+        trait = cls.from_ent(ent, number=number, is_int=is_int)
         return trait
 
     @classmethod
-    def number_word_match(cls, ent):
+    def number_word_match(cls, ent: Span) -> "Number":
         word = ent.text.lower()
         number = cls.replace.get(word)
 
-        trait = super().from_ent(ent, number=number, is_word=True)
+        trait = cls.from_ent(ent, number=number, is_word=True)
 
         return trait
 
 
 @registry.misc("number_match")
-def number_match(ent):
+def number_match(ent: Span) -> Number:
     return Number.number_match(ent)
 
 
 @registry.misc("number_word_match")
-def number_word_match(ent):
+def number_word_match(ent: Span) -> Number:
     return Number.number_word_match(ent)

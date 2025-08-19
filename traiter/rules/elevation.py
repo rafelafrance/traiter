@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
 
-from spacy.language import Language
-from spacy.util import registry
+from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add
 from traiter.pylib import const, term_util, util
@@ -42,18 +42,17 @@ class Elevation(Base):
     about: bool | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="elevation_terms", path=cls.all_csvs)
         add.trait_pipe(
             nlp,
             name="elevation_patterns",
             compiler=cls.elevation_compilers(),
         )
-        # add.debug_tokens(nlp)  # ##########################################
         add.cleanup_pipe(nlp, name="elevation_cleanup")
 
     @classmethod
-    def elevation_compilers(cls):
+    def elevation_compilers(cls) -> list[Compiler]:
         label_ender = r"[:=;,.]"
         return [
             Compiler(
@@ -84,7 +83,7 @@ class Elevation(Base):
         ]
 
     @classmethod
-    def elevation_match(cls, ent):
+    def elevation_match(cls, ent: Span) -> "Elevation":
         values = []
         units_ = ""
         expected_len = 1
@@ -126,5 +125,5 @@ class Elevation(Base):
 
 
 @registry.misc("elevation_match")
-def elevation_match(ent):
+def elevation_match(ent: Span) -> Elevation:
     return Elevation.elevation_match(ent)

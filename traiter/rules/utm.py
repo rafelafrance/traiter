@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import ClassVar
 
 from spacy.language import Language
+from spacy.tokens import Span
 from spacy.util import registry
 
 from traiter.pipes import add
@@ -29,13 +30,13 @@ class UTM(Base):
     datum: str | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="utm_terms", path=cls.all_csvs)
         add.trait_pipe(nlp, name="utm_patterns", compiler=cls.utm_patterns())
         add.cleanup_pipe(nlp, name="utm_cleanup")
 
     @classmethod
-    def utm_patterns(cls):
+    def utm_patterns(cls) -> list[Compiler]:
         decoder = {
             "(": {"TEXT": {"IN": const.OPEN}},
             ")": {"TEXT": {"IN": const.CLOSE}},
@@ -64,7 +65,7 @@ class UTM(Base):
         ]
 
     @classmethod
-    def format_coords(cls, frags):
+    def format_coords(cls, frags: list[str]) -> str:
         coords = " ".join(frags)
         coords = re.sub(rf"\s([{cls.punct}])", r"\1", coords)
         coords = re.sub(r"\s(:)", r"\1", coords)
@@ -73,7 +74,7 @@ class UTM(Base):
         return " ".join(coords.split())
 
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def utm_match(cls, ent: Span) -> "UTM":
         frags = []
         datum = []
 
@@ -99,9 +100,9 @@ class UTM(Base):
 
         utm = cls.format_coords(frags)
 
-        return super().from_ent(ent, utm=utm, datum=datum)
+        return cls.from_ent(ent, utm=utm, datum=datum)
 
 
 @registry.misc("utm_match")
-def utm_match(ent):
-    return UTM.from_ent(ent)
+def utm_match(ent: Span) -> UTM:
+    return UTM.utm_match(ent)

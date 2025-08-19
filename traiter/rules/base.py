@@ -1,6 +1,8 @@
 from dataclasses import asdict, dataclass
+from typing import Any
 
 from spacy.language import Language
+from spacy.tokens import Span
 
 
 @dataclass(eq=False)
@@ -10,11 +12,11 @@ class Base:
     _trait: str | None = None
     _text: str | None = None
 
-    def __eq__(self, other):
+    def __eq__(self, other: "Base") -> bool:
         return self.to_dict() == other.to_dict()
 
     @classmethod
-    def from_ent(cls, ent, **kwargs):
+    def from_ent(cls, ent: Span, **kwargs: Any) -> "Base":
         kwargs["start"] = ent.start_char
         kwargs["end"] = ent.end_char
         kwargs["_trait"] = ent.label_
@@ -25,5 +27,5 @@ class Base:
         return {k: v for k, v in asdict(self).items() if v is not None and k[0] != "_"}
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         raise NotImplementedError

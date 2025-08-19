@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar
 
-from spacy.language import Language
-from spacy.util import registry
+from spacy import Language, registry
+from spacy.tokens import Span
 
 from traiter.pipes import add
 from traiter.pylib import const, term_util
@@ -23,14 +23,13 @@ class Color(Base):
     missing: bool | None = None
 
     @classmethod
-    def pipe(cls, nlp: Language):
+    def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="color_terms", path=cls.color_csv)
-        # add.debug_tokens(nlp)  # ##################################################
         add.trait_pipe(nlp, name="color_patterns", compiler=cls.color_patterns())
         add.cleanup_pipe(nlp, name="color_cleanup")
 
     @classmethod
-    def color_patterns(cls):
+    def color_patterns(cls) -> list[Compiler]:
         return [
             Compiler(
                 label="color",
@@ -50,7 +49,7 @@ class Color(Base):
         ]
 
     @classmethod
-    def color_match(cls, ent):
+    def color_match(cls, ent: Span) -> "Color":
         missing = None
         frags = []
         for token in ent:
@@ -77,9 +76,9 @@ class Color(Base):
         value = "-".join(frags)
         color = cls.replace.get(value, value)
 
-        return super().from_ent(ent, color=color, missing=missing)
+        return cls.from_ent(ent, color=color, missing=missing)
 
 
 @registry.misc("color_match")
-def color_match(ent):
+def color_match(ent: Span) -> Color:
     return Color.color_match(ent)
