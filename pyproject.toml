@@ -102,8 +102,9 @@ ignore = [
     "N818",    # Exception name {name} should be named with an Error suffix
     "PD901",   # Avoid using the generic variable name df for DataFrames
     "PLR0913", # Too many arguments in function definition ({c_args} > {max_args})
-    "PLW2901", # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
     "PLW0603", # Using the global statement to update {name} is discouraged
+    "PLW1641", # Object does not implement `__hash__` method
+    "PLW2901", # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
     "PT009",   # Use a regular assert instead of unittest-style {assertion}
     "RET504",  # Unnecessary assignment to {name} before return statement
     "RUF001",  # String contains ambiguous {}. Did you mean {}?
