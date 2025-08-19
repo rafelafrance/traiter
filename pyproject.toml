@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.8.12"]
+build-backend = "uv_build"
 
 [project]
 name = "traiter"
@@ -11,29 +11,18 @@ license = { file = "LICENSE" }
 authors = [{ name = "Raphael LaFrance", email = "rafelafrance@proton.me" }]
 requires-python = ">=3.13"
 dependencies = [
-    "ftfy",
-    "regex",
-    "python-dateutil",
-    "spacy",           # "spacy[cuda11x]",
-]
-optional-dependencies.dev = [
-    "build",
-    "neovim",
-    "pre-commit",
-    "pre-commit-hooks",
-    "ruff",
-    "ruff-lsp",
+    "ftfy>=6.3.1",
+    "pip>=25.2",
+    "python-dateutil>=2.9.0.post0",
+    "regex>=2025.7.34",
+    "spacy>=3.8.7",
 ]
 
-[project.scripts]
+[tool.uv.build-backend]
+module-root = "."
+module-name = "traiter"
 
-[tool.setuptools]
-py-modules = []
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["traiter"]
-namespaces = false
+[tool.uv]
 
 [tool.ruff]
 target-version = "py313"
@@ -58,7 +47,7 @@ select = [
     "BLE",
     "FBT",
     "B",
-    #    "A",
+    # "A",
     "COM",
     "C4",
     "T10",
@@ -82,7 +71,7 @@ select = [
     "TID",
     "TCH",
     "INT",
-    #    "ARG",
+    # "ARG",
     "PTH",
     "TD",
     "FIX",
@@ -93,8 +82,8 @@ select = [
     "FLY",
     "NPY",
     "PERF",
-    #    "FURB",
-    #    "LOG",
+    # "FURB",
+    # "LOG",
     "RUF",
 ]
 

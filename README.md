@@ -6,7 +6,7 @@ These days this code is mainly used to:
 
 -- ~~If you can get away with it, you may want to try an end-to-end machine learning approach.~~
 
-I just spent a substantial effort on using a machine learning model, and I was wrong about the relative usefulness of rule-based and machine learning approaches for information extraction. Both have their strengths and weaknesses. I am now convinced that for the next couple of years you will need either a hybrid approach with, maybe, a custom model. However, I still do not recommend a rule only approach.
+I just spent a substantial effort on using a machine learning model, and I was wrong about the relative usefulness of rule-based and machine learning approaches for information extraction. Both have their strengths and weaknesses.
 
 ## Traiter
 This is the rule-based Traiter information extraction/data mining library used by all client Traiter projects.
@@ -22,7 +22,7 @@ Some literature mined:
 - Images of PDFs of species descriptions and distribution data.
 - Images of data collection notes.
 
-**Note** All terms, traits, and extraction methods are unique to the body of literature being mined so this repository only contains truly universal terms, traits or, for that matter, functions used across many research domains.
+**Note** All terms, traits, and extraction methods are unique to the body of literature being mined so this repository only contains truly universal terms, traits, or functions used across many research domains.
 
 ## SpaCy Entities vs Traits:
 - *A trait is just an annotated spaCy entity.* That is, I'm treating traits (aka attributes) as if they were their own entity. This has the advantage in that I can use named entity recognition (NER) techniques on them. We can also use standard entity link methods for linking traits to entities.
@@ -40,13 +40,7 @@ Some literature mined:
 ![parsing example](assets/anoplura_rules.png)
 
 ## Install
-You will need GIT to clone this repository. You will also need to have Python3.11+ installed, as well as pip, a package manager for Python.
-You can install the requirements into your python environment like so:
-```bash
-git clone https://github.com/rafelafrance/traiter.git
-cd /path/to/traiter
-make install
-```
+TODO: Change to use `uv`.
 
 ## Run
 This repository is a library for other Traiter projects and is not designed to be run directly.
@@ -55,5 +49,5 @@ This repository is a library for other Traiter projects and is not designed to b
 
 There are tests which you can run like so:
 ```bash
-make test
+uv run -m unittest discover
 ```
