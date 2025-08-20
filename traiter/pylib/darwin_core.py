@@ -1,5 +1,6 @@
 import csv
 from collections import defaultdict
+from collections.abc import Generator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -13,7 +14,7 @@ SEP = " | "
 FIELD_SEP = " ~ "
 
 
-def read_dwc_terms():
+def read_dwc_terms() -> tuple[dict, dict]:
     core, dublin = {}, {}
 
     path = Path(__file__).parent.parent / "rules" / "terms" / "dwc_terms.csv"
@@ -56,7 +57,7 @@ class DarwinCore:
         return out
 
     @staticmethod
-    def convert_value_list(key, values):
+    def convert_value_list(key: str, values: str | list[str]) -> str:
         flat = []
         for value in values:
             if isinstance(value, list):
@@ -84,14 +85,14 @@ class DarwinCore:
         msg = f"Field: {key} has mixed value types: {values=}"
         raise ValueError(msg)
 
-    def add(self, **kwargs) -> "DarwinCore":
+    def add(self, **kwargs: str | None) -> "DarwinCore":
         for key, value in kwargs.items():
             key = key if key.startswith(DWC) else self.ns(key)
             if value is not None and value not in self.props[key]:
                 self.props[key].append(value)
         return self
 
-    def add_dyn(self, **kwargs) -> "DarwinCore":
+    def add_dyn(self, **kwargs: str | None) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None and value not in self.dyn_props[key]:
                 self.dyn_props[key].append(value)
@@ -113,21 +114,21 @@ class DarwinCore:
         return formatted
 
     @staticmethod
-    def ns(name):
+    def ns(name: str) -> str:
         namespace = DC if name in DUBLIN else DWC
         return name if name.startswith(namespace) else namespace + name
 
     @staticmethod
-    def remove_ns(label):
+    def remove_ns(label: str) -> str:
         return label.split(":")[-1]
 
-    def items(self):
+    def items(self) -> Generator[tuple[str, Any]]:
         yield from {k: v for k, v in self.props.items() if k != DYN}.items()
         if self.props[DYN]:
             yield from self.props[DYN].items()
 
     @staticmethod
-    def key(*args, prepend: str | None = None) -> str:
+    def key(*args: str, prepend: str | None = None) -> str:
         key = [prepend] if prepend else []
         key += list(args)
         key = " ".join(key).replace("-", " ").split()

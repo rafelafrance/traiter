@@ -5,7 +5,7 @@ from traiter.rules.elevation import Elevation
 
 
 class TestElevation(unittest.TestCase):
-    def test_elevation_01(self):
+    def test_elevation_01(self) -> None:
         """It handles metric units."""
         self.assertEqual(
             parse(""" Elevation: 1463m """),
@@ -19,7 +19,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_02(self):
+    def test_elevation_02(self) -> None:
         """It handles a measurement in different units."""
         self.assertEqual(
             parse(""" Elev: 782m. (2566 ft) """),
@@ -33,7 +33,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_03(self):
+    def test_elevation_03(self) -> None:
         """It handles a range."""
         traits = parse(""" Elev. 9,500-9640 ft. """)
         self.assertEqual(traits[0].start, 0)
@@ -42,7 +42,7 @@ class TestElevation(unittest.TestCase):
         self.assertAlmostEqual(traits[0].elevation, 2895.6)
         self.assertAlmostEqual(traits[0].elevation_high, 2938.272)
 
-    def test_elevation_04(self):
+    def test_elevation_04(self) -> None:
         """Make sure punctuation is not interpreted as numbers."""
         self.assertEqual(
             parse(""" alt., 250 m. """),
@@ -56,7 +56,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_05(self):
+    def test_elevation_05(self) -> None:
         self.assertEqual(
             parse("""Alto.: 834m/2735ft."""),
             [
@@ -69,7 +69,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_06(self):
+    def test_elevation_06(self) -> None:
         self.assertEqual(
             parse("""Elev. ca, 200 m."""),
             [
@@ -83,7 +83,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_07(self):
+    def test_elevation_07(self) -> None:
         self.assertEqual(
             parse("""975m/3200ft"""),
             [
@@ -96,7 +96,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_08(self):
+    def test_elevation_08(self) -> None:
         traits = parse("""Elev. ca. 460 - 470 ft""")
         self.assertEqual(traits[0].start, 0)
         self.assertEqual(traits[0].end, 22)
@@ -104,7 +104,7 @@ class TestElevation(unittest.TestCase):
         self.assertAlmostEqual(traits[0].elevation, 140.208)
         self.assertAlmostEqual(traits[0].elevation_high, 143.256)
 
-    def test_elevation_09(self):
+    def test_elevation_09(self) -> None:
         self.assertEqual(
             parse("""elev: 737m. (2417 ft.)"""),
             [
@@ -117,7 +117,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_10(self):
+    def test_elevation_10(self) -> None:
         self.assertEqual(
             parse(
                 """Elev.
@@ -135,7 +135,7 @@ class TestElevation(unittest.TestCase):
             ],
         )
 
-    def test_elevation_11(self):
+    def test_elevation_11(self) -> None:
         self.assertEqual(
             parse("""Elev 85’."""),
             [

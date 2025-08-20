@@ -10,13 +10,13 @@ from traiter.pylib.pattern_compiler import ACCUMULATOR, Compiler
 
 
 def term_pipe(
-    nlp,
+    nlp: Language,
     *,
     name: str,
     path: Path | list[Path],
     default_labels: dict[str, str] | None = None,
     delete_patterns: list[str] | str | None = None,
-):
+) -> None:
     default_labels = default_labels if default_labels else {}
     paths = path if isinstance(path, Iterable) else [path]
     if isinstance(delete_patterns, str):
@@ -52,12 +52,12 @@ def term_pipe(
 
 
 def trait_pipe(
-    nlp,
+    nlp: Language,
     *,
     name: str,
     compiler: list[Compiler] | Compiler,
     overwrite: list[str] | None = None,
-):
+) -> None:
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     patterns = defaultdict(list)
     dispatch = {}
@@ -79,12 +79,12 @@ def trait_pipe(
 
 
 def context_pipe(
-    nlp,
+    nlp: Language,
     *,
     name: str,
     compiler: list[Compiler] | Compiler,
     overwrite: list[str] | None = None,
-):
+) -> None:
     compilers = compiler if isinstance(compiler, Iterable) else [compiler]
     patterns = defaultdict(list)
     dispatch = {}
@@ -104,14 +104,14 @@ def context_pipe(
     nlp.add_pipe(context.CONTEXT_TRAITS, name=name, config=config)
 
 
-def cleanup_pipe(nlp: Language, *, name: str):
+def cleanup_pipe(nlp: Language, *, name: str) -> None:
     config = {"keep": ACCUMULATOR.keep}
     nlp.add_pipe(cleanup.CLEANUP_TRAITS, name=name, config=config)
 
 
-def debug_tokens(nlp: Language):
+def debug_tokens(nlp: Language) -> None:
     debug.tokens(nlp)
 
 
-def debug_ents(nlp: Language):
+def debug_ents(nlp: Language) -> None:
     debug.ents(nlp)

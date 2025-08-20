@@ -17,7 +17,7 @@ class PhrasePipe:
         patterns: list[dict],
         attr: str = "lower",
         replace: dict[str, str] | None = None,
-    ):
+    ) -> None:
         self.nlp = nlp
         self.name = name
         self.patterns = patterns
@@ -26,7 +26,7 @@ class PhrasePipe:
 
         self.matcher = self.build_matcher()
 
-    def build_matcher(self):
+    def build_matcher(self) -> PhraseMatcher:
         matcher = PhraseMatcher(self.nlp.vocab, attr=self.attr.upper())
 
         by_label = defaultdict(list)

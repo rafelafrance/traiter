@@ -7,6 +7,7 @@ traits. It is based on traits so you the new trait must be a previous phrase or 
 trait match.
 """
 
+from collections.abc import Callable
 from typing import Any
 
 from spacy import util
@@ -28,7 +29,7 @@ class ContextTraits:
         patterns: dict[str, list[list[dict[str, Any]]]],
         dispatch: dict[str, str] | None = None,
         overwrite: list[str] | None = None,
-    ):
+    ) -> None:
         self.nlp = nlp
         self.name = name
         self.patterns = patterns
@@ -38,7 +39,7 @@ class ContextTraits:
         self.dispatch_table = self.build_dispatch_table()
         self.matcher = self.build_matcher()
 
-    def build_dispatch_table(self):
+    def build_dispatch_table(self) -> dict[str, Callable]:
         dispatch_table = {}
         if self.dispatch:
             for label, registered in self.dispatch.items():
@@ -46,7 +47,7 @@ class ContextTraits:
                     dispatch_table[label] = func
         return dispatch_table
 
-    def build_matcher(self):
+    def build_matcher(self) -> Matcher:
         matcher = Matcher(self.nlp.vocab)
         for label, patterns in self.patterns.items():
             matcher.add(label, patterns, greedy="FIRST")

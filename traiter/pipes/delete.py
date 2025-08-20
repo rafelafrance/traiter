@@ -8,7 +8,7 @@ DELETE_COUNT = 0
 DELETE_TRAITS = "delete_traits"
 
 
-def pipe(nlp: Language, delete: list[str]):
+def pipe(nlp: Language, delete: list[str]) -> None:
     global DELETE_COUNT
     DELETE_COUNT += 1
     config = {"delete": delete}
@@ -22,7 +22,7 @@ class DeleteTraits:
         nlp: Language,
         name: str,
         delete: list[str],  # List of traits to delete
-    ):
+    ) -> None:
         super().__init__()
         self.nlp = nlp
         self.name = name

@@ -12,7 +12,7 @@ def parse(text: str) -> list:
     return [e._.trait for e in doc.ents]
 
 
-def to_dwc(label: str, text: str):
+def to_dwc(label: str, text: str) -> dict:
     doc = PIPELINE(text)
 
     # Isolate the trait being tested

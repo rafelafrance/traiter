@@ -6,7 +6,7 @@ from traiter.rules.uuid import Uuid
 
 
 class TestUuid(unittest.TestCase):
-    def test_uuid_01(self):
+    def test_uuid_01(self) -> None:
         self.assertEqual(
             parse("c701563b-dbd9-4500-184f-1ad61eb8da11"),
             [
@@ -18,7 +18,7 @@ class TestUuid(unittest.TestCase):
             ],
         )
 
-    def test_uuid_02(self):
+    def test_uuid_02(self) -> None:
         self.assertEqual(
             parse(
                 '{"created": "2014-10-29", "relatedresourceid": '

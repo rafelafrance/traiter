@@ -6,7 +6,7 @@ from traiter.rules.trs import TRS
 
 
 class TestTRSPatterns(unittest.TestCase):
-    def test_trs_01(self):
+    def test_trs_01(self) -> None:
         self.assertEqual(
             parse("""TRS: NE/14 NW1/4 NW1/4 Nw1/4 S21 T39S R20E"""),
             [
@@ -18,7 +18,7 @@ class TestTRSPatterns(unittest.TestCase):
             ],
         )
 
-    def test_trs_02(self):
+    def test_trs_02(self) -> None:
         self.assertEqual(
             parse("""TRS: T20N R20W sec 14, 23;"""),
             [
@@ -30,7 +30,7 @@ class TestTRSPatterns(unittest.TestCase):
             ],
         )
 
-    def test_trs_03(self):
+    def test_trs_03(self) -> None:
         self.assertEqual(
             parse("""TRS: T7N R1E sec 30 39.10010 -112.298611"""),
             [
@@ -43,7 +43,7 @@ class TestTRSPatterns(unittest.TestCase):
             ],
         )
 
-    def test_trs_04(self):
+    def test_trs_04(self) -> None:
         self.assertEqual(
             parse("""T22N, R27E, S36."""),
             [
@@ -55,7 +55,7 @@ class TestTRSPatterns(unittest.TestCase):
             ],
         )
 
-    def test_trs_05(self):
+    def test_trs_05(self) -> None:
         self.assertEqual(
             parse("""Lehigh Acres T44S, R26E, S25, NEZ Shallow water"""),
             [
@@ -67,7 +67,7 @@ class TestTRSPatterns(unittest.TestCase):
             ],
         )
 
-    def test_trs_06(self):
+    def test_trs_06(self) -> None:
         self.assertEqual(
             parse("""Sec 20, T33N, R7E,"""),
             [
@@ -79,13 +79,13 @@ class TestTRSPatterns(unittest.TestCase):
             ],
         )
 
-    def test_trs_07(self):
+    def test_trs_07(self) -> None:
         self.assertEqual(
             parse("""NW 32nd Avenue"""),
             [],
         )
 
-    def test_trs_08(self):
+    def test_trs_08(self) -> None:
         self.assertEqual(
             parse("""Sec.33 T37N,"""),
             [

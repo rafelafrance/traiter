@@ -66,7 +66,7 @@ def append_abbrevs(nlp: Language, abbrevs: list[str]) -> None:
         nlp.tokenizer.add_special_case(abbrev, [{"ORTH": abbrev}])
 
 
-def remove_special_case(nlp: Language, remove: list[str]):
+def remove_special_case(nlp: Language, remove: list[str]) -> None:
     """
     Remove special rules from the tokenizer.
 
@@ -78,14 +78,14 @@ def remove_special_case(nlp: Language, remove: list[str]):
         nlp.tokenizer.add_special_case(text, [{"ORTH": text}])
 
 
-def get_states():
+def get_states() -> set[str]:
     path = Path(terms.__file__).parent / "us_location_terms.csv"
     with path.open(encoding="utf8") as in_file:
         reader = csv.DictReader(in_file)
         return {t["pattern"] for t in reader if t["label"] == "us_state"}
 
 
-def setup_tokenizer(nlp):
+def setup_tokenizer(nlp: Language) -> None:
     append_prefix_regex(nlp, PREFIX)
     append_infix_regex(nlp, INFIX)
     append_suffix_regex(nlp, SUFFIX)

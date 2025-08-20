@@ -11,7 +11,7 @@ from traiter.rules.utm import UTM
 from traiter.rules.uuid import Uuid
 
 
-def build():
+def build() -> spacy.Language:
     extensions.add_extensions()
 
     nlp = spacy.load("en_core_web_md", exclude=["ner"])

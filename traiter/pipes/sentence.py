@@ -14,7 +14,9 @@ SENTENCES = "sentences"
 
 @Language.factory(SENTENCES)
 class Sentence:
-    def __init__(self, nlp: Language, name: str, base_model: str = "en_core_web_md"):
+    def __init__(
+        self, nlp: Language, name: str, base_model: str = "en_core_web_md"
+    ) -> None:
         self.nlp = nlp
         self.name = name
 

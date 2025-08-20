@@ -5,7 +5,7 @@ from traiter.rules.color import Color
 
 
 class TestColor(unittest.TestCase):
-    def test_color_01(self):
+    def test_color_01(self) -> None:
         self.assertEqual(
             parse(
                 """hypanthium green or greenish yellow,
@@ -38,7 +38,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_02(self):
+    def test_color_02(self) -> None:
         self.assertEqual(
             parse("hypanthium straw-colored to sulphur-yellow or golden-yellow."),
             [
@@ -60,7 +60,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_03(self):
+    def test_color_03(self) -> None:
         self.assertEqual(
             parse("sepals erect, green- or red-tipped."),
             [
@@ -77,7 +77,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_04(self):
+    def test_color_04(self) -> None:
         self.assertEqual(
             parse("petals white, cream, or pale green [orange to yellow]."),
             [
@@ -109,7 +109,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_05(self):
+    def test_color_05(self) -> None:
         """It handles pattern notations within colors."""
         self.maxDiff = None
         self.assertEqual(
@@ -159,7 +159,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_06(self):
+    def test_color_06(self) -> None:
         self.assertEqual(
             parse(
                 """
@@ -207,7 +207,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_07(self):
+    def test_color_07(self) -> None:
         self.assertEqual(
             parse("calyx yellow"),
             [
@@ -219,7 +219,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_08(self):
+    def test_color_08(self) -> None:
         self.assertEqual(
             parse("corolla yellow"),
             [
@@ -231,7 +231,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_09(self):
+    def test_color_09(self) -> None:
         self.assertEqual(
             parse("flower yellow"),
             [
@@ -243,7 +243,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_10(self):
+    def test_color_10(self) -> None:
         self.assertEqual(
             parse("hypanthium yellow"),
             [
@@ -255,7 +255,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_11(self):
+    def test_color_11(self) -> None:
         self.assertEqual(
             parse("petal pale sulfur-yellow."),
             [
@@ -267,7 +267,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_12(self):
+    def test_color_12(self) -> None:
         self.assertEqual(
             parse("sepal yellow"),
             [
@@ -279,7 +279,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_13(self):
+    def test_color_13(self) -> None:
         self.assertEqual(
             parse("Leaves acaulescent or nearly so, with white hairs."),
             [
@@ -291,7 +291,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_14(self):
+    def test_color_14(self) -> None:
         self.assertEqual(
             parse("leaflets surfaces rather densely spotted with blackish dots"),
             [
@@ -303,7 +303,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_15(self):
+    def test_color_15(self) -> None:
         self.assertEqual(
             parse("Petals purplish in life, whitish yellowish when dry;"),
             [
@@ -320,7 +320,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_16(self):
+    def test_color_16(self) -> None:
         self.assertEqual(
             parse("Petals red or golden yellowish"),
             [
@@ -337,7 +337,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_17(self):
+    def test_color_17(self) -> None:
         self.assertEqual(
             parse("twigs: young growth green or reddish-tinged."),
             [
@@ -354,7 +354,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_18(self):
+    def test_color_18(self) -> None:
         self.assertEqual(
             parse(
                 """stipules, the young stems and lf-axes hispid with stout, partly
@@ -369,7 +369,7 @@ class TestColor(unittest.TestCase):
             ],
         )
 
-    def test_color_19(self):
+    def test_color_19(self) -> None:
         """It does not repeat colors."""
         self.assertEqual(
             parse("""petals clear lemon yellow."""),

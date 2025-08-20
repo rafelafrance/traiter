@@ -5,19 +5,19 @@ from traiter.pylib.util import shorten
 
 
 class TestSentence(unittest.TestCase):
-    def test_sentencizer_01(self):
+    def test_sentencizer_01(self) -> None:
         text = shorten("""It was common “along a tiny stream.” Argia apicalis.""")
         doc = PIPELINE(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 2)
 
-    def test_sentencizer_02(self):
+    def test_sentencizer_02(self) -> None:
         text = shorten("""(Dunn et al. 2009, Jørgensen 2015).""")
         doc = PIPELINE(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 1)
 
-    def test_sentencizer_03(self):
+    def test_sentencizer_03(self) -> None:
         text = """Abbreviated
             when
             subsequently mentioned."""
@@ -25,13 +25,13 @@ class TestSentence(unittest.TestCase):
         sents = list(doc.sents)
         self.assertEqual(len(sents), 1)
 
-    def test_sentencizer_04(self):
+    def test_sentencizer_04(self) -> None:
         text = """Up to 3 mm. Sometimes blue."""
         doc = PIPELINE(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 2)
 
-    def test_sentencizer_05(self):
+    def test_sentencizer_05(self) -> None:
         text = shorten(
             """
            Plants perennial (rhizomatous), usually glabrous, sometimes sparsely hairy.
@@ -42,7 +42,7 @@ class TestSentence(unittest.TestCase):
         sents = list(doc.sents)
         self.assertEqual(len(sents), 3)
 
-    def test_sentencizer_06(self):
+    def test_sentencizer_06(self) -> None:
         text = shorten(
             """
             Capsules 8–15 × 6–12 mm, larger wings deltate-rounded, 10–17 mm wide,
@@ -53,19 +53,19 @@ class TestSentence(unittest.TestCase):
         sents = list(doc.sents)
         self.assertEqual(len(sents), 2)
 
-    def test_sentencizer_07(self):
+    def test_sentencizer_07(self) -> None:
         text = shorten("""Ciald., Darwiniana.""")
         doc = PIPELINE(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 1)
 
-    def test_sentencizer_08(self):
+    def test_sentencizer_08(self) -> None:
         text = shorten("""(e.g. 1. carinata, Fig. 231).""")
         doc = PIPELINE(text)
         sents = list(doc.sents)
         self.assertEqual(len(sents), 1)
 
-    def test_sentencizer_09(self):
+    def test_sentencizer_09(self) -> None:
         text = shorten("""I""")
         doc = PIPELINE(text)
         sents = list(doc.sents)

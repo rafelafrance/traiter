@@ -1,9 +1,10 @@
+from collections.abc import Callable
 from typing import Any
 
 from spacy import util
 from spacy.language import Language
 from spacy.matcher import Matcher
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 
 from traiter.pipes.reject_match import SkipTraitCreation
 
@@ -20,7 +21,7 @@ class AddTraits:
         dispatch: dict[str, str] | None = None,
         keep: list[str] | None = None,  # Don't overwrite these entities
         overwrite: list[str] | None = None,  # Only overwrite these entities
-    ):
+    ) -> None:
         self.nlp = nlp
         self.name = name
         self.patterns = patterns
@@ -31,7 +32,7 @@ class AddTraits:
         self.dispatch_table = self.build_dispatch_table()
         self.matcher = self.build_matcher()
 
-    def build_dispatch_table(self):
+    def build_dispatch_table(self) -> dict[str, Callable]:
         dispatch_table = {}
         if self.dispatch:
             for label, registered in self.dispatch.items():
@@ -39,7 +40,7 @@ class AddTraits:
                     dispatch_table[label] = func
         return dispatch_table
 
-    def build_matcher(self):
+    def build_matcher(self) -> Matcher:
         matcher = Matcher(self.nlp.vocab)
         # Can't be greedy if we are keeping traits in the middle of a match
         greedy = None if self.keep else "LONGEST"
@@ -81,7 +82,9 @@ class AddTraits:
         return doc
 
     @staticmethod
-    def add_untouched_entities(doc, entities, used_tokens):
+    def add_untouched_entities(
+        doc: Doc, entities: list[Span], used_tokens: set[int]
+    ) -> None:
         """Add entities that do not overlap with any of the matches."""
         for ent in doc.ents:
             ent_tokens = set(range(ent.start, ent.end))
@@ -89,7 +92,9 @@ class AddTraits:
                 entities.append(ent)
 
     @staticmethod
-    def remove_overlapping_matches(matches, used_tokens):
+    def remove_overlapping_matches(
+        matches: list[Span], used_tokens: set[int]
+    ) -> list[Span]:
         """Remove any matches that overlap with an entity we kept."""
         filtered_matches = []
         for match in matches:
@@ -99,7 +104,7 @@ class AddTraits:
             filtered_matches.append(match)
         return filtered_matches
 
-    def filter_entities(self, doc):
+    def filter_entities(self, doc: Doc) -> tuple[list[Span], set[Any]]:
         used_tokens: set[Any] = set()
         entities = []
         for ent in doc.ents:

@@ -9,7 +9,7 @@ from zipfile import ZipFile
 def look_up_table(
     csv_path: Path | Iterable[Path],
     field: str,
-    type_=None,
+    type_: str | None = None,
 ) -> dict[str, Any]:
     paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
     data = {}
@@ -22,7 +22,7 @@ def look_up_table(
 def term_patterns(
     terms: list[dict[str, Any]],
     field: str,
-    type_=None,
+    type_: str | None = None,
 ) -> dict[str, Any]:
     type_ = type_ if type_ else str
     data = {}

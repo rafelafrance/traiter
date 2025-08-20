@@ -1,5 +1,3 @@
-from typing import Any
-
 import ftfy
 import regex as re
 
@@ -15,7 +13,7 @@ def compress(text: str) -> str:
     return "\n".join(ln for ln in text if ln)
 
 
-def to_positive_float(value: Any) -> float | None:
+def to_positive_float(value: str | float) -> float | None:
     if isinstance(value, str):
         value = re.sub(r"[^\d./]", "", value) if value else ""
     try:
@@ -24,7 +22,7 @@ def to_positive_float(value: Any) -> float | None:
         return None
 
 
-def to_positive_int(value: Any) -> int | None:
+def to_positive_int(value: str | float) -> int | None:
     if isinstance(value, str):
         value = re.sub(r"[^\d./]", "", value) if value else ""
         value = re.sub(r"\.$", "", value)

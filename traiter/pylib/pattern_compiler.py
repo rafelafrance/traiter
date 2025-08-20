@@ -12,7 +12,7 @@ from warnings import warn
 
 
 class CompilerAccumulator:
-    def __init__(self):
+    def __init__(self) -> None:
         self._keep = {}
 
     @property
@@ -20,11 +20,11 @@ class CompilerAccumulator:
         return list(self._keep.keys())
 
     @keep.setter
-    def keep(self, labels: str | list[str]):
+    def keep(self, labels: str | list[str]) -> None:
         labels = labels if isinstance(labels, list) else [labels]
         self._keep |= dict.fromkeys(labels, 1)
 
-    def delete(self, labels: str | list[str]):
+    def delete(self, labels: str | list[str]) -> None:
         labels = labels if isinstance(labels, list) else [labels]
         self._keep = {lb: 1 for lb in self._keep if lb not in labels}
 
@@ -41,7 +41,7 @@ class Compiler:
         decoder: dict[str, dict],
         patterns: list[str],
         is_temp: bool = False,
-    ):
+    ) -> None:
         self.label = label
         self.raw_patterns = patterns
         self.decoder = decoder
@@ -51,7 +51,7 @@ class Compiler:
         if not is_temp:
             ACCUMULATOR.keep = self.label
 
-    def compile(self):
+    def compile(self) -> "Compiler":
         """Convert raw patterns strings to spacy matcher pattern arrays."""
         for string in self.raw_patterns:
             pattern_seq = []

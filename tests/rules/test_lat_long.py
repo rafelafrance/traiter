@@ -7,7 +7,7 @@ from traiter.rules.lat_long import LatLong
 
 
 class TestLatLong(unittest.TestCase):
-    def test_lat_long_01(self):
+    def test_lat_long_01(self) -> None:
         self.assertEqual(
             parse("""Grassland, GPS 30° 49’ 27’ N, 99" 15' 22 W May"""),
             [
@@ -20,7 +20,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_02(self):
+    def test_lat_long_02(self) -> None:
         self.assertEqual(
             parse("""floodplain wetland. 40.104905N, 79.324561W NAD83"""),
             [
@@ -38,7 +38,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_03(self):
+    def test_lat_long_03(self) -> None:
         self.assertEqual(
             parse("""32° 19.517' N 110° 40.242' W Elev: 1217m"""),
             [
@@ -56,7 +56,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_04(self):
+    def test_lat_long_04(self) -> None:
         self.assertEqual(
             parse("""(Ord Mountains 7.5’ Q.: 34°41'32"N, 116°49'25"W, +1000m)"""),
             [
@@ -70,7 +70,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_05(self):
+    def test_lat_long_05(self) -> None:
         self.assertEqual(
             parse("""43.963272° N, 113.446226° W Uncertainty: 100 m."""),
             [
@@ -84,7 +84,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_06(self):
+    def test_lat_long_06(self) -> None:
         self.assertEqual(
             parse("""N 33 deg 27' 33", W 111 deg 56' 35","""),
             [
@@ -96,7 +96,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_07(self):
+    def test_lat_long_07(self) -> None:
         self.assertEqual(
             parse("""40.104905N, 79.324561W NAD83."""),
             [
@@ -109,7 +109,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_08(self):
+    def test_lat_long_08(self) -> None:
         self.assertEqual(
             parse("""33° 53' 31.0" N, -111° 56' 59.9" W"""),
             [
@@ -121,7 +121,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_09(self):
+    def test_lat_long_09(self) -> None:
         self.assertEqual(
             parse("""Lat: 41.01102 Long: -75.485306 (WGS-84)"""),
             [
@@ -134,7 +134,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_10(self):
+    def test_lat_long_10(self) -> None:
         self.assertEqual(
             parse("""Lat.: 36° 21'"N Long.: 112° 40'"W"""),
             [
@@ -146,7 +146,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_11(self):
+    def test_lat_long_11(self) -> None:
         self.assertEqual(
             parse("""N 33° 27’ W 111° 56 35" 1200 ft.,"""),
             [
@@ -160,7 +160,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_12(self):
+    def test_lat_long_12(self) -> None:
         """It handles a lat/long range."""
         self.assertEqual(
             parse("""Lat. 13.5° - 14°55'S Long. 60.2° - 61°50'W."""),
@@ -173,7 +173,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_13(self):
+    def test_lat_long_13(self) -> None:
         self.assertEqual(
             parse("""45.01701° N, 118.15694° W Uncertainty: 50 m.; Datum: WGS 84;"""),
             [
@@ -188,7 +188,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_14(self):
+    def test_lat_long_14(self) -> None:
         self.assertEqual(
             parse("""N41° 50.046’ W087° 54.172’."""),
             [
@@ -200,7 +200,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_15(self):
+    def test_lat_long_15(self) -> None:
         self.assertEqual(
             parse("""27.409578°, -80.397773°"""),
             [
@@ -212,7 +212,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_16(self):
+    def test_lat_long_16(self) -> None:
         self.assertEqual(
             parse("""Q.: 34°37'17"N, 116°50'15"W,+1000m)"""),
             [
@@ -226,7 +226,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_17(self):
+    def test_lat_long_17(self) -> None:
         self.assertEqual(
             parse("""Lat. 29°12.063'N Long. 082°02.005'W Datum: WGS 84."""),
             [
@@ -239,7 +239,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_18(self):
+    def test_lat_long_18(self) -> None:
         self.assertEqual(
             parse("""34° 29' 09.4" N 111° 46' 18.9" W +-50 meters"""),
             [
@@ -253,7 +253,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_19(self):
+    def test_lat_long_19(self) -> None:
         self.assertEqual(
             parse(
                 """40.104905N,
@@ -269,7 +269,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_20(self):
+    def test_lat_long_20(self) -> None:
         self.assertEqual(
             parse("""35°50-52'S 71°10-20'W 750-900 m"""),
             [
@@ -283,7 +283,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_21(self):
+    def test_lat_long_21(self) -> None:
         self.assertEqual(
             parse("""33.65517 -111.84455 619 Meters"""),
             [
@@ -297,7 +297,7 @@ class TestLatLong(unittest.TestCase):
             ],
         )
 
-    def test_lat_long_22(self):
+    def test_lat_long_22(self) -> None:
         self.assertEqual(
             parse("""Lat: N 39' 50' 22" Long: W 121° 02' 45" """),
             [

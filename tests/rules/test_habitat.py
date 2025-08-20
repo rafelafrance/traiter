@@ -5,7 +5,7 @@ from traiter.rules.habitat import Habitat
 
 
 class TestHabitat(unittest.TestCase):
-    def test_habitat_01(self):
+    def test_habitat_01(self) -> None:
         self.assertEqual(
             parse("""riparian forest"""),
             [
@@ -17,7 +17,7 @@ class TestHabitat(unittest.TestCase):
             ],
         )
 
-    def test_habitat_02(self):
+    def test_habitat_02(self) -> None:
         self.assertEqual(
             parse("""subalpine zone"""),
             [
@@ -29,13 +29,13 @@ class TestHabitat(unittest.TestCase):
             ],
         )
 
-    def test_habitat_03(self):
+    def test_habitat_03(self) -> None:
         self.assertEqual(
             parse("""Arizona Desert Botanical Garden"""),
             [],
         )
 
-    def test_habitat_04(self):
+    def test_habitat_04(self) -> None:
         self.assertEqual(
             parse(
                 """
@@ -55,7 +55,7 @@ class TestHabitat(unittest.TestCase):
             ],
         )
 
-    def test_habitat_05(self):
+    def test_habitat_05(self) -> None:
         self.assertEqual(
             parse("""Riparian/desert scrub."""),
             [

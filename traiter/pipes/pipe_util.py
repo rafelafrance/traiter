@@ -1,4 +1,7 @@
-def clear_tokens(ent):
+from spacy.tokens import Doc, Span
+
+
+def clear_tokens(ent: Span) -> None:
     if "" not in ent.doc.vocab.strings:
         ent.doc.vocab.strings.add("")
     ent.label = ent.doc.vocab.strings[""]
@@ -7,6 +10,6 @@ def clear_tokens(ent):
         token._.flag = ""
 
 
-def intern_string(doc, string):
+def intern_string(doc: Doc, string: str) -> None:
     if string not in doc.vocab.strings:
         doc.vocab.strings.add(string)

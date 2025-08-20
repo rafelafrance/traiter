@@ -3,6 +3,7 @@ Taxa are terms (see term_list.py) with 2 types of terms: binomials and monomials
 
 Taxon traits are build up from these two as well as other terms like ranks and names.
 """
+
 from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
@@ -10,7 +11,9 @@ from pathlib import Path
 from traiter.pylib import term_util
 
 
-def abbreviate_binomials(binomials: list[dict], *, single_expanded_name=True):
+def abbreviate_binomials(
+    binomials: list[dict], *, single_expanded_name: bool = True
+) -> dict:
     """
     Create a mapping from binomial terms to abbreviated binomials.
 
@@ -33,12 +36,12 @@ def abbreviate_binomials(binomials: list[dict], *, single_expanded_name=True):
     return abbrevs
 
 
-def abbrev_binomial_term(csv_path: Path | Iterable[Path]):
+def abbrev_binomial_term(csv_path: Path | Iterable[Path]) -> dict:
     terms = term_util.read_terms(csv_path)
     return abbreviate_binomials(terms)
 
 
-def abbreviate(pattern):
+def abbreviate(pattern: str) -> str:
     genus, *parts = pattern.split()
     abbrev = genus[0].upper() + "."
     return " ".join([abbrev, *parts])

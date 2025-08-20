@@ -13,7 +13,7 @@ class CleanupTraits:
         nlp: Language,
         name: str,
         keep: list[str] | None = None,  # List of trait labels to keep
-    ):
+    ) -> None:
         super().__init__()
         self.nlp = nlp
         self.name = name

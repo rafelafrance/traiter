@@ -8,7 +8,7 @@ from traiter.rules.date_ import Date
 
 
 class TestDate(unittest.TestCase):
-    def test_date_01(self):
+    def test_date_01(self) -> None:
         """It handles a date with a month name in the middle."""
         self.assertEqual(
             parse("""11 May 2004"""),
@@ -21,7 +21,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_02(self):
+    def test_date_02(self) -> None:
         """It handles a date with a month name in the middle and a 2-digit year."""
         self.assertEqual(
             parse("11 may 04"),
@@ -34,7 +34,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_03(self):
+    def test_date_03(self) -> None:
         """It adjusts future dates back a century for a 2-digit year."""
         tomorrow = date.today() + relativedelta(days=1)
         tomorrow = tomorrow.strftime("%d %b %y")
@@ -52,7 +52,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_04(self):
+    def test_date_04(self) -> None:
         """It handles noise prior to parsing the date."""
         self.assertEqual(
             parse("No.: 113,306 Date: 8 October 1989"),
@@ -65,7 +65,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_05(self):
+    def test_date_05(self) -> None:
         """It handles an all numeric date."""
         self.assertEqual(
             parse("11-0297 10/20/2011"),
@@ -78,7 +78,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_06(self):
+    def test_date_06(self) -> None:
         """It handles noise in the separators."""
         self.assertEqual(
             parse("Collected by D, M, MOORE — Date AUG-_11,1968"),
@@ -91,7 +91,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_07(self):
+    def test_date_07(self) -> None:
         """It handles slashes between the date parts."""
         self.assertEqual(
             parse("""Date 8/20/75"""),
@@ -104,7 +104,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_08(self):
+    def test_date_08(self) -> None:
         """It handles dates missing a day part (numeric)."""
         self.assertEqual(
             parse("Andrew Jenkins 631 2/2010"),
@@ -118,14 +118,14 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_09(self):
+    def test_date_09(self) -> None:
         """It does not parse a bad date."""
         self.assertEqual(
             parse("Date Oct. 6, 197"),
             [],
         )
 
-    def test_date_10(self):
+    def test_date_10(self) -> None:
         """It handles a bad month."""
         self.assertEqual(
             parse("June, 1992"),
@@ -139,7 +139,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_11(self):
+    def test_date_11(self) -> None:
         """It handles an abbreviated month."""
         self.assertEqual(
             parse("14 Jan. 1987"),
@@ -152,14 +152,14 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_12(self):
+    def test_date_12(self) -> None:
         """It skips a list of numbers."""
         self.assertEqual(
             parse("2 8 10"),
             [],
         )
 
-    def test_date_13(self):
+    def test_date_13(self) -> None:
         """It allows the 'yy notation."""
         self.assertEqual(
             parse("Date: 6/30 '66"),
@@ -173,7 +173,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_14(self):
+    def test_date_14(self) -> None:
         """It handles an abbreviated month."""
         self.assertEqual(
             parse("14 jan. 1987"),
@@ -186,7 +186,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_15(self):
+    def test_date_15(self) -> None:
         """It handles an abbreviated month."""
         self.assertEqual(
             parse("14 JAN. 1987"),
@@ -199,7 +199,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_16(self):
+    def test_date_16(self) -> None:
         """It handles month first."""
         self.assertEqual(
             parse("W May 19, 1998 HR1998-01"),
@@ -212,7 +212,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_17(self):
+    def test_date_17(self) -> None:
         self.assertEqual(
             parse("5/26/03,"),
             [
@@ -224,7 +224,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_18(self):
+    def test_date_18(self) -> None:
         self.assertEqual(
             parse("Date: 10.Oct.70"),
             [
@@ -237,7 +237,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_19(self):
+    def test_date_19(self) -> None:
         self.assertEqual(
             parse("Date 30-VII-1977"),
             [
@@ -249,7 +249,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_20(self):
+    def test_date_20(self) -> None:
         self.assertEqual(
             parse("SOFT. 3, 1899."),
             [
@@ -261,13 +261,13 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_21(self):
+    def test_date_21(self) -> None:
         self.assertEqual(
             parse("± 4 x 3 mm."),
             [],
         )
 
-    def test_date_22(self):
+    def test_date_22(self) -> None:
         self.assertEqual(
             parse("20091 19 X 1998"),
             [
@@ -279,7 +279,7 @@ class TestDate(unittest.TestCase):
             ],
         )
 
-    def test_date_23(self):
+    def test_date_23(self) -> None:
         self.assertEqual(
             parse("Date 9-IV-1977"),
             [

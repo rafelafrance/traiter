@@ -1,4 +1,5 @@
 from spacy.language import Language
+from spacy.tokens import Doc
 
 DEBUG_TOKENS = "debug_tokens"
 DEBUG_ENTITIES = "debug_entities"
@@ -7,7 +8,7 @@ DEBUG_ENTITIES = "debug_entities"
 DEBUG_COUNT = 0  # Used to rename debug pipes
 
 
-def tokens(nlp, **kwargs) -> str:
+def tokens(nlp: Language, **kwargs: str) -> str:
     """Automatically set up a pipe to print token information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
@@ -16,7 +17,7 @@ def tokens(nlp, **kwargs) -> str:
     return name
 
 
-def ents(nlp, **kwargs) -> str:
+def ents(nlp: Language, **kwargs: str) -> str:
     """Automatically set up a pipe to print entity information."""
     global DEBUG_COUNT
     DEBUG_COUNT += 1
@@ -27,11 +28,11 @@ def ents(nlp, **kwargs) -> str:
 
 @Language.factory(DEBUG_TOKENS)
 class DebugTokens:
-    def __init__(self, nlp: Language, name: str):
+    def __init__(self, nlp: Language, name: str) -> None:
         self.nlp = nlp
         self.name = name
 
-    def __call__(self, doc):
+    def __call__(self, doc: Doc) -> Doc:
         print("=" * 80)
         print(self.name)
         print(f"{'entity type':<24} {'flag':10} {'pos':6} token")
@@ -46,11 +47,11 @@ class DebugTokens:
 
 @Language.factory(DEBUG_ENTITIES)
 class DebugEntities:
-    def __init__(self, nlp: Language, name: str):
+    def __init__(self, nlp: Language, name: str) -> None:
         self.nlp = nlp
         self.name = name
 
-    def __call__(self, doc):
+    def __call__(self, doc: Doc) -> Doc:
         print("=" * 80)
         print(self.name)
         for ent in doc.ents:
