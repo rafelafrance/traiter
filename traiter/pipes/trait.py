@@ -6,7 +6,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher
 from spacy.tokens import Doc, Span
 
-from traiter.pipes.reject_match import SkipTraitCreation
+from traiter.pipes.reject_match import RejectMatch, SkipTraitCreation
 
 ADD_TRAITS = "add_traits"
 
@@ -67,7 +67,7 @@ class AddTraits:
             if action := self.dispatch_table.get(label):
                 try:
                     trait = action(ent)
-                except SkipTraitCreation:
+                except (RejectMatch, SkipTraitCreation):
                     continue
 
             # Create a new trait

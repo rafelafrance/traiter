@@ -59,7 +59,7 @@ ignore = [
     "PT009",   # Use a regular assert instead of unittest-style {assertion}
     "RET504",  # Unnecessary assignment to {name} before return statement
     "RUF001",  # String contains ambiguous {}. Did you mean {}?
-    "S101",     # Use of `assert` detected
+    "S101",    # Use of `assert` detected
     "SIM114",  # Combine if branches using logical or operator
     "SIM905",  # Consider using a list literal instead of `str.split`
     "SLF001",  # Private member accessed: {access}
