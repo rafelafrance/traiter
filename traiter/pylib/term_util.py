@@ -9,7 +9,7 @@ from zipfile import ZipFile
 def look_up_table(
     csv_path: Path | Iterable[Path],
     field: str,
-    type_: str | None = None,
+    type_: str | int | None = None,
 ) -> dict[str, Any]:
     paths = csv_path if isinstance(csv_path, Iterable) else [csv_path]
     data = {}
@@ -31,47 +31,6 @@ def term_patterns(
         if value not in (None, ""):
             data[term["pattern"]] = type_(value)
     return data
-
-
-def get_labels(
-    csv_paths: Path | Iterable[Path],
-    default_labels: dict[str, str] | None = None,
-) -> list[str]:
-    csv_paths = csv_paths if isinstance(csv_paths, Iterable) else [csv_paths]
-    default_labels = default_labels if default_labels else {}
-    labels = set()
-    for path in csv_paths:
-        terms = read_terms(path)
-        try:
-            labels |= {t["label"] for t in terms}
-        except KeyError:
-            if label := default_labels.get(path.stem):
-                labels.add(label)
-    return sorted(labels)
-
-
-def delete_terms(terms: list, patterns: list[str] | str) -> list:
-    patterns = patterns if isinstance(patterns, list) else patterns.split()
-    terms = [t for t in terms if t["pattern"] not in patterns]
-    return terms
-
-
-def filter_labels(terms: list, keep: list[str] | str) -> list:
-    keep = keep if isinstance(keep, list) else keep.split()
-    terms = [t for t in terms if t["label"] in keep]
-    return terms
-
-
-def labels_to_remove(
-    csv_paths: Path | Iterable[Path],
-    *,
-    keep: str | Iterable[str] | None = None,
-) -> list[str]:
-    labels = get_labels(csv_paths)
-    if keep:
-        keep = keep if isinstance(keep, Iterable) else [keep]
-        labels = [lb for lb in labels if lb not in keep]
-    return labels
 
 
 def read_terms(csv_path: Path | Iterable[Path]) -> list[dict]:

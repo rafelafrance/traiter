@@ -14,14 +14,8 @@ def term_pipe(
     *,
     name: str,
     path: Path | list[Path],
-    default_labels: dict[str, str] | None = None,
-    delete_patterns: list[str] | str | None = None,
 ) -> None:
-    default_labels = default_labels if default_labels else {}
     paths = path if isinstance(path, Iterable) else [path]
-    if isinstance(delete_patterns, str):
-        delete_patterns = delete_patterns.split()
-    delete_patterns = delete_patterns if delete_patterns else []
 
     # Gather terms and make sure they have the needed fields
     by_attr = defaultdict(list)
@@ -30,9 +24,7 @@ def term_pipe(
     for path_ in paths:
         terms = term_util.read_terms(path_)
         for term in terms:
-            if term["pattern"] in delete_patterns:
-                continue
-            label = term.get("label", default_labels.get(path_.stem))
+            label = term.get("label")
             pattern = {"label": label, "pattern": term["pattern"]}
             attr = term.get("attr", "lower").upper()
             by_attr[attr].append(pattern)
@@ -45,7 +37,6 @@ def term_pipe(
             name = f"{name}_{attr.lower()}"
             config = {
                 "patterns": patterns,
-                "replace": replaces[attr],
                 "attr": attr,
             }
             nlp.add_pipe(phrase.PHRASE_PIPE, name=name, config=config)

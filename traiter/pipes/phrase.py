@@ -16,12 +16,10 @@ class PhrasePipe:
         name: str,
         patterns: list[dict],
         attr: str = "lower",
-        replace: dict[str, str] | None = None,
     ) -> None:
         self.nlp = nlp
         self.name = name
         self.patterns = patterns
-        self.replace = replace if replace else {}
         self.attr = attr
 
         self.matcher = self.build_matcher()
@@ -58,7 +56,7 @@ class PhrasePipe:
                 continue
 
             for token in ent:
-                text = self.replace.get(token.lower_, token.text)
+                text = token.text.lower()
                 texts.append(text)
 
             used_tokens |= ent_tokens

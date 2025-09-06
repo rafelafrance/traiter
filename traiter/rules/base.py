@@ -7,10 +7,10 @@ from spacy.tokens import Span
 
 @dataclass(eq=False)
 class Base:
-    start: int | None = None
-    end: int | None = None
     _trait: str | None = None
     _text: str | None = None
+    start: int | None = None
+    end: int | None = None
 
     def __eq__(self, other: "Base") -> bool:
         return self.to_dict() == other.to_dict()
