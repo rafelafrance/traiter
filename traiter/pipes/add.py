@@ -106,3 +106,14 @@ def debug_tokens(nlp: Language) -> None:
 
 def debug_ents(nlp: Language) -> None:
     debug.ents(nlp)
+
+
+def custom_pipe(
+    nlp: Language,
+    registered: str,
+    name: str = "",
+    config: dict | None = None,
+) -> None:
+    config = config if config else {}
+    name = name if name else registered
+    nlp.add_pipe(registered, name=name, config=config)
