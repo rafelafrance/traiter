@@ -15,7 +15,7 @@ from traiter.rules.base import Base
 @dataclass(eq=False)
 class Elevation(Base):
     # Class vars ----------
-    float_re: ClassVar[str] = r"^(\d[\d,.]+)$"
+    float_re: ClassVar[str] = r"^(\d[\d,.]*)$"
     all_units: ClassVar[list[str]] = ["metric_length", "imperial_length"]
     elevation_csv: ClassVar[Path] = (
         Path(__file__).parent / "terms" / "elevation_terms.csv"
