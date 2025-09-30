@@ -22,7 +22,7 @@ class Date(Base):
     date_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "date_terms.csv"
     month_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "month_terms.csv"
     all_csvs: ClassVar[list[Path]] = [date_csv, month_csv]
-    sep: ClassVar[str] = "(.,;/_'-"
+    sep: ClassVar[str] = "(.,/_'-"
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(all_csvs, "replace")
     # ---------------------
 
