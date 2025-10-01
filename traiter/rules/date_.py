@@ -129,7 +129,7 @@ class Date(Base):
 
     @classmethod
     def short_date(cls, ent: Span) -> "Date":
-        date_ = Date.date_match(ent)
+        date_ = cls.date_match(ent)
         date_._trait = "date"
         date_.missing_day = True
         date_.date = date_.date[:7] if date_.date else None
