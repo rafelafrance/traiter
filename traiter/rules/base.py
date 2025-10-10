@@ -1,3 +1,4 @@
+import sys
 from dataclasses import asdict, dataclass
 from typing import Any
 
@@ -9,7 +10,7 @@ from spacy.tokens import Span
 class Base:
     _trait: str = ""
     _text: str = ""
-    start: int = -1
+    start: int = sys.maxsize
     end: int = -1
 
     def __eq__(self, other: "Base") -> bool:
