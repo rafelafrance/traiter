@@ -18,10 +18,10 @@ class Base:
 
     @classmethod
     def from_ent(cls, ent: Span, **kwargs: Any) -> Any:
-        kwargs["start"] = ent.start_char
-        kwargs["end"] = ent.end_char
-        kwargs["_trait"] = ent.label_
-        kwargs["_text"] = ent.text
+        kwargs["start"] = kwargs.get("start", ent.start_char)
+        kwargs["end"] = kwargs.get("end", ent.end_char)
+        kwargs["_trait"] = kwargs.get("_trait", ent.label_)
+        kwargs["_text"] = kwargs.get("_text", ent.text)
         return cls(**kwargs)
 
     def to_dict(self) -> dict:

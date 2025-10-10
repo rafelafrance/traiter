@@ -11,12 +11,12 @@ license = { file = "LICENSE" }
 authors = [{ name = "Raphael LaFrance", email = "rafelafrance@proton.me" }]
 requires-python = ">=3.13"
 dependencies = [
-    "ftfy>=6.3.1",
-    "pip>=25.2",
-    "pre-commit>=4.3.0",
-    "python-dateutil>=2.9.0.post0",
-    "regex>=2025.7.34",
-    "spacy>=3.8.7",
+  "ftfy>=6.3.1",
+  "pip>=25.2",
+  "pre-commit>=4.3.0",
+  "python-dateutil>=2.9.0.post0",
+  "regex>=2025.7.34",
+  "spacy>=3.8.7",
 ]
 
 [tool.uv.build-backend]
@@ -38,31 +38,32 @@ docstring-code-format = true
 select = ["ALL"]
 
 ignore = [
-    "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
-    "COM812",  # Trailing comma missing
-    "D100",    # Missing docstring in public module
-    "D101",    # Missing docstring in public class
-    "D102",    # Missing docstring in public method
-    "D103",    # Missing docstring in public function
-    "D104",    # Missing docstring in public package
-    "D105",    # Missing docstring in public method
-    "D107",    # Missing docstring in public __init__
-    "D203",    # 1 blank line required before class docstring
-    "D212",    # Multi-line docstring summary should start at the first line
-    "DTZ005",  # Pass a `datetime.timezone` object to the `tz` parameter
-    "DTZ011",  # datetime.date.today() used
-    "N818",    # Exception name {name} should be named with an Error suffix
-    "PD901",   # Avoid using the generic variable name df for DataFrames
-    "PLR0913", # Too many arguments in function definition ({c_args} > {max_args})
-    "PLW0603", # Using the global statement to update {name} is discouraged
-    "PLW1641", # Object does not implement `__hash__` method
-    "PLW2901", # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
-    "PT009",   # Use a regular assert instead of unittest-style {assertion}
-    "RET504",  # Unnecessary assignment to {name} before return statement
-    "RUF001",  # String contains ambiguous {}. Did you mean {}?
-    "S101",    # Use of `assert` detected
-    "SIM114",  # Combine if branches using logical or operator
-    "SIM905",  # Consider using a list literal instead of `str.split`
-    "SLF001",  # Private member accessed: {access}
-    "T201",    # print found
+  "ANN401",  # Dynamically typed expressions (typing.Any) are disallowed
+  "COM812",  # Trailing comma missing
+  "D100",    # Missing docstring in public module
+  "D101",    # Missing docstring in public class
+  "D102",    # Missing docstring in public method
+  "D103",    # Missing docstring in public function
+  "D104",    # Missing docstring in public package
+  "D105",    # Missing docstring in public method
+  "D107",    # Missing docstring in public __init__
+  "D203",    # 1 blank line required before class docstring
+  "D212",    # Multi-line docstring summary should start at the first line
+  "DTZ005",  # Pass a `datetime.timezone` object to the `tz` parameter
+  "DTZ011",  # datetime.date.today() used
+  "ERA001",  # Remove commented-out code
+  "N818",    # Exception name {name} should be named with an Error suffix
+  "PD901",   # Avoid using the generic variable name df for DataFrames
+  "PLR0913", # Too many arguments in function definition ({c_args} > {max_args})
+  "PLW0603", # Using the global statement to update {name} is discouraged
+  "PLW1641", # Object does not implement `__hash__` method
+  "PLW2901", # Outer {outer_kind} variable {name} overwritten by inner {inner_kind} target
+  "PT009",   # Use a regular assert instead of unittest-style {assertion}
+  "RET504",  # Unnecessary assignment to {name} before return statement
+  "RUF001",  # String contains ambiguous {}. Did you mean {}?
+  "S101",    # Use of `assert` detected
+  "SIM114",  # Combine if branches using logical or operator
+  "SIM905",  # Consider using a list literal instead of `str.split`
+  "SLF001",  # Private member accessed: {access}
+  "T201",    # print found
 ]
