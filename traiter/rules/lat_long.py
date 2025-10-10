@@ -277,8 +277,9 @@ class LatLong(Base):
 
         datum = "".join(datum)
         kwargs["datum"] = cls.replace.get(datum, datum) if datum else None
-        del kwargs["start"]
-        del kwargs["end"]
+
+        kwargs["start"] = ent.start_char
+        kwargs["end"] = ent.end_char
 
         return cls.from_ent(ent, **kwargs)
 
