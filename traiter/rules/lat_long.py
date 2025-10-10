@@ -3,8 +3,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import ClassVar
 
-from spacy import Language, registry
+from spacy.language import Language
 from spacy.tokens import Span
+from spacy.util import registry
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util, util
@@ -229,7 +230,11 @@ class LatLong(Base):
 
         ent[0]._.flag = "lat_long_data"
 
-        trait = cls.from_ent(ent, lat_long=lat_long, datum=datum)
+        end = ent.end_char
+        if ent.text[-1] in const.CLOSE and not any(c in ent.text for c in const.OPEN):
+            end -= 1
+
+        trait = cls.from_ent(ent, lat_long=lat_long, datum=datum, end=end)
         ent[0]._.trait = trait  # Save for uncertainty in the lat/long
         return trait
 
