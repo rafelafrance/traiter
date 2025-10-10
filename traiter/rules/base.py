@@ -7,16 +7,16 @@ from spacy.tokens import Span
 
 @dataclass(eq=False)
 class Base:
-    _trait: str | None = None
-    _text: str | None = None
-    start: int | None = None
-    end: int | None = None
+    _trait: str = ""
+    _text: str = ""
+    start: int = -1
+    end: int = -1
 
     def __eq__(self, other: "Base") -> bool:
         return self.to_dict() == other.to_dict()
 
     @classmethod
-    def from_ent(cls, ent: Span, **kwargs: Any) -> "Base":
+    def from_ent(cls, ent: Span, **kwargs: Any) -> Any:
         kwargs["start"] = ent.start_char
         kwargs["end"] = ent.end_char
         kwargs["_trait"] = ent.label_
