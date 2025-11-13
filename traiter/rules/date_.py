@@ -7,8 +7,9 @@ from typing import ClassVar
 
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
-from spacy import Language, registry
+from spacy.language import Language
 from spacy.tokens import Span
+from spacy.util import registry
 
 from traiter.pipes import add, reject_match
 from traiter.pylib import term_util
