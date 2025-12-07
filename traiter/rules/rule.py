@@ -7,13 +7,13 @@ from spacy.tokens import Span
 
 
 @dataclass(eq=False)
-class Base:
+class Rule:
     _trait: str = ""
     _text: str = ""
     start: int = sys.maxsize
     end: int = -1
 
-    def __eq__(self, other: "Base") -> bool:
+    def __eq__(self, other: "Rule") -> bool:
         return self.to_dict() == other.to_dict()
 
     @classmethod

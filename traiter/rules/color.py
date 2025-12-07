@@ -8,11 +8,11 @@ from spacy.tokens import Span
 from traiter.pipes import add
 from traiter.pylib import const, term_util
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.base import Base
+from traiter.rules.rule import Rule
 
 
 @dataclass(eq=False)
-class Color(Base):
+class Color(Rule):
     # Class vars ----------
     color_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "color_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(color_csv, "replace")

@@ -8,11 +8,11 @@ from spacy.tokens import Span
 from traiter.pipes import add, reject_match
 from traiter.pylib import const as t_const
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.base import Base
+from traiter.rules.rule import Rule
 
 
 @dataclass(eq=False)
-class Uuid(Base):
+class Uuid(Rule):
     # Class vars ----------
     hx: ClassVar[str] = "[0-9A-Fa-f]"
     whole: ClassVar[str] = rf"^{hx}{{8}}-{hx}{{4}}-{hx}{{4}}-{hx}{{4}}-{hx}{{12}}$"
