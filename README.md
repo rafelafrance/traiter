@@ -6,7 +6,11 @@ These days this code is mainly used to:
 
 -- ~~If you can get away with it, you may want to try an end-to-end machine learning approach.~~
 
-I just spent a substantial effort on using a machine learning model, and I was wrong about the relative usefulness of rule-based and machine learning approaches for information extraction. Both have their strengths and weaknesses. I now tend to use rule-based models for data pre- and post-processing, as well as generating training data.
+I just spent a substantial effort on using a machine learning model,
+and I was wrong about the relative usefulness of rule-based and machine learning approaches
+for information extraction. Both have their strengths and weaknesses.
+I now tend to use rule-based models for data pre- and post-processing,
+as well as generating training data.
 
 ## Traiter
 This is the rule-based Traiter information extraction/data mining library used by all client Traiter projects.
@@ -49,5 +53,5 @@ This repository is a library for other Traiter projects and is not designed to b
 
 There are tests which you can run like so:
 ```bash
-uv run -m unittest discover
+uv run python -m unittest discover
 ```

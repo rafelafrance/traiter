@@ -10,11 +10,11 @@ from spacy.util import registry
 from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util, util
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.rule import Rule
+from traiter.rules.base_rule import BaseRule
 
 
 @dataclass(eq=False)
-class LatLong(Rule):
+class LatLong(BaseRule):
     # Class vars ----------
     sym: ClassVar[str] = r"""°"”“'`‘´’"""
     punct: ClassVar[str] = f"""{sym},;._"""

@@ -11,7 +11,7 @@ from traiter.pylib import const as t_const
 from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
 from traiter.pylib.util import to_positive_float as as_float
-from traiter.rules.rule import Rule
+from traiter.rules.base_rule import BaseRule
 
 FLOAT_RE: str = r"\d{1,4}(\.\d{,3})?"
 FLOAT3_RE: str = r"\d{3}(\.\d{,3})?"
@@ -25,7 +25,7 @@ UNIQUE = 0  # A tiebreaker used to rename the Number pipe
 
 
 @dataclass(eq=False)
-class Number(Rule):
+class Number(BaseRule):
     # Class vars ----------
     csv: ClassVar[Path] = Path(__file__).parent / "terms" / "number_word_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(csv, "replace", int)

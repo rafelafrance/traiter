@@ -14,11 +14,11 @@ from spacy.util import registry
 from traiter.pipes import add, reject_match
 from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.rule import Rule
+from traiter.rules.base_rule import BaseRule
 
 
 @dataclass(eq=False)
-class Date(Rule):
+class Date(BaseRule):
     # Class vars ----------
     date_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "date_terms.csv"
     month_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "month_terms.csv"

@@ -10,11 +10,11 @@ from spacy.util import registry
 from traiter.pipes import add
 from traiter.pylib import const, term_util, util
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.rule import Rule
+from traiter.rules.base_rule import BaseRule
 
 
 @dataclass(eq=False)
-class Elevation(Rule):
+class Elevation(BaseRule):
     # Class vars ----------
     float_re: ClassVar[str] = r"^(\d[\d,.]*)$"
     all_units: ClassVar[list[str]] = ["metric_length", "imperial_length"]

@@ -10,11 +10,11 @@ from traiter.pipes import add
 from traiter.pipes.reject_match import SKIP_TRAIT_CREATION
 from traiter.pylib import term_util
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.rule import Rule
+from traiter.rules.base_rule import BaseRule
 
 
 @dataclass(eq=False)
-class Habitat(Rule):
+class Habitat(BaseRule):
     # Class vars ----------
     habitat_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "habitat_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.look_up_table(habitat_csv, "replace")

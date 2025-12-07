@@ -9,11 +9,11 @@ from spacy.tokens import Span
 from traiter.pipes import add, reject_match
 from traiter.pylib import const, term_util
 from traiter.pylib.pattern_compiler import Compiler
-from traiter.rules.rule import Rule
+from traiter.rules.base_rule import BaseRule
 
 
 @dataclass(eq=False)
-class TRS(Rule):
+class TRS(BaseRule):
     # Class vars ----------
     trs_csv: ClassVar[Path] = Path(__file__).parent / "terms" / "trs_terms.csv"
     replace: ClassVar[dict[str, str]] = term_util.look_up_table([trs_csv], "replace")
