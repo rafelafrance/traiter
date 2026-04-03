@@ -34,6 +34,7 @@ class Date(BaseRule):
     @classmethod
     def pipe(cls, nlp: Language) -> None:
         add.term_pipe(nlp, name="date_terms", path=cls.all_csvs)
+        # add.debug_tokens(nlp)  # ########################################
         add.trait_pipe(nlp, name="date_patterns", compiler=cls.date_patterns())
         add.cleanup_pipe(nlp, name="date_cleanup")
 

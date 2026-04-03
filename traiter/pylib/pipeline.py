@@ -11,6 +11,8 @@ from traiter.rules.trs import TRS
 from traiter.rules.utm import UTM
 from traiter.rules.uuid import Uuid
 
+# from traiter.pipes import debug
+
 
 def build() -> Language:
     extensions.add_extensions()

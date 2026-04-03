@@ -100,6 +100,7 @@ class TestDate(unittest.TestCase):
                     date="1975-08-20",
                     start=0,
                     end=12,
+                    century_adjust=True,
                 ),
             ],
         )
