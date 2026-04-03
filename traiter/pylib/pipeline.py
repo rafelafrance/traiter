@@ -1,4 +1,5 @@
 import spacy
+from spacy.language import Language
 
 from traiter.pipes import extensions, sentence, tokenizer
 from traiter.rules.color import Color
@@ -11,7 +12,7 @@ from traiter.rules.utm import UTM
 from traiter.rules.uuid import Uuid
 
 
-def build() -> spacy.Language:
+def build() -> Language:
     extensions.add_extensions()
 
     nlp = spacy.load("en_core_web_md", exclude=["ner"])

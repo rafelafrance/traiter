@@ -5,5 +5,8 @@ def add_extensions() -> None:
     if not Span.has_extension("trait"):
         Token.set_extension("flag", default="")
         Token.set_extension("trait", default=None)
+        Token.set_extension("delete", default=None)
+        Token.set_extension("term", default=None)
 
         Span.set_extension("trait", default=None)
+        Span.set_extension("delete", default=None)

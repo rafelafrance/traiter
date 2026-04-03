@@ -57,7 +57,7 @@ class DarwinCore:
         return out
 
     @staticmethod
-    def convert_value_list(key: str, values: str | list[str]) -> str:
+    def convert_value_list(key: str, values: str | list) -> str | list[str]:
         flat = []
         for value in values:
             if isinstance(value, list):
@@ -92,7 +92,7 @@ class DarwinCore:
                 self.props[key].append(value)
         return self
 
-    def add_dyn(self, **kwargs: str | None) -> "DarwinCore":
+    def add_dyn(self, **kwargs: Any) -> "DarwinCore":
         for key, value in kwargs.items():
             if value is not None and value not in self.dyn_props[key]:
                 self.dyn_props[key].append(value)
@@ -120,7 +120,7 @@ class DarwinCore:
 
     @staticmethod
     def remove_ns(label: str) -> str:
-        return label.split(":")[-1]
+        return label.rsplit(":", maxsplit=1)[-1]
 
     def items(self) -> Generator[tuple[str, Any]]:
         yield from {k: v for k, v in self.props.items() if k != DYN}.items()

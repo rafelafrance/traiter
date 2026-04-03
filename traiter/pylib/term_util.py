@@ -24,7 +24,7 @@ def term_patterns(
     field: str,
     type_: type | None = None,
 ) -> dict[str, Any]:
-    type_ = type_ if type_ else str
+    type_ = type_ or str
     data = {}
     for term in terms:
         value = term.get(field)
