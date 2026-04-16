@@ -26,8 +26,8 @@ class AddTraits:
         self.name = name
         self.patterns = patterns
         self.dispatch = dispatch
-        self.keep = keep if keep else []
-        self.overwrite = overwrite if overwrite else []
+        self.keep = keep or []
+        self.overwrite = overwrite or []
 
         self.dispatch_table = self.build_dispatch_table()
         self.matcher = self.build_matcher()
@@ -74,6 +74,7 @@ class AddTraits:
             used_tokens |= ent_tokens
 
             ent._.trait = trait
+            self.relabel_ent(ent, label)
             entities.append(ent)
 
         self.add_untouched_entities(doc, entities, used_tokens)
@@ -83,7 +84,9 @@ class AddTraits:
 
     @staticmethod
     def add_untouched_entities(
-        doc: Doc, entities: list[Span], used_tokens: set[int]
+        doc: Doc,
+        entities: list[Span],
+        used_tokens: set[int],
     ) -> None:
         """Add entities that do not overlap with any of the matches."""
         for ent in doc.ents:
@@ -93,7 +96,8 @@ class AddTraits:
 
     @staticmethod
     def remove_overlapping_matches(
-        matches: list[Span], used_tokens: set[int]
+        matches: list[Span],
+        used_tokens: set[int],
     ) -> list[Span]:
         """Remove any matches that overlap with an entity we kept."""
         filtered_matches = []
@@ -115,3 +119,24 @@ class AddTraits:
                 used_tokens |= ent_tokens
                 entities.append(ent)
         return entities, used_tokens
+
+    @staticmethod
+    def relabel_ent(ent: Span, old_label: str) -> str:
+        label = old_label
+
+        new_label = ent._.relabel or ""
+        if new_label:
+            relabel_entity(ent, new_label)
+            label = new_label
+            ent._.trait._trait = new_label
+
+        return label
+
+
+def relabel_entity(ent: Span, new_label: str, *, relabel_tokens: bool = False) -> None:
+    if new_label not in ent.doc.vocab.strings:
+        ent.doc.vocab.strings.add(new_label)
+    ent.label = ent.doc.vocab.strings[new_label]
+    if relabel_tokens:
+        for token in ent:
+            token.ent_type = ent.doc.vocab.strings[new_label]

@@ -41,21 +41,21 @@ ABBREVS += [f"{c}." for c in string.ascii_uppercase]
 
 
 def append_prefix_regex(nlp: Language, prefixes: list[str] | None = None) -> None:
-    prefixes = prefixes if prefixes else []
+    prefixes = prefixes or []
     prefixes += nlp.Defaults.prefixes
     prefix_re = compile_prefix_regex(prefixes)
     nlp.tokenizer.prefix_search = prefix_re.search
 
 
 def append_suffix_regex(nlp: Language, suffixes: list[str] | None = None) -> None:
-    suffixes = suffixes if suffixes else []
+    suffixes = suffixes or []
     suffixes += nlp.Defaults.suffixes
     suffix_re = compile_suffix_regex(suffixes)
     nlp.tokenizer.suffix_search = suffix_re.search
 
 
 def append_infix_regex(nlp: Language, infixes: list[str] | None = None) -> None:
-    infixes = infixes if infixes else []
+    infixes = infixes or []
     infixes += nlp.Defaults.infixes
     infix_re = compile_infix_regex(infixes)
     nlp.tokenizer.infix_finditer = infix_re.finditer

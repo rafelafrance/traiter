@@ -7,6 +7,7 @@ from traiter.rules.date_ import Date
 from traiter.rules.elevation import Elevation
 from traiter.rules.habitat import Habitat
 from traiter.rules.lat_long import LatLong
+from traiter.rules.number import Number
 from traiter.rules.trs import TRS
 from traiter.rules.utm import UTM
 from traiter.rules.uuid import Uuid
@@ -31,5 +32,17 @@ def build() -> Language:
     Habitat.pipe(nlp)
     TRS.pipe(nlp)
     UTM.pipe(nlp)
+
+    return nlp
+
+
+def numerical() -> Language:
+    extensions.add_extensions()
+
+    nlp = spacy.load("en_core_web_md", exclude=["ner"])
+
+    tokenizer.setup_tokenizer(nlp)
+
+    Number.pipe(nlp)
 
     return nlp

@@ -129,7 +129,7 @@ class DarwinCore:
 
     @staticmethod
     def key(*args: str, prepend: str | None = None) -> str:
-        key = [prepend] if prepend else []
+        key = [prepend]
         key += list(args)
         key = " ".join(key).replace("-", " ").split()
         key = [k.title() for k in key]

@@ -19,10 +19,10 @@ FLOAT3_RE: str = r"\d{3}(\.\d{,3})?"
 INT_RE: str = r"\d{1,4}"
 DEC_RE: str = r"\.\d{1,3}"
 
-FACT_LEN = 2
-
 # This pipe is used multiple times
 UNIQUE = 0  # A tiebreaker used to rename the Number pipe
+
+HAS_WHOLE = 3
 
 
 @dataclass(eq=False)
@@ -48,12 +48,14 @@ class Number(BaseRule):
             nlp, name=f"number_word_{UNIQUE}", compiler=cls.number_word_patterns()
         )
 
+        # add.debug_tokens(nlp)  # ##################################################
         add.trait_pipe(nlp, name=f"number_{UNIQUE}", compiler=cls.number_patterns())
 
     @classmethod
     def number_patterns(cls) -> list[Compiler]:
         decoder = {
             ",": {"TEXT": {"IN": t_const.COMMA}},
+            "/": {"TEXT": {"IN": t_const.SLASH}},
             "99.0": {"LOWER": {"REGEX": f"^{FLOAT_RE}+$"}},
             "999.0": {"LOWER": {"REGEX": f"^{FLOAT3_RE}+$"}},
             "99": {"LOWER": {"REGEX": f"^{INT_RE}+$"}},
@@ -68,6 +70,8 @@ class Number(BaseRule):
                     " 99.0 ",
                     " 99 , 999.0 ",
                     " .99 ",
+                    " 99 / 99 ",
+                    " 99 99 / 99 ",
                 ],
             ),
         ]
@@ -90,9 +94,23 @@ class Number(BaseRule):
 
     @classmethod
     def number_match(cls, ent: Span) -> "Number":
+        if "/" in ent.text:
+            return cls.as_fract(ent)
+
         number = as_float(ent.text)
-        is_int = re.search(r"[.]", ent.text) is None
+        is_int = (re.search(r"[.]", ent.text)) is None
         trait = cls.from_ent(ent, number=number, is_int=is_int)
+        return trait
+
+    @classmethod
+    def as_fract(cls, ent: Span) -> "Number":
+        parts = re.split(r"\D+", ent.text)
+        whole = 0.0 if len(parts) < HAS_WHOLE else float(parts[0])
+        numerator = float(parts[-2])
+        denominator = float(parts[-1])
+        number = whole + numerator / denominator
+
+        trait = cls.from_ent(ent, number=number, is_fraction=True)
         return trait
 
     @classmethod

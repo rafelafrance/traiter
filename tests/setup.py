@@ -3,11 +3,12 @@ from traiter.pylib.darwin_core import DarwinCore
 from traiter.pylib.util import compress
 
 PIPELINE = pipeline.build()
+NUMERICAL = pipeline.numerical()
 
 
-def parse(text: str) -> list:
+def parse(text: str, *, numerical: bool = False) -> list:
     text = compress(text)
-    doc = PIPELINE(text)
+    doc = NUMERICAL(text) if numerical else PIPELINE(text)
 
     traits = [e._.trait for e in doc.ents]
 

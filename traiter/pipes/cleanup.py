@@ -13,17 +13,20 @@ class CleanupTraits:
         nlp: Language,
         name: str,
         keep: list[str] | None = None,  # List of trait labels to keep
+        *,
+        clear: bool = True,
     ) -> None:
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.keep = keep if keep else []
+        self.keep = keep or []
+        self.clear = clear
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []
 
         for ent in doc.ents:
-            if ent.label_ not in self.keep:
+            if ent._.delete or ent.label_ not in self.keep:
                 clear_tokens(ent)
                 continue
 

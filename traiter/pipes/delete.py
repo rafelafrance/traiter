@@ -26,7 +26,7 @@ class DeleteTraits:
         super().__init__()
         self.nlp = nlp
         self.name = name
-        self.delete = delete if delete else []
+        self.delete = delete or []
 
     def __call__(self, doc: Doc) -> Doc:
         entities = []

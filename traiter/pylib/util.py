@@ -15,7 +15,7 @@ def compress(text: str) -> str:
 
 def to_positive_float(value: str | float) -> float | None:
     if isinstance(value, str):
-        value = re.sub(r"[^\d./]", "", value) if value else ""
+        value = re.sub(r"[^\d./]", "", value) or ""
     try:
         return float(value)
     except (ValueError, TypeError):
@@ -24,7 +24,7 @@ def to_positive_float(value: str | float) -> float | None:
 
 def to_positive_int(value: str | float) -> int | None:
     if isinstance(value, str):
-        value = re.sub(r"[^\d./]", "", value) if value else ""
+        value = re.sub(r"[^\d./]", "", value) or ""
         value = re.sub(r"\.$", "", value)
     try:
         return int(value)
@@ -38,7 +38,7 @@ def clean_text(
     replace: dict[str, str] | None = None,
 ) -> str:
     """Clean text before trait extraction."""
-    text = text if text else ""
+    text = text or ""
 
     # Handle uncommon mojibake
     if trans:

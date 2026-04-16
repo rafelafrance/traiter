@@ -281,7 +281,7 @@ class LatLong(BaseRule):
             kwargs["uncertainty"] = None
 
         datum = "".join(datum)
-        kwargs["datum"] = cls.replace.get(datum, datum) if datum else None
+        kwargs["datum"] = cls.replace.get(datum, datum) or None
 
         kwargs["start"] = ent.start_char
         kwargs["end"] = ent.end_char

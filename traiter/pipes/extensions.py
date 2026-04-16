@@ -8,5 +8,6 @@ def add_extensions() -> None:
         Token.set_extension("delete", default=None)
         Token.set_extension("term", default=None)
 
+        Span.set_extension("relabel", default="")
         Span.set_extension("trait", default=None)
         Span.set_extension("delete", default=None)
